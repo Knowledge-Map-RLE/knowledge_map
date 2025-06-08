@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+#root {
+    @apply w-full h-full;
+}
+
+.interface {
+    pointer-events: none;
+
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: 40px 1fr 100px;
+    gap: 8px;
+    grid-template-areas:
+        'main_menu top user'
+        'left center right'
+        'info bot minimap';
+    
+    @apply w-full h-full absolute;
+}
+
+.interface > * {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    pointer-events: auto;
+}
+
+.main_menu {
+    grid-area: main_menu;
+    display: flex;
+}
+
+.top {
+    grid-area: top;
+}
+
+.user {
+    grid-area: user;
+
+}
+
+.left {
+    grid-area: left;
+
+}
+
+.center {
+    grid-area: center;
+    pointer-events: none;
+    display: none;
+}
+
+.right {
+    grid-area: right;
+
+}
+
+.info {
+    grid-area: info;
+
+}
+
+.bot {
+    grid-area: bot;
+
+}
+
+.minimap {
+    grid-area: minimap;
+
+}
+
+

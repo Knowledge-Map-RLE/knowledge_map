@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+.user {
+    @apply flex items-center;
+}
+
+.avatar {
+    @apply bg-blue-200 h-[40px] w-[40px] rounded-full;
+}
+
+.name, .info {
+    @apply px-[10px];
+}
+
+.user_info {
+    @apply flex flex-col;
+    font-size: 12px;
+}

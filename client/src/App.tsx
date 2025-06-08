@@ -3,10 +3,10 @@ import Knowledge_map from './components/Knowledge_map'
 import Knowledge_map_ui from './components/Knowledge_map_ui'
 
 function App() {
-  return <div>
-    <Knowledge_map_ui />
+  return <>
     <Knowledge_map />
-  </div>
+    <Knowledge_map_ui />
+  </>
 }
 
 export default App

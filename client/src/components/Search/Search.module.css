@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+.search_panel {
+    @apply flex items-center;
+}
+
+.logo {
+    background-image: url('logo.svg');
+    @apply h-[40px] w-[40px] rounded-full bg-cover bg-center;
+}
+
+.search {
+    @apply px-[10px] w-full;
+}
+
+.search:focus {
+    outline: none;
+}

@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+.main_menu {
+    font-family: 'PT Sans Narrow';
+    font-weight: bold;
+    font-size: 24px;
+    @apply flex justify-center items-center;
+}
