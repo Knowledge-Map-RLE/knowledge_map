@@ -1,7 +1,8 @@
 @import "tailwindcss";
+@import "./styles/fonts.css";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: PT Sans, Helvetica, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   
