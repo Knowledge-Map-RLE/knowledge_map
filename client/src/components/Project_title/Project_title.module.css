@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+.main_menu {
+    font-family: 'PT Sans Narrow';
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+    @apply flex flex-col justify-center items-center;
+}
+
+.slogan {
+    @apply text-xs;
+}

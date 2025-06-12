@@ -31,6 +31,10 @@
     display: flex;
 }
 
+.panel {
+    @apply shadow-md;
+}
+
 .top {
     grid-area: top;
 }
@@ -42,7 +46,7 @@
 
 .left {
     grid-area: left;
-
+    padding: 5px 10px;
 }
 
 .center {
@@ -53,7 +57,7 @@
 
 .right {
     grid-area: right;
-
+    padding: 5px 10px;
 }
 
 .info {
@@ -68,7 +72,7 @@
 
 .minimap {
     grid-area: minimap;
-
+    @apply flex justify-center items-center;
 }
 
 

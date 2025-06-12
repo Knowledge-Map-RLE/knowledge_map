@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
 .knowledge_map {
-    @apply flex bg-amber-200 w-full h-full absolute justify-center items-center;
+    @apply flex bg-amber-100 w-full h-full absolute justify-center items-center;
 }
