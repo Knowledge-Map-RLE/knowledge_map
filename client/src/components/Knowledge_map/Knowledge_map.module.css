@@ -2,4 +2,9 @@
 
 .knowledge_map {
     @apply flex bg-amber-100 w-full h-full absolute justify-center items-center;
+    outline: none;
+}
+
+.knowledge_map:focus {
+    outline: none;
 }
