@@ -4,6 +4,8 @@ import { Application, extend } from '@pixi/react';
 import { Block } from './Block';
 import { Viewport } from './Viewport';
 import { Link } from './Link';
+import { Level, LevelData } from './Level';
+import { Sublevel, SublevelData } from './Sublevel';
 import ModeIndicator from './ModeIndicator';
 import styles from './Knowledge_map.module.css';
 
@@ -16,6 +18,7 @@ export interface BlockData {
   y: number;
   level: number;
   layer: number;
+  sublevelId?: number; // Привязка к подуровню
 }
 
 export interface LinkData {
@@ -31,35 +34,44 @@ export enum EditMode {
   DELETE = 'DELETE'
 }
 
+// Цвета для уровней (из Python файла)
+const LEVEL_COLORS = [0x4682b4, 0x20b2aa, 0xfa8072, 0xf0e68c, 0xdda0dd, 0xd3d3d3, 0xe0ffff, 0xe6e6fa];
+
+// Цвета для подуровней
+const SUBLEVEL_COLORS = [0xadd8e6, 0x90ee90, 0xf08080, 0xffffe0, 0xffc0cb, 0xd3d3d3, 0xe0ffff, 0xe6e6fa, 0xffe4e1, 0xf0fff0];
+
 export default function Knowledge_map() {
   // Ref для container чтобы установить фокус
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Тестовые данные
+  // Состояние для данных карты знаний
   const [blocks, setBlocks] = useState<BlockData[]>([
     {
       id: '1',
       text: 'Основы программирования',
       x: -250,
       y: 0,
-      level: 1,
-      layer: 1
+      level: 0,
+      layer: 0,
+      sublevelId: 0
     },
     {
-      id: '2',
+      id: '2', 
       text: 'JavaScript',
       x: 0,
       y: 0,
-      level: 1,
-      layer: 1
+      level: 0,
+      layer: 1,
+      sublevelId: 0
     },
     {
       id: '3',
       text: 'React',
       x: 250,
       y: 0,
-      level: 1,
-      layer: 1
+      level: 0,
+      layer: 2,
+      sublevelId: 0
     }
   ]);
 
@@ -76,6 +88,10 @@ export default function Knowledge_map() {
     }
   ]);
 
+  // Состояние для уровней и подуровней (будет получаться с сервера)
+  const [levels, setLevels] = useState<LevelData[]>([]);
+  const [sublevels, setSublevels] = useState<SublevelData[]>([]);
+
   const [selectedBlocks, setSelectedBlocks] = useState<string[]>([]);
   const [selectedLinks, setSelectedLinks] = useState<string[]>([]);
   const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
@@ -88,6 +104,111 @@ export default function Knowledge_map() {
 
   // Добавить перед handleKeyDown (примерно после useState):
   const pressedKeys = useRef<Set<string>>(new Set());
+
+  // Загрузка данных с сервера
+  useEffect(() => {
+    // Имитация запроса к серверу для получения layout данных
+    const loadLayoutData = async () => {
+      try {
+        // TODO: заменить на реальный API запрос
+        // const response = await fetch('/api/knowledge-map/layout');
+        // const layoutData = await response.json();
+        
+        // Пока используем моковые данные, основанные на текущих блоках
+        const mockLayoutData = generateMockLayoutData(blocks, links);
+        
+        setLevels(mockLayoutData.levels);
+        setSublevels(mockLayoutData.sublevels);
+        setBlocks(mockLayoutData.blocks);
+        
+      } catch (error) {
+        console.error('Ошибка при загрузке layout данных:', error);
+      }
+    };
+
+    loadLayoutData();
+  }, []); // Загружаем один раз при монтировании
+
+  // Функция для генерации моковых данных layout'а
+  const generateMockLayoutData = (blocksData: BlockData[], linksData: LinkData[]) => {
+    // Создаем подуровни на основе Y координат блоков
+    const sublevelMap = new Map<number, { y: number, blockIds: string[], minX: number, maxX: number }>();
+    
+    blocksData.forEach(block => {
+      const sublevelY = Math.round(block.y / 100) * 100; // Группируем по 100 пикселей
+      if (!sublevelMap.has(sublevelY)) {
+        sublevelMap.set(sublevelY, {
+          y: sublevelY,
+          blockIds: [],
+          minX: block.x,
+          maxX: block.x
+        });
+      }
+      
+      const sublevel = sublevelMap.get(sublevelY)!;
+      sublevel.blockIds.push(block.id);
+      sublevel.minX = Math.min(sublevel.minX, block.x - 100);
+      sublevel.maxX = Math.max(sublevel.maxX, block.x + 100);
+    });
+
+    // Создаем подуровни
+    const sublevelsList: SublevelData[] = Array.from(sublevelMap.entries()).map(([sublevelY, data], index) => ({
+      id: index,
+      y: sublevelY,
+      blockIds: data.blockIds,
+      minX: data.minX,
+      maxX: data.maxX,
+      color: SUBLEVEL_COLORS[index % SUBLEVEL_COLORS.length],
+      levelId: Math.floor(index / 2) // Группируем по 2 подуровня в уровень
+    }));
+
+    // Создаем уровни
+    const levelMap = new Map<number, { sublevelIds: number[], minX: number, maxX: number, minY: number, maxY: number }>();
+    
+    sublevelsList.forEach(sublevel => {
+      if (!levelMap.has(sublevel.levelId)) {
+        levelMap.set(sublevel.levelId, {
+          sublevelIds: [],
+          minX: sublevel.minX,
+          maxX: sublevel.maxX,
+          minY: sublevel.y,
+          maxY: sublevel.y
+        });
+      }
+      
+      const level = levelMap.get(sublevel.levelId)!;
+      level.sublevelIds.push(sublevel.id);
+      level.minX = Math.min(level.minX, sublevel.minX);
+      level.maxX = Math.max(level.maxX, sublevel.maxX);
+      level.minY = Math.min(level.minY, sublevel.y);
+      level.maxY = Math.max(level.maxY, sublevel.y);
+    });
+
+    const levelsList: LevelData[] = Array.from(levelMap.entries()).map(([levelId, data]) => ({
+      id: levelId,
+      sublevelIds: data.sublevelIds,
+      minX: data.minX,
+      maxX: data.maxX,
+      minY: data.minY,
+      maxY: data.maxY,
+      color: LEVEL_COLORS[levelId % LEVEL_COLORS.length]
+    }));
+
+    // Обновляем блоки с привязкой к подуровням
+    const updatedBlocks = blocksData.map(block => {
+      const sublevel = sublevelsList.find(sl => sl.blockIds.includes(block.id));
+      return {
+        ...block,
+        sublevelId: sublevel?.id
+      };
+    });
+
+    return {
+      levels: levelsList,
+      sublevels: sublevelsList,
+      blocks: updatedBlocks
+    };
+  };
 
   // Задержка для полной инициализации PixiJS
   useEffect(() => {
@@ -115,7 +236,7 @@ export default function Knowledge_map() {
     );
   }, []);
 
-  // Обработка клавиш для смены режимов - ИСПРАВЛЕНО: разная логика для разных режимов
+  // Обработка клавиш для смены режимов
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Игнорируем автоповтор клавиш
@@ -190,7 +311,7 @@ export default function Knowledge_map() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [isInputFocused, currentMode]); // Добавили currentMode в зависимости
+  }, [isInputFocused, currentMode]);
 
   // Логирование изменения режима
   useEffect(() => {
@@ -211,19 +332,15 @@ export default function Knowledge_map() {
         break;
 
       case EditMode.CREATE_LINKS:
-        console.log('Processing link creation...');
         if (linkCreationState.step === 'waiting') {
-          console.log('Selecting first block for link:', blockId);
           setFirstBlockForLink(blockId);
-          setSelectedBlocks([blockId]);
           setLinkCreationState({ step: 'first_selected' });
-        } else if (linkCreationState.step === 'first_selected' && firstBlockForLink) {
-          if (blockId !== firstBlockForLink) {
-            console.log('Creating link from', firstBlockForLink, 'to', blockId);
+          console.log('First block selected for link:', blockId);
+        } else if (linkCreationState.step === 'first_selected') {
+          if (firstBlockForLink && firstBlockForLink !== blockId) {
             handleCreateLink(firstBlockForLink, blockId);
-            // После создания связи возвращаемся к ожиданию следующей связи
-            setLinkCreationState({ step: 'waiting' });
             setFirstBlockForLink(null);
+            setLinkCreationState({ step: 'waiting' });
             setSelectedBlocks([]);
           } else {
             console.log('Cannot create link to the same block');
@@ -259,27 +376,94 @@ export default function Knowledge_map() {
     }
   };
 
-  // Создание нового блока
-  const handleCreateBlock = async (x: number, y: number) => {
-    if (currentMode !== EditMode.CREATE_BLOCKS) return;
+  // Обработка наведения на уровень
+  const handleLevelHover = (levelId: number, isHovered: boolean) => {
+    console.log(`Level ${levelId} ${isHovered ? 'hovered' : 'unhovered'}`);
+  };
 
+  // Обработка наведения на подуровень
+  const handleSublevelHover = (sublevelId: number, isHovered: boolean) => {
+    console.log(`Sublevel ${sublevelId} ${isHovered ? 'hovered' : 'unhovered'}`);
+  };
+
+  // Обработка клика по подуровню для создания блока
+  const handleSublevelClick = (sublevelId: number, x: number, y: number) => {
+    if (currentMode === EditMode.CREATE_BLOCKS) {
+      handleCreateBlockOnSublevel(x, y, sublevelId);
+    }
+  };
+
+  // Создание нового блока на подуровне
+  const handleCreateBlockOnSublevel = async (x: number, y: number, sublevelId: number) => {
     try {
-      console.log(`Creating block at (${x}, ${y})`);
+      console.log(`Creating block at (${x}, ${y}) on sublevel ${sublevelId}`);
       
+      const sublevel = sublevels.find(sl => sl.id === sublevelId);
+      if (!sublevel) {
+        console.error('Sublevel not found:', sublevelId);
+        return;
+      }
+
       const mockServerResponse = {
         id: Date.now().toString(),
         text: 'Новый блок',
         x: Math.round(x / 50) * 50,
-        y: Math.round(y / 50) * 50,
-        level: Math.round(y / 150),
-        layer: 1
+        y: sublevel.y, // Используем Y координату подуровня
+        level: sublevel.levelId,
+        layer: Math.round(x / 250), // Приблизительный расчет слоя
+        sublevelId: sublevelId
       };
       
       setBlocks(prev => [...prev, mockServerResponse]);
-      console.log('Block created:', mockServerResponse);
+      
+      // Обновляем подуровень
+      setSublevels(prev => prev.map(sl => 
+        sl.id === sublevelId 
+          ? { ...sl, blockIds: [...sl.blockIds, mockServerResponse.id] }
+          : sl
+      ));
+      
+      console.log('Block created on sublevel:', mockServerResponse);
       
     } catch (error) {
-      console.error('Ошибка при создании блока:', error);
+      console.error('Ошибка при создании блока на подуровне:', error);
+    }
+  };
+
+  // Создание нового блока (оригинальный метод для клика по canvas)
+  const handleCreateBlock = async (x: number, y: number) => {
+    if (currentMode !== EditMode.CREATE_BLOCKS) return;
+
+    // Находим ближайший подуровень
+    const nearestSublevel = sublevels.reduce((nearest, sublevel) => {
+      const distance = Math.abs(sublevel.y - y);
+      const nearestDistance = Math.abs(nearest.y - y);
+      return distance < nearestDistance ? sublevel : nearest;
+    }, sublevels[0]);
+
+    if (nearestSublevel) {
+      handleCreateBlockOnSublevel(x, nearestSublevel.y, nearestSublevel.id);
+    } else {
+      // Если подуровней нет, создаем обычным способом
+      try {
+        console.log(`Creating block at (${x}, ${y})`);
+        
+        const mockServerResponse = {
+          id: Date.now().toString(),
+          text: 'Новый блок',
+          x: Math.round(x / 50) * 50,
+          y: Math.round(y / 50) * 50,
+          level: Math.round(y / 150),
+          layer: 1,
+          sublevelId: undefined
+        };
+        
+        setBlocks(prev => [...prev, mockServerResponse]);
+        console.log('Block created:', mockServerResponse);
+        
+      } catch (error) {
+        console.error('Ошибка при создании блока:', error);
+      }
     }
   };
 
@@ -312,6 +496,12 @@ export default function Knowledge_map() {
         link.fromId !== blockId && link.toId !== blockId
       ));
       setSelectedBlocks(prev => prev.filter(id => id !== blockId));
+      
+      // Обновляем подуровни
+      setSublevels(prev => prev.map(sl => ({
+        ...sl,
+        blockIds: sl.blockIds.filter(id => id !== blockId)
+      })));
       
       console.log('Block deleted:', blockId);
       
@@ -390,6 +580,25 @@ export default function Knowledge_map() {
           onCanvasClick={handleCreateBlock}
           blocks={blocks}
         >
+          {/* Рендерим уровни (на заднем плане) */}
+          {levels.map(level => (
+            <Level
+              key={`level-${level.id}`}
+              levelData={level}
+              onLevelHover={handleLevelHover}
+            />
+          ))}
+
+          {/* Рендерим подуровни (поверх уровней) */}
+          {sublevels.map(sublevel => (
+            <Sublevel
+              key={`sublevel-${sublevel.id}`}
+              sublevelData={sublevel}
+              onSublevelHover={handleSublevelHover}
+              onSublevelClick={handleSublevelClick}
+            />
+          ))}
+          
           {/* Рендерим связи */}
           {links.map(link => {
             const fromBlock = blocksMap.get(link.fromId);
@@ -409,7 +618,7 @@ export default function Knowledge_map() {
             );
           })}
           
-          {/* Рендерим блоки */}
+          {/* Рендерим блоки (на переднем плане) */}
           {blocks.map(block => (
             <Block 
               key={block.id}
