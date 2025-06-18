@@ -6,7 +6,6 @@
 
 .interface {
     pointer-events: none;
-
     padding: 10px;
     display: grid;
     grid-template-columns: 200px 1fr 200px;
@@ -17,7 +16,7 @@
         'left center right'
         'info bot minimap';
     
-    @apply w-full h-full absolute;
+    @apply w-full h-full fixed top-0 left-0;
 }
 
 .interface > * {
@@ -41,7 +40,6 @@
 
 .user {
     grid-area: user;
-
 }
 
 .left {
@@ -62,12 +60,10 @@
 
 .info {
     grid-area: info;
-
 }
 
 .bot {
     grid-area: bot;
-
 }
 
 .minimap {
