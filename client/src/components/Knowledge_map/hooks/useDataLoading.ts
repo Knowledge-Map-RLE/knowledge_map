@@ -43,8 +43,9 @@ const convertApiLinkToLinkData = (apiLink: api.Link): LinkData => {
   
   return {
     id: apiLink.id,
-    fromId: apiLink.source_id,
-    toId: apiLink.target_id
+    source_id: apiLink.source_id,
+    target_id: apiLink.target_id,
+    metadata: apiLink.metadata
   };
 };
 

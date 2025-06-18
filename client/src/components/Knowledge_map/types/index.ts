@@ -10,8 +10,9 @@ export interface BlockData {
 
 export interface LinkData {
   id: string;
-  fromId: string;
-  toId: string;
+  source_id: string;
+  target_id: string;
+  metadata?: Record<string, any>;
 }
 
 export interface LevelData {

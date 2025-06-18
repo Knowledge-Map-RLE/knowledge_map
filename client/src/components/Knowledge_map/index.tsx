@@ -255,18 +255,6 @@ export default function Knowledge_map() {
                   ))}
                 </container>
 
-                {/* Контейнер для блоков */}
-                <container>
-                  {blocks.map((block) => (
-                    <Block
-                      key={block.id}
-                      blockData={block}
-                      isSelected={selectedBlocks.includes(block.id)}
-                      onClick={() => handleBlockClick(block.id)}
-                    />
-                  ))}
-                </container>
-
                 {/* Контейнер для связей */}
                 <container>
                   {links.map((link) => (
@@ -276,6 +264,18 @@ export default function Knowledge_map() {
                       blocks={blocks}
                       isSelected={selectedLinks.includes(link.id)}
                       onClick={() => handleLinkClick(link.id)}
+                    />
+                  ))}
+                </container>
+
+                {/* Контейнер для блоков */}
+                <container>
+                  {blocks.map((block) => (
+                    <Block
+                      key={block.id}
+                      blockData={block}
+                      isSelected={selectedBlocks.includes(block.id)}
+                      onClick={() => handleBlockClick(block.id)}
                     />
                   ))}
                 </container>
