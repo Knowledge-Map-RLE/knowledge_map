@@ -1,17 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Container, Graphics, Point, FederatedPointerEvent } from 'pixi.js';
 import { extend, useApplication, useTick } from '@pixi/react';
-import type { BlockData } from './index';
+import type { BlockData } from './types';
+import type { ReactNode } from 'react';
 
 extend({ Container, Graphics, Point });
 
 interface ViewportProps {
-  children: React.ReactNode;
+  children: ReactNode;
   onCanvasClick?: (x: number, y: number) => void;
   blocks?: BlockData[];
 }
 
-export function Viewport({ children, onCanvasClick, blocks }: ViewportProps) {
+export function Viewport({ children, onCanvasClick }: ViewportProps) {
   const viewRef = useRef<Container>(null);
   const gridRef = useRef<Graphics>(null);
   const { app } = useApplication();
@@ -273,6 +274,8 @@ export function Viewport({ children, onCanvasClick, blocks }: ViewportProps) {
       <pixiContainer 
         ref={viewRef}
         interactive={false}
+        eventMode="static"
+        onclick={handleCanvasClick}
       >
         {children}
       </pixiContainer>

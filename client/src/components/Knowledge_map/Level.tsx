@@ -1,74 +1,41 @@
-import { useState } from 'react';
 import { Graphics } from 'pixi.js';
 import { extend } from '@pixi/react';
-import type { ReactNode } from 'react';
+import { useCallback } from 'react';
 
 extend({ Graphics });
 
 export interface LevelData {
   id: number;
-  sublevelIds: number[];
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
+  sublevel_ids: number[];
+  min_x: number;
+  max_x: number;
+  min_y: number;
+  max_y: number;
   color: number;
 }
 
 interface LevelProps {
   levelData: LevelData;
-  onLevelHover?: (levelId: number, isHovered: boolean) => void;
+  onLevelHover?: (level: LevelData | null) => void;
 }
 
-const LEVEL_ALPHA = 0.15;
-const LEVEL_ALPHA_HOVER = 0.25;
-const LEVEL_BORDER_WIDTH = 2;
-const LEVEL_BORDER_COLOR = 0x1e40af; // navy
-const LEVEL_MARGIN = 20; // отступ уровня в пикселях
+export function Level({ levelData, onLevelHover }: LevelProps) {
+  const { min_x, max_x, min_y, max_y, color } = levelData;
 
-export function Level({ levelData, onLevelHover }: LevelProps): ReactNode {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handlePointerEnter = () => {
-    setIsHovered(true);
-    onLevelHover?.(levelData.id, true);
-  };
-
-  const handlePointerLeave = () => {
-    setIsHovered(false);
-    onLevelHover?.(levelData.id, false);
-  };
-
-  const width = levelData.maxX - levelData.minX + 2 * LEVEL_MARGIN;
-  const height = levelData.maxY - levelData.minY + 160 + 2 * LEVEL_MARGIN; // 160px высота дорожки + отступы
-  const centerX = (levelData.minX + levelData.maxX) / 2;
-  const centerY = (levelData.minY + levelData.maxY) / 2;
+  const draw = useCallback((g: Graphics) => {
+    g.clear();
+    g.beginFill(color, 0.2);
+    g.lineStyle(2, color, 0.5);
+    g.drawRect(min_x, min_y, max_x - min_x, max_y - min_y);
+    g.endFill();
+  }, [min_x, max_x, min_y, max_y, color]);
 
   return (
-    <pixiGraphics
-      x={centerX}
-      y={centerY}
-      interactive={true}
-      cursor="pointer"
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      draw={(g: Graphics) => {
-        g.clear()
-          .rect(
-            -width / 2, 
-            -height / 2, 
-            width, 
-            height
-          )
-          .fill({
-            color: levelData.color,
-            alpha: isHovered ? LEVEL_ALPHA_HOVER : LEVEL_ALPHA
-          })
-          .stroke({ 
-            color: LEVEL_BORDER_COLOR, 
-            width: LEVEL_BORDER_WIDTH
-          });
-      }}
+    <graphics
+      draw={draw}
+      eventMode="static"
+      onMouseEnter={() => onLevelHover?.(levelData)}
+      onMouseLeave={() => onLevelHover?.(null)}
     />
   );
 } 

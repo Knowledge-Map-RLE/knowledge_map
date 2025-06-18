@@ -10,6 +10,7 @@
   border: 1px solid rgba(229, 231, 235, 0.8);
   z-index: 1000;
   min-width: 200px;
+  font-family: 'PT Sans', sans-serif;
 }
 
 .modeText {
@@ -19,6 +20,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 4px;
+  color: #1a1a1a;
 }
 
 .modeIcon {
@@ -30,6 +32,23 @@
 
 .hint {
   font-size: 12px;
-  color: #9ca3af;
+  color: #666666;
   font-style: italic;
+  line-height: 1.4;
+}
+
+.modeIndicator[data-mode="SELECT"] .modeIcon {
+  background-color: #3b82f6;
+}
+
+.modeIndicator[data-mode="CREATE_BLOCKS"] .modeIcon {
+  background-color: #10b981;
+}
+
+.modeIndicator[data-mode="CREATE_LINKS"] .modeIcon {
+  background-color: #f59e0b;
+}
+
+.modeIndicator[data-mode="DELETE"] .modeIcon {
+  background-color: #ef4444;
 } 

@@ -4,13 +4,11 @@ import styles from './ModeIndicator.module.css';
 interface ModeIndicatorProps {
   currentMode: EditMode;
   linkCreationStep?: 'waiting' | 'first_selected';
-  firstBlockForLink?: string | null;
 }
 
 export default function ModeIndicator({ 
   currentMode, 
-  linkCreationStep, 
-  firstBlockForLink 
+  linkCreationStep 
 }: ModeIndicatorProps) {
   const getModeText = () => {
     switch (currentMode) {

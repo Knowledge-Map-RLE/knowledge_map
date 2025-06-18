@@ -4,7 +4,7 @@ import os
 
 class Settings(BaseSettings):
     # Neo4j настройки
-    neo4j_uri: str = "bolt://neo4j:7687"  # Используем имя сервиса Docker
+    neo4j_uri: str = "bolt://localhost:7687"  # По умолчанию localhost, в Docker override через env
     neo4j_user: str = "neo4j"
     neo4j_password: str = "password"
     
@@ -24,3 +24,22 @@ class Settings(BaseSettings):
         return f"bolt://{self.neo4j_user}:{self.neo4j_password}@{clean_uri}"
         
 settings = Settings()
+
+class Config:
+    # Neo4j connection settings
+    NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+    NEO4J_USERNAME = os.getenv("NEO4J_USERNAME", "neo4j")
+    NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")  # Установите ваш пароль
+    
+    # Layout service settings  
+    LAYOUT_SERVICE_HOST = os.getenv("LAYOUT_SERVICE_HOST", "localhost")
+    LAYOUT_SERVICE_PORT = int(os.getenv("LAYOUT_SERVICE_PORT", "50051"))
+    
+    # API settings
+    API_HOST = os.getenv("API_HOST", "0.0.0.0") 
+    API_PORT = int(os.getenv("API_PORT", "8000"))
+    
+    @classmethod
+    def get_neo4j_url(cls):
+        """Получить полный URL для подключения к Neo4j"""
+        return f"{cls.NEO4J_URI}"

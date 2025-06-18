@@ -139,13 +139,16 @@ def create_test_blocks(user: User, count: int = 100) -> List[Block]:
     return blocks
 
 def create_test_links(blocks: List[Block], user: User, count: int = 100) -> List[LinkMetadata]:
-    """Создает тестовые связи между блоками"""
+    """Создает тестовые связи между блоками, обеспечивая строгую ацикличность графа"""
     links = []
     
     print(f"Создаю {count} тестовых связей...")
     
-    # Сортируем блоки по слоям для создания DAG
+    # Сортируем блоки по слоям и уровням для создания DAG
     sorted_blocks = sorted(blocks, key=lambda b: (b.layer, b.level))
+    
+    # Создаем словарь для отслеживания исходящих связей каждого блока
+    outgoing_links = {getattr(block, 'element_id'): [] for block in sorted_blocks}
     
     attempts = 0
     max_attempts = count * 5  # Увеличиваем количество попыток
@@ -153,42 +156,45 @@ def create_test_links(blocks: List[Block], user: User, count: int = 100) -> List
     while len(links) < count and attempts < max_attempts:
         attempts += 1
         
-        # Выбираем блоки так, чтобы from_block был в меньшем слое чем to_block
+        # Выбираем блоки так, чтобы from_block был в меньшем или том же слое что и to_block
         from_idx = random.randint(0, len(sorted_blocks) - 2)
         to_idx = random.randint(from_idx + 1, len(sorted_blocks) - 1)
         
         from_block = sorted_blocks[from_idx]
         to_block = sorted_blocks[to_idx]
         
-        # Дополнительная проверка слоев для избежания циклов
-        if from_block.layer >= to_block.layer:
+        # Проверяем условия ацикличности:
+        # 1. Блок не может ссылаться на себя
+        if from_block == to_block:
             continue
             
-        # Проверяем что связь еще не существует
-        try:
-            existing_link = LinkMetadata.nodes.filter(
-                source_id=getattr(from_block, 'element_id'),
-                target_id=getattr(to_block, 'element_id')
-            ).first()
-        except LinkMetadata.DoesNotExist:
-            existing_link = None
-        
-        if existing_link:
+        # 2. Блок из большего слоя не может ссылаться на блок из меньшего слоя
+        if from_block.layer > to_block.layer:
             continue
-        
-        try:
-            # Создаем связь напрямую без проверки ацикличности (мы уже обеспечили DAG)
-            # from_block.link_to(to_block, user)
             
+        # 3. В одном слое блок с большим уровнем не может ссылаться на блок с меньшим уровнем
+        if from_block.layer == to_block.layer and from_block.level > to_block.level:
+            continue
+            
+        # 4. Проверяем что связь еще не существует
+        from_id = getattr(from_block, 'element_id')
+        to_id = getattr(to_block, 'element_id')
+        if to_id in outgoing_links[from_id]:
+            continue
+            
+        try:
             # Создаем прямую связь
             from_block.target.connect(to_block)
             
             # Создаем метаданные
             link_metadata = LinkMetadata(
-                source_id=getattr(from_block, 'element_id'),
-                target_id=getattr(to_block, 'element_id')
+                source_id=from_id,
+                target_id=to_id
             ).save()
             link_metadata.created_by.connect(user)
+            
+            # Обновляем отслеживание связей
+            outgoing_links[from_id].append(to_id)
             
             links.append(link_metadata)
             
