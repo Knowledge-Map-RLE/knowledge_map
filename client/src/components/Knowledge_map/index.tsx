@@ -233,12 +233,15 @@ export default function Knowledge_map() {
             <Viewport>
               <container>
                 {/* Контейнер для уровней */}
-                <container>
+                <container sortableChildren={true}>
                   {levels.map((level) => (
                     <Level
                       key={level.id}
                       levelData={level}
+                      sublevels={sublevels}
                       onLevelHover={handleLevelHover}
+                      onSublevelHover={handleSublevelHover}
+                      onSublevelClick={handleSublevelClick}
                     />
                   ))}
                 </container>
@@ -256,7 +259,7 @@ export default function Knowledge_map() {
                 </container>
 
                 {/* Контейнер для связей */}
-                <container>
+                <container zIndex={3}>
                   {links.map((link) => (
                     <Link
                       key={link.id}

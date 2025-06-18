@@ -6,6 +6,7 @@ export interface BlockData {
   level?: number;
   layer: number;
   sublevel_id?: number;
+  height: number;
 }
 
 export interface LinkData {

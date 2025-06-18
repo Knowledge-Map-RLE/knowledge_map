@@ -24,33 +24,28 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
     const fromCenter = { x: fromBlock.x, y: fromBlock.y };
     const toCenter = { x: toBlock.x, y: toBlock.y };
 
-    // Вычисляем угол между блоками
-    const angle = Math.atan2(toCenter.y - fromCenter.y, toCenter.x - fromCenter.x);
-
-    // Находим точки на границах блоков
+    // Определяем точки соединения на краях блоков
     const fromPoint = {
-      x: fromCenter.x + Math.cos(angle) * (BLOCK_WIDTH / 2),
-      y: fromCenter.y + Math.sin(angle) * (BLOCK_HEIGHT / 2)
+      x: fromCenter.x + BLOCK_WIDTH / 2, // Правый край исходного блока
+      y: fromCenter.y // Центр по вертикали
     };
 
     const toPoint = {
-      x: toCenter.x - Math.cos(angle) * (BLOCK_WIDTH / 2),
-      y: toCenter.y - Math.sin(angle) * (BLOCK_HEIGHT / 2)
+      x: toCenter.x - BLOCK_WIDTH / 2, // Левый край целевого блока
+      y: toCenter.y // Центр по вертикали
     };
 
     // Цвета для линий и стрелок
     const linkColor = isSelected ? 0xff0000 : 0x8a2be2; // BlueViolet цвет для неактивных линий
     const linkAlpha = 1.0; // Полная непрозрачность
 
-    // Очищаем предыдущее содержимое
-    g.clear();
-
     // Рисуем линию
+    g.clear();
     g.lineStyle(6, linkColor, linkAlpha);
     g.moveTo(fromPoint.x, fromPoint.y);
     g.lineTo(toPoint.x, toPoint.y);
     g.endFill();
-    
+
     // Рисуем стрелку
     const arrowLength = 20;
     const arrowAngle = Math.PI / 6; // 30 градусов

@@ -1,6 +1,9 @@
 import { Graphics } from 'pixi.js';
 import { extend } from '@pixi/react';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { Sublevel } from './Sublevel';
+import type { SublevelData } from './Sublevel';
+import { LEVEL_PADDING } from './constants';
 
 extend({ Graphics });
 
@@ -16,26 +19,59 @@ export interface LevelData {
 
 interface LevelProps {
   levelData: LevelData;
+  sublevels: SublevelData[];
   onLevelHover?: (level: LevelData | null) => void;
+  onSublevelHover?: (sublevel: SublevelData | null) => void;
+  onSublevelClick?: (sublevelId: number, x: number, y: number) => void;
 }
 
-export function Level({ levelData, onLevelHover }: LevelProps) {
-  const { min_x, max_x, min_y, max_y, color } = levelData;
+export function Level({ levelData, sublevels, onLevelHover, onSublevelHover, onSublevelClick }: LevelProps) {
+  const { min_x, max_x, min_y, max_y, color, sublevel_ids } = levelData;
+  const [isHovered, setIsHovered] = useState(false);
 
   const draw = useCallback((g: Graphics) => {
     g.clear();
-    g.beginFill(color, 0.2);
-    g.lineStyle(2, color, 0.5);
+    g.beginFill(color, isHovered ? 0.6 : 0.4);
+    g.lineStyle(2, color, isHovered ? 0.8 : 0.6);
     g.drawRect(min_x, min_y, max_x - min_x, max_y - min_y);
     g.endFill();
-  }, [min_x, max_x, min_y, max_y, color]);
+  }, [min_x, max_x, min_y, max_y, color, isHovered]);
+
+  const levelSublevels = sublevels.filter(sublevel => sublevel_ids.includes(sublevel.id));
+
+  const adjustedSublevels = levelSublevels.map(sublevel => ({
+    ...sublevel,
+    min_x: sublevel.min_x + LEVEL_PADDING,
+    max_x: sublevel.max_x - LEVEL_PADDING,
+    min_y: sublevel.min_y + LEVEL_PADDING,
+    max_y: sublevel.max_y - LEVEL_PADDING
+  }));
 
   return (
-    <graphics
-      draw={draw}
-      eventMode="static"
-      onMouseEnter={() => onLevelHover?.(levelData)}
-      onMouseLeave={() => onLevelHover?.(null)}
-    />
+    <container sortableChildren={true}>
+      <graphics
+        draw={draw}
+        eventMode="static"
+        onMouseEnter={() => {
+          setIsHovered(true);
+          onLevelHover?.(levelData);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          onLevelHover?.(null);
+        }}
+        zIndex={1}
+      />
+      <container zIndex={2}>
+        {adjustedSublevels.map((sublevel) => (
+          <Sublevel
+            key={sublevel.id}
+            sublevelData={sublevel}
+            onSublevelHover={onSublevelHover}
+            onSublevelClick={onSublevelClick}
+          />
+        ))}
+      </container>
+    </container>
   );
 } 

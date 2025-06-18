@@ -33,7 +33,10 @@ export function Block({ blockData, isSelected, onClick }: BlockProps) {
           fontSize: 14,
           fill: '#000000',
           wordWrap: true,
-          wordWrapWidth: BLOCK_WIDTH - 10,
+          wordWrapWidth: BLOCK_WIDTH - 20, // Увеличиваем отступы по бокам
+          breakWords: true,
+          align: 'center',
+          lineHeight: 16, // Устанавливаем высоту строки
         }}
       />
     </pixiContainer>

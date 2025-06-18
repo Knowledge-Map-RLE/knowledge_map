@@ -1,6 +1,9 @@
 import { Graphics } from 'pixi.js';
 import { extend } from '@pixi/react';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { Block } from './Block';
+import type { BlockData } from './types';
+import { SUBLEVEL_PADDING } from './constants';
 
 extend({ Graphics });
 
@@ -17,28 +20,68 @@ export interface SublevelData {
 
 interface SublevelProps {
   sublevelData: SublevelData;
+  blocks?: BlockData[];
   onSublevelHover?: (sublevel: SublevelData | null) => void;
   onSublevelClick?: (sublevelId: number, x: number, y: number) => void;
+  onBlockClick?: (blockId: string) => void;
+  onBlockHover?: (block: BlockData | null) => void;
+  selectedBlocks?: string[];
 }
 
-export function Sublevel({ sublevelData, onSublevelHover, onSublevelClick }: SublevelProps) {
-  const { min_x, max_x, min_y, max_y, color } = sublevelData;
+export function Sublevel({
+  sublevelData,
+  blocks = [],
+  onSublevelHover,
+  onSublevelClick,
+  onBlockClick,
+  onBlockHover,
+  selectedBlocks = []
+}: SublevelProps) {
+  const { min_x, max_x, min_y, max_y, color, block_ids } = sublevelData;
+  const [isHovered, setIsHovered] = useState(false);
 
   const draw = useCallback((g: Graphics) => {
     g.clear();
-    g.beginFill(color, 0.2);
-    g.lineStyle(2, color, 0.5);
+    g.beginFill(color, isHovered ? 0.6 : 0.4);
+    g.lineStyle(2, color, isHovered ? 0.8 : 0.6);
     g.drawRect(min_x, min_y, max_x - min_x, max_y - min_y);
     g.endFill();
-  }, [min_x, max_x, min_y, max_y, color]);
+  }, [min_x, max_x, min_y, max_y, color, isHovered]);
+
+  const sublevelBlocks = blocks.filter(block => block_ids.includes(block.id));
+
+  const adjustedBlocks = sublevelBlocks.map(block => ({
+    ...block,
+    x: block.x + SUBLEVEL_PADDING,
+    y: min_y + (max_y - min_y) / 2
+  }));
 
   return (
-    <pixiGraphics
-      draw={draw}
-      eventMode="static"
-      onMouseEnter={() => onSublevelHover?.(sublevelData)}
-      onMouseLeave={() => onSublevelHover?.(null)}
-      onMouseDown={() => onSublevelClick?.(sublevelData.id, (min_x + max_x) / 2, min_y)}
-    />
+    <container sortableChildren={true}>
+      <graphics
+        draw={draw}
+        eventMode="static"
+        onMouseEnter={() => {
+          setIsHovered(true);
+          onSublevelHover?.(sublevelData);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          onSublevelHover?.(null);
+        }}
+        onMouseDown={() => onSublevelClick?.(sublevelData.id, (min_x + max_x) / 2, min_y)}
+        zIndex={1}
+      />
+      <container zIndex={2}>
+        {adjustedBlocks.map((block) => (
+          <Block
+            key={block.id}
+            blockData={block}
+            isSelected={selectedBlocks.includes(block.id)}
+            onClick={() => onBlockClick?.(block.id)}
+          />
+        ))}
+      </container>
+    </container>
   );
 } 

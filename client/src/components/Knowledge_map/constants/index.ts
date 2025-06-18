@@ -2,6 +2,10 @@
 export const BLOCK_WIDTH = 100;
 export const BLOCK_HEIGHT = 50;
 
+// Отступы
+export const LEVEL_PADDING = 40; // Внутренний отступ уровня
+export const SUBLEVEL_PADDING = 30; // Внутренний отступ подуровня
+
 // Расстояния между элементами
 export const SUBLEVEL_SPACING = 200; // Расстояние между подуровнями в пикселях
 export const LAYER_SPACING = 250; // Расстояние между слоями в пикселях
