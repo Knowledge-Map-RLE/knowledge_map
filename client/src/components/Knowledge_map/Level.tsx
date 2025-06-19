@@ -2,7 +2,7 @@ import { Graphics } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useCallback, useState } from 'react';
 import { Sublevel } from './Sublevel';
-import type { SublevelData } from './Sublevel';
+import type { BlockData, SublevelData } from './types';
 import { LEVEL_PADDING } from './constants';
 
 extend({ Graphics });
@@ -20,12 +20,26 @@ export interface LevelData {
 interface LevelProps {
   levelData: LevelData;
   sublevels: SublevelData[];
+  blocks: BlockData[];
   onLevelHover?: (level: LevelData | null) => void;
   onSublevelHover?: (sublevel: SublevelData | null) => void;
   onSublevelClick?: (sublevelId: number, x: number, y: number) => void;
+  onBlockClick?: (blockId: string) => void;
+  onBlockHover?: (block: BlockData | null) => void;
+  selectedBlocks?: string[];
 }
 
-export function Level({ levelData, sublevels, onLevelHover, onSublevelHover, onSublevelClick }: LevelProps) {
+export function Level({ 
+  levelData, 
+  sublevels, 
+  blocks = [], 
+  onLevelHover, 
+  onSublevelHover, 
+  onSublevelClick,
+  onBlockClick,
+  onBlockHover,
+  selectedBlocks = []
+}: LevelProps) {
   const { min_x, max_x, min_y, max_y, color, sublevel_ids, id } = levelData;
   const [isHovered, setIsHovered] = useState(false);
 
@@ -39,13 +53,28 @@ export function Level({ levelData, sublevels, onLevelHover, onSublevelHover, onS
 
   const levelSublevels = sublevels.filter(sublevel => sublevel_ids.includes(sublevel.id));
 
-  const adjustedSublevels = levelSublevels.map(sublevel => ({
-    ...sublevel,
-    min_x: sublevel.min_x + LEVEL_PADDING,
-    max_x: sublevel.max_x - LEVEL_PADDING,
-    min_y: sublevel.min_y + LEVEL_PADDING,
-    max_y: sublevel.max_y - LEVEL_PADDING
-  }));
+  // Рассчитываем общую высоту всех подуровней
+  const totalSublevelsHeight = levelSublevels.reduce((total, sublevel) => 
+    total + (sublevel.max_y - sublevel.min_y), 0);
+  const totalGapsHeight = (levelSublevels.length - 1) * LEVEL_PADDING;
+  const totalHeight = totalSublevelsHeight + totalGapsHeight;
+
+  // Вычисляем начальную Y-координату для центрирования группы подуровней
+  const levelHeight = max_y - min_y;
+  let currentY = min_y + (levelHeight - totalHeight) / 2;
+
+  const adjustedSublevels = levelSublevels.map(sublevel => {
+    const sublevelHeight = sublevel.max_y - sublevel.min_y;
+    const adjusted = {
+      ...sublevel,
+      min_x: sublevel.min_x + LEVEL_PADDING,
+      max_x: sublevel.max_x - LEVEL_PADDING,
+      min_y: currentY,
+      max_y: currentY + sublevelHeight
+    };
+    currentY += sublevelHeight + LEVEL_PADDING;
+    return adjusted;
+  });
 
   return (
     <container sortableChildren={true}>
@@ -77,8 +106,12 @@ export function Level({ levelData, sublevels, onLevelHover, onSublevelHover, onS
           <Sublevel
             key={sublevel.id}
             sublevelData={sublevel}
+            blocks={blocks}
             onSublevelHover={onSublevelHover}
             onSublevelClick={onSublevelClick}
+            onBlockClick={onBlockClick}
+            onBlockHover={onBlockHover}
+            selectedBlocks={selectedBlocks}
           />
         ))}
       </container>

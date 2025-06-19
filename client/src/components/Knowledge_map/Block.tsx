@@ -50,10 +50,10 @@ export function Block({ blockData, isSelected, onClick }: BlockProps) {
           fontSize: 14,
           fill: '#000000',
           wordWrap: true,
-          wordWrapWidth: BLOCK_WIDTH - 20, // Увеличиваем отступы по бокам
+          wordWrapWidth: BLOCK_WIDTH - 20,
           breakWords: true,
           align: 'center',
-          lineHeight: 16, // Устанавливаем высоту строки
+          lineHeight: 16,
         }}
       />
       <pixiText

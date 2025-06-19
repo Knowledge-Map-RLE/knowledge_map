@@ -18,7 +18,6 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
   const toBlock = blocks.find(block => block.id === linkData.target_id);
 
   console.log('Rendering link:', linkData);
-  console.log('Blocks:', blocks);
   console.log('From block:', fromBlock);
   console.log('To block:', toBlock);
 
@@ -29,21 +28,25 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
     }
 
     // Находим точки соединения на краях блоков
+    // x координата блока - это его центр
     const fromPoint = {
-      x: fromBlock.x + BLOCK_WIDTH / 2, // Правая сторона исходного блока
+      x: fromBlock.x + BLOCK_WIDTH/2, // Правая сторона исходного блока
       y: fromBlock.y // Центр по вертикали
     };
 
     const toPoint = {
-      x: toBlock.x - BLOCK_WIDTH / 2, // Левая сторона целевого блока
+      x: toBlock.x - BLOCK_WIDTH/2, // Левая сторона целевого блока
       y: toBlock.y // Центр по вертикали
     };
 
-    console.log('Drawing link from', fromPoint, 'to', toPoint);
+    console.log('Link points:', {
+      from: { ...fromPoint, blockY: fromBlock.y, blockHeight: BLOCK_HEIGHT },
+      to: { ...toPoint, blockY: toBlock.y, blockHeight: BLOCK_HEIGHT }
+    });
 
     // Цвета и параметры
     const lineColor = isSelected ? 0xff0000 : 0x8a2be2; // BlueViolet для неактивных линий
-    const lineWidth = 6;
+    const lineWidth = 5;
 
     g.clear();
 
@@ -53,7 +56,7 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
     g.lineTo(toPoint.x, toPoint.y);
 
     // Рисуем стрелку
-    const arrowLength = 20;
+    const arrowLength = 15;
     const arrowAngle = Math.PI / 6;
 
     const dx = toPoint.x - fromPoint.x;
@@ -72,7 +75,7 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
 
     // Рисуем стрелку
     g.beginFill(lineColor);
-    g.lineStyle(lineWidth, lineColor, 1.0); // Сохраняем стиль линии для контура стрелки
+    g.lineStyle(lineWidth, lineColor, 1.0);
     g.moveTo(toPoint.x, toPoint.y);
     g.lineTo(arrowPoint1.x, arrowPoint1.y);
     g.lineTo(arrowPoint2.x, arrowPoint2.y);

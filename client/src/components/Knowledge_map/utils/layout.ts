@@ -1,5 +1,9 @@
-import { BlockData, LevelData, SublevelData } from '../types';
+import type { BlockData, LevelData, SublevelData } from '../types';
 import { LAYER_SPACING, SUBLEVEL_COLORS, LEVEL_COLORS, LEVEL_PADDING } from '../constants';
+
+// Константы для расчета размеров
+const DEFAULT_BLOCK_HEIGHT = 100;
+const SUBLEVEL_GAP = 80;
 
 // Функция для расчета координат блоков на основе уровней и подуровней
 export const calculateBlockCoordinates = (
@@ -29,56 +33,11 @@ export const calculateBlockCoordinates = (
       ...block,
       x,
       y: (sublevel.min_y + sublevel.max_y) / 2, // Центрируем блок в подуровне
-      level: sublevel.level_id,
-      sublevel_id: sublevel.id,
+      level: sublevel.level,
+      sublevel: sublevel.id,
       layer: block.layer || 0
     } as BlockData;
   });
-};
-
-// Функция для генерации связей на основе слоев блоков
-export const generateLinksFromBlocks = (blocksData: BlockData[]): LinkData[] => {
-  const linksList: LinkData[] = [];
-  
-  // Группируем блоки по слоям
-  const blocksByLayer = blocksData.reduce((acc, block) => {
-    if (!acc[block.layer]) {
-      acc[block.layer] = [];
-    }
-    acc[block.layer].push(block);
-    return acc;
-  }, {} as Record<number, BlockData[]>);
-  
-  // Создаем связи между соседними слоями
-  const layers = Object.keys(blocksByLayer).map(Number).sort((a, b) => a - b);
-  
-  for (let i = 0; i < layers.length - 1; i++) {
-    const currentLayer = layers[i];
-    const nextLayer = layers[i + 1];
-    
-    const currentBlocks = blocksByLayer[currentLayer];
-    const nextBlocks = blocksByLayer[nextLayer];
-    
-    // Простая логика: соединяем каждый блок с одним или несколькими блоками следующего слоя
-    currentBlocks.forEach((currentBlock, idx) => {
-      // Выбираем один или несколько блоков из следующего слоя
-      const targetCount = Math.min(2, nextBlocks.length); // Максимум 2 связи
-      const startIdx = (idx * targetCount) % nextBlocks.length;
-      
-      for (let j = 0; j < targetCount; j++) {
-        const targetIdx = (startIdx + j) % nextBlocks.length;
-        const targetBlock = nextBlocks[targetIdx];
-        
-        linksList.push({
-          id: `link_${currentBlock.id}_${targetBlock.id}`,
-          fromId: currentBlock.id,
-          toId: targetBlock.id
-        });
-      }
-    });
-  }
-  
-  return linksList;
 };
 
 // Функция для генерации моковых данных layout'а
@@ -93,14 +52,10 @@ export const generateMockLayoutData = (blocksData: BlockData[]) => {
     blocksByLayer.get(layer)!.push(block);
   });
 
-  const DEFAULT_BLOCK_HEIGHT = 100; // Высота блока по умолчанию
-  const SUBLEVEL_GAP = 80; // Отступ между подуровнями
-  const LEVEL_TO_SUBLEVEL_GAP = 40; // Отступ между уровнем и его подуровнями
-
-  let currentY = 0;
   const levels: LevelData[] = [];
   const sublevels: SublevelData[] = [];
   let sublevelId = 0;
+  let currentY = 0;
 
   // Обрабатываем каждый слой
   Array.from(blocksByLayer.keys()).sort((a, b) => a - b).forEach(layer => {
@@ -110,55 +65,56 @@ export const generateMockLayoutData = (blocksData: BlockData[]) => {
     const layerSublevels: SublevelData[] = [];
     const blocksPerSublevel = Math.ceil(layerBlocks.length / 3); // Максимум 3 подуровня в уровне
     
-    // Начальная Y-координата для подуровней в текущем уровне
-    let sublevelStartY = currentY + LEVEL_TO_SUBLEVEL_GAP;
+    // Сначала создаем все подуровни, чтобы знать их общую высоту
+    let totalSublevelsHeight = 0;
+    const tempSublevels: SublevelData[] = [];
     
     for (let i = 0; i < layerBlocks.length; i += blocksPerSublevel) {
       const sublevelBlocks = layerBlocks.slice(i, i + blocksPerSublevel);
       const sublevelMinX = Math.min(...sublevelBlocks.map(b => b.x)) - LEVEL_PADDING;
       const sublevelMaxX = Math.max(...sublevelBlocks.map(b => b.x)) + LEVEL_PADDING;
       
-      // Находим максимальную высоту блока в подуровне
-      const maxBlockHeight = Math.max(
-        ...sublevelBlocks.map(b => b.height || DEFAULT_BLOCK_HEIGHT)
-      );
-      
       const sublevel: SublevelData = {
         id: sublevelId++,
         block_ids: sublevelBlocks.map(b => b.id),
         min_x: sublevelMinX,
         max_x: sublevelMaxX,
-        min_y: sublevelStartY,
-        max_y: sublevelStartY + maxBlockHeight,
-        color: SUBLEVEL_COLORS[layerSublevels.length % SUBLEVEL_COLORS.length],
-        level_id: layer
+        min_y: 0, // Временное значение
+        max_y: DEFAULT_BLOCK_HEIGHT, // Временное значение
+        color: SUBLEVEL_COLORS[tempSublevels.length % SUBLEVEL_COLORS.length],
+        level: layer
       };
+      
+      tempSublevels.push(sublevel);
+      totalSublevelsHeight += DEFAULT_BLOCK_HEIGHT;
+    }
+    
+    // Теперь вычисляем начальную Y-координату для центрирования всей группы подуровней
+    const totalGapsHeight = (tempSublevels.length - 1) * SUBLEVEL_GAP;
+    const totalHeight = totalSublevelsHeight + totalGapsHeight;
+    let sublevelStartY = currentY + (DEFAULT_BLOCK_HEIGHT - totalHeight) / 2;
+    
+    // Устанавливаем правильные координаты для каждого подуровня
+    tempSublevels.forEach(sublevel => {
+      sublevel.min_y = sublevelStartY;
+      sublevel.max_y = sublevelStartY + DEFAULT_BLOCK_HEIGHT;
+      sublevelStartY = sublevel.max_y + SUBLEVEL_GAP;
       
       layerSublevels.push(sublevel);
       sublevels.push(sublevel);
-      
-      // Обновляем Y-координату для следующего подуровня
-      sublevelStartY += maxBlockHeight + SUBLEVEL_GAP;
-    }
+    });
 
     // Создаем уровень, учитывая все его подуровни
     const levelMinX = Math.min(...layerSublevels.map(sl => sl.min_x));
     const levelMaxX = Math.max(...layerSublevels.map(sl => sl.max_x));
     
-    // Высота уровня теперь зависит от реальных высот подуровней
-    const totalLevelHeight = 
-      (layerSublevels.length > 0 
-        ? layerSublevels[layerSublevels.length - 1].max_y - layerSublevels[0].min_y 
-        : DEFAULT_BLOCK_HEIGHT) +
-      2 * LEVEL_TO_SUBLEVEL_GAP;
-
     const level: LevelData = {
       id: layer,
       sublevel_ids: layerSublevels.map(sl => sl.id),
       min_x: levelMinX,
       max_x: levelMaxX,
       min_y: currentY,
-      max_y: currentY + totalLevelHeight,
+      max_y: currentY + DEFAULT_BLOCK_HEIGHT,
       color: LEVEL_COLORS[layer % LEVEL_COLORS.length]
     };
     
@@ -172,15 +128,11 @@ export const generateMockLayoutData = (blocksData: BlockData[]) => {
     if (sublevel) {
       return {
         ...block,
-        sublevel_id: sublevel.id,
-        y: (sublevel.min_y + sublevel.max_y) / 2, // Центрируем блок по вертикали в подуровне
-        height: block.height || DEFAULT_BLOCK_HEIGHT // Устанавливаем высоту по умолчанию, если не задана
+        sublevel: sublevel.id,
+        y: (sublevel.min_y + sublevel.max_y) / 2 // Центрируем блок по вертикали в подуровне
       };
     }
-    return {
-      ...block,
-      height: block.height || DEFAULT_BLOCK_HEIGHT
-    };
+    return block;
   });
 
   return {

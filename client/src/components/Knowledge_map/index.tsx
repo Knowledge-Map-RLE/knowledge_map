@@ -251,21 +251,13 @@ export default function Knowledge_map() {
                       key={level.id}
                       levelData={level}
                       sublevels={sublevels}
+                      blocks={blocks}
                       onLevelHover={handleLevelHover}
                       onSublevelHover={handleSublevelHover}
                       onSublevelClick={handleSublevelClick}
-                    />
-                  ))}
-                </container>
-
-                {/* Контейнер для подуровней */}
-                <container>
-                  {sublevels.map((sublevel) => (
-                    <Sublevel
-                      key={sublevel.id}
-                      sublevelData={sublevel}
-                      onSublevelHover={handleSublevelHover}
-                      onSublevelClick={handleSublevelClick}
+                      onBlockClick={(blockId) => handleBlockSelection(blockId)}
+                      onBlockHover={(block) => {/* Обработка наведения на блок */}}
+                      selectedBlocks={selectedBlocks}
                     />
                   ))}
                 </container>
@@ -287,18 +279,6 @@ export default function Knowledge_map() {
                       );
                     });
                   })()}
-                </container>
-
-                {/* Контейнер для блоков */}
-                <container>
-                  {blocks.map((block) => (
-                    <Block
-                      key={block.id}
-                      blockData={block}
-                      isSelected={selectedBlocks.includes(block.id)}
-                      onClick={() => handleBlockClick(block.id)}
-                    />
-                  ))}
                 </container>
               </container>
             </Viewport>

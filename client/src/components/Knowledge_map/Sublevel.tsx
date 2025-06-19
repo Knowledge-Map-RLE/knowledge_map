@@ -1,7 +1,7 @@
 import { Graphics, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useCallback, useState } from 'react';
-import { SUBLEVEL_PADDING } from './constants';
+import { LEVEL_PADDING } from './constants';
 import { Block } from './Block';
 import type { BlockData, SublevelData } from './types';
 
@@ -41,8 +41,8 @@ export function Sublevel({
 
   const adjustedBlocks = sublevelBlocks.map(block => ({
     ...block,
-    x: block.x + SUBLEVEL_PADDING,
-    y: min_y + (max_y - min_y) / 2
+    x: block.x,
+    y: (min_y + max_y) / 2
   }));
 
   return (
@@ -62,7 +62,7 @@ export function Sublevel({
         zIndex={1}
       />
       <pixiText
-        text={`ур: ${level}, пур: ${id}`}
+        text={`Подуровень: ${id}`}
         x={min_x + 10}
         y={min_y + 10}
         style={{
