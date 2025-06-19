@@ -14,80 +14,64 @@ export interface LinkProps {
 }
 
 export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
-  const fromBlock = blocks.find(block => block.id === linkData.source_id);
-  const toBlock = blocks.find(block => block.id === linkData.target_id);
-
-  console.log('Rendering link:', linkData);
-  console.log('From block:', fromBlock);
-  console.log('To block:', toBlock);
+  const source_block = blocks.find(block => block.id === linkData.source_id);
+  const target_block = blocks.find(block => block.id === linkData.target_id);
 
   const draw = useCallback((g: Graphics) => {
-    if (!fromBlock || !toBlock) {
-      console.log('Missing blocks for link:', linkData);
+    if (!source_block || !target_block) {
       return;
     }
 
     // Находим точки соединения на краях блоков
     // x координата блока - это его центр
-    const fromPoint = {
-      x: fromBlock.x + BLOCK_WIDTH/2, // Правая сторона исходного блока
-      y: fromBlock.y // Центр по вертикали
+    const source_point = {
+      x: source_block.x + BLOCK_WIDTH/2, // Правая сторона исходного блока
+      y: source_block.y - BLOCK_HEIGHT // Центр по вертикали
     };
 
-    const toPoint = {
-      x: toBlock.x - BLOCK_WIDTH/2, // Левая сторона целевого блока
-      y: toBlock.y // Центр по вертикали
+    const target_point = {
+      x: target_block.x - BLOCK_WIDTH/2, // Левая сторона целевого блока
+      y: target_block.y - BLOCK_HEIGHT // Центр по вертикали
     };
-
-    console.log('Link points:', {
-      from: { ...fromPoint, blockY: fromBlock.y, blockHeight: BLOCK_HEIGHT },
-      to: { ...toPoint, blockY: toBlock.y, blockHeight: BLOCK_HEIGHT }
-    });
 
     // Цвета и параметры
     const lineColor = isSelected ? 0xff0000 : 0x8a2be2; // BlueViolet для неактивных линий
     const lineWidth = 5;
 
-    g.clear();
-
+    
     // Рисуем основную линию
-    g.lineStyle(lineWidth, lineColor, 1.0);
-    g.moveTo(fromPoint.x, fromPoint.y);
-    g.lineTo(toPoint.x, toPoint.y);
+    g.clear();
+    g.moveTo(source_point.x, source_point.y);
+    g.lineTo(target_point.x, target_point.y);
+    g.stroke({ width: lineWidth, color: lineColor});
 
     // Рисуем стрелку
     const arrowLength = 15;
     const arrowAngle = Math.PI / 6;
 
-    const dx = toPoint.x - fromPoint.x;
-    const dy = toPoint.y - fromPoint.y;
+    const dx = target_point.x - source_point.x;
+    const dy = target_point.y - source_point.y;
     const lineAngle = Math.atan2(dy, dx);
 
     const arrowPoint1 = {
-      x: toPoint.x - arrowLength * Math.cos(lineAngle + arrowAngle),
-      y: toPoint.y - arrowLength * Math.sin(lineAngle + arrowAngle)
+      x: target_point.x - arrowLength * Math.cos(lineAngle + arrowAngle),
+      y: target_point.y - arrowLength * Math.sin(lineAngle + arrowAngle)
     };
 
     const arrowPoint2 = {
-      x: toPoint.x - arrowLength * Math.cos(lineAngle - arrowAngle),
-      y: toPoint.y - arrowLength * Math.sin(lineAngle - arrowAngle)
+      x: target_point.x - arrowLength * Math.cos(lineAngle - arrowAngle),
+      y: target_point.y - arrowLength * Math.sin(lineAngle - arrowAngle)
     };
 
     // Рисуем стрелку
-    g.beginFill(lineColor);
-    g.lineStyle(lineWidth, lineColor, 1.0);
-    g.moveTo(toPoint.x, toPoint.y);
+    g.moveTo(target_point.x, target_point.y);
     g.lineTo(arrowPoint1.x, arrowPoint1.y);
     g.lineTo(arrowPoint2.x, arrowPoint2.y);
     g.closePath();
-    g.endFill();
+    g.fill(lineColor);
+  }, [source_block, target_block, isSelected]);
 
-    console.log('Link drawn with color:', lineColor.toString(16));
-
-  }, [fromBlock, toBlock, isSelected]);
-
-  if (!fromBlock || !toBlock) {
-    console.log('Cannot render link:', linkData, 'Missing blocks');
+  if (!source_block || !target_block) {
     return null;
   }
 

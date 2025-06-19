@@ -1,6 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { EditMode } from '../types';
-import type { LinkCreationState } from '../types';
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { EditMode, type BlockData, type LinkCreationState, type LinkCreationStep } from '../types';
 
 interface UseKeyboardControlsProps {
   setCurrentMode: (mode: EditMode) => void;
@@ -9,13 +8,58 @@ interface UseKeyboardControlsProps {
   linkCreationState: LinkCreationState;
 }
 
-export const useKeyboardControls = ({
+interface UseKeyboardControlsResult {
+  currentMode: EditMode;
+  isQPressed: boolean;
+}
+
+export function useKeyboardControls(): UseKeyboardControlsResult {
+  const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
+  const [isQPressed, setIsQPressed] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'q' || event.key === 'Q') {
+        setIsQPressed(true);
+        setCurrentMode(EditMode.CREATE_BLOCKS);
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'q' || event.key === 'Q') {
+        setIsQPressed(false);
+        setCurrentMode(EditMode.SELECT);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  return {
+    currentMode,
+    isQPressed
+  };
+}
+
+export const useKeyboardControlsWithProps = ({
   setCurrentMode,
   setLinkCreationState,
   currentMode,
   linkCreationState
 }: UseKeyboardControlsProps) => {
   const pressedKeys = useRef<Set<string>>(new Set());
+
+  // Оборачиваем setCurrentMode в useCallback для логирования
+  const setModeWithLogging = useCallback((mode: EditMode) => {
+    console.log('useKeyboardControls setting mode:', mode);
+    setCurrentMode(mode);
+  }, [setCurrentMode]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -30,7 +74,7 @@ export const useKeyboardControls = ({
 
       // Escape всегда возвращает в режим SELECT и сбрасывает создание связей
       if (e.code === 'Escape') {
-        setCurrentMode(EditMode.SELECT);
+        setModeWithLogging(EditMode.SELECT);
         setLinkCreationState({ step: 'waiting' });
         return;
       }
@@ -39,17 +83,18 @@ export const useKeyboardControls = ({
       switch (e.code) {
         case 'KeyQ':
           if (currentMode !== EditMode.CREATE_BLOCKS) {
-            setCurrentMode(EditMode.CREATE_BLOCKS);
+            setModeWithLogging(EditMode.CREATE_BLOCKS);
           }
           break;
         case 'KeyW':
           if (currentMode !== EditMode.CREATE_LINKS) {
-            setCurrentMode(EditMode.CREATE_LINKS);
+            setModeWithLogging(EditMode.CREATE_LINKS);
+            setLinkCreationState({ step: 'selecting_source' });
           }
           break;
         case 'KeyE':
           if (currentMode !== EditMode.DELETE) {
-            setCurrentMode(EditMode.DELETE);
+            setModeWithLogging(EditMode.DELETE);
           }
           break;
       }
@@ -65,17 +110,17 @@ export const useKeyboardControls = ({
       switch (e.code) {
         case 'KeyQ':
           if (currentMode === EditMode.CREATE_BLOCKS) {
-            setCurrentMode(EditMode.SELECT);
+            setModeWithLogging(EditMode.SELECT);
           }
           break;
         case 'KeyW':
           if (currentMode === EditMode.CREATE_LINKS && linkCreationState.step === 'waiting') {
-            setCurrentMode(EditMode.SELECT);
+            setModeWithLogging(EditMode.SELECT);
           }
           break;
         case 'KeyE':
           if (currentMode === EditMode.DELETE) {
-            setCurrentMode(EditMode.SELECT);
+            setModeWithLogging(EditMode.SELECT);
           }
           break;
       }
@@ -92,5 +137,5 @@ export const useKeyboardControls = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [currentMode, setCurrentMode, setLinkCreationState, linkCreationState]);
+  }, [currentMode, setModeWithLogging, setLinkCreationState, linkCreationState]);
 }; 

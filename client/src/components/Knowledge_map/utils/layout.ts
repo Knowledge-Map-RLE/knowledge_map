@@ -40,6 +40,23 @@ export const calculateBlockCoordinates = (
   });
 };
 
+// Функция для расчета координат уровней
+export const calculateLevelCoordinates = (
+  blocks: BlockData[],
+  levels: LevelData[]
+): LevelData[] => {
+  return levels.map((level, index) => {
+    const layer = index;
+    const color = LEVEL_COLORS[layer % LEVEL_COLORS.length];
+    return {
+      ...level,
+      min_x: layer * LAYER_SPACING - LEVEL_PADDING,
+      max_x: layer * LAYER_SPACING + LEVEL_PADDING,
+      color: `#${color.toString(16).padStart(6, '0')}`
+    };
+  });
+};
+
 // Функция для генерации моковых данных layout'а
 export const generateMockLayoutData = (blocksData: BlockData[]) => {
   // Группируем блоки по layer

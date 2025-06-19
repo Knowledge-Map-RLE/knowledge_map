@@ -1,9 +1,9 @@
 import { Graphics, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useCallback, useState } from 'react';
-import { LEVEL_PADDING } from './constants';
 import { Block } from './Block';
-import type { BlockData, SublevelData } from './types';
+import type { BlockData, SublevelData, EditMode } from './types';
+import { EditMode as EditModeEnum } from './types';
 
 extend({ Graphics, Text });
 
@@ -15,6 +15,8 @@ interface Props {
   onBlockClick?: (blockId: string) => void;
   onBlockHover?: (block: BlockData | null) => void;
   selectedBlocks?: string[];
+  currentMode?: EditMode;
+  onAddBlock?: (sourceBlock: BlockData, targetLevel: number) => void;
 }
 
 export function Sublevel({
@@ -24,17 +26,18 @@ export function Sublevel({
   onSublevelClick,
   onBlockClick,
   onBlockHover,
-  selectedBlocks = []
+  selectedBlocks = [],
+  currentMode = EditModeEnum.SELECT,
+  onAddBlock = () => {}
 }: Props) {
   const { min_x, max_x, min_y, max_y, color, block_ids, id, level } = sublevelData;
   const [isHovered, setIsHovered] = useState(false);
 
   const draw = useCallback((g: Graphics) => {
     g.clear();
-    g.beginFill(color, isHovered ? 0.6 : 0.4);
-    g.lineStyle(2, color, isHovered ? 0.8 : 0.6);
-    g.drawRect(min_x, min_y, max_x - min_x, max_y - min_y);
-    g.endFill();
+    g.rect(min_x, min_y, max_x - min_x, max_y - min_y);
+    g.stroke({width: 2, color: color, alpha: isHovered ? 0.8 : 0.6});
+    g.fill({color, alpha: isHovered ? 0.6 : 0.4});
   }, [min_x, max_x, min_y, max_y, color, isHovered]);
 
   const sublevelBlocks = blocks.filter(block => block_ids.includes(block.id));
@@ -59,7 +62,6 @@ export function Sublevel({
           onSublevelHover?.(null);
         }}
         onMouseDown={() => onSublevelClick?.(sublevelData.id, (min_x + max_x) / 2, min_y)}
-        zIndex={1}
       />
       <pixiText
         text={`Подуровень: ${id}`}
@@ -70,15 +72,16 @@ export function Sublevel({
           fill: '#' + color.toString(16).padStart(6, '0'),
           fontWeight: 'bold'
         }}
-        zIndex={2}
       />
-      <container zIndex={3}>
+      <container>
         {adjustedBlocks.map((block) => (
           <Block
             key={block.id}
             blockData={block}
             isSelected={selectedBlocks.includes(block.id)}
             onClick={() => onBlockClick?.(block.id)}
+            currentMode={currentMode}
+            onAddBlock={onAddBlock}
           />
         ))}
       </container>

@@ -6,11 +6,12 @@ from schema import schema
 from models import User, Block, Tag, LinkMetadata
 from layout_client import get_layout_client, LayoutOptions, LayoutConfig
 from config import settings
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from pydantic import BaseModel
 import logging
 from neomodel import config as neomodel_config, db
 import uuid
+import json
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -93,7 +94,7 @@ class LayoutRequest(BaseModel):
 
 # Эндпоинты для проверки здоровья
 @app.get("/health")
-async def health_check():
+async def health_check() -> Dict[str, Any]:
     """Проверяет здоровье API"""
     return {"status": "ok", "message": "API is healthy"}
 
@@ -115,7 +116,7 @@ async def check_layout_health():
 
 # Эндпоинт для получения укладки
 @app.post("/layout")
-async def calculate_layout(request: LayoutRequest):
+async def calculate_layout(request: LayoutRequest) -> Dict[str, Any]:
     """Рассчитывает укладку для заданного графа"""
     try:
         client = get_layout_client()
@@ -175,7 +176,7 @@ async def root():
     }
 
 @app.get("/layout/neo4j")
-async def get_layout_from_neo4j(user_id: str | None = None):
+async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
     try:
         logger.info("Starting layout calculation from Neo4j")
         
@@ -287,6 +288,15 @@ async def get_layout_from_neo4j(user_id: str | None = None):
                 )
             )
             logger.info("Layout calculation completed")
+            # Добавляем логирование результата
+            logger.info("Layout result structure:")
+            logger.info(f"Number of blocks: {len(result.get('blocks', []))}")
+            logger.info(f"Number of links: {len(result.get('links', []))}")
+            logger.info(f"Number of levels: {len(result.get('levels', []))}")
+            logger.info(f"Number of sublevels: {len(result.get('sublevels', []))}")
+            if result.get('levels'):
+                logger.info("Sample level data:")
+                logger.info(str(result['levels'][0]))
             return result
         except Exception as e:
             logger.error(f"Error in layout calculation: {str(e)}", exc_info=True)

@@ -1,9 +1,9 @@
-import type { EditMode } from './index';
+import type { EditMode, LinkCreationStep } from './types';
 import styles from './ModeIndicator.module.css';
 
 interface ModeIndicatorProps {
   currentMode: EditMode;
-  linkCreationStep?: 'waiting' | 'first_selected';
+  linkCreationStep?: LinkCreationStep;
 }
 
 export default function ModeIndicator({ 
@@ -17,7 +17,9 @@ export default function ModeIndicator({
       case 'CREATE_BLOCKS':
         return 'Создание блоков (Q)';
       case 'CREATE_LINKS':
-        if (linkCreationStep === 'first_selected') {
+        if (linkCreationStep === 'selecting_source') {
+          return 'Выберите первый блок (W)';
+        } else if (linkCreationStep === 'selecting_target') {
           return 'Выберите второй блок (W)';
         }
         return 'Создание связей (W)';

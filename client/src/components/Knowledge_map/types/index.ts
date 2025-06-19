@@ -12,7 +12,6 @@ export interface LinkData {
   id: string;
   source_id: string;
   target_id: string;
-  metadata?: Record<string, any>;
 }
 
 export interface LevelData {
@@ -22,7 +21,8 @@ export interface LevelData {
   max_x: number;
   min_y: number;
   max_y: number;
-  color: number;
+  color?: number;
+  name?: string;
 }
 
 export interface SublevelData {
@@ -31,7 +31,7 @@ export interface SublevelData {
   max_x: number;
   min_y: number;
   max_y: number;
-  color: number;
+  color: string;
   block_ids: string[];
   level: number;
 }
@@ -45,6 +45,9 @@ export const EditMode = {
 
 export type EditMode = typeof EditMode[keyof typeof EditMode];
 
-export interface LinkCreationState {
-  step: 'waiting' | 'first_selected';
-} 
+export type LinkCreationStep = 'waiting' | 'selecting_source' | 'selecting_target';
+
+export type LinkCreationState = 
+  | { step: 'waiting' }
+  | { step: 'selecting_source' }
+  | { step: 'selecting_target', sourceBlock: BlockData };

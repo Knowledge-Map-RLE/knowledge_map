@@ -194,15 +194,18 @@ class LayoutClient:
                 
                 if blocks_in_level:
                     positions = [result['positions'][block_id] for block_id in blocks_in_level]
+                    min_x = min(x for x, _ in positions) - layout_options['layer_spacing'] / 2
+                    max_x = max(x for x, _ in positions) + layout_options['layer_spacing'] / 2
+                    min_y = min(y for _, y in positions) - layout_options['sublevel_spacing'] / 2
+                    max_y = max(y for _, y in positions) + layout_options['sublevel_spacing'] / 2
+                    
                     response["levels"].append({
                         "id": level_id,
-                        "sublevel_ids": sublevel_ids,
-                        "min_x": min(x for x, _ in positions) - layout_options['layer_spacing'] / 2,
-                        "max_x": max(x for x, _ in positions) + layout_options['layer_spacing'] / 2,
-                        "min_y": min(y for _, y in positions) - layout_options['sublevel_spacing'] / 2,
-                        "max_y": max(y for _, y in positions) + layout_options['sublevel_spacing'] / 2,
-                        "color": self._get_level_color(level_id),
-                        "name": f"Уровень {level_id}"
+                        "min_x": min_x,
+                        "max_x": max_x,
+                        "min_y": min_y,
+                        "max_y": max_y,
+                        "color": self._get_level_color(level_id)
                     })
             
             # Подуровни
@@ -212,15 +215,18 @@ class LayoutClient:
                     level_id = next(level_id for level_id, sublevel_ids in result['levels'].items() 
                                   if sublevel_id in sublevel_ids)
                     
+                    min_y = min(y for _, y in positions) - layout_options['sublevel_spacing'] / 2
+                    max_y = max(y for _, y in positions) + layout_options['sublevel_spacing'] / 2
+                    
                     response["sublevels"].append({
                         "id": sublevel_id,
-                        "y": positions[0][1],
-                        "block_ids": block_ids,
                         "min_x": min(x for x, _ in positions) - layout_options['layer_spacing'] / 2,
                         "max_x": max(x for x, _ in positions) + layout_options['layer_spacing'] / 2,
+                        "min_y": min_y,
+                        "max_y": max_y,
                         "color": self._get_sublevel_color(sublevel_id),
-                        "level_id": level_id,
-                        "height": layout_options['sublevel_spacing'] * 0.8
+                        "block_ids": block_ids,
+                        "level": level_id
                     })
             
             logger.info("Укладка успешна")
@@ -234,33 +240,33 @@ class LayoutClient:
                 "error": error_msg
             }
     
-    def _get_level_color(self, level_id: int) -> int:
-        """Возвращает цвет для уровня в формате RGB int."""
+    def _get_level_color(self, level_id: int) -> str:
+        """Возвращает цвет для уровня в формате hex строки."""
         colors = [
-            0xB0C4DE,  # lightsteelblue
-            0x20B2AA,  # lightseagreen
-            0xFA8072,  # lightsalmon
-            0xFAFAD2,  # lightgoldenrodyellow
-            0xDDA0DD,  # plum
-            0xD3D3D3,  # lightgray
-            0xE0FFFF,  # lightcyan
-            0xE6E6FA,  # lavender
+            "#B0C4DE",  # lightsteelblue
+            "#20B2AA",  # lightseagreen
+            "#FA8072",  # lightsalmon
+            "#FAFAD2",  # lightgoldenrodyellow
+            "#DDA0DD",  # plum
+            "#D3D3D3",  # lightgray
+            "#E0FFFF",  # lightcyan
+            "#E6E6FA",  # lavender
         ]
         return colors[level_id % len(colors)]
     
-    def _get_sublevel_color(self, sublevel_id: int) -> int:
-        """Возвращает цвет для подуровня в формате RGB int."""
+    def _get_sublevel_color(self, sublevel_id: int) -> str:
+        """Возвращает цвет для подуровня в формате hex строки."""
         colors = [
-            0xADD8E6,  # lightblue
-            0x90EE90,  # lightgreen
-            0xF08080,  # lightcoral
-            0xFFFFE0,  # lightyellow
-            0xFFB6C1,  # lightpink
-            0xD3D3D3,  # lightgray
-            0xE0FFFF,  # lightcyan
-            0xE6E6FA,  # lavender
-            0xFFE4E1,  # mistyrose
-            0xF0FFF0,  # honeydew
+            "#ADD8E6",  # lightblue
+            "#90EE90",  # lightgreen
+            "#F08080",  # lightcoral
+            "#FFFFE0",  # lightyellow
+            "#FFB6C1",  # lightpink
+            "#D3D3D3",  # lightgray
+            "#E0FFFF",  # lightcyan
+            "#E6E6FA",  # lavender
+            "#FFE4E1",  # mistyrose
+            "#F0FFF0",  # honeydew
         ]
         return colors[sublevel_id % len(colors)]
     

@@ -1,31 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { Container, Graphics, Text } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
-import { Block } from './Block';
 import { Viewport } from './Viewport';
 import { Link } from './Link';
 import { Level } from './Level';
-import { Sublevel } from './Sublevel';
 import ModeIndicator from './ModeIndicator';
-import { useKeyboardControls } from './hooks/useKeyboardControls';
+import { useKeyboardControlsWithProps } from './hooks/useKeyboardControls';
 import { useDataLoading } from './hooks/useDataLoading';
 import { useSelectionState } from './hooks/useSelectionState';
 import { useActions } from './hooks/useActions';
 import { EditMode } from './types';
-import type { BlockData, LinkData, LevelData, SublevelData, LinkCreationState } from './types';
+import type { LinkCreationState, BlockData } from './types';
+import { BLOCK_WIDTH } from './constants';
 import styles from './Knowledge_map.module.css';
 
 extend({ Container, Graphics, Text });
-
-// Константы для расчета координат
-const SUBLEVEL_SPACING = 200; // Расстояние между подуровнями в пикселях
-const LAYER_SPACING = 250; // Расстояние между слоями в пикселях
-
-// Цвета для уровней (из Python файла)
-const LEVEL_COLORS = [0x4682b4, 0x20b2aa, 0xfa8072, 0xf0e68c, 0xdda0dd, 0xd3d3d3, 0xe0ffff, 0xe6e6fa];
-
-// Цвета для подуровней
-const SUBLEVEL_COLORS = [0xadd8e6, 0x90ee90, 0xf08080, 0xffffe0, 0xffc0cb, 0xd3d3d3, 0xe0ffff, 0xe6e6fa, 0xffe4e1, 0xf0fff0];
 
 export default function Knowledge_map() {
   // Ref для container чтобы установить фокус
@@ -72,11 +61,10 @@ export default function Knowledge_map() {
 
   const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
   const [linkCreationState, setLinkCreationState] = useState<LinkCreationState>({ step: 'waiting' });
-  const [firstBlockForLink, setFirstBlockForLink] = useState<string | null>(null);
   const [pixiReady, setPixiReady] = useState(false);
 
   // Подключаем управление клавиатурой
-  useKeyboardControls({
+  useKeyboardControlsWithProps({
     setCurrentMode,
     setLinkCreationState,
     currentMode,
@@ -104,54 +92,34 @@ export default function Knowledge_map() {
     }
   }, []);
 
-  // Логирование изменения режима
   useEffect(() => {
-    console.log('Current mode changed to:', currentMode);
+    console.log('Knowledge_map currentMode changed:', currentMode);
   }, [currentMode]);
 
-  // Отладочный эффект для отслеживания изменений в links
-  useEffect(() => {
-    console.log('Links array updated:', links);
-  }, [links]);
-
-  // Обработка клика по блоку в зависимости от режима
+  // Обработка клика по блоку
   const handleBlockClick = (blockId: string) => {
-    console.log('Block clicked:', blockId, 'Current mode:', currentMode, 'Link creation step:', linkCreationState.step);
-    
+    const clickedBlock = blocks.find(block => block.id === blockId);
+    if (!clickedBlock) return;
+
     switch (currentMode) {
       case EditMode.SELECT:
         handleBlockSelection(blockId);
         break;
 
       case EditMode.CREATE_LINKS:
-        // Выделяем блок в любом случае
-        handleBlockSelection(blockId);
-        
-        if (linkCreationState.step === 'waiting') {
-          setFirstBlockForLink(blockId);
-          setLinkCreationState({ step: 'first_selected' });
-          console.log('First block selected for link:', blockId);
-        } else if (linkCreationState.step === 'first_selected') {
-          if (firstBlockForLink && firstBlockForLink !== blockId) {
-            console.log('Creating link from', firstBlockForLink, 'to', blockId);
-            handleCreateLink(firstBlockForLink, blockId);
-            setFirstBlockForLink(null);
-            setLinkCreationState({ step: 'waiting' });
-            clearSelection(); // Очищаем выделение после создания связи
-            console.log('Current links after creation:', links);
-          } else {
-            console.log('Cannot create link to the same block');
-          }
+        if (linkCreationState.step === 'selecting_source') {
+          setLinkCreationState({ 
+            step: 'selecting_target',
+            sourceBlock: clickedBlock
+          });
+        } else if (linkCreationState.step === 'selecting_target' && 'sourceBlock' in linkCreationState) {
+          handleCreateLink(linkCreationState.sourceBlock.id, blockId);
+          setLinkCreationState({ step: 'selecting_source' });
         }
         break;
 
       case EditMode.DELETE:
         handleDeleteBlock(blockId);
-        break;
-
-      case EditMode.CREATE_BLOCKS:
-        // В режиме создания блоков клик по существующему блоку ничего не делает
-        console.log('Block click ignored in CREATE_BLOCKS mode');
         break;
     }
   };
@@ -169,15 +137,6 @@ export default function Knowledge_map() {
     }
   };
 
-  // Обработчики наведения на уровни и подуровни
-  const handleLevelHover = (level: LevelData | null) => {
-    // Обработка наведения на уровень
-  };
-
-  const handleSublevelHover = (sublevel: SublevelData | null) => {
-    // Обработка наведения на подуровень
-  };
-
   // Обработка клика по подуровню для создания блока
   const handleSublevelClick = (sublevelId: number, x: number, y: number) => {
     if (currentMode === EditMode.CREATE_BLOCKS) {
@@ -185,13 +144,48 @@ export default function Knowledge_map() {
     }
   };
 
-  // Обработчики событий клавиатуры для div контейнера
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Пустая функция, так как основная логика обрабатывается в useEffect
-  };
+  // Обработка добавления блока через стрелки
+  const handleAddBlock = async (sourceBlock: BlockData, targetLevel: number) => {
+    console.log('handleAddBlock called:', { sourceBlock, targetLevel });
+    
+    // Находим подуровень на целевом уровне
+    const targetSublevel = sublevels.find(
+      sublevel => sublevel.level === targetLevel && 
+      sublevel.min_y <= sourceBlock.y && 
+      sublevel.max_y >= sourceBlock.y
+    );
 
-  const handleKeyUp = (e: React.KeyboardEvent) => {
-    // Пустая функция, так как основная логика обрабатывается в useEffect
+    console.log('Found target sublevel:', targetSublevel);
+    if (!targetSublevel) {
+      console.error('Target sublevel not found');
+      return;
+    }
+
+    // Создаем новый блок
+    const newX = targetLevel < sourceBlock.level ? 
+      sourceBlock.x - BLOCK_WIDTH * 2 : 
+      sourceBlock.x + BLOCK_WIDTH * 2;
+
+    console.log('Creating new block at:', { x: newX, y: sourceBlock.y, sublevelId: targetSublevel.id });
+    const newBlock = await handleCreateBlockOnSublevel(
+      newX,
+      sourceBlock.y,
+      targetSublevel.id
+    );
+
+    console.log('New block created:', newBlock);
+    // Создаем связь между блоками
+    if (newBlock) {
+      if (targetLevel < sourceBlock.level) {
+        // Связь от нового блока к текущему
+        console.log('Creating link from new block to source:', { from: newBlock.id, to: sourceBlock.id });
+        await handleCreateLink(newBlock.id, sourceBlock.id);
+      } else {
+        // Связь от текущего блока к новому
+        console.log('Creating link from source to new block:', { from: sourceBlock.id, to: newBlock.id });
+        await handleCreateLink(sourceBlock.id, newBlock.id);
+      }
+    }
   };
 
   if (!pixiReady) {
@@ -215,8 +209,6 @@ export default function Knowledge_map() {
       ref={containerRef}
       className={styles.container} 
       tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
     >
       {isLoading && (
         <div className={styles.overlay}>
@@ -252,33 +244,26 @@ export default function Knowledge_map() {
                       levelData={level}
                       sublevels={sublevels}
                       blocks={blocks}
-                      onLevelHover={handleLevelHover}
-                      onSublevelHover={handleSublevelHover}
                       onSublevelClick={handleSublevelClick}
-                      onBlockClick={(blockId) => handleBlockSelection(blockId)}
-                      onBlockHover={(block) => {/* Обработка наведения на блок */}}
+                      onBlockClick={handleBlockClick}
                       selectedBlocks={selectedBlocks}
+                      currentMode={currentMode}
+                      onAddBlock={handleAddBlock}
                     />
                   ))}
                 </container>
 
                 {/* Контейнер для связей */}
                 <container zIndex={3}>
-                  {(() => {
-                    console.log('Rendering links container, links:', links);
-                    return links.map((link) => {
-                      console.log('Rendering link:', link);
-                      return (
-                        <Link
-                          key={link.id}
-                          linkData={link}
-                          blocks={blocks}
-                          isSelected={selectedLinks.includes(link.id)}
-                          onClick={() => handleLinkClick(link.id)}
-                        />
-                      );
-                    });
-                  })()}
+                  {links.map((link) => (
+                    <Link
+                      key={link.id}
+                      linkData={link}
+                      blocks={blocks}
+                      isSelected={selectedLinks.includes(link.id)}
+                      onClick={() => handleLinkClick(link.id)}
+                    />
+                  ))}
                 </container>
               </container>
             </Viewport>

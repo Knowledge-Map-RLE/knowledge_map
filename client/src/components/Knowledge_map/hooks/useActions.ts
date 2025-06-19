@@ -21,14 +21,14 @@ export const useActions = ({
   clearSelection
 }: UseActionsProps) => {
   // Создание нового блока на подуровне
-  const handleCreateBlockOnSublevel = useCallback(async (x: number, y: number, sublevelId: number) => {
+  const handleCreateBlockOnSublevel = useCallback(async (x: number, y: number, sublevelId: number): Promise<BlockData | null> => {
     try {
       console.log(`Creating block at (${x}, ${y}) on sublevel ${sublevelId}`);
       
       const sublevel = sublevels.find(sl => sl.id === sublevelId);
       if (!sublevel) {
         console.error('Sublevel not found:', sublevelId);
-        return;
+        return null;
       }
 
       const mockServerResponse: BlockData = {
@@ -53,9 +53,11 @@ export const useActions = ({
       setSublevels(newSublevels);
       
       console.log('Block created on sublevel:', mockServerResponse);
+      return mockServerResponse;
       
     } catch (error) {
       console.error('Ошибка при создании блока на подуровне:', error);
+      return null;
     }
   }, [blocks, sublevels, setBlocks, setSublevels]);
 
@@ -82,17 +84,18 @@ export const useActions = ({
           y: Math.round(y / 50) * 50,
           level: Math.round(y / 150),
           layer: 1,
-          sublevel_id: undefined
+          sublevel: 0 // Устанавливаем дефолтное значение
         };
         
-        setBlocks((prev: BlockData[]) => [...prev, mockServerResponse]);
+        const newBlocks = [...blocks, mockServerResponse];
+        setBlocks(newBlocks);
         console.log('Block created:', mockServerResponse);
         
       } catch (error) {
         console.error('Ошибка при создании блока:', error);
       }
     }
-  }, [sublevels, setBlocks, handleCreateBlockOnSublevel]);
+  }, [sublevels, blocks, setBlocks, handleCreateBlockOnSublevel]);
 
   // Создание связи
   const handleCreateLink = useCallback(async (fromId: string, toId: string) => {

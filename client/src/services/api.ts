@@ -9,39 +9,36 @@ export interface Block {
     content: string;
     x?: number;
     y?: number;
+    level: number;
     layer?: number;
-    level?: number;
-    sublevel_id?: number;
-    metadata: Record<string, string>;
+    sublevel_id: number;
 }
 
 export interface Link {
     id: string;
     source_id: string;
     target_id: string;
-    metadata: Record<string, string>;
 }
 
 export interface Level {
     id: number;
-    sublevel_ids: number[];
     min_x: number;
     max_x: number;
     min_y: number;
     max_y: number;
-    color: number;
-    name: string;
+    color?: number;
+    name?: string;
 }
 
 export interface Sublevel {
     id: number;
-    y: number;
-    block_ids: string[];
     min_x: number;
     max_x: number;
-    color: number;
-    level_id: number;
-    height: number;
+    min_y: number;
+    max_y: number;
+    color?: number;
+    block_ids: string[];
+    level: number;
 }
 
 export interface LayoutStatistics {
@@ -58,12 +55,10 @@ export interface LayoutStatistics {
 }
 
 export interface LayoutResponse {
-    success: boolean;
     blocks: Block[];
+    links: Link[];
     levels: Level[];
     sublevels: Sublevel[];
-    statistics: LayoutStatistics;
-    error?: string;
 }
 
 /**
@@ -123,72 +118,31 @@ export async function checkLayoutHealth(): Promise<boolean> {
 /**
  * Получает укладку графа
  */
-export async function getLayout(blocks: any[] = [], links: any[] = [], options: any = {}) {
-    try {
-        // Используем endpoint /layout/neo4j для получения данных из базы
-        const response = await fetch(`${API_URL}/layout/neo4j`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Проверяем наличие данных
-        if (!data.blocks || data.blocks.length === 0) {
-            return {
-                success: false,
-                error: 'В базе данных нет блоков. Пожалуйста, запустите скрипт заполнения тестовыми данными.',
-                blocks: [],
-                links: [],
-                levels: [],
-                sublevels: []
-            };
-        }
-
-        // Фильтруем невалидные блоки
-        const validBlocks = data.blocks.filter((block: Block) => block && block.id);
-        
-        // Если после фильтрации блоков не осталось, возвращаем ошибку
-        if (validBlocks.length === 0) {
-            return {
-                success: false,
-                error: 'В базе данных нет валидных блоков (все блоки не имеют id).',
-                blocks: [],
-                links: [],
-                levels: [],
-                sublevels: []
-            };
-        }
-
-        // Фильтруем связи, оставляя только те, которые ссылаются на валидные блоки
-        const validBlockIds = new Set(validBlocks.map((block: Block) => block.id));
-        const validLinks = (data.links || []).filter((link: Link) => 
-            link && link.source_id && link.target_id && 
-            validBlockIds.has(link.source_id) && validBlockIds.has(link.target_id)
-        );
-
-        return {
-            success: true,
-            ...data,
-            blocks: validBlocks,
-            links: validLinks
-        };
-
-    } catch (error) {
-        console.error('Error getting layout:', error);
-        return {
-            success: false,
-            error: error instanceof Error ? error.message : 'Неизвестная ошибка',
-            blocks: [],
-            links: [],
-            levels: [],
-            sublevels: []
-        };
+export async function getLayout(): Promise<LayoutResponse> {
+    const response = await fetch(`${API_URL}/layout/neo4j`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json; charset=utf-8',
+        },
+        mode: 'cors',
+        credentials: 'omit'
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch layout');
     }
+    const text = await response.text();
+    console.log('Layout API response:', text);
+    const data = JSON.parse(text);
+    console.log('Layout API parsed data:', data);
+    
+    if (data.sublevels && data.sublevels.length > 0) {
+        console.log('Sample sublevel data:', data.sublevels[0]);
+        console.log('Sublevel fields:', Object.keys(data.sublevels[0]));
+        console.log('All sublevels:', data.sublevels);
+    }
+    
+    if (data.levels && data.levels.length > 0) {
+        console.log('Sample level data:', data.levels[0]);
+    }
+    return data;
 }
