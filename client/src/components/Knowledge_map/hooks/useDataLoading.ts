@@ -92,6 +92,12 @@ export const useDataLoading = (): UseDataLoadingResult => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  // Обертка для setLinks, которая добавляет логирование
+  const wrappedSetLinks = useCallback((newLinks: LinkData[] | ((prev: LinkData[]) => LinkData[])) => {
+    console.log('Setting new links:', newLinks);
+    setLinks(newLinks);
+  }, []);
+
   const loadLayoutData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -195,7 +201,7 @@ export const useDataLoading = (): UseDataLoadingResult => {
     loadError,
     loadLayoutData,
     setBlocks,
-    setLinks,
+    setLinks: wrappedSetLinks,
     setLevels,
     setSublevels
   };

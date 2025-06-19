@@ -6,12 +6,14 @@ interface UseKeyboardControlsProps {
   setCurrentMode: (mode: EditMode) => void;
   setLinkCreationState: (state: LinkCreationState) => void;
   currentMode: EditMode;
+  linkCreationState: LinkCreationState;
 }
 
 export const useKeyboardControls = ({
   setCurrentMode,
   setLinkCreationState,
-  currentMode
+  currentMode,
+  linkCreationState
 }: UseKeyboardControlsProps) => {
   const pressedKeys = useRef<Set<string>>(new Set());
 
@@ -36,16 +38,19 @@ export const useKeyboardControls = ({
       // Логика переключения режимов
       switch (e.code) {
         case 'KeyQ':
-          setCurrentMode(EditMode.CREATE_BLOCKS);
-          setLinkCreationState({ step: 'waiting' });
+          if (currentMode !== EditMode.CREATE_BLOCKS) {
+            setCurrentMode(EditMode.CREATE_BLOCKS);
+          }
           break;
         case 'KeyW':
-          setCurrentMode(EditMode.CREATE_LINKS);
-          setLinkCreationState({ step: 'waiting' });
+          if (currentMode !== EditMode.CREATE_LINKS) {
+            setCurrentMode(EditMode.CREATE_LINKS);
+          }
           break;
         case 'KeyE':
-          setCurrentMode(EditMode.DELETE);
-          setLinkCreationState({ step: 'waiting' });
+          if (currentMode !== EditMode.DELETE) {
+            setCurrentMode(EditMode.DELETE);
+          }
           break;
       }
     };
@@ -56,7 +61,7 @@ export const useKeyboardControls = ({
       
       console.log('KeyUp:', e.code, 'Current mode:', currentMode);
 
-      // Для всех режимов возвращаемся в SELECT при отпускании клавиши
+      // Возвращаемся в SELECT только если отпущена соответствующая клавиша текущего режима
       switch (e.code) {
         case 'KeyQ':
           if (currentMode === EditMode.CREATE_BLOCKS) {
@@ -64,10 +69,8 @@ export const useKeyboardControls = ({
           }
           break;
         case 'KeyW':
-          if (currentMode === EditMode.CREATE_LINKS) {
+          if (currentMode === EditMode.CREATE_LINKS && linkCreationState.step === 'waiting') {
             setCurrentMode(EditMode.SELECT);
-            // Сбрасываем состояние создания связи при выходе из режима
-            setLinkCreationState({ step: 'waiting' });
           }
           break;
         case 'KeyE':
@@ -89,5 +92,5 @@ export const useKeyboardControls = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [currentMode, setCurrentMode, setLinkCreationState]);
+  }, [currentMode, setCurrentMode, setLinkCreationState, linkCreationState]);
 }; 

@@ -26,7 +26,7 @@ interface LevelProps {
 }
 
 export function Level({ levelData, sublevels, onLevelHover, onSublevelHover, onSublevelClick }: LevelProps) {
-  const { min_x, max_x, min_y, max_y, color, sublevel_ids } = levelData;
+  const { min_x, max_x, min_y, max_y, color, sublevel_ids, id } = levelData;
   const [isHovered, setIsHovered] = useState(false);
 
   const draw = useCallback((g: Graphics) => {
@@ -61,6 +61,16 @@ export function Level({ levelData, sublevels, onLevelHover, onSublevelHover, onS
           onLevelHover?.(null);
         }}
         zIndex={1}
+      />
+      <pixiText
+        text={`Уровень: ${id}`}
+        x={min_x + 10}
+        y={min_y + 10}
+        style={{
+          fontSize: 14,
+          fill: color,
+          fontWeight: 'bold'
+        }}
       />
       <container zIndex={2}>
         {adjustedSublevels.map((sublevel) => (

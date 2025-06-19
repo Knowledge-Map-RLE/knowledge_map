@@ -3,6 +3,7 @@ import type { BlockData, LinkData, SublevelData } from '../types';
 
 interface UseActionsProps {
   blocks: BlockData[];
+  links: LinkData[];
   sublevels: SublevelData[];
   setBlocks: (blocks: BlockData[]) => void;
   setLinks: (links: LinkData[]) => void;
@@ -12,6 +13,7 @@ interface UseActionsProps {
 
 export const useActions = ({
   blocks,
+  links,
   sublevels,
   setBlocks,
   setLinks,
@@ -36,17 +38,19 @@ export const useActions = ({
         y: sublevel.min_y,
         level: sublevel.id,
         layer: Math.round(x / 250),
-        sublevel_id: sublevelId
+        sublevel: sublevelId
       };
       
-      setBlocks((prev: BlockData[]) => [...prev, mockServerResponse]);
+      const newBlocks = [...blocks, mockServerResponse];
+      setBlocks(newBlocks);
       
       // Обновляем подуровень
-      setSublevels((prev: SublevelData[]) => prev.map((sl: SublevelData) => 
+      const newSublevels = sublevels.map(sl => 
         sl.id === sublevelId 
           ? { ...sl, block_ids: [...sl.block_ids, mockServerResponse.id] }
           : sl
-      ));
+      );
+      setSublevels(newSublevels);
       
       console.log('Block created on sublevel:', mockServerResponse);
       
@@ -97,48 +101,57 @@ export const useActions = ({
       
       const mockServerResponse: LinkData = {
         id: `link_${Date.now()}`,
-        fromId,
-        toId
+        source_id: fromId,
+        target_id: toId
       };
       
-      setLinks((prev: LinkData[]) => [...prev, mockServerResponse]);
+      console.log('Current links before update:', links);
+      const newLinks = [...links, mockServerResponse];
+      console.log('New links array:', newLinks);
+      setLinks(newLinks);
       console.log('Link created:', mockServerResponse);
       
     } catch (error) {
       console.error('Ошибка при создании связи:', error);
     }
-  }, [setLinks]);
+  }, [links, setLinks]);
 
   // Удаление блока
   const handleDeleteBlock = useCallback(async (blockId: string) => {
     try {
       console.log(`Deleting block ${blockId}`);
       
-      setBlocks((prev: BlockData[]) => prev.filter(block => block.id !== blockId));
-      setLinks((prev: LinkData[]) => prev.filter(link => 
-        link.fromId !== blockId && link.toId !== blockId
-      ));
+      const newBlocks = blocks.filter(block => block.id !== blockId);
+      setBlocks(newBlocks);
+      
+      const newLinks = links.filter((link: LinkData) => 
+        link.source_id !== blockId && link.target_id !== blockId
+      );
+      setLinks(newLinks);
+      
       clearSelection();
       
       // Обновляем подуровни
-      setSublevels((prev: SublevelData[]) => prev.map((sl: SublevelData) => ({
+      const newSublevels = sublevels.map(sl => ({
         ...sl,
         block_ids: sl.block_ids.filter(id => id !== blockId)
-      })));
+      }));
+      setSublevels(newSublevels);
       
       console.log('Block deleted:', blockId);
       
     } catch (error) {
       console.error('Ошибка при удалении блока:', error);
     }
-  }, [setBlocks, setLinks, setSublevels, clearSelection]);
+  }, [blocks, links, sublevels, setBlocks, setLinks, setSublevels, clearSelection]);
 
   // Удаление связи
   const handleDeleteLink = useCallback(async (linkId: string) => {
     try {
       console.log(`Deleting link ${linkId}`);
       
-      setLinks((prev: LinkData[]) => prev.filter(link => link.id !== linkId));
+      const newLinks = links.filter((link: LinkData) => link.id !== linkId);
+      setLinks(newLinks);
       clearSelection();
       
       console.log('Link deleted:', linkId);
@@ -146,7 +159,7 @@ export const useActions = ({
     } catch (error) {
       console.error('Ошибка при удалении связи:', error);
     }
-  }, [setLinks, clearSelection]);
+  }, [links, setLinks, clearSelection]);
 
   return {
     handleCreateBlock,

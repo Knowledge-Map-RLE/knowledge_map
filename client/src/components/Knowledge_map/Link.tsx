@@ -1,4 +1,4 @@
-import { Graphics, Rectangle } from 'pixi.js';
+import { Graphics } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useCallback } from 'react';
 import type { LinkData, BlockData } from './types';
@@ -17,38 +17,44 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
   const fromBlock = blocks.find(block => block.id === linkData.source_id);
   const toBlock = blocks.find(block => block.id === linkData.target_id);
 
+  console.log('Rendering link:', linkData);
+  console.log('Blocks:', blocks);
+  console.log('From block:', fromBlock);
+  console.log('To block:', toBlock);
+
   const draw = useCallback((g: Graphics) => {
-    if (!fromBlock || !toBlock) return;
+    if (!fromBlock || !toBlock) {
+      console.log('Missing blocks for link:', linkData);
+      return;
+    }
 
-    // Находим центры блоков
-    const fromCenter = { x: fromBlock.x, y: fromBlock.y };
-    const toCenter = { x: toBlock.x, y: toBlock.y };
-
-    // Определяем точки соединения на краях блоков
+    // Находим точки соединения на краях блоков
     const fromPoint = {
-      x: fromCenter.x + BLOCK_WIDTH / 2, // Правый край исходного блока
-      y: fromCenter.y // Центр по вертикали
+      x: fromBlock.x + BLOCK_WIDTH / 2, // Правая сторона исходного блока
+      y: fromBlock.y // Центр по вертикали
     };
 
     const toPoint = {
-      x: toCenter.x - BLOCK_WIDTH / 2, // Левый край целевого блока
-      y: toCenter.y // Центр по вертикали
+      x: toBlock.x - BLOCK_WIDTH / 2, // Левая сторона целевого блока
+      y: toBlock.y // Центр по вертикали
     };
 
-    // Цвета для линий и стрелок
-    const linkColor = isSelected ? 0xff0000 : 0x8a2be2; // BlueViolet цвет для неактивных линий
-    const linkAlpha = 1.0; // Полная непрозрачность
+    console.log('Drawing link from', fromPoint, 'to', toPoint);
 
-    // Рисуем линию
+    // Цвета и параметры
+    const lineColor = isSelected ? 0xff0000 : 0x8a2be2; // BlueViolet для неактивных линий
+    const lineWidth = 6;
+
     g.clear();
-    g.lineStyle(6, linkColor, linkAlpha);
+
+    // Рисуем основную линию
+    g.lineStyle(lineWidth, lineColor, 1.0);
     g.moveTo(fromPoint.x, fromPoint.y);
     g.lineTo(toPoint.x, toPoint.y);
-    g.endFill();
 
     // Рисуем стрелку
     const arrowLength = 20;
-    const arrowAngle = Math.PI / 6; // 30 градусов
+    const arrowAngle = Math.PI / 6;
 
     const dx = toPoint.x - fromPoint.x;
     const dy = toPoint.y - fromPoint.y;
@@ -64,31 +70,30 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
       y: toPoint.y - arrowLength * Math.sin(lineAngle - arrowAngle)
     };
 
-    // Рисуем стрелку с заливкой
-    g.beginFill(linkColor, linkAlpha);
-    g.lineStyle(0);
+    // Рисуем стрелку
+    g.beginFill(lineColor);
+    g.lineStyle(lineWidth, lineColor, 1.0); // Сохраняем стиль линии для контура стрелки
     g.moveTo(toPoint.x, toPoint.y);
     g.lineTo(arrowPoint1.x, arrowPoint1.y);
     g.lineTo(arrowPoint2.x, arrowPoint2.y);
     g.closePath();
     g.endFill();
+
+    console.log('Link drawn with color:', lineColor.toString(16));
+
   }, [fromBlock, toBlock, isSelected]);
 
-  if (!fromBlock || !toBlock) return null;
-
-  const hitArea = new Rectangle(
-    Math.min(fromBlock.x, toBlock.x) - 10,
-    Math.min(fromBlock.y, toBlock.y) - 10,
-    Math.abs(toBlock.x - fromBlock.x) + 20,
-    Math.abs(toBlock.y - fromBlock.y) + 20
-  );
+  if (!fromBlock || !toBlock) {
+    console.log('Cannot render link:', linkData, 'Missing blocks');
+    return null;
+  }
 
   return (
     <pixiGraphics
       draw={draw}
       eventMode="static"
+      cursor="pointer"
       onClick={onClick}
-      hitArea={hitArea}
     />
   );
 } 

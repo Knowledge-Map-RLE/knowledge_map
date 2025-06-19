@@ -1,24 +1,13 @@
-import { Graphics } from 'pixi.js';
+import { Graphics, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useCallback, useState } from 'react';
-import { Block } from './Block';
-import type { BlockData } from './types';
 import { SUBLEVEL_PADDING } from './constants';
+import { Block } from './Block';
+import type { BlockData, SublevelData } from './types';
 
-extend({ Graphics });
+extend({ Graphics, Text });
 
-export interface SublevelData {
-  id: number;
-  block_ids: string[];
-  min_x: number;
-  max_x: number;
-  min_y: number;
-  max_y: number;
-  color: number;
-  level_id: number;
-}
-
-interface SublevelProps {
+interface Props {
   sublevelData: SublevelData;
   blocks?: BlockData[];
   onSublevelHover?: (sublevel: SublevelData | null) => void;
@@ -36,8 +25,8 @@ export function Sublevel({
   onBlockClick,
   onBlockHover,
   selectedBlocks = []
-}: SublevelProps) {
-  const { min_x, max_x, min_y, max_y, color, block_ids } = sublevelData;
+}: Props) {
+  const { min_x, max_x, min_y, max_y, color, block_ids, id, level } = sublevelData;
   const [isHovered, setIsHovered] = useState(false);
 
   const draw = useCallback((g: Graphics) => {
@@ -72,7 +61,18 @@ export function Sublevel({
         onMouseDown={() => onSublevelClick?.(sublevelData.id, (min_x + max_x) / 2, min_y)}
         zIndex={1}
       />
-      <container zIndex={2}>
+      <pixiText
+        text={`ур: ${level}, пур: ${id}`}
+        x={min_x + 10}
+        y={min_y + 10}
+        style={{
+          fontSize: 12,
+          fill: '#' + color.toString(16).padStart(6, '0'),
+          fontWeight: 'bold'
+        }}
+        zIndex={2}
+      />
+      <container zIndex={3}>
         {adjustedBlocks.map((block) => (
           <Block
             key={block.id}

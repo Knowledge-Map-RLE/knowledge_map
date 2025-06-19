@@ -3,10 +3,9 @@ export interface BlockData {
   text: string;
   x: number;
   y: number;
-  level?: number;
+  level: number;
+  sublevel: number;
   layer: number;
-  sublevel_id?: number;
-  height: number;
 }
 
 export interface LinkData {
@@ -28,13 +27,13 @@ export interface LevelData {
 
 export interface SublevelData {
   id: number;
-  block_ids: string[];
   min_x: number;
   max_x: number;
   min_y: number;
   max_y: number;
   color: number;
-  level_id: number;
+  block_ids: string[];
+  level: number;
 }
 
 export const EditMode = {

@@ -62,6 +62,7 @@ export default function Knowledge_map() {
     handleDeleteLink
   } = useActions({
     blocks,
+    links,
     sublevels,
     setBlocks,
     setLinks,
@@ -78,7 +79,8 @@ export default function Knowledge_map() {
   useKeyboardControls({
     setCurrentMode,
     setLinkCreationState,
-    currentMode
+    currentMode,
+    linkCreationState
   });
 
   // Загрузка данных при монтировании
@@ -107,6 +109,11 @@ export default function Knowledge_map() {
     console.log('Current mode changed to:', currentMode);
   }, [currentMode]);
 
+  // Отладочный эффект для отслеживания изменений в links
+  useEffect(() => {
+    console.log('Links array updated:', links);
+  }, [links]);
+
   // Обработка клика по блоку в зависимости от режима
   const handleBlockClick = (blockId: string) => {
     console.log('Block clicked:', blockId, 'Current mode:', currentMode, 'Link creation step:', linkCreationState.step);
@@ -117,16 +124,21 @@ export default function Knowledge_map() {
         break;
 
       case EditMode.CREATE_LINKS:
+        // Выделяем блок в любом случае
+        handleBlockSelection(blockId);
+        
         if (linkCreationState.step === 'waiting') {
           setFirstBlockForLink(blockId);
           setLinkCreationState({ step: 'first_selected' });
           console.log('First block selected for link:', blockId);
         } else if (linkCreationState.step === 'first_selected') {
           if (firstBlockForLink && firstBlockForLink !== blockId) {
+            console.log('Creating link from', firstBlockForLink, 'to', blockId);
             handleCreateLink(firstBlockForLink, blockId);
             setFirstBlockForLink(null);
             setLinkCreationState({ step: 'waiting' });
-            clearSelection();
+            clearSelection(); // Очищаем выделение после создания связи
+            console.log('Current links after creation:', links);
           } else {
             console.log('Cannot create link to the same block');
           }
@@ -260,15 +272,21 @@ export default function Knowledge_map() {
 
                 {/* Контейнер для связей */}
                 <container zIndex={3}>
-                  {links.map((link) => (
-                    <Link
-                      key={link.id}
-                      linkData={link}
-                      blocks={blocks}
-                      isSelected={selectedLinks.includes(link.id)}
-                      onClick={() => handleLinkClick(link.id)}
-                    />
-                  ))}
+                  {(() => {
+                    console.log('Rendering links container, links:', links);
+                    return links.map((link) => {
+                      console.log('Rendering link:', link);
+                      return (
+                        <Link
+                          key={link.id}
+                          linkData={link}
+                          blocks={blocks}
+                          isSelected={selectedLinks.includes(link.id)}
+                          onClick={() => handleLinkClick(link.id)}
+                        />
+                      );
+                    });
+                  })()}
                 </container>
 
                 {/* Контейнер для блоков */}
