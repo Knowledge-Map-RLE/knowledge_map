@@ -342,31 +342,54 @@ async def create_link(link_input: LinkInput):
 async def create_block_and_link(data: CreateAndLinkInput):
     """Атомарно создает новый блок и связь с существующим блоком."""
     try:
-        with db.transaction:
-            # 1. Найти исходный блок
-            source_block = Block.nodes.get(uid=data.source_block_id)
+        source_block = Block.nodes.get(uid=data.source_block_id)
+        
+        # Создаем новый блок
+        new_block = Block(content=data.new_block_content, layer=source_block.layer + 1).save()
+        
+        # Создаем связь
+        if data.link_direction == 'from_source':
+            link = source_block.target.connect(new_block)
+        else: # to_source
+            link = new_block.target.connect(source_block)
+        
+        # Получаем полный обновленный граф из Neo4j
+        # (Эта логика дублирует /layout/neo4j, но необходима для получения координат)
+        blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level"
+        blocks_result, _ = db.cypher_query(blocks_query)
+        
+        links_query = "MATCH (b1:Block)-[r:LINK_TO]->(b2:Block) RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id"
+        links_result, _ = db.cypher_query(links_query)
 
-            # 2. Создать новый блок
-            new_block = Block(content=data.new_block_content).save()
-            new_block.refresh()
+        blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "metadata": {}} for r in blocks_result]
+        links_for_layout = [{"id": str(r[0]) if r[0] else None, "source_id": str(r[1]), "target_id": str(r[2])} for r in links_result]
+        
+        # Вызываем сервис укладки
+        client = get_layout_client()
+        layout_result = await client.calculate_layout(blocks_for_layout, links_for_layout)
+        
+        if not layout_result.get("success"):
+            raise HTTPException(status_code=500, detail="Layout service failed after creating block and link.")
 
-            # 3. Создать связь в нужном направлении
-            if data.link_direction == 'to_source':
-                # Связь от нового блока к исходному
-                rel = new_block.target.connect(source_block)
-            else: # 'from_source'
-                # Связь от исходного блока к новому
-                rel = source_block.target.connect(new_block)
-            
-            rel.save()
+        # Находим данные нового блока в результатах укладки
+        final_new_block_data = next((b for b in layout_result.get("blocks", []) if b["id"] == new_block.uid), None)
 
-        return {"success": True, "new_block_id": new_block.uid, "link_id": rel.uid}
+        if not final_new_block_data:
+            raise HTTPException(status_code=500, detail="Could not find new block in layout result.")
 
+        return {
+            "success": True,
+            "new_block": final_new_block_data,
+            "new_link": {
+                "id": link.uid,
+                "source_id": link.start_node().uid,
+                "target_id": link.end_node().uid,
+            }
+        }
     except Block.DoesNotExist:
-        logger.error(f"Source block with uid {data.source_block_id} not found for creating and linking.")
-        raise HTTPException(status_code=404, detail="Исходный блок для создания связи не найден.")
+        raise HTTPException(status_code=404, detail="Source block not found")
     except Exception as e:
-        logger.error(f"Error in create_block_and_link: {e}", exc_info=True)
+        logger.error(f"Error creating block and link: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Подключаем GraphQL

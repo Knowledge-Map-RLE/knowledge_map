@@ -79,7 +79,7 @@ export function Sublevel({
             key={block.id}
             blockData={block}
             isSelected={selectedBlocks.includes(block.id)}
-            onClick={() => onBlockClick?.(block.id)}
+            onBlockClick={() => onBlockClick?.(block.id)}
             currentMode={currentMode}
             onAddBlock={onAddBlock}
           />

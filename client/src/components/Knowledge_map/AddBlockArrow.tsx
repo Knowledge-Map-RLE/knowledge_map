@@ -31,26 +31,19 @@ export function AddBlockArrow({ position, onHover, onHoverEnd, onClick, isHovere
     const bgX = position === 'left' ? arrowOffset - arrowWidth - 10 : arrowOffset;
     const bgY = -bgHeight/2;
 
-    // Рисуем белый фон
-    g.beginFill(0xFFFFFF, 1);
-    g.drawRect(bgX, bgY, bgWidth, bgHeight);
-    g.endFill();
-
+    // Рисуем белый фон с использованием нового API
+    g.rect(bgX, bgY, bgWidth, bgHeight).fill({ color: 0xFFFFFF, alpha: 1 });
+    
     // Рисуем стрелку
-    g.beginFill(fillColor, alpha);
+    const path = [];
     if (position === 'left') {
       // Стрелка слева (указывает вправо)
-      g.moveTo(arrowOffset, 0);
-      g.lineTo(arrowOffset - arrowWidth, -arrowHeight/2);
-      g.lineTo(arrowOffset - arrowWidth, arrowHeight/2);
+      path.push(arrowOffset, 0, arrowOffset - arrowWidth, -arrowHeight/2, arrowOffset - arrowWidth, arrowHeight/2);
     } else {
       // Стрелка справа (указывает вправо)
-      g.moveTo(arrowOffset + arrowWidth, 0);
-      g.lineTo(arrowOffset, -arrowHeight/2);
-      g.lineTo(arrowOffset, arrowHeight/2);
+      path.push(arrowOffset + arrowWidth, 0, arrowOffset, -arrowHeight/2, arrowOffset, arrowHeight/2);
     }
-    g.closePath();
-    g.endFill();
+    g.poly(path).fill({ color: fillColor, alpha });
 
     // Устанавливаем hitArea больше, чем видимая область
     const hitAreaWidth = bgWidth + 20;

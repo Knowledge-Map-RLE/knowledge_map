@@ -1,160 +1,119 @@
-import { Graphics } from 'pixi.js';
+import { Graphics, Container, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
-import { useCallback, useState, useEffect } from 'react';
-import type { BlockData, EditMode } from './types';
-import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { AddBlockArrow } from './AddBlockArrow';
-import { BlockPreview } from './BlockPreview';
-import { EditMode as EditModeEnum } from './types';
+import type { BlockData } from './types';
+import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
+import { EditMode } from './types';
+import { gsap } from 'gsap';
 
-extend({ Graphics });
+extend({ Graphics, Container, Text });
 
-interface BlockProps {
+const BLOCK_PADDING = 10;
+
+export interface BlockProps {
   blockData: BlockData;
+  onBlockClick: (id: string) => void;
+  onBlockHover?: (block: BlockData | null) => void;
   isSelected: boolean;
-  onClick: () => void;
-  onAddBlock: (sourceBlock: BlockData, targetLevel: number) => void;
   currentMode: EditMode;
+  onAddBlock: (sourceBlock: BlockData, targetLevel: number) => void;
 }
 
-export function Block({ blockData, isSelected, onClick, onAddBlock, currentMode }: BlockProps) {
-  const { x, y, text, level } = blockData;
+export function Block({ 
+  blockData, 
+  onBlockClick, 
+  onBlockHover, 
+  isSelected,
+  currentMode,
+  onAddBlock
+}: BlockProps) {
+  const { id, text, x, y, level } = blockData;
+  const containerRef = useRef<Container>(null);
+  const isInitialRender = useRef(true);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      if (isInitialRender.current) {
+        containerRef.current.x = x;
+        containerRef.current.y = y;
+        containerRef.current.alpha = 0;
+        gsap.to(containerRef.current, { alpha: 1, duration: 0.5, ease: 'power2.inOut' });
+        isInitialRender.current = false;
+      } else {
+        gsap.to(containerRef.current, { x, y, duration: 0.8, ease: 'power3.inOut' });
+      }
+    }
+  }, [x, y]);
+
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredArrow, setHoveredArrow] = useState<'left' | 'right' | null>(null);
-
-  const draw = useCallback((g: Graphics) => {
-    g.clear();
-
-    // Цвета и параметры
-    const fillColor = isSelected ? 0xeeeeee : 0xffffff;
-    const borderColor = isSelected ? 0x0000ff : 0x000000;
-    const borderWidth = isSelected ? 3 : 2;
-    const cornerRadius = 10;
-
-    // Рисуем блок с закругленными углами
-    g.roundRect(-BLOCK_WIDTH/2, -BLOCK_HEIGHT/2, BLOCK_WIDTH, BLOCK_HEIGHT, cornerRadius);
-    if (isSelected) {
-      g.stroke({ width: borderWidth, color: borderColor});
-    }
-    g.fill(fillColor);
-  }, [isSelected]);
-
-  const handleMouseEnter = () => {
-    
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = (e: any) => {
-    
-    // Проверяем, не перешел ли курсор на одну из стрелок
-    const relatedTarget = e.target.parent.children.find(
-      (child: any) => child !== e.target && child.containsPoint?.(e.data.global)
-    );
-    
-    if (!relatedTarget) {
-      setIsHovered(false);
-      setHoveredArrow(null);
-    }
-  };
-
-  const handleLeftArrowClick = () => {
-    onAddBlock(blockData, level - 1);
-  };
-
-  const handleRightArrowClick = () => {
-    onAddBlock(blockData, level + 1);
-  };
-
-  // Вычисляем координаты для предварительного просмотра
-  const getPreviewCoordinates = () => {
-    if (!hoveredArrow) return null;
-
-    const xOffset = BLOCK_WIDTH * 2;
-    const coords = {
-      sourceX: hoveredArrow === 'left' ? -BLOCK_WIDTH/2 : BLOCK_WIDTH/2, // Точка соединения на текущем блоке
-      sourceY: 0,
-      targetX: hoveredArrow === 'left' ? -xOffset : xOffset, // Смещение для нового блока
-      targetY: 0
-    };
-    
-    return coords;
-  };
-
-  const previewCoords = getPreviewCoordinates();
-
-  const shouldShowArrows = (isHovered || hoveredArrow !== null) && currentMode === EditModeEnum.CREATE_BLOCKS;
-  const shouldShowPreview = shouldShowArrows && hoveredArrow !== null && previewCoords !== null;
   
- 
+  const draw = useCallback((g: Graphics) => {
+    const bgColor = isSelected ? 0x93c5fd : 0xffffff;
+    const borderColor = isHovered || hoveredArrow ? 0x3b82f6 : 0xd1d5db;
+    const borderWidth = isSelected || isHovered || hoveredArrow ? 2 : 1;
+    g.clear();
+    g.rect(0, 0, BLOCK_WIDTH, BLOCK_HEIGHT);
+    g.fill(bgColor);
+    g.stroke({ width: borderWidth, color: borderColor });
+  }, [isSelected, isHovered, hoveredArrow]);
+
+  const handlePointerDown = (event: any) => {
+    event.stopPropagation(); 
+    onBlockClick(id);
+  };
+  
+  const handleMouseLeave = (e: any) => {
+     const relatedTarget = e.currentTarget.parent?.children.find(
+       (child: any) => child !== e.currentTarget && child.containsPoint?.(e.global)
+     );
+     if (!relatedTarget) {
+       setIsHovered(false);
+       onBlockHover?.(null);
+     }
+  };
 
   return (
-    <pixiContainer x={x} y={y} sortableChildren={true}>
-      <pixiGraphics 
-        draw={draw} 
-        eventMode="static" 
-        onClick={onClick}
-        cursor="pointer"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        zIndex={1}
-      />
+    <container 
+      ref={containerRef}
+      eventMode="static" 
+      cursor="pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      onPointerDown={handlePointerDown}
+      zIndex={10}
+    >
+      <graphics draw={draw} />
       <pixiText
         text={text}
-        anchor={0.5}
-        eventMode="none"
+        x={BLOCK_PADDING}
+        y={BLOCK_PADDING}
         style={{
           fontSize: 14,
-          fill: '#000000',
+          fill: 0x000000,
           wordWrap: true,
-          wordWrapWidth: BLOCK_WIDTH - 20,
-          breakWords: true,
-          align: 'center',
-          lineHeight: 16,
+          wordWrapWidth: BLOCK_WIDTH - 2 * BLOCK_PADDING,
         }}
-        zIndex={2}
       />
-      {shouldShowArrows && (
+      {isHovered && currentMode === EditMode.CREATE_BLOCKS && (
         <>
           <AddBlockArrow
             position="left"
-            onHover={() => {
-              
-              setHoveredArrow('left');
-            }}
-            onHoverEnd={() => {
-              
-              setHoveredArrow(null);
-            }}
-            onClick={handleLeftArrowClick}
+            onClick={() => onAddBlock(blockData, level - 1)}
+            onHover={() => setHoveredArrow('left')}
+            onHoverEnd={() => setHoveredArrow(null)}
             isHovered={hoveredArrow === 'left'}
-            zIndex={3}
           />
           <AddBlockArrow
             position="right"
-            onHover={() => {
-              
-              setHoveredArrow('right');
-            }}
-            onHoverEnd={() => {
-              
-              setHoveredArrow(null);
-            }}
-            onClick={handleRightArrowClick}
+            onClick={() => onAddBlock(blockData, level + 1)}
+            onHover={() => setHoveredArrow('right')}
+            onHoverEnd={() => setHoveredArrow(null)}
             isHovered={hoveredArrow === 'right'}
-            zIndex={3}
           />
         </>
       )}
-      {shouldShowPreview && previewCoords && (
-        <BlockPreview
-          sourceX={previewCoords.sourceX}
-          sourceY={previewCoords.sourceY}
-          targetX={previewCoords.targetX}
-          targetY={previewCoords.targetY}
-          isLeftArrow={hoveredArrow === 'left'}
-          zIndex={4}
-        />
-      )}
-    </pixiContainer>
+    </container>
   );
 }

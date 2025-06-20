@@ -12,12 +12,14 @@ export interface Block {
     level: number;
     layer?: number;
     sublevel_id: number;
+    metadata?: Record<string, any>;
 }
 
 export interface Link {
     id: string;
     source_id: string;
     target_id: string;
+    metadata?: Record<string, any>;
 }
 
 export interface Level {
@@ -28,6 +30,8 @@ export interface Level {
     max_y: number;
     color?: number;
     name?: string;
+    block_ids: string[];
+    level: number;
 }
 
 export interface Sublevel {
@@ -55,6 +59,20 @@ export interface LayoutStatistics {
 }
 
 export interface LayoutResponse {
+    blocks: Block[];
+    links: Link[];
+    levels: Level[];
+    sublevels: Sublevel[];
+}
+
+export interface CreateAndLinkResponse {
+    success: boolean;
+    new_block?: Block;
+    new_link?: Link;
+    error?: string;
+}
+
+export interface LayoutData {
     blocks: Block[];
     links: Link[];
     levels: Level[];
@@ -182,22 +200,30 @@ export async function createLink(source: string, target: string): Promise<{succe
  * Атомарно создает новый блок и связь с существующим
  */
 export async function createBlockAndLink(
-  source_block_id: string, 
-  link_direction: 'from_source' | 'to_source',
-  new_block_content: string = "Новый блок", 
-): Promise<{success: boolean, new_block_id?: string, link_id?: string}> {
+  sourceBlockId: string,
+  linkDirection: 'from_source' | 'to_source'
+): Promise<CreateAndLinkResponse> {
+  try {
     const response = await fetch(`${API_URL}/api/blocks/create_and_link`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         },
-        body: JSON.stringify({ source_block_id, new_block_content, link_direction }),
+        body: JSON.stringify({
+            source_block_id: sourceBlockId,
+            link_direction: linkDirection
+        })
     });
 
     if (!response.ok) {
-        console.error('Failed to create block and link:', response.statusText);
-        return { success: false };
+        const errorData = await response.json();
+        console.error('Ошибка при создании блока и связи:', errorData);
+        return { success: false, error: errorData.detail || 'Неизвестная ошибка сервера' };
     }
-    return response.json();
+    return await response.json();
+  } catch (error) {
+    console.error('Сетевая ошибка или ошибка парсинга JSON:', error);
+    return { success: false, error: 'Сетевая ошибка или невалидный JSON' };
+  }
 }

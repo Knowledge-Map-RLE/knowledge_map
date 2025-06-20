@@ -1,7 +1,9 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { Container, Graphics, Point, FederatedPointerEvent } from 'pixi.js';
 import { extend, useApplication } from '@pixi/react';
 import type { ReactNode } from 'react';
+// @ts-ignore
+import { gsap } from 'gsap';
 
 extend({ Container, Graphics, Point });
 
@@ -15,8 +17,13 @@ interface ViewportProps {
   onCanvasClick?: (x: number, y: number) => void;
 }
 
-export function Viewport({ children, onCanvasClick }: ViewportProps) {
+export interface ViewportRef {
+  focusOn: (x: number, y: number) => void;
+}
+
+export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick }, ref) => {
   const containerRef = useRef<Container | null>(null);
+  const tweensRef = useRef<gsap.core.Tween[]>([]);
   const { app } = useApplication();
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -27,7 +34,7 @@ export function Viewport({ children, onCanvasClick }: ViewportProps) {
   const drawGrid = useCallback((g: Graphics) => {
     if (!app || !app.renderer) return;
     g.clear();
-    g.lineStyle(1, GRID_COLOR, GRID_ALPHA);
+    g.stroke({ width: 1, color: GRID_COLOR, alpha: GRID_ALPHA });
     const viewWidth = app.screen.width;
     const viewHeight = app.screen.height;
     for (let x = 0; x <= viewWidth; x += GRID_SIZE) {
@@ -43,10 +50,12 @@ export function Viewport({ children, onCanvasClick }: ViewportProps) {
   // Обработчики перетаскивания
   const handlePointerDown = useCallback((event: FederatedPointerEvent) => {
     if (event.nativeEvent.button === 2) {
+      // Останавливаем любую текущую анимацию, если пользователь начинает перетаскивать
+      gsap.killTweensOf(position);
       setIsDragging(true);
       lastPositionRef.current = { x: event.global.x, y: event.global.y };
     }
-  }, []);
+  }, [position]);
 
   const handlePointerMove = useCallback((event: FederatedPointerEvent) => {
     if (!isDragging) return;
@@ -68,8 +77,70 @@ export function Viewport({ children, onCanvasClick }: ViewportProps) {
     }
   }, [scale, position]);
 
+  // Эффект для очистки анимаций при размонтировании
+  useEffect(() => {
+    return () => {
+      tweensRef.current.forEach(tween => tween.kill());
+      tweensRef.current = [];
+    };
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    focusOn: (targetX: number, targetY: number) => {
+      if (!app.screen || !containerRef.current) return;
+      
+      // Убиваем предыдущие анимации, чтобы избежать конфликтов
+      tweensRef.current.forEach(tween => tween.kill());
+      tweensRef.current = [];
+
+      const targetScale = 1; // Можно сделать настраиваемым
+      const duration = 1.2; // Длительность анимации в секундах
+
+      // Центрируем камеру на цели
+      const newX = (app.screen.width / 2) - (targetX * targetScale);
+      const newY = (app.screen.height / 2) - (targetY * targetScale);
+
+      // Анимируем scale
+      const scaleTween = gsap.to(containerRef.current.scale, {
+        x: targetScale,
+        y: targetScale,
+        duration,
+        ease: "power3.inOut",
+        onUpdate: () => {
+            if (containerRef.current) { // Защита от null
+                setScale(containerRef.current.scale.x);
+            }
+        }
+      });
+      
+      // Создаем прокси-объект для анимации позиции
+      const positionProxy = { x: position.x, y: position.y };
+
+      // Анимируем прокси-объект
+      const positionTween = gsap.to(positionProxy, {
+        x: newX,
+        y: newY,
+        duration,
+        ease: "power3.inOut",
+        onUpdate: () => {
+          // Обновляем состояние React на каждом кадре
+          setPosition({ x: positionProxy.x, y: positionProxy.y });
+        }
+      });
+
+      // Сохраняем новые анимации в ref
+      tweensRef.current.push(scaleTween, positionTween);
+    }
+  }));
+
   const handleWheel = useCallback((event: WheelEvent) => {
     event.preventDefault();
+    // Останавливаем любую текущую анимацию, если пользователь начинает масштабировать
+    gsap.killTweensOf(position);
+    if (containerRef.current) {
+      gsap.killTweensOf(containerRef.current.scale);
+    }
+
     const delta = event.deltaY;
     const scaleChange = delta > 0 ? 0.9 : 1.1;
     const newScale = Math.min(Math.max(scale * scaleChange, 0.1), 5);
@@ -127,9 +198,8 @@ export function Viewport({ children, onCanvasClick }: ViewportProps) {
         <graphics 
           draw={g => {
             if(app && app.renderer) {
-              g.beginFill(0,0);
-              g.drawRect(-10000, -10000, 20000, 20000);
-              g.endFill();
+              g.fill({color: 0, alpha: 0});
+              g.rect(-10000, -10000, 20000, 20000);
             }
           }}
           onClick={handleCanvasClick}
@@ -138,4 +208,4 @@ export function Viewport({ children, onCanvasClick }: ViewportProps) {
       </container>
     </container>
   );
-} 
+}); 
