@@ -69,7 +69,7 @@ export function Sublevel({
         y={min_y + 10}
         style={{
           fontSize: 12,
-          fill: '#' + color.toString(16).padStart(6, '0'),
+          fill: color,
           fontWeight: 'bold'
         }}
       />

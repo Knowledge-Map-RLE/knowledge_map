@@ -9,6 +9,7 @@ import { useKeyboardControlsWithProps } from './hooks/useKeyboardControls';
 import { useDataLoading } from './hooks/useDataLoading';
 import { useSelectionState } from './hooks/useSelectionState';
 import { useActions } from './hooks/useActions';
+import { createBlockAndLink } from '../../services/api'; // Используем новую функцию
 import { EditMode } from './types';
 import type { LinkCreationState, BlockData } from './types';
 import { BLOCK_WIDTH } from './constants';
@@ -92,6 +93,22 @@ export default function Knowledge_map() {
     }
   }, []);
 
+  // Отключаем стандартное контекстное меню
+  useEffect(() => {
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('contextmenu', handleContextMenu);
+
+      return () => {
+        container.removeEventListener('contextmenu', handleContextMenu);
+      };
+    }
+  }, []);
+
   useEffect(() => {
     console.log('Knowledge_map currentMode changed:', currentMode);
   }, [currentMode]);
@@ -146,45 +163,27 @@ export default function Knowledge_map() {
 
   // Обработка добавления блока через стрелки
   const handleAddBlock = async (sourceBlock: BlockData, targetLevel: number) => {
-    console.log('handleAddBlock called:', { sourceBlock, targetLevel });
-    
-    // Находим подуровень на целевом уровне
-    const targetSublevel = sublevels.find(
-      sublevel => sublevel.level === targetLevel && 
-      sublevel.min_y <= sourceBlock.y && 
-      sublevel.max_y >= sourceBlock.y
-    );
+    try {
+      // Определяем направление связи на основе разницы в уровнях
+      const linkDirection = targetLevel < sourceBlock.level ? 'to_source' : 'from_source';
 
-    console.log('Found target sublevel:', targetSublevel);
-    if (!targetSublevel) {
-      console.error('Target sublevel not found');
-      return;
-    }
+      // Вызываем единый атомарный эндпоинт
+      const response = await createBlockAndLink(
+        sourceBlock.id,
+        linkDirection
+      );
 
-    // Создаем новый блок
-    const newX = targetLevel < sourceBlock.level ? 
-      sourceBlock.x - BLOCK_WIDTH * 2 : 
-      sourceBlock.x + BLOCK_WIDTH * 2;
-
-    console.log('Creating new block at:', { x: newX, y: sourceBlock.y, sublevelId: targetSublevel.id });
-    const newBlock = await handleCreateBlockOnSublevel(
-      newX,
-      sourceBlock.y,
-      targetSublevel.id
-    );
-
-    console.log('New block created:', newBlock);
-    // Создаем связь между блоками
-    if (newBlock) {
-      if (targetLevel < sourceBlock.level) {
-        // Связь от нового блока к текущему
-        console.log('Creating link from new block to source:', { from: newBlock.id, to: sourceBlock.id });
-        await handleCreateLink(newBlock.id, sourceBlock.id);
-      } else {
-        // Связь от текущего блока к новому
-        console.log('Creating link from source to new block:', { from: sourceBlock.id, to: newBlock.id });
-        await handleCreateLink(sourceBlock.id, newBlock.id);
+      if (!response.success) {
+        console.error('Не удалось атомарно создать блок и связь:', response);
+        // Здесь можно добавить уведомление для пользователя
+        return;
       }
+      
+      // После успешного атомарного создания, запрашиваем новый макет
+      await loadLayoutData();
+
+    } catch (error) {
+      console.error('Произошла ошибка при добавлении блока и связи:', error);
     }
   };
 

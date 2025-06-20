@@ -7,9 +7,9 @@ from models import User, Block, Tag, LinkMetadata
 from layout_client import get_layout_client, LayoutOptions, LayoutConfig
 from config import settings
 from typing import List, Dict, Optional, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import logging
-from neomodel import config as neomodel_config, db
+from neomodel import config as neomodel_config, db, UniqueIdProperty
 import uuid
 import json
 
@@ -72,17 +72,11 @@ async def add_cors_headers(request: Request, call_next):
 
 # Pydantic модели для API запросов
 class BlockInput(BaseModel):
-    id: str
-    content: str = ""
-    metadata: Dict[str, str] = {}
-
+    content: str
 
 class LinkInput(BaseModel):
-    id: str
-    source_id: str
-    target_id: str
-    metadata: Dict[str, str] = {}
-
+    source: str
+    target: str
 
 class LayoutRequest(BaseModel):
     blocks: List[BlockInput]
@@ -91,6 +85,10 @@ class LayoutRequest(BaseModel):
     layer_spacing: Optional[int] = 250
     optimize_layout: bool = True
 
+class CreateAndLinkInput(BaseModel):
+    source_block_id: str
+    new_block_content: str = "Новый блок"
+    link_direction: str = Field(..., pattern="^(from_source|to_source)$") # 'from_source' или 'to_source'
 
 # Эндпоинты для проверки здоровья
 @app.get("/health")
@@ -221,54 +219,36 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
 
         # Выводим первые 5 связей для отладки
         for i, row in enumerate(links_result[:5]):
-            logger.info(f"Sample link {i}: id={row[0]}, source_id={row[1]}, target_id={row[2]}")
+            logger.info(f"Sample link {i}: id={row[0]}, source={row[1]}, target={row[2]}")
         
         # Преобразуем результаты в формат для сервиса укладки
         logger.info("Converting results to layout service format")
-        logger.debug(f"Raw blocks data: {blocks_result}")
         
-        blocks = []
-        block_ids = {}  # Словарь для хранения соответствия старых и новых ID
-        for row in blocks_result:
-            # Генерируем UUID если ID отсутствует
-            old_id = str(row[0]) if row[0] is not None else None
-            new_id = str(uuid.uuid4())
-            block_ids[old_id] = new_id if old_id else new_id
-            
-            block = {
-                "id": new_id,
+        # Используем настоящие ID из базы данных
+        blocks = [
+            {
+                "id": str(row[0]),
                 "content": str(row[1] or ""),
                 "layer": int(row[2] or 0),
                 "level": int(row[3] or 0),
                 "metadata": {}
             }
-            blocks.append(block)
-            logger.debug(f"Converted block: {block}")
+            for row in blocks_result
+        ]
         
-        logger.info(f"Converted {len(blocks)} blocks")
-        
-        links = []
+        # Преобразуем связи
+        links_for_layout = []
         for row in links_result:
-            # Генерируем UUID если ID отсутствует
-            link_id = str(row[0]) if row[0] is not None else str(uuid.uuid4())
-            source_id = str(row[1]) if row[1] is not None else None
-            target_id = str(row[2]) if row[2] is not None else None
-            
-            # Используем новые ID блоков
-            if source_id in block_ids and target_id in block_ids:
-                link = {
-                    "id": link_id,
-                    "source_id": block_ids[source_id],
-                    "target_id": block_ids[target_id],
-                    "metadata": {}
-                }
-                links.append(link)
-                logger.debug(f"Converted link: {link}")
-            else:
-                logger.warning(f"Skipping link {link_id}: source_id={source_id} or target_id={target_id} not found in blocks")
+            link_id = str(row[0]) if row[0] is not None else None
+            source_id = str(row[1])
+            target_id = str(row[2])
+            logger.info(f"Processing link: id={link_id}, source={source_id}, target={target_id}")
+            links_for_layout.append(
+                {"id": link_id, "source_id": source_id, "target_id": target_id}
+            )
         
-        logger.info(f"Converted {len(links)} links")
-        
+        logger.info(f"Converted {len(blocks)} blocks and {len(links_for_layout)} links using real UIDs.")
+
         if not blocks:
             logger.warning("No blocks after conversion")
             raise HTTPException(status_code=404, detail="В базе данных нет блоков. Пожалуйста, запустите скрипт заполнения тестовыми данными.")
@@ -280,7 +260,7 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
         try:
             result = await client.calculate_layout(
                 blocks=blocks,
-                links=links,
+                links=links_for_layout,
                 options=LayoutOptions(
                     sublevel_spacing=200,
                     layer_spacing=250,
@@ -306,6 +286,94 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
         logger.error(f"Error calculating layout from Neo4j: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных из Neo4j: {str(e)}")
 
+
+# === CRUD Эндпоинты для блоков и связей ===
+
+@app.post("/api/blocks", response_model=Dict[str, Any])
+async def create_block(block_input: BlockInput):
+    """Создает новый блок в Neo4j."""
+    try:
+        # Используем транзакцию для атомарности
+        with db.transaction:
+            b = Block(content=block_input.content)
+            b.save()
+            b.refresh()
+        
+        response_block = {
+            "id": b.uid,
+            "content": b.content,
+            "level": b.level,
+            "layer": b.layer,
+            "sublevel_id": b.sublevel_id,
+        }
+        return {"success": True, "block": response_block}
+    except Exception as e:
+        logger.error(f"Error creating block: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/links", response_model=Dict[str, Any])
+async def create_link(link_input: LinkInput):
+    """Создает новую связь между блоками."""
+    try:
+        # Используем транзакцию для надежности
+        with db.transaction:
+            source_block = Block.nodes.get(uid=link_input.source)
+            target_block = Block.nodes.get(uid=link_input.target)
+
+            # connect теперь возвращает экземпляр LinkRel, который мы можем сохранить
+            rel = source_block.target.connect(target_block)
+            rel.save() # <-- Явно сохраняем саму связь
+        
+        response_link = {
+            "id": rel.uid,
+            "source_id": source_block.uid,
+            "target_id": target_block.uid
+        }
+        return {"success": True, "link": response_link}
+
+    except Block.DoesNotExist:
+        logger.error(f"Attempted to create link with non-existent block. Source: {link_input.source}, Target: {link_input.target}")
+        raise HTTPException(status_code=404, detail="Один из блоков для создания связи не найден.")
+    except Exception as e:
+        logger.error(f"Error creating link: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Внутренняя ошибка при создании связи: {e}")
+
+@app.post("/api/blocks/create_and_link", response_model=Dict[str, Any])
+async def create_block_and_link(data: CreateAndLinkInput):
+    """Атомарно создает новый блок и связь с существующим блоком."""
+    try:
+        with db.transaction:
+            # 1. Найти исходный блок
+            source_block = Block.nodes.get(uid=data.source_block_id)
+
+            # 2. Создать новый блок
+            new_block = Block(content=data.new_block_content).save()
+            new_block.refresh()
+
+            # 3. Создать связь в нужном направлении
+            if data.link_direction == 'to_source':
+                # Связь от нового блока к исходному
+                rel = new_block.target.connect(source_block)
+            else: # 'from_source'
+                # Связь от исходного блока к новому
+                rel = source_block.target.connect(new_block)
+            
+            rel.save()
+
+        return {"success": True, "new_block_id": new_block.uid, "link_id": rel.uid}
+
+    except Block.DoesNotExist:
+        logger.error(f"Source block with uid {data.source_block_id} not found for creating and linking.")
+        raise HTTPException(status_code=404, detail="Исходный блок для создания связи не найден.")
+    except Exception as e:
+        logger.error(f"Error in create_block_and_link: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Подключаем GraphQL
+graphql_app = GraphQLRouter(schema)
+app.include_router(graphql_app, prefix="/graphql")
+
+logger.info("Application startup complete.")
 
 if __name__ == "__main__":
     import uvicorn

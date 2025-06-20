@@ -1,20 +1,26 @@
 from collections import deque
 from neomodel import (
     StructuredNode, StringProperty, IntegerProperty,
-    RelationshipTo, RelationshipFrom, JSONProperty, config
+    RelationshipTo, RelationshipFrom, JSONProperty, config,
+    StructuredRel, UniqueIdProperty
 )
-from uuid_v6_property import UUIDv6Property
+# from uuid_v6_property import UUIDv6Property # Больше не используем
 
 from config import settings
 
 
 config.DATABASE_URL = settings.get_database_url()
 
+class LinkRel(StructuredRel):
+    """Модель отношения (связи) между блоками"""
+    uid = UniqueIdProperty(primary_key=True)
+
+
 class User(StructuredNode):
     """Модель пользователя"""
     
     # Свойства
-    uid = UUIDv6Property()
+    uid = UniqueIdProperty(primary_key=True)
     """Уникальный идентификатор. Содержит время создания"""
     login = StringProperty(required=True, unique_index=True)
     """Логин"""
@@ -45,7 +51,7 @@ class LinkMetadata(StructuredNode):
     """Модель метаданных связи"""
     
     # Свойства
-    uid = UUIDv6Property()
+    uid = UniqueIdProperty()
     """Уникальный идентификатор. Содержит время создания"""
     created_by = RelationshipFrom('User', 'CREATED')
     """Создатель"""
@@ -56,14 +62,16 @@ class Block(StructuredNode):
     """Модель блока"""
     
     # Свойства
-    uid = UUIDv6Property()
+    uid = UniqueIdProperty(primary_key=True)
     """Уникальный идентификатор. Содержит время создания"""
     content = StringProperty(required=True)
     """Содержимое"""
-    layer = IntegerProperty(required=True, index=True)
+    layer = IntegerProperty(index=True, default=0)
     """Слой"""
-    level = IntegerProperty(required=True, index=True)
+    level = IntegerProperty(index=True, default=0)
     """Уровень"""
+    sublevel_id = IntegerProperty(index=True, default=-1)
+    """ID подуровня, к которому принадлежит блок"""
     
     data = JSONProperty()
     """Нестандартные данные — свойство для любых других не предусмотренных данных"""
@@ -71,7 +79,7 @@ class Block(StructuredNode):
     # Отношения
     created_by = RelationshipFrom('User', 'CREATED')
     """Создатель"""
-    target = RelationshipTo('Block', 'LINK_TO')
+    target = RelationshipTo('Block', 'LINK_TO', model=LinkRel)
     """
     Целевой блок. Обратные связи в Neo4j строятся автоматически —
     отдельно создавать source или модель связей Link не нужно

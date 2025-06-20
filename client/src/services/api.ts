@@ -127,22 +127,77 @@ export async function getLayout(): Promise<LayoutResponse> {
         mode: 'cors',
         credentials: 'omit'
     });
+    
     if (!response.ok) {
         throw new Error('Failed to fetch layout');
     }
+
     const text = await response.text();
-    console.log('Layout API response:', text);
     const data = JSON.parse(text);
-    console.log('Layout API parsed data:', data);
     
-    if (data.sublevels && data.sublevels.length > 0) {
-        console.log('Sample sublevel data:', data.sublevels[0]);
-        console.log('Sublevel fields:', Object.keys(data.sublevels[0]));
-        console.log('All sublevels:', data.sublevels);
-    }
-    
-    if (data.levels && data.levels.length > 0) {
-        console.log('Sample level data:', data.levels[0]);
-    }
     return data;
+}
+
+/**
+ * Создает новый блок
+ */
+export async function createBlock(content: string): Promise<{success: boolean, block?: Block}> {
+    const response = await fetch(`${API_URL}/api/blocks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+        console.error('Failed to create block:', response.statusText);
+        return { success: false };
+    }
+    return response.json();
+}
+
+/**
+ * Создает новую связь
+ */
+export async function createLink(source: string, target: string): Promise<{success: boolean, link?: Link}> {
+    const response = await fetch(`${API_URL}/api/links`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ source, target }),
+    });
+
+    if (!response.ok) {
+        console.error('Failed to create link:', response.statusText);
+        return { success: false };
+    }
+    return response.json();
+}
+
+/**
+ * Атомарно создает новый блок и связь с существующим
+ */
+export async function createBlockAndLink(
+  source_block_id: string, 
+  link_direction: 'from_source' | 'to_source',
+  new_block_content: string = "Новый блок", 
+): Promise<{success: boolean, new_block_id?: string, link_id?: string}> {
+    const response = await fetch(`${API_URL}/api/blocks/create_and_link`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ source_block_id, new_block_content, link_direction }),
+    });
+
+    if (!response.ok) {
+        console.error('Failed to create block and link:', response.statusText);
+        return { success: false };
+    }
+    return response.json();
 }

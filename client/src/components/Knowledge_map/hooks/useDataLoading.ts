@@ -39,8 +39,12 @@ const convertApiLinkToLinkData = (apiLink: api.Link): LinkData => {
     throw new Error('Invalid link data from API');
   }
 
+  const linkId = (apiLink.id && apiLink.id !== 'None') 
+    ? apiLink.id 
+    : `${apiLink.source_id}-${apiLink.target_id}`;
+
   return {
-    id: apiLink.id || `${apiLink.source_id}-${apiLink.target_id}`,
+    id: linkId,
     source_id: apiLink.source_id,
     target_id: apiLink.target_id
   };
@@ -48,9 +52,7 @@ const convertApiLinkToLinkData = (apiLink: api.Link): LinkData => {
 
 // Функция для преобразования уровня из формата API в формат LevelData
 const convertApiLevelToLevelData = (apiLevel: api.Level): LevelData => {
-  console.log('Converting level:', apiLevel);
   if (!apiLevel || typeof apiLevel.id !== 'number') {
-    console.error('Invalid level data:', apiLevel);
     throw new Error('Invalid level data from API');
   }
 
@@ -68,7 +70,6 @@ const convertApiLevelToLevelData = (apiLevel: api.Level): LevelData => {
 
   return {
     id: apiLevel.id,
-    sublevel_ids: [],  // По умолчанию пустой массив, так как это поле не приходит от API
     min_x: apiLevel.min_x,
     max_x: apiLevel.max_x,
     min_y: apiLevel.min_y,
@@ -80,23 +81,10 @@ const convertApiLevelToLevelData = (apiLevel: api.Level): LevelData => {
 
 // Функция для преобразования подуровня из формата API в формат SublevelData
 const convertApiSublevelToSublevelData = (apiSublevel: api.Sublevel): SublevelData => {
-  console.log('Converting sublevel:', apiSublevel);
   if (!apiSublevel || typeof apiSublevel.id !== 'number') {
     console.error('Invalid sublevel data:', apiSublevel);
     throw new Error('Invalid sublevel data from API');
   }
-
-  // Подробное логирование каждого поля
-  console.log('Checking sublevel fields:', {
-    id: apiSublevel.id,
-    min_x: typeof apiSublevel.min_x,
-    max_x: typeof apiSublevel.max_x,
-    min_y: typeof apiSublevel.min_y,
-    max_y: typeof apiSublevel.max_y,
-    level: typeof apiSublevel.level,
-    block_ids: Array.isArray(apiSublevel.block_ids),
-    block_ids_value: apiSublevel.block_ids
-  });
 
   if (typeof apiSublevel.min_x !== 'number' || 
       typeof apiSublevel.max_x !== 'number' || 
@@ -116,10 +104,7 @@ const convertApiSublevelToSublevelData = (apiSublevel: api.Sublevel): SublevelDa
   }
 
   // Используем значения по умолчанию для опциональных полей
-  const defaultColor = '#000000';
-  const colorHex = apiSublevel.color !== undefined ? 
-    `#${apiSublevel.color.toString(16).padStart(6, '0')}` : 
-    defaultColor;
+  const defaultColor = 0xD3D3D3;
 
   return {
     id: apiSublevel.id,
@@ -127,7 +112,7 @@ const convertApiSublevelToSublevelData = (apiSublevel: api.Sublevel): SublevelDa
     max_x: apiSublevel.max_x,
     min_y: apiSublevel.min_y,
     max_y: apiSublevel.max_y,
-    color: colorHex,
+    color: apiSublevel.color !== undefined ? apiSublevel.color : defaultColor,
     block_ids: apiSublevel.block_ids,
     level: apiSublevel.level
   };

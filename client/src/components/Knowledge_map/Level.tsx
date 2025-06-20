@@ -3,7 +3,7 @@ import { extend } from '@pixi/react';
 import { useCallback, useState, useEffect } from 'react';
 import { Sublevel } from './Sublevel';
 import type { BlockData, SublevelData, LevelData as LevelDataType } from './types';
-import { LEVEL_PADDING } from './constants';
+import { LEVEL_PADDING, SUBLEVEL_PADDING, BLOCK_HEIGHT } from './constants';
 import { Block } from './Block';
 import { EditMode } from './types';
 
@@ -36,11 +36,7 @@ export function Level({
   currentMode,
   onAddBlock
 }: LevelProps) {
-  useEffect(() => {
-    console.log('Level received currentMode:', currentMode);
-  }, [currentMode]);
-
-  const { min_x, max_x, min_y, max_y, color, sublevel_ids, id } = levelData;
+  const { min_x, max_x, min_y, max_y, color, id } = levelData;
   const [isHovered, setIsHovered] = useState(false);
 
   const draw = useCallback((g: Graphics) => {
@@ -50,27 +46,26 @@ export function Level({
     g.stroke({width: 2, color: color, alpha: isHovered ? 0.8 : 0.6});
   }, [min_x, max_x, min_y, max_y, color, isHovered]);
 
-  const levelSublevels = sublevels.filter(sublevel => sublevel_ids.includes(sublevel.id));
-  const levelBlocks = blocks.filter(block => block.level === levelData.id);
+  const levelSublevels = sublevels.filter(sublevel => sublevel.level === id);
 
-  // Рассчитываем общую высоту всех подуровней
-  const totalHeight = levelSublevels.reduce((total, sublevel) => 
-    total + (sublevel.max_y - sublevel.min_y), 0);
+  // Рассчитываем общую высоту всех подуровней с учетом отступов
+  const totalHeight = levelSublevels.length * BLOCK_HEIGHT + 
+    (levelSublevels.length - 1) * SUBLEVEL_PADDING;
 
   // Вычисляем начальную Y-координату для центрирования группы подуровней
   const levelHeight = max_y - min_y;
   let currentY = min_y + (levelHeight - totalHeight) / 2;
 
-  const adjustedSublevels = levelSublevels.map(sublevel => {
-    const sublevelHeight = sublevel.max_y - sublevel.min_y;
+  const adjustedSublevels = levelSublevels.map((sublevel, index) => {
     const adjusted = {
       ...sublevel,
-      min_x: sublevel.min_x,
-      max_x: sublevel.max_x,
+      min_x: min_x + LEVEL_PADDING,
+      max_x: max_x - LEVEL_PADDING,
       min_y: currentY,
-      max_y: currentY + sublevelHeight
+      max_y: currentY + BLOCK_HEIGHT
     };
-    currentY += sublevelHeight + LEVEL_PADDING;
+    // Добавляем SUBLEVEL_PADDING только между подуровнями
+    currentY += BLOCK_HEIGHT + (index < levelSublevels.length - 1 ? SUBLEVEL_PADDING : 0);
     return adjusted;
   });
 
@@ -110,18 +105,6 @@ export function Level({
             onBlockClick={onBlockClick}
             onBlockHover={onBlockHover}
             selectedBlocks={selectedBlocks}
-            currentMode={currentMode}
-            onAddBlock={onAddBlock}
-          />
-        ))}
-      </container>
-      <container zIndex={3}>
-        {levelBlocks.map((block) => (
-          <Block
-            key={block.id}
-            blockData={block}
-            isSelected={selectedBlocks.includes(block.id)}
-            onClick={() => onBlockClick(block.id)}
             currentMode={currentMode}
             onAddBlock={onAddBlock}
           />

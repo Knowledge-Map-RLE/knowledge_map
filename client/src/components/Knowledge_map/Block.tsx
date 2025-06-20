@@ -22,10 +22,6 @@ export function Block({ blockData, isSelected, onClick, onAddBlock, currentMode 
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredArrow, setHoveredArrow] = useState<'left' | 'right' | null>(null);
 
-  useEffect(() => {
-    console.log('Block state:', { isHovered, hoveredArrow, currentMode });
-  }, [isHovered, hoveredArrow, currentMode]);
-
   const draw = useCallback((g: Graphics) => {
     g.clear();
 
@@ -44,12 +40,12 @@ export function Block({ blockData, isSelected, onClick, onAddBlock, currentMode 
   }, [isSelected]);
 
   const handleMouseEnter = () => {
-    console.log('Block mouse enter');
+    
     setIsHovered(true);
   };
 
   const handleMouseLeave = (e: any) => {
-    console.log('Block mouse leave');
+    
     // Проверяем, не перешел ли курсор на одну из стрелок
     const relatedTarget = e.target.parent.children.find(
       (child: any) => child !== e.target && child.containsPoint?.(e.data.global)
@@ -80,7 +76,7 @@ export function Block({ blockData, isSelected, onClick, onAddBlock, currentMode 
       targetX: hoveredArrow === 'left' ? -xOffset : xOffset, // Смещение для нового блока
       targetY: 0
     };
-    console.log('Preview coordinates:', coords);
+    
     return coords;
   };
 
@@ -89,15 +85,7 @@ export function Block({ blockData, isSelected, onClick, onAddBlock, currentMode 
   const shouldShowArrows = (isHovered || hoveredArrow !== null) && currentMode === EditModeEnum.CREATE_BLOCKS;
   const shouldShowPreview = shouldShowArrows && hoveredArrow !== null && previewCoords !== null;
   
-  console.log('Render conditions:', {
-    isHovered,
-    currentMode,
-    expectedMode: EditModeEnum.CREATE_BLOCKS,
-    shouldShowArrows,
-    shouldShowPreview,
-    hoveredArrow,
-    previewCoords
-  });
+ 
 
   return (
     <pixiContainer x={x} y={y} sortableChildren={true}>
@@ -130,11 +118,11 @@ export function Block({ blockData, isSelected, onClick, onAddBlock, currentMode 
           <AddBlockArrow
             position="left"
             onHover={() => {
-              console.log('Left arrow hover');
+              
               setHoveredArrow('left');
             }}
             onHoverEnd={() => {
-              console.log('Left arrow hover end');
+              
               setHoveredArrow(null);
             }}
             onClick={handleLeftArrowClick}
@@ -144,11 +132,11 @@ export function Block({ blockData, isSelected, onClick, onAddBlock, currentMode 
           <AddBlockArrow
             position="right"
             onHover={() => {
-              console.log('Right arrow hover');
+              
               setHoveredArrow('right');
             }}
             onHoverEnd={() => {
-              console.log('Right arrow hover end');
+              
               setHoveredArrow(null);
             }}
             onClick={handleRightArrowClick}

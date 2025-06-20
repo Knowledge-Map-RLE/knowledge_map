@@ -16,7 +16,6 @@ export interface LinkData {
 
 export interface LevelData {
   id: number;
-  sublevel_ids: number[];
   min_x: number;
   max_x: number;
   min_y: number;
@@ -31,7 +30,8 @@ export interface SublevelData {
   max_x: number;
   min_y: number;
   max_y: number;
-  color: string;
+  /** Hex color number (e.g. 0xD3D3D3) */
+  color: number;
   block_ids: string[];
   level: number;
 }
