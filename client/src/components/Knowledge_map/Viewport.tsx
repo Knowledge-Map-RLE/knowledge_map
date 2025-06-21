@@ -19,6 +19,8 @@ interface ViewportProps {
 
 export interface ViewportRef {
   focusOn: (x: number, y: number) => void;
+  scale: number;
+  position: { x: number; y: number };
 }
 
 export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick }, ref) => {
@@ -33,17 +35,26 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   // Функция для отрисовки сетки
   const drawGrid = useCallback((g: Graphics) => {
     if (!app || !app.renderer) return;
-    g.clear();
-    g.stroke({ width: 1, color: GRID_COLOR, alpha: GRID_ALPHA });
+
     const viewWidth = app.screen.width;
     const viewHeight = app.screen.height;
-    for (let x = 0; x <= viewWidth; x += GRID_SIZE) {
-      g.moveTo(x, 0);
-      g.lineTo(x, viewHeight);
-    }
-    for (let y = 0; y <= viewHeight; y += GRID_SIZE) {
-      g.moveTo(0, y);
-      g.lineTo(viewWidth, y);
+
+    // Очищаем и перерисовываем, только если размеры изменились
+    // или если графика не была инициализирована
+    if ((g as any)._width !== viewWidth || (g as any)._height !== viewHeight) {
+        g.clear();
+        g.stroke({ width: 1, color: GRID_COLOR, alpha: GRID_ALPHA });
+        for (let x = 0; x <= viewWidth; x += GRID_SIZE) {
+            g.moveTo(x, 0);
+            g.lineTo(x, viewHeight);
+        }
+        for (let y = 0; y <= viewHeight; y += GRID_SIZE) {
+            g.moveTo(0, y);
+            g.lineTo(viewWidth, y);
+        }
+        // Сохраняем текущие размеры в самом объекте графики
+        (g as any)._width = viewWidth;
+        (g as any)._height = viewHeight;
     }
   }, [app]);
 
@@ -130,7 +141,9 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
 
       // Сохраняем новые анимации в ref
       tweensRef.current.push(scaleTween, positionTween);
-    }
+    },
+    scale,
+    position,
   }));
 
   const handleWheel = useCallback((event: WheelEvent) => {

@@ -6,6 +6,8 @@ export interface BlockData {
   level: number;
   sublevel: number;
   layer: number;
+  isHovered?: boolean;
+  hoveredArrow?: 'left' | 'right' | null;
 }
 
 export interface LinkData {

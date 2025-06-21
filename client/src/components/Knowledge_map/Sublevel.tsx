@@ -17,6 +17,10 @@ interface Props {
   selectedBlocks?: string[];
   currentMode?: EditMode;
   onAddBlock?: (sourceBlock: BlockData, targetLevel: number) => void;
+  onBlockPointerDown?: (blockId: string, event: any) => void;
+  onBlockMouseEnter?: (blockId: string) => void;
+  onBlockMouseLeave?: (blockId: string, event: any) => void;
+  onArrowHover?: (blockId: string, arrowPosition: 'left' | 'right' | null) => void;
 }
 
 export function Sublevel({
@@ -28,7 +32,11 @@ export function Sublevel({
   onBlockHover,
   selectedBlocks = [],
   currentMode = EditModeEnum.SELECT,
-  onAddBlock = () => {}
+  onAddBlock = () => {},
+  onBlockPointerDown = () => {},
+  onBlockMouseEnter = () => {},
+  onBlockMouseLeave = () => {},
+  onArrowHover = () => {}
 }: Props) {
   const { min_x, max_x, min_y, max_y, color, block_ids, id, level } = sublevelData;
   const [isHovered, setIsHovered] = useState(false);
@@ -82,6 +90,10 @@ export function Sublevel({
             onBlockClick={() => onBlockClick?.(block.id)}
             currentMode={currentMode}
             onAddBlock={onAddBlock}
+            onBlockPointerDown={onBlockPointerDown}
+            onBlockMouseEnter={onBlockMouseEnter}
+            onBlockMouseLeave={onBlockMouseLeave}
+            onArrowHover={onArrowHover}
           />
         ))}
       </container>

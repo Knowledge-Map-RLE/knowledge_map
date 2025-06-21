@@ -21,6 +21,10 @@ interface LevelProps {
   selectedBlocks: string[];
   currentMode: EditMode;
   onAddBlock: (sourceBlock: BlockData, targetLevel: number) => void;
+  onBlockPointerDown: (blockId: string, event: any) => void;
+  onBlockMouseEnter: (blockId: string) => void;
+  onBlockMouseLeave: (blockId: string, event: any) => void;
+  onArrowHover: (blockId: string, arrowPosition: 'left' | 'right' | null) => void;
 }
 
 export function Level({ 
@@ -34,7 +38,11 @@ export function Level({
   onBlockHover,
   selectedBlocks = [],
   currentMode,
-  onAddBlock
+  onAddBlock,
+  onBlockPointerDown,
+  onBlockMouseEnter,
+  onBlockMouseLeave,
+  onArrowHover
 }: LevelProps) {
   const { min_x, max_x, min_y, max_y, color, id } = levelData;
   const [isHovered, setIsHovered] = useState(false);
@@ -107,6 +115,10 @@ export function Level({
             selectedBlocks={selectedBlocks}
             currentMode={currentMode}
             onAddBlock={onAddBlock}
+            onBlockPointerDown={onBlockPointerDown}
+            onBlockMouseEnter={onBlockMouseEnter}
+            onBlockMouseLeave={onBlockMouseLeave}
+            onArrowHover={onArrowHover}
           />
         ))}
       </container>

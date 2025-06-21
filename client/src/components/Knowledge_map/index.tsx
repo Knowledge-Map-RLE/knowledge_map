@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
 import { Viewport } from './Viewport';
@@ -13,8 +13,9 @@ import { useActions } from './hooks/useActions';
 import { createBlockAndLink } from '../../services/api';
 import { EditMode } from './types';
 import type { LinkCreationState, BlockData, LinkData } from './types';
-import { BLOCK_WIDTH } from './constants';
+import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
 import styles from './Knowledge_map.module.css';
+import { useVirtualization } from './hooks/useVirtualization';
 
 extend({ Container, Graphics, Text });
 
@@ -41,6 +42,20 @@ export default function Knowledge_map() {
   const [linkCreationState, setLinkCreationState] = useState<LinkCreationState>({ step: 'waiting' });
   const [pixiReady, setPixiReady] = useState(false);
   const [focusTargetId, setFocusTargetId] = useState<string | null>(null);
+
+  const viewportState = viewportRef.current ? 
+    { scale: viewportRef.current.scale, position: viewportRef.current.position } : 
+    { scale: 1, position: { x: 0, y: 0 } };
+
+  const visibleBlocks = useVirtualization({
+    blocks,
+    viewportWidth: window.innerWidth,
+    viewportHeight: window.innerHeight,
+    scale: viewportState.scale,
+    position: viewportState.position,
+    blockWidth: BLOCK_WIDTH,
+    blockHeight: BLOCK_HEIGHT,
+  });
 
   useKeyboardControlsWithProps({
     setCurrentMode, setLinkCreationState, currentMode, linkCreationState
@@ -81,6 +96,34 @@ export default function Knowledge_map() {
       case EditMode.DELETE: handleDeleteBlock(blockId); break;
     }
   };
+
+  const handleBlockPointerDown = useCallback((blockId: string, event: any) => {
+    event.stopPropagation();
+    handleBlockClick(blockId);
+  }, [handleBlockClick]);
+  
+  const handleBlockMouseEnter = useCallback((blockId: string) => {
+      setBlocks(prev => prev.map(b =>
+          b.id === blockId ? { ...b, isHovered: true } : { ...b, isHovered: false }
+      ));
+  }, []);
+  
+  const handleBlockMouseLeave = useCallback((blockId: string, event: any) => {
+      const relatedTarget = event.currentTarget.parent?.children.find(
+          (child: any) => child !== event.currentTarget && child.containsPoint?.(event.global)
+      );
+      if (!relatedTarget) {
+          setBlocks(prev => prev.map(b =>
+              b.id === blockId ? { ...b, isHovered: false } : b
+          ));
+      }
+  }, []);
+  
+  const handleArrowHover = useCallback((blockId: string, arrowPosition: 'left' | 'right' | null) => {
+      setBlocks(prev => prev.map(b =>
+          b.id === blockId ? { ...b, hoveredArrow: arrowPosition } : b
+      ));
+  }, []);
 
   const handleLinkClick = (linkId: string) => {
     switch (currentMode) {
@@ -175,7 +218,7 @@ export default function Knowledge_map() {
               <Link
                 key={link.id}
                 linkData={link}
-                blocks={blocks}
+                blocks={visibleBlocks}
                 isSelected={selectedLinks.includes(link.id)}
                 onClick={() => handleLinkClick(link.id)}
               />
@@ -185,12 +228,16 @@ export default function Knowledge_map() {
                       key={level.id}
                       levelData={level}
                       sublevels={sublevels}
-                      blocks={blocks}
+                      blocks={visibleBlocks}
                       onSublevelClick={handleSublevelClick}
                       onBlockClick={handleBlockClick}
                       selectedBlocks={selectedBlocks}
                       currentMode={currentMode}
                       onAddBlock={handleAddBlock}
+                      onBlockPointerDown={handleBlockPointerDown}
+                      onBlockMouseEnter={handleBlockMouseEnter}
+                      onBlockMouseLeave={handleBlockMouseLeave}
+                      onArrowHover={handleArrowHover}
                     />
                   ))}
               </container>

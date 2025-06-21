@@ -1,6 +1,6 @@
 import { Graphics } from 'pixi.js';
 import { extend } from '@pixi/react';
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useRef, memo } from 'react';
 import type { LinkData, BlockData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
 import { gsap } from 'gsap';
@@ -14,7 +14,7 @@ export interface LinkProps {
   onClick: () => void;
 }
 
-export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
+export const Link = memo(function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
   const source_block = blocks.find(block => block.id === linkData.source_id);
   const target_block = blocks.find(block => block.id === linkData.target_id);
 
@@ -50,6 +50,8 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
       });
       isInitialRender.current = false;
     } else {
+      // Убиваем предыдущую анимацию перед созданием новой
+      gsap.killTweensOf(animatedPoints);
       gsap.to(animatedPoints, {
         source_x: source_point.x,
         source_y: source_point.y,
@@ -121,4 +123,4 @@ export function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
       onClick={onClick}
     />
   );
-} 
+}); 

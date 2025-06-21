@@ -108,9 +108,7 @@ export const useActions = ({
         target_id: toId
       };
       
-      console.log('Current links before update:', links);
       const newLinks = [...links, mockServerResponse];
-      console.log('New links array:', newLinks);
       setLinks(newLinks);
       console.log('Link created:', mockServerResponse);
       

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { BlockData, LevelData, SublevelData, LinkData } from '../types';
 import * as api from '../../../services/api';
@@ -161,33 +161,48 @@ export function useDataLoading(): UseDataLoadingResult {
   const [sublevels, setSublevels] = useState<SublevelData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const updateTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   const loadLayoutData = useCallback(async () => {
-    setIsLoading(true);
-    setLoadError(null);
-
-    try {
-      const data = await api.getLayout();
-
-      if (!data.blocks || data.blocks.length === 0) {
-        throw new Error('No blocks found in the response');
-      }
-
-      const convertedBlocks = data.blocks.map(convertApiBlockToBlockData);
-      const convertedLinks = (data.links || []).map(convertApiLinkToLinkData);
-      const convertedLevels = (data.levels || []).map(convertApiLevelToLevelData);
-      const convertedSublevels = (data.sublevels || []).map(convertApiSublevelToSublevelData);
-
-      setBlocks(prev => smartUpdateArray(prev, convertedBlocks));
-      setLinks(prev => smartUpdateArray(prev, convertedLinks));
-      setLevels(prev => smartUpdateArray(prev, convertedLevels));
-      setSublevels(prev => smartUpdateArray(prev, convertedSublevels));
-
-    } catch (error) {
-      setLoadError(error instanceof Error ? error.message : 'Unknown error');
-    } finally {
-      setIsLoading(false);
+    if (updateTimeoutRef.current) {
+      clearTimeout(updateTimeoutRef.current);
     }
+
+    updateTimeoutRef.current = setTimeout(async () => {
+      setIsLoading(true);
+      setLoadError(null);
+
+      try {
+        const data = await api.getLayout();
+
+        if (!data.blocks || data.blocks.length === 0) {
+          throw new Error('No blocks found in the response');
+        }
+
+        const convertedBlocks = data.blocks.map(convertApiBlockToBlockData);
+        const convertedLinks = (data.links || []).map(convertApiLinkToLinkData);
+        const convertedLevels = (data.levels || []).map(convertApiLevelToLevelData);
+        const convertedSublevels = (data.sublevels || []).map(convertApiSublevelToSublevelData);
+
+        setBlocks(prev => smartUpdateArray(prev, convertedBlocks));
+        setLinks(prev => smartUpdateArray(prev, convertedLinks));
+        setLevels(prev => smartUpdateArray(prev, convertedLevels));
+        setSublevels(prev => smartUpdateArray(prev, convertedSublevels));
+
+      } catch (error) {
+        setLoadError(error instanceof Error ? error.message : 'Unknown error');
+      } finally {
+        setIsLoading(false);
+      }
+    }, 100);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+    };
   }, []);
 
   return {

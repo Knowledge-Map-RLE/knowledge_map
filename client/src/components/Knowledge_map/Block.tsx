@@ -1,6 +1,6 @@
 import { Graphics, Container, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { AddBlockArrow } from './AddBlockArrow';
 import type { BlockData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
@@ -14,21 +14,27 @@ const BLOCK_PADDING = 10;
 export interface BlockProps {
   blockData: BlockData;
   onBlockClick: (id: string) => void;
-  onBlockHover?: (block: BlockData | null) => void;
   isSelected: boolean;
   currentMode: EditMode;
   onAddBlock: (sourceBlock: BlockData, targetLevel: number) => void;
+  onBlockPointerDown: (blockId: string, event: any) => void;
+  onBlockMouseEnter: (blockId: string) => void;
+  onBlockMouseLeave: (blockId: string, event: any) => void;
+  onArrowHover: (blockId: string, arrowPosition: 'left' | 'right' | null) => void;
 }
 
-export function Block({ 
+export const Block = memo(function Block({ 
   blockData, 
   onBlockClick, 
-  onBlockHover, 
   isSelected,
   currentMode,
-  onAddBlock
+  onAddBlock,
+  onBlockPointerDown,
+  onBlockMouseEnter,
+  onBlockMouseLeave,
+  onArrowHover,
 }: BlockProps) {
-  const { id, text, x, y, level } = blockData;
+  const { id, text, x, y, level, isHovered, hoveredArrow } = blockData;
   const containerRef = useRef<Container>(null);
   const isInitialRender = useRef(true);
 
@@ -46,9 +52,6 @@ export function Block({
     }
   }, [x, y]);
 
-  const [isHovered, setIsHovered] = useState(false);
-  const [hoveredArrow, setHoveredArrow] = useState<'left' | 'right' | null>(null);
-  
   const draw = useCallback((g: Graphics) => {
     const bgColor = isSelected ? 0x93c5fd : 0xffffff;
     const borderColor = isHovered || hoveredArrow ? 0x3b82f6 : 0xd1d5db;
@@ -59,29 +62,14 @@ export function Block({
     g.stroke({ width: borderWidth, color: borderColor });
   }, [isSelected, isHovered, hoveredArrow]);
 
-  const handlePointerDown = (event: any) => {
-    event.stopPropagation(); 
-    onBlockClick(id);
-  };
-  
-  const handleMouseLeave = (e: any) => {
-     const relatedTarget = e.currentTarget.parent?.children.find(
-       (child: any) => child !== e.currentTarget && child.containsPoint?.(e.global)
-     );
-     if (!relatedTarget) {
-       setIsHovered(false);
-       onBlockHover?.(null);
-     }
-  };
-
   return (
     <container 
       ref={containerRef}
       eventMode="static" 
       cursor="pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
-      onPointerDown={handlePointerDown}
+      onMouseEnter={() => onBlockMouseEnter(id)}
+      onMouseLeave={(e: any) => onBlockMouseLeave(id, e)}
+      onPointerDown={(e: any) => onBlockPointerDown(id, e)}
       zIndex={10}
     >
       <graphics draw={draw} />
@@ -101,19 +89,19 @@ export function Block({
           <AddBlockArrow
             position="left"
             onClick={() => onAddBlock(blockData, level - 1)}
-            onHover={() => setHoveredArrow('left')}
-            onHoverEnd={() => setHoveredArrow(null)}
+            onHover={() => onArrowHover(id, 'left')}
+            onHoverEnd={() => onArrowHover(id, null)}
             isHovered={hoveredArrow === 'left'}
           />
           <AddBlockArrow
             position="right"
             onClick={() => onAddBlock(blockData, level + 1)}
-            onHover={() => setHoveredArrow('right')}
-            onHoverEnd={() => setHoveredArrow(null)}
+            onHover={() => onArrowHover(id, 'right')}
+            onHoverEnd={() => onArrowHover(id, null)}
             isHovered={hoveredArrow === 'right'}
           />
         </>
       )}
     </container>
   );
-}
+});
