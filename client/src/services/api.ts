@@ -24,25 +24,16 @@ export interface Link {
 
 export interface Level {
     id: number;
-    min_x: number;
-    max_x: number;
-    min_y: number;
-    max_y: number;
-    color?: number;
+    sublevel_ids: number[];
     name?: string;
-    block_ids: string[];
-    level: number;
+    color?: string;
 }
 
 export interface Sublevel {
     id: number;
-    min_x: number;
-    max_x: number;
-    min_y: number;
-    max_y: number;
-    color?: number;
     block_ids: string[];
-    level: number;
+    level_id: number;
+    color?: string;
 }
 
 export interface LayoutStatistics {
@@ -51,8 +42,6 @@ export interface LayoutStatistics {
     total_levels: number;
     total_sublevels: number;
     max_layer: number;
-    total_width: number;
-    total_height: number;
     processing_time_ms: number;
     is_acyclic: boolean;
     isolated_blocks: number;

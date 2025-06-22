@@ -1,8 +1,9 @@
 export interface BlockData {
   id: string;
   text: string;
-  x: number;
-  y: number;
+  content?: string;
+  x?: number;
+  y?: number;
   level: number;
   sublevel: number;
   layer: number;
@@ -18,24 +19,26 @@ export interface LinkData {
 
 export interface LevelData {
   id: number;
-  min_x: number;
-  max_x: number;
-  min_y: number;
-  max_y: number;
-  color?: number;
+  sublevel_ids: number[];
+  min_x?: number;
+  max_x?: number;
+  min_y?: number;
+  max_y?: number;
+  color?: string | number;
   name?: string;
 }
 
 export interface SublevelData {
   id: number;
-  min_x: number;
-  max_x: number;
-  min_y: number;
-  max_y: number;
-  /** Hex color number (e.g. 0xD3D3D3) */
-  color: number;
+  level_id: number;
   block_ids: string[];
-  level: number;
+  min_x?: number;
+  max_x?: number;
+  min_y?: number;
+  max_y?: number;
+  /** Hex color string (e.g. "#D3D3D3") or number (e.g. 0xD3D3D3) */
+  color?: string | number;
+  level?: number; // для обратной совместимости
 }
 
 export const EditMode = {

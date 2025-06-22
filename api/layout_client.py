@@ -180,8 +180,6 @@ class LayoutClient:
                     result["blocks"].append({
                         "id": block.id,
                         "content": block.content,
-                        "x": float(block.x),
-                        "y": float(block.y),
                         "layer": block.layer,
                         "level": block.level,
                         "sublevel_id": block.sublevel_id,
@@ -205,15 +203,12 @@ class LayoutClient:
             logger.info("Обработка уровней...")
             for i, level in enumerate(response.levels):
                 try:
-                    logger.debug(f"Уровень {i}: id={level.id}, min_x={getattr(level, 'min_x', 'нет')}, min_y={getattr(level, 'min_y', 'нет')}")
+                    logger.debug(f"Уровень {i}: id={level.id}")
                     result["levels"].append({
                         "id": level.id,
-                        "min_x": getattr(level, 'min_x', 0.0),
-                        "max_x": getattr(level, 'max_x', 0.0),
-                        "min_y": getattr(level, 'min_y', 0.0),
-                        "max_y": getattr(level, 'max_y', 0.0),
-                        "color": f"#{level.color:06x}" if hasattr(level, 'color') else "#000000",
-                        "name": getattr(level, 'name', f"Уровень {level.id}")
+                        "sublevel_ids": list(level.sublevel_ids),
+                        "name": getattr(level, 'name', f"Уровень {level.id}"),
+                        "color": f"#{level.color:06x}" if hasattr(level, 'color') else "#000000"
                     })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке уровня {i} (id={getattr(level, 'id', 'unknown')}): {e}")
@@ -224,16 +219,12 @@ class LayoutClient:
             logger.info("Обработка подуровней...")
             for i, sublevel in enumerate(response.sublevels):
                 try:
-                    logger.debug(f"Подуровень {i}: id={sublevel.id}, min_y={getattr(sublevel, 'min_y', 'нет')}")
+                    logger.debug(f"Подуровень {i}: id={sublevel.id}")
                     result["sublevels"].append({
                         "id": sublevel.id,
-                        "min_x": getattr(sublevel, 'min_x', 0.0),
-                        "max_x": getattr(sublevel, 'max_x', 0.0),
-                        "min_y": getattr(sublevel, 'min_y', 0.0),
-                        "max_y": getattr(sublevel, 'max_y', 0.0),
-                        "color": f"#{sublevel.color:06x}" if hasattr(sublevel, 'color') else "#000000",
                         "block_ids": list(sublevel.block_ids) if hasattr(sublevel, 'block_ids') else [],
-                        "level": getattr(sublevel, 'level_id', 0)
+                        "level_id": getattr(sublevel, 'level_id', 0),
+                        "color": f"#{sublevel.color:06x}" if hasattr(sublevel, 'color') else "#000000"
                     })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке подуровня {i} (id={getattr(sublevel, 'id', 'unknown')}): {e}")

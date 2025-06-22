@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { BlockData, LevelData, SublevelData, LinkData } from '../types';
 import * as api from '../../../services/api';
+import { calculateBlockCoordinates, calculateLevelCoordinates, calculateSublevelCoordinates } from '../utils/layout';
 
 interface UseDataLoadingResult {
   blocks: BlockData[];
@@ -26,8 +27,7 @@ const convertApiBlockToBlockData = (apiBlock: api.Block): BlockData => {
   return {
     id: apiBlock.id,
     text: apiBlock.content || '',
-    x: apiBlock.x || 0,
-    y: apiBlock.y || 0,
+    content: apiBlock.content || '',
     level: apiBlock.level || 0,
     layer: apiBlock.layer || 0,
     sublevel: apiBlock.sublevel_id || 0
@@ -57,26 +57,16 @@ const convertApiLevelToLevelData = (apiLevel: api.Level): LevelData => {
     throw new Error('Invalid level data from API');
   }
 
-  if (typeof apiLevel.min_x !== 'number' || 
-      typeof apiLevel.max_x !== 'number' || 
-      typeof apiLevel.min_y !== 'number' || 
-      typeof apiLevel.max_y !== 'number') {
+  if (!Array.isArray(apiLevel.sublevel_ids)) {
     console.error('Missing required level fields:', apiLevel);
-    throw new Error('Invalid level data from API: missing required fields');
+    throw new Error('Invalid level data from API: missing sublevel_ids');
   }
-
-  // Используем значения по умолчанию для опциональных полей
-  const defaultColor = 0;
-  const defaultName = `Уровень ${apiLevel.id}`;
 
   return {
     id: apiLevel.id,
-    min_x: apiLevel.min_x,
-    max_x: apiLevel.max_x,
-    min_y: apiLevel.min_y,
-    max_y: apiLevel.max_y,
-    color: apiLevel.color !== undefined ? apiLevel.color : defaultColor,
-    name: apiLevel.name || defaultName
+    sublevel_ids: apiLevel.sublevel_ids,
+    name: apiLevel.name || `Уровень ${apiLevel.id}`,
+    color: apiLevel.color || '#b0c4de'
   };
 };
 
@@ -87,35 +77,20 @@ const convertApiSublevelToSublevelData = (apiSublevel: api.Sublevel): SublevelDa
     throw new Error('Invalid sublevel data from API');
   }
 
-  if (typeof apiSublevel.min_x !== 'number' || 
-      typeof apiSublevel.max_x !== 'number' || 
-      typeof apiSublevel.min_y !== 'number' || 
-      typeof apiSublevel.max_y !== 'number' ||
-      typeof apiSublevel.level !== 'number' ||
+  if (typeof apiSublevel.level_id !== 'number' ||
       !Array.isArray(apiSublevel.block_ids)) {
     console.error('Missing required sublevel fields. Values:', {
-      min_x: apiSublevel.min_x,
-      max_x: apiSublevel.max_x,
-      min_y: apiSublevel.min_y,
-      max_y: apiSublevel.max_y,
-      level: apiSublevel.level,
+      level_id: apiSublevel.level_id,
       block_ids: apiSublevel.block_ids
     });
     throw new Error('Invalid sublevel data from API: missing required fields');
   }
 
-  // Используем значения по умолчанию для опциональных полей
-  const defaultColor = 0xD3D3D3;
-
   return {
     id: apiSublevel.id,
-    min_x: apiSublevel.min_x,
-    max_x: apiSublevel.max_x,
-    min_y: apiSublevel.min_y,
-    max_y: apiSublevel.max_y,
-    color: apiSublevel.color !== undefined ? apiSublevel.color : defaultColor,
+    level_id: apiSublevel.level_id,
     block_ids: apiSublevel.block_ids,
-    level: apiSublevel.level
+    color: apiSublevel.color || '#add8e6'
   };
 };
 
@@ -184,10 +159,17 @@ export function useDataLoading(): UseDataLoadingResult {
         const convertedLevels = (data.levels || []).map(convertApiLevelToLevelData);
         const convertedSublevels = (data.sublevels || []).map(convertApiSublevelToSublevelData);
 
-        setBlocks(prev => smartUpdateArray(prev, convertedBlocks));
+        // Рассчитываем координаты блоков по алгоритму Sugiyama
+        const blocksWithCoords = calculateBlockCoordinates(convertedBlocks, convertedLevels, convertedSublevels);
+        
+        // После размещения блоков рассчитываем координаты подуровней и уровней
+        const sublevelsWithCoords = calculateSublevelCoordinates(convertedSublevels, blocksWithCoords);
+        const levelsWithCoords = calculateLevelCoordinates(convertedLevels, sublevelsWithCoords);
+
+        setBlocks(prev => smartUpdateArray(prev, blocksWithCoords));
         setLinks(prev => smartUpdateArray(prev, convertedLinks));
-        setLevels(prev => smartUpdateArray(prev, convertedLevels));
-        setSublevels(prev => smartUpdateArray(prev, convertedSublevels));
+        setLevels(prev => smartUpdateArray(prev, levelsWithCoords));
+        setSublevels(prev => smartUpdateArray(prev, sublevelsWithCoords));
 
       } catch (error) {
         setLoadError(error instanceof Error ? error.message : 'Unknown error');

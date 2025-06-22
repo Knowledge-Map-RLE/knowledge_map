@@ -40,14 +40,17 @@ export const Block = memo(function Block({
 
   useEffect(() => {
     if (containerRef.current) {
+      const safeX = x || 0;
+      const safeY = y || 0;
+      
       if (isInitialRender.current) {
-        containerRef.current.x = x;
-        containerRef.current.y = y;
+        containerRef.current.x = safeX;
+        containerRef.current.y = safeY;
         containerRef.current.alpha = 0;
         gsap.to(containerRef.current, { alpha: 1, duration: 0.5, ease: 'power2.inOut' });
         isInitialRender.current = false;
       } else {
-        gsap.to(containerRef.current, { x, y, duration: 0.8, ease: 'power3.inOut' });
+        gsap.to(containerRef.current, { x: safeX, y: safeY, duration: 0.8, ease: 'power3.inOut' });
       }
     }
   }, [x, y]);

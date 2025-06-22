@@ -23,7 +23,22 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
         start_time = time.time()
         
         # Логируем входные данные
-        logger.info(f"Получен запрос на укладку")
+        logger.info(f"=== ПОЛУЧЕН ЗАПРОС НА УКЛАДКУ ===")
+        logger.info(f"Количество блоков: {len(request.blocks)}")
+        logger.info(f"Количество связей: {len(request.links)}")
+        
+        # Логируем детали блоков
+        logger.info("Блоки:")
+        for block in request.blocks:
+            logger.info(f"  ID: {block.id}, контент: '{block.content[:50]}{'...' if len(block.content) > 50 else ''}'")
+        
+        # Логируем связи
+        if request.links:
+            logger.info("Связи:")
+            for link in request.links:
+                logger.info(f"  {link.source_id} -> {link.target_id}")
+        else:
+            logger.info("Связи отсутствуют")
         
         try:
             # Извлекаем блоки и связи из запроса
@@ -35,10 +50,10 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                 'max_layers': request.options.max_layers if request.options.max_layers > 0 else None,
                 'max_levels': request.options.max_levels if request.options.max_levels > 0 else None,
                 'blocks_per_sublevel': request.options.blocks_per_sublevel if request.options.blocks_per_sublevel > 0 else None,
-                'optimize_layout': request.options.optimize_layout,
-                'sublevel_spacing': request.options.sublevel_spacing,
-                'layer_spacing': request.options.layer_spacing
+                'optimize_layout': request.options.optimize_layout
             }
+            
+            logger.info(f"Опции укладки: {options}")
                         
             # Выполняем укладку
             result = layout_knowledge_map(blocks, links, options)
@@ -47,13 +62,11 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
             response = layout_pb2.LayoutResponse()
             
             # Добавляем блоки с позициями
-            for block_id, (x, y) in result['positions'].items():
+            for block_id in result['layers'].keys():
                 block_data = next(b for b in request.blocks if b.id == block_id)
                 block = response.blocks.add()
                 block.id = block_id
                 block.content = block_data.content
-                block.x = float(x)
-                block.y = float(y)
                 block.layer = result['layers'][block_id]
                 
                 # Находим уровень и подуровень для блока
@@ -71,19 +84,6 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                 level = response.levels.add()
                 level.id = level_id
                 level.sublevel_ids.extend(sublevel_ids)
-                
-                # Вычисляем границы уровня
-                blocks_in_level = []
-                for sublevel_id in sublevel_ids:
-                    blocks_in_level.extend(result['sublevels'][sublevel_id])
-                
-                if blocks_in_level:
-                    positions = [result['positions'][block_id] for block_id in blocks_in_level]
-                    level.min_x = min(x for x, _ in positions) - options['layer_spacing'] / 2
-                    level.max_x = max(x for x, _ in positions) + options['layer_spacing'] / 2
-                    level.min_y = min(y for _, y in positions) - options['sublevel_spacing'] / 2
-                    level.max_y = max(y for _, y in positions) + options['sublevel_spacing'] / 2
-                
                 level.name = f"Уровень {level_id}"
                 level.color = self._get_level_color(level_id)
             
@@ -98,14 +98,6 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                         sublevel.level_id = level_id
                         break
                 
-                # Вычисляем координаты подуровня
-                if block_ids:
-                    positions = [result['positions'][block_id] for block_id in block_ids]
-                    sublevel.y = positions[0][1]  # Все блоки на одном подуровне имеют одинаковую y координату
-                    sublevel.min_x = min(x for x, _ in positions) - options['layer_spacing'] / 2
-                    sublevel.max_x = max(x for x, _ in positions) + options['layer_spacing'] / 2
-                    sublevel.height = options['sublevel_spacing'] * 0.8
-                
                 sublevel.block_ids.extend(block_ids)
                 sublevel.color = self._get_sublevel_color(sublevel_id)
             
@@ -115,13 +107,38 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
             response.statistics.total_levels = result['statistics']['total_levels']
             response.statistics.total_sublevels = result['statistics']['total_sublevels']
             response.statistics.max_layer = result['statistics']['max_layer']
-            response.statistics.total_width = result['statistics']['total_width']
-            response.statistics.total_height = result['statistics']['total_height']
             response.statistics.processing_time_ms = int((time.time() - start_time) * 1000)
             response.statistics.is_acyclic = result['statistics']['is_acyclic']
             response.statistics.isolated_blocks = result['statistics']['isolated_blocks']
 
             response.success = True
+            
+            # Логируем результат укладки
+            logger.info(f"=== УКЛАДКА ЗАВЕРШЕНА ===")
+            logger.info(f"Время обработки: {response.statistics.processing_time_ms}мс")
+            logger.info(f"Статистика:")
+            logger.info(f"  Всего блоков: {response.statistics.total_blocks}")
+            logger.info(f"  Всего связей: {response.statistics.total_links}")
+            logger.info(f"  Всего уровней: {response.statistics.total_levels}")
+            logger.info(f"  Всего подуровней: {response.statistics.total_sublevels}")
+            logger.info(f"  Максимальный слой: {response.statistics.max_layer}")
+            logger.info(f"  Граф ациклический: {response.statistics.is_acyclic}")
+            logger.info(f"  Изолированных блоков: {response.statistics.isolated_blocks}")
+            
+            # Детальное логирование структуры блоков
+            logger.info("Структура блоков:")
+            for block in response.blocks:
+                logger.info(f"  {block.id}: слой={block.layer}, уровень={block.level}, подуровень={block.sublevel_id}")
+            
+            # Логирование структуры уровней
+            logger.info("Структура уровней:")
+            for level in response.levels:
+                logger.info(f"  Уровень {level.id} '{level.name}': подуровни {list(level.sublevel_ids)}")
+            
+            # Логирование подуровней
+            logger.info("Структура подуровней:")
+            for sublevel in response.sublevels:
+                logger.info(f"  Подуровень {sublevel.id} (уровень {sublevel.level_id}): блоки {list(sublevel.block_ids)}")
             
             return response
             

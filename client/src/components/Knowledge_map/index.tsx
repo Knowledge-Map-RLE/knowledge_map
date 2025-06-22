@@ -68,10 +68,24 @@ export default function Knowledge_map() {
   }, []);
   useEffect(() => { containerRef.current?.focus(); }, []);
 
+  // Автоматическое центрирование при первой загрузке данных
+  useEffect(() => {
+    if (blocks.length > 0 && !focusTargetId) {
+      // Находим центр всех блоков
+      const centerX = blocks.reduce((sum, block) => sum + (block.x || 0), 0) / blocks.length;
+      const centerY = blocks.reduce((sum, block) => sum + (block.y || 0), 0) / blocks.length;
+      
+      // Центрируем viewport на центр данных
+      setTimeout(() => {
+        viewportRef.current?.focusOn(centerX, centerY);
+      }, 100);
+    }
+  }, [blocks.length, focusTargetId]); // Зависимость только от количества блоков для единократного вызова
+
   useEffect(() => {
     if (focusTargetId && blocks.length > 0) {
       const targetBlock = blocks.find(b => b.id === focusTargetId);
-      if (targetBlock) {
+      if (targetBlock && typeof targetBlock.x === 'number' && typeof targetBlock.y === 'number') {
         const targetX = targetBlock.x + BLOCK_WIDTH / 2;
         const targetY = targetBlock.y;
         viewportRef.current?.focusOn(targetX, targetY);
@@ -156,8 +170,8 @@ export default function Knowledge_map() {
       const newBlock: BlockData = {
         id: response.new_block.id,
         text: response.new_block.content || 'Новый блок',
-        x: sourceBlock.x + (linkDirection === 'from_source' ? 150 : -150), // Временная позиция
-        y: sourceBlock.y, // Временная позиция
+        x: (sourceBlock.x || 0) + (linkDirection === 'from_source' ? 150 : -150), // Временная позиция
+        y: sourceBlock.y || 0, // Временная позиция
         level: response.new_block.level,
         layer: response.new_block.layer ?? sourceBlock.layer ?? 0,
         sublevel: response.new_block.sublevel_id,

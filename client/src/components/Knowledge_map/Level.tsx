@@ -54,7 +54,7 @@ export function Level({
     g.stroke({width: 2, color: color, alpha: isHovered ? 0.8 : 0.6});
   }, [min_x, max_x, min_y, max_y, color, isHovered]);
 
-  const levelSublevels = sublevels.filter(sublevel => sublevel.level === id);
+  const levelSublevels = sublevels.filter(sublevel => sublevel.level_id === id);
 
   // Рассчитываем общую высоту всех подуровней с учетом отступов
   const totalHeight = levelSublevels.length * BLOCK_HEIGHT + 
