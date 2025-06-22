@@ -18,6 +18,7 @@ export interface ViewportRef {
   containerRef: Container | null;
 }
 
+// TODO: исправить центрирование
 export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick }, ref) => {
   const containerRef = useRef<Container | null>(null);
   const gridRef = useRef<Graphics | null>(null);

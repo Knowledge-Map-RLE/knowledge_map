@@ -5,6 +5,8 @@ import { Viewport } from './Viewport';
 import type { ViewportRef } from './Viewport';
 import { Link } from './Link';
 import { Level } from './Level';
+import { Sublevel } from './Sublevel';
+import { Block } from './Block';
 import ModeIndicator from './ModeIndicator';
 import { useKeyboardControlsWithProps } from './hooks/useKeyboardControls';
 import { useDataLoading } from './hooks/useDataLoading';
@@ -46,7 +48,7 @@ export default function Knowledge_map() {
   const {
     handleBlockClick,
     handleBlockMouseEnter,
-    handleBlockMouseLeave, 
+    handleBlockMouseLeave,
     handleArrowHover,
     handleLinkClick,
     handleCanvasClick
@@ -71,8 +73,8 @@ export default function Knowledge_map() {
     loadLayoutData
   });
 
-  const viewportState = viewportRef.current ? 
-    { scale: viewportRef.current.scale, position: viewportRef.current.position } : 
+  const viewportState = viewportRef.current ?
+    { scale: viewportRef.current.scale, position: viewportRef.current.position } :
     { scale: 1, position: { x: 0, y: 0 } };
 
   useKeyboardControlsWithProps({
@@ -92,7 +94,7 @@ export default function Knowledge_map() {
       // Находим центр всех блоков
       const centerX = blocks.reduce((sum, block) => sum + (block.x || 0), 0) / blocks.length;
       const centerY = blocks.reduce((sum, block) => sum + (block.y || 0), 0) / blocks.length;
-      
+
       // Центрируем viewport на центр данных
       setTimeout(() => {
         viewportRef.current?.focusOn(centerX, centerY);
@@ -135,50 +137,57 @@ export default function Knowledge_map() {
   return (
     <div ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
       {(!pixiReady || isLoading) && (
-          <div className={styles.экран_загрузки}>
-              {isLoading ? 'Обновление данных...' : 'Инициализация...'}
-          </div>
+        <div className={styles.экран_загрузки}>
+          {isLoading ? 'Обновление данных...' : 'Инициализация...'}
+        </div>
       )}
       <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
         <Viewport ref={viewportRef} onCanvasClick={handleCanvasClick}>
-                  <graphics
-                    draw={(g: any) => {
-                      g.roundRect(-50, -50, 100, 100, 10);
-                      g.fill(0xFF0000);
-                    }}
-                    eventMode="static"
-                    interactive
-                    onPointerDown={() => console.log('🔴 Клик по красному квадрату')}
-                  />
-                  {/*{links.map(link => (
-                    <Link
-                      key={link.id}
-                      linkData={link}
-                      blocks={blocks}
-                      isSelected={selectedLinks.includes(link.id)}
-                      onClick={() => handleLinkClick(link.id)}
-                    />
-                  ))}
-                  {levels.map(level => (
-                    <Level
-                      key={level.id}
-                      levelData={level}
-                      sublevels={sublevels}
-                      blocks={blocks}
-                      onSublevelClick={handleSublevelClick}
-                      onBlockClick={handleBlockClick}
-                      selectedBlocks={selectedBlocks}
-                      currentMode={currentMode}
-                      onAddBlock={handleAddBlock}
-                      onBlockPointerDown={handleBlockPointerDown}
-                      onBlockMouseEnter={handleBlockMouseEnter}
-                      onBlockMouseLeave={handleBlockMouseLeave}
-                      onArrowHover={handleArrowHover}
-                    />
-                  ))} */}
-              
-            </Viewport>
-          </Application>
+          {/* Рендерим все уровни без вложенных sublevels и blocks */}
+          {levels.map(level => (
+            <Level
+              key={level.id}
+              levelData={level}
+            />
+          ))}
+          
+          {/* Рендерим все подуровни отдельно */}
+          {sublevels.map(sublevel => (
+            <Sublevel
+              key={sublevel.id}
+              sublevelData={sublevel}
+              onSublevelClick={handleSublevelClick}
+            />
+          ))}
+
+          {/* Рендерим все ссылки */}
+          {links.map(link => (
+            <Link
+              key={link.id}
+              linkData={link}
+              blocks={blocks}
+              isSelected={selectedLinks.includes(link.id)}
+              onClick={() => handleLinkClick(link.id)}
+            />
+          ))}
+          
+          {/* Рендерим все блоки отдельно */}
+          {blocks.map(block => (
+            <Block
+              key={block.id}
+              blockData={block}
+              onBlockClick={handleBlockClick}
+              isSelected={selectedBlocks.includes(block.id)}
+              currentMode={currentMode}
+              onAddBlock={handleAddBlock}
+              onBlockPointerDown={handleBlockPointerDown}
+              onBlockMouseEnter={handleBlockMouseEnter}
+              onBlockMouseLeave={handleBlockMouseLeave}
+              onArrowHover={handleArrowHover}
+            />
+          ))}
+        </Viewport>
+      </Application>
       <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
     </div>
   );
