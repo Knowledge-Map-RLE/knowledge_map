@@ -29,111 +29,100 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   const [centerX, setCenterX] = useState(400);
   const [centerY, setCenterY] = useState(300);
 
-  // Панорамирование через PIXI события
-  useEffect(() => {
-    if (!app || !containerRef.current || !gridRef.current) return;
-    
-    console.log('Настраиваем PIXI события для панорамирования');
-    
-    const grid = gridRef.current;
-    
-    // Делаем grid интерактивным для захвата всех событий
-    grid.interactive = true;
-    grid.hitArea = app.screen;
-    
-    const onPointerDown = (e: FederatedPointerEvent) => {
-      if (e.nativeEvent.button !== 2) return;
-      if ('preventDefault' in e.nativeEvent) {
-        e.nativeEvent.preventDefault();
-      }
-      
-      const cnt = containerRef.current;
-      if (!cnt) return;
-      
-      const worldPoint = cnt.toLocal(e.global);
-      dragWorld.current = new Point(worldPoint.x, worldPoint.y);
-      setIsDragging(true);
-      
-      if (app.canvas) {
-        (app.canvas as HTMLCanvasElement).style.cursor = 'grabbing';
-      }
-      console.log('Начинаем перетаскивание через PIXI');
-    };
-
-    const onPointerMove = (e: FederatedPointerEvent) => {
-      if (!isDragging || !containerRef.current || !dragWorld.current) return;
-      
-      const cnt = containerRef.current;
-      const screenPos = cnt.toGlobal(dragWorld.current);
-      cnt.position.x += e.global.x - screenPos.x;
-      cnt.position.y += e.global.y - screenPos.y;
-    };
-
-    const onPointerUp = (e: FederatedPointerEvent) => {
-      if (e.nativeEvent.button !== 2) return;
-      setIsDragging(false);
-      dragWorld.current = null;
-      
-      if (app.canvas) {
-        (app.canvas as HTMLCanvasElement).style.cursor = 'default';
-      }
-      console.log('Заканчиваем перетаскивание через PIXI');
-    };
-
-    const onRightClick = (e: FederatedPointerEvent) => {
-      if ('preventDefault' in e.nativeEvent) {
-        e.nativeEvent.preventDefault();
-      }
-    };
-
-    grid.on('pointerdown', onPointerDown);
-    grid.on('pointermove', onPointerMove);
-    grid.on('pointerup', onPointerUp);
-    grid.on('pointerupoutside', onPointerUp);
-    grid.on('rightclick', onRightClick);
-    
-    return () => {
-      grid.off('pointerdown', onPointerDown);
-      grid.off('pointermove', onPointerMove);
-      grid.off('pointerup', onPointerUp);
-      grid.off('pointerupoutside', onPointerUp);
-      grid.off('rightclick', onRightClick);
-      console.log('Отвязываем PIXI события панорамирования');
-    };
-  }, [app, isDragging]);
-  
-  // Зум через DOM события (оставляем как есть, так как wheel event лучше работает через DOM)
+  // Панорамирование через DOM события (возвращаемся к DOM из-за проблем с готовностью PIXI)
   useEffect(() => {
     if (!app) return;
     
     const timer = setTimeout(() => {
       // Проверяем готовность app более тщательно
       if (!app || !app.renderer || !app.renderer.view) {
-        console.warn('PIXI Application не готов для привязки событий зума');
         return;
       }
       
       const canvas = app.canvas as HTMLCanvasElement;
       if (!canvas) {
-        console.warn('Canvas не готов для привязки событий зума');
         return;
       }
       
-      console.log('Привязываем события зума к canvas');
+      const onPointerDown = (e: PointerEvent) => {
+        if (e.button !== 2) return;
+        e.preventDefault();
+        
+        const rect = canvas.getBoundingClientRect();
+        const sx = e.clientX - rect.left;
+        const sy = e.clientY - rect.top;
+        const cnt = containerRef.current;
+        if (!cnt) return;
+        
+        const worldPoint = cnt.toLocal({ x: sx, y: sy });
+        dragWorld.current = new Point(worldPoint.x, worldPoint.y);
+        setIsDragging(true);
+        canvas.style.cursor = 'grabbing';
+      };
+  
+      const onPointerMove = (e: PointerEvent) => {
+        if (!dragWorld.current || !containerRef.current) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const sx = e.clientX - rect.left;
+        const sy = e.clientY - rect.top;
+        const cnt = containerRef.current;
+        
+        const screenPos = cnt.toGlobal(dragWorld.current);
+        cnt.position.x += sx - screenPos.x;
+        cnt.position.y += sy - screenPos.y;
+      };
+  
+      const onPointerUp = (e: PointerEvent) => {
+        if (e.button !== 2) return;
+        setIsDragging(false);
+        dragWorld.current = null;
+        canvas.style.cursor = 'default';
+      };
+  
+      const onContextMenu = (e: Event) => e.preventDefault();
+  
+      canvas.addEventListener('pointerdown', onPointerDown);
+      canvas.addEventListener('pointermove', onPointerMove);
+      canvas.addEventListener('pointerup', onPointerUp);
+      canvas.addEventListener('contextmenu', onContextMenu);
+      
+      return () => {
+        canvas.removeEventListener('pointerdown', onPointerDown);
+        canvas.removeEventListener('pointermove', onPointerMove);
+        canvas.removeEventListener('pointerup', onPointerUp);
+        canvas.removeEventListener('contextmenu', onContextMenu);
+      };
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [app]);
+  
+  // Зум через DOM события
+  useEffect(() => {
+    if (!app) return;
+    
+    const timer = setTimeout(() => {
+      if (!app || !app.renderer || !app.renderer.view) {
+        return;
+      }
+      
+      const canvas = app.canvas as HTMLCanvasElement;
+      if (!canvas) {
+        return;
+      }
       
       const onWheel = (e: WheelEvent) => {
         e.preventDefault();
         const cnt = containerRef.current;
         if (!cnt) return;
         
-        console.log('Обрабатываем зум:', e.deltaY);
-        
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left;
         const my = e.clientY - rect.top;
         const oldScale = cnt.scale.x;
         const factor = Math.pow(1.001, -e.deltaY);
-        const newScale = Math.min(Math.max(oldScale * factor, 0.1), 5);
+        const newScale = oldScale * factor;
         const world = cnt.toLocal({ x: mx, y: my });
         const worldPoint = new Point(world.x, world.y);
         
@@ -145,9 +134,8 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       canvas.addEventListener('wheel', onWheel, { passive: false });
       return () => {
         canvas.removeEventListener('wheel', onWheel);
-        console.log('Отвязываем события зума');
       };
-    }, 500); // Увеличиваем задержку до 500мс
+    }, 500);
     
     return () => clearTimeout(timer);
   }, [app]);
