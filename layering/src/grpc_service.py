@@ -16,12 +16,14 @@ logger = logging.getLogger(__name__)
 class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
     """Реализация gRPC сервиса укладки графа"""
     
-    def CalculateLayout(self, request: layout_pb2.LayoutRequest, 
-                       context: grpc.ServicerContext) -> layout_pb2.LayoutResponse:
+    def CalculateLayout(self, request: layout_pb2.LayoutRequest, context: grpc.ServicerContext) -> layout_pb2.LayoutResponse:
         """
         Основной метод для расчета укладки графа.
         """
         start_time = time.time()
+        
+        # Логируем входные данные
+        logger.info(f"Получен запрос на укладку")
         
         try:
             # Извлекаем блоки и связи из запроса
@@ -37,7 +39,7 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                 'sublevel_spacing': request.options.sublevel_spacing,
                 'layer_spacing': request.options.layer_spacing
             }
-            
+                        
             # Выполняем укладку
             result = layout_knowledge_map(blocks, links, options)
             
@@ -118,8 +120,9 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
             response.statistics.processing_time_ms = int((time.time() - start_time) * 1000)
             response.statistics.is_acyclic = result['statistics']['is_acyclic']
             response.statistics.isolated_blocks = result['statistics']['isolated_blocks']
-            
+
             response.success = True
+            
             return response
             
         except Exception as e:
@@ -180,7 +183,9 @@ def run_server(host: str = '0.0.0.0', port: int = 50051, max_workers: int = 10) 
         port: Порт для прослушивания
         max_workers: Максимальное количество рабочих потоков
     """
+    logger.info("Настройка сервера")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
+    
     layout_pb2_grpc.add_LayoutServiceServicer_to_server(LayoutService(), server)
     
     server_address = f"{host}:{port}"

@@ -1,7 +1,7 @@
 """
 gRPC клиент для взаимодействия с микросервисом укладки графа.
 """
-
+import os
 import asyncio
 import logging
 from typing import List, Dict, Optional
@@ -13,16 +13,10 @@ from pathlib import Path
 
 # Добавляем путь к generated в PYTHONPATH
 sys.path.insert(0, str(Path(__file__).parent / "generated"))
-# Добавляем путь к layering/src в PYTHONPATH
-layering_path = Path(__file__).parent.parent / "layering" / "src"
-sys.path.insert(0, str(layering_path))
 
-from layout_algorithm import layout_knowledge_map
-import layout_pb2
-import layout_pb2_grpc
+from generated import layout_pb2, layout_pb2_grpc
 
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class LayoutConfig:
@@ -34,7 +28,6 @@ class LayoutConfig:
     @classmethod
     def from_env(cls):
         """Создает конфигурацию из переменных окружения"""
-        import os
         return cls(
             host=os.getenv("LAYOUT_SERVICE_HOST", "localhost"),
             port=int(os.getenv("LAYOUT_SERVICE_PORT", "50051")),
@@ -118,120 +111,145 @@ class LayoutClient:
         try:
             await self.connect()
             
-            # Преобразуем данные в формат для сервиса укладки
-            block_ids = [block["id"] for block in blocks]
-            link_tuples = [(link["source_id"], link["target_id"]) for link in links]
-            
-            # Отправляем запрос
             logger.info(f"Отправка запроса на укладку: {len(blocks)} блоков, {len(links)} связей")
-            logger.debug(f"Блоки: {block_ids}")
-            logger.debug(f"Связи: {link_tuples}")
             
-            # Настройки укладки
-            layout_options = {
-                'sublevel_spacing': options.sublevel_spacing if options else 200,
-                'layer_spacing': options.layer_spacing if options else 250,
-                'optimize_layout': options.optimize_layout if options else True
-            }
+            # Создаем gRPC запрос
+            request = layout_pb2.LayoutRequest()
             
-            # Вызываем алгоритм укладки
-            result = layout_knowledge_map(block_ids, link_tuples, layout_options)
+            # Добавляем блоки
+            for block in blocks:
+                grpc_block = request.blocks.add()
+                grpc_block.id = block["id"]
+                grpc_block.content = block["content"]
+                grpc_block.metadata.update(block.get("metadata", {}))
             
-            # Конвертируем результат в формат ответа
-            response = {
+            # Добавляем связи
+            for link in links:
+                grpc_link = request.links.add()
+                grpc_link.source_id = link["source_id"]
+                grpc_link.target_id = link["target_id"]
+            
+            # Добавляем опции
+            request.options.sublevel_spacing = options.sublevel_spacing if options else 200
+            request.options.layer_spacing = options.layer_spacing if options else 250
+            request.options.optimize_layout = options.optimize_layout if options else True
+            
+            # Отправляем запрос на gRPC сервис
+            response = await self._stub.CalculateLayout(
+                request, 
+                timeout=self.config.timeout
+            )
+            
+            logger.info(f"Получен ответ от gRPC сервиса: success={response.success}")
+            
+            if not response.success:
+                error_msg = response.error_message or "Неизвестная ошибка сервиса укладки"
+                logger.error(f"Layout service error: {error_msg}")
+                return {
+                    "success": False,
+                    "error": error_msg
+                }
+            
+            logger.info(f"Статистика ответа: блоков={len(response.blocks)}, уровней={len(response.levels)}, подуровней={len(response.sublevels)}")
+            
+            # Конвертируем ответ в нужный формат
+            result = {
                 'success': True,
                 'blocks': [],
                 'links': [],
                 'levels': [],
                 'sublevels': [],
-                'statistics': result['statistics']
+                'statistics': {
+                    'total_blocks': response.statistics.total_blocks,
+                    'total_links': response.statistics.total_links,
+                    'total_levels': response.statistics.total_levels,
+                    'total_sublevels': response.statistics.total_sublevels,
+                    'max_layer': response.statistics.max_layer,
+                    'total_width': response.statistics.total_width,
+                    'total_height': response.statistics.total_height,
+                    'processing_time_ms': response.statistics.processing_time_ms,
+                    'is_acyclic': response.statistics.is_acyclic,
+                    'isolated_blocks': response.statistics.isolated_blocks
+                }
             }
             
             # Блоки с позициями
-            try:
-                for block_id, (x, y) in result['positions'].items():
-                    block_data = next(b for b in blocks if b["id"] == block_id)
-                    response["blocks"].append({
-                        "id": block_id,
-                        "content": block_data["content"],
-                        "x": float(x),
-                        "y": float(y),
-                        "layer": result['layers'][block_id],
-                        "level": 0,  # Будет обновлено позже
-                        "sublevel_id": 0,  # Будет обновлено позже
-                        "metadata": block_data.get("metadata", {})
+            logger.info("Обработка блоков...")
+            for i, block in enumerate(response.blocks):
+                try:
+                    result["blocks"].append({
+                        "id": block.id,
+                        "content": block.content,
+                        "x": float(block.x),
+                        "y": float(block.y),
+                        "layer": block.layer,
+                        "level": block.level,
+                        "sublevel_id": block.sublevel_id,
+                        "metadata": dict(block.metadata)
                     })
-            except Exception as e:
-                logger.error(f"Ошибка при обработке блоков: {e}")
-                raise
-            
-            # Обновляем level и sublevel_id для блоков
-            for level_id, sublevel_ids in result['levels'].items():
-                for sublevel_id in sublevel_ids:
-                    for block_id in result['sublevels'][sublevel_id]:
-                        block = next(b for b in response["blocks"] if b["id"] == block_id)
-                        block["level"] = level_id
-                        block["sublevel_id"] = sublevel_id
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке блока {i} (id={getattr(block, 'id', 'unknown')}): {e}")
+                    raise
             
             # Связи
-            try:
-                for link in links:
-                    response["links"].append({
-                        "id": link["id"],
-                        "source_id": link["source_id"],
-                        "target_id": link["target_id"],
-                        "metadata": link.get("metadata", {})
-                    })
-            except Exception as e:
-                logger.error(f"Ошибка при обработке связей: {e}")
-                raise
+            logger.info("Обработка связей...")
+            for link in links:
+                result["links"].append({
+                    "id": link["id"],
+                    "source_id": link["source_id"],
+                    "target_id": link["target_id"],
+                    "metadata": link.get("metadata", {})
+                })
             
             # Уровни
-            for level_id, sublevel_ids in result['levels'].items():
-                blocks_in_level = []
-                for sublevel_id in sublevel_ids:
-                    blocks_in_level.extend(result['sublevels'][sublevel_id])
-                
-                if blocks_in_level:
-                    positions = [result['positions'][block_id] for block_id in blocks_in_level]
-                    min_x = min(x for x, _ in positions) - layout_options['layer_spacing'] / 2
-                    max_x = max(x for x, _ in positions) + layout_options['layer_spacing'] / 2
-                    min_y = min(y for _, y in positions) - layout_options['sublevel_spacing'] / 2
-                    max_y = max(y for _, y in positions) + layout_options['sublevel_spacing'] / 2
-                    
-                    response["levels"].append({
-                        "id": level_id,
-                        "min_x": min_x,
-                        "max_x": max_x,
-                        "min_y": min_y,
-                        "max_y": max_y,
-                        "color": self._get_level_color(level_id)
+            logger.info("Обработка уровней...")
+            for i, level in enumerate(response.levels):
+                try:
+                    logger.debug(f"Уровень {i}: id={level.id}, min_x={getattr(level, 'min_x', 'нет')}, min_y={getattr(level, 'min_y', 'нет')}")
+                    result["levels"].append({
+                        "id": level.id,
+                        "min_x": getattr(level, 'min_x', 0.0),
+                        "max_x": getattr(level, 'max_x', 0.0),
+                        "min_y": getattr(level, 'min_y', 0.0),
+                        "max_y": getattr(level, 'max_y', 0.0),
+                        "color": f"#{level.color:06x}" if hasattr(level, 'color') else "#000000",
+                        "name": getattr(level, 'name', f"Уровень {level.id}")
                     })
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке уровня {i} (id={getattr(level, 'id', 'unknown')}): {e}")
+                    logger.error(f"Доступные поля уровня: {dir(level)}")
+                    raise
             
-            # Подуровни
-            for sublevel_id, block_ids in result['sublevels'].items():
-                if block_ids:
-                    positions = [result['positions'][block_id] for block_id in block_ids]
-                    level_id = next(level_id for level_id, sublevel_ids in result['levels'].items() 
-                                  if sublevel_id in sublevel_ids)
-                    
-                    min_y = min(y for _, y in positions) - layout_options['sublevel_spacing'] / 2
-                    max_y = max(y for _, y in positions) + layout_options['sublevel_spacing'] / 2
-                    
-                    response["sublevels"].append({
-                        "id": sublevel_id,
-                        "min_x": min(x for x, _ in positions) - layout_options['layer_spacing'] / 2,
-                        "max_x": max(x for x, _ in positions) + layout_options['layer_spacing'] / 2,
-                        "min_y": min_y,
-                        "max_y": max_y,
-                        "color": self._get_sublevel_color(sublevel_id),
-                        "block_ids": block_ids,
-                        "level": level_id
+            # Подуровни  
+            logger.info("Обработка подуровней...")
+            for i, sublevel in enumerate(response.sublevels):
+                try:
+                    logger.debug(f"Подуровень {i}: id={sublevel.id}, min_y={getattr(sublevel, 'min_y', 'нет')}")
+                    result["sublevels"].append({
+                        "id": sublevel.id,
+                        "min_x": getattr(sublevel, 'min_x', 0.0),
+                        "max_x": getattr(sublevel, 'max_x', 0.0),
+                        "min_y": getattr(sublevel, 'min_y', 0.0),
+                        "max_y": getattr(sublevel, 'max_y', 0.0),
+                        "color": f"#{sublevel.color:06x}" if hasattr(sublevel, 'color') else "#000000",
+                        "block_ids": list(sublevel.block_ids) if hasattr(sublevel, 'block_ids') else [],
+                        "level": getattr(sublevel, 'level_id', 0)
                     })
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке подуровня {i} (id={getattr(sublevel, 'id', 'unknown')}): {e}")
+                    logger.error(f"Доступные поля подуровня: {dir(sublevel)}")
+                    raise
             
-            logger.info("Укладка успешна")
-            return response
+            logger.info("Укладка успешно получена от gRPC сервиса")
+            return result
             
+        except grpc.aio.AioRpcError as e:
+            error_msg = f"gRPC ошибка: {e.code()} - {e.details()}"
+            logger.error(error_msg)
+            return {
+                "success": False,
+                "error": error_msg
+            }
         except Exception as e:
             error_msg = f"Неожиданная ошибка: {str(e)}"
             logger.error(error_msg)

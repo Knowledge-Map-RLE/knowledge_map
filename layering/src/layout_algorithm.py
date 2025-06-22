@@ -138,8 +138,7 @@ def layout_knowledge_map(blocks: List[str], links: List[Tuple[str, str]], option
         'statistics': statistics
     }
 
-def _optimize_layers_two_pass(graph: nx.DiGraph, initial_layers: Dict[str, int], 
-                            toposort: List[str]) -> Dict[str, int]:
+def _optimize_layers_two_pass(graph: nx.DiGraph, initial_layers: Dict[str, int], toposort: List[str]) -> Dict[str, int]:
     """
     Двухпроходный алгоритм O(V + E) оптимизации слоев для DAG.
     """

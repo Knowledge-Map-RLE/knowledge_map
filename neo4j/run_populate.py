@@ -51,10 +51,10 @@ def auto_populate():
         user = create_test_user()
         
         # 2. Создаем блоки
-        blocks = create_test_blocks(user, 100)
+        blocks = create_test_blocks(user, 20)
         
         # 3. Создаем связи
-        links = create_test_links(blocks, user, 100)
+        links = create_test_links(blocks, user, 10)
         
         # 4. Создаем теги
         tags = create_test_tags()

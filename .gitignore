@@ -3,4 +3,5 @@ personal_folder/
 __pycache__/
 
 .env
+.venv/
 poetry.lock
