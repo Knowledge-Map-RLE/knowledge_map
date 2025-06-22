@@ -5,7 +5,7 @@ import Knowledge_map_ui from './components/Knowledge_map_ui'
 function App() {
   return <>
     <Knowledge_map />
-    <Knowledge_map_ui />
+    {/* <Knowledge_map_ui /> */}
   </>
 }
 

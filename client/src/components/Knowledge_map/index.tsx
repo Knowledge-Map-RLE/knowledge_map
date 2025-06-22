@@ -10,7 +10,8 @@ import { useKeyboardControlsWithProps } from './hooks/useKeyboardControls';
 import { useDataLoading } from './hooks/useDataLoading';
 import { useSelectionState } from './hooks/useSelectionState';
 import { useActions } from './hooks/useActions';
-import { createBlockAndLink } from '../../services/api';
+import { useInteractionHandlers } from './hooks/useInteractionHandlers';
+import { useBlockOperations } from './hooks/useBlockOperations';
 import { EditMode } from './types';
 import type { LinkCreationState, BlockData, LinkData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
@@ -41,6 +42,34 @@ export default function Knowledge_map() {
   const [linkCreationState, setLinkCreationState] = useState<LinkCreationState>({ step: 'waiting' });
   const [pixiReady, setPixiReady] = useState(false);
   const [focusTargetId, setFocusTargetId] = useState<string | null>(null);
+
+  const {
+    handleBlockClick,
+    handleBlockMouseEnter,
+    handleBlockMouseLeave, 
+    handleArrowHover,
+    handleLinkClick,
+    handleCanvasClick
+  } = useInteractionHandlers({
+    currentMode,
+    linkCreationState,
+    setLinkCreationState,
+    setBlocks,
+    blocks,
+    handleBlockSelection,
+    handleLinkSelection,
+    handleCreateLink,
+    handleDeleteBlock,
+    handleDeleteLink,
+    clearSelection
+  });
+
+  const { handleAddBlock } = useBlockOperations({
+    setBlocks,
+    setLinks,
+    setFocusTargetId,
+    loadLayoutData
+  });
 
   const viewportState = viewportRef.current ? 
     { scale: viewportRef.current.scale, position: viewportRef.current.position } : 
@@ -83,106 +112,15 @@ export default function Knowledge_map() {
     }
   }, [blocks, focusTargetId]);
 
-  const handleBlockClick = (blockId: string) => {
-    const clickedBlock = blocks.find(block => block.id === blockId);
-    if (!clickedBlock) return;
-    switch (currentMode) {
-      case EditMode.SELECT: handleBlockSelection(blockId); break;
-      case EditMode.CREATE_LINKS:
-        if (linkCreationState.step === 'selecting_source') {
-          setLinkCreationState({ step: 'selecting_target', sourceBlock: clickedBlock });
-        } else if (linkCreationState.step === 'selecting_target' && 'sourceBlock' in linkCreationState) {
-          handleCreateLink(linkCreationState.sourceBlock.id, blockId);
-          setLinkCreationState({ step: 'selecting_source' });
-        }
-        break;
-      case EditMode.DELETE: handleDeleteBlock(blockId); break;
-    }
-  };
-
+  // Простые обработчики, которые остаются в компоненте
   const handleBlockPointerDown = useCallback((blockId: string, event: any) => {
     event.stopPropagation();
     handleBlockClick(blockId);
   }, [handleBlockClick]);
-  
-  const handleBlockMouseEnter = useCallback((blockId: string) => {
-      setBlocks(prev => prev.map(b =>
-          b.id === blockId ? { ...b, isHovered: true } : { ...b, isHovered: false }
-      ));
-  }, []);
-  
-  const handleBlockMouseLeave = useCallback((blockId: string, event: any) => {
-      const relatedTarget = event.currentTarget.parent?.children.find(
-          (child: any) => child !== event.currentTarget && child.containsPoint?.(event.global)
-      );
-      if (!relatedTarget) {
-          setBlocks(prev => prev.map(b =>
-              b.id === blockId ? { ...b, isHovered: false } : b
-          ));
-      }
-  }, []);
-  
-  const handleArrowHover = useCallback((blockId: string, arrowPosition: 'left' | 'right' | null) => {
-      setBlocks(prev => prev.map(b =>
-          b.id === blockId ? { ...b, hoveredArrow: arrowPosition } : b
-      ));
-  }, []);
-
-  const handleLinkClick = (linkId: string) => {
-    switch (currentMode) {
-      case EditMode.SELECT: handleLinkSelection(linkId); break;
-      case EditMode.DELETE: handleDeleteLink(linkId); break;
-    }
-  };
 
   const handleSublevelClick = (sublevelId: number, x: number, y: number) => {
     if (currentMode === EditMode.CREATE_BLOCKS) {
       handleCreateBlockOnSublevel(x, y, sublevelId);
-    }
-  };
-
-  const handleCanvasClick = () => {
-    if (currentMode === EditMode.SELECT) clearSelection();
-  }
-
-  const handleAddBlock = async (sourceBlock: BlockData, targetLevel: number) => {
-    try {
-      const linkDirection = targetLevel < sourceBlock.level ? 'to_source' : 'from_source';
-      const response = await createBlockAndLink(sourceBlock.id, linkDirection);
-
-      if (!response.success || !response.new_block || !response.new_link) {
-        console.error('Failed to create block and link:', response.error || 'Invalid response from server');
-        return;
-      }
-      
-      // Оптимистичное добавление с корректными, но временными координатами
-      const newBlock: BlockData = {
-        id: response.new_block.id,
-        text: response.new_block.content || 'Новый блок',
-        x: (sourceBlock.x || 0) + (linkDirection === 'from_source' ? 150 : -150), // Временная позиция
-        y: sourceBlock.y || 0, // Временная позиция
-        level: response.new_block.level,
-        layer: response.new_block.layer ?? sourceBlock.layer ?? 0,
-        sublevel: response.new_block.sublevel_id,
-      };
-
-      const newLink: LinkData = {
-        id: response.new_link.id,
-        source_id: response.new_link.source_id,
-        target_id: response.new_link.target_id,
-      };
-
-      setBlocks(prev => [...prev, newBlock]);
-      setLinks(prev => [...prev, newLink]);
-      setFocusTargetId(newBlock.id);
-
-      // Фоновое обновление для получения финальных координат от сервиса укладки
-      setTimeout(() => {
-         loadLayoutData();
-      }, 100);
-
-    } catch (error) {
-      console.error('Error adding block and link:', error);
     }
   };
 
@@ -203,17 +141,25 @@ export default function Knowledge_map() {
       )}
       <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
         <Viewport ref={viewportRef} onCanvasClick={handleCanvasClick}>
-                <container sortableChildren={true}>
-            {links.map(link => (
-              <Link
-                key={link.id}
-                linkData={link}
-                blocks={blocks}
-                isSelected={selectedLinks.includes(link.id)}
-                onClick={() => handleLinkClick(link.id)}
-              />
-            ))}
-            {levels.map(level => (
+                  <graphics
+                    draw={(g: any) => {
+                      g.roundRect(-50, -50, 100, 100, 10);
+                      g.fill(0xFF0000);
+                    }}
+                    eventMode="static"
+                    interactive
+                    onPointerDown={() => console.log('🔴 Клик по красному квадрату')}
+                  />
+                  {/*{links.map(link => (
+                    <Link
+                      key={link.id}
+                      linkData={link}
+                      blocks={blocks}
+                      isSelected={selectedLinks.includes(link.id)}
+                      onClick={() => handleLinkClick(link.id)}
+                    />
+                  ))}
+                  {levels.map(level => (
                     <Level
                       key={level.id}
                       levelData={level}
@@ -229,8 +175,8 @@ export default function Knowledge_map() {
                       onBlockMouseLeave={handleBlockMouseLeave}
                       onArrowHover={handleArrowHover}
                     />
-                  ))}
-              </container>
+                  ))} */}
+              
             </Viewport>
           </Application>
       <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
