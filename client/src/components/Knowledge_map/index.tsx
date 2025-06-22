@@ -15,7 +15,6 @@ import { EditMode } from './types';
 import type { LinkCreationState, BlockData, LinkData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
 import styles from './Knowledge_map.module.css';
-import { useVirtualization } from './hooks/useVirtualization';
 
 extend({ Container, Graphics, Text });
 
@@ -46,16 +45,6 @@ export default function Knowledge_map() {
   const viewportState = viewportRef.current ? 
     { scale: viewportRef.current.scale, position: viewportRef.current.position } : 
     { scale: 1, position: { x: 0, y: 0 } };
-
-  const visibleBlocks = useVirtualization({
-    blocks,
-    viewportWidth: window.innerWidth,
-    viewportHeight: window.innerHeight,
-    scale: viewportState.scale,
-    position: viewportState.position,
-    blockWidth: BLOCK_WIDTH,
-    blockHeight: BLOCK_HEIGHT,
-  });
 
   useKeyboardControlsWithProps({
     setCurrentMode, setLinkCreationState, currentMode, linkCreationState
@@ -208,20 +197,7 @@ export default function Knowledge_map() {
   return (
     <div ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
       {(!pixiReady || isLoading) && (
-          <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'rgba(245, 245, 245, 0.8)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              zIndex: 1000,
-              color: '#666',
-              fontSize: '1.2rem',
-          }}>
+          <div className={styles.экран_загрузки}>
               {isLoading ? 'Обновление данных...' : 'Инициализация...'}
           </div>
       )}
@@ -232,7 +208,7 @@ export default function Knowledge_map() {
               <Link
                 key={link.id}
                 linkData={link}
-                blocks={visibleBlocks}
+                blocks={blocks}
                 isSelected={selectedLinks.includes(link.id)}
                 onClick={() => handleLinkClick(link.id)}
               />
@@ -242,7 +218,7 @@ export default function Knowledge_map() {
                       key={level.id}
                       levelData={level}
                       sublevels={sublevels}
-                      blocks={visibleBlocks}
+                      blocks={blocks}
                       onSublevelClick={handleSublevelClick}
                       onBlockClick={handleBlockClick}
                       selectedBlocks={selectedBlocks}
