@@ -134,6 +134,47 @@ export default function Knowledge_map() {
 
   return (
     <div ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
+      {/* Временные кнопки для тестирования viewport */}
+      <div style={{
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        zIndex: 1000,
+        background: 'rgba(0,0,0,0.8)',
+        color: 'white',
+        padding: '10px',
+        borderRadius: '5px',
+        fontSize: '12px'
+      }}>
+        <div>Тест Viewport:</div>
+        <button onClick={() => {
+          if (viewportRef.current?.containerRef) {
+            viewportRef.current.containerRef.position.x += 50;
+            console.log('Движение вправо');
+          }
+        }}>→</button>
+        <button onClick={() => {
+          if (viewportRef.current?.containerRef) {
+            viewportRef.current.containerRef.position.x -= 50;
+            console.log('Движение влево');
+          }
+        }}>←</button>
+        <button onClick={() => {
+          if (viewportRef.current?.containerRef) {
+            const newScale = viewportRef.current.containerRef.scale.x * 1.2;
+            viewportRef.current.containerRef.scale.set(newScale);
+            console.log('Зум:', newScale);
+          }
+        }}>+</button>
+        <button onClick={() => {
+          if (viewportRef.current?.containerRef) {
+            const newScale = viewportRef.current.containerRef.scale.x / 1.2;
+            viewportRef.current.containerRef.scale.set(newScale);
+            console.log('Зум:', newScale);
+          }
+        }}>-</button>
+      </div>
+      
       {(!pixiReady || isLoading) && (
           <div className={styles.экран_загрузки}>
               {isLoading ? 'Обновление данных...' : 'Инициализация...'}

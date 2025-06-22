@@ -2,7 +2,6 @@ import { useRef, useState, useEffect, useCallback, forwardRef, useImperativeHand
 import { Container, Graphics, Point, FederatedPointerEvent } from 'pixi.js';
 import { extend, useApplication, useTick } from '@pixi/react';
 import type { ReactNode } from 'react';
-// @ts-ignore
 import { gsap } from 'gsap';
 
 extend({ Container, Graphics, Point });
@@ -16,6 +15,7 @@ export interface ViewportRef {
   focusOn: (x: number, y: number) => void;
   scale: number;
   position: { x: number; y: number };
+  containerRef: Container | null;
 }
 
 export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick }, ref) => {
@@ -26,96 +26,150 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   
   const [isDragging, setIsDragging] = useState(false);
   const dragWorld = useRef<Point | null>(null);
+  const [centerX, setCenterX] = useState(400);
+  const [centerY, setCenterY] = useState(300);
 
-  // Панорамирование через DOM события
+  // Панорамирование через PIXI события
   useEffect(() => {
-    const canvas = app.canvas as HTMLCanvasElement;
+    if (!app || !containerRef.current || !gridRef.current) return;
     
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.button !== 2) return; // Только правая кнопка
-      e.preventDefault();
+    console.log('Настраиваем PIXI события для панорамирования');
+    
+    const grid = gridRef.current;
+    
+    // Делаем grid интерактивным для захвата всех событий
+    grid.interactive = true;
+    grid.hitArea = app.screen;
+    
+    const onPointerDown = (e: FederatedPointerEvent) => {
+      if (e.nativeEvent.button !== 2) return;
+      if ('preventDefault' in e.nativeEvent) {
+        e.nativeEvent.preventDefault();
+      }
       
-      const rect = canvas.getBoundingClientRect();
-      const sx = e.clientX - rect.left;
-      const sy = e.clientY - rect.top;
       const cnt = containerRef.current;
       if (!cnt) return;
       
-      const worldPoint = cnt.toLocal({ x: sx, y: sy });
+      const worldPoint = cnt.toLocal(e.global);
       dragWorld.current = new Point(worldPoint.x, worldPoint.y);
       setIsDragging(true);
-      canvas.style.cursor = 'grabbing';
+      
+      if (app.canvas) {
+        (app.canvas as HTMLCanvasElement).style.cursor = 'grabbing';
+      }
+      console.log('Начинаем перетаскивание через PIXI');
     };
 
-    const onPointerMove = (e: PointerEvent) => {
+    const onPointerMove = (e: FederatedPointerEvent) => {
       if (!isDragging || !containerRef.current || !dragWorld.current) return;
       
-      const rect = canvas.getBoundingClientRect();
-      const sx = e.clientX - rect.left;
-      const sy = e.clientY - rect.top;
       const cnt = containerRef.current;
-      
       const screenPos = cnt.toGlobal(dragWorld.current);
-      cnt.position.x += sx - screenPos.x;
-      cnt.position.y += sy - screenPos.y;
+      cnt.position.x += e.global.x - screenPos.x;
+      cnt.position.y += e.global.y - screenPos.y;
     };
 
-    const onPointerUp = (e: PointerEvent) => {
-      if (e.button !== 2) return;
+    const onPointerUp = (e: FederatedPointerEvent) => {
+      if (e.nativeEvent.button !== 2) return;
       setIsDragging(false);
       dragWorld.current = null;
-      canvas.style.cursor = 'default';
+      
+      if (app.canvas) {
+        (app.canvas as HTMLCanvasElement).style.cursor = 'default';
+      }
+      console.log('Заканчиваем перетаскивание через PIXI');
     };
 
-    const onContextMenu = (e: Event) => e.preventDefault();
+    const onRightClick = (e: FederatedPointerEvent) => {
+      if ('preventDefault' in e.nativeEvent) {
+        e.nativeEvent.preventDefault();
+      }
+    };
 
-    canvas.addEventListener('pointerdown', onPointerDown);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerup', onPointerUp);
-    canvas.addEventListener('contextmenu', onContextMenu);
+    grid.on('pointerdown', onPointerDown);
+    grid.on('pointermove', onPointerMove);
+    grid.on('pointerup', onPointerUp);
+    grid.on('pointerupoutside', onPointerUp);
+    grid.on('rightclick', onRightClick);
     
     return () => {
-      canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerup', onPointerUp);
-      canvas.removeEventListener('contextmenu', onContextMenu);
+      grid.off('pointerdown', onPointerDown);
+      grid.off('pointermove', onPointerMove);
+      grid.off('pointerup', onPointerUp);
+      grid.off('pointerupoutside', onPointerUp);
+      grid.off('rightclick', onRightClick);
+      console.log('Отвязываем PIXI события панорамирования');
     };
-  }, [app.canvas, isDragging]);
-
-  // Зум через DOM события
+  }, [app, isDragging]);
+  
+  // Зум через DOM события (оставляем как есть, так как wheel event лучше работает через DOM)
   useEffect(() => {
-    const canvas = app.canvas as HTMLCanvasElement;
+    if (!app) return;
     
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const cnt = containerRef.current;
-      if (!cnt) return;
+    const timer = setTimeout(() => {
+      // Проверяем готовность app более тщательно
+      if (!app || !app.renderer || !app.renderer.view) {
+        console.warn('PIXI Application не готов для привязки событий зума');
+        return;
+      }
       
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      const oldScale = cnt.scale.x;
-      const factor = Math.pow(1.001, -e.deltaY);
-      const newScale = Math.min(Math.max(oldScale * factor, 0.1), 5);
-      const world = cnt.toLocal({ x: mx, y: my });
-      const worldPoint = new Point(world.x, world.y);
+      const canvas = app.canvas as HTMLCanvasElement;
+      if (!canvas) {
+        console.warn('Canvas не готов для привязки событий зума');
+        return;
+      }
       
-      cnt.scale.set(newScale);
-      cnt.position.x -= worldPoint.x * (newScale - oldScale);
-      cnt.position.y -= worldPoint.y * (newScale - oldScale);
-    };
+      console.log('Привязываем события зума к canvas');
+      
+      const onWheel = (e: WheelEvent) => {
+        e.preventDefault();
+        const cnt = containerRef.current;
+        if (!cnt) return;
+        
+        console.log('Обрабатываем зум:', e.deltaY);
+        
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const oldScale = cnt.scale.x;
+        const factor = Math.pow(1.001, -e.deltaY);
+        const newScale = Math.min(Math.max(oldScale * factor, 0.1), 5);
+        const world = cnt.toLocal({ x: mx, y: my });
+        const worldPoint = new Point(world.x, world.y);
+        
+        cnt.scale.set(newScale);
+        cnt.position.x -= worldPoint.x * (newScale - oldScale);
+        cnt.position.y -= worldPoint.y * (newScale - oldScale);
+      };
+      
+      canvas.addEventListener('wheel', onWheel, { passive: false });
+      return () => {
+        canvas.removeEventListener('wheel', onWheel);
+        console.log('Отвязываем события зума');
+      };
+    }, 500); // Увеличиваем задержку до 500мс
     
-    canvas.addEventListener('wheel', onWheel, { passive: false });
-    return () => canvas.removeEventListener('wheel', onWheel);
-  }, [app.canvas]);
+    return () => clearTimeout(timer);
+  }, [app]);
 
   // Динамическая сетка через useTick
   useTick(() => {
+    if (!app) return;
+    
+    let screen;
+    try {
+      screen = app.screen;
+    } catch {
+      return;
+    }
+    
+    if (!screen) return;
+    
     const gfx = gridRef.current;
     const cnt = containerRef.current;
     if (!gfx || !cnt) return;
     
-    const { width, height } = app.screen;
+    const { width, height } = screen;
     const scale = cnt.scale.x;
     const pos = cnt.position;
 
@@ -178,7 +232,16 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   // useImperativeHandle для focusOn
   useImperativeHandle(ref, () => ({
     focusOn: (targetX: number, targetY: number) => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !app) return;
+      
+      let screen;
+      try {
+        screen = app.screen;
+      } catch {
+        return;
+      }
+      
+      if (!screen) return;
       
       // Убиваем предыдущие анимации
       tweensRef.current.forEach(tween => tween.kill());
@@ -188,8 +251,8 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       const duration = 1.2;
 
       // Центрируем на цели
-      const newX = -targetX * cnt.scale.x + app.screen.width / 2;
-      const newY = -targetY * cnt.scale.y + app.screen.height / 2;
+      const newX = -targetX * cnt.scale.x + screen.width / 2;
+      const newY = -targetY * cnt.scale.y + screen.height / 2;
 
       // Анимация позиции
       const positionTween = gsap.to(cnt.position, {
@@ -203,15 +266,25 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     },
     scale: containerRef.current?.scale.x || 1,
     position: containerRef.current?.position || { x: 0, y: 0 },
+    containerRef: containerRef.current,
   }));
 
-  // Очистка анимаций
+  // Обновляем центр при изменении размеров экрана
   useEffect(() => {
-    return () => {
-      tweensRef.current.forEach(tween => tween.kill());
-      tweensRef.current = [];
-    };
-  }, []);
+    if (!app) return;
+    
+    let screen;
+    try {
+      screen = app.screen;
+    } catch {
+      return;
+    }
+    
+    if (screen) {
+      setCenterX(screen.width / 2);
+      setCenterY(screen.height / 2);
+    }
+  }, [app]);
 
   return (
     <>
@@ -224,8 +297,8 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       <container 
         ref={containerRef}
         interactive={false}
-        x={app.screen.width / 2}
-        y={app.screen.height / 2}
+        x={centerX}
+        y={centerY}
       >
         {children}
       </container>
