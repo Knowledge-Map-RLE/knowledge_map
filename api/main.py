@@ -392,6 +392,64 @@ async def create_block_and_link(data: CreateAndLinkInput):
         logger.error(f"Error creating block and link: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.delete("/api/blocks/{block_id}", response_model=Dict[str, Any])
+async def delete_block(block_id: str):
+    """Удаляет блок и все связанные с ним связи."""
+    try:
+        with db.transaction:
+            block = Block.nodes.get(uid=block_id)
+            
+            # Удаляем все связи, где этот блок является источником или целью
+            # Сначала удаляем исходящие связи
+            outgoing_query = """
+            MATCH (source:Block {uid: $block_id})-[r:LINK_TO]->(target:Block)
+            DELETE r
+            """
+            db.cypher_query(outgoing_query, {"block_id": block_id})
+            
+            # Затем удаляем входящие связи
+            incoming_query = """
+            MATCH (source:Block)-[r:LINK_TO]->(target:Block {uid: $block_id})
+            DELETE r
+            """
+            db.cypher_query(incoming_query, {"block_id": block_id})
+            
+            # Удаляем сам блок
+            block.delete()
+            
+        return {"success": True, "message": f"Block {block_id} deleted successfully"}
+        
+    except Block.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Block not found")
+    except Exception as e:
+        logger.error(f"Error deleting block: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/links/{link_id}", response_model=Dict[str, Any])
+async def delete_link(link_id: str):
+    """Удаляет связь по её ID."""
+    try:
+        with db.transaction:
+            # Находим и удаляем связь по её UID
+            delete_query = """
+            MATCH ()-[r:LINK_TO {uid: $link_id}]->()
+            DELETE r
+            RETURN count(r) as deleted_count
+            """
+            result, _ = db.cypher_query(delete_query, {"link_id": link_id})
+            deleted_count = result[0][0] if result else 0
+            
+            if deleted_count == 0:
+                raise HTTPException(status_code=404, detail="Link not found")
+                
+        return {"success": True, "message": f"Link {link_id} deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting link: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Подключаем GraphQL
 graphql_app = GraphQLRouter(schema)
 app.include_router(graphql_app, prefix="/graphql")

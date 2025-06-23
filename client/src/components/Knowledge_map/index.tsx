@@ -35,9 +35,9 @@ export default function Knowledge_map() {
   } = useSelectionState();
 
   const {
-    handleCreateBlockOnSublevel, handleCreateLink, handleDeleteBlock, handleDeleteLink
+    handleCreateBlock, handleCreateBlockOnSublevel, handleCreateLink, handleDeleteBlock, handleDeleteLink
   } = useActions({
-    blocks, links, sublevels, setBlocks, setLinks, setSublevels, clearSelection
+    blocks, links, sublevels, setBlocks, setLinks, setSublevels, clearSelection, loadLayoutData
   });
 
   const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
@@ -126,6 +126,14 @@ export default function Knowledge_map() {
     }
   };
 
+  const handleCanvasClickWithMode = useCallback((x: number, y: number) => {
+    if (currentMode === EditMode.CREATE_BLOCKS) {
+      handleCreateBlock(x, y);
+    } else {
+      handleCanvasClick();
+    }
+  }, [currentMode, handleCreateBlock, handleCanvasClick]);
+
   if (loadError) {
     return (
       <div className={styles.knowledge_map} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
@@ -142,7 +150,7 @@ export default function Knowledge_map() {
         </div>
       )}
       <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
-        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClick}>
+        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode}>
           {/* Рендерим все уровни без вложенных sublevels и blocks */}
           {/* {levels.map(level => (
             <Level

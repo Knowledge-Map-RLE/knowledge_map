@@ -216,3 +216,41 @@ export async function createBlockAndLink(
     return { success: false, error: 'Сетевая ошибка или невалидный JSON' };
   }
 }
+
+/**
+ * Удаляет блок
+ */
+export async function deleteBlock(blockId: string): Promise<{success: boolean, error?: string}> {
+    const response = await fetch(`${API_URL}/api/blocks/${blockId}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        console.error('Failed to delete block:', response.statusText);
+        const errorData = await response.json().catch(() => ({}));
+        return { success: false, error: errorData.detail || 'Ошибка при удалении блока' };
+    }
+    return response.json();
+}
+
+/**
+ * Удаляет связь
+ */
+export async function deleteLink(linkId: string): Promise<{success: boolean, error?: string}> {
+    const response = await fetch(`${API_URL}/api/links/${linkId}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        console.error('Failed to delete link:', response.statusText);
+        const errorData = await response.json().catch(() => ({}));
+        return { success: false, error: errorData.detail || 'Ошибка при удалении связи' };
+    }
+    return response.json();
+}
