@@ -144,12 +144,12 @@ export default function Knowledge_map() {
       <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
         <Viewport ref={viewportRef} onCanvasClick={handleCanvasClick}>
           {/* Рендерим все уровни без вложенных sublevels и blocks */}
-          {levels.map(level => (
+          {/* {levels.map(level => (
             <Level
               key={level.id}
               levelData={level}
             />
-          ))}
+          ))} */}
           
           {/* Рендерим все подуровни отдельно */}
           {sublevels.map(sublevel => (
@@ -160,7 +160,7 @@ export default function Knowledge_map() {
             />
           ))}
 
-          {/* Рендерим все ссылки */}
+          {/* Рендерим все связи */}
           {links.map(link => (
             <Link
               key={link.id}

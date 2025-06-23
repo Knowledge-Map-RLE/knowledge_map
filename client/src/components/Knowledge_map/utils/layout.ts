@@ -1,5 +1,5 @@
 import type { BlockData, LevelData, SublevelData } from '../types';
-import { LAYER_SPACING, SUBLEVEL_COLORS, LEVEL_COLORS, LEVEL_PADDING } from '../constants';
+import { LAYER_SPACING, SUBLEVEL_COLORS, LEVEL_COLORS, LEVEL_PADDING, BLOCK_WIDTH, BLOCK_HEIGHT } from '../constants';
 
 // Константы для расчета размеров
 const DEFAULT_BLOCK_HEIGHT = 100;
@@ -104,11 +104,12 @@ export const calculateSublevelCoordinates = (
   
   // Создаем подуровни на основе Y-координат
   let sublevelId = 0;
+  const SUBLEVEL_MARGIN_X = 150;
   sublevelsByY.forEach((blocksInSublevel, yCoordinate) => {
     // Находим минимальную и максимальную X-координату блоков в этом подуровне
     const xCoordinates = blocksInSublevel.map(b => b.x || 0);
-    const minX = Math.min(...xCoordinates) - DEFAULT_BLOCK_WIDTH / 2;
-    const maxX = Math.max(...xCoordinates) + DEFAULT_BLOCK_WIDTH / 2;
+    const minX = Math.min(...xCoordinates) - BLOCK_WIDTH / 2 - SUBLEVEL_MARGIN_X; // Левая стенка самого левого блока
+    const maxX = Math.max(...xCoordinates) + BLOCK_WIDTH / 2; // Правая стенка самого правого блока
     
     const sublevel: SublevelData = {
       id: sublevelId++,
@@ -116,9 +117,9 @@ export const calculateSublevelCoordinates = (
       block_ids: blocksInSublevel.map(b => b.id),
       min_x: minX,
       max_x: maxX,
-      min_y: yCoordinate - SUBLEVEL_HEIGHT / 2,
-      max_y: yCoordinate + SUBLEVEL_HEIGHT / 2,
-      color: `#${SUBLEVEL_COLORS[sublevelId % SUBLEVEL_COLORS.length].toString(16).padStart(6, '0')}`
+      min_y: yCoordinate - BLOCK_HEIGHT / 2, // Y-координата точно как у блоков
+      max_y: yCoordinate, // Горизонтальный подуровень - min_y = max_y
+      color: '#90EE90' // Единый салатовый цвет для всех подуровней
     };
     
     result.push(sublevel);

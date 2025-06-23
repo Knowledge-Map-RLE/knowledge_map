@@ -283,7 +283,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         onPointerDown={onCanvasClick ? handleCanvasClick : undefined}
         draw={() => {}} 
       />
-      <container 
+    <container
         ref={containerRef}
         interactive={false}
         x={centerX}
@@ -293,4 +293,4 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       </container>
     </>
   );
-});
+}); 

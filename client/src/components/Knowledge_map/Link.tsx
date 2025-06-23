@@ -34,11 +34,11 @@ export const Link = memo(function Link({ linkData, blocks, isSelected, onClick }
 
     const source_point = {
       x: source_block.x + BLOCK_WIDTH / 2,
-      y: source_block.y - BLOCK_HEIGHT,
+      y: source_block.y,
     };
     const target_point = {
       x: target_block.x - BLOCK_WIDTH / 2,
-      y: target_block.y - BLOCK_HEIGHT,
+      y: target_block.y,
     };
 
     if (isInitialRender.current) {

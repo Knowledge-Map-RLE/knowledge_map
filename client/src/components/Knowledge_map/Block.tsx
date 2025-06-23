@@ -9,7 +9,7 @@ import { gsap } from 'gsap';
 
 extend({ Graphics, Container, Text });
 
-const BLOCK_PADDING = 10;
+const BLOCK_PADDING = 4;
 
 export interface BlockProps {
   blockData: BlockData;
@@ -60,7 +60,7 @@ export const Block = memo(function Block({
     const borderColor = isHovered || hoveredArrow ? 0x3b82f6 : 0xd1d5db;
     const borderWidth = isSelected || isHovered || hoveredArrow ? 2 : 1;
     g.clear();
-    g.rect(0, 0, BLOCK_WIDTH, BLOCK_HEIGHT);
+    g.rect(-BLOCK_WIDTH / 2, -BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT);
     g.fill(bgColor);
     g.stroke({ width: borderWidth, color: borderColor });
   }, [isSelected, isHovered, hoveredArrow]);
@@ -78,13 +78,16 @@ export const Block = memo(function Block({
       <graphics draw={draw} />
       <pixiText
         text={text}
-        x={BLOCK_PADDING}
-        y={BLOCK_PADDING}
+        x={-BLOCK_WIDTH / 2 + BLOCK_PADDING}
+        y={-BLOCK_HEIGHT / 2 + BLOCK_PADDING}
         style={{
+          fontFamily: 'PT Sans, sans-serif',
           fontSize: 14,
           fill: 0x000000,
           wordWrap: true,
           wordWrapWidth: BLOCK_WIDTH - 2 * BLOCK_PADDING,
+          breakWords: true,
+          align: 'center',
         }}
       />
       {isHovered && currentMode === EditMode.CREATE_BLOCKS && (
