@@ -21,6 +21,7 @@ export interface BlockProps {
   onBlockMouseEnter: (blockId: string) => void;
   onBlockMouseLeave: (blockId: string, event: any) => void;
   onArrowHover: (blockId: string, arrowPosition: 'left' | 'right' | null) => void;
+  onBlockRightClick: (blockId: string, x: number, y: number) => void;
 }
 
 export const Block = memo(function Block({ 
@@ -33,8 +34,9 @@ export const Block = memo(function Block({
   onBlockMouseEnter,
   onBlockMouseLeave,
   onArrowHover,
+  onBlockRightClick,
 }: BlockProps) {
-  const { id, text, x, y, level, isHovered, hoveredArrow } = blockData;
+  const { id, text, x, y, level, isHovered, hoveredArrow, is_pinned } = blockData;
   const containerRef = useRef<Container>(null);
   const isInitialRender = useRef(true);
 
@@ -56,14 +58,14 @@ export const Block = memo(function Block({
   }, [x, y]);
 
   const draw = useCallback((g: Graphics) => {
-    const bgColor = isSelected ? 0x93c5fd : 0xffffff;
-    const borderColor = isHovered || hoveredArrow ? 0x3b82f6 : 0xd1d5db;
-    const borderWidth = isSelected || isHovered || hoveredArrow ? 2 : 1;
+    const bgColor = isSelected ? 0x93c5fd : (is_pinned ? 0xfef3c7 : 0xffffff);
+    const borderColor = isHovered || hoveredArrow ? 0x3b82f6 : (is_pinned ? 0xf59e0b : 0xd1d5db);
+    const borderWidth = isSelected || isHovered || hoveredArrow || is_pinned ? 2 : 1;
     g.clear();
     g.roundRect(-BLOCK_WIDTH / 2, -BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, 10);
     g.fill(bgColor);
     g.stroke({ width: borderWidth, color: borderColor });
-  }, [isSelected, isHovered, hoveredArrow]);
+  }, [isSelected, isHovered, hoveredArrow, is_pinned]);
 
   return (
     <container 
@@ -73,6 +75,7 @@ export const Block = memo(function Block({
       onMouseEnter={() => onBlockMouseEnter(id)}
       onMouseLeave={(e: any) => onBlockMouseLeave(id, e)}
       onPointerDown={(e: any) => onBlockPointerDown(id, e)}
+      onRightClick={(e: any) => onBlockRightClick(id, e.global.x, e.global.y)}
       zIndex={10}
     >
       <graphics draw={draw} />

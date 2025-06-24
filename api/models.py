@@ -1,6 +1,6 @@
 from collections import deque
 from neomodel import (
-    StructuredNode, StringProperty, IntegerProperty,
+    StructuredNode, StringProperty, IntegerProperty, BooleanProperty,
     RelationshipTo, RelationshipFrom, JSONProperty, config,
     StructuredRel, UniqueIdProperty
 )
@@ -72,6 +72,8 @@ class Block(StructuredNode):
     """Уровень"""
     sublevel_id = IntegerProperty(index=True, default=-1)
     """ID подуровня, к которому принадлежит блок"""
+    is_pinned = BooleanProperty(default=False)
+    """Закреплен ли блок за уровнем"""
     
     data = JSONProperty()
     """Нестандартные данные — свойство для любых других не предусмотренных данных"""

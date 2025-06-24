@@ -23,6 +23,7 @@ def layout_knowledge_map(blocks: List[str], links: List[Tuple[str, str]], option
             - max_levels: Максимальное количество уровней
             - blocks_per_sublevel: Максимальное количество блоков на подуровень
             - optimize_layout: Применять ли двухпроходную оптимизацию
+            - blocks_data: Dict[str, Dict] - дополнительные данные о блоках (включая is_pinned)
             
     Returns:
         Dict с результатами укладки:
@@ -34,6 +35,11 @@ def layout_knowledge_map(blocks: List[str], links: List[Tuple[str, str]], option
     # Значения по умолчанию для опций
     options = options or {}
     optimize_layout = options.get('optimize_layout', True)
+    blocks_data = options.get('blocks_data', {})
+    
+    # Логируем информацию о закрепленных блоках
+    pinned_blocks = [bid for bid, data in blocks_data.items() if data.get('is_pinned', False)]
+    logger.info(f"Алгоритм получил {len(pinned_blocks)} закрепленных блоков: {pinned_blocks}")
     
     # 1) Создаем направленный граф
     graph = nx.DiGraph()

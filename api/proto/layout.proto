@@ -24,7 +24,8 @@ message LayoutRequest {
 message BlockInput {
   string id = 1;
   string content = 2;
-  map<string, string> metadata = 3; // Дополнительные данные
+  bool is_pinned = 3;              // Закреплен ли блок за уровнем
+  map<string, string> metadata = 4; // Дополнительные данные
 }
 
 // Связь между блоками
@@ -66,7 +67,8 @@ message BlockWithPosition {
   int32 layer = 5;                // Слой (временная последовательность)
   int32 level = 6;                // Уровень (группировка)
   int32 sublevel_id = 7;          // ID подуровня к которому принадлежит блок
-  map<string, string> metadata = 8; // Дополнительные данные
+  bool is_pinned = 8;             // Закреплен ли блок за уровнем
+  map<string, string> metadata = 9; // Дополнительные данные
 }
 
 // Уровень (группирует несколько подуровней)

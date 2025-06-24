@@ -182,7 +182,7 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
         logger.info("Querying blocks from Neo4j")
         blocks_query = """
         MATCH (b:Block)
-        RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level
+        RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned
         """
         blocks_result, _ = db.cypher_query(blocks_query)
         logger.info(f"Found {len(blocks_result)} blocks total")
@@ -225,16 +225,19 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
         logger.info("Converting results to layout service format")
         
         # Используем настоящие ID из базы данных
-        blocks = [
-            {
+        blocks = []
+        for row in blocks_result:
+            block_data = {
                 "id": str(row[0]),
                 "content": str(row[1] or ""),
                 "layer": int(row[2] or 0),
                 "level": int(row[3] or 0),
+                "is_pinned": bool(row[4]) if row[4] is not None else False,
                 "metadata": {}
             }
-            for row in blocks_result
-        ]
+            if block_data["is_pinned"]:
+                logger.info(f"Found pinned block in DB: {block_data['id']} - is_pinned: {block_data['is_pinned']}")
+            blocks.append(block_data)
         
         # Преобразуем связи
         links_for_layout = []
@@ -305,6 +308,7 @@ async def create_block(block_input: BlockInput):
             "level": b.level,
             "layer": b.layer,
             "sublevel_id": b.sublevel_id,
+            "is_pinned": b.is_pinned,
         }
         return {"success": True, "block": response_block}
     except Exception as e:
@@ -326,6 +330,7 @@ async def update_block(block_id: str, block_input: BlockInput):
             "level": block.level,
             "layer": block.layer,
             "sublevel_id": block.sublevel_id,
+            "is_pinned": block.is_pinned,
         }
         return {"success": True, "block": response_block}
     except Block.DoesNotExist:
@@ -378,13 +383,13 @@ async def create_block_and_link(data: CreateAndLinkInput):
         
         # Получаем полный обновленный граф из Neo4j
         # (Эта логика дублирует /layout/neo4j, но необходима для получения координат)
-        blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level"
+        blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned"
         blocks_result, _ = db.cypher_query(blocks_query)
         
         links_query = "MATCH (b1:Block)-[r:LINK_TO]->(b2:Block) RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id"
         links_result, _ = db.cypher_query(links_query)
 
-        blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "metadata": {}} for r in blocks_result]
+        blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "is_pinned": bool(r[4]) if r[4] is not None else False, "metadata": {}} for r in blocks_result]
         links_for_layout = [{"id": str(r[0]) if r[0] else None, "source_id": str(r[1]), "target_id": str(r[2])} for r in links_result]
         
         # Вызываем сервис укладки
@@ -471,6 +476,43 @@ async def delete_link(link_id: str):
         raise
     except Exception as e:
         logger.error(f"Error deleting link: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/blocks/{block_id}/pin", response_model=Dict[str, Any])
+async def pin_block(block_id: str):
+    """Закрепляет блок за уровнем."""
+    try:
+        with db.transaction:
+            block = Block.nodes.get(uid=block_id)
+            logger.info(f"Before pinning: block {block_id} is_pinned = {block.is_pinned}")
+            block.is_pinned = True
+            block.save()
+            block.refresh()
+            logger.info(f"After pinning: block {block_id} is_pinned = {block.is_pinned}")
+            
+        return {"success": True, "message": f"Block {block_id} pinned successfully"}
+        
+    except Block.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Block not found")
+    except Exception as e:
+        logger.error(f"Error pinning block: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/blocks/{block_id}/unpin", response_model=Dict[str, Any])
+async def unpin_block(block_id: str):
+    """Открепляет блок от уровня."""
+    try:
+        with db.transaction:
+            block = Block.nodes.get(uid=block_id)
+            block.is_pinned = False
+            block.save()
+            
+        return {"success": True, "message": f"Block {block_id} unpinned successfully"}
+        
+    except Block.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Block not found")
+    except Exception as e:
+        logger.error(f"Error unpinning block: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Подключаем GraphQL

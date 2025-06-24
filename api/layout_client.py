@@ -121,6 +121,7 @@ class LayoutClient:
                 grpc_block = request.blocks.add()
                 grpc_block.id = block["id"]
                 grpc_block.content = block["content"]
+                grpc_block.is_pinned = block.get("is_pinned", False)
                 grpc_block.metadata.update(block.get("metadata", {}))
             
             # Добавляем связи
@@ -183,6 +184,7 @@ class LayoutClient:
                         "layer": block.layer,
                         "level": block.level,
                         "sublevel_id": block.sublevel_id,
+                        "is_pinned": block.is_pinned,
                         "metadata": dict(block.metadata)
                     })
                 except Exception as e:

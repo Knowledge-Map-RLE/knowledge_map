@@ -42,7 +42,8 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
         
         try:
             # Извлекаем блоки и связи из запроса
-            blocks = [block.id for block in request.blocks]
+            blocks_data = {block.id: {"is_pinned": block.is_pinned} for block in request.blocks}
+            blocks = list(blocks_data.keys())
             links = [(link.source_id, link.target_id) for link in request.links]
             
             # Собираем опции укладки
@@ -50,10 +51,12 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                 'max_layers': request.options.max_layers if request.options.max_layers > 0 else None,
                 'max_levels': request.options.max_levels if request.options.max_levels > 0 else None,
                 'blocks_per_sublevel': request.options.blocks_per_sublevel if request.options.blocks_per_sublevel > 0 else None,
-                'optimize_layout': request.options.optimize_layout
+                'optimize_layout': request.options.optimize_layout,
+                'blocks_data': blocks_data
             }
             
             logger.info(f"Опции укладки: {options}")
+            logger.info(f"Закрепленные блоки: {[bid for bid, data in blocks_data.items() if data['is_pinned']]}")
                         
             # Выполняем укладку
             result = layout_knowledge_map(blocks, links, options)
@@ -68,6 +71,7 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                 block.id = block_id
                 block.content = block_data.content
                 block.layer = result['layers'][block_id]
+                block.is_pinned = block_data.is_pinned
                 
                 # Находим уровень и подуровень для блока
                 for level_id, sublevel_ids in result['levels'].items():

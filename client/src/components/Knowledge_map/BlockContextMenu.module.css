@@ -1,0 +1,33 @@
+.contextMenu {
+  position: fixed;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 4px 0;
+  min-width: 200px;
+  z-index: 1000;
+  font-family: 'PT Sans', sans-serif;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.menuItem:hover {
+  background-color: #f3f4f6;
+}
+
+.menuItem:focus {
+  outline: none;
+  background-color: #e5e7eb;
+} 

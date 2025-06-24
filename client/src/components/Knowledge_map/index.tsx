@@ -7,6 +7,7 @@ import { Link } from './Link';
 import { Level } from './Level';
 import { Sublevel } from './Sublevel';
 import { Block } from './Block';
+import { BlockContextMenu } from './BlockContextMenu';
 import ModeIndicator from './ModeIndicator';
 import { useKeyboardControlsWithProps } from './hooks/useKeyboardControls';
 import { useDataLoading } from './hooks/useDataLoading';
@@ -17,6 +18,7 @@ import { useBlockOperations } from './hooks/useBlockOperations';
 import { EditMode } from './types';
 import type { LinkCreationState, BlockData, LinkData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
+import { pinBlock, unpinBlock } from '../../services/api';
 import styles from './Knowledge_map.module.css';
 
 extend({ Container, Graphics, Text });
@@ -53,6 +55,13 @@ export default function Knowledge_map() {
   const [creatingBlock, setCreatingBlock] = useState<{
     sourceBlock: BlockData | null;
     targetLevel: number;
+  } | null>(null);
+
+  // Состояние контекстного меню
+  const [contextMenu, setContextMenu] = useState<{
+    blockId: string;
+    x: number;
+    y: number;
   } | null>(null);
 
   const {
@@ -136,6 +145,51 @@ export default function Knowledge_map() {
     setEditingText('');
     setEditingBlock(null); // Закрываем редактирование если оно было открыто
   }, []);
+
+  // Обработчики контекстного меню
+  const handleBlockRightClick = useCallback((blockId: string, x: number, y: number) => {
+    setContextMenu({ blockId, x, y });
+  }, []);
+
+  const handleContextMenuClose = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  const handlePinBlock = useCallback(async (blockId: string) => {
+    try {
+      const result = await pinBlock(blockId);
+      if (result.success) {
+        // Обновляем локальное состояние
+        setBlocks(prev => prev.map(block => 
+          block.id === blockId ? { ...block, is_pinned: true } : block
+        ));
+        // Перезагружаем данные для обновления укладки
+        loadLayoutData();
+      } else {
+        console.error('Failed to pin block:', result.error);
+      }
+    } catch (error) {
+      console.error('Error pinning block:', error);
+    }
+  }, [setBlocks, loadLayoutData]);
+
+  const handleUnpinBlock = useCallback(async (blockId: string) => {
+    try {
+      const result = await unpinBlock(blockId);
+      if (result.success) {
+        // Обновляем локальное состояние
+        setBlocks(prev => prev.map(block => 
+          block.id === blockId ? { ...block, is_pinned: false } : block
+        ));
+        // Перезагружаем данные для обновления укладки
+        loadLayoutData();
+      } else {
+        console.error('Failed to unpin block:', result.error);
+      }
+    } catch (error) {
+      console.error('Error unpinning block:', error);
+    }
+  }, [setBlocks, loadLayoutData]);
 
   // Обработчик создания нового блока
   const handleCreateNewBlock = useCallback(async () => {
@@ -329,6 +383,7 @@ export default function Knowledge_map() {
               onBlockMouseEnter={handleBlockMouseEnter}
               onBlockMouseLeave={handleBlockMouseLeave}
               onArrowHover={handleArrowHover}
+              onBlockRightClick={handleBlockRightClick}
             />
           ))}
           
@@ -391,6 +446,18 @@ export default function Knowledge_map() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Контекстное меню */}
+      {contextMenu && (
+        <BlockContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          isPinned={blocks.find(b => b.id === contextMenu.blockId)?.is_pinned || false}
+          onPin={() => handlePinBlock(contextMenu.blockId)}
+          onUnpin={() => handleUnpinBlock(contextMenu.blockId)}
+          onClose={handleContextMenuClose}
+        />
       )}
     </div>
   );

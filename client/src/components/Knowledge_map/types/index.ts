@@ -9,6 +9,7 @@ export interface BlockData {
   layer: number;
   isHovered?: boolean;
   hoveredArrow?: 'left' | 'right' | null;
+  is_pinned?: boolean;
 }
 
 export interface LinkData {

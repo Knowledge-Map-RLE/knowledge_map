@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import layout_pb2 as layout__pb2
+from . import layout_pb2 as layout__pb2
 
 
 class LayoutServiceStub(object):
@@ -101,4 +101,4 @@ class LayoutService(object):
             layout__pb2.HealthCheckRequest.SerializeToString,
             layout__pb2.HealthCheckResponse.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata) 

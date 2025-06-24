@@ -12,6 +12,7 @@ export interface Block {
     level: number;
     layer?: number;
     sublevel_id: number;
+    is_pinned?: boolean;
     metadata?: Record<string, any>;
 }
 
@@ -253,4 +254,54 @@ export async function deleteLink(linkId: string): Promise<{success: boolean, err
         return { success: false, error: errorData.detail || 'Ошибка при удалении связи' };
     }
     return response.json();
+}
+
+/**
+ * Закрепляет блок за уровнем
+ */
+export async function pinBlock(blockId: string): Promise<{success: boolean, error?: string}> {
+    try {
+        const response = await fetch(`${API_URL}/api/blocks/${blockId}/pin`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Failed to pin block:', response.statusText, errorText);
+            return { success: false, error: `Failed to pin block: ${response.statusText}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error pinning block:', error);
+        return { success: false, error: 'Network error' };
+    }
+}
+
+/**
+ * Открепляет блок от уровня
+ */
+export async function unpinBlock(blockId: string): Promise<{success: boolean, error?: string}> {
+    try {
+        const response = await fetch(`${API_URL}/api/blocks/${blockId}/unpin`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Failed to unpin block:', response.statusText, errorText);
+            return { success: false, error: `Failed to unpin block: ${response.statusText}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error unpinning block:', error);
+        return { success: false, error: 'Network error' };
+    }
 }
