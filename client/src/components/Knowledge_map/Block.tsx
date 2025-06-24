@@ -1,4 +1,4 @@
-import { Graphics, Container, Text } from 'pixi.js';
+import { Graphics, Container, Text, Point } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { AddBlockArrow } from './AddBlockArrow';
@@ -60,7 +60,7 @@ export const Block = memo(function Block({
     const borderColor = isHovered || hoveredArrow ? 0x3b82f6 : 0xd1d5db;
     const borderWidth = isSelected || isHovered || hoveredArrow ? 2 : 1;
     g.clear();
-    g.rect(-BLOCK_WIDTH / 2, -BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT);
+    g.roundRect(-BLOCK_WIDTH / 2, -BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, 10);
     g.fill(bgColor);
     g.stroke({ width: borderWidth, color: borderColor });
   }, [isSelected, isHovered, hoveredArrow]);
@@ -78,10 +78,11 @@ export const Block = memo(function Block({
       <graphics draw={draw} />
       <pixiText
         text={text}
-        x={-BLOCK_WIDTH / 2 + BLOCK_PADDING}
+        x={0}
         y={-BLOCK_HEIGHT / 2 + BLOCK_PADDING}
+        anchor={new Point(0.5, 0)}
         style={{
-          fontFamily: 'PT Sans, sans-serif',
+          fontFamily: 'PT Sans Narrow, sans-serif',
           fontSize: 14,
           fill: 0x000000,
           wordWrap: true,

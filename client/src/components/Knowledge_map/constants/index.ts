@@ -1,6 +1,6 @@
 // Размеры блока
-export const BLOCK_WIDTH = 100;
-export const BLOCK_HEIGHT = 50;
+export const BLOCK_WIDTH = 150;
+export const BLOCK_HEIGHT = 80;
 
 // Отступы
 export const LEVEL_PADDING = 40; // Внутренний отступ уровня
@@ -8,7 +8,7 @@ export const SUBLEVEL_PADDING = 30; // Внутренний отступ под�
 
 // Расстояния между элементами
 export const SUBLEVEL_SPACING = 200; // Расстояние между подуровнями в пикселях
-export const LAYER_SPACING = 250; // Расстояние между слоями в пикселях
+export const LAYER_SPACING = 300; // Расстояние между слоями в пикселях
 
 // Цвета для уровней
 export const LEVEL_COLORS = [
