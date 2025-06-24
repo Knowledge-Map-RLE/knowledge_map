@@ -311,6 +311,29 @@ async def create_block(block_input: BlockInput):
         logger.error(f"Error creating block: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.put("/api/blocks/{block_id}", response_model=Dict[str, Any])
+async def update_block(block_id: str, block_input: BlockInput):
+    """Обновляет содержимое блока в Neo4j."""
+    try:
+        with db.transaction:
+            block = Block.nodes.get(uid=block_id)
+            block.content = block_input.content
+            block.save()
+            
+        response_block = {
+            "id": block.uid,
+            "content": block.content,
+            "level": block.level,
+            "layer": block.layer,
+            "sublevel_id": block.sublevel_id,
+        }
+        return {"success": True, "block": response_block}
+    except Block.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Block not found")
+    except Exception as e:
+        logger.error(f"Error updating block: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/api/links", response_model=Dict[str, Any])
 async def create_link(link_input: LinkInput):
     """Создает новую связь между блоками."""

@@ -16,7 +16,7 @@ export interface BlockProps {
   onBlockClick: (id: string) => void;
   isSelected: boolean;
   currentMode: EditMode;
-  onAddBlock: (sourceBlock: BlockData, targetLevel: number) => void;
+  onArrowClick: (sourceBlock: BlockData, targetLevel: number) => void;
   onBlockPointerDown: (blockId: string, event: any) => void;
   onBlockMouseEnter: (blockId: string) => void;
   onBlockMouseLeave: (blockId: string, event: any) => void;
@@ -28,7 +28,7 @@ export const Block = memo(function Block({
   onBlockClick, 
   isSelected,
   currentMode,
-  onAddBlock,
+  onArrowClick,
   onBlockPointerDown,
   onBlockMouseEnter,
   onBlockMouseLeave,
@@ -94,14 +94,14 @@ export const Block = memo(function Block({
         <>
           <AddBlockArrow
             position="left"
-            onClick={() => onAddBlock(blockData, level - 1)}
+            onClick={() => onArrowClick(blockData, level - 1)}
             onHover={() => onArrowHover(id, 'left')}
             onHoverEnd={() => onArrowHover(id, null)}
             isHovered={hoveredArrow === 'left'}
           />
           <AddBlockArrow
             position="right"
-            onClick={() => onAddBlock(blockData, level + 1)}
+            onClick={() => onArrowClick(blockData, level + 1)}
             onHover={() => onArrowHover(id, 'right')}
             onHoverEnd={() => onArrowHover(id, null)}
             isHovered={hoveredArrow === 'right'}
