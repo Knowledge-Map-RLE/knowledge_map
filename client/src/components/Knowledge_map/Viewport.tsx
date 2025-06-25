@@ -9,6 +9,10 @@ extend({ Container, Graphics, Point });
 interface ViewportProps {
   children: ReactNode;
   onCanvasClick?: (x: number, y: number) => void;
+  isBlockContextMenuActive?: boolean;
+  blockRightClickRef?: React.RefObject<boolean>;
+  instantBlockClickRef?: React.RefObject<boolean>;
+  onBlockRightClickTime?: (time: number) => void;
 }
 
 export interface ViewportRef {
@@ -16,26 +20,27 @@ export interface ViewportRef {
   scale: number;
   position: { x: number; y: number };
   containerRef: Container | null;
+  setBlockRightClickTime: (time: number) => void;
 }
 
 // TODO: исправить центрирование
-export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick }, ref) => {
+export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick, isBlockContextMenuActive = false, blockRightClickRef, instantBlockClickRef, onBlockRightClickTime }, ref) => {
   const containerRef = useRef<Container | null>(null);
   const gridRef = useRef<Graphics | null>(null);
   const tweensRef = useRef<gsap.core.Tween[]>([]);
   const { app } = useApplication();
+  const lastBlockRightClickTime = useRef<number>(0);
   
   const [isDragging, setIsDragging] = useState(false);
   const dragWorld = useRef<Point | null>(null);
   const [centerX, setCenterX] = useState(400);
   const [centerY, setCenterY] = useState(300);
 
-  // Панорамирование через DOM события (возвращаемся к DOM из-за проблем с готовностью PIXI)
+  // DOM перетаскивание как запасной вариант
   useEffect(() => {
     if (!app) return;
     
     const timer = setTimeout(() => {
-      // Проверяем готовность app более тщательно
       if (!app || !app.renderer || !app.renderer.view) {
         return;
       }
@@ -45,8 +50,39 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         return;
       }
       
+      // Глобальный блокировщик в capture фазе - срабатывает ДО ВСЕХ остальных обработчиков
+      // Убираем capture blocker - он создавал конфликты
+
       const onPointerDown = (e: PointerEvent) => {
         if (e.button !== 2) return;
+        
+        const now = Date.now();
+        console.log('DOM pointer down', e.button, 'contextMenuActive:', isBlockContextMenuActive, 'blockFlag:', blockRightClickRef?.current, 'instantFlag:', instantBlockClickRef?.current, 'time since last block click:', now - lastBlockRightClickTime.current);
+        
+        // ПЕРВАЯ ПРОВЕРКА: instant флаг - если блок уже отметился, то не запускаем перетаскивание
+        if (instantBlockClickRef && instantBlockClickRef.current) {
+          console.log('DOM: Blocking drag due to INSTANT block click flag');
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        
+        // Если активно контекстное меню блока, не запускаем перетаскивание
+        if (isBlockContextMenuActive || (blockRightClickRef && blockRightClickRef.current)) {
+          console.log('DOM: Blocking drag due to active context menu');
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        
+        // Проверяем время последнего правого клика по блоку - уменьшаем до 100ms для более точности
+        if (now - lastBlockRightClickTime.current < 100) {
+          console.log('DOM: Blocking drag due to recent block click');
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        
         e.preventDefault();
         
         const rect = canvas.getBoundingClientRect();
@@ -58,11 +94,11 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         const worldPoint = cnt.toLocal({ x: sx, y: sy });
         dragWorld.current = new Point(worldPoint.x, worldPoint.y);
         setIsDragging(true);
-        canvas.style.cursor = 'grabbing';
+        console.log('DOM: Started dragging');
       };
-  
+
       const onPointerMove = (e: PointerEvent) => {
-        if (!dragWorld.current || !containerRef.current) return;
+        if (!dragWorld.current || !containerRef.current || !isDragging) return;
         
         const rect = canvas.getBoundingClientRect();
         const sx = e.clientX - rect.left;
@@ -73,19 +109,24 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         cnt.position.x += sx - screenPos.x;
         cnt.position.y += sy - screenPos.y;
       };
-  
+
       const onPointerUp = (e: PointerEvent) => {
         if (e.button !== 2) return;
-        setIsDragging(false);
-        dragWorld.current = null;
-        canvas.style.cursor = 'default';
+        if (isDragging) {
+          setIsDragging(false);
+          dragWorld.current = null;
+          console.log('DOM: Stopped dragging');
+        }
       };
-  
+      
       const onContextMenu = (e: Event) => e.preventDefault();
-  
-      canvas.addEventListener('pointerdown', onPointerDown);
-      canvas.addEventListener('pointermove', onPointerMove);
-      canvas.addEventListener('pointerup', onPointerUp);
+      
+      // Условно добавляем обработчики - НЕ добавляем если контекстное меню активно
+      if (!isBlockContextMenuActive) {
+        canvas.addEventListener('pointerdown', onPointerDown);
+        canvas.addEventListener('pointermove', onPointerMove);
+        canvas.addEventListener('pointerup', onPointerUp);
+      }
       canvas.addEventListener('contextmenu', onContextMenu);
       
       return () => {
@@ -97,7 +138,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [app]);
+  }, [app, isBlockContextMenuActive, blockRightClickRef, instantBlockClickRef, isDragging]);
   
   // Зум через DOM события
   useEffect(() => {
@@ -218,6 +259,51 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     onCanvasClick(localPoint.x, localPoint.y);
   }, [isDragging, onCanvasClick]);
 
+  // Обработчики перетаскивания через PIXI
+  const handleBackgroundPointerDown = useCallback((event: any) => {
+    console.log('Background pointer down:', event.button, event);
+    
+    if (event.button === 2) { // Правая кнопка мыши
+      event.preventDefault();
+      
+      // Если активно контекстное меню блока, не запускаем перетаскивание
+      if (isBlockContextMenuActive || (blockRightClickRef && blockRightClickRef.current)) {
+        console.log('Blocking drag due to context menu');
+        return;
+      }
+      
+      const cnt = containerRef.current;
+      if (!cnt) return;
+      
+      const worldPoint = cnt.toLocal(event.global);
+      dragWorld.current = new Point(worldPoint.x, worldPoint.y);
+      setIsDragging(true);
+      console.log('Started dragging');
+    } else if (event.button === 0) {
+      // Левая кнопка для обычного клика
+      if (onCanvasClick && !isDragging) {
+        handleCanvasClick(event);
+      }
+    }
+  }, [onCanvasClick, isDragging, isBlockContextMenuActive, blockRightClickRef, handleCanvasClick]);
+
+  const handleBackgroundPointerMove = useCallback((event: any) => {
+    if (!dragWorld.current || !containerRef.current || !isDragging) return;
+    
+    const cnt = containerRef.current;
+    const screenPos = cnt.toGlobal(dragWorld.current);
+    cnt.position.x += event.global.x - screenPos.x;
+    cnt.position.y += event.global.y - screenPos.y;
+  }, [isDragging]);
+
+  const handleBackgroundPointerUp = useCallback((event: any) => {
+    if (event.button === 2 && isDragging) {
+      setIsDragging(false);
+      dragWorld.current = null;
+      console.log('Stopped dragging');
+    }
+  }, [isDragging]);
+
   // useImperativeHandle для focusOn
   useImperativeHandle(ref, () => ({
     focusOn: (targetX: number, targetY: number) => {
@@ -256,6 +342,9 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     scale: containerRef.current?.scale.x || 1,
     position: containerRef.current?.position || { x: 0, y: 0 },
     containerRef: containerRef.current,
+    setBlockRightClickTime: (time: number) => {
+      lastBlockRightClickTime.current = time;
+    },
   }));
 
   // Обновляем центр при изменении размеров экрана
@@ -283,7 +372,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         onPointerDown={onCanvasClick ? handleCanvasClick : undefined}
         draw={() => {}} 
       />
-    <container
+      <container
         ref={containerRef}
         interactive={false}
         x={centerX}

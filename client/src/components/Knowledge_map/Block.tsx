@@ -22,6 +22,7 @@ export interface BlockProps {
   onBlockMouseLeave: (blockId: string, event: any) => void;
   onArrowHover: (blockId: string, arrowPosition: 'left' | 'right' | null) => void;
   onBlockRightClick: (blockId: string, x: number, y: number) => void;
+  instantBlockClickRef?: React.RefObject<boolean>;
 }
 
 export const Block = memo(function Block({ 
@@ -35,6 +36,7 @@ export const Block = memo(function Block({
   onBlockMouseLeave,
   onArrowHover,
   onBlockRightClick,
+  instantBlockClickRef,
 }: BlockProps) {
   const { id, text, x, y, level, isHovered, hoveredArrow, is_pinned } = blockData;
   const containerRef = useRef<Container>(null);
@@ -74,9 +76,33 @@ export const Block = memo(function Block({
       cursor="pointer"
       onMouseEnter={() => onBlockMouseEnter(id)}
       onMouseLeave={(e: any) => onBlockMouseLeave(id, e)}
-      onPointerDown={(e: any) => onBlockPointerDown(id, e)}
-      onRightClick={(e: any) => onBlockRightClick(id, e.global.x, e.global.y)}
-      zIndex={10}
+              onPointerDown={(e: any) => {
+          if (e.button === 2) {
+            // Правый клик - мгновенно устанавливаем флаг и блокируем всплытие
+            console.log('Block pointer down - RIGHT CLICK, blocking');
+            if (instantBlockClickRef) {
+              instantBlockClickRef.current = true;
+              console.log('INSTANT flag set to true');
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return;
+          }
+          onBlockPointerDown(id, e);
+        }}
+        onRightClick={(e: any) => {
+          console.log('Block right click event');
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          e.nativeEvent?.preventDefault?.();
+          e.nativeEvent?.stopPropagation?.();
+          e.nativeEvent?.stopImmediatePropagation?.();
+          onBlockRightClick(id, e.global.x, e.global.y);
+        }}
+
+        zIndex={10}
     >
       <graphics draw={draw} />
       <pixiText

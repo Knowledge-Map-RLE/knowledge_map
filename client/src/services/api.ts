@@ -14,6 +14,7 @@ export interface Block {
     sublevel_id: number;
     is_pinned?: boolean;
     metadata?: Record<string, any>;
+    physical_scale?: number; // степень 10 в метрах для физического масштаба уровня
 }
 
 export interface Link {
@@ -264,6 +265,7 @@ export async function pinBlock(blockId: string): Promise<{success: boolean, erro
         const response = await fetch(`${API_URL}/api/blocks/${blockId}/pin`, {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
         });
@@ -277,6 +279,33 @@ export async function pinBlock(blockId: string): Promise<{success: boolean, erro
         return await response.json();
     } catch (error) {
         console.error('Error pinning block:', error);
+        return { success: false, error: 'Network error' };
+    }
+}
+
+/**
+ * Закрепляет блок за уровнем с указанным физическим масштабом
+ */
+export async function pinBlockWithScale(blockId: string, physicalScale: number): Promise<{success: boolean, error?: string}> {
+    try {
+        const response = await fetch(`${API_URL}/api/blocks/${blockId}/pin_with_scale`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ physical_scale: physicalScale }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Failed to pin block with scale:', response.statusText, errorText);
+            return { success: false, error: `Failed to pin block with scale: ${response.statusText}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error pinning block with scale:', error);
         return { success: false, error: 'Network error' };
     }
 }

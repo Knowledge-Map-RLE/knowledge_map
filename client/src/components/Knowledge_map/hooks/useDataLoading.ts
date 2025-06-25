@@ -29,6 +29,7 @@ const convertApiBlockToBlockData = (apiBlock: api.Block): BlockData => {
     text: apiBlock.content || '',
     content: apiBlock.content || '',
     level: apiBlock.level || 0,
+    physical_scale: apiBlock.physical_scale || 0,
     layer: apiBlock.layer || 0,
     sublevel: apiBlock.sublevel_id || 0,
     is_pinned: apiBlock.is_pinned || false

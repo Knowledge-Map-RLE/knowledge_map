@@ -124,6 +124,7 @@ class LayoutClient:
                 grpc_block.content = block["content"]
                 grpc_block.is_pinned = block.get("is_pinned", False)
                 grpc_block.level = block.get("level", 0)  # Передаем уровень блока
+                grpc_block.physical_scale = block.get("physical_scale", 0)  # Передаем физический масштаб
                 grpc_block.metadata.update(block.get("metadata", {}))
             
             # Добавляем связи
@@ -188,6 +189,7 @@ class LayoutClient:
                         "level": block.level,
                         "sublevel_id": block.sublevel_id,
                         "is_pinned": block.is_pinned,
+                        "physical_scale": getattr(block, 'physical_scale', 0),
                         "metadata": dict(block.metadata)
                     })
                 except Exception as e:

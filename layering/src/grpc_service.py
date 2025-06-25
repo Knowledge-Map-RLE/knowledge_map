@@ -38,7 +38,8 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
             blocks_data = {
                 block.id: {
                     "is_pinned": block.is_pinned,
-                    "level": getattr(block, 'level', 0)  # Передаем уровень если поле существует
+                    "level": getattr(block, 'level', 0),  # Передаем уровень если поле существует
+                    "physical_scale": getattr(block, 'physical_scale', 0)  # Передаем физический масштаб
                 } 
                 for block in request.blocks
             }
@@ -103,6 +104,7 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                 block.content = block_data.content
                 block.layer = result['layers'][block_id]
                 block.is_pinned = block_data.is_pinned
+                block.physical_scale = getattr(block_data, 'physical_scale', 0)  # Добавляем физический масштаб
                 
                 # Находим уровень и подуровень для блока
                 for level_id, sublevel_ids in result['levels'].items():

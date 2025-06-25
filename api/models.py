@@ -70,6 +70,8 @@ class Block(StructuredNode):
     """Слой"""
     level = IntegerProperty(index=True, default=0)
     """Уровень"""
+    physical_scale = IntegerProperty(index=True, default=0)
+    """Физический масштаб уровня в метрах (степень числа 10). По умолчанию 0 означает 10^0 = 1 метр"""
     sublevel_id = IntegerProperty(index=True, default=-1)
     """ID подуровня, к которому принадлежит блок"""
     is_pinned = BooleanProperty(default=False)

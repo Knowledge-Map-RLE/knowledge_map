@@ -18,7 +18,7 @@ import { useBlockOperations } from './hooks/useBlockOperations';
 import { EditMode } from './types';
 import type { LinkCreationState, BlockData, LinkData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
-import { pinBlock, unpinBlock, moveBlockToLevel } from '../../services/api';
+import { pinBlock, unpinBlock, pinBlockWithScale, moveBlockToLevel } from '../../services/api';
 import styles from './Knowledge_map.module.css';
 
 extend({ Container, Graphics, Text });
@@ -63,6 +63,9 @@ export default function Knowledge_map() {
     x: number;
     y: number;
   } | null>(null);
+  const [isBlockContextMenuActive, setIsBlockContextMenuActive] = useState(false);
+  const blockRightClickRef = useRef<boolean>(false);
+  const instantBlockClickRef = useRef<boolean>(false);
 
   const {
     handleBlockClick,
@@ -148,10 +151,27 @@ export default function Knowledge_map() {
 
   // Обработчики контекстного меню
   const handleBlockRightClick = useCallback((blockId: string, x: number, y: number) => {
+    console.log('Block right click triggered');
+    blockRightClickRef.current = true;
+    setIsBlockContextMenuActive(true);
     setContextMenu({ blockId, x, y });
+    
+    // Запоминаем время клика для Viewport
+    if (viewportRef.current && viewportRef.current.setBlockRightClickTime) {
+      viewportRef.current.setBlockRightClickTime(Date.now());
+    }
+    
+    // Сбрасываем флаги через короткий тайм-аут для быстрого восстановления перетаскивания
+    setTimeout(() => {
+      blockRightClickRef.current = false;
+      instantBlockClickRef.current = false; // Сбрасываем также instant флаг
+      console.log('Block right click flags reset');
+    }, 50);
   }, []);
 
   const handleContextMenuClose = useCallback(() => {
+    blockRightClickRef.current = false;
+    setIsBlockContextMenuActive(false);
     setContextMenu(null);
   }, []);
 
@@ -188,6 +208,24 @@ export default function Knowledge_map() {
       }
     } catch (error) {
       console.error('Error unpinning block:', error);
+    }
+  }, [setBlocks, loadLayoutData]);
+
+  const handlePinBlockWithScale = useCallback(async (blockId: string, physicalScale: number) => {
+    try {
+      const result = await pinBlockWithScale(blockId, physicalScale);
+      if (result.success) {
+        // Обновляем локальное состояние
+        setBlocks(prev => prev.map(block => 
+          block.id === blockId ? { ...block, is_pinned: true, physical_scale: physicalScale } : block
+        ));
+        // Перезагружаем данные для обновления укладки
+        loadLayoutData();
+      } else {
+        console.error('Failed to pin block with scale:', result.error);
+      }
+    } catch (error) {
+      console.error('Error pinning block with scale:', error);
     }
   }, [setBlocks, loadLayoutData]);
 
@@ -380,6 +418,58 @@ export default function Knowledge_map() {
     }
   }, [blocks, focusTargetId]);
 
+  // Дополнительная защита от контекстного меню
+  useEffect(() => {
+    const preventContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    const blockAllPointerEvents = (e: Event) => {
+      if (isBlockContextMenuActive) {
+        console.log('Blocking all pointer events due to active context menu');
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return false;
+      }
+    };
+
+    const handleGlobalClick = (e: MouseEvent) => {
+      // Если клик вне контекстного меню, сбрасываем флаг
+      if (isBlockContextMenuActive && !contextMenu) {
+        setIsBlockContextMenuActive(false);
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('contextmenu', preventContextMenu);
+      
+      // Агрессивная блокировка всех pointer событий если контекстное меню активно
+      if (isBlockContextMenuActive) {
+        const canvas = container.querySelector('canvas');
+        if (canvas) {
+          canvas.addEventListener('pointerdown', blockAllPointerEvents, { capture: true });
+          canvas.addEventListener('pointermove', blockAllPointerEvents, { capture: true });
+          canvas.addEventListener('pointerup', blockAllPointerEvents, { capture: true });
+        }
+      }
+      
+      document.addEventListener('click', handleGlobalClick);
+      
+      return () => {
+        container.removeEventListener('contextmenu', preventContextMenu);
+        const canvas = container.querySelector('canvas');
+        if (canvas) {
+          canvas.removeEventListener('pointerdown', blockAllPointerEvents, { capture: true } as any);
+          canvas.removeEventListener('pointermove', blockAllPointerEvents, { capture: true } as any);
+          canvas.removeEventListener('pointerup', blockAllPointerEvents, { capture: true } as any);
+        }
+        document.removeEventListener('click', handleGlobalClick);
+      };
+    }
+  }, [isBlockContextMenuActive, contextMenu]);
+
   // Простые обработчики, которые остаются в компоненте
   const handleBlockPointerDown = useCallback((blockId: string, event: any) => {
     event.stopPropagation();
@@ -430,12 +520,13 @@ export default function Knowledge_map() {
         </div>
       )}
       <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
-        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode}>
+        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode} isBlockContextMenuActive={isBlockContextMenuActive} blockRightClickRef={blockRightClickRef} instantBlockClickRef={instantBlockClickRef}>
           {/* Рендерим все уровни */}
           {levels.map(level => (
             <Level
               key={level.id}
               levelData={level}
+              blocks={blocks}
             />
           ))}
           
@@ -473,6 +564,7 @@ export default function Knowledge_map() {
               onBlockMouseLeave={handleBlockMouseLeave}
               onArrowHover={handleArrowHover}
               onBlockRightClick={handleBlockRightClick}
+              instantBlockClickRef={instantBlockClickRef}
             />
           ))}
           
@@ -543,8 +635,10 @@ export default function Knowledge_map() {
           x={contextMenu.x}
           y={contextMenu.y}
           isPinned={blocks.find(b => b.id === contextMenu.blockId)?.is_pinned || false}
+          currentPhysicalScale={blocks.find(b => b.id === contextMenu.blockId)?.physical_scale || 0}
           onPin={() => handlePinBlock(contextMenu.blockId)}
           onUnpin={() => handleUnpinBlock(contextMenu.blockId)}
+          onPinWithScale={(physicalScale: number) => handlePinBlockWithScale(contextMenu.blockId, physicalScale)}
           onClose={handleContextMenuClose}
         />
       )}

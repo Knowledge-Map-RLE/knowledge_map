@@ -26,7 +26,8 @@ message BlockInput {
   string content = 2;
   bool is_pinned = 3;              // Закреплен ли блок за уровнем
   int32 level = 4;                 // Текущий уровень блока (для закрепленных блоков)
-  map<string, string> metadata = 5; // Дополнительные данные
+  int32 physical_scale = 5;        // Физический масштаб уровня в метрах (степень числа 10)
+  map<string, string> metadata = 6; // Дополнительные данные
 }
 
 // Связь между блоками
@@ -69,7 +70,8 @@ message BlockWithPosition {
   int32 level = 6;                // Уровень (группировка)
   int32 sublevel_id = 7;          // ID подуровня к которому принадлежит блок
   bool is_pinned = 8;             // Закреплен ли блок за уровнем
-  map<string, string> metadata = 9; // Дополнительные данные
+  int32 physical_scale = 9;       // Физический масштаб уровня в метрах (степень числа 10)
+  map<string, string> metadata = 10; // Дополнительные данные
 }
 
 // Уровень (группирует несколько подуровней)

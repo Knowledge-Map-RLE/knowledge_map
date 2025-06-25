@@ -15,9 +15,9 @@ export const useSelectionState = (): UseSelectionStateResult => {
 
   const handleBlockSelection = useCallback((blockId: string) => {
     setSelectedBlocks(prev => 
-      prev.includes(blockId) 
-        ? prev.filter(id => id !== blockId)
-        : [...prev, blockId]
+      prev.includes(blockId) && prev.length === 1
+        ? [] // Если блок единственный выделенный, снимаем выделение
+        : [blockId] // Иначе выделяем только этот блок
     );
   }, []);
 

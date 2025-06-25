@@ -93,6 +93,9 @@ class CreateAndLinkInput(BaseModel):
 class MoveToLevelInput(BaseModel):
     target_level: int
 
+class PinWithScaleInput(BaseModel):
+    physical_scale: int  # степень 10 в метрах
+
 # Эндпоинты для проверки здоровья
 @app.get("/health")
 async def health_check() -> Dict[str, Any]:
@@ -185,7 +188,7 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
         logger.info("Querying blocks from Neo4j")
         blocks_query = """
         MATCH (b:Block)
-        RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned
+        RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned, b.physical_scale as physical_scale
         """
         blocks_result, _ = db.cypher_query(blocks_query)
         logger.info(f"Found {len(blocks_result)} blocks total")
@@ -210,6 +213,7 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
                 "layer": int(row[2] or 0),
                 "level": int(row[3] or 0),
                 "is_pinned": bool(row[4]) if row[4] is not None else False,
+                "physical_scale": int(row[5] or 0) if row[5] is not None else 0,
                 "metadata": {}
             }
             if block_data["is_pinned"]:
@@ -311,6 +315,7 @@ async def create_block(block_input: BlockInput):
             "layer": b.layer,
             "sublevel_id": b.sublevel_id,
             "is_pinned": b.is_pinned,
+            "physical_scale": getattr(b, 'physical_scale', 0),
         }
         return {"success": True, "block": response_block}
     except Exception as e:
@@ -333,6 +338,7 @@ async def update_block(block_id: str, block_input: BlockInput):
             "layer": block.layer,
             "sublevel_id": block.sublevel_id,
             "is_pinned": block.is_pinned,
+            "physical_scale": getattr(block, 'physical_scale', 0),
         }
         return {"success": True, "block": response_block}
     except Block.DoesNotExist:
@@ -385,13 +391,13 @@ async def create_block_and_link(data: CreateAndLinkInput):
         
         # Получаем полный обновленный граф из Neo4j
         # (Эта логика дублирует /layout/neo4j, но необходима для получения координат)
-        blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned"
+        blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned, b.physical_scale as physical_scale"
         blocks_result, _ = db.cypher_query(blocks_query)
         
         links_query = "MATCH (b1:Block)-[r:LINK_TO]->(b2:Block) RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id"
         links_result, _ = db.cypher_query(links_query)
 
-        blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "is_pinned": bool(r[4]) if r[4] is not None else False, "metadata": {}} for r in blocks_result]
+        blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "is_pinned": bool(r[4]) if r[4] is not None else False, "physical_scale": int(r[5] or 0) if r[5] is not None else 0, "metadata": {}} for r in blocks_result]
         links_for_layout = [{"id": str(r[0]) if r[0] else None, "source_id": str(r[1]), "target_id": str(r[2])} for r in links_result]
         
         # Вызываем сервис укладки
@@ -492,13 +498,13 @@ async def pin_block(block_id: str):
             # Если у блока нет уровня, устанавливаем его текущий level из позиции в графе
             if block.level == 0:
                 # Получаем все блоки для определения текущего уровня
-                blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned"
+                blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned, b.physical_scale as physical_scale"
                 blocks_result, _ = db.cypher_query(blocks_query)
                 
                 links_query = "MATCH (b1:Block)-[r:LINK_TO]->(b2:Block) RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id"
                 links_result, _ = db.cypher_query(links_query)
 
-                blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "is_pinned": bool(r[4]) if r[4] is not None else False, "metadata": {}} for r in blocks_result]
+                blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "is_pinned": bool(r[4]) if r[4] is not None else False, "physical_scale": int(r[5] or 0) if r[5] is not None else 0, "metadata": {}} for r in blocks_result]
                 links_for_layout = [{"id": str(r[0]) if r[0] else None, "source_id": str(r[1]), "target_id": str(r[2])} for r in links_result]
                 
                 # Получаем текущую укладку для определения уровня блока
@@ -544,6 +550,57 @@ async def unpin_block(block_id: str):
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error unpinning block: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/blocks/{block_id}/pin_with_scale", response_model=Dict[str, Any])
+async def pin_block_with_scale(block_id: str, data: PinWithScaleInput):
+    """Закрепляет блок за уровнем с указанным физическим масштабом."""
+    logger.info(f"🔥 PIN_BLOCK_WITH_SCALE CALLED: {block_id} with scale {data.physical_scale}")
+    try:
+        with db.transaction:
+            block = Block.nodes.get(uid=block_id)
+            logger.info(f"📊 Before pinning with scale: block {block_id} is_pinned = {block.is_pinned}, level = {block.level}, physical_scale = {getattr(block, 'physical_scale', 'not set')}")
+            
+            # Если у блока нет уровня, устанавливаем его текущий level из позиции в графе
+            if block.level == 0:
+                # Получаем все блоки для определения текущего уровня
+                blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned, b.physical_scale as physical_scale"
+                blocks_result, _ = db.cypher_query(blocks_query)
+                
+                links_query = "MATCH (b1:Block)-[r:LINK_TO]->(b2:Block) RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id"
+                links_result, _ = db.cypher_query(links_query)
+
+                blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "is_pinned": bool(r[4]) if r[4] is not None else False, "physical_scale": int(r[5] or 0) if r[5] is not None else 0, "metadata": {}} for r in blocks_result]
+                links_for_layout = [{"id": str(r[0]) if r[0] else None, "source_id": str(r[1]), "target_id": str(r[2])} for r in links_result]
+                
+                # Получаем текущую укладку для определения уровня блока
+                client = get_layout_client()
+                layout_result = await client.calculate_layout(blocks_for_layout, links_for_layout)
+                
+                if layout_result.get('success') and layout_result.get('blocks'):
+                    # Находим уровень текущего блока в результатах укладки
+                    current_block_level = 0
+                    for block_info in layout_result['blocks']:
+                        if block_info['id'] == block_id:
+                            current_block_level = block_info['level']
+                            break
+                    
+                    block.level = current_block_level
+                    logger.info(f"Setting block {block_id} level to {current_block_level} based on current layout")
+            
+            # Устанавливаем физический масштаб и закрепляем
+            block.is_pinned = True
+            block.physical_scale = data.physical_scale
+            block.save()
+            block.refresh()
+            logger.info(f"After pinning with scale: block {block_id} is_pinned = {block.is_pinned}, level = {block.level}, physical_scale = {block.physical_scale}")
+            
+        return {"success": True, "message": f"Block {block_id} pinned successfully at level {block.level} with physical scale {data.physical_scale}"}
+        
+    except Block.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Block not found")
+    except Exception as e:
+        logger.error(f"Error pinning block with scale: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/blocks/{block_id}/move_to_level", response_model=Dict[str, Any])

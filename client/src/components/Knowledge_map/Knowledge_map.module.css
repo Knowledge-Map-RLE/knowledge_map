@@ -3,6 +3,11 @@
 .knowledge_map {
     @apply flex bg-amber-100 w-full h-full fixed top-0 left-0 justify-center items-center;
     outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-context-menu: none;
 }
 
 .knowledge_map:focus {

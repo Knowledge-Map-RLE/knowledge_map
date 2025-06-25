@@ -5,6 +5,7 @@ export interface BlockData {
   x?: number;
   y?: number;
   level: number;
+  physical_scale?: number; // степень 10 в метрах для физического масштаба уровня
   sublevel: number;
   layer: number;
   isHovered?: boolean;
