@@ -1,15 +1,14 @@
 import type { BlockData, LevelData, SublevelData, LinkData } from '../types';
-import { LAYER_SPACING, SUBLEVEL_COLORS, LEVEL_COLORS, LEVEL_PADDING, BLOCK_WIDTH, BLOCK_HEIGHT } from '../constants';
-
-// Константы для расчета размеров
-const LEVEL_HEIGHT = 300; // Высота уровня
-const SUBLEVEL_HEIGHT = 120; // Высота подуровня внутри уровня
-const SUBLEVEL_MARGIN = 20; // Отступ между подуровнями
-const LEVEL_MARGIN = 50; // Отступ между уровнями
-const GRAPH_WIDTH = 2000; // Полная ширина графа
-const GRAPH_START_X = -1000; // Начало графа по X
-const BLOCK_SPACING_X = 250; // Горизонтальный интервал между блоками
-const BLOCK_SPACING_Y = 130; // Вертикальный интервал между блоками
+import {
+  BLOCK_HEIGHT,
+  LEVEL_HEIGHT,
+  SUBLEVEL_HEIGHT,
+  SUBLEVEL_MARGIN,
+  LEVEL_MARGIN,
+  GRAPH_WIDTH,
+  BLOCK_SPACING_X,
+  BLOCK_SPACING_Y
+} from '../constants';
 
 // Функция для расчета координат уровней - они должны располагаться горизонтально друг под другом
 export const calculateLevelCoordinates = (
@@ -31,8 +30,8 @@ export const calculateLevelCoordinates = (
     
     return {
       ...level,
-      min_x: GRAPH_START_X,
-      max_x: GRAPH_START_X + GRAPH_WIDTH,
+      min_x: 0,
+      max_x: GRAPH_WIDTH,
       min_y: minY,
       max_y: maxY
     };
@@ -288,8 +287,8 @@ export const calculateBlockCoordinates = (
     const layerNodes = orderedBlocksByLayer.get(layerNum)!;
     const layerNodeCount = layerNodes.length;
     
-    // X координата - фиксированная для слоя
-    const layerX = GRAPH_START_X + layerNum * LAYER_WIDTH;
+    // X координата - фиксированная для слоя (начинаем с 0)
+    const layerX = layerNum * LAYER_WIDTH;
     
     // Y координаты - центрируем блоки в слое
     const totalLayerHeight = (layerNodeCount - 1) * NODE_HEIGHT;
@@ -354,8 +353,8 @@ export const calculateBlockCoordinates = (
       availableHeight = originalSublevel.max_y - originalSublevel.min_y;
     }
     
-    // Определяем сколько блоков помещается в один подуровень
-    const minBlockSpacing = BLOCK_HEIGHT + 20; // Минимальное расстояние между блоками
+         // Определяем сколько блоков помещается в один подуровень
+     const minBlockSpacing = BLOCK_HEIGHT + 50; // Минимальное расстояние между блоками (увеличено)
     const maxBlocksPerSublevel = Math.max(1, Math.floor(availableHeight / minBlockSpacing));
     
     console.log(`🔧 Подуровень ${sublevelId}: ${unpinnedBlocks.length} незакреплённых блоков, может поместиться ${maxBlocksPerSublevel} блоков на подуровень`);
@@ -392,7 +391,7 @@ export const calculateBlockCoordinates = (
       const blockChunk = unpinnedBlocks.slice(i, i + maxBlocksPerSublevel);
       const virtualKey = `${sublevelId}_${virtualIndex}`;
       
-      const yOffset = virtualIndex * (availableHeight + 30); // Отступ между виртуальными подуровнями
+      const yOffset = virtualIndex * (availableHeight + 70); // Отступ между виртуальными подуровнями (увеличен)
       
       virtualSublevels.set(virtualKey, {
         blocks: blockChunk,
@@ -448,7 +447,7 @@ export const calculateBlockCoordinates = (
           // Дополнительное смещение внутри виртуального подуровня
           const blockIndexInVirtual = blockVirtualSublevel.blocks.findIndex(b => b.id === block.id);
           if (blockIndexInVirtual >= 0 && blockVirtualSublevel.blocks.length > 1) {
-            const virtualSublevelHeight = Math.min(SUBLEVEL_HEIGHT - 40, blockVirtualSublevel.blocks.length * 30);
+            const virtualSublevelHeight = Math.min(SUBLEVEL_HEIGHT - 40, blockVirtualSublevel.blocks.length * 50); // Увеличен отступ между блоками
             const blockOffsetInVirtual = (blockIndexInVirtual - (blockVirtualSublevel.blocks.length - 1) / 2) * 
                                        (virtualSublevelHeight / Math.max(1, blockVirtualSublevel.blocks.length - 1));
             finalY += blockOffsetInVirtual;

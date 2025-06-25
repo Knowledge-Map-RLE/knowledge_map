@@ -90,6 +90,9 @@ class CreateAndLinkInput(BaseModel):
     new_block_content: str = "Новый блок"
     link_direction: str = Field(..., pattern="^(from_source|to_source)$") # 'from_source' или 'to_source'
 
+class MoveToLevelInput(BaseModel):
+    target_level: int
+
 # Эндпоинты для проверки здоровья
 @app.get("/health")
 async def health_check() -> Dict[str, Any]:
@@ -541,6 +544,35 @@ async def unpin_block(block_id: str):
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error unpinning block: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/blocks/{block_id}/move_to_level", response_model=Dict[str, Any])
+async def move_block_to_level(block_id: str, data: MoveToLevelInput):
+    """Перемещает закрепленный блок на указанный уровень."""
+    logger.info(f"🔄 MOVE_BLOCK_TO_LEVEL CALLED: {block_id} -> level {data.target_level}")
+    try:
+        with db.transaction:
+            block = Block.nodes.get(uid=block_id)
+            
+            # Проверяем, что блок закреплен
+            if not block.is_pinned:
+                raise HTTPException(status_code=400, detail="Block must be pinned to move between levels")
+            
+            logger.info(f"📊 Before moving: block {block_id} level = {block.level}")
+            
+            # Обновляем уровень блока
+            block.level = data.target_level
+            block.save()
+            block.refresh()
+            
+            logger.info(f"✅ After moving: block {block_id} level = {block.level}")
+            
+        return {"success": True, "message": f"Block {block_id} moved to level {data.target_level} successfully"}
+        
+    except Block.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Block not found")
+    except Exception as e:
+        logger.error(f"Error moving block to level: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Подключаем GraphQL

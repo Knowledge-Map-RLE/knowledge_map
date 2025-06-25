@@ -18,7 +18,7 @@ import { useBlockOperations } from './hooks/useBlockOperations';
 import { EditMode } from './types';
 import type { LinkCreationState, BlockData, LinkData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
-import { pinBlock, unpinBlock } from '../../services/api';
+import { pinBlock, unpinBlock, moveBlockToLevel } from '../../services/api';
 import styles from './Knowledge_map.module.css';
 
 extend({ Container, Graphics, Text });
@@ -191,6 +191,88 @@ export default function Knowledge_map() {
     }
   }, [setBlocks, loadLayoutData]);
 
+  // Функция для поиска подходящего уровня для перемещения
+  const findTargetLevel = useCallback((currentLevel: number, direction: 'up' | 'down', excludeBlockId?: string) => {
+    const pinnedBlocksMap = new Map<number, string[]>();
+    
+    // Группируем закрепленные блоки по уровням (исключая текущий блок для расчета границ)
+    blocks.forEach(block => {
+      if (block.is_pinned && block.id !== excludeBlockId) {
+        const level = block.level;
+        if (!pinnedBlocksMap.has(level)) {
+          pinnedBlocksMap.set(level, []);
+        }
+        pinnedBlocksMap.get(level)!.push(block.id);
+      }
+    });
+    
+    // Получаем отсортированные уровни с закрепленными блоками (без текущего)
+    const pinnedLevels = Array.from(pinnedBlocksMap.keys()).sort((a, b) => a - b);
+    
+    console.log(`🔍 findTargetLevel: current=${currentLevel}, direction=${direction}, pinnedLevels:`, pinnedLevels);
+    
+    if (direction === 'up') {
+        // "Вверх" означает переход на уровень с МЕНЬШИМ номером (визуально выше)
+        const levelsAbove = pinnedLevels.filter(level => level < currentLevel);
+        
+        if (levelsAbove.length > 0) {
+          const target = Math.max(...levelsAbove); // Ближайший (максимальный) из меньших
+          console.log(`✅ Moving to existing level above: ${target}`);
+          return target;
+        }
+        
+        // Если не найден, создаем новый уровень выше всех существующих закрепленных блоков (включая текущий)
+        const allLevels = [currentLevel, ...pinnedLevels];
+        const minLevel = Math.min(...allLevels);
+        const target = minLevel - 1;
+        console.log(`🆕 Creating new level above all (including current): ${target}`);
+        return target;
+    } else {
+        // "Вниз" означает переход на уровень с БОЛЬШИМ номером (визуально ниже)
+        const levelsBelow = pinnedLevels.filter(level => level > currentLevel);
+        
+        if (levelsBelow.length > 0) {
+          const target = Math.min(...levelsBelow); // Ближайший (минимальный) из больших
+          console.log(`✅ Moving to existing level below: ${target}`);
+          return target;
+        }
+        
+        // Если не найден, создаем новый уровень ниже всех существующих закрепленных блоков (включая текущий)
+        const allLevels = [currentLevel, ...pinnedLevels];
+        const maxLevel = Math.max(...allLevels);
+        const target = maxLevel + 1;
+        console.log(`🆕 Creating new level below all (including current): ${target}`);
+        return target;
+    }
+  }, [blocks]);
+
+  // Обработчик перемещения закрепленного блока
+  const handleMovePinnedBlock = useCallback(async (blockId: string, direction: 'up' | 'down') => {
+    const block = blocks.find(b => b.id === blockId);
+    if (!block || !block.is_pinned) {
+      console.warn('Block is not pinned or not found:', blockId);
+      return;
+    }
+
+    const targetLevel = findTargetLevel(block.level, direction, blockId);
+    console.log(`🚀 Moving block ${blockId} from level ${block.level} to level ${targetLevel} (${direction})`);
+
+    try {
+      const result = await moveBlockToLevel(blockId, targetLevel);
+      if (result.success) {
+        console.log('✅ Block moved successfully, reloading layout...');
+        // Снимаем выделение после успешного перемещения
+        clearSelection();
+        // Перезагружаем данные для получения новой укладки
+        loadLayoutData();
+      } else {
+        console.error('❌ Failed to move block:', result.error);
+      }
+    } catch (error) {
+      console.error('💥 Error moving block:', error);
+    }
+  }, [blocks, findTargetLevel, loadLayoutData, clearSelection]);
+
   // Обработчик создания нового блока
   const handleCreateNewBlock = useCallback(async () => {
     if (!creatingBlock?.sourceBlock || !editingText.trim()) return;
@@ -253,7 +335,14 @@ export default function Knowledge_map() {
     { scale: 1, position: { x: 0, y: 0 } };
 
   useKeyboardControlsWithProps({
-    setCurrentMode, setLinkCreationState, currentMode, linkCreationState
+    setCurrentMode, 
+    setLinkCreationState, 
+    currentMode, 
+    linkCreationState,
+    selectedBlocks,
+    blocks,
+    levels,
+    onMovePinnedBlock: handleMovePinnedBlock
   });
 
   useEffect(() => { loadLayoutData(); }, [loadLayoutData]);

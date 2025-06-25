@@ -6,6 +6,10 @@ interface UseKeyboardControlsProps {
   setLinkCreationState: (state: LinkCreationState) => void;
   currentMode: EditMode;
   linkCreationState: LinkCreationState;
+  selectedBlocks?: string[];
+  blocks?: BlockData[];
+  levels?: any[];
+  onMovePinnedBlock?: (blockId: string, direction: 'up' | 'down') => void;
 }
 
 interface UseKeyboardControlsResult {
@@ -51,7 +55,11 @@ export const useKeyboardControlsWithProps = ({
   setCurrentMode,
   setLinkCreationState,
   currentMode,
-  linkCreationState
+  linkCreationState,
+  selectedBlocks = [],
+  blocks = [],
+  levels = [],
+  onMovePinnedBlock
 }: UseKeyboardControlsProps) => {
   const pressedKeys = useRef<Set<string>>(new Set());
 
@@ -97,6 +105,28 @@ export const useKeyboardControlsWithProps = ({
             setModeWithLogging(EditMode.DELETE);
           }
           break;
+          
+        case 'ArrowUp':
+          if (e.ctrlKey && selectedBlocks.length === 1 && onMovePinnedBlock) {
+            e.preventDefault();
+            const selectedBlockId = selectedBlocks[0];
+            const selectedBlock = blocks.find(b => b.id === selectedBlockId);
+            if (selectedBlock?.is_pinned) {
+              onMovePinnedBlock(selectedBlockId, 'up');
+            }
+          }
+          break;
+          
+        case 'ArrowDown':
+          if (e.ctrlKey && selectedBlocks.length === 1 && onMovePinnedBlock) {
+            e.preventDefault();
+            const selectedBlockId = selectedBlocks[0];
+            const selectedBlock = blocks.find(b => b.id === selectedBlockId);
+            if (selectedBlock?.is_pinned) {
+              onMovePinnedBlock(selectedBlockId, 'down');
+            }
+          }
+          break;
       }
     };
 
@@ -137,5 +167,5 @@ export const useKeyboardControlsWithProps = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [currentMode, setModeWithLogging, setLinkCreationState, linkCreationState]);
+  }, [currentMode, setModeWithLogging, setLinkCreationState, linkCreationState, selectedBlocks, blocks, onMovePinnedBlock]);
 }; 

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест логики перемещения блоков</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .block { display: inline-block; margin: 5px; padding: 10px; border: 1px solid #333; background: #f0f0f0; }
+        .pinned { background: #ffeb3b; }
+        .current { background: #4caf50; color: white; }
+        .result { margin: 10px 0; padding: 10px; background: #e3f2fd; }
+    </style>
+</head>
+<body>
+    <h1>Тест логики перемещения закрепленных блоков</h1>
+    
+    <div class="test-section">
+        <h3>Текущие закрепленные блоки</h3>
+        <div id="blocks-display"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Тестирование</h3>
+        <label>Выберите блок для перемещения:</label>
+        <select id="block-select"></select>
+        <br><br>
+        <button onclick="testMove('up')">Ctrl+Up ⬆️</button>
+        <button onclick="testMove('down')">Ctrl+Down ⬇️</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Исправленная логика
+        function findTargetLevel(currentLevel, direction, excludeBlockId, allBlocks) {
+            const pinnedBlocksMap = new Map();
+            
+            // Группируем закрепленные блоки по уровням (исключая текущий блок для расчета границ)
+            allBlocks.forEach(block => {
+                if (block.is_pinned && block.id !== excludeBlockId) {
+                    const level = block.level;
+                    if (!pinnedBlocksMap.has(level)) {
+                        pinnedBlocksMap.set(level, []);
+                    }
+                    pinnedBlocksMap.get(level).push(block.id);
+                }
+            });
+            
+            // Получаем отсортированные уровни с закрепленными блоками (без текущего)
+            const pinnedLevels = Array.from(pinnedBlocksMap.keys()).sort((a, b) => a - b);
+            
+            console.log(`🔍 findTargetLevel: current=${currentLevel}, direction=${direction}, exclude=${excludeBlockId}`);
+            console.log(`📊 All pinned levels (excluding current block):`, pinnedLevels);
+            
+            if (direction === 'up') {
+                // "Вверх" означает переход на уровень с МЕНЬШИМ номером (визуально выше)
+                const levelsAbove = pinnedLevels.filter(level => level < currentLevel);
+                console.log(`⬆️ Levels above ${currentLevel}:`, levelsAbove);
+                
+                if (levelsAbove.length > 0) {
+                    const target = Math.max(...levelsAbove); // Ближайший (максимальный) из меньших
+                    console.log(`✅ Found existing level above: ${target}`);
+                    return target;
+                }
+                
+                // Если не найден, создаем новый уровень выше всех существующих закрепленных блоков (включая текущий)
+                const allLevels = [currentLevel, ...pinnedLevels];
+                const minLevel = Math.min(...allLevels);
+                const target = minLevel - 1;
+                console.log(`🆕 Creating new level above all (including current): ${minLevel} - 1 = ${target}`);
+                return target;
+            } else {
+                // "Вниз" означает переход на уровень с БОЛЬШИМ номером (визуально ниже)
+                const levelsBelow = pinnedLevels.filter(level => level > currentLevel);
+                console.log(`⬇️ Levels below ${currentLevel}:`, levelsBelow);
+                
+                if (levelsBelow.length > 0) {
+                    const target = Math.min(...levelsBelow); // Ближайший (минимальный) из больших
+                    console.log(`✅ Found existing level below: ${target}`);
+                    return target;
+                }
+                
+                // Если не найден, создаем новый уровень ниже всех существующих закрепленных блоков (включая текущий)
+                const allLevels = [currentLevel, ...pinnedLevels];
+                const maxLevel = Math.max(...allLevels);
+                const target = maxLevel + 1;
+                console.log(`🆕 Creating new level below all (including current): ${maxLevel} + 1 = ${target}`);
+                return target;
+            }
+        }
+
+        // Тестовые данные
+        const blocks = [
+            { id: 'block1', level: 1, is_pinned: true, content: 'Блок 1' },
+            { id: 'block2', level: 3, is_pinned: true, content: 'Блок 2' },
+            { id: 'block3', level: 5, is_pinned: true, content: 'Блок 3' },
+            { id: 'block4', level: 7, is_pinned: true, content: 'Блок 4' },
+            { id: 'block5', level: 2, is_pinned: false, content: 'Незакрепленный' },
+        ];
+
+        function displayBlocks() {
+            const display = document.getElementById('blocks-display');
+            const select = document.getElementById('block-select');
+            
+            display.innerHTML = '';
+            select.innerHTML = '';
+            
+            blocks.filter(b => b.is_pinned).forEach(block => {
+                const div = document.createElement('div');
+                div.className = 'block pinned';
+                div.innerHTML = `${block.content}<br>Уровень: ${block.level}`;
+                display.appendChild(div);
+                
+                const option = document.createElement('option');
+                option.value = block.id;
+                option.textContent = `${block.content} (уровень ${block.level})`;
+                select.appendChild(option);
+            });
+        }
+
+        function testMove(direction) {
+            const selectedId = document.getElementById('block-select').value;
+            const selectedBlock = blocks.find(b => b.id === selectedId);
+            
+            if (!selectedBlock) return;
+            
+            console.clear();
+            console.log(`🚀 Тестирование перемещения блока ${selectedBlock.content} (уровень ${selectedBlock.level}) в направлении ${direction}`);
+            
+            const targetLevel = findTargetLevel(selectedBlock.level, direction, selectedId, blocks);
+            
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="result">
+                    <h4>Результат перемещения:</h4>
+                    <p><strong>Блок:</strong> ${selectedBlock.content}</p>
+                    <p><strong>Исходный уровень:</strong> ${selectedBlock.level}</p>
+                    <p><strong>Направление:</strong> ${direction === 'up' ? 'Вверх ⬆️' : 'Вниз ⬇️'}</p>
+                    <p><strong>Целевой уровень:</strong> ${targetLevel}</p>
+                    <p><em>Откройте консоль браузера для подробной информации</em></p>
+                </div>
+            `;
+        }
+
+        // Инициализация
+        displayBlocks();
+    </script>
+</body>
+</html> 

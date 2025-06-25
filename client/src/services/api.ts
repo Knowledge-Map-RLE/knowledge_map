@@ -305,3 +305,30 @@ export async function unpinBlock(blockId: string): Promise<{success: boolean, er
         return { success: false, error: 'Network error' };
     }
 }
+
+/**
+ * Перемещает закрепленный блок на указанный уровень
+ */
+export async function moveBlockToLevel(blockId: string, targetLevel: number): Promise<{success: boolean, error?: string}> {
+    try {
+        const response = await fetch(`${API_URL}/api/blocks/${blockId}/move_to_level`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ target_level: targetLevel }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Failed to move block to level:', response.statusText, errorText);
+            return { success: false, error: `Failed to move block: ${response.statusText}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error moving block to level:', error);
+        return { success: false, error: 'Network error' };
+    }
+}
