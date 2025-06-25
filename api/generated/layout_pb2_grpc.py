@@ -101,4 +101,4 @@ class LayoutService(object):
             layout__pb2.HealthCheckRequest.SerializeToString,
             layout__pb2.HealthCheckResponse.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata) 
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -25,7 +25,8 @@ message BlockInput {
   string id = 1;
   string content = 2;
   bool is_pinned = 3;              // Закреплен ли блок за уровнем
-  map<string, string> metadata = 4; // Дополнительные данные
+  int32 level = 4;                 // Текущий уровень блока (для закрепленных блоков)
+  map<string, string> metadata = 5; // Дополнительные данные
 }
 
 // Связь между блоками

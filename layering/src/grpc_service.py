@@ -23,28 +23,36 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
         start_time = time.time()
         
         # Логируем входные данные
-        logger.info(f"=== ПОЛУЧЕН ЗАПРОС НА УКЛАДКУ ===")
+        logger.info(f"🔥 === ПОЛУЧЕН ЗАПРОС НА УКЛАДКУ - НОВАЯ ВЕРСИЯ СЕРВИСА! ===")
         logger.info(f"Количество блоков: {len(request.blocks)}")
         logger.info(f"Количество связей: {len(request.links)}")
         
-        # Логируем детали блоков
-        logger.info("Блоки:")
-        for block in request.blocks:
-            logger.info(f"  ID: {block.id}, контент: '{block.content[:50]}{'...' if len(block.content) > 50 else ''}'")
+        # Проверяем закреплённые блоки
+        pinned_blocks = [b for b in request.blocks if b.is_pinned]
+        logger.info(f"🔥 ЗАКРЕПЛЁННЫХ БЛОКОВ В ЗАПРОСЕ: {len(pinned_blocks)} из {len(request.blocks)}")
         
-        # Логируем связи
-        if request.links:
-            logger.info("Связи:")
-            for link in request.links:
-                logger.info(f"  {link.source_id} -> {link.target_id}")
-        else:
-            logger.info("Связи отсутствуют")
+
         
         try:
             # Извлекаем блоки и связи из запроса
-            blocks_data = {block.id: {"is_pinned": block.is_pinned} for block in request.blocks}
+            blocks_data = {
+                block.id: {
+                    "is_pinned": block.is_pinned,
+                    "level": getattr(block, 'level', 0)  # Передаем уровень если поле существует
+                } 
+                for block in request.blocks
+            }
             blocks = list(blocks_data.keys())
             links = [(link.source_id, link.target_id) for link in request.links]
+            
+            # КРИТИЧЕСКОЕ ЛОГИРОВАНИЕ
+            logger.info(f"🔥 ДЕТАЛИ BLOCKS_DATA:")
+            for block_id, data in blocks_data.items():
+                if data['is_pinned']:
+                    logger.info(f"   🔥 PINNED: {block_id[:8]}... level={data['level']}, is_pinned={data['is_pinned']}")
+                    
+            pinned_count_check = sum(1 for data in blocks_data.values() if data['is_pinned'])
+            logger.info(f"🔥 ПОДСЧЁТ ЗАКРЕПЛЁННЫХ В BLOCKS_DATA: {pinned_count_check}")
             
             # Собираем опции укладки
             options = {
@@ -60,6 +68,29 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
                         
             # Выполняем укладку
             result = layout_knowledge_map(blocks, links, options)
+            
+            # КРИТИЧЕСКОЕ ЛОГИРОВАНИЕ РЕЗУЛЬТАТА
+            logger.info(f"🔥 РЕЗУЛЬТАТ АЛГОРИТМА:")
+            logger.info(f"   Levels structure: {result.get('levels', {})}")
+            logger.info(f"   Sublevels structure: {result.get('sublevels', {})}")
+            
+            # Проверяем где оказались закреплённые блоки
+            pinned_block_ids = [bid for bid, data in blocks_data.items() if data['is_pinned']]
+            if pinned_block_ids:
+                logger.info(f"🔥 ГДЕ ОКАЗАЛИСЬ ЗАКРЕПЛЁННЫЕ БЛОКИ:")
+                for block_id in pinned_block_ids:
+                    # Найти уровень и подуровень этого блока в результате
+                    found_level = None
+                    found_sublevel = None
+                    for level_id, sublevel_ids in result.get('levels', {}).items():
+                        for sublevel_id in sublevel_ids:
+                            if block_id in result.get('sublevels', {}).get(sublevel_id, []):
+                                found_level = level_id
+                                found_sublevel = sublevel_id
+                                break
+                        if found_level is not None:
+                            break
+                    logger.info(f"   🔥 {block_id[:8]}... -> уровень {found_level}, подуровень {found_sublevel}")
             
             # Создаем ответ
             response = layout_pb2.LayoutResponse()
@@ -117,32 +148,7 @@ class LayoutService(layout_pb2_grpc.LayoutServiceServicer):
 
             response.success = True
             
-            # Логируем результат укладки
-            logger.info(f"=== УКЛАДКА ЗАВЕРШЕНА ===")
-            logger.info(f"Время обработки: {response.statistics.processing_time_ms}мс")
-            logger.info(f"Статистика:")
-            logger.info(f"  Всего блоков: {response.statistics.total_blocks}")
-            logger.info(f"  Всего связей: {response.statistics.total_links}")
-            logger.info(f"  Всего уровней: {response.statistics.total_levels}")
-            logger.info(f"  Всего подуровней: {response.statistics.total_sublevels}")
-            logger.info(f"  Максимальный слой: {response.statistics.max_layer}")
-            logger.info(f"  Граф ациклический: {response.statistics.is_acyclic}")
-            logger.info(f"  Изолированных блоков: {response.statistics.isolated_blocks}")
-            
-            # Детальное логирование структуры блоков
-            logger.info("Структура блоков:")
-            for block in response.blocks:
-                logger.info(f"  {block.id}: слой={block.layer}, уровень={block.level}, подуровень={block.sublevel_id}")
-            
-            # Логирование структуры уровней
-            logger.info("Структура уровней:")
-            for level in response.levels:
-                logger.info(f"  Уровень {level.id} '{level.name}': подуровни {list(level.sublevel_ids)}")
-            
-            # Логирование подуровней
-            logger.info("Структура подуровней:")
-            for sublevel in response.sublevels:
-                logger.info(f"  Подуровень {sublevel.id} (уровень {sublevel.level_id}): блоки {list(sublevel.block_ids)}")
+            logger.info(f"=== УКЛАДКА ЗАВЕРШЕНА за {response.statistics.processing_time_ms}мс ===")
             
             return response
             

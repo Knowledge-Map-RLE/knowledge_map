@@ -41,6 +41,7 @@ class LayoutOptions:
     sublevel_spacing: int = 200
     layer_spacing: int = 250
     optimize_layout: bool = True
+    # УБИРАЕМ: blocks_per_sublevel больше не используется
 
 
 class LayoutClient:
@@ -122,6 +123,7 @@ class LayoutClient:
                 grpc_block.id = block["id"]
                 grpc_block.content = block["content"]
                 grpc_block.is_pinned = block.get("is_pinned", False)
+                grpc_block.level = block.get("level", 0)  # Передаем уровень блока
                 grpc_block.metadata.update(block.get("metadata", {}))
             
             # Добавляем связи
@@ -134,6 +136,7 @@ class LayoutClient:
             request.options.sublevel_spacing = options.sublevel_spacing if options else 200
             request.options.layer_spacing = options.layer_spacing if options else 250
             request.options.optimize_layout = options.optimize_layout if options else True
+            # УБИРАЕМ: больше не передаём blocks_per_sublevel
             
             # Отправляем запрос на gRPC сервис
             response = await self._stub.CalculateLayout(

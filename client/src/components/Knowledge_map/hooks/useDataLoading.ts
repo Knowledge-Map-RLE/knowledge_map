@@ -160,12 +160,14 @@ export function useDataLoading(): UseDataLoadingResult {
         const convertedLevels = (data.levels || []).map(convertApiLevelToLevelData);
         const convertedSublevels = (data.sublevels || []).map(convertApiSublevelToSublevelData);
 
-        // Рассчитываем координаты блоков по алгоритму Sugiyama
-        const blocksWithCoords = calculateBlockCoordinates(convertedBlocks, convertedLevels, convertedSublevels);
+        // Сначала рассчитываем координаты уровней
+        const levelsWithCoords = calculateLevelCoordinates(convertedLevels, convertedSublevels);
         
-        // После размещения блоков рассчитываем координаты подуровней и уровней
-        const sublevelsWithCoords = calculateSublevelCoordinates(convertedSublevels, blocksWithCoords);
-        const levelsWithCoords = calculateLevelCoordinates(convertedLevels, sublevelsWithCoords);
+        // Затем рассчитываем координаты подуровней внутри уровней
+        const sublevelsWithCoords = calculateSublevelCoordinates(convertedSublevels, levelsWithCoords);
+        
+        // И наконец размещаем блоки с разрешением коллизий
+        const blocksWithCoords = calculateBlockCoordinates(convertedBlocks, levelsWithCoords, sublevelsWithCoords, convertedLinks);
 
         setBlocks(prev => smartUpdateArray(prev, blocksWithCoords));
         setLinks(prev => smartUpdateArray(prev, convertedLinks));

@@ -187,42 +187,16 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
         blocks_result, _ = db.cypher_query(blocks_query)
         logger.info(f"Found {len(blocks_result)} blocks total")
         
-        # Выводим первые 5 блоков для отладки
-        for i, row in enumerate(blocks_result[:5]):
-            logger.info(f"Sample block {i}: id={row[0]}, content={row[1]}, layer={row[2]}, level={row[3]}")
-        
         if not blocks_result:
             logger.warning("No blocks found in Neo4j")
             raise HTTPException(status_code=404, detail="В базе данных нет блоков. Пожалуйста, запустите скрипт заполнения тестовыми данными.")
         
-        # Запрос связей из Neo4j с проверкой на циклы
-        logger.info("Querying links from Neo4j")
-        links_query = """
-        MATCH path = (b1:Block)-[r:LINK_TO*]->(b2:Block)
-        WHERE b1 = b2  // Ищем циклы
-        RETURN COUNT(path) as cycles
-        """
-        cycles_result, _ = db.cypher_query(links_query)
-        cycles_count = cycles_result[0][0]
-        logger.info(f"Found {cycles_count} cycles in the graph")
-
-        # Запрос связей, исключая те, что создают циклы
+        # Запрос связей из Neo4j (упрощённый без проверки циклов)
         links_query = """
         MATCH (b1:Block)-[r:LINK_TO]->(b2:Block)
-        WHERE NOT EXISTS {
-            MATCH (b2)-[:LINK_TO*]->(b1)  // Проверяем, что нет обратного пути
-        }
         RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query)
-        logger.info(f"Found {len(links_result)} acyclic links")
-
-        # Выводим первые 5 связей для отладки
-        for i, row in enumerate(links_result[:5]):
-            logger.info(f"Sample link {i}: id={row[0]}, source={row[1]}, target={row[2]}")
-        
-        # Преобразуем результаты в формат для сервиса укладки
-        logger.info("Converting results to layout service format")
         
         # Используем настоящие ID из базы данных
         blocks = []
@@ -245,21 +219,15 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
             link_id = str(row[0]) if row[0] is not None else None
             source_id = str(row[1])
             target_id = str(row[2])
-            logger.info(f"Processing link: id={link_id}, source={source_id}, target={target_id}")
             links_for_layout.append(
                 {"id": link_id, "source_id": source_id, "target_id": target_id}
             )
-        
-        logger.info(f"Converted {len(blocks)} blocks and {len(links_for_layout)} links using real UIDs.")
 
         if not blocks:
-            logger.warning("No blocks after conversion")
-            raise HTTPException(status_code=404, detail="В базе данных нет блоков. Пожалуйста, запустите скрипт заполнения тестовыми данными.")
+            raise HTTPException(status_code=404, detail="В базе данных нет блоков.")
         
         # Получаем укладку
-        logger.info("Getting layout client")
         client = get_layout_client()
-        logger.info("Calculating layout")
         try:
             result = await client.calculate_layout(
                 blocks=blocks,
@@ -270,16 +238,47 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
                     optimize_layout=True
                 )
             )
-            logger.info("Layout calculation completed")
-            # Добавляем логирование результата
-            logger.info("Layout result structure:")
-            logger.info(f"Number of blocks: {len(result.get('blocks', []))}")
-            logger.info(f"Number of links: {len(result.get('links', []))}")
-            logger.info(f"Number of levels: {len(result.get('levels', []))}")
-            logger.info(f"Number of sublevels: {len(result.get('sublevels', []))}")
-            if result.get('levels'):
-                logger.info("Sample level data:")
-                logger.info(str(result['levels'][0]))
+
+            
+            # Сохраняем обновлённые уровни и подуровни обратно в базу данных
+            if result.get('success') and result.get('blocks'):
+                logger.info("🔥 СОХРАНЯЕМ ОБНОВЛЁННЫЕ УРОВНИ БЛОКОВ В БАЗУ ДАННЫХ...")
+                
+                # Сначала покажем что пришло из алгоритма
+                pinned_in_result = [b for b in result['blocks'] if b.get('is_pinned', False)]
+                logger.info(f"🔥 ЗАКРЕПЛЁННЫХ БЛОКОВ В РЕЗУЛЬТАТЕ: {len(pinned_in_result)}")
+                for block_info in pinned_in_result:
+                    logger.info(f"   🔥 PINNED RESULT: {block_info['id'][:8]}... level={block_info['level']}, sublevel={block_info['sublevel_id']}")
+                
+                with db.transaction:
+                    updates_count = 0
+                    for block_info in result['blocks']:
+                        try:
+                            block = Block.nodes.get(uid=block_info['id'])
+                            # Обновляем уровень и подуровень только если они изменились
+                            old_level = block.level
+                            old_sublevel = block.sublevel_id
+                            new_level = block_info['level']
+                            new_sublevel = block_info['sublevel_id']
+                            
+                            if old_level != new_level or old_sublevel != new_sublevel:
+                                block.level = new_level
+                                block.sublevel_id = new_sublevel
+                                block.save()
+                                updates_count += 1
+                                
+                                if block.is_pinned:
+                                    logger.info(f"🔥 PINNED UPDATED: {block_info['id'][:8]}... level {old_level}->{new_level}, sublevel {old_sublevel}->{new_sublevel}")
+                                else:
+                                    logger.info(f"Updated block {block_info['id'][:8]}...: level {old_level}->{new_level}, sublevel {old_sublevel}->{new_sublevel}")
+                                
+                        except Block.DoesNotExist:
+                            logger.warning(f"Block {block_info['id']} not found in database")
+                        except Exception as e:
+                            logger.error(f"Error updating block {block_info['id']}: {e}")
+                            
+                logger.info(f"🔥 ✓ ОБНОВЛЕНО {updates_count} БЛОКОВ В БАЗЕ ДАННЫХ")
+            
             return result
         except Exception as e:
             logger.error(f"Error in layout calculation: {str(e)}", exc_info=True)
@@ -480,17 +479,46 @@ async def delete_link(link_id: str):
 
 @app.post("/api/blocks/{block_id}/pin", response_model=Dict[str, Any])
 async def pin_block(block_id: str):
-    """Закрепляет блок за уровнем."""
+    """Закрепляет блок за уровнем с сохранением его текущего уровня."""
+    logger.info(f"🔥 PIN_BLOCK CALLED: {block_id} - НОВАЯ ВЕРСИЯ КОДА!")
     try:
         with db.transaction:
             block = Block.nodes.get(uid=block_id)
-            logger.info(f"Before pinning: block {block_id} is_pinned = {block.is_pinned}")
+            logger.info(f"📊 Before pinning: block {block_id} is_pinned = {block.is_pinned}, level = {block.level}")
+            
+            # Если у блока нет уровня, устанавливаем его текущий level из позиции в графе
+            if block.level == 0:
+                # Получаем все блоки для определения текущего уровня
+                blocks_query = "MATCH (b:Block) RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned"
+                blocks_result, _ = db.cypher_query(blocks_query)
+                
+                links_query = "MATCH (b1:Block)-[r:LINK_TO]->(b2:Block) RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id"
+                links_result, _ = db.cypher_query(links_query)
+
+                blocks_for_layout = [{"id": str(r[0]), "content": str(r[1] or ""), "layer": int(r[2] or 0), "level": int(r[3] or 0), "is_pinned": bool(r[4]) if r[4] is not None else False, "metadata": {}} for r in blocks_result]
+                links_for_layout = [{"id": str(r[0]) if r[0] else None, "source_id": str(r[1]), "target_id": str(r[2])} for r in links_result]
+                
+                # Получаем текущую укладку для определения уровня блока
+                client = get_layout_client()
+                layout_result = await client.calculate_layout(blocks_for_layout, links_for_layout)
+                
+                if layout_result.get('success') and layout_result.get('blocks'):
+                    # Находим уровень текущего блока в результатах укладки
+                    current_block_level = 0
+                    for block_info in layout_result['blocks']:
+                        if block_info['id'] == block_id:
+                            current_block_level = block_info['level']
+                            break
+                    
+                    block.level = current_block_level
+                    logger.info(f"Setting block {block_id} level to {current_block_level} based on current layout")
+            
             block.is_pinned = True
             block.save()
             block.refresh()
-            logger.info(f"After pinning: block {block_id} is_pinned = {block.is_pinned}")
+            logger.info(f"After pinning: block {block_id} is_pinned = {block.is_pinned}, level = {block.level}")
             
-        return {"success": True, "message": f"Block {block_id} pinned successfully"}
+        return {"success": True, "message": f"Block {block_id} pinned successfully at level {block.level}"}
         
     except Block.DoesNotExist:
         raise HTTPException(status_code=404, detail="Block not found")
