@@ -70,6 +70,14 @@ export interface LayoutData {
     sublevels: Sublevel[];
 }
 
+export interface S3FileResponse {
+    content?: string;
+    content_type?: string;
+    size?: number;
+    last_modified?: string;
+    error?: string;
+}
+
 /**
  * Проверяет здоровье основного API
  */
@@ -359,5 +367,57 @@ export async function moveBlockToLevel(blockId: string, targetLevel: number): Pr
     } catch (error) {
         console.error('Error moving block to level:', error);
         return { success: false, error: 'Network error' };
+    }
+}
+
+/**
+ * Получает markdown файл из S3 для NLP компонента
+ */
+export async function getNLPMarkdown(filename: string): Promise<S3FileResponse> {
+    try {
+        const response = await fetch(`${API_URL}/api/nlp/markdown/${encodeURIComponent(filename)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+            mode: 'cors',
+            credentials: 'omit'
+        });
+
+        if (!response.ok) {
+            console.error('Failed to get NLP markdown:', response.statusText);
+            return { error: `Failed to get markdown file: ${response.statusText}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error getting NLP markdown:', error);
+        return { error: 'Network error' };
+    }
+}
+
+/**
+ * Получает объект из S3
+ */
+export async function getS3Object(bucketName: string, objectKey: string): Promise<S3FileResponse> {
+    try {
+        const response = await fetch(`${API_URL}/api/s3/buckets/${bucketName}/objects/${encodeURIComponent(objectKey)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+            mode: 'cors',
+            credentials: 'omit'
+        });
+
+        if (!response.ok) {
+            console.error('Failed to get S3 object:', response.statusText);
+            return { error: `Failed to get object: ${response.statusText}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error getting S3 object:', error);
+        return { error: 'Network error' };
     }
 }

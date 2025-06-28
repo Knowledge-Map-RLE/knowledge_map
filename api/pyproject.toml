@@ -19,6 +19,9 @@ grpcio = "^1.60.0"
 grpcio-tools = "^1.60.0"
 protobuf = "^4.25.0"
 networkx = "^3.5"
+aioboto3 = "^13.0.0"
+aiofiles = "^24.1.0"
+requests = "^2.32.4"
 
 
 [build-system]

@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
     
+    # S3 настройки
+    s3_endpoint_url: str = "http://localhost:9000"
+    s3_access_key: str = "minio"
+    s3_secret_key: str = "minio123456"
+    s3_region: str = "us-east-1"
+    
     class Config:
         env_file = ".env"
         case_sensitive = False

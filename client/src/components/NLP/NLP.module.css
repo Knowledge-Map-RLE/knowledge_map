@@ -7,3 +7,33 @@
 .nlp > div {
     @apply w-full;
 }
+
+.nlp_text {
+    @apply p-4 overflow-y-auto bg-white border-r border-gray-300 shadow-sm;
+}
+
+.nlp_text::-webkit-scrollbar {
+    width: 8px;
+}
+
+.nlp_text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.nlp_text::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.nlp_text::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.nlp_graph {
+    @apply p-4 bg-blue-50 border-r border-gray-300;
+}
+
+.nlp_knowledge_map {
+    @apply p-4 bg-green-50;
+}
