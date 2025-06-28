@@ -12,7 +12,7 @@
     grid-template-rows: 40px 1fr 100px;
     gap: 8px;
     grid-template-areas:
-        'main_menu top user'
+        'name_slogan top user'
         'left center right'
         'info bot minimap';
     
@@ -25,8 +25,8 @@
     pointer-events: auto;
 }
 
-.main_menu {
-    grid-area: main_menu;
+.name_slogan {
+    grid-area: name_slogan;
     display: flex;
 }
 
@@ -45,6 +45,22 @@
 .left {
     grid-area: left;
     padding: 5px 10px;
+}
+
+.menu_title {
+    @apply text-lg font-bold text-center;
+}
+
+.main_menu {
+    @apply flex flex-col gap-2;
+}
+
+.main_menu > a {
+    @apply border-1 border-gray-300 rounded-md p-2;
+}
+
+.main_menu > a:hover {
+    @apply bg-gray-200;
 }
 
 .center {

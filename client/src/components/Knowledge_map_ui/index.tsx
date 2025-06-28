@@ -2,6 +2,7 @@ import s from './Knowledge_map_ui.module.css'
 import Project_title from '../Project_title'
 import Search from '../Search'
 import User from '../User'
+import { Link } from 'react-router-dom'
 
 export default function Knowledge_map_ui() {
     return <div className={s.interface}>
@@ -9,17 +10,12 @@ export default function Knowledge_map_ui() {
         <Search className={s.panel} />
         <User className={s.panel} />
         <div className={`${s.left} ${s.panel}`}>
-            <h2>Текущие тренды</h2>
-            <div>
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div>4</div>
-                <div>5</div>
-                <div>6</div>
-                <div>7</div>
-                <div>8</div>
-            </div>
+            <h2 className={s.menu_title}>Меню</h2>
+            <nav className={s.main_menu}>
+                <Link to="/">Карта знаний</Link>
+                <Link to="/">Исходник → Markdown</Link>
+                <Link to="/nlp">Лингвистика</Link>
+            </nav>
         </div>
         <div className={`${s.center} ${s.panel}`}> </div>
         <div className={`${s.right} ${s.panel}`}>
@@ -35,6 +31,18 @@ export default function Knowledge_map_ui() {
                 <div>Успешных паттернов: 12</div>
                 <div>Открытий: 2</div>
                 <div>Ускорение науки: 5% (Вы как сотня учёных, так держать!)</div>
+            </div>
+
+            <h2>Текущие тренды</h2>
+            <div>
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
             </div>
         </div>
         <div className={`${s.info} ${s.panel}`}> </div>

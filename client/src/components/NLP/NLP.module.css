@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+.nlp {
+    @apply w-[75%] h-[75%] absolute flex flex-row top-20 left-56 right-96 bottom-20 bg-gray-100;
+}
+
+.nlp > div {
+    @apply w-full;
+}

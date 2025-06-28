@@ -513,7 +513,7 @@ export default function Knowledge_map() {
   }
 
   return (
-    <div ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
+    <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
       {(!pixiReady || isLoading) && (
         <div className={styles.экран_загрузки}>
           {isLoading ? 'Обновление данных...' : 'Инициализация...'}
@@ -642,6 +642,6 @@ export default function Knowledge_map() {
           onClose={handleContextMenuClose}
         />
       )}
-    </div>
+    </main>
   );
 }

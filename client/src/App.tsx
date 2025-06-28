@@ -1,12 +1,18 @@
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './styles/App.css'
 import Knowledge_map from './components/Knowledge_map'
 import Knowledge_map_ui from './components/Knowledge_map_ui'
+import NLP from './components/NLP';
 
 function App() {
-  return <>
-    <Knowledge_map />
-    {/* <Knowledge_map_ui /> */}
-  </>
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<><Knowledge_map /><Knowledge_map_ui /></>} />
+        <Route path="/nlp" element={<><NLP /><Knowledge_map_ui /></>} />
+      </Routes>
+    </Router>
+  )
 }
 
 export default App
