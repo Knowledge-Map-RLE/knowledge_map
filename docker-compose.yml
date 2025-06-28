@@ -20,10 +20,10 @@ services:
         soft: 40000
         hard: 40000
     volumes:
-      - neo4j_data:/data
-      - neo4j_logs:/logs
-      - neo4j_import:/var/lib/neo4j/import
-      - neo4j_plugins:/plugins
+      - ./data/neo4j_data:/data
+      - ./data/neo4j_logs:/logs
+      - ./data/neo4j_import:/var/lib/neo4j/import
+      - ./data/neo4j_plugins:/plugins
     networks:
       - knowledge_map_network
     healthcheck:
@@ -83,11 +83,35 @@ services:
     depends_on:
       - api
 
+  s3:
+    image: minio/minio:RELEASE.2024-01-01T16-36-33Z
+    container_name: knowledge_map_s3
+    restart: unless-stopped
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # MinIO Console
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123456
+      MINIO_CONSOLE_ADDRESS: ":9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./data/s3_data:/data
+    networks:
+      - knowledge_map_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 10s
+
 volumes:
   neo4j_data:
   neo4j_logs:
   neo4j_import:
   neo4j_plugins:
+  s3_data:
 
 networks:
   knowledge_map_network:
