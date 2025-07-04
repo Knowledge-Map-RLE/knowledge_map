@@ -13,8 +13,8 @@ export default function NLP() {
                 setIsLoading(true)
                 setError(null)
                 
-                // Загружаем файл "Пример статьи.md" из S3
-                const response = await getNLPMarkdown('Пример статьи.md')
+                // Загружаем файл "Article example.md" из S3
+                const response = await getNLPMarkdown('Article example.md')
                 
                 if (response.error || !response.content) {
                     throw new Error(response.error || 'Не удалось загрузить содержимое файла')
@@ -25,7 +25,7 @@ export default function NLP() {
                 const errorMessage = err instanceof Error ? err.message : 'Неизвестная ошибка'
                 console.error('Ошибка загрузки markdown:', errorMessage)
                 setError(errorMessage)
-                setMarkdownContent('Ошибка загрузки документа. Проверьте, что файл "Пример статьи.md" загружен в bucket "markdown".')
+                setMarkdownContent('Ошибка загрузки документа. Проверьте, что файл "Article example.md" загружен в bucket "markdown".')
             } finally {
                 setIsLoading(false)
             }
@@ -36,6 +36,10 @@ export default function NLP() {
 
     return (
         <main className={s.nlp}>
+            <div className={s.nlp_graph}>
+                Граф лингвистических паттернов текста
+            </div>
+            
             <div className={s.nlp_text}>
                 {isLoading && (
                     <div style={{ color: '#666', fontStyle: 'italic' }}>
@@ -66,19 +70,15 @@ export default function NLP() {
                         <ul style={{ marginTop: '0.5rem', paddingLeft: '1.5rem' }}>
                             <li>MinIO запущен (docker-compose up -d s3)</li>
                             <li>Bucket "markdown" создан</li>
-                            <li>Файл "Пример статьи.md" загружен в bucket</li>
+                            <li>Файл "Article example.md" загружен в bucket</li>
                             <li>API сервер запущен и доступен</li>
                         </ul>
                     </div>
                 )}
             </div>
             
-            <div className={s.nlp_graph}>
-                Граф онтологии лингвистики текста
-            </div>
-            
             <div className={s.nlp_knowledge_map}>
-                Как это будет добавлено в граф карты знаний?
+                Паттерны → карта знаний
             </div>
         </main>
     )

@@ -52,9 +52,9 @@ docker-compose up -d s3
    - Войдите: `minio` / `minio123456`
    - Создайте bucket с именем `markdown`
 
-3. **Загрузите файл "Пример статьи.md":**
+3. **Загрузите файл "Article example.md":**
    - В веб-интерфейсе MinIO загрузите markdown файл
-   - Или используйте API эндпоинт `POST /api/s3/buckets/markdown/objects/Пример статьи.md`
+   - Или используйте API эндпоинт `POST /api/s3/buckets/markdown/objects/Article example.md`
 
 4. **Запустите API:**
 ```powershell
@@ -117,12 +117,12 @@ curl -X POST "http://localhost:8000/api/s3/buckets/markdown/objects/test.md" \
 curl "http://localhost:8000/api/s3/buckets/markdown/objects/test.md"
 
 # Для NLP компонента
-curl "http://localhost:8000/api/nlp/markdown/Пример статьи.md"
+curl "http://localhost:8000/api/nlp/markdown/Article example.md"
 ```
 
 ### Через фронтенд
 
-Компонент NLP автоматически загружает `Пример статьи.md` при монтировании.
+Компонент NLP автоматически загружает `Article example.md` при монтировании.
 
 ## 🔧 Использование в коде
 
@@ -152,7 +152,7 @@ content = await s3.download_text("markdown", "example.md")
 import { getNLPMarkdown } from '../services/api'
 
 // Загружаем markdown файл
-const response = await getNLPMarkdown('Пример статьи.md')
+const response = await getNLPMarkdown('Article example.md')
 if (response.content) {
     console.log(response.content)
 }
@@ -194,7 +194,7 @@ INFO:__main__:Данные загружены: s3://markdown/example.md
 
 Компонент NLP автоматически:
 
-1. **Загружает** файл `Пример статьи.md` из bucket `markdown`
+1. **Загружает** файл `Article example.md` из bucket `markdown`
 2. **Отображает** содержимое в `div.nlp_text`
 3. **Показывает** индикатор загрузки
 4. **Обрабатывает** ошибки с полезными подсказками

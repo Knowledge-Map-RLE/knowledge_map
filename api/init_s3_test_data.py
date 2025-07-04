@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Скрипт для инициализации S3 с тестовыми данными.
-Создает bucket "markdown" и загружает файл "Пример статьи.md".
+Создает bucket "markdown" и загружает файл "Article example.md".
 """
 
 import asyncio
@@ -91,7 +91,7 @@ async def init_s3_test_data():
             return False
         
         # Загружаем тестовый файл
-        filename = "Пример статьи.md"
+        filename = "Article example.md"
         success = await s3.upload_bytes(
             data=TEST_MARKDOWN_CONTENT.encode('utf-8'),
             bucket_name="markdown",
@@ -138,7 +138,7 @@ async def check_s3_status():
             return False
         
         # Проверяем наличие тестового файла
-        filename = "Пример статьи.md"
+        filename = "Article example.md"
         file_exists = await s3.object_exists("markdown", filename)
         
         if file_exists:
@@ -183,12 +183,12 @@ async def main():
         print("\n🎉 Инициализация завершена успешно!")
         print("\n📝 Что было сделано:")
         print("   ✅ Создан bucket 'markdown'")
-        print("   ✅ Загружен файл 'Пример статьи.md'")
+        print("   ✅ Загружен файл 'Article example.md'")
         print("   ✅ Проверена доступность данных")
         print("\n🌐 Теперь можно:")
         print("   - Открыть http://localhost:9001 (MinIO Console)")
         print("   - Проверить компонент NLP в веб-интерфейсе")
-        print("   - Использовать API: GET /api/nlp/markdown/Пример статьи.md")
+        print("   - Использовать API: GET /api/nlp/markdown/Article example.md")
     else:
         print("\n💥 Ошибка инициализации!")
         print("\n🔧 Попробуйте:")
