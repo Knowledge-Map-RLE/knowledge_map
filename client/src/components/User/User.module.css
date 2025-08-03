@@ -16,3 +16,16 @@
     @apply flex flex-col;
     font-size: 12px;
 }
+
+.auth_buttons {
+    @apply flex gap-2;
+}
+
+.auth_button {
+    @apply px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors;
+    font-size: 14px;
+}
+
+.logout_button {
+    @apply ml-2 px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 transition-colors;
+}

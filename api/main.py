@@ -10,7 +10,7 @@ from s3_client import get_s3_client
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
 import logging
-from neomodel import config as neomodel_config, db, UniqueIdProperty
+from neomodel import config as neomodel_config, db, UniqueIdProperty, DoesNotExist
 import uuid
 import json
 
@@ -297,7 +297,7 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
                                 else:
                                     logger.info(f"Updated block {block_info['id'][:8]}...: level {old_level}->{new_level}, sublevel {old_sublevel}->{new_sublevel}")
                                 
-                        except Block.DoesNotExist:
+                        except DoesNotExist:
                             logger.warning(f"Block {block_info['id']} not found in database")
                         except Exception as e:
                             logger.error(f"Error updating block {block_info['id']}: {e}")
@@ -359,7 +359,7 @@ async def update_block(block_id: str, block_input: BlockInput):
             "physical_scale": getattr(block, 'physical_scale', 0),
         }
         return {"success": True, "block": response_block}
-    except Block.DoesNotExist:
+    except DoesNotExist:
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error updating block: {e}")
@@ -385,7 +385,7 @@ async def create_link(link_input: LinkInput):
         }
         return {"success": True, "link": response_link}
 
-    except Block.DoesNotExist:
+    except DoesNotExist:
         logger.error(f"Attempted to create link with non-existent block. Source: {link_input.source}, Target: {link_input.target}")
         raise HTTPException(status_code=404, detail="Один из блоков для создания связи не найден.")
     except Exception as e:
@@ -440,7 +440,7 @@ async def create_block_and_link(data: CreateAndLinkInput):
                 "target_id": link.end_node().uid,
             }
         }
-    except Block.DoesNotExist:
+    except DoesNotExist:
         raise HTTPException(status_code=404, detail="Source block not found")
     except Exception as e:
         logger.error(f"Error creating block and link: {e}")
@@ -473,7 +473,7 @@ async def delete_block(block_id: str):
             
         return {"success": True, "message": f"Block {block_id} deleted successfully"}
         
-    except Block.DoesNotExist:
+    except DoesNotExist:
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error deleting block: {e}")
@@ -547,7 +547,7 @@ async def pin_block(block_id: str):
             
         return {"success": True, "message": f"Block {block_id} pinned successfully at level {block.level}"}
         
-    except Block.DoesNotExist:
+    except DoesNotExist:
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error pinning block: {e}")
@@ -564,7 +564,7 @@ async def unpin_block(block_id: str):
             
         return {"success": True, "message": f"Block {block_id} unpinned successfully"}
         
-    except Block.DoesNotExist:
+    except DoesNotExist:
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error unpinning block: {e}")
@@ -615,7 +615,7 @@ async def pin_block_with_scale(block_id: str, data: PinWithScaleInput):
             
         return {"success": True, "message": f"Block {block_id} pinned successfully at level {block.level} with physical scale {data.physical_scale}"}
         
-    except Block.DoesNotExist:
+    except DoesNotExist:
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error pinning block with scale: {e}")
@@ -644,7 +644,7 @@ async def move_block_to_level(block_id: str, data: MoveToLevelInput):
             
         return {"success": True, "message": f"Block {block_id} moved to level {data.target_level} successfully"}
         
-    except Block.DoesNotExist:
+    except DoesNotExist:
         raise HTTPException(status_code=404, detail="Block not found")
     except Exception as e:
         logger.error(f"Error moving block to level: {e}")
@@ -697,7 +697,7 @@ async def get_s3_object(bucket_name: str, object_key: str):
 
 
 @app.post("/api/s3/buckets/{bucket_name}/objects/{object_key:path}", response_model=S3UploadResponse)
-async def upload_s3_object(bucket_name: str, object_key: str, content: str = None):
+async def upload_s3_object(bucket_name: str, object_key: str, content: Optional[str] = None):
     """Загружает объект в S3."""
     try:
         if not content:

@@ -19,7 +19,6 @@ class LinkRel(StructuredRel):
 class User(StructuredNode):
     """Модель пользователя"""
     
-    # Свойства
     uid = UniqueIdProperty(primary_key=True)
     """Уникальный идентификатор. Содержит время создания"""
     login = StringProperty(required=True, unique_index=True)
@@ -32,7 +31,6 @@ class User(StructuredNode):
     """Фамилия"""
     given_names = StringProperty()
     """Имя"""
-    
     data = JSONProperty()
     """Нестандартные данные — свойство для любых других не предусмотренных данных"""
 

@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+.overlay {
+    @apply fixed inset-0 bg-black bg-white/50 flex items-center justify-center z-50;
+}
+
+.modal {
+    @apply bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto;
+}
+
+.header {
+    @apply flex justify-between items-center p-6 border-b;
+}
+
+.header h2 {
+    @apply text-xl font-semibold text-gray-900;
+}
+
+.close_button {
+    @apply text-gray-400 hover:text-gray-600 text-2xl font-bold;
+}
+
+.form {
+    @apply p-6 space-y-4;
+}
+
+.field {
+    @apply space-y-2;
+}
+
+.field label {
+    @apply block text-sm font-medium text-gray-700;
+}
+
+.input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+.hint {
+    @apply text-xs text-gray-500;
+}
+
+.captcha_container {
+    @apply flex gap-2 items-center;
+}
+
+.captcha_image {
+    @apply flex-shrink-0;
+}
+
+.captcha_placeholder {
+    @apply w-24 h-10 bg-gray-200 flex items-center justify-center text-xs text-gray-500 rounded border;
+}
+
+.actions {
+    @apply pt-4;
+}
+
+.submit_button {
+    @apply w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors;
+}
+
+.error {
+    @apply text-red-600 text-sm bg-red-50 p-3 rounded-md;
+}
+
+.info {
+    @apply p-6 bg-blue-50 text-blue-800 text-sm rounded-md;
+}
+
+.info p {
+    @apply mb-2;
+}
+
+.info p:last-child {
+    @apply mb-0;
+}
+
+.link {
+    @apply text-blue-600 hover:text-blue-800 underline;
+}
+
+.recovery_link, .back_link {
+    @apply text-center pt-4;
+}
+
+.link_button {
+    @apply text-blue-600 hover:text-blue-800 text-sm underline;
+} 
