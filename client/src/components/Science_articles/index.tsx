@@ -1,31 +1,31 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
-import { Viewport } from './Viewport';
-import type { ViewportRef } from './Viewport';
-import { Link } from './Link';
-import { Level } from './Level';
-import { Sublevel } from './Sublevel';
-import { Block } from './Block';
-import { BlockContextMenu } from './BlockContextMenu';
-import ModeIndicator from './ModeIndicator';
-import { useKeyboardControlsWithProps } from './hooks/useKeyboardControls';
-import { useDataLoading } from './hooks/useDataLoading';
-import { useSelectionState } from './hooks/useSelectionState';
-import { useActions } from './hooks/useActions';
-import { useInteractionHandlers } from './hooks/useInteractionHandlers';
-import { useBlockOperations } from './hooks/useBlockOperations';
-import { useEditingState } from './hooks/useEditingState';
-import { useContextMenu } from './hooks/useContextMenu';
-import { EditingPanel } from './components/EditingPanel';
-import { EditMode } from './types';
-import type { LinkCreationState, BlockData, LinkData } from './types';
-import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
-import styles from './Knowledge_map.module.css';
+import { Viewport } from '../Knowledge_map/Viewport';
+import type { ViewportRef } from '../Knowledge_map/Viewport';
+import { Link } from '../Knowledge_map/Link';
+import { Level } from '../Knowledge_map/Level';
+import { Sublevel } from '../Knowledge_map/Sublevel';
+import { Block } from '../Knowledge_map/Block';
+import { BlockContextMenu } from '../Knowledge_map/BlockContextMenu';
+import ModeIndicator from '../Knowledge_map/ModeIndicator';
+import { useKeyboardControlsWithProps } from '../Knowledge_map/hooks/useKeyboardControls';
+import { useDataLoading } from '../Knowledge_map/hooks/useDataLoading';
+import { useSelectionState } from '../Knowledge_map/hooks/useSelectionState';
+import { useActions } from '../Knowledge_map/hooks/useActions';
+import { useInteractionHandlers } from '../Knowledge_map/hooks/useInteractionHandlers';
+import { useBlockOperations } from '../Knowledge_map/hooks/useBlockOperations';
+import { useEditingState } from '../Knowledge_map/hooks/useEditingState';
+import { useContextMenu } from '../Knowledge_map/hooks/useContextMenu';
+import { EditingPanel } from '../Knowledge_map/components/EditingPanel';
+import { EditMode } from '../Knowledge_map/types';
+import type { LinkCreationState, BlockData, LinkData } from '../Knowledge_map/types';
+import { BLOCK_WIDTH, BLOCK_HEIGHT } from '../Knowledge_map/constants';
+import styles from '../Knowledge_map/Knowledge_map.module.css';
 
 extend({ Container, Graphics, Text });
 
-export default function Knowledge_map() {
+export default function Science_articles() {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
 
@@ -109,6 +109,28 @@ export default function Knowledge_map() {
     loadLayoutData
   });
 
+  // Переопределяем функцию загрузки данных для загрузки только статей
+  const loadArticlesData = useCallback(async () => {
+    try {
+      const response = await fetch('http://localhost:8000/layout/articles');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      
+      if (data.success) {
+        setBlocks(data.blocks || []);
+        setLinks(data.links || []);
+        setLevels(data.levels || []);
+        setSublevels(data.sublevels || []);
+      } else {
+        throw new Error(data.error || 'Failed to load articles data');
+      }
+    } catch (error) {
+      console.error('Error loading articles data:', error);
+    }
+  }, [setBlocks, setLinks, setLevels, setSublevels]);
+
   const viewportState = viewportRef.current ?
     { scale: viewportRef.current.scale, position: viewportRef.current.position } :
     { scale: 1, position: { x: 0, y: 0 } };
@@ -124,7 +146,7 @@ export default function Knowledge_map() {
     onMovePinnedBlock: handleMovePinnedBlock
   });
 
-  useEffect(() => { loadLayoutData(); }, [loadLayoutData]);
+  useEffect(() => { loadArticlesData(); }, [loadArticlesData]);
   useEffect(() => {
     const timer = setTimeout(() => setPixiReady(true), 500);
     return () => clearTimeout(timer);
@@ -259,7 +281,7 @@ export default function Knowledge_map() {
   if (loadError) {
     return (
       <div className={styles.knowledge_map} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
-        Ошибка загрузки: {loadError}
+        Ошибка загрузки статей: {loadError}
       </div>
     );
   }
@@ -268,7 +290,7 @@ export default function Knowledge_map() {
     <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
       {(!pixiReady || isLoading) && (
         <div className={styles.экран_загрузки}>
-          {isLoading ? 'Обновление данных...' : 'Инициализация...'}
+          {isLoading ? 'Загрузка научных статей...' : 'Инициализация...'}
         </div>
       )}
       <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>

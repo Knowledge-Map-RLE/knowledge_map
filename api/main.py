@@ -14,6 +14,13 @@ from neomodel import config as neomodel_config, db, UniqueIdProperty, DoesNotExi
 import uuid
 import json
 
+from api.auth_client import auth_client
+from api.schemas import (
+    UserRegisterRequest, UserLoginRequest, UserRecoveryRequest, 
+    UserPasswordResetRequest, User2FASetupRequest, User2FAVerifyRequest,
+    AuthResponse, TokenVerifyResponse
+)
+
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -196,6 +203,123 @@ async def root():
         "layout_health": "/layout/health",
         "neo4j_browser": "http://localhost:7474"
     }
+
+@app.get("/layout/articles")
+async def get_articles_layout() -> Dict[str, Any]:
+    """Получает укладку только для статей (блоков с типом "Article")"""
+    try:
+        logger.info("Starting articles layout calculation from Neo4j")
+        
+        # Запрос только статей из Neo4j
+        logger.info("Querying articles from Neo4j")
+        blocks_query = """
+        MATCH (b:Article)
+        RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned, b.physical_scale as physical_scale
+        """
+        blocks_result, _ = db.cypher_query(blocks_query)
+        logger.info(f"Found {len(blocks_result)} articles total")
+        
+        if not blocks_result:
+            logger.warning("No articles found in Neo4j")
+            raise HTTPException(status_code=404, detail="В базе данных нет статей. Пожалуйста, добавьте статьи с меткой 'Article'.")
+        
+        # Запрос связей между статьями
+        links_query = """
+        MATCH (b1:Article)-[r:LINK_TO]->(b2:Article)
+        RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id
+        """
+        links_result, _ = db.cypher_query(links_query)
+        
+        # Используем настоящие ID из базы данных
+        blocks = []
+        for row in blocks_result:
+            block_data = {
+                "id": str(row[0]),
+                "content": str(row[1] or ""),
+                "layer": int(row[2] or 0),
+                "level": int(row[3] or 0),
+                "is_pinned": bool(row[4]) if row[4] is not None else False,
+                "physical_scale": int(row[5] or 0) if row[5] is not None else 0,
+                "metadata": {}
+            }
+            if block_data["is_pinned"]:
+                logger.info(f"Found pinned article in DB: {block_data['id']} - is_pinned: {block_data['is_pinned']}")
+            blocks.append(block_data)
+        
+        # Преобразуем связи
+        links_for_layout = []
+        for row in links_result:
+            link_id = str(row[0]) if row[0] is not None else None
+            source_id = str(row[1])
+            target_id = str(row[2])
+            links_for_layout.append(
+                {"id": link_id, "source_id": source_id, "target_id": target_id}
+            )
+
+        if not blocks:
+            raise HTTPException(status_code=404, detail="В базе данных нет статей.")
+        
+        # Получаем укладку
+        client = get_layout_client()
+        try:
+            result = await client.calculate_layout(
+                blocks=blocks,
+                links=links_for_layout,
+                options=LayoutOptions(
+                    sublevel_spacing=200,
+                    layer_spacing=250,
+                    optimize_layout=True
+                )
+            )
+
+            # Сохраняем обновлённые уровни и подуровни обратно в базу данных
+            if result.get('success') and result.get('blocks'):
+                logger.info("🔥 СОХРАНЯЕМ ОБНОВЛЁННЫЕ УРОВНИ СТАТЕЙ В БАЗУ ДАННЫХ...")
+                
+                # Сначала покажем что пришло из алгоритма
+                pinned_in_result = [b for b in result['blocks'] if b.get('is_pinned', False)]
+                logger.info(f"🔥 ЗАКРЕПЛЁННЫХ СТАТЕЙ В РЕЗУЛЬТАТЕ: {len(pinned_in_result)}")
+                for block_info in pinned_in_result:
+                    logger.info(f"   🔥 PINNED ARTICLE RESULT: {block_info['id'][:8]}... level={block_info['level']}, sublevel={block_info['sublevel_id']}")
+                
+                with db.transaction:
+                    updates_count = 0
+                    for block_info in result['blocks']:
+                        try:
+                            block = Block.nodes.get(uid=block_info['id'])
+                            # Обновляем уровень и подуровень только если они изменились
+                            old_level = block.level
+                            old_sublevel = block.sublevel_id
+                            new_level = block_info['level']
+                            new_sublevel = block_info['sublevel_id']
+                            
+                            if old_level != new_level or old_sublevel != new_sublevel:
+                                block.level = new_level
+                                block.sublevel_id = new_sublevel
+                                block.save()
+                                updates_count += 1
+                                
+                                if block.is_pinned:
+                                    logger.info(f"🔥 PINNED ARTICLE UPDATED: {block_info['id'][:8]}... level {old_level}->{new_level}, sublevel {old_sublevel}->{new_sublevel}")
+                                else:
+                                    logger.info(f"Updated article {block_info['id'][:8]}...: level {old_level}->{new_level}, sublevel {old_sublevel}->{new_sublevel}")
+                                
+                        except DoesNotExist:
+                            logger.warning(f"Article {block_info['id']} not found in database")
+                        except Exception as e:
+                            logger.error(f"Error updating article {block_info['id']}: {e}")
+                            
+                logger.info(f"🔥 ✓ ОБНОВЛЕНО {updates_count} СТАТЕЙ В БАЗЕ ДАННЫХ")
+            
+            return result
+        except Exception as e:
+            logger.error(f"Error in articles layout calculation: {str(e)}", exc_info=True)
+            raise HTTPException(status_code=500, detail=f"Ошибка при расчете укладки статей: {str(e)}")
+            
+    except Exception as e:
+        logger.error(f"Error calculating articles layout from Neo4j: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Ошибка при получении данных статей из Neo4j: {str(e)}")
+
 
 @app.get("/layout/neo4j")
 async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
@@ -813,10 +937,179 @@ async def get_nlp_markdown(filename: str):
         logger.error(f"Error getting NLP markdown: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
 # Подключаем GraphQL
 graphql_app = GraphQLRouter(schema)
 app.include_router(graphql_app, prefix="/graphql")
+
+
+
+# ===== Auth endpoints =====
+@app.post("/api/auth/register", response_model=AuthResponse)
+async def register_user(request: UserRegisterRequest):
+    """Регистрирует нового пользователя"""
+    try:
+        result = auth_client.register(
+            login=request.login,
+            password=request.password,
+            nickname=request.nickname,
+            captcha=request.captcha
+        )
+        
+        if result["success"]:
+            return AuthResponse(
+                success=True,
+                message=result["message"],
+                user=result["user"],
+                recovery_keys=result["recovery_keys"]
+            )
+        else:
+            raise HTTPException(status_code=400, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/auth/login", response_model=AuthResponse)
+async def login_user(request: UserLoginRequest):
+    """Аутентифицирует пользователя"""
+    try:
+        result = auth_client.login(
+            login=request.login,
+            password=request.password,
+            captcha=request.captcha,
+            device_info=request.device_info or "",
+            ip_address=request.ip_address or ""
+        )
+        
+        if result["success"]:
+            return AuthResponse(
+                success=True,
+                message=result["message"],
+                token=result["token"],
+                user=result["user"],
+                requires_2fa=result["requires_2fa"]
+            )
+        else:
+            raise HTTPException(status_code=401, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/auth/logout")
+async def logout_user(token: str, logout_all: bool = False):
+    """Выходит из системы"""
+    try:
+        result = auth_client.logout(token, logout_all)
+        
+        if result["success"]:
+            return {"success": True, "message": result["message"]}
+        else:
+            raise HTTPException(status_code=400, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/auth/verify", response_model=TokenVerifyResponse)
+async def verify_user_token(token: str):
+    """Проверяет токен пользователя"""
+    try:
+        result = auth_client.verify_token(token)
+        
+        if result["valid"]:
+            return TokenVerifyResponse(
+                valid=True,
+                user=result["user"],
+                message=result["message"]
+            )
+        else:
+            raise HTTPException(status_code=401, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/auth/recovery", response_model=AuthResponse)
+async def recovery_request(request: UserRecoveryRequest):
+    """Проверяет ключ восстановления"""
+    try:
+        result = auth_client.recovery_request(
+            recovery_key=request.recovery_key,
+            captcha=request.captcha
+        )
+        
+        if result["success"]:
+            return AuthResponse(
+                success=True,
+                message=result["message"],
+                user={"uid": result["user_id"]}
+            )
+        else:
+            raise HTTPException(status_code=400, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/auth/reset-password")
+async def reset_password(request: UserPasswordResetRequest):
+    """Сбрасывает пароль пользователя"""
+    try:
+        result = auth_client.reset_password(
+            user_id=request.user_id,
+            new_password=request.new_password
+        )
+        
+        if result["success"]:
+            return {"success": True, "message": result["message"]}
+        else:
+            raise HTTPException(status_code=400, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/auth/2fa/setup", response_model=AuthResponse)
+async def setup_2fa(request: User2FASetupRequest):
+    """Настраивает 2FA для пользователя"""
+    try:
+        result = auth_client.setup_2fa(request.user_id)
+        
+        if result["success"]:
+            return AuthResponse(
+                success=True,
+                message=result["message"],
+                user={"uid": request.user_id},
+                recovery_keys=result["backup_codes"]
+            )
+        else:
+            raise HTTPException(status_code=400, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/auth/2fa/verify")
+async def verify_2fa(request: User2FAVerifyRequest):
+    """Проверяет код 2FA"""
+    try:
+        result = auth_client.verify_2fa(
+            user_id=request.user_id,
+            code=request.code
+        )
+        
+        if result["success"]:
+            return {"success": True, "message": result["message"]}
+        else:
+            raise HTTPException(status_code=400, detail=result["message"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/auth/captcha")
+async def get_captcha():
+    """Генерирует капчу (заглушка)"""
+    # В реальной реализации здесь будет генерация капчи
+    return {
+        "captcha_id": "test_captcha_123",
+        "captcha_image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+    }
+# ===== Auth endpoints END =====
+
 
 logger.info("Application startup complete.")
 

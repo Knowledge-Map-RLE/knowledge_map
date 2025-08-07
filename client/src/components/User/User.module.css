@@ -29,3 +29,7 @@
 .logout_button {
     @apply ml-2 px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 transition-colors;
 }
+
+.loading {
+    @apply text-gray-500 text-sm;
+}

@@ -27,10 +27,10 @@ class User(StructuredNode):
     """Пароль"""
     nickname = StringProperty(required=True)
     """Прозвище — отображаемое имя"""
-    surname = StringProperty()
-    """Фамилия"""
-    given_names = StringProperty()
-    """Имя"""
+    # surname = StringProperty()
+    # """Фамилия"""
+    # given_names = StringProperty()
+    # """Имя"""
     data = JSONProperty()
     """Нестандартные данные — свойство для любых других не предусмотренных данных"""
 

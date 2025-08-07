@@ -1,15 +1,35 @@
-[project]
+[tool.poetry]
 name = "auth"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Dobrosvet",email = "dimaprokofev@yandex.ru"}
-]
+description = "Сервис авторизации пользователей"
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-]
+authors = ["Dobrosvet <dimaprokofev@yandex.ru>"]
+packages = [{ include = "auth" }]
 
+[tool.poetry.dependencies]
+python = ">=3.12"
+fastapi = ">=0.104.0"
+uvicorn = ">=0.24.0"
+pydantic = ">=2.5.0"
+neomodel = ">=5.3.0"
+grpcio = ">=1.59.0"
+grpcio-tools = ">=1.59.0"
+passlib = ">=1.7.4"
+python-multipart = ">=0.0.6"
+python-jose = { version = ">=3.3.0", extras = ["cryptography"] }
+bcrypt = ">=4.1.0"
+pyotp = ">=2.9.0"
+qrcode = ">=7.4.0"
+pillow = ">=10.1.0"
+redis = ">=5.0.0"
+httpx = ">=0.25.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
+mypy = "^1.7"
+
+[tool.poetry.scripts]
+start-auth = "auth.main:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

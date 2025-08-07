@@ -5,6 +5,11 @@ import User from '../User'
 import { Link } from 'react-router-dom'
 
 export default function Knowledge_map_ui() {
+    const handleDisabledLinkClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
     return <div className={s.interface}>
         <Project_title className={s.panel} />
         <Search className={s.panel} />
@@ -13,8 +18,9 @@ export default function Knowledge_map_ui() {
             <h2 className={s.menu_title}>Меню</h2>
             <nav className={s.main_menu}>
                 <Link to="/">Карта знаний</Link>
-                <Link to="/">Исходник → Markdown</Link>
-                <Link to="/nlp">Лингвистика</Link>
+                <Link to="/science_articles">Карта научных статей</Link>
+                <Link to="/" className={s.disabled_link} onClick={handleDisabledLinkClick}>Исходник → Markdown</Link>
+                <Link to="/nlp" className={s.disabled_link} onClick={handleDisabledLinkClick}>Лингвистика</Link>
             </nav>
         </div>
         <div className={`${s.center} ${s.panel}`}> </div>

@@ -63,6 +63,32 @@
     @apply bg-gray-200;
 }
 
+/* Стили для недоступных ссылок */
+.disabled_link {
+    @apply opacity-40 cursor-not-allowed;
+    position: relative;
+}
+
+.disabled_link:hover {
+    @apply bg-gray-100;
+    cursor: not-allowed;
+}
+
+.disabled_link:hover::after {
+    content: "Раздел ещё не готов";
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
 .center {
     grid-area: center;
     pointer-events: none;

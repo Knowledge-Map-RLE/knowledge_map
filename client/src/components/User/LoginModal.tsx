@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import s from './Modal.module.css'
+import { authService, User } from '../../services/auth'
 
 interface LoginModalProps {
     onClose: () => void
     onSwitchToRecovery: () => void
-    onSuccess: (user: { username: string; displayName: string; level: number }) => void
+    onSuccess: (user: User) => void
 }
 
 export default function LoginModal({ onClose, onSwitchToRecovery, onSuccess }: LoginModalProps) {
@@ -22,17 +23,19 @@ export default function LoginModal({ onClose, onSwitchToRecovery, onSuccess }: L
         setError('')
 
         try {
-            // Здесь будет вызов API для входа
-            // Пока что симулируем успешный вход
-            await new Promise(resolve => setTimeout(resolve, 1000))
-            
-            onSuccess({
-                username: formData.username,
-                displayName: 'Пользователь',
-                level: 1
+            const result = await authService.login({
+                login: formData.username,
+                password: formData.password,
+                captcha: formData.captcha
             })
-        } catch (err) {
-            setError('Ошибка входа. Проверьте логин и пароль.')
+            
+            if (result.success && result.user) {
+                onSuccess(result.user)
+            } else {
+                setError(result.message || 'Ошибка входа')
+            }
+        } catch (err: any) {
+            setError(err.response?.data?.detail || 'Ошибка входа. Проверьте логин и пароль.')
         } finally {
             setIsLoading(false)
         }

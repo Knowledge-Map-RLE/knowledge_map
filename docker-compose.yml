@@ -8,9 +8,11 @@ services:
     environment:
       NEO4J_AUTH: neo4j/password
       NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
-      NEO4J_server_memory_pagecache_size: "512M"
-      NEO4J_server_memory_heap_initial__size: "512M"
-      NEO4J_server_memory_heap_max__size: "1G"
+      NEO4J_server_memory_heap_initial__size: "2G"
+      NEO4J_server_memory_heap_max__size: "3G"
+      NEO4J_server_memory_pagecache_size: "3G"
+      NEO4J_server_bolt_advertised__address: ":7687"
+      NEO4J_db_transaction_timeout: "60m"
       NEO4J_server_jvm_additional: "-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC"
       NEO4J_PLUGINS: '["apoc"]'
       NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
@@ -20,12 +22,16 @@ services:
         soft: 40000
         hard: 40000
     volumes:
-      - ./data/neo4j_data:/data
-      - ./data/neo4j_logs:/logs
-      - ./data/neo4j_import:/var/lib/neo4j/import
-      - ./data/neo4j_plugins:/plugins
+      - D:/Данные/knowledge_map_app/neo4j_data:/data
+      - D:/Данные/knowledge_map_app/neo4j_logs:/logs
+      - D:/Данные/knowledge_map_app/neo4j_import:/var/lib/neo4j/import
+      - D:/Данные/knowledge_map_app/neo4j_plugins:/plugins
     networks:
       - knowledge_map_network
+    deploy:
+      resources:
+        limits:
+          memory: 6G
     healthcheck:
       test: cypher-shell --username neo4j --password password 'MATCH () RETURN count(*) as count'
       interval: 10s
@@ -34,6 +40,57 @@ services:
       start_period: 30s
     restart: unless-stopped
 
+  redis:
+    image: redis/redis-stack:latest
+    container_name: knowledge_map_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - knowledge_map_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    container_name: knowledge_map_auth
+    restart: unless-stopped
+    ports:
+      - "50052:50051"  # gRPC порт для auth сервиса
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=password
+      - REDIS_URL=redis://redis:6379
+      - GRPC_HOST=0.0.0.0
+      - GRPC_PORT=50051
+      - SECRET_KEY=your-secret-key-change-in-production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - PASSWORD_MIN_LENGTH=8
+      - RECOVERY_KEYS_COUNT=10
+      - RECOVERY_KEY_LENGTH=16
+      - LOGIN_ATTEMPTS_LIMIT=5
+      - LOGIN_ATTEMPTS_WINDOW=300
+    networks:
+      - knowledge_map_network
+    depends_on:
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - auth_proto:/shared/proto
+      - ./auth:/app
+      - /app/__pycache__
+      - /app/src/__pycache__
+
   layout:
     build:
       context: ./layering
@@ -41,7 +98,7 @@ services:
     container_name: knowledge_map_layout
     restart: unless-stopped
     ports:
-      - "50051:50051"
+      - "50053:50051"  # gRPC порт для layout сервиса
     environment:
       - LOG_LEVEL=INFO
     networks:
@@ -59,8 +116,10 @@ services:
       - NEO4J_URI=bolt://neo4j:7687
       - NEO4J_USER=neo4j
       - NEO4J_PASSWORD=password
-      - LAYOUT_SERVICE_HOST=layout-service
+      - LAYOUT_SERVICE_HOST=layout
       - LAYOUT_SERVICE_PORT=50051
+      - AUTH_SERVICE_HOST=auth
+      - AUTH_SERVICE_PORT=50051
       - DEBUG=true
     networks:
       - knowledge_map_network
@@ -69,6 +128,12 @@ services:
         condition: service_healthy
       layout:
         condition: service_started
+      auth:
+        condition: service_started
+    volumes:
+      - auth_proto:/shared/proto
+      - ./api:/app
+      - /app/__pycache__
 
   client:
     build:
@@ -96,7 +161,7 @@ services:
       MINIO_CONSOLE_ADDRESS: ":9001"
     command: server /data --console-address ":9001"
     volumes:
-      - ./data/s3_data:/data
+      -  D:/Данные/knowledge_map_app/s3_data:/data
     networks:
       - knowledge_map_network
     healthcheck:
@@ -112,6 +177,7 @@ volumes:
   neo4j_import:
   neo4j_plugins:
   s3_data:
+  auth_proto:
 
 networks:
   knowledge_map_network:

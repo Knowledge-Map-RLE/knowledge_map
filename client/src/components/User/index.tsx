@@ -1,27 +1,86 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import s from './User.module.css'
-import { LoginModal, RegisterModal, RecoveryModal, PasswordResetModal } from './modals'
+import LoginModal from './LoginModal'
+import RegisterModal from './RegisterModal'
+import RecoveryModal from './RecoveryModal'
+import PasswordResetModal from './PasswordResetModal'
+import { authService, User as UserType } from '../../services/auth'
 
 export type ModalType = 'login' | 'register' | 'recovery' | 'password-reset' | null
 
 export default function User({ className='' }: { className: string }) {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [userData, setUserData] = useState<{
-        username: string
-        displayName: string
-        level: number
-    } | null>(null)
+    const [userData, setUserData] = useState<UserType | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        // Проверяем токен при загрузке компонента
+        checkAuthStatus()
+    }, [])
+
+    const checkAuthStatus = async () => {
+        try {
+            const user = await authService.verifyToken()
+            if (user) {
+                setIsAuthenticated(true)
+                setUserData(user)
+            } else {
+                setIsAuthenticated(false)
+                setUserData(null)
+            }
+        } catch (error) {
+            setIsAuthenticated(false)
+            setUserData(null)
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     const handleLogin = () => setActiveModal('login')
     const handleRegister = () => setActiveModal('register')
-    const handleLogout = () => {
-        setIsAuthenticated(false)
-        setUserData(null)
-        // Здесь будет вызов API для выхода
+    
+    const handleLogout = async () => {
+        try {
+            await authService.logout()
+            setIsAuthenticated(false)
+            setUserData(null)
+        } catch (error) {
+            console.error('Ошибка при выходе:', error)
+        }
     }
 
     const closeModal = () => setActiveModal(null)
+
+    const handleLoginSuccess = (user: UserType) => {
+        setIsAuthenticated(true)
+        setUserData(user)
+        closeModal()
+    }
+
+    const handleRegisterSuccess = (user: UserType) => {
+        setIsAuthenticated(true)
+        setUserData(user)
+        closeModal()
+    }
+
+    const handleRecoverySuccess = () => {
+        setActiveModal('password-reset')
+    }
+
+    const handlePasswordResetSuccess = (user: UserType) => {
+        setIsAuthenticated(true)
+        setUserData(user)
+        closeModal()
+    }
+
+    if (isLoading) {
+        return (
+            <div className={`${s.user} ${className}`}>
+                <div className={s.loading}>Загрузка...</div>
+            </div>
+        )
+    }
 
     // Если пользователь не авторизован, показываем кнопки входа/регистрации
     if (!isAuthenticated) {
@@ -47,22 +106,14 @@ export default function User({ className='' }: { className: string }) {
                     <LoginModal 
                         onClose={closeModal}
                         onSwitchToRecovery={() => setActiveModal('recovery')}
-                        onSuccess={(user) => {
-                            setIsAuthenticated(true)
-                            setUserData(user)
-                            closeModal()
-                        }}
+                        onSuccess={handleLoginSuccess}
                     />
                 )}
 
                 {activeModal === 'register' && (
                     <RegisterModal 
                         onClose={closeModal}
-                        onSuccess={(user) => {
-                            setIsAuthenticated(true)
-                            setUserData(user)
-                            closeModal()
-                        }}
+                        onSuccess={handleRegisterSuccess}
                     />
                 )}
 
@@ -70,18 +121,14 @@ export default function User({ className='' }: { className: string }) {
                     <RecoveryModal 
                         onClose={closeModal}
                         onSwitchToLogin={() => setActiveModal('login')}
-                        onSuccess={() => setActiveModal('password-reset')}
+                        onSuccess={handleRecoverySuccess}
                     />
                 )}
 
                 {activeModal === 'password-reset' && (
                     <PasswordResetModal 
                         onClose={closeModal}
-                        onSuccess={(user) => {
-                            setIsAuthenticated(true)
-                            setUserData(user)
-                            closeModal()
-                        }}
+                        onSuccess={handlePasswordResetSuccess}
                     />
                 )}
             </div>
@@ -93,8 +140,8 @@ export default function User({ className='' }: { className: string }) {
         <div className={`${s.user} ${className}`}>
             <div className={s.avatar}></div>
             <div className={s.user_info}>
-                <div className={s.name}>{userData?.displayName || 'Пользователь'}</div>
-                <div className={s.info}>УР: {userData?.level || 0} | @{userData?.username}</div>
+                <div className={s.name}>{userData?.nickname || 'Пользователь'}</div>
+                <div className={s.info}>@{userData?.login}</div>
             </div>
             <button 
                 onClick={handleLogout}

@@ -421,3 +421,34 @@ export async function getS3Object(bucketName: string, objectKey: string): Promis
         return { error: 'Network error' };
     }
 }
+
+/**
+ * HTTP клиент для использования в других сервисах
+ */
+export const api = {
+    get: async (url: string) => {
+        const response = await fetch(`${API_URL}${url}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+            mode: 'cors',
+            credentials: 'omit'
+        });
+        return response;
+    },
+    
+    post: async (url: string, data?: any) => {
+        const response = await fetch(`${API_URL}${url}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: data ? JSON.stringify(data) : undefined,
+            mode: 'cors',
+            credentials: 'omit'
+        });
+        return response;
+    }
+};
