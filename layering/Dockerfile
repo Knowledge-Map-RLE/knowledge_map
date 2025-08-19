@@ -1,40 +1,43 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
-# Устанавливаем системные зависимости с retry
-RUN apt-get update --fix-missing && \
-    for i in 1 2 3; do \
-        apt-get install -y gcc g++ && break || \
-        (echo "Retry $i failed, waiting..." && sleep 5); \
-    done && \
-    rm -rf /var/lib/apt/lists/*
+# чтобы APT не задавал вопросов
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Создаем рабочую директорию
 WORKDIR /app
 
-# Устанавливаем Poetry
-RUN pip install poetry
+# 1) Установка системных зависимостей (gcc, g++) с retry и --fix-missing
+RUN set -eux; \
+    for i in 1 2 3; do \
+      apt-get update -o Acquire::Retries=3 --fix-missing && \
+      apt-get install -y --no-install-recommends gcc g++ -o Acquire::Retries=3 --fix-missing && \
+      break || (echo "APT install failed, retry #${i}" && sleep 5); \
+    done; \
+    rm -rf /var/lib/apt/lists/*
 
-# Копируем файлы зависимостей
+# 2) Копируем pyproject и lock-файл
 COPY pyproject.toml poetry.lock* ./
 
-# Настраиваем Poetry и устанавливаем зависимости
-RUN poetry config virtualenvs.create false \
-    && poetry install --only=main --no-root --no-interaction --no-ansi
+# 3) Устанавливаем Poetry
+RUN pip install --no-cache-dir poetry
 
-# Копируем исходный код
+# 4) Отключаем виртуальные окружения в Poetry
+RUN poetry config virtualenvs.create false
+
+# 5) Устанавливаем только production-зависимости
+RUN poetry install --only=main --no-root --no-interaction --no-ansi
+
+# 6) Копируем исходники
 COPY . .
 
-# Генерируем protobuf файлы
-RUN mkdir -p src/generated \
-    && python -m grpc_tools.protoc \
-        -I./proto \
-        --python_out=./src/generated \
-        --grpc_python_out=./src/generated \
-        ./proto/layout.proto \
-    && touch src/generated/__init__.py
+# 7) Генерируем gRPC-клиент/сервер из .proto
+RUN python -m grpc_tools.protoc \
+    -I proto \
+    --python_out=src/generated \
+    --grpc_python_out=src/generated \
+    proto/layout.proto
 
-# Открываем порт
+# 8) Открываем порт gRPC
 EXPOSE 50051
 
-# Команда запуска
-CMD ["python", "src/main.py"]
+# 9) Запуск
+CMD ["poetry", "run", "python", "-m", "src.main"]
