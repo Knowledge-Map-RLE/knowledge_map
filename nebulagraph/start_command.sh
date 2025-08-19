@@ -1,0 +1,1 @@
+docker-compose up -d nebulagraph-metad0 nebulagraph-storaged0 nebulagraph-graphd0 nebula-studio
