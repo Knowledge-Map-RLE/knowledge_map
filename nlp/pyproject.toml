@@ -8,6 +8,10 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "pymorphy2 (>=0.9.1,<0.10.0)",
+    "setuptools (>=80.9.0,<81.0.0)",
+    "pytest (>=8.4.1,<9.0.0)",
+    "nltk (>=3.9.1,<4.0.0)"
 ]
 
 
