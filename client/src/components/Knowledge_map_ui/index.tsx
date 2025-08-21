@@ -18,7 +18,7 @@ export default function Knowledge_map_ui() {
             <h2 className={s.menu_title}>Меню</h2>
             <nav className={s.main_menu}>
                 <Link to="/">Карта знаний</Link>
-                <Link to="/science_articles">Карта научных статей</Link>
+                <Link to="/science_articles">Подпроект "Карта научных статей"</Link>
                 <Link to="/" className={s.disabled_link} onClick={handleDisabledLinkClick}>Исходник → Markdown</Link>
                 <Link to="/nlp" className={s.disabled_link} onClick={handleDisabledLinkClick}>Лингвистика</Link>
             </nav>

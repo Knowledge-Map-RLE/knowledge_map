@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Сервис авторизации пользователей"
 readme = "README.md"
 authors = ["Dobrosvet <dimaprokofev@yandex.ru>"]
-packages = [{ include = "auth" }]
+packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.12"
@@ -29,7 +29,7 @@ pytest = "^7.0"
 mypy = "^1.7"
 
 [tool.poetry.scripts]
-start-auth = "auth.main:main"
+start-auth = "src.main:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

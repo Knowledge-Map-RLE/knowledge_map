@@ -29,15 +29,24 @@ RUN poetry install --only=main --no-root --no-interaction --no-ansi
 # 6) Копируем исходники
 COPY . .
 
-# 7) Генерируем gRPC-клиент/сервер из .proto
+# 7) Создаём директорию для generated файлов
+RUN mkdir -p src/generated
+
+# 8) Генерируем gRPC-клиент/сервер из .proto
 RUN python -m grpc_tools.protoc \
     -I proto \
     --python_out=src/generated \
     --grpc_python_out=src/generated \
     proto/layout.proto
 
-# 8) Открываем порт gRPC
+# 9) Исправляем импорты в сгенерированных файлах
+RUN sed -i 's/import layout_pb2 as layout__pb2/from . import layout_pb2 as layout__pb2/g' src/generated/layout_pb2_grpc.py
+
+# 10) Создаём __init__.py для правильного импорта
+RUN echo "# Generated protobuf package" > src/generated/__init__.py
+
+# 11) Открываем порт gRPC
 EXPOSE 50051
 
-# 9) Запуск
-CMD ["poetry", "run", "python", "-m", "src.main"]
+# 12) Запуск
+CMD ["python", "-m", "src.main"]

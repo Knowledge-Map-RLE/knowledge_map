@@ -4,7 +4,7 @@ from neomodel import (
     StructuredNode, StringProperty, IntegerProperty, BooleanProperty,
     DateTimeProperty, JSONProperty, UniqueIdProperty, config
 )
-from auth.src.config import settings
+from .config import settings
 
 # Настройка подключения к Neo4j
 config.DATABASE_URL = f"{settings.NEO4J_URI}?user={settings.NEO4J_USER}&password={settings.NEO4J_PASSWORD}"

@@ -14,8 +14,8 @@ from neomodel import config as neomodel_config, db, UniqueIdProperty, DoesNotExi
 import uuid
 import json
 
-from api.auth_client import auth_client
-from api.schemas import (
+from auth_client import auth_client
+from schemas import (
     UserRegisterRequest, UserLoginRequest, UserRecoveryRequest, 
     UserPasswordResetRequest, User2FASetupRequest, User2FAVerifyRequest,
     AuthResponse, TokenVerifyResponse
@@ -225,7 +225,7 @@ async def get_articles_layout() -> Dict[str, Any]:
         
         # Запрос связей между статьями
         links_query = """
-        MATCH (b1:Article)-[r:LINK_TO]->(b2:Article)
+        MATCH (b1:Article)-[r:CITED]->(b2:Article)
         RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query)

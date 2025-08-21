@@ -24,10 +24,18 @@ RUN pip install --no-cache-dir poetry==1.7.1
 
 # 3) Копируем манифесты и устанавливаем зависимости
 COPY pyproject.toml poetry.lock* ./
-RUN poetry install --only=main --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false && \
+    poetry install --only=main --no-interaction --no-ansi
 
 # 4) Копируем исходники
 COPY . .
 
-# 5) Точка входа
-CMD ["poetry", "run", "start-auth"]
+# 5) Генерируем protobuf файлы
+RUN python -m grpc_tools.protoc \
+    -I proto \
+    --python_out=src \
+    --grpc_python_out=src \
+    proto/auth.proto
+
+# 6) Точка входа
+CMD ["python", "-m", "src.main"]

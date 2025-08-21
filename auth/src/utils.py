@@ -8,7 +8,7 @@ import base64
 import io
 from datetime import datetime, timedelta
 from typing import Optional, List
-from auth.src.config import settings
+from .config import settings
 
 
 def hash_password(password: str) -> str:

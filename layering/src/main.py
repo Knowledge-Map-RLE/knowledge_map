@@ -6,7 +6,7 @@ import argparse
 import logging
 import sys
 from pathlib import Path
-from grpc_service import run_server
+from .grpc_service import run_server
 
 # Добавляем путь к src в PYTHONPATH
 sys.path.insert(0, str(Path(__file__).parent))

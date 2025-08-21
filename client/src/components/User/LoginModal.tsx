@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import s from './Modal.module.css'
-import { authService, User } from '../../services/auth'
+import { authService } from '../../services/auth'
+import type { User } from '../../services/auth'
 
 interface LoginModalProps {
     onClose: () => void

@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
 from typing import Optional, List, Tuple
-from auth.src.models import User, Session
-from auth.src.schemas import UserCreate, UserLogin, RecoveryRequest, PasswordReset
-from auth.src.utils import (
+from .models import User, Session
+from .schemas import UserCreate, UserLogin, RecoveryRequest, PasswordReset
+from .utils import (
     hash_password, verify_password, generate_recovery_keys,
     generate_2fa_secret, generate_2fa_qr_code, verify_2fa_code,
     create_access_token, verify_token, generate_session_id
 )
-from auth.src.config import settings
+from .config import settings
 import redis
 import json
 

@@ -2,7 +2,7 @@ import grpc
 import auth_pb2
 import auth_pb2_grpc
 from typing import Optional, Dict, Any
-from api.config import settings
+from config import settings
 
 
 class AuthClient:

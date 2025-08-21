@@ -8,8 +8,14 @@ from concurrent import futures
 from typing import Dict, List, Tuple
 
 import grpc
-from generated import layout_pb2, layout_pb2_grpc
-from layout_algorithm import layout_knowledge_map
+try:
+    from generated import layout_pb2, layout_pb2_grpc
+except ImportError:
+    from .generated import layout_pb2, layout_pb2_grpc
+try:
+    from layout_algorithm import layout_knowledge_map
+except ImportError:
+    from .layout_algorithm import layout_knowledge_map
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 import asyncio
 import threading
-from auth.src.grpc_server import serve
-from auth.src.user_service import UserService
+from .grpc_server import serve
+from .user_service import UserService
 
 
 def start_grpc_server():

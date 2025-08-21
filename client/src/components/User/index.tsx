@@ -4,7 +4,8 @@ import LoginModal from './LoginModal'
 import RegisterModal from './RegisterModal'
 import RecoveryModal from './RecoveryModal'
 import PasswordResetModal from './PasswordResetModal'
-import { authService, User as UserType } from '../../services/auth'
+import { authService } from '../../services/auth'
+import type { User as UserType } from '../../services/auth'
 
 export type ModalType = 'login' | 'register' | 'recovery' | 'password-reset' | null
 

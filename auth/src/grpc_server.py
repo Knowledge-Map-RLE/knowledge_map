@@ -1,11 +1,14 @@
 import grpc
 from concurrent import futures
+import sys
+import os
+sys.path.insert(0, os.path.dirname(__file__))
 import auth_pb2
 import auth_pb2_grpc
-from auth.src.user_service import UserService
-from auth.src.models import User
-from auth.src.schemas import UserCreate, UserLogin, RecoveryRequest, PasswordReset, TwoFactorVerify
-from auth.src.config import settings
+from .user_service import UserService
+from .models import User
+from .schemas import UserCreate, UserLogin, RecoveryRequest, PasswordReset, TwoFactorVerify
+from .config import settings
 import json
 
 

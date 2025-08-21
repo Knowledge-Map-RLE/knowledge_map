@@ -79,12 +79,12 @@ class AuthService {
 
     async register(data: RegisterRequest): Promise<AuthResponse> {
         const response = await api.post('/auth/register', data)
-        return response.data
+        return await response.json()
     }
 
     async login(data: LoginRequest): Promise<AuthResponse> {
         const response = await api.post('/auth/login', data)
-        const result = response.data
+        const result = await response.json()
         
         if (result.success && result.token) {
             this.setToken(result.token)
@@ -102,7 +102,7 @@ class AuthService {
         try {
             const response = await api.post('/auth/logout', { token, logout_all: logoutAll })
             this.clearToken()
-            return response.data
+            return await response.json()
         } catch (error) {
             this.clearToken()
             return { success: false, message: 'Ошибка при выходе' }
@@ -117,7 +117,8 @@ class AuthService {
 
         try {
             const response = await api.post('/auth/verify', { token })
-            return response.data.valid ? response.data.user : null
+            const result = await response.json()
+            return result.valid ? result.user : null
         } catch (error) {
             this.clearToken()
             return null
@@ -126,27 +127,27 @@ class AuthService {
 
     async recoveryRequest(data: RecoveryRequest): Promise<AuthResponse> {
         const response = await api.post('/auth/recovery', data)
-        return response.data
+        return await response.json()
     }
 
     async resetPassword(data: PasswordResetRequest): Promise<{ success: boolean; message: string }> {
         const response = await api.post('/auth/reset-password', data)
-        return response.data
+        return await response.json()
     }
 
     async setup2FA(data: TwoFactorSetupRequest): Promise<AuthResponse> {
         const response = await api.post('/auth/2fa/setup', data)
-        return response.data
+        return await response.json()
     }
 
     async verify2FA(data: TwoFactorVerifyRequest): Promise<{ success: boolean; message: string }> {
         const response = await api.post('/auth/2fa/verify', data)
-        return response.data
+        return await response.json()
     }
 
     async getCaptcha(): Promise<CaptchaResponse> {
         const response = await api.get('/auth/captcha')
-        return response.data
+        return await response.json()
     }
 
     isAuthenticated(): boolean {

@@ -8,7 +8,7 @@ service AuthService {
   rpc Logout (LogoutRequest) returns (LogoutResponse);
   rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
   rpc GetUser (GetUserRequest) returns (GetUserResponse);
-  rpc RecoveryRequest (RecoveryRequest) returns (RecoveryResponse);
+  rpc SendRecovery (RecoveryRequest) returns (RecoveryResponse);
   rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
   rpc Setup2FA (Setup2FARequest) returns (Setup2FAResponse);
   rpc Verify2FA (Verify2FARequest) returns (Verify2FAResponse);
