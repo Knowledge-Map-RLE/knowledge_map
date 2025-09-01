@@ -1,110 +1,4 @@
 services:
-  nebulagraph-metad0:
-    image: vesoft/nebula-metad:v3.5.0
-    container_name: knowledge_map_nebula_metad0
-    command:
-      - --meta_server_addrs=172.28.0.2:9559
-      - --local_ip=172.28.0.2
-      - --ws_ip=172.28.0.2
-      - --port=9559
-      - --ws_http_port=19559
-      - --data_path=/usr/local/nebula/data/meta
-      - --log_dir=/usr/local/nebula/logs
-      - --daemonize=false
-    environment:
-      USER: root
-    volumes:
-      - D:/Данные/knowledge_map_app/nebula/meta0:/usr/local/nebula/data/meta
-      - D:/Данные/knowledge_map_app/nebula/logs/metad0:/usr/local/nebula/logs
-    ports:
-      - "9559:9559"
-      - "19559:19559"
-    networks:
-      knowledge_map_network:
-        ipv4_address: 172.28.0.2
-    restart: unless-stopped
-
-  nebulagraph-storaged0:
-    image: vesoft/nebula-storaged:v3.5.0
-    container_name: knowledge_map_nebula_storaged0
-    depends_on:
-      - nebulagraph-metad0
-    command:
-      - --meta_server_addrs=172.28.0.2:9559
-      - --local_ip=172.28.0.3
-      - --ws_ip=172.28.0.3
-      - --port=9779
-      - --ws_http_port=19779
-      - --data_path=/usr/local/nebula/data/storage
-      - --log_dir=/usr/local/nebula/logs
-      - --daemonize=false
-      - --storage_client_timeout_ms=300000
-    environment:
-      USER: root
-    volumes:
-      - D:/Данные/knowledge_map_app/nebula/storage0:/usr/local/nebula/data/storage
-      - D:/Данные/knowledge_map_app/nebula/logs/storaged0:/usr/local/nebula/logs
-    ports:
-      - "9779:9779"
-      - "19779:19779"
-    networks:
-      knowledge_map_network:
-        ipv4_address: 172.28.0.3
-    restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
-    deploy:
-      resources:
-        limits:
-          memory: 12G
-          cpus: '4.0'
-        reservations:
-          memory: 6G
-          cpus: '4.0'
-
-  nebulagraph-graphd0:
-    image: vesoft/nebula-graphd:v3.5.0
-    container_name: knowledge_map_nebula_graphd0
-    depends_on:
-      - nebulagraph-metad0
-      - nebulagraph-storaged0
-    command:
-      - --meta_server_addrs=172.28.0.2:9559
-      - --local_ip=172.28.0.4
-      - --ws_ip=172.28.0.4
-      - --port=9669
-      - --ws_http_port=19669
-      - --log_dir=/usr/local/nebula/logs
-      - --daemonize=false
-      - --storage_client_timeout_ms=300000
-    environment:
-      USER: root
-    volumes:
-      - D:/Данные/knowledge_map_app/nebula/graph0:/usr/local/nebula/logs
-    ports:
-      - "9669:9669"
-      - "19669:19669"
-    networks:
-      knowledge_map_network:
-        ipv4_address: 172.28.0.4
-    restart: unless-stopped
-
-  nebula-studio:
-    image: vesoft/nebula-graph-studio:latest
-    container_name: knowledge_map_nebula_studio
-    depends_on:
-      - nebulagraph-graphd0
-    environment:
-      # опционально выставите TZ, если нужно
-      TZ: "UTC"
-    ports:
-      - "7001:7001"
-    networks:
-      - knowledge_map_network
-    restart: unless-stopped
-
   # Neo4j — база данных для хранения графовых данных
   neo4j:
     image: neo4j:5.13.0
@@ -129,10 +23,10 @@ services:
         soft: 40000
         hard: 40000
     volumes:
-      - D:/Данные/knowledge_map_app/neo4j_data:/data
-      - D:/Данные/knowledge_map_app/neo4j_logs:/logs
-      - D:/Данные/knowledge_map_app/neo4j_import:/var/lib/neo4j/import
-      - D:/Данные/knowledge_map_app/neo4j_plugins:/plugins
+      - C:/Data_Knowledge_Map/neo4j_data:/data
+      - C:/Data_Knowledge_Map/neo4j_logs:/logs
+      - C:/Data_Knowledge_Map/neo4j_import:/var/lib/neo4j/import
+      - C:/Data_Knowledge_Map/neo4j_plugins:/plugins
     networks:
       - knowledge_map_network
     deploy:
@@ -290,7 +184,7 @@ services:
       MINIO_CONSOLE_ADDRESS: ":9001"
     command: server /data --console-address ":9001"
     volumes:
-      -  D:/Данные/knowledge_map_app/s3_data:/data
+      -  C:/Data_Knowledge_Map/s3_data:/data
     networks:
       - knowledge_map_network
     healthcheck:
