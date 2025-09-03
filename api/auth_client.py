@@ -1,6 +1,6 @@
 import grpc
-import auth_pb2
-import auth_pb2_grpc
+from generated import auth_pb2
+from generated import auth_pb2_grpc
 from typing import Optional, Dict, Any
 from config import settings
 

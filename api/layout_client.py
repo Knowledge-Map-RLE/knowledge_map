@@ -23,7 +23,7 @@ class LayoutConfig:
     """Конфигурация подключения к сервису укладки"""
     host: str = "localhost"
     port: int = 50051
-    timeout: int = 30  # секунды
+    timeout: int = 300  # секунды
     
     @classmethod
     def from_env(cls):
@@ -31,7 +31,7 @@ class LayoutConfig:
         return cls(
             host=os.getenv("LAYOUT_SERVICE_HOST", "localhost"),
             port=int(os.getenv("LAYOUT_SERVICE_PORT", "50051")),
-            timeout=int(os.getenv("LAYOUT_SERVICE_TIMEOUT", "30"))
+            timeout=int(os.getenv("LAYOUT_SERVICE_TIMEOUT", "300"))
         )
 
 

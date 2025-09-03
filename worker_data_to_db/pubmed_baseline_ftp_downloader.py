@@ -182,25 +182,23 @@ def verify_all_downloads() -> bool:
 # ================== Основные функции ==================
 
 def download_all_files():
-    """Скачивает все .xml.gz в LOCAL_DIR параллельно."""
+    """Скачивает только последний .xml.gz файл в LOCAL_DIR."""
     files = ftp_list_xml_gz()
-    total = len(files)
-    logger.info(f"Найдено {total} файлов, старт загрузки в {MAX_WORKERS} потоков")
-
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as exe:
-        futures = {exe.submit(download_file_remote, fn): fn for fn in files}
-        for i, fut in enumerate(as_completed(futures), start=1):
-            fn = futures[fut]
-            try:
-                fut.result()
-                logger.info(f"[{i}/{total}] {fn} скачан успешно")
-            except Exception as e:
-                logger.error(f"[{i}/{total}] {fn} не удалось скачать: {e}")
+    if not files:
+        logger.error("Не найдено файлов для загрузки")
+        return False
     
-    success = verify_all_downloads()
-    if not success:
-        logger.error("Не все файлы скачаны корректно.")
-    return success
+    # Берём только последний файл
+    latest_file = sorted(files)[-1]
+    logger.info(f"Загружаем только последний файл: {latest_file}")
+    
+    try:
+        download_file_remote(latest_file)
+        logger.info(f"[OK] {latest_file} скачан успешно")
+        return True
+    except Exception as e:
+        logger.error(f"[ERROR] {latest_file} не удалось скачать: {e}")
+        return False
 
 def download_one_file(pmid: str):
     """
@@ -209,3 +207,12 @@ def download_one_file(pmid: str):
     """
     filename = f"{pmid}.xml.gz"
     return download_file_remote(filename)
+
+if __name__ == "__main__":
+    start = time.time()
+    success = download_all_files()
+    if success:
+        logger.info(f"Загрузка завершена успешно за {time.time() - start:.1f}s")
+    else:
+        logger.error("Загрузка завершена с ошибками")
+        sys.exit(1)

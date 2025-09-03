@@ -62,11 +62,20 @@ def append_checkpoint(fname: str):
 # ========== СХЕМА ==========
 def ensure_schema():
     with driver.session() as session:
+        # Создаём схему для нашего алгоритма укладки
         session.run("""
             CREATE CONSTRAINT IF NOT EXISTS
-            FOR (a:Article) REQUIRE a.pmid IS UNIQUE
+            FOR (n:Node) REQUIRE n.uid IS UNIQUE
         """)
-    logger.info("Schema constraint ensured")
+        session.run("""
+            CREATE INDEX IF NOT EXISTS
+            FOR (n:Node) ON (n.layout_status)
+        """)
+        session.run("""
+            CREATE INDEX IF NOT EXISTS
+            FOR (n:Node) ON (n.layer, n.level)
+        """)
+    logger.info("Schema constraints and indexes ensured")
 
 # ========== ЗАПИСЬ ==========
 def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
@@ -76,15 +85,23 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
         if nodes:
             tx.run("""
                 UNWIND $nodes AS row
-                  MERGE (a:Article {pmid: row.pmid})
-                  SET a = row
+                  MERGE (n:Node {uid: row.pmid})
+                  SET n = row,
+                      n.uid = row.pmid,
+                      n.layout_status = 'unprocessed',
+                      n.layer = -1,
+                      n.level = -1,
+                      n.sublevel_id = -1,
+                      n.x = 0.0,
+                      n.y = 0.0,
+                      n.is_pinned = false
             """, nodes=nodes)
         if rels:
             tx.run("""
                 UNWIND $rels AS r
-                  MERGE (a:Article {pmid: r.pmid})
-                  MERGE (b:Article {pmid: r.cpmid})
-                  MERGE (a)-[:CITES]->(b)
+                  MERGE (source:Node {uid: r.pmid})
+                  MERGE (target:Node {uid: r.cpmid})
+                  MERGE (source)-[:CITES]->(target)
             """, rels=rels)
 
     logger.info(f"[WRITE-ENTRY] {path_name}: nodes={len(nodes)}, rels={len(rels)}")
@@ -198,25 +215,35 @@ def process_all():
         return
 
     files = sorted(DATA_DIR.glob("*.xml.gz"))
-    done  = load_checkpoint()
-    to_do = [f for f in files if f.name not in done]
-    logger.info(f"{len(done)} files done, {len(to_do)} to go")
+    if not files:
+        logger.error("Не найдено файлов для обработки")
+        return
+    
+    # Берём только последний файл
+    latest_file = files[-1]
+    logger.info(f"Обрабатываем только последний файл: {latest_file.name}")
+    
+    # Очищаем базу данных перед загрузкой нового файла
+    try:
+        with driver.session() as s:
+            s.run("MATCH (n:Node) DETACH DELETE n")
+        logger.info("База данных очищена")
+    except Exception as e:
+        logger.error(f"Ошибка при очистке базы: {e}")
+        return
 
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as exe:
-        futures = {exe.submit(parse_one_file, f): f for f in to_do}
-        for fut in as_completed(futures):
-            path = futures[fut]
-            try:
-                fut.result()
-            except Exception as e:
-                logger.error(f"[PARSE-ERR] {path.name}: {e}")
+    try:
+        parse_one_file(latest_file)
+        logger.info(f"[OK] {latest_file.name} обработан успешно")
+    except Exception as e:
+        logger.error(f"[PARSE-ERR] {latest_file.name}: {e}")
 
     # ждём пока писатели обработают всё
     write_queue.join()
     for _ in range(WRITER_COUNT):
         write_queue.put(None)
 
-    logger.info("All done.")
+    logger.info("Обработка завершена.")
 
 if __name__ == "__main__":
     start = time.time()

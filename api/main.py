@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 # Настройка подключения к Neo4j
 neomodel_config.DATABASE_URL = settings.get_database_url()
-logger.info(f"Neo4j connection configured: {settings.neo4j_uri}")
+logger.info(f"Neo4j connection configured: {settings.NEO4J_URI}")
 
 # Настройка CORS
 origins = [
@@ -210,23 +210,30 @@ async def get_articles_layout() -> Dict[str, Any]:
     try:
         logger.info("Starting articles layout calculation from Neo4j")
         
-        # Запрос только статей из Neo4j
+        # Читаем граф из Neo4j: узлы помечены как Node, связи - CITES
         logger.info("Querying articles from Neo4j")
         blocks_query = """
-        MATCH (b:Article)
-        RETURN b.uid as id, b.content as content, b.layer as layer, b.level as level, b.is_pinned as is_pinned, b.physical_scale as physical_scale
+        MATCH (n:Node)
+        RETURN n.uid as id,
+               n.content as content,
+               n.layer as layer,
+               n.level as level,
+               n.sublevel_id as sublevel_id,
+               n.is_pinned as is_pinned,
+               n.physical_scale as physical_scale,
+               n.x as x,
+               n.y as y
         """
         blocks_result, _ = db.cypher_query(blocks_query)
-        logger.info(f"Found {len(blocks_result)} articles total")
+        logger.info(f"Found {len(blocks_result)} nodes total")
         
         if not blocks_result:
-            logger.warning("No articles found in Neo4j")
-            raise HTTPException(status_code=404, detail="В базе данных нет статей. Пожалуйста, добавьте статьи с меткой 'Article'.")
+            logger.warning("No nodes found in Neo4j")
+            raise HTTPException(status_code=404, detail="В базе данных нет узлов Node. Загрузите данные.")
         
-        # Запрос связей между статьями
         links_query = """
-        MATCH (b1:Article)-[r:CITED]->(b2:Article)
-        RETURN r.uid as id, b1.uid as source_id, b2.uid as target_id
+        MATCH (s:Node)-[r:CITES]->(t:Node)
+        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query)
         
@@ -238,12 +245,15 @@ async def get_articles_layout() -> Dict[str, Any]:
                 "content": str(row[1] or ""),
                 "layer": int(row[2] or 0),
                 "level": int(row[3] or 0),
-                "is_pinned": bool(row[4]) if row[4] is not None else False,
-                "physical_scale": int(row[5] or 0) if row[5] is not None else 0,
+                "sublevel_id": int(row[4] or 0),
+                "is_pinned": bool(row[5]) if row[5] is not None else False,
+                "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
+                "x": float(row[7]) if row[7] is not None else None,
+                "y": float(row[8]) if row[8] is not None else None,
                 "metadata": {}
             }
-            if block_data["is_pinned"]:
-                logger.info(f"Found pinned article in DB: {block_data['id']} - is_pinned: {block_data['is_pinned']}")
+            if block_data.get("is_pinned"):
+                logger.info(f"Found pinned node in DB: {block_data['id']} - is_pinned: {block_data['is_pinned']}")
             blocks.append(block_data)
         
         # Преобразуем связи
@@ -259,58 +269,32 @@ async def get_articles_layout() -> Dict[str, Any]:
         if not blocks:
             raise HTTPException(status_code=404, detail="В базе данных нет статей.")
         
+        # Удаляем потенциальные циклы: оставляем рёбра только вперёд по слоям/уровням
+        # TODO это должно делаться на стороне бэкенда
+        level_index = {b["id"]: (b.get("layer", 0), b.get("level", 0)) for b in blocks}
+        filtered_links = []
+        for l in links_for_layout:
+            s = l["source_id"]; t = l["target_id"]
+            if s in level_index and t in level_index:
+                sl, sv = level_index[s]
+                tl, tv = level_index[t]
+                if (tl > sl) or (tl == sl and tv > sv):
+                    filtered_links.append(l)
+        if len(filtered_links) < len(links_for_layout):
+            logger.info(f"Filtered potential cycles: kept {len(filtered_links)} of {len(links_for_layout)} links")
+        
         # Получаем укладку
         client = get_layout_client()
         try:
             result = await client.calculate_layout(
                 blocks=blocks,
-                links=links_for_layout,
+                links=filtered_links,
                 options=LayoutOptions(
                     sublevel_spacing=200,
                     layer_spacing=250,
-                    optimize_layout=True
+                    optimize_layout=False
                 )
             )
-
-            # Сохраняем обновлённые уровни и подуровни обратно в базу данных
-            if result.get('success') and result.get('blocks'):
-                logger.info("🔥 СОХРАНЯЕМ ОБНОВЛЁННЫЕ УРОВНИ СТАТЕЙ В БАЗУ ДАННЫХ...")
-                
-                # Сначала покажем что пришло из алгоритма
-                pinned_in_result = [b for b in result['blocks'] if b.get('is_pinned', False)]
-                logger.info(f"🔥 ЗАКРЕПЛЁННЫХ СТАТЕЙ В РЕЗУЛЬТАТЕ: {len(pinned_in_result)}")
-                for block_info in pinned_in_result:
-                    logger.info(f"   🔥 PINNED ARTICLE RESULT: {block_info['id'][:8]}... level={block_info['level']}, sublevel={block_info['sublevel_id']}")
-                
-                with db.transaction:
-                    updates_count = 0
-                    for block_info in result['blocks']:
-                        try:
-                            block = Block.nodes.get(uid=block_info['id'])
-                            # Обновляем уровень и подуровень только если они изменились
-                            old_level = block.level
-                            old_sublevel = block.sublevel_id
-                            new_level = block_info['level']
-                            new_sublevel = block_info['sublevel_id']
-                            
-                            if old_level != new_level or old_sublevel != new_sublevel:
-                                block.level = new_level
-                                block.sublevel_id = new_sublevel
-                                block.save()
-                                updates_count += 1
-                                
-                                if block.is_pinned:
-                                    logger.info(f"🔥 PINNED ARTICLE UPDATED: {block_info['id'][:8]}... level {old_level}->{new_level}, sublevel {old_sublevel}->{new_sublevel}")
-                                else:
-                                    logger.info(f"Updated article {block_info['id'][:8]}...: level {old_level}->{new_level}, sublevel {old_sublevel}->{new_sublevel}")
-                                
-                        except DoesNotExist:
-                            logger.warning(f"Article {block_info['id']} not found in database")
-                        except Exception as e:
-                            logger.error(f"Error updating article {block_info['id']}: {e}")
-                            
-                logger.info(f"🔥 ✓ ОБНОВЛЕНО {updates_count} СТАТЕЙ В БАЗЕ ДАННЫХ")
-            
             return result
         except Exception as e:
             logger.error(f"Error in articles layout calculation: {str(e)}", exc_info=True)
@@ -320,6 +304,238 @@ async def get_articles_layout() -> Dict[str, Any]:
         logger.error(f"Error calculating articles layout from Neo4j: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных статей из Neo4j: {str(e)}")
 
+
+@app.get("/layout/articles_all")
+async def get_all_articles_layout() -> Dict[str, Any]:
+    """Возвращает все блоки и связи из графа статей."""
+    try:
+        logger.info("Loading all articles and links")
+
+        # Запрос всех узлов
+        nodes_query = """
+        MATCH (n:Node)
+        RETURN n.uid as id,
+               coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
+               n.layer as layer,
+               n.level as level,
+               n.sublevel_id as sublevel_id,
+               n.is_pinned as is_pinned,
+               n.physical_scale as physical_scale,
+               n.x as x,
+               n.y as y,
+               n.layout_status as layout_status
+        """
+        blocks_result, _ = db.cypher_query(nodes_query)
+
+        if not blocks_result:
+            return {
+                "success": True,
+                "blocks": [],
+                "links": [],
+                "levels": [],
+                "sublevels": [],
+                "total": 0
+            }
+
+        blocks: list[dict] = []
+        for row in blocks_result:
+            block = {
+                "id": str(row[0]),
+                "content": str(row[1] or ""),
+                "layer": int(row[2] or 0),
+                "level": int(row[3] or 0),
+                "sublevel_id": int(row[4] or 0),
+                "is_pinned": bool(row[5]) if row[5] is not None else False,
+                "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
+                "x": float(row[7]) if row[7] is not None else None,
+                "y": float(row[8]) if row[8] is not None else None,
+                "layout_status": str(row[9] or ""),
+                "metadata": {},
+            }
+            blocks.append(block)
+
+        # Запрос всех связей
+        links_query = """
+        MATCH (s:Node)-[r:CITES]->(t:Node)
+        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
+        """
+        links_result, _ = db.cypher_query(links_query)
+        
+        links: list[dict] = []
+        for row in links_result:
+            link_id = row[0]
+            links.append({
+                "id": str(link_id) if link_id is not None else f"{row[1]}-{row[2]}",
+                "source_id": str(row[1]),
+                "target_id": str(row[2]),
+            })
+
+        logger.info(f"Loaded {len(blocks)} blocks and {len(links)} links")
+
+        return {
+            "success": True,
+            "blocks": blocks,
+            "links": links,
+            "levels": [],
+            "sublevels": [],
+            "total": len(blocks)
+        }
+    except Exception as e:
+        logger.error(f"Error loading all articles: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/layout/articles_page")
+async def get_articles_layout_page(
+    offset: int = 0,
+    limit: int = 2000,
+    center_layer: int = 0,
+    center_level: int = 0,
+) -> Dict[str, Any]:
+    """Возвращает часть графа статей, упорядоченную по близости к (center_layer, center_level).
+
+    - Узлы и связи берутся из Neo4j (`Node`, `CITES`).
+    - Связи фильтруются, чтобы не допустить циклов (вперёд по (layer, level)).
+    - Укладка считается только для выбранной партии.
+    """
+    try:
+        logger.info(
+            f"Articles page requested: offset={offset}, limit={limit}, center=({center_layer},{center_level})"
+        )
+
+        # Всего узлов (для прогресса)
+        total_query = """
+        MATCH (n:Node)
+        RETURN count(n) as total
+        """
+        total_res, _ = db.cypher_query(total_query)
+        total_nodes = int(total_res[0][0]) if total_res else 0
+
+        # Выбираем ближние к центру (layer, level)
+        nodes_query = """
+        MATCH (n:Node)
+        WITH n,
+             abs(n.layer - $center_layer) AS dl,
+             abs(n.level - $center_level) AS dv
+        RETURN n.uid as id,
+               coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
+               n.layer as layer,
+               n.level as level,
+               n.sublevel_id as sublevel_id,
+               n.is_pinned as is_pinned,
+               n.physical_scale as physical_scale,
+               n.x as x,
+               n.y as y,
+               dl, dv
+        ORDER BY (n.layout_status = 'in_longest_path') DESC, dl ASC, dv ASC
+        SKIP $offset LIMIT $limit
+        """
+        blocks_result, _ = db.cypher_query(
+            nodes_query,
+            {
+                "center_layer": center_layer,
+                "center_level": center_level,
+                "offset": offset,
+                "limit": limit,
+            },
+        )
+
+        if not blocks_result:
+            return {
+                "success": True,
+                "blocks": [],
+                "links": [],
+                "levels": [],
+                "sublevels": [],
+                "page": {"offset": offset, "limit": limit, "returned": 0, "total": total_nodes},
+            }
+
+        blocks: list[dict] = []
+        selected_ids: set[str] = set()
+        for row in blocks_result:
+            block = {
+                "id": str(row[0]),
+                "content": str(row[1] or ""),
+                "layer": int(row[2] or 0),
+                "level": int(row[3] or 0),
+                "sublevel_id": int(row[4] or 0),
+                "is_pinned": bool(row[5]) if row[5] is not None else False,
+                "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
+                "x": float(row[7]) if row[7] is not None else None,
+                "y": float(row[8]) if row[8] is not None else None,
+                "metadata": {},
+            }
+            blocks.append(block)
+            selected_ids.add(block["id"])
+
+        # Связи только внутри выбранного подмножества
+        links_query = """
+        MATCH (s:Node)-[r:CITES]->(t:Node)
+        WHERE s.uid IN $ids AND t.uid IN $ids
+        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
+        """
+        links_result, _ = db.cypher_query(links_query, {"ids": list(selected_ids)})
+        links_for_layout: list[dict] = []
+        for row in links_result:
+            link_id = row[0]
+            links_for_layout.append(
+                {
+                    "id": str(link_id) if link_id is not None else f"{row[1]}-{row[2]}",
+                    "source_id": str(row[1]),
+                    "target_id": str(row[2]),
+                }
+            )
+
+        # Дополнительно: связи внутри longest path, но только если оба узла есть в текущей странице
+        # Это гарантирует, что LP связи будут видны, когда загружены соответствующие узлы
+        lp_links_query = """
+        MATCH (s:Node {layout_status: 'in_longest_path'})-[r:CITES]->(t:Node {layout_status: 'in_longest_path'})
+        WHERE s.uid IN $ids OR t.uid IN $ids
+        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
+        """
+        lp_links_result, _ = db.cypher_query(lp_links_query, {"ids": list(selected_ids)})
+        # Добавляем, избегая дубликатов
+        existing = set(f"{l['source_id']}->{l['target_id']}" for l in links_for_layout)
+        
+        for row in lp_links_result:
+            sid = str(row[1]); tid = str(row[2])
+            key = f"{sid}->{tid}"
+            if key in existing:
+                continue
+            links_for_layout.append({
+                "id": str(row[0]) if row[0] is not None else key,
+                "source_id": sid,
+                "target_id": tid,
+            })
+            existing.add(key)
+
+        # Фильтрация циклов (вперёд по (layer, level))
+        level_index = {b["id"]: (b.get("layer", 0), b.get("level", 0)) for b in blocks}
+        filtered_links = []
+        for l in links_for_layout:
+            s = l["source_id"]; t = l["target_id"]
+            if s in level_index and t in level_index:
+                sl, sv = level_index[s]
+                tl, tv = level_index[t]
+                if (tl > sl) or (tl == sl and tv > sv):
+                    filtered_links.append(l)
+
+        # Возвращаем напрямую без вызова gRPC укладки (уровни/подуровни уже в БД)
+        return {
+            "success": True,
+            "blocks": blocks,
+            "links": filtered_links,
+            "levels": [],
+            "sublevels": [],
+            "page": {
+                "offset": offset,
+                "limit": limit,
+                "returned": len(blocks),
+                "total": total_nodes,
+            },
+        }
+    except Exception as e:
+        logger.error(f"Error in paged articles layout: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/layout/neo4j")
 async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:

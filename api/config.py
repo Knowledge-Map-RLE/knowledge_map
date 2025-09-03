@@ -34,7 +34,12 @@ class Settings(BaseSettings):
         env_file = ".env"
     
     def get_database_url(self) -> str:
-        return f"{self.NEO4J_URI}?user={self.NEO4J_USER}&password={self.NEO4J_PASSWORD}"
+        # neomodel ожидает формат: bolt://user:password@host:port
+        # self.NEO4J_URI может быть вида bolt://host:port
+        uri = self.NEO4J_URI
+        # Отбрасываем схему и собираем host:port
+        hostport = uri.replace("bolt://", "")
+        return f"bolt://{self.NEO4J_USER}:{self.NEO4J_PASSWORD}@{hostport}"
 
 
 settings = Settings()

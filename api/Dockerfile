@@ -27,6 +27,16 @@ RUN poetry install --only=main --no-root && rm -rf $POETRY_CACHE_DIR
 # Копируем исходный код
 COPY . .
 
+# Генерируем proto файлы
+RUN python -m grpc_tools.protoc \
+    -I./proto \
+    --python_out=./generated \
+    --grpc_python_out=./generated \
+    ./proto/layout.proto ./proto/auth.proto
+
+# Создаем __init__.py для generated папки
+RUN echo "" > generated/__init__.py
+
 # Открываем порт
 EXPOSE 8000
 

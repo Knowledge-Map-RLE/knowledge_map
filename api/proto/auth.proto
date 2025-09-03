@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Logout (LogoutRequest) returns (LogoutResponse);
+  rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc SendRecovery (RecoveryRequest) returns (RecoveryResponse);
+  rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc Setup2FA (Setup2FARequest) returns (Setup2FAResponse);
+  rpc Verify2FA (Verify2FARequest) returns (Verify2FAResponse);
+}
+
+message RegisterRequest {
+  string login = 1;
+  string password = 2;
+  string nickname = 3;
+  string captcha = 4;
+}
+
+message RegisterResponse {
+  bool success = 1;
+  string message = 2;
+  User user = 3;
+  repeated string recovery_keys = 4;
+}
+
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+  string captcha = 3;
+  string device_info = 4;
+  string ip_address = 5;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string message = 2;
+  string token = 3;
+  User user = 4;
+  bool requires_2fa = 5;
+}
+
+message LogoutRequest {
+  string token = 1;
+  bool logout_all = 2;
+}
+
+message LogoutResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message VerifyTokenRequest {
+  string token = 1;
+}
+
+message VerifyTokenResponse {
+  bool valid = 1;
+  User user = 2;
+  string message = 3;
+}
+
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message GetUserResponse {
+  bool success = 1;
+  User user = 2;
+  string message = 3;
+}
+
+message RecoveryRequest {
+  string recovery_key = 1;
+  string captcha = 2;
+}
+
+message RecoveryResponse {
+  bool success = 1;
+  string message = 2;
+  string user_id = 3;
+}
+
+message ResetPasswordRequest {
+  string user_id = 1;
+  string new_password = 2;
+}
+
+message ResetPasswordResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Setup2FARequest {
+  string user_id = 1;
+}
+
+message Setup2FAResponse {
+  bool success = 1;
+  string secret = 2;
+  string qr_code = 3;
+  repeated string backup_codes = 4;
+  string message = 5;
+}
+
+message Verify2FARequest {
+  string user_id = 1;
+  string code = 2;
+}
+
+message Verify2FAResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message User {
+  string uid = 1;
+  string login = 2;
+  string nickname = 3;
+  bool is_active = 4;
+  bool is_2fa_enabled = 5;
+  string created_at = 6;
+  string last_login = 7;
+} 
