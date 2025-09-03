@@ -39,6 +39,13 @@ export function useArticlesData() {
       const fallbackY = row * (BLOCK_HEIGHT + 60);
       const title = (b.content ?? b.title ?? b.name ?? id);
       
+      // Нормализуем координаты: если нет или слишком большие, используем компактные из layer/level/sub
+      const compactX = lay * 20.0 + sub * 15.0;
+      const compactY = lvl * 120.0;
+      const needCompact = (v: number | undefined) => (v == null) || !isFinite(v) || Math.abs(v) > 100000;
+      const normalizedX = needCompact(bx) ? compactX : bx as number;
+      const normalizedY = needCompact(by) ? compactY : by as number;
+
       // Логируем координаты для отладки
       if (i < 3) { // Логируем только первые 3 блока
         console.log(`[processServerBlocks] Блок ${i+1}:`, {
@@ -48,10 +55,12 @@ export function useArticlesData() {
           serverY: b.y,
           processedX: bx,
           processedY: by,
+          compactX,
+          compactY,
           fallbackX,
           fallbackY,
-          finalX: (bx !== undefined ? bx : fallbackX),
-          finalY: (by !== undefined ? by : fallbackY)
+          finalX: normalizedX,
+          finalY: normalizedY
         });
       }
       
@@ -59,8 +68,8 @@ export function useArticlesData() {
         id,
         text: String(title),
         content: String(title),
-        x: (bx !== undefined ? bx : fallbackX),
-        y: (by !== undefined ? by : fallbackY),
+        x: normalizedX,
+        y: normalizedY,
         level: lvl,
         physical_scale: typeof b.physical_scale === 'number' ? b.physical_scale : 0,
         sublevel: sub,

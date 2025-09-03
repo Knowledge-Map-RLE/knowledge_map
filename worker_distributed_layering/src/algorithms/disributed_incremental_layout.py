@@ -88,29 +88,53 @@ class DistributedIncrementalLayout:
         start_time = time.time()
         options = options or {}
         
-        logger.info("Starting distributed incremental layout calculation")
+        logger.info("=== STARTING DISTRIBUTED INCREMENTAL LAYOUT ===")
+        logger.info(f"Starting distributed incremental layout calculation")
         
         try:
             # 1. Инициализация и получение статистики
+            logger.info("=== STEP 1: INITIALIZATION ===")
             stats = await self._initialize_layout(node_labels or [], filters)
+            logger.info(f"Initialization completed. Graph stats: {stats}")
             
             # 2. Поиск longest path (единственный полный обход)
+            logger.info("=== STEP 2: FINDING LONGEST PATH ===")
             longest_path = await self._find_longest_path_neo4j()
+            logger.info(f"Longest path found with {len(longest_path)} vertices")
             
             # 3. Размещение longest path
+            logger.info("=== STEP 3: PLACING LONGEST PATH ===")
+            logger.info("Starting longest path placement...")
             await self._place_longest_path(longest_path)
+            logger.info("Longest path placement completed")
+            
+            # 3.5. Размещение соседей longest path по разным уровням
+            logger.info("=== STEP 3.5: PLACING LP NEIGHBORS ===")
+            logger.info("Starting placement of LP neighbors across levels...")
+            try:
+                await self._place_lp_neighbors(longest_path)
+                logger.info("LP neighbors placement completed")
+            except Exception as e:
+                logger.error(f"Error in LP neighbors placement: {str(e)}")
+                import traceback
+                logger.error(f"Traceback: {traceback.format_exc()}")
             
             # 4. Поиск и размещение компонентов связности
+            logger.info("=== STEP 4: PLACING CONNECTED COMPONENTS ===")
             components = await self._find_connected_components()
+            logger.info(f"Found {len(components)} connected components")
             for i, component in enumerate(components):
                 start_layer = i % 10  # Распределяем по слоям
                 start_level = (i // 10) % 5  # Распределяем по уровням
+                logger.info(f"Placing component {i+1}/{len(components)} with {len(component)} vertices at layer {start_layer}, level {start_level}")
                 await self._place_connected_component(component, start_layer, start_level)
             
             # 5. Инкрементальное размещение остальных вершин
+            logger.info("=== STEP 5: INCREMENTAL PLACEMENT ===")
             result = await self._incremental_placement_iterations()
             
             # 5. Финальная обработка закреплённых блоков
+            logger.info("=== STEP 6: PROCESSING PINNED BLOCKS ===")
             await self._process_pinned_blocks()
             
             processing_time = time.time() - start_time
@@ -130,10 +154,14 @@ class DistributedIncrementalLayout:
                 f"db_ops: {self.db_operations}"
             )
             
+            logger.info("=== LAYOUT COMPLETED SUCCESSFULLY ===")
             return result
             
         except Exception as e:
+            logger.error(f"=== LAYOUT FAILED ===")
             logger.error(f"Incremental layout failed: {str(e)}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return {
                 "success": False,
                 "error": str(e),
@@ -294,33 +322,39 @@ class DistributedIncrementalLayout:
 
     async def _place_longest_path(self, longest_path: List[str]):
         """
-        Размещает longest path в укладке
+        Размещает longest path в укладке с распределением по уровням
         """
-        logger.info("Placing longest path")
-        # Для каждого узла LP выбираем следующий свободный sublevel_id на (layer=lp.layer, level=0)
-        placement_query = """
-        MATCH (lp:LongestPath)
-        WITH lp
-        ORDER BY lp.layer
-        CALL {
-          WITH lp
-          MATCH (n:Node {uid: lp.id})
-          OPTIONAL MATCH (m:Node {layer: lp.layer, level: 0})
-          WITH n, lp, coalesce(max(m.sublevel_id), -1) AS maxSub
-          SET n.layout_status = 'in_longest_path',
-              n.layer = lp.layer,
-              n.level = 0,
-              n.sublevel_id = maxSub + 1,
-              n.x = lp.layer * 20.0 + (maxSub + 1) * 15.0,
-              n.y = 0.0
-          RETURN 1 AS ok
-        }
-        RETURN count(ok)
-        """
+        logger.info("Placing longest path with level distribution")
+        
+        # Размещаем узлы LP на базовом уровне 0 (остальные вершины будут распределяться относительно них)
+        for i, vertex_id in enumerate(longest_path):
+            level = 0
+            
+            placement_query = """
+            MATCH (n:Node {uid: $vertex_id})
+            OPTIONAL MATCH (m:Node {layer: $layer, level: $level})
+            WITH n, coalesce(max(m.sublevel_id), -1) AS maxSub
+            SET n.layout_status = 'in_longest_path',
+                n.layer = $layer,
+                n.level = $level,
+                n.sublevel_id = maxSub + 1,
+                n.x = $layer * 20.0 + (maxSub + 1) * 15.0,
+                n.y = $level * 120.0
+            RETURN 1 AS ok
+            """
+            
+            async with self.circuit_breaker:
+                await neo4j_client.execute_query_with_retry(
+                    placement_query, 
+                    {
+                        "vertex_id": vertex_id,
+                        "layer": i,
+                        "level": level
+                    }
+                )
+                self.db_operations += 1
 
-        async with self.circuit_breaker:
-            await neo4j_client.execute_query_with_retry(placement_query)
-            self.db_operations += 1
+        # Удалён лишний вызов без параметров, из-за которого Neo4j требовал vertex_id/layer/level
             
         # Обновляем кэш позиций
         # Считываем фактически выставленные позиции LP из БД, чтобы кэш совпадал
@@ -343,6 +377,87 @@ class DistributedIncrementalLayout:
                 y=row["y"],
                 status=VertexStatus.IN_LONGEST_PATH
             )
+        
+        # После размещения LP размещаем его предков и потомков
+        await self._place_lp_neighbors(longest_path)
+
+    async def _place_lp_neighbors(self, longest_path: List[str]):
+        """
+        Размещает предков и потомков вершин LP рядом с ними
+        """
+        logger.info("Placing LP neighbors (predecessors and successors)")
+        
+        # Получаем всех предков и потомков LP вершин
+        neighbors_query = """
+        MATCH (lp:Node)
+        WHERE lp.layout_status = 'in_longest_path'
+        OPTIONAL MATCH (pred:Node)-[:CITES]->(lp)
+        OPTIONAL MATCH (lp)-[:CITES]->(succ:Node)
+        RETURN DISTINCT 
+            lp.uid as lp_uid,
+            lp.layer as lp_layer,
+            lp.level as lp_level,
+            collect(DISTINCT pred.uid) as predecessors,
+            collect(DISTINCT succ.uid) as successors
+        """
+        
+        async with self.circuit_breaker:
+            lp_neighbors = await neo4j_client.execute_query_with_retry(neighbors_query)
+            self.db_operations += 1
+        
+        logger.info(f"Found {len(lp_neighbors)} LP vertices with neighbors")
+        
+        # Собираем все вершины для топологической сортировки
+        all_vertices = set()
+        vertex_dependencies = {}  # vertex_id -> set of dependencies
+        
+        for row in lp_neighbors:
+            lp_uid = row["lp_uid"]
+            predecessors = row["predecessors"] or []
+            successors = row["successors"] or []
+            
+            logger.info(f"LP vertex {lp_uid}: {len(predecessors)} predecessors, {len(successors)} successors")
+            
+            all_vertices.add(lp_uid)
+            all_vertices.update(predecessors)
+            all_vertices.update(successors)
+            
+            # Строим граф зависимостей
+            for pred in predecessors:
+                if pred not in vertex_dependencies:
+                    vertex_dependencies[pred] = set()
+                vertex_dependencies[pred].add(lp_uid)
+            
+            for succ in successors:
+                if lp_uid not in vertex_dependencies:
+                    vertex_dependencies[lp_uid] = set()
+                vertex_dependencies[lp_uid].add(succ)
+        
+        logger.info(f"Total vertices to place: {len(all_vertices)}")
+        logger.info(f"Vertices with dependencies: {len(vertex_dependencies)}")
+        
+        # Топологическая сортировка
+        sorted_vertices = self._topological_sort(all_vertices, vertex_dependencies)
+        logger.info(f"Topologically sorted {len(sorted_vertices)} vertices for placement")
+        
+        # Размещаем вершины в топологическом порядке
+        placed_count = 0
+        for vertex_id in sorted_vertices:
+            if vertex_id in longest_path:
+                continue  # LP вершины уже размещены
+            
+            # Находим позицию LP вершины, к которой привязана данная вершина
+            lp_position = await self._find_lp_position_for_vertex(vertex_id)
+            if lp_position:
+                lp_layer, lp_level = lp_position
+                # Определяем тип связи
+                neighbor_type = await self._get_vertex_relation_to_lp(vertex_id, lp_position)
+                await self._place_lp_neighbor(vertex_id, lp_layer, lp_level, neighbor_type)
+                placed_count += 1
+            else:
+                logger.warning(f"Could not find LP position for vertex {vertex_id}")
+        
+        logger.info(f"Successfully placed {placed_count} LP neighbors")
 
     async def _incremental_placement_iterations(self) -> Dict[str, Any]:
         """
@@ -470,9 +585,9 @@ class DistributedIncrementalLayout:
         # Получаем позиции соседей
         neighbor_positions = await self._get_neighbor_positions(neighbors)
 
-        # Вычисляем оптимальные layer и level
+        # Вычисляем оптимальные layer и level (на основе уже размещённых соседей)
         target_layer = self._calculate_optimal_layer(neighbor_positions)
-        target_level = self._calculate_optimal_level(neighbors)
+        target_level = self._calculate_optimal_level(neighbor_positions)
 
         # Находим ближайшую свободную позицию около (layer, level)
         # Приоритет: сначала пробуем оптимальный уровень, потом ищем свободные
@@ -572,43 +687,76 @@ class DistributedIncrementalLayout:
 
     def _calculate_optimal_level(
         self,
-        neighbor_positions: Dict[str, List[str]]
+        neighbor_positions: Dict[str, List[VertexPosition]]
     ) -> int:
-        """Оптимальный level: разнообразие по уровням для избежания наложений."""
-        # Для простоты возвращаем случайный уровень, так как у нас нет позиций
-        import random
-        return random.randint(0, 5)  # 0-5 уровней для разнообразия
+        """Оптимальный level: без верхнего предела, ближе к потомкам и не накладываясь на предшественников.
+
+        Правило:
+        - Если есть потомки: целевой уровень = min(level потомков) - 1 (чтобы быть над ними)
+        - Иначе если есть предшественники: целевой уровень = max(level предшественников) + 1
+        - Иначе: 0
+        """
+        successors = neighbor_positions.get("successors", [])
+        predecessors = neighbor_positions.get("predecessors", [])
+
+        if successors:
+            # Стараемся быть как можно ближе к ближайшему потомку сверху
+            min_succ_level = min(pos.level for pos in successors)
+            return max(0, min_succ_level - 1)
+
+        if predecessors:
+            max_pred_level = max(pos.level for pos in predecessors)
+            return max_pred_level + 1
+
+        return 0
 
     async def _find_free_position_near(self, target_layer: int, target_level: int) -> Optional[Tuple[int, int, int]]:
         """
         Находит ближайшую свободную позицию около (target_layer, target_level).
-        Сначала проверяем точное совпадение, затем расширяем поиск по уровням и слоям.
+        Новая логика: размещаем предков и потомков LP вершин рядом с ними.
         Возвращает (layer, level, sublevel_id).
         """
-        # 1) Пробуем точное место
+        # 1) Пробуем точное место (тот же уровень, тот же слой)
         sublevel = await self._next_sublevel_at(target_layer, target_level)
         if sublevel is not None:
             return (target_layer, target_level, sublevel)
 
-        # 2) Ищем ближние уровни в этом же слое (приоритет разнообразия)
-        for d_level in range(1, 15):  # Увеличиваем диапазон поиска для большего разнообразия
+        # 2) Ищем свободные места на том же уровне, но в соседних слоях (как отростки от LP)
+        # Сначала пробуем предыдущий слой (левее)
+        if target_layer > 0:
+            prev_layer = target_layer - 1
+            sub = await self._next_sublevel_at(prev_layer, target_level)
+            if sub is not None:
+                return (prev_layer, target_level, sub)
+        
+        # Потом следующий слой (правее)
+        next_layer = target_layer + 1
+        sub = await self._next_sublevel_at(next_layer, target_level)
+        if sub is not None:
+            return (next_layer, target_level, sub)
+
+        # 3) Если на том же уровне не помещается, ищем на соседних уровнях
+        # Приоритет: выбираем ближайший по модулю уровень
+        for d_level in range(1, 10):  # Ограничиваем поиск для производительности
             for sign in (-1, 1):
                 lvl = target_level + sign * d_level
-                if lvl < 0:
-                    continue
+                # Разрешаем отрицательные уровни
+                
+                # Пробуем тот же слой
                 sub = await self._next_sublevel_at(target_layer, lvl)
                 if sub is not None:
                     return (target_layer, lvl, sub)
-
-        # 3) Ищем соседние слои на том же уровне
-        for d_layer in range(1, 6):
-            for sign in (-1, 1):
-                lyr = target_layer + sign * d_layer
-                if lyr < 0:
-                    continue
-                sub = await self._next_sublevel_at(lyr, target_level)
+                
+                # Пробуем предыдущий слой
+                if target_layer > 0:
+                    sub = await self._next_sublevel_at(target_layer - 1, lvl)
+                    if sub is not None:
+                        return (target_layer - 1, lvl, sub)
+                
+                # Пробуем следующий слой
+                sub = await self._next_sublevel_at(target_layer + 1, lvl)
                 if sub is not None:
-                    return (lyr, target_level, sub)
+                    return (target_layer + 1, lvl, sub)
 
         # 4) В крайнем случае — создаём новый уровень выше существующих
         # Находим максимальный уровень в этом слое
@@ -688,7 +836,7 @@ class DistributedIncrementalLayout:
             if free_pos:
                 layer, level, sublevel = free_pos
                 x = layer * 20.0 + sublevel * 15.0
-                y = level * 40.0  # Уменьшаем разницу по y
+                y = level * 120.0  # Учитываем высоту блока 80 и зазор ~40
                 placements.append({
                     "vertex_id": vertex_id,
                     "layer": layer,
@@ -726,31 +874,32 @@ class DistributedIncrementalLayout:
                 if result and result[0] and result[0].get("max_sub") is not None:
                     max_map[key] = int(result[0]["max_sub"])
             
-            # Присваиваем уникальные sublevel_id внутри партии
+            # Готовим элементы с порядком внутри уровня; сам sublevel_id вычислим в Cypher атомарно
             assigned_items = []
             for key, items in grouped.items():
-                base = max_map[key] + 1
                 # Сортируем элементы по приоритету для детерминированности
                 sorted_items = sorted(items, key=lambda x: x["vertex_id"])
                 for idx, item in enumerate(sorted_items):
-                    sub = base + idx
                     assigned_items.append({
                         "vertex_id": item["vertex_id"],
                         "layer": item["layer"],
                         "level": item["level"],
-                        "sublevel_id": sub,
-                        "x": item["layer"] * 20.0 + sub * 15.0,
-                        "y": item["level"] * 40.0,
+                        "order": idx,
+                        "x": item["layer"] * 20.0 + (idx) * 15.0,
+                        "y": item["level"] * 120.0,
                     })
             
             # Обновляем узлы в базе
             update_query = """
             UNWIND $batch AS item
             MATCH (n:Node {uid: item.vertex_id})
+            // Атомарно вычисляем базовый sublevel и добавляем порядковый индекс
+            OPTIONAL MATCH (m:Node {layer: item.layer, level: item.level})
+            WITH n, item, coalesce(max(m.sublevel_id), -1) AS base
             SET n.layout_status = 'placed',
                 n.layer = item.layer,
                 n.level = item.level,
-                n.sublevel_id = item.sublevel_id,
+                n.sublevel_id = base + item.order + 1,
                 n.x = item.x,
                 n.y = item.y
             """
@@ -760,18 +909,32 @@ class DistributedIncrementalLayout:
             if self.db_operations is None:
                 self.db_operations = 0
             self.db_operations += 1
-            
-            # Обновляем кэш
-            for item in assigned_items:
-                self.vertex_positions_cache[item["vertex_id"]] = VertexPosition(
-                    vertex_id=item["vertex_id"],
-                    layer=item["layer"],
-                    level=item["level"],
-                    sublevel_id=item["sublevel_id"],
-                    x=item["x"],
-                    y=item["y"],
-                    status=VertexStatus.PLACED
-                )
+
+        # Перечитываем обновлённые узлы из БД, чтобы получить фактический sublevel_id/x/y
+        read_updated_query = """
+        UNWIND $uids AS uid
+        MATCH (n:Node {uid: uid})
+        RETURN n.uid as vertex_id, n.layer as layer, n.level as level,
+               n.sublevel_id as sublevel_id, n.x as x, n.y as y
+        """
+        uids = [item["vertex_id"] for item in assigned_items]
+        async with self.circuit_breaker:
+            rows = await neo4j_client.execute_query_with_retry(read_updated_query, {"uids": uids})
+            if self.db_operations is None:
+                self.db_operations = 0
+            self.db_operations += 1
+
+        # Обновляем кэш из БД
+        for row in rows:
+            self.vertex_positions_cache[row["vertex_id"]] = VertexPosition(
+                vertex_id=row["vertex_id"],
+                layer=row["layer"],
+                level=row["level"],
+                sublevel_id=row["sublevel_id"],
+                x=row["x"],
+                y=row["y"],
+                status=VertexStatus.PLACED
+            )
             
             logger.info(f"Placed {len(assigned_items)} nodes from component")
 
@@ -785,10 +948,9 @@ class DistributedIncrementalLayout:
         components_query = """
         MATCH (n:Node)
         WHERE n.layout_status = 'unprocessed'
-        WITH n LIMIT 1000
         CALL {
             WITH n
-            MATCH path = (n)-[:CITES*1..5]-(connected:Node)
+            MATCH path = (n)-[:CITES*1..6]-(connected:Node)
             WHERE connected.layout_status = 'unprocessed'
             WITH collect(DISTINCT connected.uid) as connected_uids, n
             RETURN connected_uids + [n.uid] as component
@@ -831,13 +993,12 @@ class DistributedIncrementalLayout:
         placements = []
         for vertex_id in vertices:
             neighbors = await self._get_vertex_neighbors(vertex_id)
-            target_layer, target_level = self._calculate_optimal_level(neighbors), 0
             free_position = await self._find_nearest_position_for_vertex(vertex_id, neighbors)
             
             if free_position:
                 layer, level, sublevel = free_position
                 x = layer * 20.0 + sublevel * 15.0  # Уменьшаем расстояния
-                y = level * 40.0  # Уменьшаем разницу по y
+                y = level * 120.0  # Учитываем высоту блока 80 и зазор ~40
                 placements.append({
                     "vertex_id": vertex_id,
                     "layer": layer,
@@ -879,31 +1040,31 @@ class DistributedIncrementalLayout:
             else:
                 max_map[key] = 0
         
-        # Присваиваем уникальные sublevel_id внутри партии
+        # Готовим элементы с порядком внутри уровня; сам sublevel_id вычислим в Cypher атомарно
         assigned_items = []
         for key, items in grouped.items():
-            base = max_map[key] + 1
             # Сортируем элементы по приоритету (например, по vertex_id для детерминированности)
             sorted_items = sorted(items, key=lambda x: x["vertex_id"])
             for idx, item in enumerate(sorted_items):
-                sub = base + idx
                 assigned_items.append({
                     "vertex_id": item["vertex_id"],
                     "layer": item["layer"],
                     "level": item["level"],
-                    "sublevel_id": sub,
-                    "x": item["layer"] * 20.0 + sub * 15.0,  # Уменьшаем расстояния
-                    "y": item["level"] * 40.0,  # Уменьшаем разницу по y
+                    "order": idx,
+                    "x": item["layer"] * 20.0 + (idx) * 15.0,
+                    "y": item["level"] * 120.0,
                 })
         
         # Обновляем узлы в базе
         update_query = """
         UNWIND $batch AS item
         MATCH (n:Node {uid: item.vertex_id})
+        OPTIONAL MATCH (m:Node {layer: item.layer, level: item.level})
+        WITH n, item, coalesce(max(m.sublevel_id), -1) AS base
         SET n.layout_status = 'placed',
             n.layer = item.layer,
             n.level = item.level,
-            n.sublevel_id = item.sublevel_id,
+            n.sublevel_id = base + item.order + 1,
             n.x = item.x,
             n.y = item.y
         """
@@ -913,16 +1074,30 @@ class DistributedIncrementalLayout:
             if self.db_operations is None:
                 self.db_operations = 0
             self.db_operations += 1
-        
+
+        # Перечитываем обновлённые узлы из БД
+        read_updated_query = """
+        UNWIND $uids AS uid
+        MATCH (n:Node {uid: uid})
+        RETURN n.uid as vertex_id, n.layer as layer, n.level as level,
+               n.sublevel_id as sublevel_id, n.x as x, n.y as y
+        """
+        uids = [item["vertex_id"] for item in assigned_items]
+        async with self.circuit_breaker:
+            rows = await neo4j_client.execute_query_with_retry(read_updated_query, {"uids": uids})
+            if self.db_operations is None:
+                self.db_operations = 0
+            self.db_operations += 1
+
         # Обновляем кэш
-        for item in assigned_items:
-            self.vertex_positions_cache[item["vertex_id"]] = VertexPosition(
-                vertex_id=item["vertex_id"],
-                layer=item["layer"],
-                level=item["level"],
-                sublevel_id=item["sublevel_id"],
-                x=item["x"],
-                y=item["y"],
+        for row in rows:
+            self.vertex_positions_cache[row["vertex_id"]] = VertexPosition(
+                vertex_id=row["vertex_id"],
+                layer=row["layer"],
+                level=row["level"],
+                sublevel_id=row["sublevel_id"],
+                x=row["x"],
+                y=row["y"],
                 status=VertexStatus.PLACED
             )
         
@@ -1012,7 +1187,7 @@ class DistributedIncrementalLayout:
         SET n.layout_status = 'pinned',
             n.level = $target_level,
             n.sublevel_id = $sublevel_id,
-            n.y = $target_level * 40.0
+            n.y = $target_level * 120.0  # Учитываем высоту блока 80 и зазор ~40
         """
         
         async with self.circuit_breaker:
@@ -1103,6 +1278,146 @@ class DistributedIncrementalLayout:
             "levels": dict(levels),
             "statistics": statistics
         }
+
+    def _topological_sort(self, vertices: Set[str], dependencies: Dict[str, Set[str]]) -> List[str]:
+        """
+        Топологическая сортировка вершин по зависимостям
+        """
+        # Считаем входящие рёбра для каждой вершины
+        in_degree = {vertex: 0 for vertex in vertices}
+        for vertex in vertices:
+            if vertex in dependencies:
+                for dep in dependencies[vertex]:
+                    if dep in in_degree:
+                        in_degree[dep] += 1
+        
+        # Начинаем с вершин без входящих рёбер
+        queue = [vertex for vertex, degree in in_degree.items() if degree == 0]
+        result = []
+        
+        while queue:
+            current = queue.pop(0)
+            result.append(current)
+            
+            # Уменьшаем входящие рёбра для зависимых вершин
+            if current in dependencies:
+                for dep in dependencies[current]:
+                    in_degree[dep] -= 1
+                    if in_degree[dep] == 0:
+                        queue.append(dep)
+        
+        # Проверяем на циклы
+        if len(result) != len(vertices):
+            logger.warning(f"Cycle detected in graph, {len(vertices) - len(result)} vertices not sorted")
+            # Добавляем оставшиеся вершины в конец
+            remaining = [v for v in vertices if v not in result]
+            result.extend(remaining)
+        
+        return result
+
+    async def _find_lp_position_for_vertex(self, vertex_id: str) -> Optional[Tuple[int, int]]:
+        """
+        Находит позицию LP вершины, к которой привязана данная вершина
+        """
+        query = """
+        MATCH (n:Node {uid: $vertex_id})
+        OPTIONAL MATCH (n)-[:CITES]->(lp:Node)
+        WHERE lp.layout_status = 'in_longest_path'
+        OPTIONAL MATCH (lp2:Node)-[:CITES]->(n)
+        WHERE lp2.layout_status = 'in_longest_path'
+        RETURN 
+            CASE WHEN lp IS NOT NULL THEN lp.layer ELSE lp2.layer END as lp_layer,
+            CASE WHEN lp IS NOT NULL THEN lp.level ELSE lp2.level END as lp_level
+        LIMIT 1
+        """
+        
+        async with self.circuit_breaker:
+            result = await neo4j_client.execute_query_with_retry(query, {"vertex_id": vertex_id})
+            self.db_operations += 1
+        
+        if result and result[0] and result[0]["lp_layer"] is not None:
+            return (result[0]["lp_layer"], result[0]["lp_level"])
+        return None
+
+    async def _get_vertex_relation_to_lp(self, vertex_id: str, lp_position: Tuple[int, int]) -> str:
+        """
+        Определяет тип связи вершины с LP (predecessor или successor)
+        """
+        lp_layer, lp_level = lp_position
+        
+        query = """
+        MATCH (n:Node {uid: $vertex_id})
+        OPTIONAL MATCH (n)-[:CITES]->(lp:Node {layer: $lp_layer, level: $lp_level})
+        WHERE lp.layout_status = 'in_longest_path'
+        RETURN CASE WHEN lp IS NOT NULL THEN 'successor' ELSE 'predecessor' END as relation
+        """
+        
+        async with self.circuit_breaker:
+            result = await neo4j_client.execute_query_with_retry(query, {
+                "vertex_id": vertex_id,
+                "lp_layer": lp_layer,
+                "lp_level": lp_level
+            })
+            self.db_operations += 1
+        
+        if result and result[0]:
+            return result[0]["relation"]
+        return "predecessor"  # По умолчанию
+
+    async def _place_lp_neighbor(self, vertex_id: str, lp_layer: int, lp_level: int, neighbor_type: str):
+        """
+        Размещает одного соседа LP вершины рядом с ней
+        """
+        # Определяем позицию для соседа
+        if neighbor_type == "predecessor":
+            # Размещаем перед LP вершиной
+            free_position = await self._find_free_position_near(lp_layer, lp_level)
+            if free_position:
+                layer, level, sublevel = free_position
+                x = layer * 20.0 + sublevel * 15.0
+                y = level * 120.0  # Учитываем высоту блока 80 и зазор ~40
+                await self._place_neighbor(vertex_id, layer, level, sublevel, x, y, neighbor_type)
+        elif neighbor_type == "successor":
+            # Размещаем после LP вершины
+            free_position = await self._find_free_position_near(lp_layer, lp_level)
+            if free_position:
+                layer, level, sublevel = free_position
+                x = lp_layer * 20.0 + (sublevel + 1) * 15.0 # Размещаем после LP вершины
+                y = level * 120.0  # Учитываем высоту блока 80 и зазор ~40
+                await self._place_neighbor(vertex_id, layer, level, sublevel, x, y, neighbor_type)
+
+    async def _place_neighbor(self, vertex_id: str, layer: int, level: int, sublevel_id: int, x: float, y: float, neighbor_type: str):
+        """
+        Размещает одного соседа вершины рядом с ней
+        """
+        placement_query = """
+        MATCH (n:Node {uid: $vertex_id})
+        OPTIONAL MATCH (m:Node {layer: $layer, level: $level})
+        WITH n, coalesce(max(m.sublevel_id), -1) AS maxSub
+        SET n.layout_status = 'placed',
+            n.layer = $layer,
+            n.level = $level,
+            n.sublevel_id = $sublevel_id,
+            n.x = $x,
+            n.y = $y
+        RETURN 1 AS ok
+        """
+        
+        async with self.circuit_breaker:
+            await neo4j_client.execute_query_with_retry(
+                placement_query, 
+                {
+                    "vertex_id": vertex_id,
+                    "layer": layer,
+                    "level": level,
+                    "sublevel_id": sublevel_id,
+                    "x": x,
+                    "y": y
+                }
+            )
+            if self.db_operations is None:
+                self.db_operations = 0
+            self.db_operations += 1
 
 
 # Глобальный экземпляр алгоритма

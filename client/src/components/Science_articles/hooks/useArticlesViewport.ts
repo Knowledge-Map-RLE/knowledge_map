@@ -27,7 +27,16 @@ export function useArticlesViewport(
     let timer: any;
     const schedule = () => {
       clearTimeout(timer);
-      timer = setTimeout(() => loadNextPage(), 250);
+      timer = setTimeout(() => {
+        // Загружаем вокруг видимого центра
+        const center = viewportRef.current?.getWorldCenter?.();
+        if (center) {
+          // @ts-ignore — расширенная сигнатура loadNextPage не используется здесь
+          (loadNextPage as any)?.(center.x, center.y);
+        } else {
+          loadNextPage();
+        }
+      }, 250);
     };
     
     // Слушаем события viewport

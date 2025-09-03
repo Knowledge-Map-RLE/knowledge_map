@@ -21,6 +21,9 @@ export interface ViewportRef {
   position: { x: number; y: number };
   containerRef: Container | null;
   setBlockRightClickTime: (time: number) => void;
+  getWorldCenter: () => { x: number; y: number } | null;
+  on?: (event: 'moved' | 'zoomed', handler: () => void) => void;
+  off?: (event: 'moved' | 'zoomed', handler: () => void) => void;
 }
 
 // TODO: исправить центрирование
@@ -28,6 +31,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   const containerRef = useRef<Container | null>(null);
   const gridRef = useRef<Graphics | null>(null);
   const tweensRef = useRef<gsap.core.Tween[]>([]);
+  const listenersRef = useRef<Record<'moved' | 'zoomed', Set<() => void>>>({ moved: new Set(), zoomed: new Set() });
   const { app } = useApplication();
   const lastBlockRightClickTime = useRef<number>(0);
   
@@ -35,6 +39,13 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   const dragWorld = useRef<Point | null>(null);
   const [centerX, setCenterX] = useState(400);
   const [centerY, setCenterY] = useState(300);
+
+  const emit = useCallback((event: 'moved' | 'zoomed') => {
+    const set = listenersRef.current[event];
+    set.forEach(fn => {
+      try { fn(); } catch {}
+    });
+  }, []);
 
   // DOM перетаскивание как запасной вариант
   useEffect(() => {
@@ -108,6 +119,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         const screenPos = cnt.toGlobal(dragWorld.current);
         cnt.position.x += sx - screenPos.x;
         cnt.position.y += sy - screenPos.y;
+        emit('moved');
       };
 
       const onPointerUp = (e: PointerEvent) => {
@@ -116,6 +128,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
           setIsDragging(false);
           dragWorld.current = null;
           console.log('DOM: Stopped dragging');
+          emit('moved');
         }
       };
       
@@ -171,6 +184,8 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         cnt.scale.set(newScale);
         cnt.position.x -= worldPoint.x * (newScale - oldScale);
         cnt.position.y -= worldPoint.y * (newScale - oldScale);
+        emit('zoomed');
+        emit('moved');
       };
       
       canvas.addEventListener('wheel', onWheel, { passive: false });
@@ -344,6 +359,23 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     containerRef: containerRef.current,
     setBlockRightClickTime: (time: number) => {
       lastBlockRightClickTime.current = time;
+    },
+    getWorldCenter: () => {
+      if (!app || !containerRef.current) return null;
+      let screen;
+      try { screen = app.screen; } catch { return null; }
+      if (!screen) return null;
+      const cnt = containerRef.current;
+      const centerScreenX = screen.width / 2;
+      const centerScreenY = screen.height / 2;
+      const world = cnt.toLocal({ x: centerScreenX, y: centerScreenY } as any);
+      return { x: world.x, y: world.y };
+    },
+    on: (event: 'moved' | 'zoomed', handler: () => void) => {
+      listenersRef.current[event].add(handler);
+    },
+    off: (event: 'moved' | 'zoomed', handler: () => void) => {
+      listenersRef.current[event].delete(handler);
     },
   }));
 

@@ -452,16 +452,33 @@ async def get_articles_layout_page(
         blocks: list[dict] = []
         selected_ids: set[str] = set()
         for row in blocks_result:
+            layer_val = int(row[2] or 0)
+            level_val = int(row[3] or 0)
+            sub_val = int(row[4] or 0)
+            x_raw = float(row[7]) if row[7] is not None else None
+            y_raw = float(row[8]) if row[8] is not None else None
+
+            # Компактные координаты по новой схеме
+            compact_x = layer_val * 20.0 + sub_val * 15.0
+            compact_y = level_val * 120.0
+
+            # Если координаты отсутствуют или слишком большие/аномальные — используем компактные
+            def need_compact(v: float | None) -> bool:
+                return (v is None) or (abs(v) > 100000.0) or (v != v)
+
+            final_x = compact_x if need_compact(x_raw) else x_raw
+            final_y = compact_y if need_compact(y_raw) else y_raw
+
             block = {
                 "id": str(row[0]),
                 "content": str(row[1] or ""),
-                "layer": int(row[2] or 0),
-                "level": int(row[3] or 0),
-                "sublevel_id": int(row[4] or 0),
+                "layer": layer_val,
+                "level": level_val,
+                "sublevel_id": sub_val,
                 "is_pinned": bool(row[5]) if row[5] is not None else False,
                 "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
-                "x": float(row[7]) if row[7] is not None else None,
-                "y": float(row[8]) if row[8] is not None else None,
+                "x": float(final_x),
+                "y": float(final_y),
                 "metadata": {},
             }
             blocks.append(block)

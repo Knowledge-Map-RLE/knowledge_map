@@ -24,25 +24,36 @@ export function useArticlesDataLoader() {
     loadedLinkIdsRef
   } = useArticlesData();
 
-  const loadNextPage = useCallback(async () => {
+  const loadNextPage = useCallback(async (centerX?: number, centerY?: number) => {
     if (isLoading) {
       console.log(`[ArticlesPage] Skipping loadNextPage - already loading`);
       return;
     }
     
-    // Простая проверка - если уже загружены блоки и это первая страница, пропускаем
-    if (blocks.length > 0 && pageOffset === 0) {
-      console.log(`[ArticlesPage] Skipping loadNextPage - blocks already exist (${blocks.length} blocks)`);
-      return;
+    // Простая проверка только для первой постраничной загрузки
+    if (centerX == null && centerY == null) {
+      if (blocks.length > 0 && pageOffset === 0) {
+        console.log(`[ArticlesPage] Skipping loadNextPage - blocks already exist (${blocks.length} blocks)`);
+        return;
+      }
     }
     
     setIsLoading(true);
     setLoadError(null);
     
     try {
-      console.log(`[ArticlesPage] Loading page ${pageOffset + 1} with limit ${pageLimit}`);
+      let url: string;
+      if (centerX != null && centerY != null) {
+        const center_level = Math.max(0, Math.round(centerY / 120));
+        const center_layer = Math.max(0, Math.round(centerX / 20));
+        url = `http://localhost:8000/layout/articles_page?offset=0&limit=${pageLimit}&center_layer=${center_layer}&center_level=${center_level}`;
+        console.log(`[ArticlesPage] Loading around center=(${center_layer},${center_level}) limit ${pageLimit}`);
+      } else {
+        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}`;
+        console.log(`[ArticlesPage] Loading page ${pageOffset + 1} with limit ${pageLimit}`);
+      }
       
-      const response = await fetch(`http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}`);
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -73,8 +84,10 @@ export function useArticlesDataLoader() {
           setIsBootLoading(false);
         }
         
-        // Переходим к следующей странице
-        setPageOffset(prev => prev + pageLimit);
+        // Переходим к следующей странице только для постраничной загрузки
+        if (centerX == null && centerY == null) {
+          setPageOffset(prev => prev + pageLimit);
+        }
         
       } else {
         throw new Error((data && data.error) || 'Failed to load articles page');
@@ -87,6 +100,32 @@ export function useArticlesDataLoader() {
       setIsLoading(false);
     }
   }, [isLoading, pageOffset, blocks.length, pageLimit, isBootLoading, loadedBlockIdsRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, setIsBootLoading, setPageOffset]);
+
+  const loadAround = useCallback(async (centerX: number, centerY: number) => {
+    if (isLoading) return;
+    setIsLoading(true);
+    setLoadError(null);
+    try {
+      // Преобразуем world Y в уровень, шаг 120 соответствует серверу
+      const center_level = Math.max(0, Math.round(centerY / 120));
+      const center_layer = Math.max(0, Math.round(centerX / 20));
+      console.log(`[ArticlesPage] loadAround center=(${center_layer},${center_level})`);
+      const response = await fetch(`http://localhost:8000/layout/articles_page?offset=0&limit=${pageLimit}&center_layer=${center_layer}&center_level=${center_level}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (data && data.success) {
+        const processedBlocks = processServerBlocks(data.blocks || []);
+        const processedLinks = processServerLinks(data.links || []);
+        updateBlocks(processedBlocks);
+        updateLinks(processedLinks);
+      }
+    } catch (e: any) {
+      console.error('loadAround error', e);
+      setLoadError(e?.message || 'Unknown error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoading, pageLimit, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError]);
 
   return {
     blocks,
