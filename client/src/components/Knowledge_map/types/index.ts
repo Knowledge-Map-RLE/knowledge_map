@@ -1,46 +1,28 @@
 export interface BlockData {
   id: string;
-  text: string;
-  content?: string;
-  x?: number;
-  y?: number;
-  level: number;
-  physical_scale?: number; // степень 10 в метрах для физического масштаба уровня
-  sublevel: number;
+  title: string;
+  x: number;
+  y: number;
   layer: number;
-  isHovered?: boolean;
-  hoveredArrow?: 'left' | 'right' | null;
+  level: number;
   is_pinned?: boolean;
 }
 
 export interface LinkData {
   id: string;
-  source_id: string;
-  target_id: string;
+  source: string;
+  target: string;
+  source_block?: BlockData;
+  target_block?: BlockData;
 }
 
 export interface LevelData {
   id: number;
-  sublevel_ids: number[];
-  min_x?: number;
-  max_x?: number;
-  min_y?: number;
-  max_y?: number;
-  color?: string | number;
-  name?: string;
-}
-
-export interface SublevelData {
-  id: number;
-  level_id: number;
-  block_ids: string[];
-  min_x?: number;
-  max_x?: number;
-  min_y?: number;
-  max_y?: number;
-  /** Hex color string (e.g. "#D3D3D3") or number (e.g. 0xD3D3D3) */
-  color?: string | number;
-  level?: number; // для обратной совместимости
+  min_x: number;
+  max_x: number;
+  min_y: number;
+  max_y: number;
+  color: string;
 }
 
 export const EditMode = {

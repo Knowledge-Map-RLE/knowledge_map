@@ -158,7 +158,7 @@ class DistributedLayoutWorkerManager:
                 stats = await neo4j_client.get_graph_statistics()
                 health_status["components"]["neo4j"] = {
                     "status": "healthy",
-                    "node_count": stats.get("node_count", 0),
+                    "article_count": stats.get("article_count", 0),
                     "edge_count": stats.get("edge_count", 0),
                 }
             except Exception as e:

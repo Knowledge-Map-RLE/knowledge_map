@@ -9,3 +9,8 @@ declare module '@pixi/react' {
     container: PixiReactElementProps<typeof Container>;
   }
 }
+
+declare module '*.module.css' {
+  const classes: { [key: string]: string };
+  export default classes;
+}

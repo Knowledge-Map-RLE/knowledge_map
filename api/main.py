@@ -210,10 +210,10 @@ async def get_articles_layout() -> Dict[str, Any]:
     try:
         logger.info("Starting articles layout calculation from Neo4j")
         
-        # Читаем граф из Neo4j: узлы помечены как Node, связи - CITES
+        # Читаем граф из Neo4j: узлы помечены как Article, связи - CITES
         logger.info("Querying articles from Neo4j")
         blocks_query = """
-        MATCH (n:Node)
+        MATCH (n:Article)
         RETURN n.uid as id,
                n.content as content,
                n.layer as layer,
@@ -225,14 +225,14 @@ async def get_articles_layout() -> Dict[str, Any]:
                n.y as y
         """
         blocks_result, _ = db.cypher_query(blocks_query)
-        logger.info(f"Found {len(blocks_result)} nodes total")
+        logger.info(f"Found {len(blocks_result)} articles total")
         
         if not blocks_result:
-            logger.warning("No nodes found in Neo4j")
-            raise HTTPException(status_code=404, detail="В базе данных нет узлов Node. Загрузите данные.")
+            logger.warning("No articles found in Neo4j")
+            raise HTTPException(status_code=404, detail="В базе данных нет статей Article. Загрузите данные.")
         
         links_query = """
-        MATCH (s:Node)-[r:CITES]->(t:Node)
+        MATCH (s:Article)-[r:CITES]->(t:Article)
         RETURN r.uid as id, s.uid as source_id, t.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query)
@@ -311,9 +311,9 @@ async def get_all_articles_layout() -> Dict[str, Any]:
     try:
         logger.info("Loading all articles and links")
 
-        # Запрос всех узлов
+        # Запрос всех статей
         nodes_query = """
-        MATCH (n:Node)
+        MATCH (n:Article)
         RETURN n.uid as id,
                coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
                n.layer as layer,
@@ -356,7 +356,7 @@ async def get_all_articles_layout() -> Dict[str, Any]:
 
         # Запрос всех связей
         links_query = """
-        MATCH (s:Node)-[r:CITES]->(t:Node)
+        MATCH (s:Article)-[r:CITES]->(t:Article)
         RETURN r.uid as id, s.uid as source_id, t.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query)
@@ -402,42 +402,39 @@ async def get_articles_layout_page(
             f"Articles page requested: offset={offset}, limit={limit}, center=({center_layer},{center_level})"
         )
 
-        # Всего узлов (для прогресса)
+        # Всего статей (для прогресса)
         total_query = """
-        MATCH (n:Node)
+        MATCH (n:Article)
         RETURN count(n) as total
         """
         total_res, _ = db.cypher_query(total_query)
-        total_nodes = int(total_res[0][0]) if total_res else 0
+        logger.info(f"Total query result: {total_res}")
+        total_articles = int(total_res[0][0]) if total_res and total_res[0] and total_res[0][0] is not None else 0
+        logger.info(f"Total articles: {total_articles}")
 
-        # Выбираем ближние к центру (layer, level)
+        # Простой запрос: сначала LP статьи, потом остальные
         nodes_query = """
-        MATCH (n:Node)
-        WITH n,
-             abs(n.layer - $center_layer) AS dl,
-             abs(n.level - $center_level) AS dv
+        MATCH (n:Article)
         RETURN n.uid as id,
                coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
-               n.layer as layer,
-               n.level as level,
-               n.sublevel_id as sublevel_id,
-               n.is_pinned as is_pinned,
-               n.physical_scale as physical_scale,
+               coalesce(n.layer, 0) as layer,
+               coalesce(n.level, 0) as level,
+               coalesce(n.sublevel_id, 0) as sublevel_id,
+               coalesce(n.is_pinned, false) as is_pinned,
+               coalesce(n.physical_scale, 0) as physical_scale,
                n.x as x,
-               n.y as y,
-               dl, dv
-        ORDER BY (n.layout_status = 'in_longest_path') DESC, dl ASC, dv ASC
+               n.y as y
+        ORDER BY CASE WHEN n.layout_status = 'in_longest_path' THEN 0 ELSE 1 END, n.layer ASC, n.level ASC
         SKIP $offset LIMIT $limit
         """
         blocks_result, _ = db.cypher_query(
             nodes_query,
             {
-                "center_layer": center_layer,
-                "center_level": center_level,
                 "offset": offset,
                 "limit": limit,
             },
         )
+        logger.info(f"Blocks query result: {len(blocks_result) if blocks_result else 0} rows")
 
         if not blocks_result:
             return {
@@ -446,7 +443,7 @@ async def get_articles_layout_page(
                 "links": [],
                 "levels": [],
                 "sublevels": [],
-                "page": {"offset": offset, "limit": limit, "returned": 0, "total": total_nodes},
+                "page": {"offset": offset, "limit": limit, "returned": 0, "total": total_articles},
             }
 
         blocks: list[dict] = []
@@ -455,19 +452,9 @@ async def get_articles_layout_page(
             layer_val = int(row[2] or 0)
             level_val = int(row[3] or 0)
             sub_val = int(row[4] or 0)
-            x_raw = float(row[7]) if row[7] is not None else None
-            y_raw = float(row[8]) if row[8] is not None else None
-
-            # Компактные координаты по новой схеме
-            compact_x = layer_val * 20.0 + sub_val * 15.0
-            compact_y = level_val * 120.0
-
-            # Если координаты отсутствуют или слишком большие/аномальные — используем компактные
-            def need_compact(v: float | None) -> bool:
-                return (v is None) or (abs(v) > 100000.0) or (v != v)
-
-            final_x = compact_x if need_compact(x_raw) else x_raw
-            final_y = compact_y if need_compact(y_raw) else y_raw
+            # Используем реальные координаты из базы данных
+            x_coord = float(row[7]) if row[7] is not None else 0.0
+            y_coord = float(row[8]) if row[8] is not None else 0.0
 
             block = {
                 "id": str(row[0]),
@@ -477,8 +464,8 @@ async def get_articles_layout_page(
                 "sublevel_id": sub_val,
                 "is_pinned": bool(row[5]) if row[5] is not None else False,
                 "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
-                "x": float(final_x),
-                "y": float(final_y),
+                "x": x_coord,
+                "y": y_coord,
                 "metadata": {},
             }
             blocks.append(block)
@@ -486,7 +473,7 @@ async def get_articles_layout_page(
 
         # Связи только внутри выбранного подмножества
         links_query = """
-        MATCH (s:Node)-[r:CITES]->(t:Node)
+        MATCH (s:Article)-[r:CITES]->(t:Article)
         WHERE s.uid IN $ids AND t.uid IN $ids
         RETURN r.uid as id, s.uid as source_id, t.uid as target_id
         """
@@ -505,7 +492,7 @@ async def get_articles_layout_page(
         # Дополнительно: связи внутри longest path, но только если оба узла есть в текущей странице
         # Это гарантирует, что LP связи будут видны, когда загружены соответствующие узлы
         lp_links_query = """
-        MATCH (s:Node {layout_status: 'in_longest_path'})-[r:CITES]->(t:Node {layout_status: 'in_longest_path'})
+        MATCH (s:Article {layout_status: 'in_longest_path'})-[r:CITES]->(t:Article {layout_status: 'in_longest_path'})
         WHERE s.uid IN $ids OR t.uid IN $ids
         RETURN r.uid as id, s.uid as source_id, t.uid as target_id
         """
@@ -547,7 +534,7 @@ async def get_articles_layout_page(
                 "offset": offset,
                 "limit": limit,
                 "returned": len(blocks),
-                "total": total_nodes,
+                "total": total_articles,
             },
         }
     except Exception as e:

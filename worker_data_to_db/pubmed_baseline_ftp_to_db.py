@@ -1,6 +1,7 @@
 import gzip
 import logging
 import time
+import datetime
 from pathlib import Path
 from queue import Queue
 from threading import Thread
@@ -17,12 +18,12 @@ NEO4J_URI       = "bolt://127.0.0.1:7687"
 NEO4J_USER      = "neo4j"
 NEO4J_PASSWORD  = "password"
 
-MAX_WORKERS       = 4        # потоки парсинга
-WRITER_COUNT      = 2        # число потоков-писателей
+MAX_WORKERS       = 2        # потоки парсинга (уменьшено)
+WRITER_COUNT      = 1        # число потоков-писателей (уменьшено до 1)
 MAX_WRITE_RETRIES = 3
-WRITE_BACKOFF     = 5
-BATCH_SIZE        = 500
-POOL_SIZE         = 5
+WRITE_BACKOFF     = 2        # уменьшена задержка
+BATCH_SIZE        = 1000     # увеличен размер батча
+POOL_SIZE         = 3        # уменьшен размер пула
 QUEUE_SIZE        = MAX_WORKERS * 2
 # ==================================
 
@@ -60,20 +61,42 @@ def append_checkpoint(fname: str):
         f.write(fname + "\n")
 
 # ========== СХЕМА ==========
+def check_existing_constraints():
+    """Проверяем существующие ограничения в базе данных"""
+    with driver.session() as session:
+        result = session.run("SHOW CONSTRAINTS")
+        constraints = []
+        for record in result:
+            constraints.append(dict(record))
+        return constraints
+
 def ensure_schema():
     with driver.session() as session:
+        # Проверяем существующие ограничения
+        constraints = check_existing_constraints()
+        logger.info(f"Existing constraints: {len(constraints)}")
+        for constraint in constraints:
+            logger.info(f"  - {constraint.get('name', 'unnamed')}: {constraint.get('description', 'no description')}")
+        
+        # Удаляем проблемное ограничение на layer и level, если оно существует
+        try:
+            session.run("DROP CONSTRAINT node_layer_level_unique IF EXISTS")
+            logger.info("Removed problematic layer+level constraint")
+        except Exception as e:
+            logger.info(f"No layer+level constraint to remove: {e}")
+        
         # Создаём схему для нашего алгоритма укладки
         session.run("""
             CREATE CONSTRAINT IF NOT EXISTS
-            FOR (n:Node) REQUIRE n.uid IS UNIQUE
+            FOR (n:Article) REQUIRE n.uid IS UNIQUE
         """)
         session.run("""
             CREATE INDEX IF NOT EXISTS
-            FOR (n:Node) ON (n.layout_status)
+            FOR (n:Article) ON (n.layout_status)
         """)
         session.run("""
             CREATE INDEX IF NOT EXISTS
-            FOR (n:Node) ON (n.layer, n.level)
+            FOR (n:Article) ON (n.layer, n.level)
         """)
     logger.info("Schema constraints and indexes ensured")
 
@@ -85,22 +108,26 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
         if nodes:
             tx.run("""
                 UNWIND $nodes AS row
-                  MERGE (n:Node {uid: row.pmid})
-                  SET n = row,
+                  MERGE (n:Article {uid: row.pmid})
+                  ON CREATE SET n = row,
                       n.uid = row.pmid,
                       n.layout_status = 'unprocessed',
-                      n.layer = -1,
-                      n.level = -1,
-                      n.sublevel_id = -1,
+                      n.layer = null,
+                      n.level = null,
+                      n.sublevel_id = null,
                       n.x = 0.0,
                       n.y = 0.0,
                       n.is_pinned = false
+                  ON MATCH SET n = row,
+                      n.uid = row.pmid
             """, nodes=nodes)
         if rels:
             tx.run("""
                 UNWIND $rels AS r
-                  MERGE (source:Node {uid: r.pmid})
-                  MERGE (target:Node {uid: r.cpmid})
+                  MERGE (source:Article {uid: r.pmid})
+                  MERGE (target:Article {uid: r.cpmid})
+                  WITH source, target, r
+                  WHERE source <> target
                   MERGE (source)-[:CITES]->(target)
             """, rels=rels)
 
@@ -114,6 +141,8 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
         except (neo4j_exceptions.ServiceUnavailable,
                 neo4j_exceptions.SessionExpired,
                 neo4j_exceptions.TransientError,
+                neo4j_exceptions.ConstraintError,
+                neo4j_exceptions.CypherSyntaxError,
                 OSError) as e:
             logger.warning(f"[WRITE-ERR] {path_name} attempt {attempt}: {e}")
             try:
@@ -148,14 +177,20 @@ for i in range(WRITER_COUNT):
     t.start()
 
 # ========== ПАРСИНГ ОДНОГО ФАЙЛА ==========
-MANDATORY_FIELDS = ['pmid', 'title', 'publication_time', 'journal']
+MANDATORY_FIELDS = ['pmid', 'title', 'journal']  # publication_time сделано необязательным
 
 def parse_one_file(path: Path):
     nodes, rels = [], []
     count = 0
+    total_articles = 0
+    rejected_articles = 0
+    rejection_reasons = {}
+    total_rels_found = 0
+    
     with gzip.open(path, 'rb') as gf:
         for _, elem in ET.iterparse(gf, events=("end",)):
             if elem.tag == "PubmedArticle":
+                total_articles += 1
                 data = {
                     'pmid': elem.findtext('.//PMID'),
                     'doi': elem.findtext('.//ArticleIdList/ArticleId[@IdType="doi"]') or None,
@@ -164,7 +199,7 @@ def parse_one_file(path: Path):
                     'publication_time': (
                         (elem.findtext('.//Journal/JournalIssue/PubDate/Year')
                          or elem.findtext('.//Journal/JournalIssue/PubDate/MedlineDate') or '').strip()
-                    ),
+                    ) or None,
                     'journal': elem.findtext('.//Journal/Title'),
                     'abstract': ''.join(elem.find('.//Abstract/AbstractText').itertext()).strip()
                                 if elem.find('.//Abstract/AbstractText') is not None else None,
@@ -179,12 +214,28 @@ def parse_one_file(path: Path):
                         if dn.text
                     ]
                 }
-                if all(data[f] for f in MANDATORY_FIELDS):
+                
+                # Проверяем обязательные поля и записываем причины отклонения
+                missing_fields = []
+                for field in MANDATORY_FIELDS:
+                    if not data[field]:
+                        missing_fields.append(field)
+                
+                if missing_fields:
+                    rejected_articles += 1
+                    reason = f"missing: {', '.join(missing_fields)}"
+                    rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
+                else:
                     nodes.append(data)
-                    for aid in elem.findall('.//ReferenceList//ArticleId[@IdType="pubmed"]'):
-                        txt = aid.text
-                        if txt and txt.isdigit():
-                            rels.append({'pmid': data['pmid'], 'cpmid': txt})
+                    article_rels = 0
+                    reference_list = elem.find('.//ReferenceList')
+                    if reference_list is not None:
+                        for aid in reference_list.findall('.//ArticleId[@IdType="pubmed"]'):
+                            txt = aid.text
+                            if txt and txt.isdigit():
+                                rels.append({'pmid': data['pmid'], 'cpmid': txt})
+                                article_rels += 1
+                    total_rels_found += article_rels
                     count += 1
                 elem.clear()
 
@@ -198,6 +249,16 @@ def parse_one_file(path: Path):
     if nodes or rels:
         logger.info(f"{path.name}: enqueue final batch")
         write_queue.put((path.name, nodes, rels))
+
+    # Выводим статистику
+    logger.info(f"{path.name}: Обработано статей: {total_articles}")
+    logger.info(f"{path.name}: Принято статей: {count}")
+    logger.info(f"{path.name}: Отклонено статей: {rejected_articles}")
+    logger.info(f"{path.name}: Найдено связей цитирования: {total_rels_found}")
+    if rejection_reasons:
+        logger.info(f"{path.name}: Причины отклонения:")
+        for reason, count_reason in rejection_reasons.items():
+            logger.info(f"  - {reason}: {count_reason} статей")
 
     return path.name
 
@@ -219,29 +280,76 @@ def process_all():
         logger.error("Не найдено файлов для обработки")
         return
     
-    # Берём только последний файл
-    latest_file = files[-1]
-    logger.info(f"Обрабатываем только последний файл: {latest_file.name}")
+    # Показываем все доступные файлы
+    logger.info(f"Найдено файлов: {len(files)}")
+    for i, file in enumerate(files):
+        logger.info(f"  {i+1}. {file.name}")
+    
+    # Берём только указанный файл
+    latest_file = files[-2]
+    logger.info(f"Обрабатываем только указанный файл: {latest_file.name}")
+    
+    # Проверяем дату модификации файла
+    mod_time = datetime.datetime.fromtimestamp(latest_file.stat().st_mtime)
+    logger.info(f"Дата модификации файла: {mod_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    # Проверяем размер файла
+    file_size_mb = latest_file.stat().st_size / (1024 * 1024)
+    logger.info(f"Размер файла: {file_size_mb:.1f} MB")
+    
+    # Если нужно обработать все файлы, раскомментируйте следующие строки:
+    # logger.info("Обрабатываем ВСЕ файлы (не только последний)")
+    # files_to_process = files
+    # else:
+    files_to_process = [latest_file]
     
     # Очищаем базу данных перед загрузкой нового файла
     try:
         with driver.session() as s:
-            s.run("MATCH (n:Node) DETACH DELETE n")
+            # Удаляем все узлы
+            s.run("MATCH (n:Article) DETACH DELETE n")
+            
+            # Удаляем все ограничения, которые могут вызывать конфликты
+            constraints = s.run("SHOW CONSTRAINTS").data()
+            for constraint in constraints:
+                constraint_name = constraint.get('name')
+                if constraint_name and 'layer' in constraint_name.lower():
+                    try:
+                        s.run(f"DROP CONSTRAINT {constraint_name}")
+                        logger.info(f"Удалено ограничение: {constraint_name}")
+                    except Exception as e:
+                        logger.warning(f"Не удалось удалить ограничение {constraint_name}: {e}")
+            
         logger.info("База данных очищена")
     except Exception as e:
         logger.error(f"Ошибка при очистке базы: {e}")
         return
 
     try:
-        parse_one_file(latest_file)
-        logger.info(f"[OK] {latest_file.name} обработан успешно")
+        for file_to_process in files_to_process:
+            logger.info(f"Начинаем обработку файла: {file_to_process.name}")
+            parse_one_file(file_to_process)
+            logger.info(f"[OK] {file_to_process.name} обработан успешно")
     except Exception as e:
-        logger.error(f"[PARSE-ERR] {latest_file.name}: {e}")
+        logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")
 
     # ждём пока писатели обработают всё
     write_queue.join()
     for _ in range(WRITER_COUNT):
         write_queue.put(None)
+
+    # Показываем итоговую статистику
+    try:
+        with driver.session() as s:
+            result = s.run("MATCH (n:Article) RETURN count(n) as total_nodes")
+            total_nodes = result.single()["total_nodes"]
+            logger.info(f"ИТОГО загружено узлов в базу: {total_nodes}")
+            
+            result = s.run("MATCH ()-[r:CITES]->() RETURN count(r) as total_rels")
+            total_rels = result.single()["total_rels"]
+            logger.info(f"ИТОГО загружено связей в базу: {total_rels}")
+    except Exception as e:
+        logger.error(f"Ошибка при получении статистики: {e}")
 
     logger.info("Обработка завершена.")
 

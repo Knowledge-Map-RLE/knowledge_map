@@ -36,7 +36,7 @@ export default function Science_articles() {
     pageOffset,
     pageLimit,
     loadNextPage
-  } = useArticlesDataLoader();
+  } = useArticlesDataLoader(viewportRef);
 
   // Логируем состояние загрузки для отладки
   console.log(`[Science_articles] Состояние:`, {

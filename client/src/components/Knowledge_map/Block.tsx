@@ -7,6 +7,7 @@ import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
 import { EditMode } from './types';
 import { gsap } from 'gsap';
 
+// Расширяем компоненты PixiJS для использования в JSX с префиксом 'pixi'
 extend({ Graphics, Container, Text });
 
 const BLOCK_PADDING = 4;
@@ -38,7 +39,10 @@ export const Block = memo(function Block({
   onBlockRightClick,
   instantBlockClickRef,
 }: BlockProps) {
-  const { id, text, x, y, level, isHovered, hoveredArrow, is_pinned } = blockData;
+  const { id, title, x, y, level, is_pinned } = blockData;
+  
+  // Отладочная информация
+  console.log(`[Block] Rendering block: id=${id}, title="${title}", x=${x}, y=${y}, isSelected=${isSelected}, is_pinned=${is_pinned}`);
   const containerRef = useRef<Container>(null);
   const isInitialRender = useRef(true);
 
@@ -61,83 +65,61 @@ export const Block = memo(function Block({
 
   const draw = useCallback((g: Graphics) => {
     const bgColor = isSelected ? 0x93c5fd : (is_pinned ? 0xfef3c7 : 0xffffff);
-    const borderColor = isHovered || hoveredArrow ? 0x3b82f6 : (is_pinned ? 0xf59e0b : 0xd1d5db);
-    const borderWidth = isSelected || isHovered || hoveredArrow || is_pinned ? 2 : 1;
+    const borderColor = is_pinned ? 0xf59e0b : 0xd1d5db;
+    const borderWidth = isSelected || is_pinned ? 2 : 1;
     g.clear();
     g.roundRect(-BLOCK_WIDTH / 2, -BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, 10);
     g.fill(bgColor);
     g.stroke({ width: borderWidth, color: borderColor });
-  }, [isSelected, isHovered, hoveredArrow, is_pinned]);
+  }, [isSelected, is_pinned]);
+
+  const drawText = (g: Graphics) => {
+    g.clear();
+    g.beginFill(0xffffff);
+    g.drawRoundedRect(-60, 40, 120, 30, 8);
+    g.endFill();
+  };
 
   return (
-    <container 
-      ref={containerRef}
-      eventMode="static" 
-      cursor="pointer"
-      onMouseEnter={() => onBlockMouseEnter(id)}
-      onMouseLeave={(e: any) => onBlockMouseLeave(id, e)}
-              onPointerDown={(e: any) => {
-          if (e.button === 2) {
-            // Правый клик - мгновенно устанавливаем флаг и блокируем всплытие
-            console.log('Block pointer down - RIGHT CLICK, blocking');
-            if (instantBlockClickRef) {
-              instantBlockClickRef.current = true;
-              console.log('INSTANT flag set to true');
-            }
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            return;
-          }
-          onBlockPointerDown(id, e);
-        }}
-        onRightClick={(e: any) => {
-          console.log('Block right click event');
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          e.nativeEvent?.preventDefault?.();
-          e.nativeEvent?.stopPropagation?.();
-          e.nativeEvent?.stopImmediatePropagation?.();
-          onBlockRightClick(id, e.global.x, e.global.y);
-        }}
-
-        zIndex={10}
-    >
-      <graphics draw={draw} />
-      <pixiText
-        text={text}
-        x={0}
-        y={-BLOCK_HEIGHT / 2 + BLOCK_PADDING}
-        anchor={new Point(0.5, 0)}
-        style={{
-          fontFamily: 'PT Sans Narrow, sans-serif',
-          fontSize: 14,
-          fill: 0x000000,
-          wordWrap: true,
-          wordWrapWidth: BLOCK_WIDTH - 2 * BLOCK_PADDING,
-          breakWords: true,
-          align: 'center',
-        }}
+         <pixiContainer 
+       ref={containerRef}
+       eventMode="static" 
+       cursor="pointer"
+       onMouseEnter={() => onBlockMouseEnter(id)}
+       onMouseLeave={(e: any) => onBlockMouseLeave(id, e)}
+       onPointerDown={(e: any) => {
+         if (e.button === 2) {
+           // Правый клик - мгновенно устанавливаем флаг и блокируем всплытие
+           console.log('Block pointer down - RIGHT CLICK, blocking');
+           if (instantBlockClickRef) {
+             instantBlockClickRef.current = true;
+             console.log('INSTANT flag set to true');
+           }
+           e.preventDefault();
+           e.stopPropagation();
+           e.stopImmediatePropagation();
+           return;
+         }
+         onBlockPointerDown(id, e);
+       }}
+       onRightClick={(e: any) => {
+         console.log('Block right click event');
+         e.preventDefault();
+         e.stopPropagation();
+         e.stopImmediatePropagation();
+         e.nativeEvent?.preventDefault?.();
+         e.nativeEvent?.stopPropagation?.();
+         e.nativeEvent?.stopImmediatePropagation?.();
+         onBlockRightClick(id, e.global.x, e.global.y);
+       }}
+       zIndex={10}
+     >
+               <pixiGraphics draw={draw} />
+      <text
+        text={title}
+        anchor={{ x: 0.5, y: 0.5 }}
       />
-      {isHovered && currentMode === EditMode.CREATE_BLOCKS && (
-        <>
-          <AddBlockArrow
-            position="left"
-            onClick={() => onArrowClick(blockData, level - 1)}
-            onHover={() => onArrowHover(id, 'left')}
-            onHoverEnd={() => onArrowHover(id, null)}
-            isHovered={hoveredArrow === 'left'}
-          />
-          <AddBlockArrow
-            position="right"
-            onClick={() => onArrowClick(blockData, level + 1)}
-            onHover={() => onArrowHover(id, 'right')}
-            onHoverEnd={() => onArrowHover(id, null)}
-            isHovered={hoveredArrow === 'right'}
-          />
-        </>
-      )}
-    </container>
+        
+     </pixiContainer>
   );
 });

@@ -1,11 +1,11 @@
 from neo4j import GraphDatabase
 
-def get_subgraph(tx, node_id, depth):
+def get_subgraph(tx, article_id, depth):
     """
-    Gets a subgraph from Neo4j starting from a given node and depth.
+    Gets a subgraph from Neo4j starting from a given article and depth.
     """
     query = """
-    MATCH (n) WHERE id(n) = $node_id
+    MATCH (n:Article) WHERE n.uid = $article_id
     CALL apoc.path.subgraphAll(n, {
         relationshipFilter: ">",
         maxLevel: $depth
@@ -13,7 +13,7 @@ def get_subgraph(tx, node_id, depth):
     YIELD nodes, relationships
     RETURN nodes, relationships
     """
-    result = tx.run(query, node_id=node_id, depth=depth)
+    result = tx.run(query, article_id=article_id, depth=depth)
     return result.single()
 
 def compute_centrality(tx):

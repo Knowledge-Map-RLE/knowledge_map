@@ -10,16 +10,16 @@ def process_task(task_data):
     """
     Processes a layout task.
     """
-    node_id = task_data.get("node_id")
+    article_id = task_data.get("article_id")
     depth = task_data.get("depth", 2)  # Default depth
 
     # 1. Get subgraph from Neo4j
     with GraphDatabase.driver("bolt://neo4j:7687", auth=("neo4j", "password")) as driver:
         with driver.session() as session:
-            subgraph_data = session.read_transaction(get_subgraph, node_id=node_id, depth=depth)
+            subgraph_data = session.read_transaction(get_subgraph, article_id=article_id, depth=depth)
 
     if not subgraph_data:
-        print(f"No subgraph found for node ID: {node_id}")
+        print(f"No subgraph found for article ID: {article_id}")
         return
 
     nodes = subgraph_data[0]
@@ -36,7 +36,7 @@ def process_task(task_data):
 
     # 3. Persist layouted graph data back to Neo4j
     #  ... Implementation to update node positions in Neo4j ...
-    print(f"Layout complete for subgraph starting at node {node_id}")
+    print(f"Layout complete for subgraph starting at article {article_id}")
 
 def start_worker():
     """

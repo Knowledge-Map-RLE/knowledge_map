@@ -14,7 +14,7 @@ from neo4j.exceptions import Neo4jError, TransientError
 import structlog
 
 from .config import get_neo4j_config, settings
-from .utils.circuit_breaker import CircuitBreaker
+from .utils.simple_circuit_breaker import CircuitBreaker
 from .utils.metrics import metrics_collector
 
 logger = structlog.get_logger(__name__)
@@ -105,12 +105,14 @@ class Neo4jClient:
                     execution_time = time.time() - start_time
                     metrics_collector.record_neo4j_query("query", execution_time)
                     
-                    logger.debug(
-                        "Query executed successfully",
-                        query=query[:100] + "..." if len(query) > 100 else query,
-                        execution_time=execution_time,
-                        records_count=len(records),
+                    # Компактный прогресс по БД
+                    msg = (
+                        f"[db] ok | {len(records)} rec | {execution_time*1000:.1f} ms | "
+                        f"q:{(query[:80] + '...') if len(query) > 80 else query}"
                     )
+                    if len(msg) > 200:
+                        msg = msg[:197] + "..."
+                    print(msg)  # Добавляем перенос строки
                     
                     return records
 
@@ -182,13 +184,13 @@ class Neo4jClient:
         total_count = count_result[0]["total_count"]
         
         logger.info(
-            "Starting chunked node streaming",
-            total_nodes=total_count,
+            "Starting chunked article streaming",
+            total_articles=total_count,
             chunk_size=chunk_size,
             estimated_chunks=total_count // chunk_size + 1,
         )
 
-        # Загружаем узлы по чанкам с оптимизацией
+        # Загружаем статьи по чанкам с оптимизацией
         offset = 0
         chunk_number = 0
         
@@ -232,17 +234,17 @@ class Neo4jClient:
     async def stream_edges_chunked(
         self, 
         chunk_size: int = None,
-        node_ids: Optional[List[str]] = None
+        article_ids: Optional[List[str]] = None
     ) -> AsyncGenerator[List[Dict], None]:
         """
         Потоковая загрузка рёбер по чанкам
         """
         chunk_size = chunk_size or settings.chunk_size
         
-        # Если указаны конкретные узлы, фильтруем рёбра
-        if node_ids:
-            node_ids_str = "', '".join(node_ids)
-            where_clause = f"WHERE source.uid IN ['{node_ids_str}'] AND target.uid IN ['{node_ids_str}']"
+        # Если указаны конкретные статьи, фильтруем рёбра
+        if article_ids:
+            article_ids_str = "', '".join(article_ids)
+            where_clause = f"WHERE source.uid IN ['{article_ids_str}'] AND target.uid IN ['{article_ids_str}']"
         else:
             where_clause = ""
         
@@ -308,15 +310,15 @@ class Neo4jClient:
         # Упрощённый запрос для быстрого получения статистики
         stats_query = """
         MATCH (n:Article) 
-        RETURN count(n) as node_count
+        RETURN count(n) as article_count
         LIMIT 1
         """
         
         try:
-            logger.info("Executing node count query...")
+            logger.info("Executing article count query...")
             result = await self.execute_query_with_retry(stats_query)
-            node_count = result[0]["node_count"] if result else 0
-            logger.info(f"Found {node_count} nodes in graph")
+            article_count = result[0]["article_count"] if result else 0
+            logger.info(f"Found {article_count} articles in graph")
             
             # Быстрый запрос для рёбер - используем прямой COUNT
             logger.info("Executing edge count query...")
@@ -334,11 +336,11 @@ class Neo4jClient:
             except Exception as e:
                 logger.warning(f"Edge count query failed, using estimate: {str(e)}")
                 # Используем приблизительную оценку
-                edge_count = node_count * 2  # Примерная оценка
+                edge_count = article_count * 2  # Примерная оценка
                 logger.info(f"Using fallback edge count estimate: {edge_count}")
             
-            # Быстрый запрос для закреплённых узлов (с таймаутом)
-            logger.info("Executing pinned nodes count query...")
+            # Быстрый запрос для закреплённых статей (с таймаутом)
+            logger.info("Executing pinned articles count query...")
             pinned_count = 0
             
             try:
@@ -352,7 +354,7 @@ class Neo4jClient:
                 
                 check_result = await self.execute_query_with_retry(check_query)
                 if check_result and check_result[0]["count"] > 0:
-                    # Если поле существует, считаем закреплённые узлы
+                    # Если поле существует, считаем закреплённые статьи
                     pinned_query = """
                     MATCH (n:Article {is_pinned: true}) 
                     RETURN count(n) as pinned_count 
@@ -361,30 +363,30 @@ class Neo4jClient:
                     pinned_result = await self.execute_query_with_retry(pinned_query)
                     pinned_count = pinned_result[0]["pinned_count"] if pinned_result else 0
                 else:
-                    # Если поля нет, считаем что закреплённых узлов нет
+                    # Если поля нет, считаем что закреплённых статей нет
                     pinned_count = 0
                     
-                logger.info(f"Found {pinned_count} pinned nodes")
+                logger.info(f"Found {pinned_count} pinned articles")
                 
             except Exception as e:
-                logger.warning(f"Pinned nodes count failed, using default: {str(e)}")
+                logger.warning(f"Pinned articles count failed, using default: {str(e)}")
                 pinned_count = 0
             
             return {
-                "node_count": node_count,
+                "article_count": article_count,
                 "edge_count": edge_count,
                 "pinned_count": pinned_count,
                 "all_labels": ["Article"],  # Упрощённо
                 "component_count": 1,  # Упрощённо
-                "density": edge_count / (node_count * (node_count - 1)) if node_count > 1 else 0,
-                "avg_degree": 2 * edge_count / node_count if node_count > 0 else 0,
+                "density": edge_count / (article_count * (article_count - 1)) if article_count > 1 else 0,
+                "avg_degree": 2 * edge_count / article_count if article_count > 0 else 0,
             }
             
         except Exception as e:
             logger.error(f"Failed to get graph statistics: {str(e)}")
             # Возвращаем дефолтные значения для продолжения работы
             return {
-                "node_count": 1000,  # Дефолтное значение для тестирования
+                "article_count": 1000,  # Дефолтное значение для тестирования
                 "edge_count": 2000,
                 "pinned_count": 0,
                 "all_labels": ["Article"],
@@ -405,7 +407,7 @@ class Neo4jClient:
         
         logger.info(
             "Starting batch position update",
-            total_nodes=len(node_positions),
+            total_articles=len(node_positions),
             batch_size=batch_size,
         )
         
@@ -462,9 +464,9 @@ class Neo4jClient:
         async for node_chunk in self.stream_nodes_chunked(["Article"], chunk_size):
             nodes.extend(node_chunk)
             
-        node_ids = [node["id"] for node in nodes]
+        article_ids = [node["id"] for node in nodes]
         
-        async for edge_chunk in self.stream_edges_chunked(chunk_size, node_ids):
+        async for edge_chunk in self.stream_edges_chunked(chunk_size, article_ids):
             edges.extend(edge_chunk)
             
         return nodes, edges

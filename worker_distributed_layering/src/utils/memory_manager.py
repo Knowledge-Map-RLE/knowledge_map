@@ -53,7 +53,7 @@ class MemoryManager:
                 "process": {"memory_mb": 100, "cpu_percent": 5}
             }
     
-    def adaptive_processing_strategy(self, node_count: int) -> str:
+    def adaptive_processing_strategy(self, article_count: int) -> str:
         """
         Определяет стратегию обработки на основе размера графа и доступной памяти
         """
@@ -61,14 +61,14 @@ class MemoryManager:
         available_memory_gb = system_info["memory"]["available_gb"]
         
         # Примерные расчёты для разных стратегий
-        if node_count < 1000 and available_memory_gb > 2:
+        if article_count < 1000 and available_memory_gb > 2:
             return "single_pass"
-        elif node_count < 50000 and available_memory_gb > 1:
+        elif article_count < 50000 and available_memory_gb > 1:
             return "chunked"
         else:
             return "fully_distributed"
     
-    def calculate_optimal_chunk_size(self, total_nodes: int) -> int:
+    def calculate_optimal_chunk_size(self, total_articles: int) -> int:
         """
         Вычисляет оптимальный размер чанка
         """
@@ -77,7 +77,7 @@ class MemoryManager:
         
         # Консервативный расчёт
         base_chunk_size = int(available_memory_gb * 500)  # ~500 узлов на GB
-        return min(base_chunk_size, max(100, total_nodes // 10))
+        return min(base_chunk_size, max(100, total_articles // 10))
     
     async def monitor_memory_usage(self, interval_seconds: int = 30):
         """

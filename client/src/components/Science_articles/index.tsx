@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
 import { Viewport } from '../Knowledge_map/Viewport';
@@ -21,7 +22,8 @@ import { EditingPanel } from '../Knowledge_map/components/EditingPanel';
 import { EditMode } from '../Knowledge_map/types';
 import type { LinkCreationState, BlockData, LinkData } from '../Knowledge_map/types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from '../Knowledge_map/constants';
-import styles from '../Knowledge_map/Knowledge_map.module.css';
+
+import { useArticlesDataLoader } from './hooks/useArticlesDataLoader';
 
 extend({ Container, Graphics, Text });
 
@@ -29,188 +31,52 @@ export default function Science_articles() {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
 
-  const [blocks, setBlocks] = useState<BlockData[]>([]);
-  const [links, setLinks] = useState<LinkData[]>([]);
+  // Хук для загрузки данных статей
+  const {
+    blocks,
+    links,
+    isLoading,
+    isBootLoading,
+    loadError,
+    pageOffset,
+    pageLimit,
+    loadNextPage
+  } = useArticlesDataLoader(viewportRef);
+
+  // Центрируем viewport при загрузке блоков
+  useEffect(() => {
+    if (blocks.length > 0 && viewportRef.current) {
+      console.log(`[Science_articles] Centering viewport on ${blocks.length} blocks`);
+      
+      // Находим центр всех блоков
+      const centerX = blocks.reduce((sum, block) => sum + (block.x || 0), 0) / blocks.length;
+      const centerY = blocks.reduce((sum, block) => sum + (block.y || 0), 0) / blocks.length;
+      
+      // Находим диапазон координат для определения масштаба
+      const minX = Math.min(...blocks.map(b => b.x || 0));
+      const maxX = Math.max(...blocks.map(b => b.x || 0));
+      const minY = Math.min(...blocks.map(b => b.y || 0));
+      const maxY = Math.max(...blocks.map(b => b.y || 0));
+      
+      const rangeX = maxX - minX;
+      const rangeY = maxY - minY;
+      
+      console.log(`[Science_articles] Coordinate range: x=${minX}-${maxX} (${rangeX}), y=${minY}-${maxY} (${rangeY})`);
+      
+      // Устанавливаем подходящий масштаб для видимости всех блоков
+      const targetScale = Math.min(1.0, 800 / Math.max(rangeX, rangeY, 100));
+      viewportRef.current.scale = targetScale;
+      
+      // Центрируем viewport
+      viewportRef.current.focusOn(centerX, centerY);
+      console.log(`[Science_articles] Viewport centered on blocks with scale ${targetScale}`);
+    }
+  }, [blocks.length]);
+
   const [levels, setLevels] = useState<any[]>([]);
   const [sublevels, setSublevels] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isBootLoading, setIsBootLoading] = useState<boolean>(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-
-  // Пагинация и наборы уже загруженных сущностей
-  const [pageOffset, setPageOffset] = useState<number>(0);
-  const [pageLimit] = useState<number>(50);
-  const [totalCount, setTotalCount] = useState<number>(0);
   const loadedBlockIdsRef = useRef<Set<string>>(new Set());
   const loadedLinkIdsRef = useRef<Set<string>>(new Set());
-
-  // Загрузка данных по батчам (пагинация)
-  async function loadNextPage() {
-    if (isLoading) {
-      console.log(`[ArticlesPage] Skipping loadNextPage - already loading`);
-      return;
-    }
-    
-    // Проверяем, не загружали ли мы уже эту страницу
-    if (loadedBlockIdsRef.current.size > 0 && pageOffset === 0) {
-      console.log(`[ArticlesPage] Skipping loadNextPage - already loaded initial data (${loadedBlockIdsRef.current.size} blocks)`);
-      return;
-    }
-    
-    // Дополнительная защита от дублирования
-    if (blocks.length > 0 && pageOffset === 0) {
-      console.log(`[ArticlesPage] Skipping loadNextPage - blocks already exist (${blocks.length} blocks)`);
-      return;
-    }
-    
-    // Защита от двойного вызова в React Strict Mode
-    if (loadedBlockIdsRef.current.size > 0) {
-      console.log(`[ArticlesPage] Skipping loadNextPage - React Strict Mode protection (loadedBlockIds: ${loadedBlockIdsRef.current.size})`);
-      return;
-    }
-    
-    setIsLoading(true);
-    setLoadError(null);
-    
-    try {
-      console.log(`[ArticlesPage] Loading page ${pageOffset + 1} with limit ${pageLimit}`);
-      
-      const response = await fetch(`http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log(`[ArticlesPage] received page:`, data);
-      
-      if (data && data.success) {
-        const serverBlocks = Array.isArray(data.blocks) ? data.blocks : [];
-        const serverLinks = Array.isArray(data.links) ? data.links : [];
-
-        console.log(`[ArticlesPage] blocks: ${serverBlocks.length}, links: ${serverLinks.length}`);
-        console.log(`[ArticlesPage] first block:`, serverBlocks[0]);
-        console.log(`[ArticlesPage] first block fields:`, Object.keys(serverBlocks[0] || {}));
-        
-        const processedBlocks: BlockData[] = [];
-        for (let i = 0; i < serverBlocks.length; i++) {
-          const b = serverBlocks[i];
-          const id = String(b.id);
-          const bx = (typeof b.x === 'number') ? b.x : (b.x != null ? Number(b.x) : undefined);
-          const by = (typeof b.y === 'number') ? b.y : (b.y != null ? Number(b.y) : undefined);
-          const lvl = (typeof b.level === 'number') ? b.level : 0;
-          const lay = (typeof b.layer === 'number') ? b.layer : 0;
-          const sub = (typeof b.sublevel_id === 'number') ? b.sublevel_id : 0;
-          
-          console.log(`[ArticlesPage] Block ${i} coordinates: x=${b.x} (${typeof b.x}), y=${b.y} (${typeof b.y}), processed: bx=${bx}, by=${by}`);
-          
-          // Fallback координаты, если x/y не определены
-          const cols = 40;
-          const col = i % cols;
-          const row = Math.floor(i / cols);
-          const fallbackX = col * (BLOCK_WIDTH + 40);
-          const fallbackY = row * (BLOCK_HEIGHT + 60);
-          const title = (b.content ?? b.title ?? b.name ?? id);
-          
-          const processedBlock = {
-            id,
-            text: String(title),
-            content: String(title),
-            x: (bx !== undefined ? bx : fallbackX),
-            y: (by !== undefined ? by : fallbackY),
-            level: lvl,
-            physical_scale: typeof b.physical_scale === 'number' ? b.physical_scale : 0,
-            sublevel: sub,
-            layer: lay,
-            is_pinned: Boolean(b.is_pinned)
-          };
-          
-          console.log(`[ArticlesPage] processed block ${i}:`, processedBlock);
-          console.log(`[ArticlesPage] Final coordinates for block ${i}: x=${processedBlock.x}, y=${processedBlock.y}`);
-          processedBlocks.push(processedBlock);
-        }
-        
-        const processedLinks: LinkData[] = [];
-        for (const l of serverLinks) {
-          const id = l.id ? String(l.id) : `${String(l.source_id)}-${String(l.target_id)}`;
-          processedLinks.push({ 
-            id, 
-            source_id: String(l.source_id), 
-            target_id: String(l.target_id) 
-          });
-        }
-        
-        // Добавляем новые блоки к существующим
-        setBlocks(prevBlocks => {
-          console.log(`[ArticlesPage] setBlocks called with prevBlocks.length: ${prevBlocks.length}`);
-          console.log(`[ArticlesPage] setBlocks stack trace:`, new Error().stack);
-          
-          // Защита от двойного вызова в React Strict Mode
-          if (loadedBlockIdsRef.current.size > 0) {
-            console.log(`[ArticlesPage] Skipping setBlocks - already processed (loadedBlockIds: ${loadedBlockIdsRef.current.size})`);
-            // Возвращаем текущее состояние, а не prevBlocks
-            return blocks;
-          }
-          
-          const newBlocks = [...prevBlocks];
-          let addedCount = 0;
-          for (const block of processedBlocks) {
-            if (!loadedBlockIdsRef.current.has(block.id)) {
-              newBlocks.push(block);
-              loadedBlockIdsRef.current.add(block.id);
-              addedCount++;
-            }
-          }
-          console.log(`[ArticlesPage] Added ${addedCount} new blocks, total: ${newBlocks.length}`);
-          console.log(`[ArticlesPage] First few blocks:`, newBlocks.slice(0, 3));
-          console.log(`[ArticlesPage] Returning newBlocks with length: ${newBlocks.length}`);
-          return newBlocks;
-        });
-        
-        // Добавляем новые связи к существующим
-        setLinks(prevLinks => {
-          console.log(`[ArticlesPage] setLinks called with prevLinks.length: ${prevLinks.length}`);
-          console.log(`[ArticlesPage] setLinks stack trace:`, new Error().stack);
-          
-          // Защита от двойного вызова в React Strict Mode
-          if (loadedLinkIdsRef.current.size > 0) {
-            console.log(`[ArticlesPage] Skipping setLinks - already processed (loadedLinkIds: ${loadedLinkIdsRef.current.size})`);
-            // Возвращаем текущее состояние, а не prevLinks
-            return links;
-          }
-          
-          const newLinks = [...prevLinks];
-          let addedCount = 0;
-          for (const link of processedLinks) {
-            if (!loadedLinkIdsRef.current.has(link.id)) {
-              newLinks.push(link);
-              loadedLinkIdsRef.current.add(link.id);
-              addedCount++;
-            }
-          }
-          console.log(`[ArticlesPage] Added ${addedCount} new links, total: ${newLinks.length}`);
-          console.log(`[ArticlesPage] Returning newLinks with length: ${newLinks.length}`);
-          return newLinks;
-        });
-        
-        // Убираем экран загрузки при первой загрузке
-        if (isBootLoading && processedBlocks.length > 0) {
-          setIsBootLoading(false);
-        }
-        
-        // Переходим к следующей странице
-        setPageOffset(prev => prev + pageLimit);
-        
-      } else {
-        throw new Error((data && data.error) || 'Failed to load articles page');
-      }
-    } catch (error: any) {
-      console.error('Error loading articles page:', error);
-      setLoadError(error?.message || 'Unknown error');
-      if (isBootLoading) setIsBootLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const {
     selectedBlocks, selectedLinks, handleBlockSelection, handleLinkSelection, clearSelection
@@ -219,7 +85,7 @@ export default function Science_articles() {
   const {
     handleCreateBlock, handleCreateBlockOnSublevel, handleCreateLink, handleDeleteBlock, handleDeleteLink
   } = useActions({
-    blocks, links, sublevels, setBlocks, setLinks, setSublevels, clearSelection, loadLayoutData: () => loadNextPage()
+    blocks, links, sublevels, setBlocks: () => {}, setLinks: () => {}, setSublevels: () => {}, clearSelection, loadLayoutData: () => loadNextPage()
   });
 
   const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
@@ -252,7 +118,7 @@ export default function Science_articles() {
     handleUnpinBlock,
     handlePinBlockWithScale,
     handleMovePinnedBlock
-  } = useContextMenu(blocks, setBlocks, () => loadNextPage(), clearSelection);
+  } = useContextMenu(blocks, () => {}, () => loadNextPage(), clearSelection);
 
   const {
     handleBlockClick,
@@ -265,7 +131,7 @@ export default function Science_articles() {
     currentMode,
     linkCreationState,
     setLinkCreationState,
-    setBlocks,
+    setBlocks: () => {},
     blocks,
     handleBlockSelection,
     handleLinkSelection,
@@ -281,8 +147,8 @@ export default function Science_articles() {
   }, [originalHandleArrowHover]);
 
   const { handleAddBlock } = useBlockOperations({
-    setBlocks,
-    setLinks,
+    setBlocks: () => {},
+    setLinks: () => {},
     setFocusTargetId,
     loadLayoutData: () => loadNextPage()
   });
@@ -309,7 +175,10 @@ export default function Science_articles() {
     let timer: any;
     const schedule = () => {
       clearTimeout(timer);
-      timer = setTimeout(() => loadNextPage(), 250);
+      timer = setTimeout(() => {
+        console.log(`[Science_articles] Triggering loadNextPage from viewport event`);
+        loadNextPage();
+      }, 250);
     };
     
     // Слушаем события viewport
@@ -328,7 +197,7 @@ export default function Science_articles() {
         v.off('zoomed', handleViewportZoomed);
       }
     };
-  }, []);
+  }, [loadNextPage]);
 
   const viewportState = viewportRef.current ?
     { scale: viewportRef.current.scale, position: viewportRef.current.position } :
@@ -352,20 +221,24 @@ export default function Science_articles() {
   }, []);
   useEffect(() => { containerRef.current?.focus(); }, []);
 
-  // Автоматическое центрирование только при первой загрузке (не при подгрузке)
+  // Автоматическое центрирование при загрузке блоков
   useEffect(() => {
-    if (blocks.length > 0 && !focusTargetId && blocks.length <= pageLimit) {
-      // Только для первой загрузки (когда blocks.length <= pageLimit)
+    if (blocks.length > 0 && !focusTargetId) {
       // Находим центр всех блоков
       const centerX = blocks.reduce((sum, block) => sum + (block.x || 0), 0) / blocks.length;
       const centerY = blocks.reduce((sum, block) => sum + (block.y || 0), 0) / blocks.length;
 
+      console.log(`[ArticlesPage] Centering viewport on blocks center: x=${centerX}, y=${centerY}`);
+      
       // Центрируем viewport на центр данных
       setTimeout(() => {
-        viewportRef.current?.focusOn(centerX, centerY);
+        if (viewportRef.current) {
+          viewportRef.current.focusOn(centerX, centerY);
+          console.log(`[ArticlesPage] Viewport centered on blocks`);
+        }
       }, 100);
     }
-  }, [blocks.length, focusTargetId, pageLimit]);
+  }, [blocks.length, focusTargetId]);
 
   useEffect(() => {
     if (focusTargetId && blocks.length > 0) {
@@ -468,19 +341,19 @@ export default function Science_articles() {
   // Обработчики для панели редактирования
   const handleSaveEditWrapper = useCallback(() => {
     if (editingBlock) {
-      handleSaveEdit(editingBlock, editingText, setBlocks);
+      handleSaveEdit(editingBlock, editingText, () => {});
     }
-  }, [editingBlock, editingText, handleSaveEdit, setBlocks]);
+  }, [editingBlock, editingText, handleSaveEdit]);
 
   const handleCreateNewBlockWrapper = useCallback(() => {
     if (creatingBlock) {
-      handleCreateNewBlock(creatingBlock, editingText, blocks, setBlocks, handleAddBlock);
+      handleCreateNewBlock(creatingBlock, editingText, blocks, () => {}, handleAddBlock);
     }
-  }, [creatingBlock, editingText, blocks, setBlocks, handleAddBlock, handleCreateNewBlock]);
+  }, [creatingBlock, editingText, blocks, handleAddBlock, handleCreateNewBlock]);
 
   if (loadError) {
     return (
-      <div className={styles.knowledge_map} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
+              <div className="knowledge_map" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
         Ошибка загрузки статей: {loadError}
       </div>
     );
@@ -491,9 +364,9 @@ export default function Science_articles() {
   console.log(`[ArticlesPage] pageOffset:`, pageOffset);
   
   return (
-    <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
+            <main ref={containerRef} className="knowledge_map" tabIndex={-1}>
       {(!pixiReady || (isBootLoading && blocks.length === 0)) && (
-        <div className={styles.экран_загрузки}>
+                  <div className="экран_загрузки">
           {isLoading ? 'Загрузка научных статей...' : 'Инициализация...'}
         </div>
       )}
@@ -548,6 +421,28 @@ export default function Science_articles() {
         </Viewport>
       </Application>
       <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
+      
+      {/* Кнопка для тестирования подгрузки */}
+      <button 
+        onClick={() => {
+          console.log(`[Science_articles] Manual loadNextPage triggered`);
+          loadNextPage();
+        }}
+        style={{
+          position: 'fixed',
+          top: '10px',
+          right: '10px',
+          zIndex: 1000,
+          padding: '8px 16px',
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Загрузить еще ({blocks.length} блоков)
+      </button>
 
       {/* Панель редактирования/создания блоков */}
       <EditingPanel
@@ -566,7 +461,7 @@ export default function Science_articles() {
           x={contextMenu.x}
           y={contextMenu.y}
           isPinned={blocks.find(b => b.id === contextMenu.blockId)?.is_pinned || false}
-          currentPhysicalScale={blocks.find(b => b.id === contextMenu.blockId)?.physical_scale || 0}
+          currentPhysicalScale={0}
           onPin={() => handlePinBlock(contextMenu.blockId)}
           onUnpin={() => handleUnpinBlock(contextMenu.blockId)}
           onPinWithScale={(physicalScale: number) => handlePinBlockWithScale(contextMenu.blockId, physicalScale)}

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { useArticlesData } from './useArticlesData';
+import useArticlesData from './useArticlesData';
 
-export function useArticlesDataLoader() {
+export function useArticlesDataLoader(viewportRef?: any) {
   const {
     blocks,
     links,
@@ -24,6 +24,42 @@ export function useArticlesDataLoader() {
     loadedLinkIdsRef
   } = useArticlesData();
 
+
+
+  // Функция центрирования viewport на блоках
+  const centerViewportOnBlocks = useCallback((newBlocks: any[]) => {
+    if (viewportRef?.current && newBlocks.length > 0) {
+      // Находим центр всех блоков
+      const centerX = newBlocks.reduce((sum, block) => sum + (block.x || 0), 0) / newBlocks.length;
+      const centerY = newBlocks.reduce((sum, block) => sum + (block.y || 0), 0) / newBlocks.length;
+
+      console.log(`[ArticlesPage] Centering viewport on blocks center: x=${centerX}, y=${centerY}`);
+      
+      // Находим диапазон координат для определения масштаба
+      const minX = Math.min(...newBlocks.map(b => b.x || 0));
+      const maxX = Math.max(...newBlocks.map(b => b.x || 0));
+      const minY = Math.min(...newBlocks.map(b => b.y || 0));
+      const maxY = Math.max(...newBlocks.map(b => b.y || 0));
+      
+      const rangeX = maxX - minX;
+      const rangeY = maxY - minY;
+      
+      console.log(`[ArticlesPage] Coordinate range: x=${minX}-${maxX} (${rangeX}), y=${minY}-${maxY} (${rangeY})`);
+      
+      // Центрируем viewport на центр данных
+      setTimeout(() => {
+        if (viewportRef.current) {
+                  // Устанавливаем подходящий масштаб для видимости всех блоков
+        const targetScale = Math.min(1.0, 800 / Math.max(rangeX, rangeY, 100));
+        viewportRef.current.scale = targetScale;
+        
+        viewportRef.current.focusOn(centerX, centerY);
+        console.log(`[ArticlesPage] Viewport centered on blocks with scale ${targetScale}`);
+        }
+      }, 100);
+    }
+  }, [viewportRef]);
+
   const loadNextPage = useCallback(async (centerX?: number, centerY?: number) => {
     if (isLoading) {
       console.log(`[ArticlesPage] Skipping loadNextPage - already loading`);
@@ -34,7 +70,7 @@ export function useArticlesDataLoader() {
     if (centerX == null && centerY == null) {
       if (blocks.length > 0 && pageOffset === 0) {
         console.log(`[ArticlesPage] Skipping loadNextPage - blocks already exist (${blocks.length} blocks)`);
-        return;
+        // НЕ возвращаемся - продолжаем загрузку для получения большего количества блоков
       }
     }
     
@@ -82,6 +118,9 @@ export function useArticlesDataLoader() {
         if (isBootLoading && processedBlocks.length > 0) {
           console.log(`[ArticlesPage] Убираем экран загрузки, processedBlocks: ${processedBlocks.length}`);
           setIsBootLoading(false);
+          
+          // Центрируем viewport на первой загрузке
+          centerViewportOnBlocks(processedBlocks);
         }
         
         // Переходим к следующей странице только для постраничной загрузки
@@ -99,7 +138,7 @@ export function useArticlesDataLoader() {
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, pageOffset, blocks.length, pageLimit, isBootLoading, loadedBlockIdsRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, setIsBootLoading, setPageOffset]);
+  }, [isLoading, pageOffset, blocks.length, pageLimit, isBootLoading, loadedBlockIdsRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, setIsBootLoading, setPageOffset, centerViewportOnBlocks]);
 
   const loadAround = useCallback(async (centerX: number, centerY: number) => {
     if (isLoading) return;
