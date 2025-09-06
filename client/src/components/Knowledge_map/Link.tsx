@@ -121,6 +121,7 @@ export const Link = memo(function Link({ linkData, blocks, isSelected, onClick }
       eventMode="static"
       cursor="pointer"
       onClick={onClick}
+      zIndex={10}
     />
   );
 }); 

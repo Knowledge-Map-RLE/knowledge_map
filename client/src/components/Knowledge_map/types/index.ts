@@ -6,6 +6,7 @@ export interface BlockData {
   layer: number;
   level: number;
   is_pinned?: boolean;
+  physical_scale?: number;
 }
 
 export interface LinkData {

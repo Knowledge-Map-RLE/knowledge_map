@@ -218,10 +218,35 @@ class DistributedIncrementalLayout:
                 print(f"Error in LP neighbors placement after {step45_time:.2f}s: {str(e)}")
                 print(f"Traceback: {traceback.format_exc()}")
             
-            # 5. Поиск и размещение компонентов связности (ОТКЛЮЧЕНО)
-            # logger.info("=== STEP 5: PLACING CONNECTED COMPONENTS ===")
-            # components = await self.component_processor.find_connected_components_gds()
-            # logger.info(f"Found {len(components)} connected components")
+            # 5. Поиск и размещение компонентов связности
+            logger.info("=== STEP 5: PLACING CONNECTED COMPONENTS ===")
+            print("=== STEP 5: PLACING CONNECTED COMPONENTS ===")
+            logger.info("Starting connected components search and placement...")
+            print("Starting connected components search and placement...")
+            step5_start = time.time()
+            try:
+                components = await self.component_processor.find_connected_components_gds()
+                step5_time = time.time() - step5_start
+                logger.info(f"Connected components search completed in {step5_time:.2f}s: {len(components)} components found")
+                print(f"Connected components search completed in {step5_time:.2f}s: {len(components)} components found")
+                
+                # Размещаем компоненты
+                if components:
+                    placement_start = time.time()
+                    await self.component_processor.place_connected_components_parallel(components)
+                    placement_time = time.time() - placement_start
+                    logger.info(f"Connected components placement completed in {placement_time:.2f}s")
+                    print(f"Connected components placement completed in {placement_time:.2f}s")
+                else:
+                    logger.info("No connected components found to place")
+                    print("No connected components found to place")
+                    
+            except Exception as e:
+                step5_time = time.time() - step5_start
+                logger.error(f"Error in connected components processing after {step5_time:.2f}s: {str(e)}")
+                logger.error(f"Traceback: {traceback.format_exc()}")
+                print(f"Error in connected components processing after {step5_time:.2f}s: {str(e)}")
+                print(f"Traceback: {traceback.format_exc()}")
             
             # 6. Быстрое размещение оставшихся статей (ОТКЛЮЧЕНО)
             # logger.info("=== STEP 6: FAST BATCH PLACEMENT OF REMAINING ARTICLES ===")
@@ -234,7 +259,7 @@ class DistributedIncrementalLayout:
             #     logger.error(f"Error in processing pinned blocks: {str(e)}")
             #     # Продолжаем выполнение даже при ошибке
             
-            # Создаем базовый результат после STEP 4.5
+            # Создаем базовый результат после STEP 5
             processing_time = time.time() - start_time
             result = LayoutResult(
                 success=True,
@@ -243,12 +268,13 @@ class DistributedIncrementalLayout:
                 levels={},
                 statistics={
                     "processing_time_seconds": processing_time,
-                    "step_completed": "longest_path_and_neighbors_placed",
+                    "step_completed": "connected_components_placed",
                     "total_articles": self.total_articles_estimate,
                     "removed_edges": removed_edges,
                     "longest_path_length": len(longest_path),
                     "lp_placements_count": len(lp_placements) if lp_placements else 0,
                     "lp_neighbors_count": lp_neighbors_count if 'lp_neighbors_count' in locals() else 0,
+                    "connected_components_count": len(components) if 'components' in locals() else 0,
                     "graph_stats": stats
                 }
             )
@@ -285,8 +311,8 @@ class DistributedIncrementalLayout:
                     logger.info(f"{key}: {value}")
                     print(f"{key}: {value}")
             
-            logger.info("=== LAYOUT COMPLETED SUCCESSFULLY (STEPS 1-4.5 ONLY) ===")
-            print("=== LAYOUT COMPLETED SUCCESSFULLY (STEPS 1-4.5 ONLY) ===")
+            logger.info("=== LAYOUT COMPLETED SUCCESSFULLY (STEPS 1-5) ===")
+            print("=== LAYOUT COMPLETED SUCCESSFULLY (STEPS 1-5) ===")
             return result
             
         except Exception as e:

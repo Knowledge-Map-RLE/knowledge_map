@@ -10,6 +10,7 @@ import { Sublevel } from '../Knowledge_map/Sublevel';
 import { Block } from '../Knowledge_map/Block';
 import { BlockContextMenu } from '../Knowledge_map/BlockContextMenu';
 import ModeIndicator from '../Knowledge_map/ModeIndicator';
+import ViewportCoordinates from '../Knowledge_map/ViewportCoordinates';
 import { useKeyboardControlsWithProps } from '../Knowledge_map/hooks/useKeyboardControls';
 // Загружаем данные только с бэкенда, без клиентских вычислений координат
 import { useSelectionState } from '../Knowledge_map/hooks/useSelectionState';
@@ -24,12 +25,36 @@ import type { LinkCreationState, BlockData, LinkData } from '../Knowledge_map/ty
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from '../Knowledge_map/constants';
 
 import { useArticlesDataLoader } from './hooks/useArticlesDataLoader';
+import { useViewport } from '../contexts/ViewportContext';
 
 extend({ Container, Graphics, Text });
 
 export default function Science_articles() {
+  console.log('Science_articles component is rendering!');
+  
   const containerRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<ViewportRef>(null);
+  const viewportRef = useRef<ViewportRef | null>(null);
+  const { setViewportRef } = useViewport();
+
+  // Регистрируем viewportRef в глобальном контексте
+  useEffect(() => {
+    console.log('Science_articles useEffect triggered');
+    
+    const registerViewport = () => {
+      console.log('Science_articles: Registering viewportRef in context:', !!viewportRef.current);
+      if (viewportRef.current) {
+        setViewportRef(viewportRef);
+      }
+    };
+
+    // Пробуем зарегистрировать сразу
+    registerViewport();
+    
+    // И также через задержку на случай, если viewport еще не готов
+    const timer = setTimeout(registerViewport, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [setViewportRef]);
 
   // Хук для загрузки данных статей
   const {
@@ -224,17 +249,23 @@ export default function Science_articles() {
   // Автоматическое центрирование при загрузке блоков
   useEffect(() => {
     if (blocks.length > 0 && !focusTargetId) {
-      // Находим центр всех блоков
-      const centerX = blocks.reduce((sum, block) => sum + (block.x || 0), 0) / blocks.length;
-      const centerY = blocks.reduce((sum, block) => sum + (block.y || 0), 0) / blocks.length;
-
-      console.log(`[ArticlesPage] Centering viewport on blocks center: x=${centerX}, y=${centerY}`);
+      // Логируем координаты блоков для отладки
+      const sampleBlocks = blocks.slice(0, 5); // Первые 5 блоков
+      console.log(`[ArticlesPage] Sample block coordinates:`, sampleBlocks.map(b => ({ 
+        id: b.id, 
+        x: b.x, 
+        y: b.y,
+        layer: b.layer,
+        level: b.level
+      })));
       
-      // Центрируем viewport на центр данных
+      // Центрируем viewport на центр холста (0, 0) вместо центра блоков
+      console.log(`[ArticlesPage] Centering viewport on canvas center (0, 0)`);
+      
       setTimeout(() => {
         if (viewportRef.current) {
-          viewportRef.current.focusOn(centerX, centerY);
-          console.log(`[ArticlesPage] Viewport centered on blocks`);
+          viewportRef.current.focusOn(0, 0);
+          console.log(`[ArticlesPage] Viewport centered on canvas center`);
         }
       }, 100);
     }
@@ -468,6 +499,7 @@ export default function Science_articles() {
           onClose={handleContextMenuClose}
         />
       )}
+      
     </main>
   );
 }

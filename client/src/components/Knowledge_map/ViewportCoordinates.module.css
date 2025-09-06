@@ -1,0 +1,56 @@
+.coordinatesIndicator {
+  position: fixed;
+  bottom: 120px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  z-index: 1000;
+  min-width: 180px;
+  font-family: 'PT Sans', sans-serif;
+}
+
+.coordinatesText {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #1a1a1a;
+}
+
+.coordinatesIcon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.coordinatesContent {
+  flex: 1;
+}
+
+.coordinatesLabel {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #374151;
+}
+
+.coordinatesValues {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+.scaleValue {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+}

@@ -123,16 +123,24 @@ class LongestPathProcessor:
         for row in find_result:
             logger.info(f"LP node: uid={row['uid']}, index={row['index']}, total_nodes={row.get('total_nodes', 'N/A')}")
         
-        # 2. Размещаем найденный longest path одним запросом с вычислениями в Cypher
+        # 2. Размещаем найденный longest path топологически
         placements = []
         longest_path = [row["uid"] for row in find_result]
         
-        # Выполняем размещение с вычислениями координат в БД
+        # Выполняем топологическое размещение
         if longest_path:
-            db_placement_query = """
-            UNWIND $longest_path as vertex_uid
+            # Сначала получаем топологический порядок
+            topological_order = await self._get_topological_order_for_lp(longest_path)
             
-            // Сортируем по uid для детерминированного порядка
+            if not topological_order:
+                logger.warning("Failed to get topological order, falling back to original order")
+                topological_order = longest_path
+            
+            # Размещаем в топологическом порядке
+            db_placement_query = """
+            UNWIND $topological_order as vertex_uid
+            
+            // Сортируем для детерминированного порядка
             WITH vertex_uid
             ORDER BY vertex_uid
             
@@ -146,8 +154,11 @@ class LongestPathProcessor:
             SET n.layout_status = 'in_longest_path',
                 n.layer = i,
                 n.level = 0,
-                n.x = i * layer_spacing,
-                n.y = i * 10  // Небольшое смещение по y для видимости
+                n.x = CASE 
+                    WHEN i * layer_spacing > 100000 THEN 100000  // Защита от огромных X
+                    ELSE i * layer_spacing 
+                END,
+                n.y = 0  // Все LP вершины на уровне 0
             
             RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y
             ORDER BY n.layer
@@ -158,7 +169,7 @@ class LongestPathProcessor:
                     result = await neo4j_client.execute_query_with_retry(
                         db_placement_query,
                         {
-                            "longest_path": longest_path,
+                            "topological_order": topological_order,
                             "layer_spacing": layer_spacing,
                             "level_spacing": level_spacing
                         }
@@ -250,13 +261,20 @@ class LongestPathProcessor:
         layer_spacing = self.position_calculator.LAYER_SPACING
         level_spacing = self.position_calculator.LEVEL_SPACING
         
-        # Размещаем кэшированный LP одним запросом с вычислениями в Cypher
+        # Размещаем кэшированный LP топологически
         placements = []
         
-        # Выполняем размещение с вычислениями координат в БД
+        # Выполняем топологическое размещение
         if longest_path:
+            # Получаем топологический порядок для кэшированного LP
+            topological_order = await self._get_topological_order_for_lp(longest_path)
+            
+            if not topological_order:
+                logger.warning("Failed to get topological order for cached LP, falling back to original order")
+                topological_order = longest_path
+            
             cached_placement_query = """
-            UNWIND $longest_path as vertex_uid
+            UNWIND $topological_order as vertex_uid
             
             // Сортируем для правильного порядка
             WITH vertex_uid, collect(vertex_uid) as lp_list
@@ -268,8 +286,11 @@ class LongestPathProcessor:
             SET n.layout_status = 'in_longest_path',
                 n.layer = i,
                 n.level = 0,
-                n.x = i * layer_spacing,
-                n.y = i * 10  // Небольшое смещение по y для видимости
+                n.x = CASE 
+                    WHEN i * layer_spacing > 100000 THEN 100000  // Защита от огромных X
+                    ELSE i * layer_spacing 
+                END,
+                n.y = 0  // Все LP вершины на уровне 0
             
             RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y
             ORDER BY n.layer
@@ -280,7 +301,7 @@ class LongestPathProcessor:
                     result = await neo4j_client.execute_query_with_retry(
                         cached_placement_query,
                         {
-                            "longest_path": longest_path,
+                            "topological_order": topological_order,
                             "layer_spacing": layer_spacing,
                             "level_spacing": level_spacing
                         }
@@ -349,102 +370,280 @@ class LongestPathProcessor:
 
     async def place_lp_neighbors(self, longest_path: List[str]) -> int:
         """
-        Размещает предков и потомков вершин LP рядом с ними.
-        Вся логика выполняется на стороне БД для максимальной производительности.
-        Использует арифметическую прогрессию: y=0, x рассчитывается в БД.
+        Размещает соседей LP с правильной топологией:
+        - Каждый блок должен быть на слое после своего предка и перед своим потомком
+        - При необходимости сдвигает LP вершины вправо инкрементально
+        - Обеспечивает уникальность позиций (layer, level)
         """
-        logger.info("Placing LP neighbors using DB-side arithmetic progression (y=0, x=progression)")
+        logger.info("Placing LP neighbors with correct topology and incremental LP shifting")
         
         # Получаем параметры позиционирования
         layer_spacing = self.position_calculator.LAYER_SPACING
         level_spacing = self.position_calculator.LEVEL_SPACING
         
-        # Вся логика размещения выполняется в одном запросе к БД
-        db_placement_query = """
-        // 1. Находим всех соседей LP вершин (предков и потомков)
+        # 1. Получаем всех соседей LP с их связями
+        neighbors_query = """
+        // Находим всех соседей LP вершин с их связями
         MATCH (lp:Article)
         WHERE lp.layout_status = 'in_longest_path'
         OPTIONAL MATCH (pred:Article)-[:CITES]->(lp)
         OPTIONAL MATCH (lp)-[:CITES]->(succ:Article)
         
-        // 2. Собираем всех уникальных соседей
-        WITH collect(DISTINCT pred) + collect(DISTINCT succ) as all_neighbors
-        UNWIND all_neighbors as neighbor
-        WITH neighbor
-        WHERE neighbor IS NOT NULL AND neighbor.layout_status <> 'in_longest_path'
+        // Собираем соседей с информацией о связанных LP блоках
+        WITH lp, 
+             collect(DISTINCT {neighbor: pred, lp_block: lp, relationship: 'predecessor'}) + 
+             collect(DISTINCT {neighbor: succ, lp_block: lp, relationship: 'successor'}) as connections
+        UNWIND connections as conn
+        WITH conn.neighbor as neighbor, conn.lp_block as lp_block, conn.relationship as rel
+        WHERE neighbor IS NOT NULL AND (neighbor.layout_status IS NULL OR neighbor.layout_status <> 'in_longest_path')
         
-        // 3. Получаем количество LP вершин для расчета стартовой позиции
-        WITH neighbor, 
-             size([(lp:Article) WHERE lp.layout_status = 'in_longest_path']) as lp_count
+        // Возвращаем соседей с их связями
+        RETURN DISTINCT neighbor.uid as neighbor_id, 
+               lp_block.uid as lp_id, 
+               lp_block.layer as lp_layer,
+               lp_block.level as lp_level,
+               rel as relationship
+        ORDER BY neighbor_id, lp_id
+        """
         
-        // 4. Сортируем соседей по uid для детерминированного порядка
-        WITH neighbor, lp_count
-        ORDER BY neighbor.uid
+        async with self.circuit_breaker:
+            neighbors_result = await neo4j_client.execute_query_with_retry(neighbors_query)
         
-        // 5. Присваиваем индексы и рассчитываем позиции по арифметической прогрессии
-        WITH neighbor, lp_count, collect(neighbor) as neighbors_list
-        UNWIND range(0, size(neighbors_list)-1) as i
-        WITH neighbors_list[i] as neighbor, lp_count, i
+        if not neighbors_result:
+            logger.info("No LP neighbors found to place")
+            return 0
         
-        // 6. Рассчитываем координаты по арифметической прогрессии
-        WITH neighbor, 
-             lp_count + i as layer,  // Слои после LP вершин
-             0 as level,             // Все на уровне 0
-             (lp_count + i) * $layer_spacing as x,  // x по арифметической прогрессии
-             i * 10 as y                             // Небольшое смещение по y
+        logger.info(f"Found {len(neighbors_result)} neighbor-LP connections")
         
-        // 7. Размещаем соседей
-        SET neighbor.layout_status = 'lp_neighbor',
-            neighbor.layer = layer,
-            neighbor.level = level,
-            neighbor.x = x,
-            neighbor.y = y
+        # 2. Строим граф зависимостей для топологического размещения
+        neighbors_map = {}
+        for row in neighbors_result:
+            neighbor_id = row["neighbor_id"]
+            if neighbor_id not in neighbors_map:
+                neighbors_map[neighbor_id] = []
+            neighbors_map[neighbor_id].append({
+                "lp_id": row["lp_id"],
+                "lp_layer": row["lp_layer"],
+                "lp_level": row["lp_level"],
+                "relationship": row["relationship"]
+            })
         
-        // 8. Возвращаем статистику
-        RETURN count(neighbor) as placed_count,
-               collect(neighbor.uid)[0..5] as first_five_placed,
-               min(neighbor.layer) as min_layer,
-               max(neighbor.layer) as max_layer
+        logger.info(f"Processing {len(neighbors_map)} unique neighbors")
+        
+        # 3. Топологическое размещение с инкрементальным сдвигом LP
+        placed_count = 0
+        for neighbor_id, connections in neighbors_map.items():
+            # Находим топологически корректную позицию
+            target_layer = await self._find_topological_position(neighbor_id, connections, longest_path)
+            
+            # Проверяем, нужно ли сдвигать LP вершины
+            if target_layer is not None:
+                await self._shift_lp_vertices_if_needed(target_layer, longest_path, layer_spacing, level_spacing)
+                
+                # Ищем свободное место в целевом слое
+                final_layer, final_level = await self._find_free_position_in_layer(target_layer, 1)
+                
+                # Размещаем соседа
+                success = await self._place_single_neighbor(neighbor_id, final_layer, final_level, layer_spacing, level_spacing)
+                if success:
+                    placed_count += 1
+                    
+                # Логируем прогресс каждые 10 размещений
+                if placed_count % 10 == 0:
+                    logger.info(f"Placed {placed_count} LP neighbors so far...")
+        
+        logger.info(f"Successfully placed {placed_count} LP neighbors with topological placement")
+        return placed_count
+
+    async def _find_topological_position(self, neighbor_id: str, connections: List[Dict], longest_path: List[str]) -> Optional[int]:
+        """
+        Находит топологически корректную позицию для соседа.
+        Возвращает target_layer или None если размещение невозможно.
+        """
+        if not connections:
+            return None
+        
+        # Анализируем связи для определения топологической позиции
+        predecessor_layers = []
+        successor_layers = []
+        
+        for conn in connections:
+            lp_layer = conn.get("lp_layer")
+            if lp_layer is None:
+                continue
+                
+            if conn["relationship"] == "predecessor":
+                # Сосед является предком LP блока - должен быть на слое ПЕРЕД LP блоком
+                predecessor_layers.append(lp_layer)
+            elif conn["relationship"] == "successor":
+                # Сосед является потомком LP блока - должен быть на слое ПОСЛЕ LP блока
+                successor_layers.append(lp_layer)
+        
+        # Проверяем, что у нас есть валидные слои
+        if not predecessor_layers and not successor_layers:
+            return None
+        
+        # Определяем целевую позицию
+        if predecessor_layers and successor_layers:
+            # Сосед связан и с предками, и с потомками - нужен промежуточный слой
+            min_successor_layer = min(successor_layers)
+            max_predecessor_layer = max(predecessor_layers)
+            
+            if min_successor_layer > max_predecessor_layer + 1:
+                # Есть место между предками и потомками
+                target_layer = max_predecessor_layer + 1
+            else:
+                # Нужно сдвинуть LP вершины
+                target_layer = max_predecessor_layer + 1
+                
+        elif predecessor_layers:
+            # Только предки - размещаем перед самым левым предком
+            target_layer = min(predecessor_layers)
+            
+        elif successor_layers:
+            # Только потомки - размещаем после самого правого потомка
+            target_layer = max(successor_layers) + 1
+            
+        else:
+            return None
+        
+        # Проверяем разумность значения
+        if target_layer < 0 or target_layer > 10000:  # Разумные границы
+            logger.warning(f"Unreasonable target layer {target_layer} for neighbor {neighbor_id}, using fallback")
+            return 10  # Fallback позиция
+        
+        return target_layer
+
+    async def _shift_lp_vertices_if_needed(self, target_layer: int, longest_path: List[str], layer_spacing: float, level_spacing: float):
+        """
+        Сдвигает LP вершины вправо, если это необходимо для размещения соседа.
+        """
+        # Находим максимальный слой среди LP вершин
+        max_lp_layer_query = """
+        MATCH (n:Article)
+        WHERE n.layout_status = 'in_longest_path' AND n.layer IS NOT NULL
+        RETURN max(n.layer) as max_layer
+        """
+        
+        async with self.circuit_breaker:
+            result = await neo4j_client.execute_query_with_retry(max_lp_layer_query)
+        
+        max_lp_layer = result[0]["max_layer"] if result and result[0] and result[0]["max_layer"] is not None else 0
+        
+        # Проверяем разумность max_lp_layer (не должно быть больше 10000)
+        if max_lp_layer > 10000:
+            logger.warning(f"Unreasonable max_lp_layer: {max_lp_layer}, resetting to 0")
+            max_lp_layer = 0
+        
+        logger.info(f"Target layer: {target_layer}, Max LP layer: {max_lp_layer}")
+        
+        # Если целевой слой пересекается с LP вершинами, сдвигаем их
+        if target_layer <= max_lp_layer:
+            # Простой сдвиг на 1 слой - достаточно для размещения соседа
+            shift_amount = 1
+            logger.info(f"Shifting LP vertices by {shift_amount} layer to make room for neighbor at layer {target_layer}")
+            
+            # Сдвигаем все LP вершины начиная с target_layer
+            shift_query = """
+            MATCH (n:Article)
+            WHERE n.layout_status = 'in_longest_path' AND n.layer >= $target_layer
+            SET n.layer = n.layer + $shift_amount,
+                n.x = (n.layer + $shift_amount) * $layer_spacing
+            RETURN count(n) as shifted_count
+            """
+            
+            async with self.circuit_breaker:
+                shift_result = await neo4j_client.execute_query_with_retry(shift_query, {
+                    "target_layer": target_layer,
+                    "shift_amount": shift_amount,
+                    "layer_spacing": layer_spacing
+                })
+            
+            shifted_count = shift_result[0]["shifted_count"] if shift_result and shift_result[0] else 0
+            logger.info(f"Shifted {shifted_count} LP vertices by {shift_amount} layer")
+
+    async def _find_free_position_in_layer(self, target_layer: int, target_level: int) -> Tuple[int, int]:
+        """
+        Ищет свободное место в целевом слое, начиная с целевого уровня.
+        Если место занято, ищет ближайшее свободное место в том же слое.
+        """
+        # Сначала проверяем целевую позицию
+        if await self._is_position_free(target_layer, target_level):
+            return (target_layer, target_level)
+        
+        # Ищем свободное место в том же слое, начиная с целевого уровня
+        for level_offset in range(1, 100):  # Максимум 100 уровней вверх
+            # Проверяем уровень выше
+            if await self._is_position_free(target_layer, target_level + level_offset):
+                return (target_layer, target_level + level_offset)
+            
+            # Проверяем уровень ниже (если target_level > 0)
+            if target_level - level_offset >= 0:
+                if await self._is_position_free(target_layer, target_level - level_offset):
+                    return (target_layer, target_level - level_offset)
+        
+        # Если не нашли свободное место в слое, создаем новый уровень
+        max_level_query = """
+        MATCH (n:Article {layer: $layer})
+        WHERE n.layout_status IN ['placed', 'in_longest_path', 'lp_neighbor']
+        RETURN max(n.level) as max_level
+        """
+        
+        async with self.circuit_breaker:
+            result = await neo4j_client.execute_query_with_retry(max_level_query, {"layer": target_layer})
+        
+        new_level = 0
+        if result and result[0] and result[0]["max_level"] is not None:
+            new_level = int(result[0]["max_level"]) + 1
+        
+        return (target_layer, new_level)
+
+    async def _is_position_free(self, layer: int, level: int) -> bool:
+        """Проверяет, свободна ли позиция (layer, level)."""
+        query = """
+        MATCH (n:Article {layer: $layer, level: $level})
+        WHERE n.layout_status IN ['placed', 'in_longest_path', 'lp_neighbor']
+        RETURN count(n) as count
+        """
+        async with self.circuit_breaker:
+            result = await neo4j_client.execute_query_with_retry(query, {"layer": layer, "level": level})
+        
+        if result and result[0]:
+            return int(result[0]["count"]) == 0
+        return True
+
+    async def _place_single_neighbor(self, neighbor_id: str, layer: int, level: int, layer_spacing: float, level_spacing: float) -> bool:
+        """Размещает одного соседа LP в указанной позиции."""
+        x = layer * layer_spacing
+        y = level * level_spacing
+        
+        placement_query = """
+        MATCH (n:Article {uid: $neighbor_id})
+        SET n.layout_status = 'lp_neighbor',
+            n.layer = $layer,
+            n.level = $level,
+            n.x = $x,
+            n.y = $y,
+            n.is_lp_neighbor = true,
+            n.visual_priority = 100
+        RETURN n.uid as placed_id
         """
         
         try:
             async with self.circuit_breaker:
-                result = await neo4j_client.execute_query_with_retry(
-                    db_placement_query,
-                    {
-                        "layer_spacing": layer_spacing,
-                        "level_spacing": level_spacing
-                    }
-                )
+                result = await neo4j_client.execute_query_with_retry(placement_query, {
+                    "neighbor_id": neighbor_id,
+                    "layer": layer,
+                    "level": level,
+                    "x": x,
+                    "y": y
+                })
             
-            if result and result[0]:
-                placed_count = result[0]["placed_count"]
-                first_five = result[0]["first_five_placed"] or []
-                min_layer = result[0]["min_layer"]
-                max_layer = result[0]["max_layer"]
-                
-                logger.info(f"Successfully placed {placed_count} LP neighbors using DB-side arithmetic progression")
-                logger.info(f"Layer range: {min_layer} to {max_layer}")
-                
-                if first_five:
-                    logger.info(f"First 5 placed neighbors: {first_five}")
-                
-                if placed_count > 5:
-                    logger.info(f"... and {placed_count - 5} more neighbors")
-                    
-            else:
-                placed_count = 0
-                logger.info("No LP neighbors found to place")
+            return result is not None and len(result) > 0
                 
         except Exception as e:
-            logger.error(f"Failed to place LP neighbors using DB-side logic: {str(e)}")
-            logger.info("Falling back to Python-side placement...")
-            
-            # Fallback на Python-логику при ошибке
-            return await self._place_lp_neighbors_fallback(longest_path)
-        
-        logger.info(f"LP neighbors placement completed: {placed_count} nodes placed using DB-side arithmetic progression")
-        return placed_count
+            logger.error(f"Failed to place neighbor {neighbor_id}: {str(e)}")
+            return False
 
     async def _place_lp_neighbors_fallback(self, longest_path: List[str]) -> int:
         """
@@ -508,7 +707,7 @@ class LongestPathProcessor:
             n.layer = start_layer + i,
             n.level = 0,
             n.x = (start_layer + i) * layer_spacing,
-            n.y = i * 10
+            n.y = 0
         
         RETURN count(n) as placed_count,
                collect(n.uid)[0..5] as first_five_placed
@@ -561,3 +760,78 @@ class LongestPathProcessor:
             result = await neo4j_client.execute_query_with_retry(clear_query)
             cleared_count = result[0]["cleared_count"] if result else 0
             logger.info(f"Cleared layout positions for {cleared_count} articles")
+
+    async def _get_topological_order_for_lp(self, longest_path: List[str]) -> Optional[List[str]]:
+        """
+        Получает топологический порядок для longest path блоков.
+        Возвращает список UID в топологическом порядке или None при ошибке.
+        """
+        if not longest_path or len(longest_path) <= 1:
+            return longest_path
+        
+        logger.info(f"Getting topological order for {len(longest_path)} LP blocks")
+        
+        try:
+            # Получаем связи между блоками longest path
+            relationships_query = """
+            UNWIND $lp_blocks as block_uid
+            MATCH (n:Article {uid: block_uid})
+            OPTIONAL MATCH (n)-[:CITES]->(target:Article)
+            WHERE target.uid IN $lp_blocks
+            RETURN n.uid as source, target.uid as target
+            """
+            
+            async with self.circuit_breaker:
+                relationships_result = await neo4j_client.execute_query_with_retry(
+                    relationships_query, 
+                    {"lp_blocks": longest_path}
+                )
+            
+            # Строим граф зависимостей
+            in_degree = {uid: 0 for uid in longest_path}
+            graph = {uid: [] for uid in longest_path}
+            
+            for row in relationships_result:
+                source = row["source"]
+                target = row["target"]
+                if target and source != target:  # Избегаем петель
+                    graph[source].append(target)
+                    in_degree[target] += 1
+            
+            # Топологическая сортировка (Kahn's algorithm)
+            queue = [uid for uid, degree in in_degree.items() if degree == 0]
+            topological_order = []
+            
+            # Защита от бесконечных циклов
+            max_iterations = len(longest_path) * 2
+            iterations = 0
+            
+            while queue and iterations < max_iterations:
+                iterations += 1
+                current = queue.pop(0)
+                topological_order.append(current)
+                
+                # Уменьшаем in_degree для соседей
+                for neighbor in graph[current]:
+                    in_degree[neighbor] -= 1
+                    if in_degree[neighbor] == 0:
+                        queue.append(neighbor)
+            
+            # Проверяем, что все блоки включены
+            if len(topological_order) != len(longest_path):
+                logger.warning(f"Topological sort incomplete: {len(topological_order)}/{len(longest_path)} blocks")
+                # Добавляем недостающие блоки в конец
+                missing = [uid for uid in longest_path if uid not in topological_order]
+                topological_order.extend(missing)
+            
+            # Проверяем разумность результата
+            if len(topological_order) > 10000:
+                logger.error(f"Topological order too large: {len(topological_order)} blocks")
+                return None
+            
+            logger.info(f"Topological order computed: {len(topological_order)} blocks")
+            return topological_order
+            
+        except Exception as e:
+            logger.error(f"Failed to compute topological order: {str(e)}")
+            return None

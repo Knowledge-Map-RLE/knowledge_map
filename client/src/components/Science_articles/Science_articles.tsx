@@ -19,12 +19,36 @@ import { useArticlesViewport } from './hooks/useArticlesViewport';
 import { ArticlesRenderer } from './components/ArticlesRenderer';
 import { ArticlesControls } from './components/ArticlesControls';
 import { TestNode } from './components/TestNode';
+import { useViewport } from '../../contexts/ViewportContext';
 
 extend({ Container, Graphics, Text });
 
 export default function Science_articles() {
+  console.log('Science_articles.tsx component is rendering!');
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
+  const { setViewportRef } = useViewport();
+
+  // Регистрируем viewportRef в глобальном контексте
+  useEffect(() => {
+    console.log('Science_articles.tsx useEffect triggered');
+    
+    const registerViewport = () => {
+      console.log('Science_articles.tsx: Registering viewportRef in context:', !!viewportRef.current);
+      if (viewportRef.current) {
+        setViewportRef(viewportRef);
+      }
+    };
+
+    // Пробуем зарегистрировать сразу
+    registerViewport();
+    
+    // И также через задержку на случай, если viewport еще не готов
+    const timer = setTimeout(registerViewport, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [setViewportRef]);
 
   // Используем новый хук для загрузки данных
   const {

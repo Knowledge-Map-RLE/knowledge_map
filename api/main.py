@@ -240,16 +240,33 @@ async def get_articles_layout() -> Dict[str, Any]:
         # Используем настоящие ID из базы данных
         blocks = []
         for row in blocks_result:
+            layer_val = int(row[2] or 0)
+            level_val = int(row[3] or 0)
+            
+            # Используем реальные координаты из базы данных или вычисляем их
+            if row[7] is not None and row[8] is not None:
+                # Координаты уже заданы в базе данных
+                x_coord = float(row[7])
+                y_coord = float(row[8])
+            else:
+                # Вычисляем координаты на основе layer и level
+                # Используем те же коэффициенты, что и в алгоритме укладки
+                LAYER_SPACING = 240  # BLOCK_WIDTH (200) + HORIZONTAL_GAP (40)
+                LEVEL_SPACING = 130  # BLOCK_HEIGHT (80) + VERTICAL_GAP (50)
+                
+                x_coord = float(layer_val * LAYER_SPACING)
+                y_coord = float(level_val * LEVEL_SPACING)
+            
             block_data = {
                 "id": str(row[0]),
                 "content": str(row[1] or ""),
-                "layer": int(row[2] or 0),
-                "level": int(row[3] or 0),
+                "layer": layer_val,
+                "level": level_val,
                 "sublevel_id": int(row[4] or 0),
                 "is_pinned": bool(row[5]) if row[5] is not None else False,
                 "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
-                "x": float(row[7]) if row[7] is not None else None,
-                "y": float(row[8]) if row[8] is not None else None,
+                "x": x_coord,
+                "y": y_coord,
                 "metadata": {}
             }
             if block_data.get("is_pinned"):
@@ -339,16 +356,33 @@ async def get_all_articles_layout() -> Dict[str, Any]:
 
         blocks: list[dict] = []
         for row in blocks_result:
+            layer_val = int(row[2] or 0)
+            level_val = int(row[3] or 0)
+            
+            # Используем реальные координаты из базы данных или вычисляем их
+            if row[7] is not None and row[8] is not None:
+                # Координаты уже заданы в базе данных
+                x_coord = float(row[7])
+                y_coord = float(row[8])
+            else:
+                # Вычисляем координаты на основе layer и level
+                # Используем те же коэффициенты, что и в алгоритме укладки
+                LAYER_SPACING = 240  # BLOCK_WIDTH (200) + HORIZONTAL_GAP (40)
+                LEVEL_SPACING = 130  # BLOCK_HEIGHT (80) + VERTICAL_GAP (50)
+                
+                x_coord = float(layer_val * LAYER_SPACING)
+                y_coord = float(level_val * LEVEL_SPACING)
+            
             block = {
                 "id": str(row[0]),
                 "content": str(row[1] or ""),
-                "layer": int(row[2] or 0),
-                "level": int(row[3] or 0),
+                "layer": layer_val,
+                "level": level_val,
                 "sublevel_id": int(row[4] or 0),
                 "is_pinned": bool(row[5]) if row[5] is not None else False,
                 "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
-                "x": float(row[7]) if row[7] is not None else None,
-                "y": float(row[8]) if row[8] is not None else None,
+                "x": x_coord,
+                "y": y_coord,
                 "layout_status": str(row[9] or ""),
                 "metadata": {},
             }
@@ -452,9 +486,19 @@ async def get_articles_layout_page(
             layer_val = int(row[2] or 0)
             level_val = int(row[3] or 0)
             sub_val = int(row[4] or 0)
-            # Используем реальные координаты из базы данных
-            x_coord = float(row[7]) if row[7] is not None else 0.0
-            y_coord = float(row[8]) if row[8] is not None else 0.0
+            # Используем реальные координаты из базы данных или вычисляем их
+            if row[7] is not None and row[8] is not None:
+                # Координаты уже заданы в базе данных
+                x_coord = float(row[7])
+                y_coord = float(row[8])
+            else:
+                # Вычисляем координаты на основе layer и level
+                # Используем те же коэффициенты, что и в алгоритме укладки
+                LAYER_SPACING = 240  # BLOCK_WIDTH (200) + HORIZONTAL_GAP (40)
+                LEVEL_SPACING = 130  # BLOCK_HEIGHT (80) + VERTICAL_GAP (50)
+                
+                x_coord = float(layer_val * LAYER_SPACING)
+                y_coord = float(level_val * LEVEL_SPACING)
 
             block = {
                 "id": str(row[0]),

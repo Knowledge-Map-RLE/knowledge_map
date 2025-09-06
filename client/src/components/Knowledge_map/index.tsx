@@ -9,6 +9,7 @@ import { Sublevel } from './Sublevel';
 import { Block } from './Block';
 import { BlockContextMenu } from './BlockContextMenu';
 import ModeIndicator from './ModeIndicator';
+import ViewportCoordinates from './ViewportCoordinates';
 import { useKeyboardControlsWithProps } from './hooks/useKeyboardControls';
 import { useDataLoading } from './hooks/useDataLoading';
 import { useSelectionState } from './hooks/useSelectionState';
@@ -21,6 +22,7 @@ import { EditingPanel } from './components/EditingPanel';
 import { EditMode } from './types';
 import type { LinkCreationState, BlockData, LinkData } from './types';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
+import { useViewport } from '../../contexts/ViewportContext';
 import styles from './Knowledge_map.module.css';
 
 extend({ Container, Graphics, Text });
@@ -28,6 +30,25 @@ extend({ Container, Graphics, Text });
 export default function Knowledge_map() {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
+  const { setViewportRef } = useViewport();
+
+  // Регистрируем viewportRef в глобальном контексте
+  useEffect(() => {
+    const registerViewport = () => {
+      console.log('Knowledge_map: Registering viewportRef in context:', !!viewportRef.current);
+      if (viewportRef.current) {
+        setViewportRef(viewportRef);
+      }
+    };
+
+    // Пробуем зарегистрировать сразу
+    registerViewport();
+    
+    // И также через задержку на случай, если viewport еще не готов
+    const timer = setTimeout(registerViewport, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [setViewportRef, pixiReady]); // Добавляем pixiReady как зависимость
 
   const {
     blocks, links, levels, sublevels, isLoading, loadError, loadLayoutData,
@@ -291,7 +312,7 @@ export default function Knowledge_map() {
             />
           ))}
 
-          {/* Рендерим все связи */}
+          {/* Рендерим все связи ПЕРВЫМИ (под блоками) */}
           {links.map(link => (
             <Link
               key={link.id}
@@ -302,14 +323,14 @@ export default function Knowledge_map() {
             />
           ))}
           
-          {/* Рендерим все блоки отдельно */}
+          {/* Рендерим все блоки ПОСЛЕДНИМИ (поверх связей) */}
           {blocks.map(block => (
             <Block
-              key={block.id}
-              blockData={block}
-              onBlockClick={handleBlockClick}
-              isSelected={selectedBlocks.includes(block.id)}
-              currentMode={currentMode}
+            key={block.id}
+            blockData={block}
+            onBlockClick={handleBlockClick}
+            isSelected={selectedBlocks.includes(block.id)}
+            currentMode={currentMode}
               onArrowClick={handleArrowClick}
               onBlockPointerDown={handleBlockPointerDown}
               onBlockMouseEnter={handleBlockMouseEnter}
@@ -319,9 +340,10 @@ export default function Knowledge_map() {
               instantBlockClickRef={instantBlockClickRef}
             />
           ))}
+          
         </Viewport>
       </Application>
-      <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
+        <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
 
       {/* Панель редактирования/создания блоков */}
       <EditingPanel
@@ -347,6 +369,7 @@ export default function Knowledge_map() {
           onClose={handleContextMenuClose}
         />
       )}
+      
     </main>
   );
 }

@@ -76,8 +76,8 @@ const useArticlesData = () => {
         const processedLinks = serverLinks.map((l, index) => {
                     const processed = {
             id: l.id,
-            source: l.source_id || l.source,
-            target: l.target_id || l.target,
+            source_id: l.source_id || l.source,
+            target_id: l.target_id || l.target,
             metadata: l.metadata || {}
         };
             

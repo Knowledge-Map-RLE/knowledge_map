@@ -85,6 +85,7 @@ export const Block = memo(function Block({
        ref={containerRef}
        eventMode="static" 
        cursor="pointer"
+       zIndex={1}
        onMouseEnter={() => onBlockMouseEnter(id)}
        onMouseLeave={(e: any) => onBlockMouseLeave(id, e)}
        onPointerDown={(e: any) => {
@@ -112,12 +113,11 @@ export const Block = memo(function Block({
          e.nativeEvent?.stopImmediatePropagation?.();
          onBlockRightClick(id, e.global.x, e.global.y);
        }}
-       zIndex={10}
      >
                <pixiGraphics draw={draw} />
       <text
         text={title}
-        anchor={{ x: 0.5, y: 0.5 }}
+        anchor={0.5}
       />
         
      </pixiContainer>
