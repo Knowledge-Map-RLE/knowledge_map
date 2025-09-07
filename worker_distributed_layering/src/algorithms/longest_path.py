@@ -55,7 +55,7 @@ class LongestPathProcessor:
         # 1. Найдём longest path для всего графа (между любыми двумя узлами)
         find_query = """
         // Сначала найдем все возможные пути
-        MATCH path = (start:Article)-[:CITES*]->(end:Article)
+        MATCH path = (start:Article)-[:BIBLIOGRAPHIC_LINK*]->(end:Article)
         WHERE start <> end  // Избегаем петель
         
         // Группируем по длине пути и берем самый длинный
@@ -86,12 +86,12 @@ class LongestPathProcessor:
             alternative_query = """
             // Находим узлы с минимальной степенью исхода (листья)
             MATCH (start:Article)
-            WHERE NOT (start)-[:CITES]->()
+            WHERE NOT (start)-[:BIBLIOGRAPHIC_LINK]->()
             WITH start
             LIMIT 100  // Ограничиваем для производительности
             
             // Ищем пути от этих узлов
-            MATCH path = (start)-[:CITES*1..15]->(end:Article)
+            MATCH path = (start)-[:BIBLIOGRAPHIC_LINK*1..15]->(end:Article)
             WHERE start <> end
             
             WITH path, length(path) as path_length
@@ -160,7 +160,7 @@ class LongestPathProcessor:
                 END,
                 n.y = 0  // Все LP вершины на уровне 0
             
-            RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y
+            RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y, n.layout_status as status
             ORDER BY n.layer
             """
             
@@ -199,7 +199,7 @@ class LongestPathProcessor:
                         "vertex_id": vertex_id,
                         "layer": i,
                         "x": i * layer_spacing,
-                        "y": i * 10
+                        "y": 0  # Все LP вершины на уровне 0
                     })
                 
                 fallback_query = """
@@ -210,7 +210,7 @@ class LongestPathProcessor:
                             n.level = 0,
                     n.x = data.x,
                     n.y = data.y
-                        RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y
+                        RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y, n.layout_status as status
                 ORDER BY n.layer
                         """
                         
@@ -292,7 +292,7 @@ class LongestPathProcessor:
                 END,
                 n.y = 0  // Все LP вершины на уровне 0
             
-            RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y
+            RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y, n.layout_status as status
             ORDER BY n.layer
             """
             
@@ -339,7 +339,7 @@ class LongestPathProcessor:
                             n.level = 0,
                     n.x = data.x,
                     n.y = data.y
-                        RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y
+                        RETURN n.uid as uid, n.layer as layer, n.level as level, n.x as x, n.y as y, n.layout_status as status
                 ORDER BY n.layer
                         """
                         
@@ -386,8 +386,8 @@ class LongestPathProcessor:
         // Находим всех соседей LP вершин с их связями
         MATCH (lp:Article)
         WHERE lp.layout_status = 'in_longest_path'
-        OPTIONAL MATCH (pred:Article)-[:CITES]->(lp)
-        OPTIONAL MATCH (lp)-[:CITES]->(succ:Article)
+        OPTIONAL MATCH (pred:Article)-[:BIBLIOGRAPHIC_LINK]->(lp)
+        OPTIONAL MATCH (lp)-[:BIBLIOGRAPHIC_LINK]->(succ:Article)
         
         // Собираем соседей с информацией о связанных LP блоках
         WITH lp, 
@@ -656,8 +656,8 @@ class LongestPathProcessor:
         neighbors_query = """
         MATCH (lp:Article)
         WHERE lp.layout_status = 'in_longest_path'
-        OPTIONAL MATCH (pred:Article)-[:CITES]->(lp)
-        OPTIONAL MATCH (lp)-[:CITES]->(succ:Article)
+        OPTIONAL MATCH (pred:Article)-[:BIBLIOGRAPHIC_LINK]->(lp)
+        OPTIONAL MATCH (lp)-[:BIBLIOGRAPHIC_LINK]->(succ:Article)
         RETURN DISTINCT 
             collect(DISTINCT pred.uid) as predecessors,
             collect(DISTINCT succ.uid) as successors
@@ -710,7 +710,8 @@ class LongestPathProcessor:
             n.y = 0
         
         RETURN count(n) as placed_count,
-               collect(n.uid)[0..5] as first_five_placed
+               collect(n.uid)[0..5] as first_five_placed,
+               collect({uid: n.uid, x: n.x, y: n.y, layer: n.layer, level: n.level})[0..3] as sample_coords
         """
         
         try:
@@ -727,11 +728,17 @@ class LongestPathProcessor:
             if result and result[0]:
                 placed_count = result[0]["placed_count"]
                 first_five = result[0]["first_five_placed"] or []
+                sample_coords = result[0]["sample_coords"] or []
                 
                 logger.info(f"Fallback placement completed: {placed_count} neighbors placed using DB-side calculations")
                 
                 if first_five:
                     logger.info(f"First 5 placed neighbors: {first_five}")
+                
+                if sample_coords:
+                    logger.info("Sample coordinates:")
+                    for coord in sample_coords:
+                        logger.info(f"  {coord['uid']}: x={coord['x']}, y={coord['y']}, layer={coord['layer']}, level={coord['level']}")
                     
             else:
                 placed_count = 0
@@ -776,7 +783,7 @@ class LongestPathProcessor:
             relationships_query = """
             UNWIND $lp_blocks as block_uid
             MATCH (n:Article {uid: block_uid})
-            OPTIONAL MATCH (n)-[:CITES]->(target:Article)
+            OPTIONAL MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(target:Article)
             WHERE target.uid IN $lp_blocks
             RETURN n.uid as source, target.uid as target
             """

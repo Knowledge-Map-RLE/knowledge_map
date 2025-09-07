@@ -32,7 +32,7 @@ class ComponentProcessor:
         WHERE n.layout_status = 'unprocessed'
         CALL {
             WITH n
-            MATCH path = (n)-[:CITES*1..6]-(connected:Article)
+            MATCH path = (n)-[:BIBLIOGRAPHIC_LINK*1..6]-(connected:Article)
             WHERE connected.layout_status = 'unprocessed'
             WITH collect(DISTINCT connected.uid) as connected_uids, n
             RETURN connected_uids + [n.uid] as component
@@ -151,7 +151,7 @@ class ComponentProcessor:
         
         # Находим соседей компонента для определения оптимального размещения
         neighbors_query = """
-        MATCH (n:Article)-[:CITES]-(m:Article)
+        MATCH (n:Article)-[:BIBLIOGRAPHIC_LINK]-(m:Article)
         WHERE n.uid IN $component_ids AND m.layout_status IN ['placed', 'in_longest_path']
         RETURN m.layer as layer, m.level as level, m.x as x, m.y as y
         """
@@ -271,13 +271,19 @@ class ComponentProcessor:
         
         query = """
         UNWIND $batch AS item
-        MATCH (n:Article {uid: item.article_id})
+        MATCH (n:Article {uid: item.vertex_id})
         SET n.layout_status = $status,
             n.layer = item.layer,
             n.level = item.level,
             n.x = item.x,
             n.y = item.y
+        RETURN n.uid as uid, n.x as x, n.y as y, n.layer as layer, n.level as level
         """
         params = {"batch": items, "status": status}
         async with self.circuit_breaker:
-            await neo4j_client.execute_query_with_retry(query, params)
+            result = await neo4j_client.execute_query_with_retry(query, params)
+            # Логируем результат для отладки
+            if result:
+                logger.info(f"Updated {len(result)} nodes with status '{status}'")
+                for row in result[:3]:  # Показываем первые 3 для отладки
+                    logger.info(f"  {row['uid']}: x={row['x']}, y={row['y']}, layer={row['layer']}, level={row['level']}")

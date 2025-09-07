@@ -22,7 +22,7 @@ MAX_WORKERS       = 2        # потоки парсинга (уменьшено
 WRITER_COUNT      = 1        # число потоков-писателей (уменьшено до 1)
 MAX_WRITE_RETRIES = 3
 WRITE_BACKOFF     = 2        # уменьшена задержка
-BATCH_SIZE        = 1000     # увеличен размер батча
+BATCH_SIZE        = 500      # уменьшен размер батча для экономии памяти
 POOL_SIZE         = 3        # уменьшен размер пула
 QUEUE_SIZE        = MAX_WORKERS * 2
 # ==================================
@@ -119,16 +119,17 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.y = 0.0,
                       n.is_pinned = false
                   ON MATCH SET n = row,
-                      n.uid = row.pmid
+                      n.uid = row.pmid,
+                      n.layout_status = 'unprocessed'
             """, nodes=nodes)
         if rels:
             tx.run("""
                 UNWIND $rels AS r
-                  MERGE (source:Article {uid: r.pmid})
-                  MERGE (target:Article {uid: r.cpmid})
+                  MERGE (target:Article {uid: r.pmid})
+                  MERGE (source:Article {uid: r.cpmid})
                   WITH source, target, r
                   WHERE source <> target
-                  MERGE (source)-[:CITES]->(target)
+                  MERGE (source)-[:BIBLIOGRAPHIC_LINK]->(target)
             """, rels=rels)
 
     logger.info(f"[WRITE-ENTRY] {path_name}: nodes={len(nodes)}, rels={len(rels)}")
@@ -137,6 +138,8 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
             with driver.session() as session:
                 session.execute_write(tx_work)
             logger.info(f"[WRITE-OK] {path_name}")
+            # Небольшая пауза для освобождения памяти
+            time.sleep(0.05)
             return True
         except (neo4j_exceptions.ServiceUnavailable,
                 neo4j_exceptions.SessionExpired,
@@ -233,7 +236,7 @@ def parse_one_file(path: Path):
                         for aid in reference_list.findall('.//ArticleId[@IdType="pubmed"]'):
                             txt = aid.text
                             if txt and txt.isdigit():
-                                rels.append({'pmid': data['pmid'], 'cpmid': txt})
+                                rels.append({'pmid': data['pmid'], 'cpmid': txt})  # новая статья ссылается на старую
                                 article_rels += 1
                     total_rels_found += article_rels
                     count += 1
@@ -244,6 +247,11 @@ def parse_one_file(path: Path):
                     write_queue.put((path.name, nodes.copy(), rels.copy()))
                     nodes.clear()
                     rels.clear()
+                    # Принудительная очистка памяти каждые 10 батчей
+                    if count % (BATCH_SIZE * 10) == 0:
+                        import gc
+                        gc.collect()
+                        time.sleep(0.1)
 
     # остаток
     if nodes or rels:
@@ -303,13 +311,45 @@ def process_all():
     # else:
     files_to_process = [latest_file]
     
-    # Очищаем базу данных перед загрузкой нового файла
+    # Очищаем базу данных перед загрузкой нового файла (как в алгоритме укладки)
     try:
+        logger.info("Начинаем очистку базы данных...")
+        
         with driver.session() as s:
-            # Удаляем все узлы
-            s.run("MATCH (n:Article) DETACH DELETE n")
+            # 1. Очищаем все связи батчами (как в алгоритме укладки)
+            logger.info("Очистка связей...")
+            while True:
+                result = s.run("""
+                    MATCH ()-[r:BIBLIOGRAPHIC_LINK]->()
+                    WITH r LIMIT 10000
+                    DELETE r
+                    RETURN count(r) as deleted_rels
+                """).single()
+                
+                deleted_rels = result["deleted_rels"] if result else 0
+                if deleted_rels == 0:
+                    break
+                logger.info(f"Удалено связей: {deleted_rels}")
+                time.sleep(0.1)
             
-            # Удаляем все ограничения, которые могут вызывать конфликты
+            # 2. Очищаем все узлы батчами
+            logger.info("Очистка узлов...")
+            while True:
+                result = s.run("""
+                    MATCH (n:Article)
+                    WITH n LIMIT 10000
+                    DELETE n
+                    RETURN count(n) as deleted_nodes
+                """).single()
+                
+                deleted_nodes = result["deleted_nodes"] if result else 0
+                if deleted_nodes == 0:
+                    break
+                logger.info(f"Удалено узлов: {deleted_nodes}")
+                time.sleep(0.1)
+            
+            # 3. Удаляем проблемные ограничения
+            logger.info("Очистка ограничений...")
             constraints = s.run("SHOW CONSTRAINTS").data()
             for constraint in constraints:
                 constraint_name = constraint.get('name')
@@ -320,16 +360,38 @@ def process_all():
                     except Exception as e:
                         logger.warning(f"Не удалось удалить ограничение {constraint_name}: {e}")
             
-        logger.info("База данных очищена")
+        logger.info("База данных полностью очищена")
     except Exception as e:
         logger.error(f"Ошибка при очистке базы: {e}")
-        return
+        # Если очистка не удалась, пробуем мягкую очистку
+        logger.info("Пробуем мягкую очистку...")
+        try:
+            with driver.session() as s:
+                # Мягкая очистка - только сброс статуса укладки
+                s.run("""
+                    MATCH (n:Article)
+                    SET n.layout_status = 'unprocessed',
+                        n.layer = null,
+                        n.level = null,
+                        n.x = null,
+                        n.y = null
+                """)
+                logger.info("Мягкая очистка выполнена успешно")
+        except Exception as soft_e:
+            logger.error(f"Мягкая очистка также не удалась: {soft_e}")
+            logger.info("Продолжаем с обновлением существующих данных...")
 
     try:
         for file_to_process in files_to_process:
             logger.info(f"Начинаем обработку файла: {file_to_process.name}")
             parse_one_file(file_to_process)
             logger.info(f"[OK] {file_to_process.name} обработан успешно")
+            
+            # Принудительная очистка памяти после обработки файла
+            import gc
+            gc.collect()
+            time.sleep(1)  # Пауза для освобождения памяти
+            logger.info("Память очищена после обработки файла")
     except Exception as e:
         logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")
 
@@ -345,7 +407,7 @@ def process_all():
             total_nodes = result.single()["total_nodes"]
             logger.info(f"ИТОГО загружено узлов в базу: {total_nodes}")
             
-            result = s.run("MATCH ()-[r:CITES]->() RETURN count(r) as total_rels")
+            result = s.run("MATCH ()-[r:BIBLIOGRAPHIC_LINK]->() RETURN count(r) as total_rels")
             total_rels = result.single()["total_rels"]
             logger.info(f"ИТОГО загружено связей в базу: {total_rels}")
     except Exception as e:

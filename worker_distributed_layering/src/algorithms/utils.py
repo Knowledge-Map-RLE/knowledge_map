@@ -137,11 +137,11 @@ class LayoutUtils:
                 # Транзакция 2: WRITE операции (изменение данных)
                 tx_write = await session.begin_transaction()
                 try:
-                    # 1. Очищаем существующие координаты статей
-                    await tx_write.run("""
-                        MATCH (n:Article)
-                        REMOVE n.layer, n.level, n.x, n.y
-                    """)
+                    # 1. Очищаем существующие координаты статей (уже очищено в _clear_all_layout_positions)
+                    # await tx_write.run("""
+                    #     MATCH (n:Article)
+                    #     REMOVE n.layer, n.level, n.x, n.y
+                    # """)
                     
                     # 2. Инициализируем статус и сбрасываем временные поля топосортировки
                     await tx_write.run("""
@@ -182,7 +182,7 @@ class LayoutUtils:
                         
                         # 3. Индекс для связей CITES
                         await tx.run("""
-                            CREATE INDEX IF NOT EXISTS FOR ()-[r:CITES]->() ON (r)
+                            CREATE INDEX IF NOT EXISTS FOR ()-[r:BIBLIOGRAPHIC_LINK]->() ON (r)
                         """)
                         
                         # 4. Составной индекс для uid и layout_status
@@ -233,7 +233,7 @@ class LayoutUtils:
         # Проверяем, есть ли узлы без входящих рёбер
         sources_query = """
         MATCH (n:Article)
-        WHERE NOT ()-[:CITES]->(n)
+        WHERE NOT ()-[:BIBLIOGRAPHIC_LINK]->(n)
         RETURN count(n) AS source_count
         """
         
@@ -256,7 +256,7 @@ class LayoutUtils:
         
         # Удаляем петли
         remove_loops_query = """
-        MATCH (n:Article)-[r:CITES]->(n)
+        MATCH (n:Article)-[r:BIBLIOGRAPHIC_LINK]->(n)
         DELETE r
         RETURN count(r) AS removed_loops
         """
@@ -267,7 +267,7 @@ class LayoutUtils:
         
         # Удаляем дублирующиеся рёбра (оставляем только одно ребро между парой узлов)
         remove_duplicates_query = """
-        MATCH (a:Article)-[r1:CITES]->(b:Article)
+        MATCH (a:Article)-[r1:BIBLIOGRAPHIC_LINK]->(b:Article)
         WHERE a.uid < b.uid  // Используем uid вместо id() для избежания дублирования
         WITH a, b, collect(r1) AS edges
         WHERE size(edges) > 1
@@ -311,7 +311,7 @@ class LayoutUtils:
         toposort_query = """
         // Инициализация: вычисляем степени
         MATCH (n:Article)
-        SET n.in_deg = size([(m:Article)-[:CITES]->(n) | m]),
+        SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),
             n.topo_order = -1,
             n.visited = false
         
@@ -326,7 +326,7 @@ class LayoutUtils:
         
         // Уменьшаем степени соседей
         WITH n, order_counter
-        MATCH (n)-[:CITES]->(neighbor:Article)
+        MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(neighbor:Article)
         WHERE neighbor.visited = false
         SET neighbor.in_deg = neighbor.in_deg - 1
         
@@ -340,7 +340,7 @@ class LayoutUtils:
             n.visited = true
         
         WITH n, next_order
-        MATCH (n)-[:CITES]->(neighbor:Article)
+        MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(neighbor:Article)
         WHERE neighbor.visited = false
         SET neighbor.in_deg = neighbor.in_deg - 1
         
@@ -354,7 +354,7 @@ class LayoutUtils:
             n.visited = true
         
         WITH n, next_order2
-        MATCH (n)-[:CITES]->(neighbor:Article)
+        MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(neighbor:Article)
         WHERE neighbor.visited = false
         SET neighbor.in_deg = neighbor.in_deg - 1
         
@@ -388,7 +388,7 @@ class LayoutUtils:
         # Простая инициализация
         init_query = """
         MATCH (n:Article)
-        SET n.in_deg = size([(m:Article)-[:CITES]->(n) | m]),
+        SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),
             n.topo_order = toInteger(substring(n.uid, 0, 10)),  // Используем числовую часть uid как порядок
             n.visited = true
         """

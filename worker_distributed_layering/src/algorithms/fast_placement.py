@@ -113,10 +113,16 @@ class FastPlacementProcessor:
             n.level = item.level,
             n.x = item.x,
             n.y = item.y
+        RETURN n.uid as uid, n.x as x, n.y as y, n.layer as layer, n.level as level
         """
         params = {"batch": items, "status": status}
         async with self.circuit_breaker:
-            await neo4j_client.execute_query_with_retry(query, params)
+            result = await neo4j_client.execute_query_with_retry(query, params)
+            # Логируем результат для отладки
+            if result:
+                logger.info(f"Updated {len(result)} articles with status '{status}'")
+                for row in result[:3]:  # Показываем первые 3 для отладки
+                    logger.info(f"  {row['uid']}: x={row['x']}, y={row['y']}, layer={row['layer']}, level={row['level']}")
 
     async def _build_final_result(self) -> LayoutResult:
         """Строит финальный результат укладки"""

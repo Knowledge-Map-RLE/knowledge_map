@@ -11,7 +11,7 @@ CREATE INDEX node_uid_index IF NOT EXISTS
 FOR (n:Article) ON (n.uid);
 
 CREATE INDEX relationship_uids IF NOT EXISTS 
-FOR ()-[r:CITES]-() ON (r.uid);
+FOR ()-[r:BIBLIOGRAPHIC_LINK]-() ON (r.uid);
 
 CREATE INDEX pinned_nodes IF NOT EXISTS 
 FOR (n:Article) ON (n.is_pinned);
@@ -25,7 +25,7 @@ CALL apoc.custom.declareProcedure(
         RETURN count(n) as nodes
     }
     CALL {
-        MATCH ()-[r:CITES]->() 
+        MATCH ()-[r:BIBLIOGRAPHIC_LINK]->() 
         RETURN count(r) as edges
     }
     CALL {
@@ -53,7 +53,7 @@ CALL apoc.custom.declareProcedure(
      
      UNWIND nodes as n1
      UNWIND nodes as n2
-     MATCH (n1:Article)-[r:CITES]->(n2:Article)
+     MATCH (n1:Article)-[r:BIBLIOGRAPHIC_LINK]->(n2:Article)
      WHERE n1.uid IN nodeIds AND n2.uid IN nodeIds
      
      WITH nodes, collect(distinct r) as edges
@@ -92,7 +92,7 @@ CALL apoc.custom.declareProcedure(
     'CALL {
         MATCH (n:Article), (m:Article)
         WITH count(n) as nodes
-        MATCH ()-[r:CITES]->()
+        MATCH ()-[r:BIBLIOGRAPHIC_LINK]->()
         WITH nodes, count(r) as edges
         RETURN CASE WHEN nodes > 1 
                THEN toFloat(edges) / (nodes * (nodes - 1))
@@ -100,12 +100,12 @@ CALL apoc.custom.declareProcedure(
     }
     CALL {
         MATCH (n:Article)
-        WITH n, size([(n)-[:CITES]-() | 1]) as degree
+        WITH n, size([(n)-[:BIBLIOGRAPHIC_LINK]-() | 1]) as degree
         RETURN avg(degree) as avgDegree
     }
     CALL {
         MATCH (n:Article)
-        WHERE NOT (n)-[:CITES]-()
+        WHERE NOT (n)-[:BIBLIOGRAPHIC_LINK]-()
         RETURN count(n) as isolatedNodes
     }
     RETURN [
@@ -139,7 +139,7 @@ CALL apoc.custom.declareProcedure(
      WITH nodeIds, collect(n) as nodes
      UNWIND nodes as node
      WITH node, nodeIds, 
-          size([(node)<-[:CITES]-(pred:Article) 
+          size([(node)<-[:BIBLIOGRAPHIC_LINK]-(pred:Article) 
                 WHERE pred.uid IN nodeIds | pred]) as inDegree
      
      // Сортируем топологически (упрощённая версия)
@@ -152,7 +152,7 @@ CALL apoc.custom.declareProcedure(
      WITH sortedNodes[i] as item, sortedNodes
      MATCH (n:Article {uid: item.nodeId})
      WITH n, sortedNodes,
-          max([0] + [layer + 1 | pred IN [(n)<-[:CITES]-(p:Article) 
+          max([0] + [layer + 1 | pred IN [(n)<-[:BIBLIOGRAPHIC_LINK]-(p:Article) 
                                           WHERE p.uid IN [s.nodeId | s IN sortedNodes] | p]
                      | head([s IN sortedNodes WHERE s.nodeId = pred.uid | s.layer])]) as calculatedLayer
      
@@ -175,7 +175,7 @@ CALL apoc.custom.declareProcedure(
      // Подсчитываем рёбра в компоненте
      UNWIND componentNodes as nodeId1
      UNWIND componentNodes as nodeId2  
-     MATCH (n1:Article {uid: nodeId1})-[r:CITES]->(n2:Article {uid: nodeId2})
+     MATCH (n1:Article {uid: nodeId1})-[r:BIBLIOGRAPHIC_LINK]->(n2:Article {uid: nodeId2})
      WHERE nodeId1 <> nodeId2
      WITH componentId, componentNodes, count(r) as edgeCount
      

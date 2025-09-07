@@ -37,7 +37,7 @@ async def create_indexes():
             "CREATE INDEX IF NOT EXISTS FOR (n:Article) ON (n.layer)",
             
             # Индекс на uid для связей CITES
-            "CREATE INDEX IF NOT EXISTS FOR ()-[r:CITES]-() ON (r.uid)",
+            "CREATE INDEX IF NOT EXISTS FOR ()-[r:BIBLIOGRAPHIC_LINK]-() ON (r.uid)",
         ]
         
         for i, index_query in enumerate(indexes, 1):

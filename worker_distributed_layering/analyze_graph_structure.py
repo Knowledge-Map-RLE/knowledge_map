@@ -22,8 +22,8 @@ async def analyze_graph_structure():
             stats_query = """
             MATCH (n:Article)
             RETURN count(n) as total_nodes,
-                   size([(n)-[:CITES]->() | 1]) as total_outgoing,
-                   size([()-[:CITES]->(n) | 1]) as total_incoming
+                   size([(n)-[:BIBLIOGRAPHIC_LINK]->() | 1]) as total_outgoing,
+                   size([()-[:BIBLIOGRAPHIC_LINK]->(n) | 1]) as total_incoming
             """
             
             result = await session.run(stats_query)
@@ -37,8 +37,8 @@ async def analyze_graph_structure():
             sources_sinks_query = """
             MATCH (n:Article)
             WITH n, 
-                 size([(n)-[:CITES]->() | 1]) as out_degree,
-                 size([()-[:CITES]->(n) | 1]) as in_degree
+                 size([(n)-[:BIBLIOGRAPHIC_LINK]->() | 1]) as out_degree,
+                 size([()-[:BIBLIOGRAPHIC_LINK]->(n) | 1]) as in_degree
             RETURN 
                 sum(CASE WHEN in_degree = 0 THEN 1 ELSE 0 END) as sources,
                 sum(CASE WHEN out_degree = 0 THEN 1 ELSE 0 END) as sinks,
@@ -54,7 +54,7 @@ async def analyze_graph_structure():
             
             # Анализ длин путей
             path_lengths_query = """
-            MATCH path = (start:Article)-[:CITES*1..5]->(end:Article)
+            MATCH path = (start:Article)-[:BIBLIOGRAPHIC_LINK*1..5]->(end:Article)
             WHERE start <> end
             WITH length(path) as path_length, count(*) as count
             RETURN path_length, count
@@ -71,7 +71,7 @@ async def analyze_graph_structure():
             components_query = """
             CALL gds.wcc.stream('Article', {
                 nodeLabels: ['Article'],
-                relationshipTypes: ['CITES']
+                relationshipTypes: ['BIBLIOGRAPHIC_LINK']
             })
             YIELD nodeId, componentId
             RETURN componentId, count(*) as component_size
@@ -92,8 +92,8 @@ async def analyze_graph_structure():
                 alternative_query = """
                 MATCH (n:Article)
                 WITH n, 
-                     size([(n)-[:CITES]->() | 1]) as out_degree,
-                     size([()-[:CITES]->(n) | 1]) as in_degree
+                     size([(n)-[:BIBLIOGRAPHIC_LINK]->() | 1]) as out_degree,
+                     size([()-[:BIBLIOGRAPHIC_LINK]->(n) | 1]) as in_degree
                 WHERE out_degree > 0 OR in_degree > 0
                 RETURN n.uid as uid, out_degree, in_degree, (out_degree + in_degree) as total_degree
                 ORDER BY total_degree DESC

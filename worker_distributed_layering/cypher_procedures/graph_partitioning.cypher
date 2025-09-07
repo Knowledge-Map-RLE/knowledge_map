@@ -16,7 +16,7 @@ BEGIN
     }
     
     CALL {
-        MATCH ()-[r:CITES]->() 
+        MATCH ()-[r:BIBLIOGRAPHIC_LINK]->() 
         RETURN count(r) as edges
     }
     
@@ -57,7 +57,7 @@ BEGIN
         'graph_for_partitioning',
         '*',
         {
-            CITES: {orientation: 'UNDIRECTED'}
+            BIBLIOGRAPHIC_LINK: {orientation: 'UNDIRECTED'}
         }
     );
     
@@ -68,7 +68,7 @@ BEGIN
     
     // Подсчитываем рёбра для каждой компоненты
     UNWIND nodeIds as nodeId
-    MATCH (n {uid: nodeId})-[r:CITES]-(m)
+    MATCH (n {uid: nodeId})-[r:BIBLIOGRAPHIC_LINK]-(m)
     WHERE m.uid IN nodeIds
     WITH componentId, nodeIds, count(DISTINCT r) as edgeCount
     
@@ -94,7 +94,7 @@ BEGIN
     WITH collect(n) as nodes
     CALL apoc.custom.asFunction('calculateLayers', 
         'UNWIND $nodes as node
-         WITH node, size([(node)<-[:CITES]-(pred) WHERE pred.uid IN $nodeIds | pred]) as inDegree
+         WITH node, size([(node)<-[:BIBLIOGRAPHIC_LINK]-(pred) WHERE pred.uid IN $nodeIds | pred]) as inDegree
          WITH node, inDegree
          ORDER BY inDegree
          WITH collect({node: node, layer: 0}) as nodeLayerMap
@@ -103,7 +103,7 @@ BEGIN
          UNWIND range(0, size($nodes)-1) as iteration
          UNWIND nodeLayerMap as item
          WITH item.node as node, 
-              max([layer IN [(item.node)-[:CITES]->(succ) WHERE succ.uid IN $nodeIds | 
+              max([layer IN [(item.node)-[:BIBLIOGRAPHIC_LINK]->(succ) WHERE succ.uid IN $nodeIds | 
                    head([nlm IN nodeLayerMap WHERE nlm.node = succ | nlm.layer])] | layer + 1]) as newLayer
          RETURN node.uid as nodeId, coalesce(newLayer, 0) as layer',
         'LIST<STRING>', 'MAP', true
@@ -132,7 +132,7 @@ BEGIN
     // Получаем рёбра между узлами компоненты
     UNWIND nodes as n1
     UNWIND nodes as n2
-    MATCH (n1)-[r:CITES]->(n2)
+    MATCH (n1)-[r:BIBLIOGRAPHIC_LINK]->(n2)
     WHERE n1.uid IN nodeIds AND n2.uid IN nodeIds
     WITH nodes, collect(r) as edges
     
@@ -167,7 +167,7 @@ BEGIN
     CALL {
         MATCH (n), (m)
         WITH count(n) as nodes
-        MATCH ()-[r:CITES]->()
+        MATCH ()-[r:BIBLIOGRAPHIC_LINK]->()
         WITH nodes, count(r) as edges
         RETURN CASE WHEN nodes > 1 
                THEN toFloat(edges) / (nodes * (nodes - 1))
@@ -177,14 +177,14 @@ BEGIN
     // Средняя степень
     CALL {
         MATCH (n)
-        WITH n, size([(n)-[:CITES]-() | 1]) as degree
+        WITH n, size([(n)-[:BIBLIOGRAPHIC_LINK]-() | 1]) as degree
         RETURN avg(degree) as avgDegree
     }
     
     // Изолированные узлы
     CALL {
         MATCH (n)
-        WHERE NOT (n)-[:CITES]-()
+        WHERE NOT (n)-[:BIBLIOGRAPHIC_LINK]-()
         RETURN count(n) as isolatedNodes
     }
     
@@ -223,14 +223,14 @@ BEGIN
     }
     
     CALL {
-        MATCH ()-[r:CITES]->()
+        MATCH ()-[r:BIBLIOGRAPHIC_LINK]->()
         RETURN count(r) as edges
     }
     
     // Статистика степеней
     CALL {
         MATCH (n)
-        WITH n, size([(n)-[:CITES]-() | 1]) as degree
+        WITH n, size([(n)-[:BIBLIOGRAPHIC_LINK]-() | 1]) as degree
         RETURN avg(degree) as avgDegree,
                max(degree) as maxDegree,
                count(CASE WHEN degree = 0 THEN n END) as isolatedNodes
@@ -259,7 +259,7 @@ BEGIN
     CALL {
         MATCH (n)
         WITH n, iteration
-        MATCH (n)-[:CITES]->(succ)
+        MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(succ)
         WITH n, succ, iteration
         WHERE succ.temp_level <= iteration
         SET n.temp_level = iteration + 1
@@ -279,7 +279,7 @@ END
 $$;
 
 // 10. Создание индексов для производительности
-CREATE INDEX IF NOT EXISTS FOR ()-[r:CITES]-() ON (r.uid);
+CREATE INDEX IF NOT EXISTS FOR ()-[r:BIBLIOGRAPHIC_LINK]-() ON (r.uid);
 
 CREATE INDEX IF NOT EXISTS FOR (n) ON (n.level, n.layer, n.is_pinned);
 

@@ -250,7 +250,7 @@ class Neo4jClient:
         
         # Получаем общее количество рёбер
         count_query = f"""
-        MATCH (source:Article)-[r:CITES]->(target:Article)
+        MATCH (source:Article)-[r:BIBLIOGRAPHIC_LINK]->(target:Article)
         {where_clause}
         RETURN count(r) as total_count
         """
@@ -271,7 +271,7 @@ class Neo4jClient:
         
         while offset < total_count:
             chunk_query = f"""
-            MATCH (source:Article)-[r:CITES]->(target:Article)
+            MATCH (source:Article)-[r:BIBLIOGRAPHIC_LINK]->(target:Article)
             {where_clause}
             RETURN r.uid as id, source.uid as source_id, target.uid as target_id
             ORDER BY r.uid
@@ -326,7 +326,7 @@ class Neo4jClient:
             try:
                 # Прямой COUNT работает быстро (проверено)
                 edge_query = """
-                MATCH ()-[r:CITES]->() 
+                MATCH ()-[r:BIBLIOGRAPHIC_LINK]->() 
                 RETURN count(r) as edge_count
                 """
                 edge_result = await self.execute_query_with_retry(edge_query)

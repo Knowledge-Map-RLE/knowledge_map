@@ -210,7 +210,7 @@ async def get_articles_layout() -> Dict[str, Any]:
     try:
         logger.info("Starting articles layout calculation from Neo4j")
         
-        # Читаем граф из Neo4j: узлы помечены как Article, связи - CITES
+        # Читаем граф из Neo4j: узлы помечены как Article, связи - BIBLIOGRAPHIC_LINK
         logger.info("Querying articles from Neo4j")
         blocks_query = """
         MATCH (n:Article)
@@ -232,8 +232,8 @@ async def get_articles_layout() -> Dict[str, Any]:
             raise HTTPException(status_code=404, detail="В базе данных нет статей Article. Загрузите данные.")
         
         links_query = """
-        MATCH (s:Article)-[r:CITES]->(t:Article)
-        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
+        MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
+        RETURN s.uid as source_id, t.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query)
         
@@ -276,9 +276,9 @@ async def get_articles_layout() -> Dict[str, Any]:
         # Преобразуем связи
         links_for_layout = []
         for row in links_result:
-            link_id = str(row[0]) if row[0] is not None else None
-            source_id = str(row[1])
-            target_id = str(row[2])
+            link_id = f"{row[0]}-{row[1]}"  # Генерируем ID из source и target
+            source_id = str(row[0])
+            target_id = str(row[1])
             links_for_layout.append(
                 {"id": link_id, "source_id": source_id, "target_id": target_id}
             )
@@ -390,18 +390,18 @@ async def get_all_articles_layout() -> Dict[str, Any]:
 
         # Запрос всех связей
         links_query = """
-        MATCH (s:Article)-[r:CITES]->(t:Article)
-        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
+        MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
+        RETURN s.uid as source_id, t.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query)
         
         links: list[dict] = []
         for row in links_result:
-            link_id = row[0]
+            link_id = f"{row[0]}-{row[1]}"  # Генерируем ID из source и target
             links.append({
-                "id": str(link_id) if link_id is not None else f"{row[1]}-{row[2]}",
-                "source_id": str(row[1]),
-                "target_id": str(row[2]),
+                "id": link_id,
+                "source_id": str(row[0]),
+                "target_id": str(row[1]),
             })
 
         logger.info(f"Loaded {len(blocks)} blocks and {len(links)} links")
@@ -427,7 +427,7 @@ async def get_articles_layout_page(
 ) -> Dict[str, Any]:
     """Возвращает часть графа статей, упорядоченную по близости к (center_layer, center_level).
 
-    - Узлы и связи берутся из Neo4j (`Node`, `CITES`).
+    - Узлы и связи берутся из Neo4j (`Node`, `BIBLIOGRAPHIC_LINK`).
     - Связи фильтруются, чтобы не допустить циклов (вперёд по (layer, level)).
     - Укладка считается только для выбранной партии.
     """
@@ -517,40 +517,40 @@ async def get_articles_layout_page(
 
         # Связи только внутри выбранного подмножества
         links_query = """
-        MATCH (s:Article)-[r:CITES]->(t:Article)
+        MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
         WHERE s.uid IN $ids AND t.uid IN $ids
-        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
+        RETURN s.uid as source_id, t.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query, {"ids": list(selected_ids)})
         links_for_layout: list[dict] = []
         for row in links_result:
-            link_id = row[0]
+            link_id = f"{row[0]}-{row[1]}"  # Генерируем ID из source и target
             links_for_layout.append(
                 {
-                    "id": str(link_id) if link_id is not None else f"{row[1]}-{row[2]}",
-                    "source_id": str(row[1]),
-                    "target_id": str(row[2]),
+                    "id": link_id,
+                    "source_id": str(row[0]),
+                    "target_id": str(row[1]),
                 }
             )
 
         # Дополнительно: связи внутри longest path, но только если оба узла есть в текущей странице
         # Это гарантирует, что LP связи будут видны, когда загружены соответствующие узлы
         lp_links_query = """
-        MATCH (s:Article {layout_status: 'in_longest_path'})-[r:CITES]->(t:Article {layout_status: 'in_longest_path'})
+        MATCH (s:Article {layout_status: 'in_longest_path'})-[r:BIBLIOGRAPHIC_LINK]->(t:Article {layout_status: 'in_longest_path'})
         WHERE s.uid IN $ids OR t.uid IN $ids
-        RETURN r.uid as id, s.uid as source_id, t.uid as target_id
+        RETURN s.uid as source_id, t.uid as target_id
         """
         lp_links_result, _ = db.cypher_query(lp_links_query, {"ids": list(selected_ids)})
         # Добавляем, избегая дубликатов
         existing = set(f"{l['source_id']}->{l['target_id']}" for l in links_for_layout)
         
         for row in lp_links_result:
-            sid = str(row[1]); tid = str(row[2])
+            sid = str(row[0]); tid = str(row[1])
             key = f"{sid}->{tid}"
             if key in existing:
                 continue
             links_for_layout.append({
-                "id": str(row[0]) if row[0] is not None else key,
+                "id": key,  # Используем сгенерированный ключ как ID
                 "source_id": sid,
                 "target_id": tid,
             })
@@ -629,9 +629,9 @@ async def get_layout_from_neo4j(user_id: str | None = None) -> Dict[str, Any]:
         # Преобразуем связи
         links_for_layout = []
         for row in links_result:
-            link_id = str(row[0]) if row[0] is not None else None
-            source_id = str(row[1])
-            target_id = str(row[2])
+            link_id = f"{row[0]}-{row[1]}"  # Генерируем ID из source и target
+            source_id = str(row[0])
+            target_id = str(row[1])
             links_for_layout.append(
                 {"id": link_id, "source_id": source_id, "target_id": target_id}
             )
