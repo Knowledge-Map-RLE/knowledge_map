@@ -12,7 +12,6 @@ export function ViewportProvider({ children }: { children: ReactNode }) {
   const [viewportRef, setViewportRef] = useState<React.RefObject<ViewportRef | null> | null>(null);
 
   const handleSetViewportRef = (ref: React.RefObject<ViewportRef | null>) => {
-    console.log('ViewportContext: Setting viewport ref:', !!ref?.current);
     setViewportRef(ref);
   };
 
@@ -29,6 +28,5 @@ export function useViewport() {
     console.error('useViewport must be used within a ViewportProvider');
     throw new Error('useViewport must be used within a ViewportProvider');
   }
-  console.log('useViewport called, viewportRef available:', !!context.viewportRef?.current);
   return context;
 }

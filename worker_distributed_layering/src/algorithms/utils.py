@@ -385,16 +385,22 @@ class LayoutUtils:
         """
         logger.info("Using simple fallback topological sort...")
         
-        # Простая инициализация
-        init_query = """
-        MATCH (n:Article)
-        SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),
-            n.topo_order = toInteger(substring(n.uid, 0, 10)),  // Используем числовую часть uid как порядок
-            n.visited = true
+        # БАТЧЕВАЯ инициализация с использованием APOC periodic.iterate, чтобы не переполнять транзакционную память
+        # Требует apoc, у нас он включён в docker-compose.
+        init_query_batched = """
+        CALL apoc.periodic.iterate(
+          "MATCH (n:Article) RETURN n",
+          "WITH n 
+           SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),
+               n.topo_order = toInteger(substring(n.uid, 0, 10)),
+               n.visited = true",
+          {batchSize: 1000, parallel: false}
+        ) YIELD batches, total, errorMessages
+        RETURN batches, total, errorMessages
         """
         
         async with self.circuit_breaker:
-            await neo4j_client.execute_query_with_retry(init_query)
+            await neo4j_client.execute_query_with_retry(init_query_batched)
         
         logger.info("Simple fallback topological sort completed")
 

@@ -22,8 +22,11 @@ export interface ViewportRef {
   containerRef: Container | null;
   setBlockRightClickTime: (time: number) => void;
   getWorldCenter: () => { x: number; y: number } | null;
+  getWorldBounds?: () => { left: number; top: number; right: number; bottom: number } | null;
+  getScreenSize?: () => { width: number; height: number } | null;
   on?: (event: 'moved' | 'zoomed', handler: () => void) => void;
   off?: (event: 'moved' | 'zoomed', handler: () => void) => void;
+  setScale?: (scale: number) => void;
 }
 
 // TODO: исправить центрирование
@@ -360,6 +363,17 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     setBlockRightClickTime: (time: number) => {
       lastBlockRightClickTime.current = time;
     },
+    setScale: (scale: number) => {
+      const cnt = containerRef.current;
+      if (!cnt) return;
+      const oldScale = cnt.scale.x;
+      cnt.scale.set(scale);
+      // Эмитим события для подписчиков
+      emit('zoomed');
+      if (oldScale !== scale) {
+        emit('moved');
+      }
+    },
     getWorldCenter: () => {
       if (!app || !containerRef.current) return null;
       let screen;
@@ -370,6 +384,27 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       const centerScreenY = screen.height / 2;
       const world = cnt.toLocal({ x: centerScreenX, y: centerScreenY } as any);
       return { x: world.x, y: world.y };
+    },
+    getWorldBounds: () => {
+      if (!app || !containerRef.current) return null;
+      let screen;
+      try { screen = app.screen; } catch { return null; }
+      if (!screen) return null;
+      const cnt = containerRef.current;
+      const scale = cnt.scale.x;
+      const pos = cnt.position;
+      const left = -pos.x / scale;
+      const top = -pos.y / scale;
+      const right = (screen.width - pos.x) / scale;
+      const bottom = (screen.height - pos.y) / scale;
+      return { left, top, right, bottom };
+    },
+    getScreenSize: () => {
+      if (!app) return null;
+      let screen;
+      try { screen = app.screen; } catch { return null; }
+      if (!screen) return null;
+      return { width: screen.width, height: screen.height };
     },
     on: (event: 'moved' | 'zoomed', handler: () => void) => {
       listenersRef.current[event].add(handler);
@@ -407,8 +442,8 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       <container
         ref={containerRef}
         interactive={false}
-        x={centerX}
-        y={centerY}
+        x={0}
+        y={0}
       >
         {children}
       </container>

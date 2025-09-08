@@ -19,8 +19,8 @@ const useArticlesData = () => {
                     const processed = {
             id: b.id,
             title: b.title || b.id,
-            x: b.x || 0,
-            y: b.y || 0,
+            x: (typeof b.x === 'number') ? b.x : undefined,
+            y: (typeof b.y === 'number') ? b.y : undefined,
             layer: (typeof b.layer === 'number') ? b.layer : 0,
             level: (typeof b.level === 'number') ? b.level : 0,
             is_pinned: b.is_pinned || false

@@ -45,16 +45,27 @@ export function useArticlesDataLoader(viewportRef?: any) {
       const rangeY = maxY - minY;
       
       console.log(`[ArticlesPage] Coordinate range: x=${minX}-${maxX} (${rangeX}), y=${minY}-${maxY} (${rangeY})`);
-      
+
       // Центрируем viewport на центр данных
       setTimeout(() => {
         if (viewportRef.current) {
-                  // Устанавливаем подходящий масштаб для видимости всех блоков
-        const targetScale = Math.min(1.0, 800 / Math.max(rangeX, rangeY, 100));
-        viewportRef.current.scale = targetScale;
-        
-        viewportRef.current.focusOn(centerX, centerY);
-        console.log(`[ArticlesPage] Viewport centered on blocks with scale ${targetScale}`);
+          // Рассчитываем масштаб по обоим измерениям с небольшим отступом
+          const padding = 400; // добавляем запас к диапазону, чтобы не упираться в края
+          const fitX =  window.innerWidth  / Math.max(rangeX + padding, 100);
+          const fitY =  window.innerHeight / Math.max(rangeY + padding, 100);
+          const minScale = 0.2;
+          const maxScale = 1.0;
+          const targetScale = Math.max(minScale, Math.min(maxScale, Math.min(fitX, fitY)));
+
+          // Устанавливаем масштаб (через setScale если доступен)
+          if (typeof (viewportRef.current as any).setScale === 'function') {
+            (viewportRef.current as any).setScale(targetScale);
+          } else {
+            (viewportRef.current as any).scale = targetScale;
+          }
+
+          viewportRef.current.focusOn(centerX, centerY);
+          console.log(`[ArticlesPage] Viewport centered on blocks with scale ${targetScale}`);
         }
       }, 100);
     }
@@ -82,8 +93,10 @@ export function useArticlesDataLoader(viewportRef?: any) {
       if (centerX != null && centerY != null) {
         const center_level = Math.max(0, Math.round(centerY / 120));
         const center_layer = Math.max(0, Math.round(centerX / 20));
-        url = `http://localhost:8000/layout/articles_page?offset=0&limit=${pageLimit}&center_layer=${center_layer}&center_level=${center_level}`;
-        console.log(`[ArticlesPage] Loading around center=(${center_layer},${center_level}) limit ${pageLimit}`);
+        // ВАЖНО: используем текущий pageOffset даже при загрузке вокруг центра,
+        // чтобы получать следующую страницу, а не одни и те же 50 элементов
+        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}&center_layer=${center_layer}&center_level=${center_level}`;
+        console.log(`[ArticlesPage] Loading around center=(${center_layer},${center_level}) offset=${pageOffset} limit ${pageLimit}`);
       } else {
         url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}`;
         console.log(`[ArticlesPage] Loading page ${pageOffset + 1} with limit ${pageLimit}`);
@@ -123,10 +136,8 @@ export function useArticlesDataLoader(viewportRef?: any) {
           centerViewportOnBlocks(processedBlocks);
         }
         
-        // Переходим к следующей странице только для постраничной загрузки
-        if (centerX == null && centerY == null) {
-          setPageOffset(prev => prev + pageLimit);
-        }
+        // Переходим к следующей странице для обоих сценариев (и центр, и обычная страница)
+        setPageOffset(prev => prev + pageLimit);
         
       } else {
         throw new Error((data && data.error) || 'Failed to load articles page');

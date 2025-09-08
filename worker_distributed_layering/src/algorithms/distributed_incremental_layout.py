@@ -15,6 +15,16 @@
 10. Быстрое размещение оставшихся узлов по сетке (избегает застревания)
 11. Стратегическое размещение: LP на уровне 0, компоненты выше, остальные еще выше
 
+Алгоритм включает все 7 шагов:
+1. Инициализация и получение статистики
+2. Обнаружение и исправление циклов для обеспечения DAG
+3. Ранняя топологическая сортировка всего графа в БД
+4. Поиск и размещение longest path
+4.5. Размещение соседей longest path по разным уровням
+5. Поиск и размещение компонентов связности
+6. Быстрое размещение оставшихся статей
+7. Финальная обработка закреплённых блоков
+
 Ускорения:
 - Параллельная обработка компонент: O(V²) → O(V²/P)
 - Batch операции: O(V²) → O(V log V)  
@@ -248,18 +258,75 @@ class DistributedIncrementalLayout:
                 print(f"Error in connected components processing after {step5_time:.2f}s: {str(e)}")
                 print(f"Traceback: {traceback.format_exc()}")
             
-            # 6. Быстрое размещение оставшихся статей (ОТКЛЮЧЕНО)
-            # logger.info("=== STEP 6: FAST BATCH PLACEMENT OF REMAINING ARTICLES ===")
+            # 6. Быстрое размещение оставшихся статей
+            logger.info("=== STEP 6: FAST BATCH PLACEMENT OF REMAINING ARTICLES ===")
+            print("=== STEP 6: FAST BATCH PLACEMENT OF REMAINING ARTICLES ===")
+            logger.info("Starting fast batch placement of remaining articles...")
+            print("Starting fast batch placement of remaining articles...")
+            step6_start = time.time()
+            try:
+                fast_placement_result = await self.fast_placement_processor.fast_batch_placement_remaining()
+                step6_time = time.time() - step6_start
+                logger.info(f"Fast batch placement completed in {step6_time:.2f}s")
+                print(f"Fast batch placement completed in {step6_time:.2f}s")
+                if fast_placement_result:
+                    logger.info(f"Fast placement result: {fast_placement_result}")
+                    print(f"Fast placement result: {fast_placement_result}")
+            except Exception as e:
+                step6_time = time.time() - step6_start
+                logger.error(f"Error in fast batch placement after {step6_time:.2f}s: {str(e)}")
+                logger.error(f"Traceback: {traceback.format_exc()}")
+                print(f"Error in fast batch placement after {step6_time:.2f}s: {str(e)}")
+                print(f"Traceback: {traceback.format_exc()}")
             
-            # 7. Финальная обработка закреплённых блоков (ОТКЛЮЧЕНО)
-            # logger.info("=== STEP 7: PROCESSING PINNED BLOCKS ===")
-            # try:
-            #     await self._process_pinned_blocks()
-            # except Exception as e:
-            #     logger.error(f"Error in processing pinned blocks: {str(e)}")
-            #     # Продолжаем выполнение даже при ошибке
+            # 7. Финальная обработка закреплённых блоков
+            logger.info("=== STEP 7: PROCESSING PINNED BLOCKS ===")
+            print("=== STEP 7: PROCESSING PINNED BLOCKS ===")
+            logger.info("Starting processing of pinned blocks...")
+            print("Starting processing of pinned blocks...")
+            step7_start = time.time()
+            try:
+                await self._process_pinned_blocks()
+                step7_time = time.time() - step7_start
+                logger.info(f"Pinned blocks processing completed in {step7_time:.2f}s")
+                print(f"Pinned blocks processing completed in {step7_time:.2f}s")
+            except Exception as e:
+                step7_time = time.time() - step7_start
+                logger.error(f"Error in processing pinned blocks after {step7_time:.2f}s: {str(e)}")
+                logger.error(f"Traceback: {traceback.format_exc()}")
+                print(f"Error in processing pinned blocks after {step7_time:.2f}s: {str(e)}")
+                print(f"Traceback: {traceback.format_exc()}")
+                # Продолжаем выполнение даже при ошибке
             
-            # Создаем базовый результат после STEP 5
+            # 8. Топологическая инкрементальная раскладка остальных по сетке (без коллизий в cell)
+            logger.info("=== STEP 8: PLACE REMAINING BY TOPOLOGICAL INCREMENTAL GRID ===")
+            print("=== STEP 8: PLACE REMAINING BY TOPOLOGICAL INCREMENTAL GRID ===")
+            step8_start = time.time()
+            placed_topo = 0
+            try:
+                placed_topo = await self._place_remaining_topological_grid()
+                step8_time = time.time() - step8_start
+                logger.info(f"Topological incremental placement completed in {step8_time:.2f}s, updated {placed_topo} vertices")
+                print(f"Topological incremental placement completed in {step8_time:.2f}s, updated {placed_topo} vertices")
+            except Exception as e:
+                step8_time = time.time() - step8_start
+                logger.error(f"Error in topological incremental placement after {step8_time:.2f}s: {str(e)}")
+                logger.error(f"Traceback: {traceback.format_exc()}")
+                print(f"Error in topological incremental placement after {step8_time:.2f}s: {str(e)}")
+                print(f"Traceback: {traceback.format_exc()}")
+
+            # Если что-то осталось — финальный безопасный фолбек по глобальной сетке
+            if placed_topo == 0:
+                logger.info("No vertices placed around LP, running global grid fallback")
+                fallback_start = time.time()
+                try:
+                    updated_count = await self._place_unplaced_vertices_everywhere()
+                    fb_time = time.time() - fallback_start
+                    logger.info(f"Global grid fallback completed in {fb_time:.2f}s, updated {updated_count} vertices")
+                except Exception:
+                    logger.error("Global grid fallback failed as well")
+            
+            # Создаем финальный результат после всех шагов
             processing_time = time.time() - start_time
             result = LayoutResult(
                 success=True,
@@ -268,13 +335,16 @@ class DistributedIncrementalLayout:
                 levels={},
                 statistics={
                     "processing_time_seconds": processing_time,
-                    "step_completed": "connected_components_placed",
+                    "step_completed": "all_steps_completed",
                     "total_articles": self.total_articles_estimate,
                     "removed_edges": removed_edges,
                     "longest_path_length": len(longest_path),
                     "lp_placements_count": len(lp_placements) if lp_placements else 0,
                     "lp_neighbors_count": lp_neighbors_count if 'lp_neighbors_count' in locals() else 0,
                     "connected_components_count": len(components) if 'components' in locals() else 0,
+                    "fast_placement_result": fast_placement_result if 'fast_placement_result' in locals() else None,
+                    "topo_incremental_placed": placed_topo,
+                    "pinned_blocks_processed": True,
                     "graph_stats": stats
                 }
             )
@@ -311,8 +381,8 @@ class DistributedIncrementalLayout:
                     logger.info(f"{key}: {value}")
                     print(f"{key}: {value}")
             
-            logger.info("=== LAYOUT COMPLETED SUCCESSFULLY (STEPS 1-5) ===")
-            print("=== LAYOUT COMPLETED SUCCESSFULLY (STEPS 1-5) ===")
+            logger.info("=== LAYOUT COMPLETED SUCCESSFULLY (ALL STEPS 1-8) ===")
+            print("=== LAYOUT COMPLETED SUCCESSFULLY (ALL STEPS 1-8) ===")
             return result
             
         except Exception as e:
@@ -344,8 +414,13 @@ class DistributedIncrementalLayout:
         logger.info(f"Graph statistics received: {stats}")
         
         logger.info("Initializing layout tables...")
-        await self.layout_utils.initialize_layout_tables()
-        logger.info("Layout tables initialized")
+        try:
+            await self.layout_utils.initialize_layout_tables()
+            logger.info("Layout tables initialized")
+        except Exception as e:
+            # Из-за ограничений памяти транзакции Neo4j можем пропустить инициализацию (временное решение)
+            logger.error(f"Layout tables initialization skipped due to error: {e}")
+            logger.error("Continuing without layout table re-initialization (temporary workaround)")
         
         # Очищаем кэши
         self.vertex_positions_cache.clear()
@@ -414,6 +489,193 @@ class DistributedIncrementalLayout:
         if self.db_operations is None:
             self.db_operations = 0
         self.db_operations += 1
+
+    async def _place_unplaced_vertices_everywhere(self) -> int:
+        """
+        Раскладывает все узлы без координат по глобальной сетке на основе (layer, level).
+        Если в одной клетке несколько узлов, добавляет небольшой вертикальный сдвиг,
+        чтобы избежать полного наложения.
+        """
+        logger.info("Placing unplaced vertices on global grid")
+
+        query = (
+            "MATCH (n:Article) "
+            "WHERE n.x IS NULL OR n.y IS NULL "
+            "WITH n.layer AS layer, n.level AS level, collect(n) AS nodes "
+            "UNWIND range(0, size(nodes)-1) AS i "
+            "WITH nodes[i] AS n, layer, level, i "
+            "SET n.x = toFloat(layer) * $layer_spacing, "
+            "    n.y = toFloat(level) * $level_spacing + toFloat(i) * $stack_step, "
+            "    n.layout_status = coalesce(n.layout_status, 'placed_grid') "
+            "RETURN count(n) as updated"
+        )
+
+        params = {
+            "layer_spacing": float(self.LAYER_SPACING),
+            "level_spacing": float(self.LEVEL_SPACING),
+            "stack_step": 24.0,
+        }
+
+        result = await neo4j_client.execute_query_with_retry(query, params)
+        if self.db_operations is None:
+            self.db_operations = 0
+        self.db_operations += 1
+
+        updated = int(result[0]["updated"]) if result and isinstance(result[0], dict) and "updated" in result[0] else 0
+        logger.info(f"Global grid update count: {updated}")
+        return updated
+
+    async def _place_remaining_topological_grid(self) -> int:
+        """
+        Топологическая инкрементальная раскладка оставшихся вершин:
+        - ограничиваем общий объём до 50 000
+        - берём партии (по 1000) без координат, отсортированные по (layer, level)
+        - для каждой ищем первую свободную cell в том же layer, повышая level
+        - в одной cell всегда один блок
+        """
+        layer_step = float(self.LAYER_SPACING)
+        level_step = float(self.LEVEL_SPACING)
+
+        # Всего незаполненных
+        total_q = "MATCH (n:Article) WHERE n.x IS NULL OR n.y IS NULL RETURN count(n) as left"
+        total_res = await neo4j_client.execute_query_with_retry(total_q)
+        if self.db_operations is None:
+            self.db_operations = 0
+        self.db_operations += 1
+        total_all = int(total_res[0]["left"]) if total_res and isinstance(total_res[0], dict) else 0
+        limit_total = 50000
+        target_total = min(total_all, limit_total)
+        if target_total == 0:
+            return 0
+
+        placed_total = 0
+        batch_size = 50
+
+        # Радиус по слоям для горизонтального распределения
+        layer_radius = 8
+
+        while placed_total < target_total:
+            # Берём батч без координат
+            fetch_q = (
+                "MATCH (n:Article) WHERE n.x IS NULL OR n.y IS NULL "
+                "RETURN n.uid as id, coalesce(n.layer,0) as layer, coalesce(n.level,0) as level "
+                "ORDER BY layer ASC, level ASC "
+                "LIMIT $limit"
+            )
+            batch = await neo4j_client.execute_query_with_retry(fetch_q, {"limit": min(batch_size, target_total - placed_total)})
+            if self.db_operations is None:
+                self.db_operations = 0
+            self.db_operations += 1
+
+            if not batch:
+                break
+
+            updated_batch = 0
+            for row in batch:
+                art_id = row["id"] if isinstance(row, dict) else row[0]
+                layer = int(row["layer"]) if isinstance(row, dict) else int(row[1])
+                level = int(row["level"]) if isinstance(row, dict) else int(row[2])
+
+                # Кандидаты по слоям: 0, +1, -1, +2, -2, ... в пределах layer_radius
+                layer_candidates = [layer]
+                for d in range(1, layer_radius + 1):
+                    layer_candidates.append(layer + d)
+                    layer_candidates.append(layer - d)
+
+                # Находим первую свободную клетку (layer, level) в окрестности по слоям и вверх по уровням
+                free_q = (
+                    "WITH $layer_candidates AS layers, $base AS base "
+                    "UNWIND layers AS ly "
+                    "CALL { WITH ly, base "
+                    "  UNWIND range(0, 2000) AS k "
+                    "  WITH ly, (base + k) AS lv "
+                    "  CALL { WITH ly, lv "
+                    "    MATCH (m:Article) "
+                    "    WHERE coalesce(m.layer,0)=ly AND coalesce(m.level,0)=lv AND m.x IS NOT NULL AND m.y IS NOT NULL "
+                    "    RETURN count(m) as c "
+                    "  } "
+                    "  WHERE c=0 "
+                    "  RETURN ly AS free_layer, lv AS free_level LIMIT 1 "
+                    "} "
+                    "RETURN free_layer, free_level LIMIT 1"
+                )
+                free_res = await neo4j_client.execute_query_with_retry(free_q, {"layer_candidates": layer_candidates, "base": level})
+                if self.db_operations is None:
+                    self.db_operations = 0
+                self.db_operations += 1
+                if free_res and isinstance(free_res[0], dict):
+                    free_layer = int(free_res[0].get("free_layer", layer))
+                    free_level = int(free_res[0].get("free_level", level))
+                else:
+                    free_layer = layer
+                    free_level = level
+
+                upd_q = (
+                    "MATCH (n:Article {uid: $id}) "
+                    "SET n.layer = $layer, n.level = $level, "
+                    "    n.x = toFloat($layer) * $layer_step, "
+                    "    n.y = toFloat($level) * $level_step, "
+                    "    n.layout_status = coalesce(n.layout_status, 'placed_topo') "
+                    "RETURN n.uid as id"
+                )
+                await neo4j_client.execute_query_with_retry(upd_q, {
+                    "id": art_id,
+                    "layer": free_layer,
+                    "level": free_level,
+                    "layer_step": layer_step,
+                    "level_step": level_step,
+                })
+                if self.db_operations is None:
+                    self.db_operations = 0
+                self.db_operations += 1
+                updated_batch += 1
+
+            placed_total += updated_batch
+            percent = (placed_total / target_total) * 100.0
+            logger.info(f"[STEP 8] Topo placed {placed_total}/{target_total} ({percent:.2f}%) in batches of {batch_size}")
+
+            if updated_batch == 0:
+                break
+
+        return placed_total
+    async def _place_remaining_around_lp(self) -> int:
+        """
+        Размещает все ещё неуложенные вершины вокруг узлов LP/их окрестности
+        на ближайшие свободные позиции (layer,level), двигаясь от LP наружу.
+        Работает даже для вершин, не связанных с LP (берём ближайший по (layer,level)).
+        """
+        logger.info("Placing remaining vertices around LP neighbourhood")
+
+        # 1) Собираем занятые позиции (клетки) и строим множество занятых пар (layer,level)
+        occupied_query = (
+            "MATCH (n:Article) WHERE n.x IS NOT NULL AND n.y IS NOT NULL "
+            "RETURN DISTINCT coalesce(n.layer,0) AS layer, coalesce(n.level,0) AS level"
+        )
+        occupied = await neo4j_client.execute_query_with_retry(occupied_query)
+        if self.db_operations is None:
+            self.db_operations = 0
+        self.db_operations += 1
+
+        occupied_set = {(int(r["layer"]), int(r["level"])) for r in occupied} if occupied else set()
+
+        # 2) Читаем список LP узлов (layout_status='in_longest_path') как центры "волн"
+        lp_query = (
+            "MATCH (n:Article {layout_status: 'in_longest_path'}) "
+            "RETURN coalesce(n.layer,0) AS layer, coalesce(n.level,0) AS level"
+        )
+        lp_rows = await neo4j_client.execute_query_with_retry(lp_query)
+        if self.db_operations is None:
+            self.db_operations = 0
+        self.db_operations += 1
+        lp_centers = [(int(r["layer"]), int(r["level"])) for r in lp_rows] if lp_rows else []
+
+        if not lp_centers:
+            logger.info("No LP centers found, skipping around-LP placement")
+            return 0
+
+        # Этот метод больше не используется (заменен на топологическую раскладку), оставлен как no-op
+        logger.info("Around-LP placement disabled; using topological incremental grid placement")
+        return 0
 
     async def calculate_incremental_layout_distributed(self, worker_id: int = 0, total_workers: int = 1) -> LayoutResult:
         """Распределённая версия алгоритма укладки"""

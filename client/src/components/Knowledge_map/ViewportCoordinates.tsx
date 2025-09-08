@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useViewport } from '../../contexts/ViewportContext';
+import { useDataLoading } from './hooks/useDataLoading';
 
 export default function ViewportCoordinates() {
-  console.log('ViewportCoordinates component is rendering!');
-  console.log('Current URL:', window.location.pathname);
   
   const { viewportRef } = useViewport();
+  const { blocks, isLoading } = useDataLoading();
   const [coordinates, setCoordinates] = useState({ x: 0, y: 0, scale: 1 });
 
   useEffect(() => {
-    console.log('ViewportCoordinates useEffect triggered, viewportRef:', !!viewportRef?.current);
     
     const updateCoordinates = () => {
       if (!viewportRef?.current) {
-        console.log('No viewport ref available');
         setCoordinates({ x: 0, y: 0, scale: 1 });
         return;
       }
@@ -21,7 +19,6 @@ export default function ViewportCoordinates() {
       const viewport = viewportRef.current;
       const worldCenter = viewport.getWorldCenter();
       
-      console.log('Updating coordinates, worldCenter:', worldCenter, 'scale:', viewport.scale);
       
       if (worldCenter) {
         const newCoords = {
@@ -29,7 +26,6 @@ export default function ViewportCoordinates() {
           y: Math.round(worldCenter.y),
           scale: Math.round(viewport.scale * 100) / 100
         };
-        console.log('Setting new coordinates:', newCoords);
         setCoordinates(newCoords);
       }
     };
@@ -39,20 +35,16 @@ export default function ViewportCoordinates() {
 
     // Подписываемся на события viewport
     const handleViewportChange = () => {
-      console.log('Viewport change event triggered');
       updateCoordinates();
     };
 
     if (viewportRef?.current) {
-      console.log('Subscribing to viewport events');
       viewportRef.current.on?.('moved', handleViewportChange);
       viewportRef.current.on?.('zoomed', handleViewportChange);
     } else {
-      console.log('No viewport ref to subscribe to events');
-    }
+      }
 
     return () => {
-      console.log('Cleaning up ViewportCoordinates');
       clearInterval(interval);
       if (viewportRef?.current) {
         viewportRef.current.off?.('moved', handleViewportChange);
@@ -85,6 +77,16 @@ export default function ViewportCoordinates() {
       <div>Y: {coordinates.y}</div>
       <div>Scale: {coordinates.scale}</div>
       <div>Viewport: {viewportRef?.current ? 'OK' : 'NULL'}</div>
+      <div>Position: {viewportRef?.current?.position ? `${Math.round(viewportRef.current.position.x)}, ${Math.round(viewportRef.current.position.y)}` : 'N/A'}</div>
+      <div style={{ fontSize: '12px', marginTop: '8px', color: '#ccc' }}>
+        Блоков: {blocks.length} {isLoading && '(загрузка...)'}
+      </div>
+      <div style={{ fontSize: '12px', color: '#ccc' }}>
+        Автозагрузка при перемещении (1с)
+      </div>
+      <div style={{ fontSize: '10px', color: '#999', marginTop: '4px' }}>
+        Проверьте консоль для логов
+      </div>
     </div>
   );
 }

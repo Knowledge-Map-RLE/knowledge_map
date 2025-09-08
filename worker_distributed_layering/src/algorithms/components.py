@@ -65,46 +65,86 @@ class ComponentProcessor:
         return all_components
 
     async def find_connected_components_gds(self) -> List[List[str]]:
-        """Используем Neo4j GDS для быстрого поиска компонент"""
-        logger.info("Using Neo4j GDS for connected components")
-        
+        """Поиск компонент через Neo4j GDS WCC с записью свойства wccId и безопасной агрегацией."""
+        logger.info("Using Neo4j GDS for connected components (write wccId + capped aggregation)")
+
         try:
-            # Сначала проверяем, доступен ли GDS
+            # 1) Проверяем наличие GDS
             check_gds_query = """
             CALL gds.list() YIELD name
             WHERE name = 'wcc'
             RETURN count(*) as gds_available
             """
-            
             gds_check = await neo4j_client.execute_query_with_retry(check_gds_query)
-            
-            if gds_check and gds_check[0]["gds_available"] > 0:
-                # Используем GDS WCC
-                gds_query = """
-                CALL gds.wcc.stream('citation_graph')
-                YIELD nodeId, componentId
-                RETURN gds.util.asNode(nodeId).uid as uid, componentId
-                ORDER BY componentId, uid
+            if not (gds_check and gds_check[0]["gds_available"] > 0):
+                logger.info("GDS not available, skipping connected components step (no fallback)")
+                return []
+
+            # 2) Проверяем/создаём проекцию графа (UNDIRECTED)
+            exists_q = """
+            CALL gds.graph.exists('citation_graph') YIELD exists
+            RETURN exists
+            """
+            exists_res = await neo4j_client.execute_query_with_retry(exists_q)
+            exists = bool(exists_res and exists_res[0] and exists_res[0]["exists"])  # type: ignore
+
+            if not exists:
+                project_q = """
+                CALL gds.graph.project(
+                  'citation_graph',
+                  'Article',
+                  {BIBLIOGRAPHIC_LINK: {orientation: 'UNDIRECTED'}}
+                )
+                YIELD graphName, nodeCount, relationshipCount
+                RETURN graphName, nodeCount, relationshipCount
                 """
-                
-                result = await neo4j_client.execute_query_with_retry(gds_query)
-                
-                # Группируем по componentId
-                from collections import defaultdict
-                components = defaultdict(list)
-                for row in result:
-                    components[row["componentId"]].append(row["uid"])
-                
-                component_list = list(components.values())
-                logger.info(f"GDS found {len(component_list)} connected components")
-                return component_list
-            else:
-                logger.info("GDS not available, falling back to standard method")
-                return await self.find_connected_components()
-                
+                await neo4j_client.execute_query_with_retry(project_q)
+                logger.info("GDS graph 'citation_graph' projected")
+
+            # 3) Запускаем WCC c записью свойства (минимум данных в приложение)
+            wcc_write_q = """
+            CALL gds.wcc.write('citation_graph', {
+              writeProperty: 'wccId',
+              concurrency: 4,
+              maxIterations: 50
+            })
+            YIELD componentCount, preProcessingMillis, computeMillis, postProcessingMillis
+            RETURN componentCount
+            """
+            write_res = await neo4j_client.execute_query_with_retry(wcc_write_q)
+            component_count = write_res[0]["componentCount"] if write_res and write_res[0] else None
+            logger.info(f"GDS WCC write completed: components={component_count}")
+
+            # 4) Снимаем компоненты с лимитами, чтобы не забить память
+            MAX_COMPONENTS = 1000
+            MAX_NODES_PER_COMPONENT = 5000
+
+            distinct_q = """
+            MATCH (n:Article)
+            WITH n.wccId as cid, count(*) as cnt
+            RETURN cid, cnt
+            ORDER BY cnt DESC
+            LIMIT $max_components
+            """
+            distinct = await neo4j_client.execute_query_with_retry(distinct_q, {"max_components": MAX_COMPONENTS})
+
+            components: List[List[str]] = []
+            for row in distinct:
+                cid = row["cid"]
+                fetch_q = """
+                MATCH (n:Article {wccId: $cid})
+                RETURN n.uid as uid
+                LIMIT $limit
+                """
+                members = await neo4j_client.execute_query_with_retry(fetch_q, {"cid": cid, "limit": MAX_NODES_PER_COMPONENT})
+                components.append([m["uid"] for m in members])
+
+            logger.info(f"Prepared {len(components)} components (capped) for placement")
+            return components
+
         except Exception as e:
-            logger.warning(f"GDS failed: {e}, falling back to standard method")
-            return await self.find_connected_components()
+            logger.warning(f"GDS WCC failed: {e}. Skipping connected components step")
+            return []
 
     async def place_connected_components_parallel(self, components: List[List[str]]) -> int:
         """Параллельное размещение компонент"""

@@ -1,4 +1,4 @@
-import { Graphics, Container, Text, Point } from 'pixi.js';
+import { Graphics, Container, Point } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { AddBlockArrow } from './AddBlockArrow';
@@ -7,8 +7,8 @@ import { BLOCK_WIDTH, BLOCK_HEIGHT } from './constants';
 import { EditMode } from './types';
 import { gsap } from 'gsap';
 
-// Расширяем компоненты PixiJS для использования в JSX с префиксом 'pixi'
-extend({ Graphics, Container, Text });
+// Для соответствия остальным компонентам регистрируем только Graphics
+extend({ Graphics });
 
 const BLOCK_PADDING = 4;
 
@@ -48,8 +48,10 @@ export const Block = memo(function Block({
 
   useEffect(() => {
     if (containerRef.current) {
-      const safeX = x || 0;
-      const safeY = y || 0;
+      const fallbackX = (typeof (blockData.layer) === 'number' ? blockData.layer : 0) * 240;
+      const fallbackY = (typeof (blockData.level) === 'number' ? blockData.level : 0) * 130;
+      const safeX = (typeof x === 'number') ? x : fallbackX;
+      const safeY = (typeof y === 'number') ? y : fallbackY;
       
       if (isInitialRender.current) {
         containerRef.current.x = safeX;
@@ -81,7 +83,7 @@ export const Block = memo(function Block({
   };
 
   return (
-         <pixiContainer 
+         <container 
        ref={containerRef}
        eventMode="static" 
        cursor="pointer"
@@ -115,11 +117,9 @@ export const Block = memo(function Block({
        }}
      >
                <pixiGraphics draw={draw} />
-      <text
-        text={title}
-        anchor={0.5}
-      />
+      {/* @ts-ignore PixiText props typing */}
+      <pixiText text={title} />
         
-     </pixiContainer>
+     </container>
   );
 });

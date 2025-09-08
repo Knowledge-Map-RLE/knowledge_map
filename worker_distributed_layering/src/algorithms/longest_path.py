@@ -41,16 +41,9 @@ class LongestPathProcessor:
         layer_spacing = self.position_calculator.LAYER_SPACING
         level_spacing = self.position_calculator.LEVEL_SPACING
         
-        # 0. Сначала полностью очистим все позиции layout в БД
-        clear_all_query = """
-        MATCH (n:Article)
-        REMOVE n.layer, n.level, n.x, n.y, n.layout_status
-        RETURN count(n) as cleared_count
-        """
-        
-        async with self.circuit_breaker:
-            clear_result = await neo4j_client.execute_query_with_retry(clear_all_query)
-            logger.info(f"Cleared layout positions for {clear_result[0]['cleared_count']} articles")
+        # Глобальная очистка всех статей удалена из-за переполнения транзакционной памяти.
+        # Используем ограниченную очистку в _clear_all_layout_positions() (LP и соседи),
+        # чтобы минимизировать нагрузку.
         
         # 1. Найдём longest path для всего графа (между любыми двумя узлами)
         find_query = """
@@ -754,19 +747,21 @@ class LongestPathProcessor:
         """
         Очищает все существующие позиции укладки в БД для избежания конфликтов ограничений
         """
-        logger.info("Clearing all existing layout positions")
-        
+        logger.info("Clearing layout positions for LP subset only (bounded)")
+        # Очищаем только то, что будет перезаписано LP и их непосредственные соседи, чтобы не бить по памяти
         clear_query = """
-        MATCH (n:Article)
-        WHERE n.layer IS NOT NULL OR n.level IS NOT NULL OR n.x IS NOT NULL OR n.y IS NOT NULL OR n.layout_status IS NOT NULL
-        REMOVE n.layer, n.level, n.x, n.y, n.layout_status
-        RETURN count(n) as cleared_count
+        MATCH (n:Article {layout_status: 'in_longest_path'})
+        OPTIONAL MATCH (n)-[:BIBLIOGRAPHIC_LINK]-(m:Article)
+        WITH collect(distinct n) + collect(distinct m) AS nodes
+        UNWIND nodes AS v
+        WITH DISTINCT v
+        REMOVE v.layer, v.level, v.x, v.y, v.layout_status
+        RETURN count(v) as cleared_count
         """
-        
         async with self.circuit_breaker:
             result = await neo4j_client.execute_query_with_retry(clear_query)
             cleared_count = result[0]["cleared_count"] if result else 0
-            logger.info(f"Cleared layout positions for {cleared_count} articles")
+            logger.info(f"Cleared layout positions for {cleared_count} articles (LP subset)")
 
     async def _get_topological_order_for_lp(self, longest_path: List[str]) -> Optional[List[str]]:
         """

@@ -11,18 +11,23 @@ export interface BlockData {
 
 export interface LinkData {
   id: string;
-  source: string;
-  target: string;
+  source_id: string;
+  target_id: string;
   source_block?: BlockData;
   target_block?: BlockData;
 }
 
 export interface LevelData {
   id: number;
-  min_x: number;
-  max_x: number;
-  min_y: number;
-  max_y: number;
+  sublevel_ids: number[];
+  name: string;
+  color: string;
+}
+
+export interface SublevelData {
+  id: number;
+  level_id: number;
+  block_ids: string[];
   color: string;
 }
 

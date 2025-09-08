@@ -12,6 +12,7 @@ interface UseDataLoadingResult {
   isLoading: boolean;
   loadError: string | null;
   loadLayoutData: () => Promise<void>;
+  loadAround: (centerX: number, centerY: number, limit?: number) => Promise<void>;
   setBlocks: Dispatch<SetStateAction<BlockData[]>>;
   setLinks: Dispatch<SetStateAction<LinkData[]>>;
   setLevels: Dispatch<SetStateAction<LevelData[]>>;
@@ -26,8 +27,9 @@ const convertApiBlockToBlockData = (apiBlock: api.Block): BlockData => {
   
   return {
     id: apiBlock.id,
-    text: apiBlock.content || '',
-    content: apiBlock.content || '',
+    title: apiBlock.title || apiBlock.content || '',
+    x: (typeof apiBlock.x === 'number') ? apiBlock.x : undefined as any,
+    y: (typeof apiBlock.y === 'number') ? apiBlock.y : undefined as any,
     level: apiBlock.level || 0,
     physical_scale: apiBlock.physical_scale || 0,
     layer: apiBlock.layer || 0,
@@ -150,9 +152,12 @@ export function useDataLoading(): UseDataLoadingResult {
       setLoadError(null);
 
       try {
-        const data = await api.getLayout();
+        console.log('[DataLoading] Loading initial layout data...');
+        const data = await api.loadLayout();
+        console.log('[DataLoading] Received data:', data);
 
         if (!data.blocks || data.blocks.length === 0) {
+          console.error('[DataLoading] No blocks found in response:', data);
           throw new Error('No blocks found in the response');
         }
 
@@ -183,6 +188,45 @@ export function useDataLoading(): UseDataLoadingResult {
     }, 100);
   }, []);
 
+  const loadAround = useCallback(async (centerX: number, centerY: number, limit: number = 50) => {
+    try {
+      console.log(`[DataLoading] Loading around center: (${centerX}, ${centerY}), limit: ${limit}`);
+      
+      const data = await api.loadAround(centerX, centerY, limit);
+      console.log('[DataLoading] Received loadAround data:', data);
+
+      if (!data.blocks || data.blocks.length === 0) {
+        console.log('[DataLoading] No new blocks found around center');
+        return;
+      }
+
+      console.log(`[DataLoading] Loaded ${data.blocks.length} new blocks`);
+
+      const convertedBlocks = data.blocks.map(convertApiBlockToBlockData);
+      const convertedLinks = (data.links || []).map(convertApiLinkToLinkData);
+      const convertedLevels = (data.levels || []).map(convertApiLevelToLevelData);
+      const convertedSublevels = (data.sublevels || []).map(convertApiSublevelToSublevelData);
+
+      // Сначала рассчитываем координаты уровней
+      const levelsWithCoords = calculateLevelCoordinates(convertedLevels, convertedSublevels);
+      
+      // Затем рассчитываем координаты подуровней внутри уровней
+      const sublevelsWithCoords = calculateSublevelCoordinates(convertedSublevels, levelsWithCoords);
+      
+      // И наконец размещаем блоки с разрешением коллизий
+      const blocksWithCoords = calculateBlockCoordinates(convertedBlocks, levelsWithCoords, sublevelsWithCoords, convertedLinks);
+
+      setBlocks(prev => smartUpdateArray(prev, blocksWithCoords));
+      setLinks(prev => smartUpdateArray(prev, convertedLinks));
+      setLevels(prev => smartUpdateArray(prev, levelsWithCoords));
+      setSublevels(prev => smartUpdateArray(prev, sublevelsWithCoords));
+
+    } catch (error) {
+      console.error('[DataLoading] Error loading around:', error);
+      setLoadError(error instanceof Error ? error.message : 'Unknown error');
+    }
+  }, []);
+
   useEffect(() => {
     return () => {
       if (updateTimeoutRef.current) {
@@ -199,6 +243,7 @@ export function useDataLoading(): UseDataLoadingResult {
     isLoading,
     loadError,
     loadLayoutData,
+    loadAround,
     setBlocks,
     setLinks,
     setLevels,

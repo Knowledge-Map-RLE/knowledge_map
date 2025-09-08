@@ -5,26 +5,34 @@
 export interface Block {
     id: string;
   title: string;
+  content?: string;
   x: number;
   y: number;
   layer: number;
     level: number;
+    sublevel_id?: number;
     is_pinned?: boolean;
+    physical_scale?: number;
 }
 
 export interface Link {
     id: string;
-  source: string;
-  target: string;
+  source_id: string;
+  target_id: string;
     metadata?: Record<string, any>;
 }
 
 export interface Level {
     id: number;
-  min_x: number;
-  max_x: number;
-  min_y: number;
-  max_y: number;
+  sublevel_ids: number[];
+  name: string;
+  color: string;
+}
+
+export interface Sublevel {
+  id: number;
+  level_id: number;
+  block_ids: string[];
   color: string;
 }
 
@@ -33,6 +41,7 @@ export interface ApiResponse {
     blocks: Block[];
     links: Link[];
     levels: Level[];
+    sublevels: Sublevel[];
   statistics: {
     total_blocks: number;
     total_layers: number;
@@ -45,17 +54,25 @@ export interface LoadAroundResponse {
     blocks: Block[];
     links: Link[];
     levels: Level[];
+    sublevels: Sublevel[];
 }
 
 // API функции остаются теми же
 export const api = {
   async loadLayout(): Promise<ApiResponse> {
-    const response = await fetch('/api/layout');
+    const response = await fetch('/layout/articles_page?offset=0&limit=50');
     return response.json();
   },
 
   async loadAround(centerX: number, centerY: number, limit: number = 50): Promise<LoadAroundResponse> {
-    const response = await fetch(`/api/load_around?center_x=${centerX}&center_y=${centerY}&limit=${limit}`);
+    const centerLayer = Math.max(0, Math.round(centerX / 20));
+    const centerLevel = Math.max(0, Math.round(centerY / 120));
+    const response = await fetch(`/layout/articles_page?offset=0&limit=${limit}&center_layer=${centerLayer}&center_level=${centerLevel}`);
+    return response.json();
+  },
+
+  async loadArticlesPage(offset: number = 0, limit: number = 2000, centerLayer: number = 0, centerLevel: number = 0): Promise<ApiResponse> {
+    const response = await fetch(`/layout/articles_page?offset=${offset}&limit=${limit}&center_layer=${centerLayer}&center_level=${centerLevel}`);
     return response.json();
   },
 

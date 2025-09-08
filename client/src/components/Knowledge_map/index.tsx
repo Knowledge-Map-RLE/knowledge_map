@@ -51,9 +51,43 @@ export default function Knowledge_map() {
   }, [setViewportRef, pixiReady]); // Добавляем pixiReady как зависимость
 
   const {
-    blocks, links, levels, sublevels, isLoading, loadError, loadLayoutData,
+    blocks, links, levels, sublevels, isLoading, loadError, loadLayoutData, loadAround,
     setBlocks, setLinks, setLevels, setSublevels
   } = useDataLoading();
+
+  // Автоматическая загрузка данных при изменении viewport
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    
+    let timer: any;
+    const scheduleLoad = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const center = viewport.getWorldCenter?.();
+        if (center) {
+          console.log(`[Knowledge_map] Triggering loadAround from viewport event: (${center.x}, ${center.y})`);
+          loadAround(center.x, center.y, 100);
+        }
+      }, 1000); // Debounce 1 секунда
+    };
+    
+    const handleViewportMoved = () => scheduleLoad();
+    const handleViewportZoomed = () => scheduleLoad();
+    
+    if (viewport.on) {
+      viewport.on('moved', handleViewportMoved);
+      viewport.on('zoomed', handleViewportZoomed);
+    }
+    
+    return () => {
+      clearTimeout(timer);
+      if (viewport.off) {
+        viewport.off('moved', handleViewportMoved);
+        viewport.off('zoomed', handleViewportZoomed);
+      }
+    };
+  }, [loadAround]);
 
   const {
     selectedBlocks, selectedLinks, handleBlockSelection, handleLinkSelection, clearSelection
@@ -289,7 +323,7 @@ export default function Knowledge_map() {
     <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
       {(!pixiReady || isLoading) && (
         <div className={styles.экран_загрузки}>
-          {isLoading ? 'Обновление данных...' : 'Инициализация...'}
+          {isLoading ? 'Загрузка данных...' : 'Инициализация...'}
         </div>
       )}
       <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
@@ -312,38 +346,77 @@ export default function Knowledge_map() {
             />
           ))}
 
-          {/* Рендерим все связи ПЕРВЫМИ (под блоками) */}
-          {links.map(link => (
-            <Link
-              key={link.id}
-              linkData={link}
-              blocks={blocks}
-              isSelected={selectedLinks.includes(link.id)}
-              onClick={() => handleLinkClick(link.id)}
-            />
-          ))}
+          {/* Рендерим связи только если обе вершины в пределах видимой области с запасом */}
+          {(() => {
+            const vb = viewportRef.current?.getWorldBounds?.();
+            if (!vb) return null;
+            const screen = viewportRef.current?.getScreenSize?.();
+            const scale = viewportRef.current?.scale || 1;
+            const padX = ((screen?.width || 800) * 0.5) / scale;
+            const padY = ((screen?.height || 600) * 0.5) / scale;
+            const left = vb.left - padX;
+            const right = vb.right + padX;
+            const top = vb.top - padY;
+            const bottom = vb.bottom + padY;
+            const blockMap = new Map(blocks.map(b => [b.id, b]));
+            const isInView = (b?: BlockData) => {
+              if (!b) return false;
+              const x = (b.x ?? 0);
+              const y = (b.y ?? 0);
+              return x >= left && x <= right && y >= top && y <= bottom;
+            };
+            // Показываем связь, если хотя бы один из концов видим (иначе длинные связи пропадают)
+            const visibleLinks = links.filter(l => isInView(blockMap.get(l.source_id)) || isInView(blockMap.get(l.target_id)));
+            return visibleLinks.map(link => (
+              <Link
+                key={link.id}
+                linkData={link}
+                blocks={blocks}
+                isSelected={selectedLinks.includes(link.id)}
+                onClick={() => handleLinkClick(link.id)}
+              />
+            ));
+          })()}
           
-          {/* Рендерим все блоки ПОСЛЕДНИМИ (поверх связей) */}
-          {blocks.map(block => (
-            <Block
-            key={block.id}
-            blockData={block}
-            onBlockClick={handleBlockClick}
-            isSelected={selectedBlocks.includes(block.id)}
-            currentMode={currentMode}
-              onArrowClick={handleArrowClick}
-              onBlockPointerDown={handleBlockPointerDown}
-              onBlockMouseEnter={handleBlockMouseEnter}
-              onBlockMouseLeave={handleBlockMouseLeave}
-              onArrowHover={handleArrowHover}
-              onBlockRightClick={handleBlockRightClick}
-              instantBlockClickRef={instantBlockClickRef}
-            />
-          ))}
+          {/* Рендерим блоки с culling по мировым границам viewport с запасом */}
+          {(() => {
+            const vb = viewportRef.current?.getWorldBounds?.();
+            if (!vb) return null;
+            const screen = viewportRef.current?.getScreenSize?.();
+            const scale = viewportRef.current?.scale || 1;
+            const padX = ((screen?.width || 800) * 0.5) / scale;
+            const padY = ((screen?.height || 600) * 0.5) / scale;
+            const left = vb.left - padX;
+            const right = vb.right + padX;
+            const top = vb.top - padY;
+            const bottom = vb.bottom + padY;
+            const visibleBlocks = blocks.filter(b => {
+              const x = (b.x ?? 0);
+              const y = (b.y ?? 0);
+              return x >= left && x <= right && y >= top && y <= bottom;
+            });
+            return visibleBlocks.map(block => (
+              <Block
+                key={block.id}
+                blockData={block}
+                onBlockClick={handleBlockClick}
+                isSelected={selectedBlocks.includes(block.id)}
+                currentMode={currentMode}
+                onArrowClick={handleArrowClick}
+                onBlockPointerDown={handleBlockPointerDown}
+                onBlockMouseEnter={handleBlockMouseEnter}
+                onBlockMouseLeave={handleBlockMouseLeave}
+                onArrowHover={handleArrowHover}
+                onBlockRightClick={handleBlockRightClick}
+                instantBlockClickRef={instantBlockClickRef}
+              />
+            ));
+          })()}
           
         </Viewport>
       </Application>
         <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
+        <ViewportCoordinates />
 
       {/* Панель редактирования/создания блоков */}
       <EditingPanel
