@@ -102,6 +102,26 @@ export const api = {
   },
 };
 
+// Convenience wrappers for existing api methods
+export async function loadLayout(): Promise<ApiResponse> {
+  return api.loadLayout();
+}
+
+export async function loadAround(centerX: number, centerY: number, limit: number = 50): Promise<LoadAroundResponse> {
+  return api.loadAround(centerX, centerY, limit);
+}
+
+export async function edgesByViewport(bounds: {left:number; right:number; top:number; bottom:number}): Promise<{blocks: Partial<Block>[]; links: Partial<Link>[]}>
+{
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/articles/edges_by_viewport`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(bounds)
+  });
+  return res.json();
+}
+
 // Обёртки для удобства использования в хуках
 export async function createBlock(name: string): Promise<{ success: boolean; block: any }> {
   const response = await fetch('/api/blocks', {

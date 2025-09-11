@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { BlockData, LevelData, SublevelData, LinkData } from '../types';
 import * as api from '../../../services/api';
+import { edgesByViewport } from '../../../services/api';
 import { calculateBlockCoordinates, calculateLevelCoordinates, calculateSublevelCoordinates } from '../utils/layout';
 
 interface UseDataLoadingResult {
@@ -13,6 +14,7 @@ interface UseDataLoadingResult {
   loadError: string | null;
   loadLayoutData: () => Promise<void>;
   loadAround: (centerX: number, centerY: number, limit?: number) => Promise<void>;
+  loadEdgesByViewport: (bounds: {left:number; right:number; top:number; bottom:number}) => Promise<void>;
   setBlocks: Dispatch<SetStateAction<BlockData[]>>;
   setLinks: Dispatch<SetStateAction<LinkData[]>>;
   setLevels: Dispatch<SetStateAction<LevelData[]>>;
@@ -33,7 +35,6 @@ const convertApiBlockToBlockData = (apiBlock: api.Block): BlockData => {
     level: apiBlock.level || 0,
     physical_scale: apiBlock.physical_scale || 0,
     layer: apiBlock.layer || 0,
-    sublevel: apiBlock.sublevel_id || 0,
     is_pinned: apiBlock.is_pinned || false
   };
 };
@@ -140,7 +141,7 @@ export function useDataLoading(): UseDataLoadingResult {
   const [sublevels, setSublevels] = useState<SublevelData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const updateTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const updateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const loadLayoutData = useCallback(async () => {
     if (updateTimeoutRef.current) {
@@ -227,6 +228,36 @@ export function useDataLoading(): UseDataLoadingResult {
     }
   }, []);
 
+  // Загружаем рёбра по рамке viewport и объединяем с локальным состоянием
+  const loadEdgesByViewport = useCallback(async (bounds: {left:number; right:number; top:number; bottom:number}) => {
+    try {
+      const data = await edgesByViewport(bounds);
+      if (Array.isArray(data.blocks)) {
+        const mergedBlocks: BlockData[] = data.blocks.map((b: any) => ({
+          id: String(b.id),
+          title: '',
+          x: b.x,
+          y: b.y,
+          layer: b.layer ?? 0,
+          level: b.level ?? 0,
+          physical_scale: 0,
+          is_pinned: false
+        }));
+        setBlocks(prev => smartUpdateArray(prev, mergedBlocks));
+      }
+      if (Array.isArray(data.links)) {
+        const mergedLinks: LinkData[] = data.links.map((l: any) => ({
+          id: `${l.source_id}-${l.target_id}`,
+          source_id: String(l.source_id),
+          target_id: String(l.target_id)
+        }));
+        setLinks(prev => smartUpdateArray(prev, mergedLinks));
+      }
+    } catch (e) {
+      console.warn('loadEdgesByViewport failed', e);
+    }
+  }, []);
+
   useEffect(() => {
     return () => {
       if (updateTimeoutRef.current) {
@@ -244,6 +275,7 @@ export function useDataLoading(): UseDataLoadingResult {
     loadError,
     loadLayoutData,
     loadAround,
+    loadEdgesByViewport,
     setBlocks,
     setLinks,
     setLevels,

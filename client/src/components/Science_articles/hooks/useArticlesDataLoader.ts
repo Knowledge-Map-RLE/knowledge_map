@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import useArticlesData from './useArticlesData';
+import { edgesByViewport } from '../../../services/api';
 
 export function useArticlesDataLoader(viewportRef?: any) {
   const {
@@ -177,6 +178,42 @@ export function useArticlesDataLoader(viewportRef?: any) {
     }
   }, [isLoading, pageLimit, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError]);
 
+  const loadEdgesByViewport = useCallback(async () => {
+    if (isLoading || !viewportRef?.current) return;
+    
+    setIsLoading(true);
+    setLoadError(null);
+    
+    try {
+      // Получаем границы viewport
+      const bounds = viewportRef.current.getWorldBounds();
+      if (!bounds) {
+        console.log('[ArticlesPage] No viewport bounds available');
+        return;
+      }
+      
+      console.log(`[ArticlesPage] Loading edges by viewport:`, bounds);
+      
+      const data = await edgesByViewport(bounds);
+      
+      if (data && data.blocks && data.links) {
+        const processedBlocks = processServerBlocks(data.blocks);
+        const processedLinks = processServerLinks(data.links);
+        
+        console.log(`[ArticlesPage] Loaded by viewport: ${processedBlocks.length} blocks, ${processedLinks.length} links`);
+        
+        // Обновляем состояние
+        updateBlocks(processedBlocks);
+        updateLinks(processedLinks);
+      }
+    } catch (e: any) {
+      console.error('loadEdgesByViewport error', e);
+      setLoadError(e?.message || 'Unknown error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoading, viewportRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError]);
+
   return {
     blocks,
     links,
@@ -185,6 +222,7 @@ export function useArticlesDataLoader(viewportRef?: any) {
     loadError,
     pageOffset,
     pageLimit,
-    loadNextPage
+    loadNextPage,
+    loadEdgesByViewport
   };
 }

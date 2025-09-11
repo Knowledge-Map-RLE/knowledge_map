@@ -33,6 +33,8 @@ export default function Knowledge_map() {
   const { setViewportRef } = useViewport();
 
   // Регистрируем viewportRef в глобальном контексте
+  const [pixiReady, setPixiReady] = useState(false);
+
   useEffect(() => {
     const registerViewport = () => {
       console.log('Knowledge_map: Registering viewportRef in context:', !!viewportRef.current);
@@ -48,10 +50,10 @@ export default function Knowledge_map() {
     const timer = setTimeout(registerViewport, 1000);
     
     return () => clearTimeout(timer);
-  }, [setViewportRef, pixiReady]); // Добавляем pixiReady как зависимость
+  }, [setViewportRef, pixiReady]);
 
   const {
-    blocks, links, levels, sublevels, isLoading, loadError, loadLayoutData, loadAround,
+    blocks, links, levels, sublevels, isLoading, loadError, loadLayoutData, loadAround, loadEdgesByViewport,
     setBlocks, setLinks, setLevels, setSublevels
   } = useDataLoading();
 
@@ -65,9 +67,10 @@ export default function Knowledge_map() {
       clearTimeout(timer);
       timer = setTimeout(() => {
         const center = viewport.getWorldCenter?.();
-        if (center) {
-          console.log(`[Knowledge_map] Triggering loadAround from viewport event: (${center.x}, ${center.y})`);
-          loadAround(center.x, center.y, 100);
+        const vb = viewport.getWorldBounds?.();
+        if (center) loadAround(center.x, center.y, 100);
+        if (vb) {
+          loadEdgesByViewport({ left: vb.left, right: vb.right, top: vb.top, bottom: vb.bottom });
         }
       }, 1000); // Debounce 1 секунда
     };
@@ -87,7 +90,7 @@ export default function Knowledge_map() {
         viewport.off('zoomed', handleViewportZoomed);
       }
     };
-  }, [loadAround]);
+  }, [loadAround, loadEdgesByViewport]);
 
   const {
     selectedBlocks, selectedLinks, handleBlockSelection, handleLinkSelection, clearSelection
@@ -101,7 +104,6 @@ export default function Knowledge_map() {
 
   const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
   const [linkCreationState, setLinkCreationState] = useState<LinkCreationState>({ step: 'waiting' });
-  const [pixiReady, setPixiReady] = useState(false);
   const [focusTargetId, setFocusTargetId] = useState<string | null>(null);
 
   // Хуки для управления состоянием

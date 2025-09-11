@@ -45,9 +45,9 @@ class LongestPathProcessor:
         # Используем ограниченную очистку в _clear_all_layout_positions() (LP и соседи),
         # чтобы минимизировать нагрузку.
         
-        # 1. Найдём longest path для всего графа (между любыми двумя узлами)
+        # 1. Найдём longest path для всего графа, используя топологический порядок для приоритизации
         find_query = """
-        // Сначала найдем все возможные пути
+        // Сначала найдем все возможные пути, приоритизируя по топологическому порядку
         MATCH path = (start:Article)-[:BIBLIOGRAPHIC_LINK*]->(end:Article)
         WHERE start <> end  // Избегаем петель
         
@@ -65,8 +65,8 @@ class LongestPathProcessor:
         WITH collect(DISTINCT node_in_path) as unique_nodes, path_size
         UNWIND range(0, size(unique_nodes)-1) as new_i
         WITH unique_nodes[new_i] as node_in_path, new_i as i, size(unique_nodes) as total_nodes
-        RETURN node_in_path.uid as uid, i as index, total_nodes
-        ORDER BY i
+        RETURN node_in_path.uid as uid, i as index, total_nodes, coalesce(node_in_path.topo_order, 0) as topo_order
+        ORDER BY topo_order ASC, i ASC
         """
         
         async with self.circuit_breaker:
@@ -75,12 +75,13 @@ class LongestPathProcessor:
         if not find_result:
             logger.warning("No longest path found with depth limit 20, trying alternative approach...")
             
-            # Альтернативный подход: ищем пути от узлов с минимальной степенью исхода
+            # Альтернативный подход: ищем пути от узлов с минимальной степенью исхода, используя топологический порядок
             alternative_query = """
-            // Находим узлы с минимальной степенью исхода (листья)
+            // Находим узлы с минимальной степенью исхода (листья), приоритизируя по топологическому порядку
             MATCH (start:Article)
             WHERE NOT (start)-[:BIBLIOGRAPHIC_LINK]->()
             WITH start
+            ORDER BY coalesce(start.topo_order, 0) ASC
             LIMIT 100  // Ограничиваем для производительности
             
             // Ищем пути от этих узлов
@@ -94,8 +95,8 @@ class LongestPathProcessor:
             WITH path, nodes(path) as path_nodes, size(nodes(path)) as path_size
             UNWIND range(0, path_size-1) as i
             WITH path_nodes[i] as node_in_path, i, path_size
-            RETURN node_in_path.uid as uid, i as index, path_size as total_nodes
-            ORDER BY i
+            RETURN node_in_path.uid as uid, i as index, path_size as total_nodes, coalesce(node_in_path.topo_order, 0) as topo_order
+            ORDER BY topo_order ASC, i ASC
             """
             
             try:
@@ -374,7 +375,7 @@ class LongestPathProcessor:
         layer_spacing = self.position_calculator.LAYER_SPACING
         level_spacing = self.position_calculator.LEVEL_SPACING
         
-        # 1. Получаем всех соседей LP с их связями
+        # 1. Получаем всех соседей LP с их связями, отсортированных по топологическому порядку
         neighbors_query = """
         // Находим всех соседей LP вершин с их связями
         MATCH (lp:Article)
@@ -390,13 +391,14 @@ class LongestPathProcessor:
         WITH conn.neighbor as neighbor, conn.lp_block as lp_block, conn.relationship as rel
         WHERE neighbor IS NOT NULL AND (neighbor.layout_status IS NULL OR neighbor.layout_status <> 'in_longest_path')
         
-        // Возвращаем соседей с их связями
+        // Возвращаем соседей с их связями, отсортированных по топологическому порядку
         RETURN DISTINCT neighbor.uid as neighbor_id, 
                lp_block.uid as lp_id, 
                lp_block.layer as lp_layer,
                lp_block.level as lp_level,
-               rel as relationship
-        ORDER BY neighbor_id, lp_id
+               rel as relationship,
+               coalesce(neighbor.topo_order, 0) as neighbor_topo_order
+        ORDER BY neighbor_topo_order ASC, neighbor_id, lp_id
         """
         
         async with self.circuit_breaker:
@@ -418,14 +420,18 @@ class LongestPathProcessor:
                 "lp_id": row["lp_id"],
                 "lp_layer": row["lp_layer"],
                 "lp_level": row["lp_level"],
-                "relationship": row["relationship"]
+                "relationship": row["relationship"],
+                "neighbor_topo_order": row["neighbor_topo_order"]
             })
         
         logger.info(f"Processing {len(neighbors_map)} unique neighbors")
         
         # 3. Топологическое размещение с инкрементальным сдвигом LP
+        # Сортируем соседей по топологическому порядку для более логичного размещения
+        sorted_neighbors = sorted(neighbors_map.items(), key=lambda x: x[1][0].get('neighbor_topo_order', 0) if x[1] else 0)
+        
         placed_count = 0
-        for neighbor_id, connections in neighbors_map.items():
+        for neighbor_id, connections in sorted_neighbors:
             # Находим топологически корректную позицию
             target_layer = await self._find_topological_position(neighbor_id, connections, longest_path)
             
@@ -511,10 +517,11 @@ class LongestPathProcessor:
         """
         Сдвигает LP вершины вправо, если это необходимо для размещения соседа.
         """
-        # Находим максимальный слой среди LP вершин
+        # Находим максимальный слой среди LP вершин (только связанные вершины)
         max_lp_layer_query = """
         MATCH (n:Article)
         WHERE n.layout_status = 'in_longest_path' AND n.layer IS NOT NULL
+        AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
         RETURN max(n.layer) as max_layer
         """
         
@@ -536,12 +543,13 @@ class LongestPathProcessor:
             shift_amount = 1
             logger.info(f"Shifting LP vertices by {shift_amount} layer to make room for neighbor at layer {target_layer}")
             
-            # Сдвигаем все LP вершины начиная с target_layer
+            # Сдвигаем все LP вершины начиная с target_layer (только связанные вершины)
             shift_query = """
             MATCH (n:Article)
             WHERE n.layout_status = 'in_longest_path' AND n.layer >= $target_layer
+            AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
             SET n.layer = n.layer + $shift_amount,
-                n.x = (n.layer + $shift_amount) * $layer_spacing
+                n.x = n.layer * $layer_spacing
             RETURN count(n) as shifted_count
             """
             

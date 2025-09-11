@@ -5,7 +5,6 @@ import os
 import re
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import requests
@@ -182,23 +181,29 @@ def verify_all_downloads() -> bool:
 # ================== Основные функции ==================
 
 def download_all_files():
-    """Скачивает только последний .xml.gz файл в LOCAL_DIR."""
+    """Скачивает все .xml.gz файлы в LOCAL_DIR."""
     files = ftp_list_xml_gz()
     if not files:
         logger.error("Не найдено файлов для загрузки")
         return False
     
-    # Берём только последний файл
-    latest_file = sorted(files)[-1]
-    logger.info(f"Загружаем только последний файл: {latest_file}")
+    logger.info(f"Найдено {len(files)} файлов для загрузки")
     
-    try:
-        download_file_remote(latest_file)
-        logger.info(f"[OK] {latest_file} скачан успешно")
-        return True
-    except Exception as e:
-        logger.error(f"[ERROR] {latest_file} не удалось скачать: {e}")
-        return False
+    success_count = 0
+    error_count = 0
+    
+    for i, filename in enumerate(sorted(files), 1):
+        logger.info(f"[{i}/{len(files)}] Загружаем: {filename}")
+        try:
+            download_file_remote(filename)
+            logger.info(f"[OK] {filename} скачан успешно")
+            success_count += 1
+        except Exception as e:
+            logger.error(f"[ERROR] {filename} не удалось скачать: {e}")
+            error_count += 1
+    
+    logger.info(f"Загрузка завершена: {success_count} успешно, {error_count} с ошибками")
+    return error_count == 0
 
 def download_one_file(pmid: str):
     """

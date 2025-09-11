@@ -65,7 +65,8 @@ export default function Science_articles() {
     loadError,
     pageOffset,
     pageLimit,
-    loadNextPage
+    loadNextPage,
+    loadEdgesByViewport
   } = useArticlesDataLoader(viewportRef);
 
   // Центрируем viewport при загрузке блоков
@@ -201,8 +202,8 @@ export default function Science_articles() {
     const schedule = () => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        console.log(`[Science_articles] Triggering loadNextPage from viewport event`);
-        loadNextPage();
+        console.log(`[Science_articles] Triggering loadEdgesByViewport from viewport event`);
+        loadEdgesByViewport();
       }, 250);
     };
     
@@ -222,7 +223,7 @@ export default function Science_articles() {
         v.off('zoomed', handleViewportZoomed);
       }
     };
-  }, [loadNextPage]);
+  }, [loadEdgesByViewport]);
 
   const viewportState = viewportRef.current ?
     { scale: viewportRef.current.scale, position: viewportRef.current.position } :
@@ -456,8 +457,8 @@ export default function Science_articles() {
       {/* Кнопка для тестирования подгрузки */}
       <button 
         onClick={() => {
-          console.log(`[Science_articles] Manual loadNextPage triggered`);
-          loadNextPage();
+          console.log(`[Science_articles] Manual loadEdgesByViewport triggered`);
+          loadEdgesByViewport();
         }}
         style={{
           position: 'fixed',
@@ -472,7 +473,7 @@ export default function Science_articles() {
           cursor: 'pointer'
         }}
       >
-        Загрузить еще ({blocks.length} блоков)
+        Загрузить по viewport ({blocks.length} блоков)
       </button>
 
       {/* Панель редактирования/создания блоков */}

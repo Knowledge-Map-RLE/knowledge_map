@@ -2,6 +2,7 @@ import gzip
 import logging
 import time
 import datetime
+import re
 from pathlib import Path
 from queue import Queue
 from threading import Thread
@@ -18,12 +19,12 @@ NEO4J_URI       = "bolt://127.0.0.1:7687"
 NEO4J_USER      = "neo4j"
 NEO4J_PASSWORD  = "password"
 
-MAX_WORKERS       = 2        # потоки парсинга (уменьшено)
-WRITER_COUNT      = 1        # число потоков-писателей (уменьшено до 1)
+MAX_WORKERS       = 2        # потоки парсинга
+WRITER_COUNT      = 1        # число потоков-писателей
 MAX_WRITE_RETRIES = 3
-WRITE_BACKOFF     = 2        # уменьшена задержка
-BATCH_SIZE        = 500      # уменьшен размер батча для экономии памяти
-POOL_SIZE         = 3        # уменьшен размер пула
+WRITE_BACKOFF     = 2
+BATCH_SIZE        = 100      # УМЕНЬШЕН для экономии памяти
+POOL_SIZE         = 3
 QUEUE_SIZE        = MAX_WORKERS * 2
 # ==================================
 
@@ -100,6 +101,64 @@ def ensure_schema():
         """)
     logger.info("Schema constraints and indexes ensured")
 
+# ========== УЛУЧШЕННЫЕ ФУНКЦИИ ПАРСИНГА ==========
+
+def extract_year_from_date(date_text):
+    """Извлекает год из текста даты"""
+    if not date_text:
+        return None
+    
+    # Ищем 4-значный год
+    year_match = re.search(r'\b(19|20)\d{2}\b', str(date_text))
+    if year_match:
+        year = int(year_match.group())
+        # Валидация: год должен быть разумным
+        if 1900 <= year <= 2030:
+            return str(year)
+    
+    return None
+
+def clean_author_name(forename, lastname):
+    """Очищает имя автора"""
+    if not forename and not lastname:
+        return None
+    
+    # Объединяем имя и фамилию
+    name_parts = []
+    if forename:
+        name_parts.append(forename.strip())
+    if lastname:
+        name_parts.append(lastname.strip())
+    
+    full_name = " ".join(name_parts).strip()
+    
+    # Проверяем на разумную длину
+    if len(full_name) > 200:  # Слишком длинное имя
+        return None
+    
+    return full_name if full_name else None
+
+def extract_bibliographic_links_improved(elem, pmid):
+    """Улучшенное извлечение библиографических ссылок"""
+    links = []
+    unique_citations = set()
+    
+    # Извлекаем ссылки из всех возможных ReferenceList (включая вложенные)
+    for reference_list in elem.findall('.//ReferenceList'):
+        # Ищем ArticleId с IdType="pubmed" во всех вложенных ReferenceList
+        for aid in reference_list.findall('.//ArticleId[@IdType="pubmed"]'):
+            txt = aid.text
+            if txt and txt.strip():
+                txt_clean = txt.strip()
+                # Валидация: PMID должен быть числом
+                if txt_clean.isdigit():
+                    citation_key = f"{pmid}->{txt_clean}"
+                    if citation_key not in unique_citations:
+                        unique_citations.add(citation_key)
+                        links.append(txt_clean)
+    
+    return links
+
 # ========== ЗАПИСЬ ==========
 def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
     global driver
@@ -138,8 +197,8 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
             with driver.session() as session:
                 session.execute_write(tx_work)
             logger.info(f"[WRITE-OK] {path_name}")
-            # Небольшая пауза для освобождения памяти
-            time.sleep(0.05)
+            # Увеличенная пауза для освобождения памяти
+            time.sleep(0.2)
             return True
         except (neo4j_exceptions.ServiceUnavailable,
                 neo4j_exceptions.SessionExpired,
@@ -194,31 +253,79 @@ def parse_one_file(path: Path):
         for _, elem in ET.iterparse(gf, events=("end",)):
             if elem.tag == "PubmedArticle":
                 total_articles += 1
+                
+                # Извлекаем PMID
+                pmid = elem.findtext('.//PMID')
+                if not pmid or not pmid.strip():
+                    rejected_articles += 1
+                    rejection_reasons["missing: pmid"] = rejection_reasons.get("missing: pmid", 0) + 1
+                    elem.clear()
+                    continue
+                
+                pmid = pmid.strip()
+                
+                # Извлекаем заголовок
+                title_elem = elem.find('.//ArticleTitle')
+                title = None
+                if title_elem is not None:
+                    title = ''.join(title_elem.itertext()).strip()
+                    if len(title) > 1000:  # Слишком длинный заголовок
+                        title = title[:1000] + "..."
+                
+                # Извлекаем журнал
+                journal = elem.findtext('.//Journal/Title')
+                if journal and len(journal) > 500:  # Слишком длинное название журнала
+                    journal = journal[:500] + "..."
+                
+                # Извлекаем год публикации
+                year_text = (elem.findtext('.//Journal/JournalIssue/PubDate/Year')
+                           or elem.findtext('.//Journal/JournalIssue/PubDate/MedlineDate') or '')
+                publication_time = extract_year_from_date(year_text)
+                
+                # Извлекаем DOI
+                doi = elem.findtext('.//ArticleIdList/ArticleId[@IdType="doi"]') or None
+                if doi and len(doi) > 200:  # Слишком длинный DOI
+                    doi = doi[:200]
+                
+                # Извлекаем абстракт
+                abstract_elem = elem.find('.//Abstract/AbstractText')
+                abstract = None
+                if abstract_elem is not None:
+                    abstract = ''.join(abstract_elem.itertext()).strip()
+                    if len(abstract) > 5000:  # Слишком длинный абстракт
+                        abstract = abstract[:5000] + "..."
+                
+                # Извлекаем авторов (ограничиваем количество)
+                authors = []
+                author_elements = elem.findall('.//AuthorList/Author')
+                for au in author_elements[:50]:  # Максимум 50 авторов
+                    forename = au.findtext('ForeName')
+                    lastname = au.findtext('LastName')
+                    author_name = clean_author_name(forename, lastname)
+                    if author_name:
+                        authors.append(author_name)
+                
+                # Извлекаем ключевые слова (ограничиваем количество)
+                keywords = []
+                keyword_elements = elem.findall('.//MeshHeadingList/MeshHeading/DescriptorName')
+                for dn in keyword_elements[:30]:  # Максимум 30 ключевых слов
+                    if dn.text and dn.text.strip():
+                        keyword = dn.text.strip()
+                        if len(keyword) <= 200:  # Разумная длина ключевого слова
+                            keywords.append(keyword)
+                
                 data = {
-                    'pmid': elem.findtext('.//PMID'),
-                    'doi': elem.findtext('.//ArticleIdList/ArticleId[@IdType="doi"]') or None,
-                    'title': ''.join(elem.find('.//ArticleTitle').itertext()).strip()
-                              if elem.find('.//ArticleTitle') is not None else None,
-                    'publication_time': (
-                        (elem.findtext('.//Journal/JournalIssue/PubDate/Year')
-                         or elem.findtext('.//Journal/JournalIssue/PubDate/MedlineDate') or '').strip()
-                    ) or None,
-                    'journal': elem.findtext('.//Journal/Title'),
-                    'abstract': ''.join(elem.find('.//Abstract/AbstractText').itertext()).strip()
-                                if elem.find('.//Abstract/AbstractText') is not None else None,
-                    'authors': [
-                        " ".join([au.findtext('ForeName') or "", au.findtext('LastName') or ""]).strip()
-                        for au in elem.findall('.//AuthorList/Author')
-                        if au.findtext('ForeName') or au.findtext('LastName')
-                    ],
-                    'keywords': [
-                        dn.text.strip()
-                        for dn in elem.findall('.//MeshHeadingList/MeshHeading/DescriptorName')
-                        if dn.text
-                    ]
+                    'pmid': pmid,
+                    'doi': doi,
+                    'title': title,
+                    'publication_time': publication_time,
+                    'journal': journal,
+                    'abstract': abstract,
+                    'authors': authors,
+                    'keywords': keywords
                 }
                 
-                # Проверяем обязательные поля и записываем причины отклонения
+                # Проверяем обязательные поля
                 missing_fields = []
                 for field in MANDATORY_FIELDS:
                     if not data[field]:
@@ -230,16 +337,14 @@ def parse_one_file(path: Path):
                     rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
                 else:
                     nodes.append(data)
-                    article_rels = 0
-                    reference_list = elem.find('.//ReferenceList')
-                    if reference_list is not None:
-                        for aid in reference_list.findall('.//ArticleId[@IdType="pubmed"]'):
-                            txt = aid.text
-                            if txt and txt.isdigit():
-                                rels.append({'pmid': data['pmid'], 'cpmid': txt})  # новая статья ссылается на старую
-                                article_rels += 1
-                    total_rels_found += article_rels
                     count += 1
+                
+                # Извлекаем библиографические ссылки
+                article_rels = extract_bibliographic_links_improved(elem, pmid)
+                for link_pmid in article_rels:
+                    rels.append({'pmid': pmid, 'cpmid': link_pmid})
+                
+                total_rels_found += len(article_rels)
                 elem.clear()
 
                 if count % BATCH_SIZE == 0:
@@ -247,11 +352,11 @@ def parse_one_file(path: Path):
                     write_queue.put((path.name, nodes.copy(), rels.copy()))
                     nodes.clear()
                     rels.clear()
-                    # Принудительная очистка памяти каждые 10 батчей
-                    if count % (BATCH_SIZE * 10) == 0:
+                    # Принудительная очистка памяти каждые 5 батчей
+                    if count % (BATCH_SIZE * 5) == 0:
                         import gc
                         gc.collect()
-                        time.sleep(0.1)
+                        time.sleep(0.5)
 
     # остаток
     if nodes or rels:
@@ -293,23 +398,24 @@ def process_all():
     for i, file in enumerate(files):
         logger.info(f"  {i+1}. {file.name}")
     
-    # Берём только указанный файл
-    latest_file = files[-2]
-    logger.info(f"Обрабатываем только указанный файл: {latest_file.name}")
+    # Берём последние 3 файла
+    latest_files = files[-3:]  # Последние 3 файла
+    logger.info(f"Обрабатываем последние 3 файла:")
+    for i, file in enumerate(latest_files, 1):
+        logger.info(f"  {i}. {file.name}")
     
-    # Проверяем дату модификации файла
-    mod_time = datetime.datetime.fromtimestamp(latest_file.stat().st_mtime)
-    logger.info(f"Дата модификации файла: {mod_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    # Показываем информацию о файлах
+    total_size = 0
+    for file in latest_files:
+        mod_time = datetime.datetime.fromtimestamp(file.stat().st_mtime)
+        file_size_mb = file.stat().st_size / (1024 * 1024)
+        total_size += file_size_mb
+        logger.info(f"  {file.name}: {file_size_mb:.1f} MB, модифицирован: {mod_time.strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # Проверяем размер файла
-    file_size_mb = latest_file.stat().st_size / (1024 * 1024)
-    logger.info(f"Размер файла: {file_size_mb:.1f} MB")
+    logger.info(f"Общий размер файлов: {total_size:.1f} MB")
     
-    # Если нужно обработать все файлы, раскомментируйте следующие строки:
-    # logger.info("Обрабатываем ВСЕ файлы (не только последний)")
-    # files_to_process = files
-    # else:
-    files_to_process = [latest_file]
+    # Обрабатываем все 3 файла
+    files_to_process = latest_files
     
     # Очищаем базу данных перед загрузкой нового файла (как в алгоритме укладки)
     try:
@@ -321,7 +427,7 @@ def process_all():
             while True:
                 result = s.run("""
                     MATCH ()-[r:BIBLIOGRAPHIC_LINK]->()
-                    WITH r LIMIT 10000
+                    WITH r LIMIT 5000
                     DELETE r
                     RETURN count(r) as deleted_rels
                 """).single()
@@ -337,7 +443,7 @@ def process_all():
             while True:
                 result = s.run("""
                     MATCH (n:Article)
-                    WITH n LIMIT 10000
+                    WITH n LIMIT 5000
                     DELETE n
                     RETURN count(n) as deleted_nodes
                 """).single()
@@ -390,7 +496,7 @@ def process_all():
             # Принудительная очистка памяти после обработки файла
             import gc
             gc.collect()
-            time.sleep(1)  # Пауза для освобождения памяти
+            time.sleep(2)  # Увеличенная пауза для освобождения памяти
             logger.info("Память очищена после обработки файла")
     except Exception as e:
         logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")

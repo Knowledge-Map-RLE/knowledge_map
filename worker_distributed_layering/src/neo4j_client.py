@@ -11,13 +11,12 @@ import time
 
 from neo4j import AsyncGraphDatabase, AsyncDriver, AsyncSession
 from neo4j.exceptions import Neo4jError, TransientError
-import structlog
 
 from .config import get_neo4j_config, settings
 from .utils.simple_circuit_breaker import CircuitBreaker
 from .utils.metrics import metrics_collector
 
-logger = structlog.get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Neo4jClient:
@@ -49,9 +48,9 @@ class Neo4jClient:
         try:
             self.driver = AsyncGraphDatabase.driver(**config)
             await self.driver.verify_connectivity()
-            logger.info("Connected to Neo4j", uri=config["uri"])
+            logger.info(f"Connected to Neo4j uri={config['uri']}")
         except Exception as e:
-            logger.error("Failed to connect to Neo4j", error=str(e))
+            logger.error(f"Failed to connect to Neo4j: {str(e)}")
             raise
 
     async def close(self) -> None:
@@ -105,14 +104,14 @@ class Neo4jClient:
                     execution_time = time.time() - start_time
                     metrics_collector.record_neo4j_query("query", execution_time)
                     
-                    # Компактный прогресс по БД
+                    # Логируем прогресс по БД
                     msg = (
                         f"[db] ok | {len(records)} rec | {execution_time*1000:.1f} ms | "
                         f"q:{(query[:80] + '...') if len(query) > 80 else query}"
                     )
                     if len(msg) > 200:
                         msg = msg[:197] + "..."
-                    print(msg)  # Добавляем перенос строки
+                    logger.info(msg)
                     
                     return records
 
@@ -120,10 +119,7 @@ class Neo4jClient:
                 if attempt < max_retries:
                     wait_time = 2 ** attempt
                     logger.warning(
-                        "Transient error, retrying",
-                        error=str(e),
-                        attempt=attempt + 1,
-                        wait_time=wait_time,
+                        f"Transient error, retrying attempt={attempt + 1} error={str(e)} wait_time={wait_time}"
                     )
                     await asyncio.sleep(wait_time)
                     # Переподключаемся при transient ошибках
@@ -135,15 +131,13 @@ class Neo4jClient:
                 if "connection" in str(e).lower() or "defunct" in str(e).lower():
                     if attempt < max_retries:
                         logger.warning(
-                            "Connection error, reconnecting and retrying",
-                            error=str(e),
-                            attempt=attempt + 1,
+                            f"Connection error, reconnecting and retrying attempt={attempt + 1} error={str(e)}"
                         )
                         await asyncio.sleep(2 ** attempt)
                         await self.reconnect()
                         continue
                 # Ошибка записывается в логи
-                logger.error("Query execution failed", error=str(e), query=query[:100])
+                logger.error(f"Query execution failed error={str(e)} query={query[:100]}")
                 raise
 
         raise Exception(f"Query failed after {max_retries} retries")
@@ -184,10 +178,7 @@ class Neo4jClient:
         total_count = count_result[0]["total_count"]
         
         logger.info(
-            "Starting chunked article streaming",
-            total_articles=total_count,
-            chunk_size=chunk_size,
-            estimated_chunks=total_count // chunk_size + 1,
+            f"Starting chunked article streaming total_articles={total_count} chunk_size={chunk_size} estimated_chunks={total_count // chunk_size + 1}"
         )
 
         # Загружаем статьи по чанкам с оптимизацией
@@ -219,11 +210,7 @@ class Neo4jClient:
                 break
                 
             logger.debug(
-                "Loaded node chunk",
-                chunk_number=chunk_number,
-                nodes_in_chunk=len(chunk_data),
-                load_time=load_time,
-                offset=offset,
+                f"Loaded node chunk chunk_number={chunk_number} nodes_in_chunk={len(chunk_data)} load_time={load_time} offset={offset}"
             )
             
             yield chunk_data
@@ -259,10 +246,7 @@ class Neo4jClient:
         total_count = count_result[0]["total_count"]
         
         logger.info(
-            "Starting chunked edge streaming",
-            total_edges=total_count,
-            chunk_size=chunk_size,
-            estimated_chunks=total_count // chunk_size + 1,
+            f"Starting chunked edge streaming total_edges={total_count} chunk_size={chunk_size} estimated_chunks={total_count // chunk_size + 1}"
         )
 
         # Загружаем рёбра по чанкам
@@ -289,11 +273,7 @@ class Neo4jClient:
                 break
                 
             logger.debug(
-                "Loaded edge chunk",
-                chunk_number=chunk_number,
-                edges_in_chunk=len(chunk_data),
-                load_time=load_time,
-                offset=offset,
+                f"Loaded edge chunk chunk_number={chunk_number} edges_in_chunk={len(chunk_data)} load_time={load_time} offset={offset}"
             )
             
             yield chunk_data
@@ -406,9 +386,7 @@ class Neo4jClient:
         batch_size = batch_size or settings.batch_size
         
         logger.info(
-            "Starting batch position update",
-            total_articles=len(node_positions),
-            batch_size=batch_size,
+            f"Starting batch position update total_articles={len(node_positions)} batch_size={batch_size}"
         )
         
         for i in range(0, len(node_positions), batch_size):
@@ -440,10 +418,7 @@ class Neo4jClient:
             update_time = time.time() - start_time
             
             logger.debug(
-                "Updated batch",
-                batch_number=i // batch_size + 1,
-                nodes_updated=len(batch),
-                update_time=update_time,
+                f"Updated batch batch_number={i // batch_size + 1} nodes_updated={len(batch)} update_time={update_time}"
             )
 
     async def get_subgraph_by_component(

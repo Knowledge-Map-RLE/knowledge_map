@@ -26,11 +26,13 @@ class FastPlacementProcessor:
         """
         logger.info("Starting fast batch placement of remaining articles")
         
-        # Получаем все неразмещённые статьи
+        # Получаем все неразмещённые статьи, отсортированные по топологическому порядку
         remaining_query = """
         MATCH (n:Article)
         WHERE n.layout_status = 'unprocessed'
-        RETURN n.uid as article_id
+        AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
+        RETURN n.uid as article_id, coalesce(n.topo_order, 0) as topo_order
+        ORDER BY topo_order ASC
         """
         
         async with self.circuit_breaker:
@@ -128,14 +130,16 @@ class FastPlacementProcessor:
         """Строит финальный результат укладки"""
         logger.info("Building final layout result")
         
-        # Получаем все размещённые статьи
+        # Получаем все размещённые статьи, отсортированные по топологическому порядку (только связанные вершины)
         query = """
         MATCH (n:Article)
         WHERE n.layout_status IN ['placed', 'in_longest_path', 'pinned']
+        AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
         RETURN n.uid as article_id, n.layer as layer, n.level as level, 
                n.x as x, n.y as y,
-               n.layout_status as status, n.is_pinned as is_pinned
-        ORDER BY n.layer, n.level
+               n.layout_status as status, n.is_pinned as is_pinned,
+               coalesce(n.topo_order, 0) as topo_order
+        ORDER BY topo_order ASC
         """
         
         async with self.circuit_breaker:

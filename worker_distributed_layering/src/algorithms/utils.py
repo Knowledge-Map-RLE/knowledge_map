@@ -60,6 +60,7 @@ class LayoutUtils:
         query = """
         MATCH (n:Article)
         WHERE n.layout_status IN ['placed','in_longest_path','pinned']
+        AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
         RETURN count(n) AS cnt
         """
         async with self.circuit_breaker:
@@ -68,9 +69,10 @@ class LayoutUtils:
 
     async def ensure_total_articles_estimate(self) -> int:
         """Инициализирует или возвращает оценку общего числа статей."""
-        # Всегда обновляем из БД для точности
+        # Всегда обновляем из БД для точности (только связанные вершины)
         q = """
         MATCH (n:Article)
+        WHERE (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
         RETURN count(n) AS total
         """
         async with self.circuit_breaker:
@@ -137,15 +139,18 @@ class LayoutUtils:
                 # Транзакция 2: WRITE операции (изменение данных)
                 tx_write = await session.begin_transaction()
                 try:
-                    # 1. Очищаем существующие координаты статей (уже очищено в _clear_all_layout_positions)
-                    # await tx_write.run("""
-                    #     MATCH (n:Article)
-                    #     REMOVE n.layer, n.level, n.x, n.y
-                    # """)
-                    
-                    # 2. Инициализируем статус и сбрасываем временные поля топосортировки
+                    # 1. Очищаем координаты у изолированных вершин
                     await tx_write.run("""
                         MATCH (n:Article)
+                        WHERE NOT ()-[:BIBLIOGRAPHIC_LINK]->(n) AND NOT (n)-[:BIBLIOGRAPHIC_LINK]->()
+                        REMOVE n.layer, n.level, n.x, n.y
+                        SET n.layout_status = 'isolated'
+                    """)
+                    
+                    # 2. Инициализируем статус и сбрасываем временные поля топосортировки (только связанные вершины)
+                    await tx_write.run("""
+                        MATCH (n:Article)
+                        WHERE (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
                         SET n.layout_status = 'unprocessed'
                         REMOVE n.topo_order, n.visited, n.in_deg
                     """)
@@ -230,10 +235,11 @@ class LayoutUtils:
         """
         logger.info("Checking graph acyclicity...")
         
-        # Проверяем, есть ли узлы без входящих рёбер
+        # Проверяем, есть ли узлы без входящих рёбер (только связанные вершины)
         sources_query = """
         MATCH (n:Article)
         WHERE NOT ()-[:BIBLIOGRAPHIC_LINK]->(n)
+        AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
         RETURN count(n) AS source_count
         """
         
@@ -284,125 +290,6 @@ class LayoutUtils:
         logger.info(f"Removed {removed_loops} loops and {removed_duplicates} duplicates (total: {total_removed})")
         return total_removed
 
-
-
-
-
-    
-
-    async def compute_toposort_order_db(self) -> None:
-        """
-        Вычисляет глобальный топологический порядок и сохраняет индекс в n.topo_order.
-        Реализация через инкрементальную схему, но без размещения.
-        """
-        logger.info("Computing global topological order using super-optimized DB-only algorithm")
-
-        # Получаем общее количество статей для контроля
-        total_articles_query = """
-        MATCH (n:Article)
-        RETURN count(n) AS total
-        """
-        async with self.circuit_breaker:
-            total_rows = await neo4j_client.execute_query_with_retry(total_articles_query)
-        total_articles = int(total_rows[0]["total"]) if total_rows else 0
-        logger.info(f"Total articles to process: {total_articles}")
-
-        # Быстрая, но правильная топологическая сортировка
-        toposort_query = """
-        // Инициализация: вычисляем степени
-        MATCH (n:Article)
-        SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),
-            n.topo_order = -1,
-            n.visited = false
-        
-        // Быстрый алгоритм Кана с ограниченными итерациями
-        WITH 0 AS order_counter
-        MATCH (n:Article)
-        WHERE n.in_deg = 0 AND n.visited = false
-        WITH n, order_counter
-        LIMIT 10000  // Обрабатываем большими батчами
-        SET n.topo_order = order_counter,
-            n.visited = true
-        
-        // Уменьшаем степени соседей
-        WITH n, order_counter
-        MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(neighbor:Article)
-        WHERE neighbor.visited = false
-        SET neighbor.in_deg = neighbor.in_deg - 1
-        
-        // Вторая итерация
-        WITH order_counter + 10000 AS next_order
-        MATCH (n:Article)
-        WHERE n.in_deg = 0 AND n.visited = false
-        WITH n, next_order
-        LIMIT 10000
-        SET n.topo_order = next_order,
-            n.visited = true
-        
-        WITH n, next_order
-        MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(neighbor:Article)
-        WHERE neighbor.visited = false
-        SET neighbor.in_deg = neighbor.in_deg - 1
-        
-        // Третья итерация
-        WITH next_order + 10000 AS next_order2
-        MATCH (n:Article)
-        WHERE n.in_deg = 0 AND n.visited = false
-        WITH n, next_order2
-        LIMIT 10000
-        SET n.topo_order = next_order2,
-            n.visited = true
-        
-        WITH n, next_order2
-        MATCH (n)-[:BIBLIOGRAPHIC_LINK]->(neighbor:Article)
-        WHERE neighbor.visited = false
-        SET neighbor.in_deg = neighbor.in_deg - 1
-        
-        // Обрабатываем оставшиеся узлы (если есть циклы)
-        WITH next_order2 + 10000 AS next_order3
-        MATCH (n:Article)
-        WHERE n.visited = false
-        SET n.topo_order = next_order3 + toInteger(substring(n.uid, 0, 10)),  // Используем числовую часть uid
-            n.visited = true
-        
-        RETURN count(n) AS processed_count
-        """
-        
-        try:
-            async with self.circuit_breaker:
-                await neo4j_client.execute_query_with_retry(toposort_query)
-            
-            logger.info("Ultra-fast topological sort completed using simple id-based ordering")
-            
-        except Exception as e:
-            logger.warning(f"Ultra-fast toposort failed: {e}")
-            logger.info("Falling back to simple fallback...")
-            await self._simple_toposort_fallback()
-
-    async def _simple_toposort_fallback(self) -> None:
-        """
-        Простая fallback версия топологической сортировки без UNWIND.
-        """
-        logger.info("Using simple fallback topological sort...")
-        
-        # БАТЧЕВАЯ инициализация с использованием APOC periodic.iterate, чтобы не переполнять транзакционную память
-        # Требует apoc, у нас он включён в docker-compose.
-        init_query_batched = """
-        CALL apoc.periodic.iterate(
-          "MATCH (n:Article) RETURN n",
-          "WITH n 
-           SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),
-               n.topo_order = toInteger(substring(n.uid, 0, 10)),
-               n.visited = true",
-          {batchSize: 1000, parallel: false}
-        ) YIELD batches, total, errorMessages
-        RETURN batches, total, errorMessages
-        """
-        
-        async with self.circuit_breaker:
-            await neo4j_client.execute_query_with_retry(init_query_batched)
-        
-        logger.info("Simple fallback topological sort completed")
 
     def should_throttle_progress(self) -> bool:
         """Проверяет, нужно ли ограничить частоту логирования прогресса"""

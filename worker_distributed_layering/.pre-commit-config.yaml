@@ -1,0 +1,83 @@
+# Конфигурация pre-commit хуков для автоматического запуска тестов и проверок
+repos:
+  # Базовые проверки кода
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: check-docstring-first
+
+  # Форматирование кода с Black
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3.11
+        args: [--line-length=100]
+
+  # Сортировка импортов с isort
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=100]
+
+  # Проверка стиля кода с flake8
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args: [--max-line-length=100, --extend-ignore=E203,W503]
+
+  # Проверка типов с mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all]
+        args: [--ignore-missing-imports]
+
+  # Запуск тестов для измененных файлов
+  - repo: local
+    hooks:
+      - id: pytest-changed-files
+        name: pytest-changed-files
+        entry: poetry run pytest
+        language: system
+        files: ^src/.*\.py$
+        args: [--tb=short, -v]
+        pass_filenames: false
+
+      - id: pytest-topological-tests
+        name: pytest-topological-tests
+        entry: poetry run pytest
+        language: system
+        files: ^(src/algorithms/topological_sort\.py|tests/test_topological.*\.py)$
+        args: [tests/test_topological_sort.py, tests/test_topological_validation.py, --tb=short, -v]
+        pass_filenames: false
+
+      - id: pytest-validation-tests
+        name: pytest-validation-tests
+        entry: poetry run pytest
+        language: system
+        files: ^tests/test_topological_validation\.py$
+        args: [tests/test_topological_validation.py, --tb=short, -v]
+        pass_filenames: false
+
+# Конфигурация для CI/CD
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false

@@ -121,6 +121,17 @@ class S3ListResponse(BaseModel):
     objects: List[Dict[str, Any]]
     count: int
 
+# ===== New: viewport edges endpoint models =====
+class ViewportBounds(BaseModel):
+    left: float
+    right: float
+    top: float
+    bottom: float
+
+class ViewportEdgesResponse(BaseModel):
+    blocks: List[Dict[str, Any]]
+    links: List[Dict[str, Any]]
+
 # Эндпоинты для проверки здоровья
 @app.get("/health")
 async def health_check() -> Dict[str, Any]:
@@ -320,6 +331,91 @@ async def get_articles_layout() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error calculating articles layout from Neo4j: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных статей из Neo4j: {str(e)}")
+
+
+# ===== New: edges-by-viewport endpoint =====
+@app.post("/api/articles/edges_by_viewport", response_model=ViewportEdgesResponse)
+async def get_edges_by_viewport(bounds: ViewportBounds, limit_per_node: int = 200):
+    """Возвращает узлы в окне и рёбра, у которых хотя бы один конец попадает в окно.
+    Для второй вершины возвращаем координаты (если x,y отсутствуют — вычисляем из layer/level).
+    """
+    try:
+        LAYER_SPACING = 240
+        LEVEL_SPACING = 130
+
+        # Узлы в окне
+        nodes_query = (
+            "MATCH (n:Article) "
+            "WHERE coalesce(n.x, toFloat(coalesce(n.layer,0))*$LAYER_SPACING) >= $left "
+            "  AND coalesce(n.x, toFloat(coalesce(n.layer,0))*$LAYER_SPACING) <= $right "
+            "  AND coalesce(n.y, toFloat(coalesce(n.level,0))*$LEVEL_SPACING) >= $top "
+            "  AND coalesce(n.y, toFloat(coalesce(n.level,0))*$LEVEL_SPACING) <= $bottom "
+            "RETURN n.uid as id, n.layer as layer, n.level as level, n.x as x, n.y as y"
+        )
+        params = {
+            "left": bounds.left,
+            "right": bounds.right,
+            "top": bounds.top,
+            "bottom": bounds.bottom,
+            "LAYER_SPACING": LAYER_SPACING,
+            "LEVEL_SPACING": LEVEL_SPACING,
+        }
+        nodes_result, _ = db.cypher_query(nodes_query, params)
+        ids_in_view = [str(r[0]) for r in nodes_result]
+
+        # Рёбра, где хотя бы один конец в окне, с ограничением fan-out
+        edges_query = (
+            "UNWIND $ids AS vid "
+            "MATCH (s:Article {uid: vid})-[:BIBLIOGRAPHIC_LINK]->(t:Article) "
+            "WITH s, t ORDER BY t.uid LIMIT $limit_per_node "
+            "RETURN s.uid as sid, s.layer as sl, s.level as sv, s.x as sx, s.y as sy, "
+            "       t.uid as tid, t.layer as tl, t.level as tv, t.x as tx, t.y as ty "
+            "UNION "
+            "UNWIND $ids AS vid "
+            "MATCH (s:Article)-[:BIBLIOGRAPHIC_LINK]->(t:Article {uid: vid}) "
+            "WITH s, t ORDER BY s.uid LIMIT $limit_per_node "
+            "RETURN s.uid as sid, s.layer as sl, s.level as sv, s.x as sx, s.y as sy, "
+            "       t.uid as tid, t.layer as tl, t.level as tv, t.x as tx, t.y as ty"
+        )
+        edges_result, _ = db.cypher_query(edges_query, {"ids": ids_in_view, "limit_per_node": limit_per_node})
+
+        # Собираем выдачу
+        blocks_map: dict[str, dict] = {}
+        def pack_block(uid, layer, level, x, y):
+            if uid in blocks_map:
+                return
+            if x is None:
+                x = float((layer or 0) * LAYER_SPACING)
+            if y is None:
+                y = float((level or 0) * LEVEL_SPACING)
+            blocks_map[uid] = {
+                "id": str(uid),
+                "layer": int(layer or 0),
+                "level": int(level or 0),
+                "x": float(x),
+                "y": float(y),
+            }
+
+        # Добавляем видимые узлы
+        for r in nodes_result:
+            pack_block(r[0], r[1], r[2], r[3], r[4])
+
+        links: list[dict] = []
+        seen = set()
+        for r in edges_result:
+            sid, sl, sv, sx, sy, tid, tl, tv, tx, ty = r
+            pack_block(sid, sl, sv, sx, sy)
+            pack_block(tid, tl, tv, tx, ty)
+            key = f"{sid}->{tid}"
+            if key in seen:
+                continue
+            seen.add(key)
+            links.append({"id": key, "source_id": str(sid), "target_id": str(tid)})
+
+        return ViewportEdgesResponse(blocks=list(blocks_map.values()), links=links)
+    except Exception as e:
+        logger.error(f"edges_by_viewport failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/layout/articles_all")
