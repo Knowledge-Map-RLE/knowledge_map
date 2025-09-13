@@ -69,14 +69,10 @@ export default function Science_articles() {
     loadEdgesByViewport
   } = useArticlesDataLoader(viewportRef);
 
-  // Центрируем viewport при загрузке блоков
+  // Центрируем viewport на координатах (0,0) при загрузке блоков
   useEffect(() => {
     if (blocks.length > 0 && viewportRef.current) {
-      console.log(`[Science_articles] Centering viewport on ${blocks.length} blocks`);
-      
-      // Находим центр всех блоков
-      const centerX = blocks.reduce((sum, block) => sum + (block.x || 0), 0) / blocks.length;
-      const centerY = blocks.reduce((sum, block) => sum + (block.y || 0), 0) / blocks.length;
+      console.log(`[Science_articles] Centering viewport on origin (0,0) for ${blocks.length} blocks`);
       
       // Находим диапазон координат для определения масштаба
       const minX = Math.min(...blocks.map(b => b.x || 0));
@@ -93,9 +89,9 @@ export default function Science_articles() {
       const targetScale = Math.min(1.0, 800 / Math.max(rangeX, rangeY, 100));
       viewportRef.current.scale = targetScale;
       
-      // Центрируем viewport
-      viewportRef.current.focusOn(centerX, centerY);
-      console.log(`[Science_articles] Viewport centered on blocks with scale ${targetScale}`);
+      // Центрируем viewport на координатах (0,0)
+      viewportRef.current.focusOn(0, 0);
+      console.log(`[Science_articles] Viewport centered on origin (0,0) with scale ${targetScale}`);
     }
   }, [blocks.length]);
 

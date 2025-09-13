@@ -32,19 +32,25 @@ class TopologicalSorter:
         self._last_progress_time = current_time
         return False
 
-    async def compute_toposort_order_db(self) -> None:
+    async def compute_toposort_order_db(self, exclude_isolated: bool = False) -> None:
         """
         Вычисляет полный топологический порядок используя алгоритм Кана с батчевой обработкой.
         Сложность O(V + E) - оптимальная для топологической сортировки.
         """
         logger.info("Computing complete topological order using Kahn's algorithm with batching")
 
-        # Получаем общее количество статей для контроля (только связанные вершины)
-        total_articles_query = """
+        # Получаем общее количество статей для контроля (включая/исключая изолированные вершины)
+        total_articles_query = (
+            """
         MATCH (n:Article)
-        WHERE (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
-        RETURN count(n) AS total
         """
+            + (
+                "WHERE (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })\n"
+                if exclude_isolated
+                else ""
+            )
+            + "RETURN count(n) AS total\n"
+        )
         async with self.circuit_breaker:
             total_rows = await neo4j_client.execute_query_with_retry(total_articles_query)
         total_articles = int(total_rows[0]["total"]) if total_rows else 0
@@ -52,16 +58,18 @@ class TopologicalSorter:
 
         # Инициализация: вычисляем in_degree для всех узлов батчами
         logger.info("Initializing in_degree calculation...")
-        init_query = """
+        init_query = (
+            """
         CALL apoc.periodic.iterate(
-          "MATCH (n:Article) WHERE (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() }) RETURN n",
-          "SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),
-           n.topo_order = -1,
-           n.visited = false",
-          {batchSize: 5000, parallel: false}
-        ) YIELD batches, total, errorMessages
-        RETURN batches, total, errorMessages
+          "
         """
+            + (
+                "MATCH (n:Article) WHERE (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() }) RETURN n\n"
+                if exclude_isolated
+                else "MATCH (n:Article) RETURN n\n"
+            )
+            + "\",\n          \"SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),\n           n.topo_order = -1,\n           n.visited = false\",\n          {batchSize: 5000, parallel: false}\n        ) YIELD batches, total, errorMessages\n        RETURN batches, total, errorMessages\n        """
+        )
         
         async with self.circuit_breaker:
             init_result = await neo4j_client.execute_query_with_retry(init_query)
@@ -74,12 +82,17 @@ class TopologicalSorter:
         
         while True:
             # Находим ВСЕ узлы с in_deg = 0 и visited = false (алгоритм Кана требует обработки всех источников на одном уровне)
-            find_zero_degree_query = """
+            # Сначала обрабатываем связанные вершины, затем изолированные
+            find_zero_degree_query = (
+                """
             MATCH (n:Article)
             WHERE n.in_deg = 0 AND n.visited = false
-            AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
-            RETURN n.uid AS uid
             """
+                + (
+                    "AND (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })\n"
+                )
+                + "RETURN n.uid AS uid\n            ORDER BY n.uid\n            """
+            )
             
             async with self.circuit_breaker:
                 zero_degree_nodes = await neo4j_client.execute_query_with_retry(find_zero_degree_query)
@@ -93,7 +106,7 @@ class TopologicalSorter:
             logger.info(f"Обрабатываем уровень {order_counter}-{order_counter + current_batch_size - 1}: {current_batch_size} узлов")
             
             # Разбиваем на батчи для избежания проблем с памятью
-            batch_size = 5000  # Уменьшаем размер батча
+            batch_size = 20000  # Крупнее батчи для уменьшения количества транзакций
             for i in range(0, len(node_uids), batch_size):
                 batch_uids = node_uids[i:i + batch_size]
                 batch_data = [
@@ -115,8 +128,8 @@ class TopologicalSorter:
                         {"node_data": batch_data}
                     )
                 
-                # Логируем прогресс каждые 10 батчей
-                if (i // batch_size) % 10 == 0:
+                # Логируем прогресс редко, чтобы уменьшить накладные расходы
+                if (i // batch_size) % 20 == 0:
                     logger.info(f"Обработано {min(i + batch_size, len(node_uids))}/{len(node_uids)} узлов уровня")
             
             
@@ -190,6 +203,44 @@ class TopologicalSorter:
                     )
             
             processed_total += remaining_count
+            order_counter += remaining_count  # Важно: сдвигаем счётчик, чтобы избежать дубликатов
+        
+        # Обрабатываем изолированные вершины в конце (если опция исключения отключена)
+        if not exclude_isolated:
+            isolated_query = """
+            MATCH (n:Article)
+            WHERE n.visited = false
+            AND NOT (EXISTS { ()-[:BIBLIOGRAPHIC_LINK]->(n) } OR EXISTS { (n)-[:BIBLIOGRAPHIC_LINK]->() })
+            RETURN n.uid AS uid
+            ORDER BY n.uid
+            """
+            
+            async with self.circuit_breaker:
+                isolated_nodes = await neo4j_client.execute_query_with_retry(isolated_query)
+            
+            if isolated_nodes:
+                logger.info(f"Обрабатываем {len(isolated_nodes)} изолированных вершин в конце")
+                
+                # Присваиваем порядок изолированным вершинам батчами
+                batch_size_iso = 20000
+                for i in range(0, len(isolated_nodes), batch_size_iso):
+                    batch = isolated_nodes[i:i+batch_size_iso]
+                    isolated_data = [
+                        {"uid": row["uid"], "order_value": order_counter + i + j}
+                        for j, row in enumerate(batch)
+                    ]
+                    handle_isolated_query = """
+                    UNWIND $node_data AS item
+                    MATCH (n:Article {uid: item.uid})
+                    SET n.topo_order = item.order_value,
+                        n.visited = true
+                    """
+                    async with self.circuit_breaker:
+                        await neo4j_client.execute_query_with_retry(
+                            handle_isolated_query, {"node_data": isolated_data}
+                        )
+                processed_total += len(isolated_nodes)
+                order_counter += len(isolated_nodes)
         
         logger.info(f"Complete topological sort finished: {processed_total}/{total_articles} nodes processed")
 

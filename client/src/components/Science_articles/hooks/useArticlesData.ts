@@ -8,7 +8,7 @@ const useArticlesData = () => {
     const [isBootLoading, setIsBootLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [pageOffset, setPageOffset] = useState(0);
-    const [pageLimit] = useState(50);
+    const [pageLimit] = useState(1000);
     const loadedBlockIdsRef = { current: new Set<string>() };
     const loadedLinkIdsRef = { current: new Set<string>() };
 

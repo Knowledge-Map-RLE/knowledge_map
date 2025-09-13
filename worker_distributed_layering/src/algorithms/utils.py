@@ -209,24 +209,27 @@ class LayoutUtils:
 
     async def detect_and_fix_cycles(self) -> int:
         """
-        Простая проверка ацикличности без удаления рёбер.
-        Только удаляем петли и дублирующиеся рёбра.
+        Обнаружение и исправление циклов путем разворота связей.
+        Не удаляем связи, а разворачиваем их для устранения циклов.
         """
-        logger.info("Checking graph acyclicity without removing edges...")
+        logger.info("Checking graph acyclicity and fixing cycles by reversing edges...")
         
         # 1. Удаляем только петли и кратные рёбра (это безопасно)
         removed_loops_duplicates = await self._remove_loops_and_duplicates()
         
-        # 2. Проверяем ацикличность без удаления рёбер
+        # 2. Разворачиваем циклы
+        reversed_edges = await self._reverse_cycles()
+        
+        # 3. Проверяем ацикличность после разворота
         is_acyclic = await self._check_acyclicity()
         
         if not is_acyclic:
-            logger.warning("Graph contains cycles, but we're not removing edges to preserve structure")
+            logger.warning("Graph still contains cycles after reversal")
         else:
-            logger.info("Graph is acyclic")
+            logger.info("Graph is now acyclic after cycle reversal")
         
-        logger.info(f"Cycle check completed. Removed {removed_loops_duplicates} loops/duplicates only")
-        return removed_loops_duplicates
+        logger.info(f"Cycle fix completed. Removed {removed_loops_duplicates} loops/duplicates, reversed {reversed_edges} edges")
+        return removed_loops_duplicates + reversed_edges
     
     async def _check_acyclicity(self) -> bool:
         """
@@ -252,6 +255,60 @@ class LayoutUtils:
         # Если есть хотя бы один источник, граф ациклический
         return source_count > 0
     
+    async def _reverse_cycles(self) -> int:
+        """
+        Разворачивает циклы в графе, используя топологическую сортировку.
+        Если связь идет от узла с большим topo_order к узлу с меньшим, разворачиваем её.
+        """
+        logger.info("Reversing cycles using topological order...")
+        
+        # Получаем все связи с их топологическими порядками
+        edges_query = """
+        MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
+        WHERE s.topo_order IS NOT NULL AND t.topo_order IS NOT NULL
+        RETURN s.uid as source_id, t.uid as target_id, s.topo_order as source_order, t.topo_order as target_order
+        """
+        
+        async with self.circuit_breaker:
+            edges_result = await neo4j_client.execute_query_with_retry(edges_query)
+        
+        reversed_count = 0
+        
+        # Обрабатываем связи батчами
+        batch_size = 1000
+        for i in range(0, len(edges_result), batch_size):
+            batch = edges_result[i:i + batch_size]
+            
+            # Находим связи, которые нужно развернуть (идут "назад" по топологическому порядку)
+            edges_to_reverse = []
+            for edge in batch:
+                source_order = edge["source_order"]
+                target_order = edge["target_order"]
+                
+                # Если связь идет от узла с большим порядком к узлу с меньшим - это цикл
+                if source_order > target_order:
+                    edges_to_reverse.append({
+                        "source_id": edge["source_id"],
+                        "target_id": edge["target_id"]
+                    })
+            
+            if edges_to_reverse:
+                # Разворачиваем связи батчами
+                reverse_query = """
+                UNWIND $edges AS edge
+                MATCH (s:Article {uid: edge.source_id})-[r:BIBLIOGRAPHIC_LINK]->(t:Article {uid: edge.target_id})
+                DELETE r
+                CREATE (t)-[:BIBLIOGRAPHIC_LINK]->(s)
+                """
+                
+                async with self.circuit_breaker:
+                    await neo4j_client.execute_query_with_retry(reverse_query, {"edges": edges_to_reverse})
+                
+                reversed_count += len(edges_to_reverse)
+                logger.info(f"Reversed {len(edges_to_reverse)} edges in batch {i//batch_size + 1}")
+        
+        logger.info(f"Total reversed edges: {reversed_count}")
+        return reversed_count
 
     async def _remove_loops_and_duplicates(self) -> int:
         """

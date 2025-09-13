@@ -225,6 +225,12 @@ async def get_articles_layout() -> Dict[str, Any]:
         logger.info("Querying articles from Neo4j")
         blocks_query = """
         MATCH (n:Article)
+        WHERE n.layout_status IN ['in_longest_path','placed_layers','placed']
+          AND n.x IS NOT NULL AND n.y IS NOT NULL
+          AND (
+            EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR 
+            EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
+          )
         RETURN n.uid as id,
                n.content as content,
                n.layer as layer,
@@ -343,13 +349,17 @@ async def get_edges_by_viewport(bounds: ViewportBounds, limit_per_node: int = 20
         LAYER_SPACING = 240
         LEVEL_SPACING = 130
 
-        # Узлы в окне
+        # Узлы в окне - только со связями
         nodes_query = (
             "MATCH (n:Article) "
             "WHERE coalesce(n.x, toFloat(coalesce(n.layer,0))*$LAYER_SPACING) >= $left "
             "  AND coalesce(n.x, toFloat(coalesce(n.layer,0))*$LAYER_SPACING) <= $right "
             "  AND coalesce(n.y, toFloat(coalesce(n.level,0))*$LEVEL_SPACING) >= $top "
             "  AND coalesce(n.y, toFloat(coalesce(n.level,0))*$LEVEL_SPACING) <= $bottom "
+            "  AND ("
+            "    EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR "
+            "    EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))"
+            "  ) "
             "RETURN n.uid as id, n.layer as layer, n.level as level, n.x as x, n.y as y"
         )
         params = {
@@ -424,9 +434,15 @@ async def get_all_articles_layout() -> Dict[str, Any]:
     try:
         logger.info("Loading all articles and links")
 
-        # Запрос всех статей
+        # Запрос всех статей - только со связями
         nodes_query = """
         MATCH (n:Article)
+        WHERE n.layout_status IN ['in_longest_path','placed_layers','placed']
+          AND n.x IS NOT NULL AND n.y IS NOT NULL
+          AND (
+            EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR 
+            EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
+          )
         RETURN n.uid as id,
                coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
                n.layer as layer,
@@ -452,33 +468,16 @@ async def get_all_articles_layout() -> Dict[str, Any]:
 
         blocks: list[dict] = []
         for row in blocks_result:
-            layer_val = int(row[2] or 0)
-            level_val = int(row[3] or 0)
-            
-            # Используем реальные координаты из базы данных или вычисляем их
-            if row[7] is not None and row[8] is not None:
-                # Координаты уже заданы в базе данных
-                x_coord = float(row[7])
-                y_coord = float(row[8])
-            else:
-                # Вычисляем координаты на основе layer и level
-                # Используем те же коэффициенты, что и в алгоритме укладки
-                LAYER_SPACING = 240  # BLOCK_WIDTH (200) + HORIZONTAL_GAP (40)
-                LEVEL_SPACING = 130  # BLOCK_HEIGHT (80) + VERTICAL_GAP (50)
-                
-                x_coord = float(layer_val * LAYER_SPACING)
-                y_coord = float(level_val * LEVEL_SPACING)
-            
             block = {
                 "id": str(row[0]),
                 "content": str(row[1] or ""),
-                "layer": layer_val,
-                "level": level_val,
+                "layer": int(row[2]) if row[2] is not None else None,
+                "level": int(row[3]) if row[3] is not None else None,
                 "sublevel_id": int(row[4] or 0),
                 "is_pinned": bool(row[5]) if row[5] is not None else False,
                 "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
-                "x": x_coord,
-                "y": y_coord,
+                "x": float(row[7]) if row[7] is not None else 0.0,
+                "y": float(row[8]) if row[8] is not None else 0.0,
                 "layout_status": str(row[9] or ""),
                 "metadata": {},
             }
@@ -518,10 +517,10 @@ async def get_all_articles_layout() -> Dict[str, Any]:
 async def get_articles_layout_page(
     offset: int = 0,
     limit: int = 2000,
-    center_layer: int = 0,
-    center_level: int = 0,
+    center_x: float = 0.0,
+    center_y: float = 0.0,
 ) -> Dict[str, Any]:
-    """Возвращает часть графа статей, упорядоченную по близости к (center_layer, center_level).
+    """Возвращает часть графа статей, упорядоченную по близости к (center_x, center_y).
 
     - Узлы и связи берутся из Neo4j (`Node`, `BIBLIOGRAPHIC_LINK`).
     - Связи фильтруются, чтобы не допустить циклов (вперёд по (layer, level)).
@@ -529,12 +528,19 @@ async def get_articles_layout_page(
     """
     try:
         logger.info(
-            f"Articles page requested: offset={offset}, limit={limit}, center=({center_layer},{center_level})"
+            f"Articles page requested: offset={offset}, limit={limit}, center=({center_x},{center_y})"
         )
+        print(f"DEBUG: Articles page requested: offset={offset}, limit={limit}, center=({center_x},{center_y})")
 
-        # Всего статей (для прогресса)
+        # Всего статей (для прогресса) - только со связями
         total_query = """
         MATCH (n:Article)
+        WHERE n.layout_status IN ['in_longest_path','placed_layers','placed']
+          AND n.x IS NOT NULL AND n.y IS NOT NULL
+          AND (
+            EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR 
+            EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
+          )
         RETURN count(n) as total
         """
         total_res, _ = db.cypher_query(total_query)
@@ -542,19 +548,29 @@ async def get_articles_layout_page(
         total_articles = int(total_res[0][0]) if total_res and total_res[0] and total_res[0][0] is not None else 0
         logger.info(f"Total articles: {total_articles}")
 
-        # Простой запрос: сначала LP статьи, потом остальные
+        # Запрос с учетом center_x и center_y для фильтрации по близости
+        # ИСПРАВЛЕНИЕ: Загружаем только статьи, которые имеют связи (исходящие или входящие)
         nodes_query = """
         MATCH (n:Article)
+        WHERE n.layout_status IN ['in_longest_path','placed_layers','placed']
+          AND n.x IS NOT NULL AND n.y IS NOT NULL
+          AND (
+            EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR 
+            EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
+          )
         RETURN n.uid as id,
                coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
-               coalesce(n.layer, 0) as layer,
-               coalesce(n.level, 0) as level,
+               n.layer as layer,
+               n.level as level,
                coalesce(n.sublevel_id, 0) as sublevel_id,
                coalesce(n.is_pinned, false) as is_pinned,
                coalesce(n.physical_scale, 0) as physical_scale,
                n.x as x,
-               n.y as y
-        ORDER BY CASE WHEN n.layout_status = 'in_longest_path' THEN 0 ELSE 1 END, n.layer ASC, n.level ASC
+               n.y as y,
+               n.layout_status as layout_status,
+               coalesce(n.topo_order, 0) as topo_order,
+               sqrt((n.x - $center_x) * (n.x - $center_x) + (n.y - $center_y) * (n.y - $center_y)) as distance
+        ORDER BY distance ASC, n.layer ASC, n.topo_order ASC
         SKIP $offset LIMIT $limit
         """
         blocks_result, _ = db.cypher_query(
@@ -562,6 +578,8 @@ async def get_articles_layout_page(
             {
                 "offset": offset,
                 "limit": limit,
+                "center_x": center_x,
+                "center_y": center_y,
             },
         )
         logger.info(f"Blocks query result: {len(blocks_result) if blocks_result else 0} rows")
@@ -579,42 +597,26 @@ async def get_articles_layout_page(
         blocks: list[dict] = []
         selected_ids: set[str] = set()
         for row in blocks_result:
-            layer_val = int(row[2] or 0)
-            level_val = int(row[3] or 0)
-            sub_val = int(row[4] or 0)
-            # Используем реальные координаты из базы данных или вычисляем их
-            if row[7] is not None and row[8] is not None:
-                # Координаты уже заданы в базе данных
-                x_coord = float(row[7])
-                y_coord = float(row[8])
-            else:
-                # Вычисляем координаты на основе layer и level
-                # Используем те же коэффициенты, что и в алгоритме укладки
-                LAYER_SPACING = 240  # BLOCK_WIDTH (200) + HORIZONTAL_GAP (40)
-                LEVEL_SPACING = 130  # BLOCK_HEIGHT (80) + VERTICAL_GAP (50)
-                
-                x_coord = float(layer_val * LAYER_SPACING)
-                y_coord = float(level_val * LEVEL_SPACING)
-
             block = {
                 "id": str(row[0]),
                 "content": str(row[1] or ""),
-                "layer": layer_val,
-                "level": level_val,
-                "sublevel_id": sub_val,
+                "layer": int(row[2]) if row[2] is not None else None,
+                "level": int(row[3]) if row[3] is not None else None,
+                "sublevel_id": int(row[4] or 0),
                 "is_pinned": bool(row[5]) if row[5] is not None else False,
                 "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
-                "x": x_coord,
-                "y": y_coord,
+                "x": float(row[7]) if row[7] is not None else 0.0,
+                "y": float(row[8]) if row[8] is not None else 0.0,
                 "metadata": {},
             }
             blocks.append(block)
             selected_ids.add(block["id"])
 
-        # Связи только внутри выбранного подмножества
+        # ИСПРАВЛЕНИЕ: Загружаем ВСЕ связи для выбранных статей, включая целевые статьи
+        # Это гарантирует, что все связи будут видны, даже если целевая статья не в текущей странице
         links_query = """
         MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
-        WHERE s.uid IN $ids AND t.uid IN $ids
+        WHERE s.uid IN $ids OR t.uid IN $ids
         RETURN s.uid as source_id, t.uid as target_id
         """
         links_result, _ = db.cypher_query(links_query, {"ids": list(selected_ids)})
@@ -629,39 +631,56 @@ async def get_articles_layout_page(
                 }
             )
 
-        # Дополнительно: связи внутри longest path, но только если оба узла есть в текущей странице
-        # Это гарантирует, что LP связи будут видны, когда загружены соответствующие узлы
-        lp_links_query = """
-        MATCH (s:Article {layout_status: 'in_longest_path'})-[r:BIBLIOGRAPHIC_LINK]->(t:Article {layout_status: 'in_longest_path'})
-        WHERE s.uid IN $ids OR t.uid IN $ids
-        RETURN s.uid as source_id, t.uid as target_id
-        """
-        lp_links_result, _ = db.cypher_query(lp_links_query, {"ids": list(selected_ids)})
-        # Добавляем, избегая дубликатов
-        existing = set(f"{l['source_id']}->{l['target_id']}" for l in links_for_layout)
+        # ИСПРАВЛЕНИЕ: Загружаем целевые статьи, которые не попали в текущую страницу, но имеют связи
+        target_ids = set()
+        for link in links_for_layout:
+            target_ids.add(link["target_id"])
+            target_ids.add(link["source_id"])
         
-        for row in lp_links_result:
-            sid = str(row[0]); tid = str(row[1])
-            key = f"{sid}->{tid}"
-            if key in existing:
-                continue
-            links_for_layout.append({
-                "id": key,  # Используем сгенерированный ключ как ID
-                "source_id": sid,
-                "target_id": tid,
-            })
-            existing.add(key)
+        # Находим целевые статьи, которых нет в текущей странице
+        missing_target_ids = target_ids - selected_ids
+        
+        if missing_target_ids:
+            # Загружаем недостающие целевые статьи
+            missing_targets_query = """
+            MATCH (n:Article)
+            WHERE n.uid IN $missing_ids
+              AND n.layout_status IN ['in_longest_path','placed_layers','placed']
+              AND n.x IS NOT NULL AND n.y IS NOT NULL
+            RETURN n.uid as id,
+                   coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
+                   n.layer as layer,
+                   n.level as level,
+                   coalesce(n.sublevel_id, 0) as sublevel_id,
+                   coalesce(n.is_pinned, false) as is_pinned,
+                   coalesce(n.physical_scale, 0) as physical_scale,
+                   n.x as x,
+                   n.y as y,
+                   n.layout_status as layout_status
+            """
+            missing_targets_result, _ = db.cypher_query(missing_targets_query, {"missing_ids": list(missing_target_ids)})
+            
+            # Добавляем недостающие статьи к блокам
+            for row in missing_targets_result:
+                block = {
+                    "id": str(row[0]),
+                    "content": str(row[1] or ""),
+                    "layer": int(row[2]) if row[2] is not None else None,
+                    "level": int(row[3]) if row[3] is not None else None,
+                    "sublevel_id": int(row[4] or 0),
+                    "is_pinned": bool(row[5]) if row[5] is not None else False,
+                    "physical_scale": int(row[6] or 0) if row[6] is not None else 0,
+                    "x": float(row[7]) if row[7] is not None else 0.0,
+                    "y": float(row[8]) if row[8] is not None else 0.0,
+                    "metadata": {},
+                }
+                blocks.append(block)
+                selected_ids.add(block["id"])
+            
+            logger.info(f"Added {len(missing_targets_result)} missing target articles to ensure all connections are visible")
 
-        # Фильтрация циклов (вперёд по (layer, level))
-        level_index = {b["id"]: (b.get("layer", 0), b.get("level", 0)) for b in blocks}
-        filtered_links = []
-        for l in links_for_layout:
-            s = l["source_id"]; t = l["target_id"]
-            if s in level_index and t in level_index:
-                sl, sv = level_index[s]
-                tl, tv = level_index[t]
-                if (tl > sl) or (tl == sl and tv > sv):
-                    filtered_links.append(l)
+        # API просто возвращает все связи как есть - разворот циклов делается в алгоритме укладки
+        filtered_links = links_for_layout
 
         # Возвращаем напрямую без вызова gRPC укладки (уровни/подуровни уже в БД)
         return {

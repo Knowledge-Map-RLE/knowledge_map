@@ -65,6 +65,10 @@ class Settings(BaseSettings):
     cache_ttl: int = Field(default=3600, env="CACHE_TTL", description="TTL кэша в секундах")
     enable_result_caching: bool = Field(default=True, env="ENABLE_RESULT_CACHING")
     
+    # Настройки алгоритма укладки
+    exclude_isolated_vertices: bool = Field(default=True, env="EXCLUDE_ISOLATED_VERTICES", description="Исключить изолированные вершины из укладки")
+    validate_topo_order: bool = Field(default=False, env="VALIDATE_TOPO_ORDER", description="Проверять корректность топологического порядка")
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

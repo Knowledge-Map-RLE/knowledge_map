@@ -189,7 +189,7 @@ export function useDataLoading(): UseDataLoadingResult {
     }, 100);
   }, []);
 
-  const loadAround = useCallback(async (centerX: number, centerY: number, limit: number = 50) => {
+  const loadAround = useCallback(async (centerX: number, centerY: number, limit: number = 1000) => {
     try {
       console.log(`[DataLoading] Loading around center: (${centerX}, ${centerY}), limit: ${limit}`);
       

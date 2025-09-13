@@ -27,14 +27,10 @@ export function useArticlesDataLoader(viewportRef?: any) {
 
 
 
-  // Функция центрирования viewport на блоках
-  const centerViewportOnBlocks = useCallback((newBlocks: any[]) => {
+  // Функция центрирования viewport на координатах (0,0)
+  const centerViewportOnOrigin = useCallback((newBlocks: any[]) => {
     if (viewportRef?.current && newBlocks.length > 0) {
-      // Находим центр всех блоков
-      const centerX = newBlocks.reduce((sum, block) => sum + (block.x || 0), 0) / newBlocks.length;
-      const centerY = newBlocks.reduce((sum, block) => sum + (block.y || 0), 0) / newBlocks.length;
-
-      console.log(`[ArticlesPage] Centering viewport on blocks center: x=${centerX}, y=${centerY}`);
+      console.log(`[ArticlesPage] Centering viewport on origin (0,0)`);
       
       // Находим диапазон координат для определения масштаба
       const minX = Math.min(...newBlocks.map(b => b.x || 0));
@@ -47,7 +43,7 @@ export function useArticlesDataLoader(viewportRef?: any) {
       
       console.log(`[ArticlesPage] Coordinate range: x=${minX}-${maxX} (${rangeX}), y=${minY}-${maxY} (${rangeY})`);
 
-      // Центрируем viewport на центр данных
+      // Центрируем viewport на координатах (0,0)
       setTimeout(() => {
         if (viewportRef.current) {
           // Рассчитываем масштаб по обоим измерениям с небольшим отступом
@@ -65,8 +61,9 @@ export function useArticlesDataLoader(viewportRef?: any) {
             (viewportRef.current as any).scale = targetScale;
           }
 
-          viewportRef.current.focusOn(centerX, centerY);
-          console.log(`[ArticlesPage] Viewport centered on blocks with scale ${targetScale}`);
+          // Центрируем на координатах (0,0)
+          viewportRef.current.focusOn(0, 0);
+          console.log(`[ArticlesPage] Viewport centered on origin (0,0) with scale ${targetScale}`);
         }
       }, 100);
     }
@@ -92,12 +89,10 @@ export function useArticlesDataLoader(viewportRef?: any) {
     try {
       let url: string;
       if (centerX != null && centerY != null) {
-        const center_level = Math.max(0, Math.round(centerY / 120));
-        const center_layer = Math.max(0, Math.round(centerX / 20));
         // ВАЖНО: используем текущий pageOffset даже при загрузке вокруг центра,
-        // чтобы получать следующую страницу, а не одни и те же 50 элементов
-        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}&center_layer=${center_layer}&center_level=${center_level}`;
-        console.log(`[ArticlesPage] Loading around center=(${center_layer},${center_level}) offset=${pageOffset} limit ${pageLimit}`);
+        // чтобы получать следующую страницу, а не одни и те же элементы
+        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}&center_x=${centerX}&center_y=${centerY}`;
+        console.log(`[ArticlesPage] Loading around center=(${centerX},${centerY}) offset=${pageOffset} limit ${pageLimit}`);
       } else {
         url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}`;
         console.log(`[ArticlesPage] Loading page ${pageOffset + 1} with limit ${pageLimit}`);
@@ -133,8 +128,8 @@ export function useArticlesDataLoader(viewportRef?: any) {
           console.log(`[ArticlesPage] Убираем экран загрузки, processedBlocks: ${processedBlocks.length}`);
           setIsBootLoading(false);
           
-          // Центрируем viewport на первой загрузке
-          centerViewportOnBlocks(processedBlocks);
+          // Центрируем viewport на координатах (0,0) при первой загрузке
+          centerViewportOnOrigin(processedBlocks);
         }
         
         // Переходим к следующей странице для обоих сценариев (и центр, и обычная страница)
@@ -150,18 +145,15 @@ export function useArticlesDataLoader(viewportRef?: any) {
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, pageOffset, blocks.length, pageLimit, isBootLoading, loadedBlockIdsRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, setIsBootLoading, setPageOffset, centerViewportOnBlocks]);
+  }, [isLoading, pageOffset, blocks.length, pageLimit, isBootLoading, loadedBlockIdsRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, setIsBootLoading, setPageOffset, centerViewportOnOrigin]);
 
   const loadAround = useCallback(async (centerX: number, centerY: number) => {
     if (isLoading) return;
     setIsLoading(true);
     setLoadError(null);
     try {
-      // Преобразуем world Y в уровень, шаг 120 соответствует серверу
-      const center_level = Math.max(0, Math.round(centerY / 120));
-      const center_layer = Math.max(0, Math.round(centerX / 20));
-      console.log(`[ArticlesPage] loadAround center=(${center_layer},${center_level})`);
-      const response = await fetch(`http://localhost:8000/layout/articles_page?offset=0&limit=${pageLimit}&center_layer=${center_layer}&center_level=${center_level}`);
+      console.log(`[ArticlesPage] loadAround center=(${centerX},${centerY})`);
+      const response = await fetch(`http://localhost:8000/layout/articles_page?offset=0&limit=${pageLimit}&center_x=${centerX}&center_y=${centerY}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       if (data && data.success) {

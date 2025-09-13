@@ -60,19 +60,17 @@ export interface LoadAroundResponse {
 // API функции остаются теми же
 export const api = {
   async loadLayout(): Promise<ApiResponse> {
-    const response = await fetch('/layout/articles_page?offset=0&limit=50');
+    const response = await fetch('/layout/articles_page?offset=0&limit=1000');
     return response.json();
   },
 
-  async loadAround(centerX: number, centerY: number, limit: number = 50): Promise<LoadAroundResponse> {
-    const centerLayer = Math.max(0, Math.round(centerX / 20));
-    const centerLevel = Math.max(0, Math.round(centerY / 120));
-    const response = await fetch(`/layout/articles_page?offset=0&limit=${limit}&center_layer=${centerLayer}&center_level=${centerLevel}`);
+  async loadAround(centerX: number, centerY: number, limit: number = 1000): Promise<LoadAroundResponse> {
+    const response = await fetch(`/layout/articles_page?offset=0&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
     return response.json();
   },
 
-  async loadArticlesPage(offset: number = 0, limit: number = 2000, centerLayer: number = 0, centerLevel: number = 0): Promise<ApiResponse> {
-    const response = await fetch(`/layout/articles_page?offset=${offset}&limit=${limit}&center_layer=${centerLayer}&center_level=${centerLevel}`);
+  async loadArticlesPage(offset: number = 0, limit: number = 2000, centerX: number = 0, centerY: number = 0): Promise<ApiResponse> {
+    const response = await fetch(`/layout/articles_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
     return response.json();
   },
 

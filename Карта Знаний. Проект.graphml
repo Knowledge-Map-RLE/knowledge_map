@@ -760,7 +760,7 @@ SALES</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="167.03583437758823" width="1348.5321462043107" x="592.6687910028118" y="808.3189304779764"/>
+              <y:Geometry height="167.03583437758823" width="773.1674985529246" x="578.8355005098692" y="794.3899987239542"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="231.91796875" x="0.0" xml:space="preserve" y="0.0">      API для разработчиков (Developer)</y:NodeLabel>
@@ -1117,7 +1117,7 @@ SALES</y:NodeLabel>
               <y:Geometry height="257.402556701031" width="329.3710185567013" x="-1659.9650802694723" y="2169.0849566587262"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="199.18359375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="329.3710185567013" x="0.0" xml:space="preserve" y="29.10948147551551">Нужно
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="199.18359375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="329.3710185567013" x="0.0" xml:space="preserve" y="29.109481475515622">Нужно
 - отобразить большой граф на клиенте с помощью Pixi.js таким образом что бы ничего не лагало
 - для этого нужно кластеризовать граф что бы для каждого размера масштаба был свой молее мелкий набор данных который посилен рендеру
 - Нужно воспользоваться Level of detail (LOD) техникой
@@ -1435,7 +1435,7 @@ SALES</y:NodeLabel>
                   <y:Geometry height="34.08130571390075" width="386.1238592381676" x="-1847.5977436338608" y="-2264.4836228372724"/>
                   <y:Fill color="#FFFFFF" transparent="false"/>
                   <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="386.1238592381676" x="0.0" xml:space="preserve" y="-2.057979955549399">ВИДНЫ САМЫЕ ДЛИННЫЕ ЦЕПОЧКИ В ГРАФЕ ИЛИ ВЫБОРОЧНАЯ ЦЕПОЧКА ДЛЯ РАСЧЁТА ДЛИННЫ</y:NodeLabel>
+                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="386.1238592381676" x="0.0" xml:space="preserve" y="-2.057979955549854">ВИДНЫ САМЫЕ ДЛИННЫЕ ЦЕПОЧКИ В ГРАФЕ ИЛИ ВЫБОРОЧНАЯ ЦЕПОЧКА ДЛЯ РАСЧЁТА ДЛИННЫ</y:NodeLabel>
                   <y:Shape type="roundrectangle"/>
                 </y:ShapeNode>
               </data>
@@ -1468,7 +1468,7 @@ SALES</y:NodeLabel>
                   <y:Geometry height="328.79103068334075" width="386.1238592381676" x="-1847.5977436338608" y="-1706.2526730938494"/>
                   <y:Fill color="#FFFFFF" transparent="false"/>
                   <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="327.97265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="386.1238592381676" x="0.0" xml:space="preserve" y="0.4091872166702615">РАСПИСАТЬ КЕЙСЫ — В КАКОМ СЛУЧАЕ МОЖЕТ ПОНАДОБИТСЯ КАЖДАЯ ИЗ ВОЗМОЖНОСТЕЙ</y:NodeLabel>
+                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="327.97265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="386.1238592381676" x="0.0" xml:space="preserve" y="0.40918721667048885">РАСПИСАТЬ КЕЙСЫ — В КАКОМ СЛУЧАЕ МОЖЕТ ПОНАДОБИТСЯ КАЖДАЯ ИЗ ВОЗМОЖНОСТЕЙ</y:NodeLabel>
                   <y:Shape type="roundrectangle"/>
                 </y:ShapeNode>
               </data>
@@ -1501,7 +1501,7 @@ SALES</y:NodeLabel>
                   <y:Geometry height="121.66620604416198" width="386.1238592381676" x="-1847.5977436338608" y="-1846.308527699644"/>
                   <y:Fill color="#FFFFFF" transparent="false"/>
                   <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="118.6904296875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="386.1238592381676" x="0.0" xml:space="preserve" y="1.487888178330877">ВИДЕН ПРОЛОЖЕННЫЙ СГЕНЕРИРОВАННЫЙ ПУТЬ ОТ ТЕКУЩЕГО СОСТОЯНИЯ НАУКИ ДО ЦЕЛИ "ПОБЕЖДЕНО СТАРЕНИЕ ЧЕЛОВЕКА"
+                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="118.6904296875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="386.1238592381676" x="0.0" xml:space="preserve" y="1.4878881783311044">ВИДЕН ПРОЛОЖЕННЫЙ СГЕНЕРИРОВАННЫЙ ПУТЬ ОТ ТЕКУЩЕГО СОСТОЯНИЯ НАУКИ ДО ЦЕЛИ "ПОБЕЖДЕНО СТАРЕНИЕ ЧЕЛОВЕКА"
 
 УКАЗАНО НАПРАВЛЕНИЕ ДЕЙСТВИЙ
 
@@ -1519,7 +1519,7 @@ SALES</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="1780.0065661181557" width="263.53987679125976" x="-1142.8695766264282" y="-3879.31270590724"/>
+              <y:Geometry height="1780.0065661181552" width="263.53987679125976" x="-1142.8695766264282" y="-3879.31270590724"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="115.111328125" x="0.0" xml:space="preserve" y="0.0">      БАЗА ДАННЫХ</y:NodeLabel>
@@ -1729,7 +1729,7 @@ LAYER</y:NodeLabel>
             <y:ProxyAutoBoundsNode>
               <y:Realizers active="0">
                 <y:GroupNode>
-                  <y:Geometry height="385.42372368785846" width="230.8121702028502" x="-1125.1418700380186" y="-3036.64358467998"/>
+                  <y:Geometry height="385.423723687858" width="230.8121702028502" x="-1125.1418700380186" y="-3036.64358467998"/>
                   <y:Fill color="#F2F2F228" transparent="false"/>
                   <y:BorderStyle color="#000000" type="line" width="1.0"/>
                   <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="125.5703125" x="0.0" xml:space="preserve" y="0.0">      ПОЛЬЗОВАТЕЛЬ</y:NodeLabel>
@@ -1813,7 +1813,7 @@ LAYER</y:NodeLabel>
                   <y:Geometry height="35.04167912367984" width="174.95404024086884" x="-1110.1418700380186" y="-2826.4146186862076"/>
                   <y:Fill color="#FFFFFF" transparent="false"/>
                   <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="174.95404024086884" x="0.0" xml:space="preserve" y="-1.5777932506598518">КЛЮЧИ ВОССТАНОВЛЕНИЯ</y:NodeLabel>
+                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="174.95404024086884" x="0.0" xml:space="preserve" y="-1.5777932506603065">КЛЮЧИ ВОССТАНОВЛЕНИЯ</y:NodeLabel>
                   <y:Shape type="roundrectangle"/>
                 </y:ShapeNode>
               </data>
@@ -2290,7 +2290,7 @@ LAYER</y:NodeLabel>
           <y:Geometry height="631.4427977008977" width="403.1970543840275" x="-2310.7947980178883" y="-3154.923050828559"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="189.984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="403.1970543840275" x="0.0" xml:space="preserve" y="220.72921135044862">ПЕРЕСМОТРЕТЬ ВЕСЬ СУЩЕСТВУЮЩИЙ КОД ПРОЕКТА</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="189.984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="403.1970543840275" x="0.0" xml:space="preserve" y="220.72921135044908">ПЕРЕСМОТРЕТЬ ВЕСЬ СУЩЕСТВУЮЩИЙ КОД ПРОЕКТА</y:NodeLabel>
           <y:Shape type="roundrectangle"/>
         </y:ShapeNode>
       </data>
