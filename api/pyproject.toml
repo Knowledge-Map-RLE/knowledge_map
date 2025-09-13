@@ -22,6 +22,7 @@ networkx = "^3.5"
 aioboto3 = "^13.0.0"
 aiofiles = "^24.1.0"
 requests = "^2.32.4"
+aiohttp = "^3.9.0"
 
 
 [build-system]

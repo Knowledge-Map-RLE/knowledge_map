@@ -6,6 +6,7 @@ import NLP from './components/NLP';
 import Science_articles from './components/Science_articles';
 import ViewportCoordinates from './components/Knowledge_map/ViewportCoordinates';
 import { ViewportProvider } from './contexts/ViewportContext';
+import Data_extraction from './components/Data_extraction';
 
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<><Knowledge_map /><Knowledge_map_ui /></>} />
-          <Route path="/nlp" element={<><NLP /><Knowledge_map_ui /></>} />
+          <Route path="/data_extraction" element={<><Data_extraction /><Knowledge_map_ui /></>} />
           <Route path="/science_articles" element={<><Science_articles /><Knowledge_map_ui /></>} />
+          <Route path="/nlp" element={<><NLP /><Knowledge_map_ui /></>} />
         </Routes>
         
         {/* Глобальный компонент координат - поверх всех страниц */}

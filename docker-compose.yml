@@ -119,7 +119,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.minimal
     container_name: knowledge_map_api
     restart: unless-stopped
     ports:
@@ -132,6 +132,10 @@ services:
       - LAYOUT_SERVICE_PORT=50051
       - AUTH_SERVICE_HOST=auth
       - AUTH_SERVICE_PORT=50051
+      - S3_ENDPOINT_URL=http://s3:9000
+      - S3_ACCESS_KEY=minio
+      - S3_SECRET_KEY=minio123456
+      - S3_REGION=us-east-1
       - DEBUG=true
     networks:
       - knowledge_map_network
@@ -152,6 +156,51 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+
+  ai:
+    build:
+      context: ./ai
+      dockerfile: Dockerfile
+    container_name: knowledge_map_ai
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=password
+      - S3_ENDPOINT_URL=http://s3:9000
+      - S3_ACCESS_KEY=minio
+      - S3_SECRET_KEY=minio123456
+      - API_SERVICE_URL=http://api:8000
+      - MODEL_NAME=microsoft/DialoGPT-medium
+      - MODEL_DEVICE=auto
+      - LOG_LEVEL=INFO
+    networks:
+      - knowledge_map_network
+    depends_on:
+      neo4j:
+        condition: service_healthy
+      s3:
+        condition: service_started
+      api:
+        condition: service_started
+    volumes:
+      - C:/Data_Knowledge_Map/ai_models:/app/models
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   client:
     build:
@@ -186,7 +235,7 @@ services:
       MINIO_CONSOLE_ADDRESS: ":9001"
     command: server /data --console-address ":9001"
     volumes:
-      -  C:/Data_Knowledge_Map/s3_data:/data
+      -  D:/Data_Knowledge_Map/s3_data:/data
     networks:
       - knowledge_map_network
     healthcheck:
@@ -388,6 +437,7 @@ volumes:
   neo4j_plugins:
   s3_data:
   auth_proto:
+  ai_models:
   nebula_storage0:
     driver: local
 

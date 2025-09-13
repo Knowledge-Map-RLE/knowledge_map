@@ -1,28 +1,30 @@
 FROM python:3.12-slim
 
-# Устанавливаем только необходимые системные зависимости
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Устанавливаем только curl
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Poetry
-RUN pip install --no-cache-dir poetry==1.7.1
-
-# Настраиваем Poetry
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VENV_IN_PROJECT=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache \
-    POETRY_VIRTUALENVS_CREATE=false
+# Устанавливаем pip зависимости напрямую
+RUN pip install --no-cache-dir \
+    fastapi==0.104.1 \
+    uvicorn==0.24.0 \
+    pydantic==2.11.7 \
+    pydantic-settings==2.9.1 \
+    neomodel==5.3.1 \
+    strawberry-graphql[fastapi]==0.219.0 \
+    grpcio==1.74.0 \
+    grpcio-tools==1.74.0 \
+    protobuf==6.31.1 \
+    networkx==3.5 \
+    aioboto3==13.4.0 \
+    aiofiles==24.1.0 \
+    requests==2.32.4 \
+    aiohttp==3.12.13 \
+    python-multipart==0.0.6 \
+    python-dotenv==1.1.0 \
+    uuid6==2025.0.0
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
-
-# Копируем файлы Poetry
-COPY pyproject.toml poetry.lock* ./
-
-# Устанавливаем зависимости
-RUN poetry install --only=main --no-root && rm -rf $POETRY_CACHE_DIR
 
 # Копируем исходный код
 COPY . .
