@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+.annotationContainer {
+    @apply w-full h-full flex flex-col bg-white rounded-lg border border-gray-300;
+}
+
+.toolbar {
+    @apply flex flex-wrap gap-4 p-4 bg-gray-50 border-b border-gray-300;
+}
+
+.toolbarSection {
+    @apply flex flex-col gap-2;
+}
+
+.toolbarSection h3 {
+    @apply text-sm font-semibold text-gray-700;
+}
+
+.instructionText {
+    @apply text-xs text-gray-600 mb-3 space-y-1;
+}
+
+.instructionText p {
+    @apply m-0;
+}
+
+.manualInputSection {
+    @apply space-y-2;
+}
+
+.toggleButton {
+    @apply px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm;
+}
+
+.inputPanel {
+    @apply flex flex-col gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg;
+}
+
+.textInput {
+    @apply px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none;
+}
+
+.selectionPanel {
+    @apply flex flex-col gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg;
+}
+
+.labelSelect {
+    @apply px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.addButton {
+    @apply px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors;
+}
+
+.cancelButton {
+    @apply px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors;
+}
+
+.relationButton {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed;
+}
+
+.exportButton {
+    @apply px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors;
+}
+
+.pdfContainer {
+    @apply flex-1 relative flex flex-col;
+}
+
+.pdfHeader {
+    @apply p-2 bg-gray-100 border-b border-gray-300;
+}
+
+.pdfHeader h4 {
+    @apply text-sm font-semibold text-gray-800 m-0;
+}
+
+.pdfHint {
+    @apply text-xs text-gray-600 m-0 mt-1;
+}
+
+.pdfViewer {
+    @apply w-full h-full border-0;
+}
+
+.annotationsPanel {
+    @apply w-80 p-4 bg-gray-50 border-l border-gray-300 overflow-y-auto;
+}
+
+.annotationsPanel h3 {
+    @apply text-lg font-semibold mb-3 text-gray-800;
+}
+
+.annotationsList {
+    @apply space-y-2 mb-6;
+}
+
+.annotationItem {
+    @apply p-3 bg-white border border-gray-200 rounded-lg shadow-sm;
+}
+
+.annotationHeader {
+    @apply flex items-center justify-between mb-2;
+}
+
+.annotationLabel {
+    @apply px-2 py-1 text-xs font-medium text-white rounded;
+}
+
+.annotationContent {
+    @apply text-sm text-gray-700 italic;
+}
+
+.relationsList {
+    @apply space-y-2;
+}
+
+.relationItem {
+    @apply p-3 bg-white border border-gray-200 rounded-lg shadow-sm;
+}
+
+.relationContent {
+    @apply flex items-center gap-2 text-sm;
+}
+
+.relationSource {
+    @apply font-medium text-blue-600;
+}
+
+.relationType {
+    @apply px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded;
+}
+
+.relationTarget {
+    @apply font-medium text-green-600;
+}
+
+.deleteButton {
+    @apply w-6 h-6 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors flex items-center justify-center text-sm;
+}
+
+.modalOverlay {
+    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50;
+}
+
+.modal {
+    @apply bg-white rounded-lg p-6 w-96 max-w-full mx-4;
+}
+
+.modal h3 {
+    @apply text-xl font-bold mb-4;
+}
+
+.relationForm {
+    @apply space-y-4;
+}
+
+.formGroup {
+    @apply flex flex-col gap-2;
+}
+
+.formGroup label {
+    @apply text-sm font-medium text-gray-700;
+}
+
+.formGroup select {
+    @apply px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.modalButtons {
+    @apply flex gap-2 pt-4;
+}
+
+/* Стили для выделения текста */
+::selection {
+    @apply bg-blue-200;
+}
+
+/* Анимации */
+.annotationItem {
+    @apply transition-all duration-200 hover:shadow-md;
+}
+
+.relationItem {
+    @apply transition-all duration-200 hover:shadow-md;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .annotationContainer {
+        @apply flex-col;
+    }
+    
+    .annotationsPanel {
+        @apply w-full border-l-0 border-t;
+    }
+    
+    .toolbar {
+        @apply flex-col;
+    }
+}

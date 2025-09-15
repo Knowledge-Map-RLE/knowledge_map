@@ -1,5 +1,6 @@
 import asyncio
 import threading
+import time
 from .grpc_server import serve
 from .user_service import UserService
 
@@ -15,7 +16,7 @@ def cleanup_sessions():
     while True:
         try:
             user_service.cleanup_expired_sessions()
-            asyncio.sleep(3600)  # Каждый час
+            time.sleep(3600)  # Каждый час
         except Exception as e:
             print(f"Ошибка очистки сессий: {e}")
 
@@ -37,7 +38,7 @@ def main():
     # Держим основной поток живым
     try:
         while True:
-            asyncio.sleep(1)
+            time.sleep(1)
     except KeyboardInterrupt:
         print("Завершение работы сервиса авторизации...")
 

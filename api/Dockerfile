@@ -21,7 +21,10 @@ RUN pip install --no-cache-dir \
     aiohttp==3.12.13 \
     python-multipart==0.0.6 \
     python-dotenv==1.1.0 \
-    uuid6==2025.0.0
+    uuid6==2025.0.0 \
+    psutil==6.0.0 \
+    "pillow<11.0.0" \
+    marker-pdf==1.9.3
 
 # Устанавливаем рабочую директорию
 WORKDIR /app

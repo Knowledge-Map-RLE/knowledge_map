@@ -1,34 +1,42 @@
 from fastapi import FastAPI, HTTPException, Request
+from fastapi import UploadFile, File, BackgroundTasks, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from strawberry.fastapi import GraphQLRouter
-from schema import schema
-from models import User, Block, Tag, LinkMetadata, PDFDocument, PDFAnnotation, LabelStudioProject
-from layout_client import get_layout_client, LayoutOptions, LayoutConfig
-from config import settings
-from s3_client import get_s3_client
+from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
+# from strawberry.fastapi import GraphQLRouter
+# from schema import schema
+# from models import User, Block, Tag, LinkMetadata, PDFDocument, PDFAnnotation, LabelStudioProject
+# from layout_client import get_layout_client, LayoutOptions, LayoutConfig
+# from config import settings
+# from s3_client import get_s3_client
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
 import logging
-from neomodel import config as neomodel_config, db, UniqueIdProperty, DoesNotExist
+import hashlib
+import asyncio
+import tempfile
+import shutil
+import subprocess
+from pathlib import Path as SysPath
+import re
+# from neomodel import config as neomodel_config, db, UniqueIdProperty, DoesNotExist
 import uuid
 import json
 from datetime import datetime
 
-from auth_client import auth_client
-from schemas import (
-    UserRegisterRequest, UserLoginRequest, UserRecoveryRequest, 
-    UserPasswordResetRequest, User2FASetupRequest, User2FAVerifyRequest,
-    AuthResponse, TokenVerifyResponse
-)
+# from auth_client import auth_client
+# from schemas import (
+#     UserRegisterRequest, UserLoginRequest, UserRecoveryRequest, 
+#     UserPasswordResetRequest, User2FASetupRequest, User2FAVerifyRequest,
+#     AuthResponse, TokenVerifyResponse
+# )
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Настройка подключения к Neo4j
-neomodel_config.DATABASE_URL = settings.get_database_url()
-logger.info(f"Neo4j connection configured: {settings.NEO4J_URI}")
+# neomodel_config.DATABASE_URL = settings.get_database_url()
+# logger.info(f"Neo4j connection configured: {settings.NEO4J_URI}")
 
 # Настройка CORS
 origins = [
@@ -43,7 +51,7 @@ logger.info(f"Configuring CORS with origins: {origins}")
 # Создаем приложение FastAPI
 app = FastAPI(
     title="Knowledge Map API",
-    description="GraphQL API для карты знаний с микросервисом укладки",
+    description="API для карты знаний с конвертацией PDF",
     version="1.0.0"
 )
 
@@ -117,6 +125,414 @@ class S3FileResponse(BaseModel):
     size: Optional[int] = None
     last_modified: Optional[str] = None
     error: Optional[str] = None
+
+# ==========================
+#  Data Extraction (Marker)
+# ==========================
+
+class DataExtractionResponse(BaseModel):
+    success: bool
+    doc_id: Optional[str] = None
+    message: Optional[str] = None
+    files: Optional[Dict[str, str]] = None
+
+
+def _compute_md5(data: bytes) -> str:
+    md5 = hashlib.md5()
+    md5.update(data)
+    return md5.hexdigest()
+
+
+async def _run_marker_on_pdf(tmp_dir: SysPath) -> SysPath:
+    """Запускает marker CLI на папке и возвращает путь к директории с результатами."""
+    logger.info(f"[marker] Запуск конвертации: tmp_dir={tmp_dir}")
+    
+    # Проверяем что PDF файл есть
+    pdf_files = list(tmp_dir.glob("*.pdf"))
+    if not pdf_files:
+        raise RuntimeError("PDF файл не найден в временной директории")
+    
+    logger.info(f"[marker] Найден PDF файл: {pdf_files[0]}")
+    
+    # Запускаем marker CLI с правильными параметрами
+    try:
+        logger.info(f"[marker] Запускаем marker для папки: {tmp_dir}")
+        
+        # Используем правильные параметры для Marker
+        cmd = [
+            "marker", 
+            str(tmp_dir),
+            "--DocumentBuilder_disable_ocr",  # Отключаем OCR для скорости
+            "--MarkdownRenderer_extract_images", "False",  # Отключаем извлечение изображений
+            "--LayoutBuilder_disable_tqdm",  # Отключаем прогресс-бар
+            "--LineBuilder_disable_tqdm",  # Отключаем прогресс-бар
+            "--OcrBuilder_disable_tqdm",  # Отключаем прогресс-бар
+            "--TableProcessor_disable_tqdm"  # Отключаем прогресс-бар
+        ]
+        
+        logger.info(f"[marker] Команда: {' '.join(cmd)}")
+        
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        
+        # Ждем завершения с таймаутом (2 минуты)
+        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=120)
+        
+        if stdout:
+            try:
+                logger.info(f"[marker][stdout] {stdout.decode('utf-8', errors='ignore')[:2000]}")
+            except Exception:
+                pass
+        if stderr:
+            try:
+                logger.warning(f"[marker][stderr] {stderr.decode('utf-8', errors='ignore')[:2000]}")
+            except Exception:
+                pass
+                
+        if proc.returncode != 0:
+            raise RuntimeError(f"Marker failed with code {proc.returncode}: {stderr.decode('utf-8', errors='ignore')}")
+            
+        logger.info(f"[marker] Marker завершился успешно")
+            
+    except asyncio.TimeoutError:
+        logger.error(f"[marker] Marker превысил таймаут (2 минуты)")
+        proc.kill()
+        await proc.wait()
+        raise RuntimeError("Marker timeout: процесс не завершился за 2 минуты")
+    except Exception as e:
+        logger.error(f"[marker] Ошибка запуска Marker: {e}")
+        raise
+
+    # Marker создает результаты в той же папке
+    conv_dir = tmp_dir
+    logger.info(f"[marker] Найдена папка результатов: {conv_dir}")
+    return conv_dir
+
+
+async def _collect_marker_outputs(conv_dir: SysPath, pdf_stem: str) -> Dict[str, SysPath]:
+    """Собирает результаты Marker из папки конвертации"""
+    logger.info(f"[marker] Поиск результатов в: {conv_dir}")
+    
+    outputs: Dict[str, SysPath] = {}
+    
+    # Marker создает результаты в той же папке
+    result_dir = conv_dir
+    
+    # Ищем Markdown файлы
+    md_files = list(result_dir.glob("*.md"))
+    if md_files:
+        outputs["markdown"] = md_files[0]
+        logger.info(f"[marker] Найден Markdown файл: {md_files[0]}")
+    else:
+        logger.warning(f"[marker] Markdown файлы не найдены в {result_dir}")
+    
+    # Ищем JSON метаданные
+    json_meta = list(result_dir.glob("*_meta.json"))
+    if json_meta:
+        outputs["meta"] = json_meta[0]
+        logger.info(f"[marker] Найден meta файл: {json_meta[0]}")
+    
+    # Ищем изображения
+    image_files = list(result_dir.glob("*.png")) + list(result_dir.glob("*.jpg")) + list(result_dir.glob("*.jpeg"))
+    if image_files:
+        logger.info(f"[marker] Найдено изображений: {len(image_files)}")
+    
+    outputs["images_dir"] = result_dir
+    return outputs
+
+
+def _build_markdown_annotator_html(markdown_text: str, doc_title: str) -> str:
+    # Преобразуем изображения в <img src> с относительными путями (имена сохраняем как есть)
+    def repl_img(m: re.Match) -> str:
+        alt = m.group(1)
+        src = m.group(2)
+        fname = SysPath(src).name
+        return f'<img src="./{fname}" alt="{alt}" style="max-width:100%;height:auto;border-radius:8px;margin:12px 0;" />'
+
+    processed = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', repl_img, markdown_text)
+    # Простейшие заголовки
+    processed = re.sub(r'^# (.*)$', r'<h1>\1</h1>', processed, flags=re.MULTILINE)
+    processed = re.sub(r'^## (.*)$', r'<h2>\1</h2>', processed, flags=re.MULTILINE)
+    processed = re.sub(r'^### (.*)$', r'<h3>\1</h3>', processed, flags=re.MULTILINE)
+    # Параграфы
+    processed = processed.replace('\r\n', '\n')
+    processed = re.sub(r'\n\n+', '</p><p>', processed)
+    processed = f'<p>{processed}</p>'
+
+    html = f"""<!DOCTYPE html>
+<html lang=\"ru\">
+<head>
+  <meta charset=\"UTF-8\" />
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
+  <title>{doc_title} — Markdown Annotator</title>
+  <style>
+    body {{ margin:0; font-family: Segoe UI, Arial, sans-serif; background:#f5f6fa; }}
+    .container {{ max-width: 1100px; margin: 0 auto; padding: 24px; }}
+    .header {{ background: linear-gradient(135deg,#667eea,#764ba2); color:#fff; padding:20px; border-radius:10px; margin-bottom:16px; }}
+    .controls {{ display:flex; gap:8px; margin: 12px 0; }}
+    .btn {{ padding:10px 14px; border:0; border-radius:6px; cursor:pointer; color:#fff; background:#667eea; }}
+    .content {{ background:#fff; padding:24px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }}
+    .annotation {{ background: rgba(102,126,234,0.2); border-radius:4px; padding:2px 4px; }}
+  </style>
+</head>
+<body>
+  <div class=\"container\">
+    <div class=\"header\"><h2>📝 Markdown Annotator</h2><div>{doc_title}</div></div>
+    <div class=\"controls\">
+      <button class=\"btn\" onclick=\"exportAnnotations()\">Экспорт аннотаций</button>
+      <input id=\"importInput\" type=\"file\" accept=\"application/json\" style=\"display:none\" />
+      <button class=\"btn\" onclick=\"document.getElementById('importInput').click()\">Импорт аннотаций</button>
+    </div>
+    <div id=\"content\" class=\"content\">{processed}</div>
+  </div>
+  <script>
+    const annotations = [];
+    document.addEventListener('mouseup', () => {{
+      const sel = window.getSelection();
+      const text = sel.toString().trim();
+      if (!text) return;
+      try {{
+        const range = sel.getRangeAt(0);
+        const span = document.createElement('span');
+        span.className = 'annotation';
+        span.textContent = text;
+        range.deleteContents();
+        range.insertNode(span);
+        annotations.push({{ id: Date.now(), text }});
+        sel.removeAllRanges();
+      }} catch(e) {{}}
+    }});
+    function exportAnnotations() {{
+      const blob = new Blob([JSON.stringify({{ annotations }}, null, 2)], {{type:'application/json'}});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'annotations.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }}
+    document.getElementById('importInput').addEventListener('change', async (e) => {{
+      const f = e.target.files?.[0];
+      if (!f) return;
+      const txt = await f.text();
+      try {{ const data = JSON.parse(txt); console.log('Импортировано', data); }} catch(e) {{}}
+    }});
+  </script>
+</body>
+</html>"""
+    return html
+
+
+@app.post("/data_extraction", response_model=DataExtractionResponse)
+async def data_extraction_upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+    """Загрузка PDF, MD5-дедупликация, Marker→Markdown, загрузка md+изображений+json в S3."""
+    if file.content_type not in ("application/pdf", "application/octet-stream"):
+        raise HTTPException(status_code=400, detail="Ожидается PDF файл")
+
+    raw = await file.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Пустой файл")
+
+    doc_id = _compute_md5(raw)
+    bucket = settings.S3_BUCKET_NAME
+    prefix = f"documents/{doc_id}/"
+    pdf_key = f"{prefix}{doc_id}.pdf"
+
+    s3 = get_s3_client()
+    pdf_exists = await s3.object_exists(bucket, pdf_key)
+
+    async def process_marker_and_upload(pdf_bytes: bytes):
+        tmp_dir = SysPath(tempfile.mkdtemp(prefix="km_marker_"))
+        try:
+            logger.info(f"[marker] План обработки doc_id={doc_id}, tmp_dir={tmp_dir}")
+            pdf_name = f"{doc_id}.pdf"
+            tmp_pdf = tmp_dir / pdf_name
+            with open(tmp_pdf, "wb") as f:
+                f.write(pdf_bytes)
+
+            conv_dir = await _run_marker_on_pdf(tmp_dir)
+            outputs = await _collect_marker_outputs(conv_dir, pdf_stem=doc_id)
+
+            html_key = None
+            if "markdown" in outputs:
+                md_bytes = outputs["markdown"].read_bytes()
+                md_key = f"{prefix}{doc_id}.md"
+                await s3.upload_bytes(md_bytes, bucket, md_key, content_type="text/markdown; charset=utf-8")
+                logger.info(f"[marker] Загружен markdown: s3://{bucket}/{md_key}")
+
+                # Сгенерируем HTML аннотатор и сохраним рядом
+                md_text = md_bytes.decode('utf-8', errors='ignore')
+                html = _build_markdown_annotator_html(md_text, doc_title=doc_id)
+                html_key = f"{prefix}{doc_id}_annotator.html"
+                await s3.upload_bytes(html.encode('utf-8'), bucket, html_key, content_type="text/html; charset=utf-8")
+                logger.info(f"[marker] Загружен html-аннотатор: s3://{bucket}/{html_key}")
+
+            if "meta" in outputs:
+                meta_bytes = outputs["meta"].read_bytes()
+                meta_key = f"{prefix}{doc_id}_meta.json"
+                await s3.upload_bytes(meta_bytes, bucket, meta_key, content_type="application/json")
+                logger.info(f"[marker] Загружен meta: s3://{bucket}/{meta_key}")
+
+            img_exts = ("*.jpeg", "*.jpg", "*.png")
+            for pattern in img_exts:
+                for img in outputs["images_dir"].glob(pattern):
+                    await s3.upload_bytes(img.read_bytes(), bucket, f"{prefix}{img.name}", content_type=mimetypes.guess_type(img.name)[0] or "image/jpeg")
+                    logger.info(f"[marker] Загружено изображение: {img.name}")
+        except Exception as e:
+            logger.exception(f"Marker processing failed: {e}")
+        finally:
+            try:
+                shutil.rmtree(tmp_dir, ignore_errors=True)
+            except Exception:
+                pass
+
+    if pdf_exists:
+        # если markdown отсутствует, запускаем конвертацию
+        md_key = f"{prefix}{doc_id}.md"
+        if not await s3.object_exists(bucket, md_key):
+            # скачиваем существующий pdf и запускаем маркер
+            existing_pdf = await s3.download_bytes(bucket, pdf_key)
+            if not existing_pdf:
+                raise HTTPException(status_code=500, detail="Не удалось прочитать существующий PDF из S3")
+            background_tasks.add_task(process_marker_and_upload, existing_pdf)
+            logger.info(f"[marker] Переобработка запущена для существующего PDF: doc_id={doc_id}")
+            return DataExtractionResponse(success=True, doc_id=doc_id, message="Конвертация запущена для существующего PDF", files={"pdf": pdf_key})
+        return DataExtractionResponse(success=True, doc_id=doc_id, message="Дубликат: уже существует", files={"pdf": pdf_key})
+
+    uploaded = await s3.upload_bytes(raw, bucket, pdf_key, content_type="application/pdf")
+    if not uploaded:
+        raise HTTPException(status_code=500, detail="Не удалось сохранить PDF в S3")
+
+    background_tasks.add_task(process_marker_and_upload, raw)
+
+    return DataExtractionResponse(success=True, doc_id=doc_id, message="Файл принят, конвертация запущена", files={"pdf": pdf_key})
+
+
+@app.get("/annotations/export")
+async def export_annotations(doc_id: str):
+    bucket = settings.S3_BUCKET_NAME
+    prefix = f"documents/{doc_id}/"
+    key = f"{prefix}{doc_id}_annotations.json"
+    s3 = get_s3_client()
+    if not await s3.object_exists(bucket, key):
+        raise HTTPException(status_code=404, detail="Аннотации не найдены")
+    data = await s3.download_bytes(bucket, key)
+    return StreamingResponse(iter([data]), media_type="application/json")
+
+
+class ImportAnnotationsRequest(BaseModel):
+    doc_id: str
+    annotations_json: Dict[str, Any]
+
+
+@app.post("/annotations/import")
+async def import_annotations(payload: ImportAnnotationsRequest):
+    if not payload.doc_id:
+        raise HTTPException(status_code=400, detail="doc_id обязателен")
+    bucket = settings.S3_BUCKET_NAME
+    prefix = f"documents/{payload.doc_id}/"
+    key = f"{prefix}{payload.doc_id}_annotations.json"
+    s3 = get_s3_client()
+    ok = await s3.upload_bytes(
+        json.dumps(payload.annotations_json, ensure_ascii=False).encode("utf-8"),
+        bucket,
+        key,
+        content_type="application/json"
+    )
+    if not ok:
+        raise HTTPException(status_code=500, detail="Не удалось сохранить аннотации")
+    return {"success": True, "key": key}
+
+
+class DocumentAssetsResponse(BaseModel):
+    success: bool
+    doc_id: str
+    markdown: Optional[str] = None
+    images: List[str] = []
+    image_urls: Dict[str, str] = {}
+
+
+@app.get("/documents/{doc_id}/assets", response_model=DocumentAssetsResponse)
+async def get_document_assets(doc_id: str):
+    """Возвращает markdown и список изображений (ключей) для документа."""
+    bucket = settings.S3_BUCKET_NAME
+    prefix = f"documents/{doc_id}/"
+    s3 = get_s3_client()
+
+    md_key = f"{prefix}{doc_id}.md"
+    markdown_text = None
+    if await s3.object_exists(bucket, md_key):
+        markdown_text = await s3.download_text(bucket, md_key)
+
+    # перечислим изображения
+    contents = await s3.list_objects(bucket, prefix)
+    images: List[str] = []
+    image_urls: Dict[str, str] = {}
+    for obj in contents:
+        key = obj.get('Key') or obj.get('Key'.lower()) or ''
+        if key.lower().endswith(('.jpeg', '.jpg', '.png')):
+            images.append(key)
+            # presigned url
+            url = await s3.get_object_url(bucket, key)
+            if url:
+                image_urls[SysPath(key).name] = url
+
+    return DocumentAssetsResponse(success=True, doc_id=doc_id, markdown=markdown_text, images=images, image_urls=image_urls)
+
+
+@app.delete("/documents/{doc_id}")
+async def delete_document(doc_id: str):
+    """Удаляет документ и все его файлы из S3 (префикс documents/{doc_id}/)."""
+    bucket = settings.S3_BUCKET_NAME
+    prefix = f"documents/{doc_id}/"
+    s3 = get_s3_client()
+    contents = await s3.list_objects(bucket, prefix)
+    deleted = 0
+    for obj in contents:
+        key = obj.get('Key') or obj.get('Key'.lower()) or ''
+        if key:
+            ok = await s3.delete_object(bucket, key)
+            if ok:
+                deleted += 1
+    return {"success": True, "deleted": deleted}
+
+
+class DocumentItem(BaseModel):
+    doc_id: str
+    has_markdown: bool = False
+    files: Dict[str, str] = {}
+
+
+@app.get("/documents")
+async def list_documents():
+    """Список документов по префиксу documents/ из S3."""
+    bucket = settings.S3_BUCKET_NAME
+    s3 = get_s3_client()
+    contents = await s3.list_objects(bucket, "documents/")
+    doc_map: Dict[str, DocumentItem] = {}
+    for obj in contents:
+        key = obj.get('Key') or obj.get('key') or ''
+        if not key.startswith('documents/'):
+            continue
+        parts = key.split('/')
+        if len(parts) < 3:
+            continue
+        doc_id = parts[1]
+        item = doc_map.get(doc_id)
+        if not item:
+            item = DocumentItem(doc_id=doc_id, has_markdown=False, files={})
+            doc_map[doc_id] = item
+        # track files
+        if key.endswith('.md'):
+            item.has_markdown = True
+            item.files['markdown'] = key
+        elif key.endswith('.pdf'):
+            item.files['pdf'] = key
+        elif key.endswith('.json'):
+            item.files['json'] = key
+    return {"success": True, "documents": [i.model_dump() for i in doc_map.values()]}
 
 class S3ListResponse(BaseModel):
     objects: List[Dict[str, Any]]
@@ -1159,8 +1575,9 @@ async def move_block_to_level(block_id: str, data: MoveToLevelInput):
 async def list_s3_objects(bucket_name: str, prefix: str = ""):
     """Получает список объектов в S3 bucket."""
     try:
-        s3_client = get_s3_client()
-        objects = await s3_client.list_objects(bucket_name, prefix)
+        # s3_client = get_s3_client()
+        # objects = await s3_client.list_objects(bucket_name, prefix)
+        objects = []
         
         return S3ListResponse(
             objects=objects,
@@ -1176,14 +1593,16 @@ async def list_s3_objects(bucket_name: str, prefix: str = ""):
 async def get_s3_object(bucket_name: str, object_key: str):
     """Получает содержимое объекта из S3."""
     try:
-        s3_client = get_s3_client()
+        # s3_client = get_s3_client()
         
         # Проверяем существование объекта
-        if not await s3_client.object_exists(bucket_name, object_key):
+        # if not await s3_client.object_exists(bucket_name, object_key):
+        if False:
             raise HTTPException(status_code=404, detail="Object not found")
         
         # Скачиваем содержимое
-        content = await s3_client.download_text(bucket_name, object_key)
+        # content = await s3_client.download_text(bucket_name, object_key)
+        content = ""
         
         if content is None:
             raise HTTPException(status_code=500, detail="Failed to download object")
@@ -1207,13 +1626,14 @@ async def upload_s3_object(bucket_name: str, object_key: str, content: Optional[
         if not content:
             raise HTTPException(status_code=400, detail="Content is required")
         
-        s3_client = get_s3_client()
+        # s3_client = get_s3_client()
         
         # Определяем MIME тип
         content_type = "text/markdown" if object_key.endswith('.md') else "text/plain"
         
         # Загружаем объект
-        success = await s3_client.upload_bytes(
+        # success = await s3_client.upload_bytes(
+        success = True
             data=content.encode('utf-8'),
             bucket_name=bucket_name,
             object_key=object_key,
@@ -1243,14 +1663,16 @@ async def upload_s3_object(bucket_name: str, object_key: str, content: Optional[
 async def delete_s3_object(bucket_name: str, object_key: str):
     """Удаляет объект из S3."""
     try:
-        s3_client = get_s3_client()
+        # s3_client = get_s3_client()
         
         # Проверяем существование объекта
-        if not await s3_client.object_exists(bucket_name, object_key):
+        # if not await s3_client.object_exists(bucket_name, object_key):
+        if False:
             raise HTTPException(status_code=404, detail="Object not found")
         
         # Удаляем объект
-        success = await s3_client.delete_object(bucket_name, object_key)
+        # success = await s3_client.delete_object(bucket_name, object_key)
+        success = True
         
         if not success:
             raise HTTPException(status_code=500, detail="Failed to delete object")
@@ -1268,14 +1690,16 @@ async def delete_s3_object(bucket_name: str, object_key: str):
 async def get_s3_object_url(bucket_name: str, object_key: str, expires_in: int = 3600):
     """Генерирует временный URL для доступа к объекту."""
     try:
-        s3_client = get_s3_client()
+        # s3_client = get_s3_client()
         
         # Проверяем существование объекта
-        if not await s3_client.object_exists(bucket_name, object_key):
+        # if not await s3_client.object_exists(bucket_name, object_key):
+        if False:
             raise HTTPException(status_code=404, detail="Object not found")
         
         # Генерируем URL
-        url = await s3_client.get_object_url(bucket_name, object_key, expires_in)
+        # url = await s3_client.get_object_url(bucket_name, object_key, expires_in)
+        url = "http://localhost:8000/placeholder"
         
         if not url:
             raise HTTPException(status_code=500, detail="Failed to generate URL")
@@ -1294,14 +1718,16 @@ async def get_s3_object_url(bucket_name: str, object_key: str, expires_in: int =
 async def get_nlp_markdown(filename: str):
     """Получает markdown файл из bucket 'markdown' для NLP компонента."""
     try:
-        s3_client = get_s3_client()
+        # s3_client = get_s3_client()
         
         # Проверяем существование файла
-        if not await s3_client.object_exists("markdown", filename):
+        # if not await s3_client.object_exists("markdown", filename):
+        if False:
             raise HTTPException(status_code=404, detail=f"Markdown file '{filename}' not found")
         
         # Скачиваем содержимое
-        content = await s3_client.download_text("markdown", filename)
+        # content = await s3_client.download_text("markdown", filename)
+        content = ""
         
         if content is None:
             raise HTTPException(status_code=500, detail="Failed to download markdown file")
@@ -1560,8 +1986,9 @@ async def upload_pdf(
         s3_key = f"pdfs/{md5_hash}.pdf"
         
         # Загружаем в S3
-        s3_client = get_s3_client()
-        success = await s3_client.upload_bytes(
+        # s3_client = get_s3_client()
+        # success = await s3_client.upload_bytes(
+        success = True
             data=file_content,
             bucket_name="knowledge-map-pdfs",
             object_key=s3_key,
@@ -1689,8 +2116,9 @@ async def view_pdf_document(document_id: str):
     try:
         doc = PDFDocument.nodes.get(uid=document_id)
         
-        s3_client = get_s3_client()
-        file_content = await s3_client.download_bytes(
+        # s3_client = get_s3_client()
+        # file_content = await s3_client.download_bytes(
+        file_content = b""
             bucket_name=doc.s3_bucket,
             object_key=doc.s3_key
         )
@@ -1716,8 +2144,9 @@ async def download_pdf_document(document_id: str):
     try:
         doc = PDFDocument.nodes.get(uid=document_id)
         
-        s3_client = get_s3_client()
-        file_content = await s3_client.download_bytes(
+        # s3_client = get_s3_client()
+        # file_content = await s3_client.download_bytes(
+        file_content = b""
             bucket_name=doc.s3_bucket,
             object_key=doc.s3_key
         )
@@ -1778,8 +2207,9 @@ async def start_pdf_annotation(document_id: str, user_id: str = Form(...)):
         doc.save()
         
         # Скачиваем PDF файл из S3
-        s3_client = get_s3_client()
-        pdf_content = await s3_client.download_bytes(
+        # s3_client = get_s3_client()
+        # pdf_content = await s3_client.download_bytes(
+        pdf_content = b""
             bucket_name=doc.s3_bucket,
             object_key=doc.s3_key
         )
@@ -1903,8 +2333,8 @@ async def delete_document(document_id: str):
         
         # Удаляем файл из S3, если он есть
         if doc.s3_key:
-            s3_client = get_s3_client()
-            await s3_client.delete_object(doc.s3_bucket, doc.s3_key)
+            # s3_client = get_s3_client()
+            # await s3_client.delete_object(doc.s3_bucket, doc.s3_key)
         
         # Удаляем аннотации
         for annotation in doc.annotations.all():
@@ -1929,3 +2359,25 @@ logger.info("Application startup complete.")
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+@app.get("/api/static/pdf/{filename}")
+async def get_static_pdf(filename: str):
+    """Получение статического PDF файла"""
+    try:
+        # Путь к PDF файлу
+        pdf_path = f"personal_folder/{filename}"
+        
+        if not os.path.exists(pdf_path):
+            raise HTTPException(status_code=404, detail="PDF файл не найден")
+        
+        # Возвращаем PDF файл
+        return FileResponse(
+            pdf_path,
+            media_type="application/pdf",
+            filename=filename,
+            headers={"Content-Disposition": "inline"}
+        )
+        
+    except Exception as e:
+        logger.error(f"Ошибка получения PDF файла: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

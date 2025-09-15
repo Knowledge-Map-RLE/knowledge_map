@@ -57,6 +57,56 @@ export interface LoadAroundResponse {
     sublevels: Sublevel[];
 }
 
+export interface DataExtractionResponse {
+  success: boolean;
+  doc_id?: string;
+  message?: string;
+  files?: Record<string, string>;
+}
+
+export async function uploadPdfForExtraction(file: File): Promise<DataExtractionResponse> {
+  const form = new FormData();
+  form.append('file', file);
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/data_extraction`, { method: 'POST', body: form });
+  return res.json();
+}
+
+export async function importAnnotations(docId: string, annotations: any): Promise<{ success: boolean; key?: string }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/annotations/import`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ doc_id: docId, annotations_json: annotations })
+  });
+  return res.json();
+}
+
+export async function exportAnnotations(docId: string): Promise<string> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/annotations/export?doc_id=${encodeURIComponent(docId)}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.text();
+}
+
+export async function getDocumentAssets(docId: string): Promise<{ success: boolean; markdown?: string; images?: string[]; image_urls?: Record<string,string> }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/documents/${encodeURIComponent(docId)}/assets`);
+  return res.json();
+}
+
+export async function deleteDocument(docId: string): Promise<{ success: boolean; deleted?: number }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/documents/${encodeURIComponent(docId)}`, { method: 'DELETE' });
+  return res.json();
+}
+
+export async function listDocuments(): Promise<{ success: boolean; documents: Array<{ doc_id: string; has_markdown: boolean; files: Record<string,string> }> }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/documents`);
+  return res.json();
+}
+
 // API функции остаются теми же
 export const api = {
   async loadLayout(): Promise<ApiResponse> {
