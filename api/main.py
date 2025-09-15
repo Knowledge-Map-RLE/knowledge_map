@@ -2,12 +2,12 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi import UploadFile, File, BackgroundTasks, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
-# from strawberry.fastapi import GraphQLRouter
-# from schema import schema
-# from models import User, Block, Tag, LinkMetadata, PDFDocument, PDFAnnotation, LabelStudioProject
-# from layout_client import get_layout_client, LayoutOptions, LayoutConfig
-# from config import settings
-# from s3_client import get_s3_client
+from strawberry.fastapi import GraphQLRouter
+from schema import schema
+from models import User, Block, Tag, LinkMetadata, PDFDocument, PDFAnnotation, LabelStudioProject
+from layout_client import get_layout_client, LayoutOptions, LayoutConfig
+from config import settings
+from s3_client import get_s3_client
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
 import logging
@@ -18,25 +18,25 @@ import shutil
 import subprocess
 from pathlib import Path as SysPath
 import re
-# from neomodel import config as neomodel_config, db, UniqueIdProperty, DoesNotExist
+from neomodel import config as neomodel_config, db, UniqueIdProperty, DoesNotExist
 import uuid
 import json
 from datetime import datetime
 
-# from auth_client import auth_client
-# from schemas import (
-#     UserRegisterRequest, UserLoginRequest, UserRecoveryRequest, 
-#     UserPasswordResetRequest, User2FASetupRequest, User2FAVerifyRequest,
-#     AuthResponse, TokenVerifyResponse
-# )
+from auth_client import auth_client
+from schemas import (
+    UserRegisterRequest, UserLoginRequest, UserRecoveryRequest, 
+    UserPasswordResetRequest, User2FASetupRequest, User2FAVerifyRequest,
+    AuthResponse, TokenVerifyResponse
+)
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Настройка подключения к Neo4j
-# neomodel_config.DATABASE_URL = settings.get_database_url()
-# logger.info(f"Neo4j connection configured: {settings.NEO4J_URI}")
+neomodel_config.DATABASE_URL = settings.get_database_url()
+logger.info(f"Neo4j connection configured: {settings.NEO4J_URI}")
 
 # Настройка CORS
 origins = [
@@ -1634,15 +1634,15 @@ async def upload_s3_object(bucket_name: str, object_key: str, content: Optional[
         # Загружаем объект
         # success = await s3_client.upload_bytes(
         success = True
-            data=content.encode('utf-8'),
-            bucket_name=bucket_name,
-            object_key=object_key,
-            content_type=content_type,
-            metadata={
-                "uploaded_by": "knowledge_map_api",
-                "encoding": "utf-8"
-            }
-        )
+        #     data=content.encode('utf-8'),
+        #     bucket_name=bucket_name,
+        #     object_key=object_key,
+        #     content_type=content_type,
+        #     metadata={
+        #         "uploaded_by": "knowledge_map_api",
+        #         "encoding": "utf-8"
+        #     }
+        # )
         
         if not success:
             raise HTTPException(status_code=500, detail="Failed to upload object")
@@ -1918,8 +1918,6 @@ async def get_captcha():
 
 # ===== PDF Document endpoints START =====
 
-import hashlib
-from fastapi import UploadFile, File, Form
 import mimetypes
 
 class PDFUploadResponse(BaseModel):
@@ -1989,16 +1987,16 @@ async def upload_pdf(
         # s3_client = get_s3_client()
         # success = await s3_client.upload_bytes(
         success = True
-            data=file_content,
-            bucket_name="knowledge-map-pdfs",
-            object_key=s3_key,
-            content_type="application/pdf",
-            metadata={
-                "original_filename": file.filename,
-                "upload_date": datetime.utcnow().isoformat(),
-                "user_id": user_id
-            }
-        )
+        #     data=file_content,
+        #     bucket_name="knowledge-map-pdfs",
+        #     object_key=s3_key,
+        #     content_type="application/pdf",
+        #     metadata={
+        #         "original_filename": file.filename,
+        #         "upload_date": datetime.utcnow().isoformat(),
+        #         "user_id": user_id
+        #     }
+        # )
         
         if not success:
             raise HTTPException(status_code=500, detail="Ошибка загрузки файла в S3")
@@ -2119,9 +2117,9 @@ async def view_pdf_document(document_id: str):
         # s3_client = get_s3_client()
         # file_content = await s3_client.download_bytes(
         file_content = b""
-            bucket_name=doc.s3_bucket,
-            object_key=doc.s3_key
-        )
+        #     bucket_name=doc.s3_bucket,
+        #     object_key=doc.s3_key
+        # )
         
         if not file_content:
             raise HTTPException(status_code=404, detail="Файл не найден в S3")
@@ -2147,9 +2145,9 @@ async def download_pdf_document(document_id: str):
         # s3_client = get_s3_client()
         # file_content = await s3_client.download_bytes(
         file_content = b""
-            bucket_name=doc.s3_bucket,
-            object_key=doc.s3_key
-        )
+        #     bucket_name=doc.s3_bucket,
+        #     object_key=doc.s3_key
+        # )
         
         if not file_content:
             raise HTTPException(status_code=404, detail="Файл не найден в S3")
@@ -2210,9 +2208,9 @@ async def start_pdf_annotation(document_id: str, user_id: str = Form(...)):
         # s3_client = get_s3_client()
         # pdf_content = await s3_client.download_bytes(
         pdf_content = b""
-            bucket_name=doc.s3_bucket,
-            object_key=doc.s3_key
-        )
+        #     bucket_name=doc.s3_bucket,
+        #     object_key=doc.s3_key
+        # )
         
         if not pdf_content:
             doc.processing_status = "error"
@@ -2335,6 +2333,7 @@ async def delete_document(document_id: str):
         if doc.s3_key:
             # s3_client = get_s3_client()
             # await s3_client.delete_object(doc.s3_bucket, doc.s3_key)
+            pass
         
         # Удаляем аннотации
         for annotation in doc.annotations.all():
@@ -2367,6 +2366,7 @@ async def get_static_pdf(filename: str):
         # Путь к PDF файлу
         pdf_path = f"personal_folder/{filename}"
         
+        import os
         if not os.path.exists(pdf_path):
             raise HTTPException(status_code=404, detail="PDF файл не найден")
         
