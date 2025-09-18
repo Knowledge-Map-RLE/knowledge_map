@@ -9,21 +9,30 @@ services:
     environment:
       NEO4J_AUTH: neo4j/password
       NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
-      NEO4J_server_memory_heap_initial__size: "3G"
-      NEO4J_server_memory_heap_max__size: "4G"
-      NEO4J_server_memory_pagecache_size: "1.5G"
+      # Оптимизированные настройки памяти для стабильности
+      NEO4J_server_memory_heap_initial__size: "2G"
+      NEO4J_server_memory_heap_max__size: "3G"
+      NEO4J_server_memory_pagecache_size: "1G"
       NEO4J_server_bolt_advertised__address: "127.0.0.1:7687"
-      NEO4J_db_memory_transaction_total_max: "1G"
+      NEO4J_db_memory_transaction_total_max: "512M"
       NEO4J_db_transaction_timeout: "60m"
-      NEO4J_server_jvm_additional: "-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC"
+      # Оптимизированные JVM настройки
+      NEO4J_server_jvm_additional: "-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication"
       NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
-      NEO4J_dbms_memory_transaction_total_max: "4G"
+      NEO4J_dbms_memory_transaction_total_max: "2G"
       NEO4J_dbms_security_procedures_unrestricted: "apoc.*,gds.*"
       NEO4J_dbms_security_procedures_allowlist: "apoc.*,gds.*"
+      # Дополнительные настройки для стабильности
+      NEO4J_server_http_enabled: "true"
+      NEO4J_server_http_listen__address: "0.0.0.0:7474"
+      NEO4J_server_bolt_listen__address: "0.0.0.0:7687"
     ulimits:
       nofile:
-        soft: 40000
-        hard: 40000
+        soft: 65536
+        hard: 65536
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - C:/Data_Knowledge_Map/neo4j_data:/data
       - C:/Data_Knowledge_Map/neo4j_logs:/logs
@@ -34,13 +43,17 @@ services:
     deploy:
       resources:
         limits:
-          memory: 6G
+          memory: 4G      # Уменьшено для освобождения памяти под API
+          cpus: '2.0'     # Ограничено
+        reservations:
+          memory: 2G      # Гарантированная память
+          cpus: '1.0'     # Минимальные CPU
     healthcheck:
       test: cypher-shell --username neo4j --password password 'MATCH () RETURN count(*) as count'
-      interval: 15s
-      timeout: 15s
+      interval: 30s       # Увеличено для стабильности
+      timeout: 20s        # Увеличено
       retries: 5
-      start_period: 60s
+      start_period: 90s   # Больше времени на запуск
     restart: unless-stopped
   redis:
     image: redis/redis-stack:latest
@@ -48,14 +61,25 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    environment:
+      # Оптимизация Redis для стабильности
+      REDIS_ARGS: "--maxmemory 1gb --maxmemory-policy allkeys-lru --save 900 1 --save 300 10 --save 60 10000"
     networks:
       - knowledge_map_network
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G    # Ограничено
+          cpus: '1.0'     # Ограничено
+        reservations:
+          memory: 512M    # Минимальная память
+          cpus: '0.5'     # Минимальные CPU
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      interval: 30s       # Увеличено
+      timeout: 15s        # Увеличено
+      retries: 5          # Больше попыток
+      start_period: 20s   # Больше времени на запуск
 
   auth:
     build:
@@ -97,21 +121,70 @@ services:
       retries: 3
       start_period: 30s
 
-  layout:
+  pdf_to_md:
     build:
-      context: ./layering
+      context: ./pdf_to_md
       dockerfile: Dockerfile
-    container_name: knowledge_map_layout
+    container_name: knowledge_map_pdf_to_md
     restart: unless-stopped
     ports:
-      - "50053:50051"  # gRPC порт для layout сервиса
+      - "8002:8002"   # REST API
+      - "50054:50051" # gRPC порт
     environment:
-      - LOG_LEVEL=INFO
+      - PYTHONUNBUFFERED=1
+      - MARKER_TIMEOUT_SEC=1800
+      # Оптимизация для Marker
+      - OMP_NUM_THREADS=2
+      - MKL_NUM_THREADS=2
+      - OPENBLAS_NUM_THREADS=2
+      - NUMEXPR_NUM_THREADS=2
+      - VECLIB_MAXIMUM_THREADS=2
+      - NUMBA_NUM_THREADS=2
+      # Ограничение памяти для PyTorch
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
     networks:
       - knowledge_map_network
-    depends_on:
-      neo4j:
-        condition: service_healthy
+    volumes:
+      - ./pdf_to_md:/app
+      - /app/__pycache__
+      - ./test_marker/marker_models:/app/marker_models:ro
+    deploy:
+      resources:
+        limits:
+          memory: 8G       # Память для моделей Marker
+          cpus: '3.0'      # CPU для обработки
+        reservations:
+          memory: 4G       # Гарантированная память
+          cpus: '1.5'      # Минимальные CPU
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 120s
+
+  # layout:
+  #   build:
+  #     context: ./layering
+  #     dockerfile: Dockerfile
+  #   container_name: knowledge_map_layout
+  #   restart: unless-stopped
+  #   ports:
+  #     - "50053:50051"  # gRPC порт для layout сервиса
+  #   environment:
+  #     - LOG_LEVEL=INFO
+  #   networks:
+  #     - knowledge_map_network
+  #   depends_on:
+  #     neo4j:
+  #       condition: service_healthy
 
   api:
     build:
@@ -129,30 +202,58 @@ services:
       - LAYOUT_SERVICE_PORT=50051
       - AUTH_SERVICE_HOST=auth
       - AUTH_SERVICE_PORT=50051
+      - PDF_TO_MD_SERVICE_HOST=pdf_to_md
+      - PDF_TO_MD_SERVICE_PORT=50051
       - S3_ENDPOINT_URL=http://s3:9000
       - S3_ACCESS_KEY=minio
       - S3_SECRET_KEY=minio123456
       - S3_REGION=us-east-1
+      - MARKER_TIMEOUT_SEC=1800
       - DEBUG=true
+      # Оптимизация для Marker
+      - OMP_NUM_THREADS=2
+      - MKL_NUM_THREADS=2
+      - OPENBLAS_NUM_THREADS=2
+      - NUMEXPR_NUM_THREADS=2
+      - VECLIB_MAXIMUM_THREADS=2
+      - NUMBA_NUM_THREADS=2
+      # Ограничение памяти для PyTorch
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
     networks:
       - knowledge_map_network
     depends_on:
       neo4j:
         condition: service_healthy
-      layout:
-        condition: service_started
       auth:
         condition: service_started
     volumes:
       - auth_proto:/shared/proto
       - ./api:/app
       - /app/__pycache__
+      - ./test_marker/marker_models:/app/marker_models:ro
+    # Критически важно: ограничения ресурсов для API с Marker
+    deploy:
+      resources:
+        limits:
+          memory: 12G      # Увеличено для моделей Marker (8.3GB + запас)
+          cpus: '4.0'      # Достаточно для обработки
+        reservations:
+          memory: 8G       # Гарантированная память
+          cpus: '2.0'      # Минимальные CPU
+    # Увеличены лимиты файловых дескрипторов
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+      memlock:
+        soft: -1
+        hard: -1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
+      interval: 60s        # Увеличено для стабильности
+      timeout: 30s         # Увеличено
+      retries: 5           # Больше попыток
+      start_period: 120s   # Больше времени на запуск с моделями
 
   ai:
     build:
@@ -293,139 +394,139 @@ services:
           cpus: '2.0'     # ← Увеличено с 1.0 до 2.0
 
   # Celery воркер для обработки графов
-  layout_worker_1:
-    build:
-      context: ./worker_distributed_layering
-      dockerfile: Dockerfile
-    container_name: knowledge_map_layout_worker_1
-    restart: unless-stopped
-    environment:
-      - NEO4J_URI=bolt://neo4j:7687
-      - NEO4J_USER=neo4j
-      - NEO4J_PASSWORD=password
-      - REDIS_URL=redis://redis:6379/3
-      - CELERY_BROKER_URL=redis://redis:6379/4
-      - CELERY_RESULT_BACKEND=redis://redis:6379/5
-      - CHUNK_SIZE=6000  # Увеличено с 3000 до 6000
-      - MEMORY_LIMIT_GB=4.0  # Увеличено с 3.0 до 4.0
-      - ENABLE_NUMBA_JIT=true
-      - LOG_LEVEL=INFO
-      - WORKER_ID=1
-    networks:
-      - knowledge_map_network
-    depends_on:
-      neo4j:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      layout_worker_manager:
-        condition: service_started
-    command: ["celery", "-A", "src.tasks", "worker", "--loglevel=info", "--concurrency=2", "--queues=graph_processing"]
-    deploy:
-      resources:
-        limits:
-          memory: 4G      # ← Увеличено с 3G до 4G
-          cpus: '2.0'     # ← Увеличено с 1.5 до 2.0
-        reservations:
-          memory: 2G      # ← Увеличено с 1G до 2G
-          cpus: '1.0'     # ← Увеличено с 0.5 до 1.0
+  # layout_worker_1:
+  #   build:
+  #     context: ./worker_distributed_layering
+  #     dockerfile: Dockerfile
+  #   container_name: knowledge_map_layout_worker_1
+  #   restart: unless-stopped
+  #   environment:
+  #     - NEO4J_URI=bolt://neo4j:7687
+  #     - NEO4J_USER=neo4j
+  #     - NEO4J_PASSWORD=password
+  #     - REDIS_URL=redis://redis:6379/3
+  #     - CELERY_BROKER_URL=redis://redis:6379/4
+  #     - CELERY_RESULT_BACKEND=redis://redis:6379/5
+  #     - CHUNK_SIZE=6000  # Увеличено с 3000 до 6000
+  #     - MEMORY_LIMIT_GB=4.0  # Увеличено с 3.0 до 4.0
+  #     - ENABLE_NUMBA_JIT=true
+  #     - LOG_LEVEL=INFO
+  #     - WORKER_ID=1
+  #   networks:
+  #     - knowledge_map_network
+  #   depends_on:
+  #     neo4j:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #     layout_worker_manager:
+  #       condition: service_started
+  #   command: ["celery", "-A", "src.tasks", "worker", "--loglevel=info", "--concurrency=2", "--queues=graph_processing"]
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 4G      # ← Увеличено с 3G до 4G
+  #         cpus: '2.0'     # ← Увеличено с 1.5 до 2.0
+  #       reservations:
+  #         memory: 2G      # ← Увеличено с 1G до 2G
+  #         cpus: '1.0'     # ← Увеличено с 0.5 до 1.0
 
-  # Воркер для оптимизации (опциональный - запускается при больших графах)
-  layout_optimization_worker:
-    build:
-      context: ./worker_distributed_layering
-      dockerfile: Dockerfile
-    container_name: knowledge_map_layout_optimizer
-    restart: unless-stopped
-    environment:
-      - NEO4J_URI=bolt://neo4j:7687
-      - NEO4J_USER=neo4j
-      - NEO4J_PASSWORD=password
-      - REDIS_URL=redis://redis:6379/3
-      - CELERY_BROKER_URL=redis://redis:6379/4
-      - CELERY_RESULT_BACKEND=redis://redis:6379/5
-      - MEMORY_LIMIT_GB=3.0
-      - ENABLE_NUMBA_JIT=true
-      - ENABLE_CYTHON_OPTIMIZATION=true
-      - LOG_LEVEL=INFO
-      - WORKER_ID=optimization
-    networks:
-      - knowledge_map_network
-    depends_on:
-      neo4j:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      layout_worker_manager:
-        condition: service_started
-    command: ["celery", "-A", "src.tasks", "worker", "--loglevel=info", "--concurrency=1", "--queues=optimization"]
-    deploy:
-      resources:
-        limits:
-          memory: 3G
-          cpus: '1.0'
-        reservations:
-          memory: 1G
-          cpus: '0.5'
-    profiles:
-      - production  # Запускается только при профиле production
+  # # Воркер для оптимизации (опциональный - запускается при больших графах)
+  # layout_optimization_worker:
+  #   build:
+  #     context: ./worker_distributed_layering
+  #     dockerfile: Dockerfile
+  #   container_name: knowledge_map_layout_optimizer
+  #   restart: unless-stopped
+  #   environment:
+  #     - NEO4J_URI=bolt://neo4j:7687
+  #     - NEO4J_USER=neo4j
+  #     - NEO4J_PASSWORD=password
+  #     - REDIS_URL=redis://redis:6379/3
+  #     - CELERY_BROKER_URL=redis://redis:6379/4
+  #     - CELERY_RESULT_BACKEND=redis://redis:6379/5
+  #     - MEMORY_LIMIT_GB=3.0
+  #     - ENABLE_NUMBA_JIT=true
+  #     - ENABLE_CYTHON_OPTIMIZATION=true
+  #     - LOG_LEVEL=INFO
+  #     - WORKER_ID=optimization
+  #   networks:
+  #     - knowledge_map_network
+  #   depends_on:
+  #     neo4j:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #     layout_worker_manager:
+  #       condition: service_started
+  #   command: ["celery", "-A", "src.tasks", "worker", "--loglevel=info", "--concurrency=1", "--queues=optimization"]
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 3G
+  #         cpus: '1.0'
+  #       reservations:
+  #         memory: 1G
+  #         cpus: '0.5'
+  #   profiles:
+  #     - production  # Запускается только при профиле production
 
-  # Воркер для сохранения результатов
-  layout_persistence_worker:
-    build:
-      context: ./worker_distributed_layering
-      dockerfile: Dockerfile
-    container_name: knowledge_map_layout_persistence
-    restart: unless-stopped
-    environment:
-      - NEO4J_URI=bolt://neo4j:7687
-      - NEO4J_USER=neo4j
-      - NEO4J_PASSWORD=password
-      - REDIS_URL=redis://redis:6379/3
-      - CELERY_BROKER_URL=redis://redis:6379/4
-      - CELERY_RESULT_BACKEND=redis://redis:6379/5
-      - MEMORY_LIMIT_GB=1.0
-      - LOG_LEVEL=INFO
-      - WORKER_ID=persistence
-    networks:
-      - knowledge_map_network
-    depends_on:
-      neo4j:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      layout_worker_manager:
-        condition: service_started
-    command: ["celery", "-A", "src.tasks", "worker", "--loglevel=info", "--concurrency=1", "--queues=persistence"]
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: '0.5'
-        reservations:
-          memory: 512M
-          cpus: '0.25'
+  # # Воркер для сохранения результатов
+  # layout_persistence_worker:
+  #   build:
+  #     context: ./worker_distributed_layering
+  #     dockerfile: Dockerfile
+  #   container_name: knowledge_map_layout_persistence
+  #   restart: unless-stopped
+  #   environment:
+  #     - NEO4J_URI=bolt://neo4j:7687
+  #     - NEO4J_USER=neo4j
+  #     - NEO4J_PASSWORD=password
+  #     - REDIS_URL=redis://redis:6379/3
+  #     - CELERY_BROKER_URL=redis://redis:6379/4
+  #     - CELERY_RESULT_BACKEND=redis://redis:6379/5
+  #     - MEMORY_LIMIT_GB=1.0
+  #     - LOG_LEVEL=INFO
+  #     - WORKER_ID=persistence
+  #   networks:
+  #     - knowledge_map_network
+  #   depends_on:
+  #     neo4j:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #     layout_worker_manager:
+  #       condition: service_started
+  #   command: ["celery", "-A", "src.tasks", "worker", "--loglevel=info", "--concurrency=1", "--queues=persistence"]
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 1G
+  #         cpus: '0.5'
+  #       reservations:
+  #         memory: 512M
+  #         cpus: '0.25'
 
-  # Flower для мониторинга Celery (опциональный)
-  layout_flower:
-    build:
-      context: ./worker_distributed_layering
-      dockerfile: Dockerfile
-    container_name: knowledge_map_layout_flower
-    restart: unless-stopped
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/4
-      - CELERY_RESULT_BACKEND=redis://redis:6379/5
-    ports:
-      - "5555:5555"
-    networks:
-      - knowledge_map_network
-    depends_on:
-      redis:
-        condition: service_healthy
-    command: ["celery", "-A", "src.tasks", "flower", "--port=5555"]
-    profiles:
-      - monitoring  # Запускается только с профилем monitoring
+  # # Flower для мониторинга Celery (опциональный)
+  # layout_flower:
+  #   build:
+  #     context: ./worker_distributed_layering
+  #     dockerfile: Dockerfile
+  #   container_name: knowledge_map_layout_flower
+  #   restart: unless-stopped
+  #   environment:
+  #     - CELERY_BROKER_URL=redis://redis:6379/4
+  #     - CELERY_RESULT_BACKEND=redis://redis:6379/5
+  #   ports:
+  #     - "5555:5555"
+  #   networks:
+  #     - knowledge_map_network
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #   command: ["celery", "-A", "src.tasks", "flower", "--port=5555"]
+  #   profiles:
+  #     - monitoring  # Запускается только с профилем monitoring
 
 volumes:
   neo4j_data:

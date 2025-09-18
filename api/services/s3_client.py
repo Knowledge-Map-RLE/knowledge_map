@@ -16,7 +16,7 @@ import mimetypes
 
 import aioboto3
 from botocore.exceptions import ClientError, NoCredentialsError
-from config import settings
+from .config import settings
 
 logger = logging.getLogger(__name__)
 

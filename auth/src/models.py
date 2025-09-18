@@ -7,7 +7,9 @@ from neomodel import (
 from .config import settings
 
 # Настройка подключения к Neo4j
-config.DATABASE_URL = f"{settings.NEO4J_URI}?user={settings.NEO4J_USER}&password={settings.NEO4J_PASSWORD}"
+# neomodel ожидает формат: bolt://user:password@host:port
+_hostport = settings.NEO4J_URI.replace("bolt://", "")
+config.DATABASE_URL = f"bolt://{settings.NEO4J_USER}:{settings.NEO4J_PASSWORD}@{_hostport}"
 
 
 class User(StructuredNode):

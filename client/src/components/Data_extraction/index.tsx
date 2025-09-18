@@ -86,15 +86,36 @@ export default function Data_extraction() {
         try {
             const data = await listDocuments();
             if (data?.success && Array.isArray(data.documents)) {
-                // маппинг в локальный тип PDFDocument
-                const mapped = data.documents.map(d => ({
-                    uid: d.doc_id,
-                    original_filename: d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
-                    md5_hash: d.doc_id,
-                    upload_date: new Date().toISOString(),
-                    processing_status: d.has_markdown ? 'annotated' : 'uploaded',
-                    is_processed: !!d.has_markdown,
-                })) as any[];
+                // маппинг в локальный тип PDFDocument с проверкой реального статуса
+                const mapped = await Promise.all(data.documents.map(async (d) => {
+                    let status = d.has_markdown ? 'annotated' : 'uploaded';
+                    
+                    // Проверяем реальный статус через API маркера
+                    try {
+                        const response = await fetch(`http://localhost:8000/marker/status/doc/${d.doc_id}`);
+                        if (response.ok) {
+                            const markerStatus = await response.json();
+                            if (markerStatus.status === 'processing') {
+                                status = 'processing';
+                            } else if (markerStatus.status === 'failed') {
+                                status = 'error';
+                            } else if (markerStatus.status === 'ready' && markerStatus.percent === 100) {
+                                status = 'annotated';
+                            }
+                        }
+                    } catch (err) {
+                        console.warn(`Не удалось проверить статус для ${d.doc_id}:`, err);
+                    }
+                    
+                    return {
+                        uid: d.doc_id,
+                        original_filename: d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
+                        md5_hash: d.doc_id,
+                        upload_date: new Date().toISOString(),
+                        processing_status: status,
+                        is_processed: status === 'annotated',
+                    } as any;
+                }));
                 setDocuments(mapped);
             }
         } catch (err) {
@@ -173,40 +194,60 @@ export default function Data_extraction() {
             if (assets?.markdown) {
                 setMarkdownContent(assets.markdown);
                 setProgressMap(prev => ({ ...prev, [document.uid]: 100 }));
+                console.log('Markdown загружен:', assets.markdown.length, 'символов');
+            } else {
+                console.log('Markdown не найден для документа:', document.uid);
+                setMarkdownContent('');
             }
             if (assets?.image_urls) {
                 setImageUrls(assets.image_urls);
+                console.log('Изображения загружены:', Object.keys(assets.image_urls));
             } else {
                 setImageUrls({});
             }
         } catch (err) {
             console.error('Ошибка загрузки документа:', err);
+            setMarkdownContent('');
+            setImageUrls({});
         }
     };
 
-    // Пуллинг прогресса обработки: если документ в статусе processing/uploaded без markdown — увеличиваем проценты и проверяем assets
+    // Пуллинг прогресса обработки: проверяем реальный статус через API
     useEffect(() => {
         const interval = setInterval(async () => {
             const current = selectedDocument;
             if (!current) return;
             if (current.processing_status !== 'annotated') {
                 try {
-                    const assets = await getDocumentAssets(current.uid);
-                    if (assets?.markdown) {
-                        setMarkdownContent(assets.markdown);
-                        setProgressMap(prev => ({ ...prev, [current.uid]: 100 }));
-                        // обновляем локальный статус
-                        setSelectedDocument(prev => prev ? { ...prev, processing_status: 'annotated', is_processed: true } as any : prev);
-                    } else {
-                        // плавное увеличение: максимум до 95%
-                        setProgressMap(prev => {
-                            const val = Math.min(95, (prev[current.uid] ?? 10) + 3);
-                            return { ...prev, [current.uid]: val };
-                        });
+                    // Проверяем статус через API маркера
+                    const response = await fetch(`http://localhost:8000/marker/status/doc/${current.uid}`);
+                    if (response.ok) {
+                        const status = await response.json();
+                        if (status.status === 'ready' && status.percent === 100) {
+                            // Документ готов, загружаем markdown
+                            const assets = await getDocumentAssets(current.uid);
+                            if (assets?.markdown) {
+                                setMarkdownContent(assets.markdown);
+                                setImageUrls(assets.image_urls || {});
+                                setProgressMap(prev => ({ ...prev, [current.uid]: 100 }));
+                                // обновляем локальный статус
+                                setSelectedDocument(prev => prev ? { ...prev, processing_status: 'annotated', is_processed: true } as any : prev);
+                                console.log('Обработка завершена, markdown загружен:', assets.markdown.length, 'символов');
+                            }
+                        } else if (status.status === 'processing') {
+                            // Обновляем реальный прогресс
+                            setProgressMap(prev => ({ ...prev, [current.uid]: status.percent || 0 }));
+                        } else if (status.status === 'failed') {
+                            // Обработка не удалась
+                            setProgressMap(prev => ({ ...prev, [current.uid]: 0 }));
+                            setSelectedDocument(prev => prev ? { ...prev, processing_status: 'error' } as any : prev);
+                        }
                     }
-                } catch {}
+                } catch (err) {
+                    console.error('Ошибка проверки статуса:', err);
+                }
             }
-        }, 5000);
+        }, 2000); // Проверяем каждые 2 секунды
         return () => clearInterval(interval);
     }, [selectedDocument]);
 
@@ -437,7 +478,7 @@ export default function Data_extraction() {
                                             <>
                                                 {' '}
                                                 <span className="text-blue-600 font-semibold">
-                                                    {Math.min( (progressMap[doc.uid] ?? 10), 100)}%
+                                                    {progressMap[doc.uid] ?? 0}%
                                                 </span>
                                             </>
                                         ) : null}

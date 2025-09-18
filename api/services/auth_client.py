@@ -1,8 +1,14 @@
 import grpc
+import sys
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "utils"))
+sys.path.insert(0, str(PROJECT_ROOT / "utils" / "generated"))
+
 from generated import auth_pb2
 from generated import auth_pb2_grpc
 from typing import Optional, Dict, Any
-from config import settings
+from .config import settings
 
 
 class AuthClient:

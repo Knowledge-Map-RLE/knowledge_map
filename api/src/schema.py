@@ -1,6 +1,6 @@
 import strawberry
 from typing import List, Optional
-from models import User, Block, Tag, LinkMetadata
+from src.models import User, Block, Tag, LinkMetadata
 
 # GraphQL Types
 @strawberry.type

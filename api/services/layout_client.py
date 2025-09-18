@@ -11,8 +11,11 @@ import grpc
 import sys
 from pathlib import Path
 
-# Добавляем путь к generated в PYTHONPATH
-sys.path.insert(0, str(Path(__file__).parent / "generated"))
+# Добавляем путь к utils/generated (на уровень выше от services)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+# Добавляем пути для both: 'generated' пакета и прямых импортов layout_pb2
+sys.path.insert(0, str(PROJECT_ROOT / "utils"))
+sys.path.insert(0, str(PROJECT_ROOT / "utils" / "generated"))
 
 from generated import layout_pb2, layout_pb2_grpc
 

@@ -7,10 +7,9 @@ from neomodel import (
 # from uuid_v6_property import UUIDv6Property # Больше не используем
 from datetime import datetime
 
-from config import settings
+from services.config import settings
 
-
-config.DATABASE_URL = settings.get_database_url()
+# Настройка DATABASE_URL будет выполнена в app.py
 
 class LinkRel(StructuredRel):
     """Модель отношения (связи) между блоками"""
