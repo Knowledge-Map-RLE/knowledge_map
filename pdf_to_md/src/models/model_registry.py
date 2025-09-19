@@ -5,6 +5,7 @@ from pathlib import Path as SysPath
 
 from .marker_utils import _run_marker_on_pdf as marker_legacy_convert
 from .marker_proper_model import marker_proper_model
+from .huridocs_model import huridocs_model
 
 logger = logging.getLogger(__name__)
 
@@ -14,18 +15,27 @@ class ModelRegistry:
     
     def __init__(self):
         self._models: Dict[str, Any] = {}
-        self._default_model: str = "marker_proper"
+        self._default_model: str = "huridocs"
         self._register_models()
     
     def _register_models(self):
         """Регистрирует доступные модели"""
-        # Marker Proper (новая модель по умолчанию)
+        # HURIDOCS (модель по умолчанию)
+        self._models["huridocs"] = {
+            "name": "HURIDOCS",
+            "description": "HURIDOCS PDF Document Layout Analysis - анализ структуры PDF и преобразование в Markdown",
+            "convert_func": huridocs_model.convert_pdf_to_markdown,
+            "enabled": True,
+            "default": True
+        }
+        
+        # Marker Proper (альтернативная модель)
         self._models["marker_proper"] = {
             "name": "Marker Proper",
             "description": "Улучшенная модель Marker с оптимизированной обработкой",
             "convert_func": marker_proper_model.convert_pdf_to_markdown,
             "enabled": True,
-            "default": True
+            "default": False
         }
         
         # Marker Legacy (старая модель)

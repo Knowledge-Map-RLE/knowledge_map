@@ -28,7 +28,7 @@ RUN poetry lock --no-interaction --no-ansi \
 COPY . .
 
 # 7) Копируем предзагруженные модели Marker (если есть)
-COPY marker_models/ ./marker_models/
+# COPY marker_models/ ./marker_models/
 
 # 8) Генерируем proto файлы
 RUN python -m grpc_tools.protoc \

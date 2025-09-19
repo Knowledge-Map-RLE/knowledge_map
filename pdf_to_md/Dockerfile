@@ -1,11 +1,15 @@
 FROM python:3.11-slim
 
-# Установка системных зависимостей
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Установка системных зависимостей с retry логикой
+RUN for i in 1 2 3; do \
+        apt-get update && \
+        apt-get install -y --fix-missing \
+            build-essential \
+            curl \
+            git \
+        && break || sleep 10; \
+    done && \
+    rm -rf /var/lib/apt/lists/*
 
 # Установка Poetry
 RUN pip install poetry
