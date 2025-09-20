@@ -3,6 +3,7 @@ personal_folder/
 logs/
 node_modules/
 dist/
+test_output/
 
 __pycache__/
 

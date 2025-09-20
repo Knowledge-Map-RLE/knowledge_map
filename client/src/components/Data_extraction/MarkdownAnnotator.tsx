@@ -24,11 +24,12 @@ export default function MarkdownAnnotator({ docId, markdown, images, imageUrls, 
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
   const html = useMemo(() => {
-    // заменим картинки на теги img (имена без путей) — клиент их не грузит с S3 напрямую
+    // заменим картинки на теги img с правильными URL через API
     const md = markdown || '';
     const withImgs = md.replace(/!\[[^\]]*\]\(([^)]+)\)/g, (_m, p1) => {
       const fname = String(p1).split('/').pop() as string;
-      const url = (imageUrls && imageUrls[fname]) ? imageUrls[fname] : fname;
+      // Используем новый API endpoint для получения изображений
+      const url = `http://localhost:8000/api/data_extraction/documents/${docId}/images/${fname}`;
       return `<img src="${url}" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:12px 0;"/>`;
     });
     const p = withImgs
@@ -37,7 +38,7 @@ export default function MarkdownAnnotator({ docId, markdown, images, imageUrls, 
       .replace(/^### (.*)$/gm, '<h3>$1</h3>')
       .replace(/\n\n+/g, '</p><p>');
     return `<p>${p}</p>`;
-  }, [markdown, imageUrls]);
+  }, [markdown, docId]);
 
   useEffect(() => {
     setAnnotations([]);

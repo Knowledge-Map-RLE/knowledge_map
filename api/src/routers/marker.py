@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from services.marker_progress import marker_progress_store
-from services.pdf_to_md_client import pdf_to_md_client
+from services.pdf_to_md_grpc_client import pdf_to_md_grpc_client
 
 router = APIRouter(prefix="/marker", tags=["marker"])
 
@@ -27,7 +27,7 @@ async def get_available_models():
     """Возвращает список доступных моделей конвертации"""
     try:
         # Пытаемся получить модели из нового сервиса
-        models_data = await pdf_to_md_client.get_models()
+        models_data = await pdf_to_md_grpc_client.get_models()
         return models_data
     except Exception as e:
         # Fallback на пустой результат
@@ -42,7 +42,7 @@ async def set_default_model(model_id: str):
     """Устанавливает модель по умолчанию"""
     try:
         # Пытаемся установить модель в новом сервисе
-        success = await pdf_to_md_client.set_default_model(model_id)
+        success = await pdf_to_md_grpc_client.set_default_model(model_id)
         if success:
             return {
                 "success": True, 
@@ -60,7 +60,7 @@ async def enable_model(model_id: str):
     """Включает модель"""
     try:
         # Пытаемся включить модель в новом сервисе
-        success = await pdf_to_md_client.enable_model(model_id, enabled=True)
+        success = await pdf_to_md_grpc_client.enable_model(model_id, enabled=True)
         if success:
             return {
                 "success": True, 
@@ -78,7 +78,7 @@ async def disable_model(model_id: str):
     """Отключает модель"""
     try:
         # Пытаемся отключить модель в новом сервисе
-        success = await pdf_to_md_client.enable_model(model_id, enabled=False)
+        success = await pdf_to_md_grpc_client.enable_model(model_id, enabled=False)
         if success:
             return {
                 "success": True, 

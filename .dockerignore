@@ -1,0 +1,52 @@
+# Git
+.git/
+.gitignore
+
+# Node.js
+node_modules/
+**/node_modules/
+
+# Python
+venv/
+.venv/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.log
+
+# Build artifacts
+dist/
+build/
+tmp/
+*.egg-info/
+
+# IDE
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Test files
+test_*
+*_test.py
+tests/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Large files
+*.bin
+*.safetensors
+models/
+marker_models/
+conversion_results/
+markdown_output/

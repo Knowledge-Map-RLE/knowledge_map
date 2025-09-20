@@ -199,7 +199,7 @@ async def convert_pdf_to_markdown_marker_async(
     Returns:
         Словарь с результатами конвертации или None при ошибке
     """
-    if not os.path.exists(pdf_path):
+    if not Path(pdf_path).exists():
         error_msg = f"Файл не найден: {pdf_path}"
         if on_complete:
             on_complete({"error": error_msg, "success": False})
@@ -214,7 +214,7 @@ async def convert_pdf_to_markdown_marker_async(
     markdown_path = Path(output_dir) / markdown_name
     
     # Получаем размер файла для информации
-    file_size = os.path.getsize(pdf_path)
+    file_size = Path(pdf_path).stat().st_size
     file_size_mb = file_size / (1024 * 1024)
     
     # Начинаем преобразование
@@ -231,6 +231,7 @@ async def convert_pdf_to_markdown_marker_async(
         start_time = time.time()
         
         # Настраиваем переменные окружения для логирования Marker
+        import os
         env = os.environ.copy()
         env["MARKER_LOG_LEVEL"] = "DEBUG"
         env["MARKER_DEBUG"] = "1"
@@ -432,11 +433,11 @@ async def convert_pdf_to_markdown_marker_async(
             
             if not result_dirs:
                 # Если не найдено по точному имени, ищем любые папки
-                result_dirs = list(conversion_results_dir.glob("*"))
-                if result_dirs:
+                all_dirs = [d for d in conversion_results_dir.glob("*") if d.is_dir()]
+                if all_dirs:
                     # Берем самую новую папку
-                    result_dirs = [max(result_dirs, key=lambda p: p.stat().st_mtime)]
-                    # Используем самую новую папку
+                    result_dirs = [max(all_dirs, key=lambda p: p.stat().st_mtime)]
+                    log_progress(f"Используем самую новую папку: {result_dirs[0].name}", "PROGRESS")
             
             if result_dirs:
                 result_dir = result_dirs[0]
@@ -523,7 +524,7 @@ async def convert_pdf_to_markdown_marker_async(
 def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
     """Простое преобразование PDF в Markdown с использованием Marker"""
     
-    if not os.path.exists(pdf_path):
+    if not Path(pdf_path).exists():
         log_progress(f"Файл не найден: {pdf_path}", "ERROR")
         return None
     
@@ -536,7 +537,7 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
     markdown_path = Path(output_dir) / markdown_name
     
     # Получаем размер файла для информации
-    file_size = os.path.getsize(pdf_path)
+    file_size = Path(pdf_path).stat().st_size
     file_size_mb = file_size / (1024 * 1024)
     
     # Начинаем преобразование
@@ -558,6 +559,7 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
         start_time = time.time()
         
         # Настраиваем переменные окружения для логирования Marker
+        import os
         env = os.environ.copy()
         env["MARKER_LOG_LEVEL"] = "DEBUG"
         env["MARKER_DEBUG"] = "1"
@@ -725,7 +727,7 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
             # Возможные пути для conversion_results
             possible_paths = [
                 Path(site.getsitepackages()[0]) / "conversion_results",
-                Path(os.path.expanduser("~")) / "AppData" / "Roaming" / "Python" / f"Python{sys.version_info.major}{sys.version_info.minor}" / "site-packages" / "conversion_results",
+                Path.home() / "AppData" / "Roaming" / "Python" / f"Python{sys.version_info.major}{sys.version_info.minor}" / "site-packages" / "conversion_results",
                 Path.cwd() / "conversion_results"
             ]
             
@@ -749,11 +751,11 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
             if not result_dirs:
                 log_progress(f"Не найдено папок с именем '{pdf_stem}', ищем любые папки...", "WARNING")
                 # Если не найдено по точному имени, ищем любые папки
-                result_dirs = list(conversion_results_dir.glob("*"))
-                if result_dirs:
+                all_dirs = [d for d in conversion_results_dir.glob("*") if d.is_dir()]
+                if all_dirs:
                     # Берем самую новую папку
-                    result_dirs = [max(result_dirs, key=lambda p: p.stat().st_mtime)]
-                    # Используем самую новую папку
+                    result_dirs = [max(all_dirs, key=lambda p: p.stat().st_mtime)]
+                    log_progress(f"Используем самую новую папку: {result_dirs[0].name}", "PROGRESS")
             
             if result_dirs:
                 result_dir = result_dirs[0]
@@ -780,9 +782,9 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
                     image_count = 0
                     for ext in image_extensions:
                         image_files = list(result_dir.glob(ext))
-                    for image_file in image_files:
-                        dest_image_path = Path(output_dir) / image_file.name
-                        shutil.copy2(image_file, dest_image_path)
+                        for image_file in image_files:
+                            dest_image_path = Path(output_dir) / image_file.name
+                            shutil.copy2(image_file, dest_image_path)
                             image_count += 1
                             log_progress(f"Скопировано изображение: {image_file.name}", "SUCCESS")
                     
@@ -839,6 +841,25 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
             log_progress("Удаляем временную папку...", "PROGRESS")
             shutil.rmtree(temp_input_dir)
             log_progress(f"Временная папка удалена: {temp_input_dir}", "SUCCESS")
+
+def create_label_studio_json(markdown_path: Path, output_dir: str) -> str:
+    """Создание JSON файла для Label Studio"""
+    json_name = f"{markdown_path.stem}_marker_tasks.json"
+    json_path = Path(output_dir) / json_name
+    
+    tasks = [
+        {
+            "data": {
+                "markdown": f"http://localhost:9002/markdown/{markdown_path.name}"
+            }
+        }
+    ]
+    
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(tasks, f, ensure_ascii=False, indent=2)
+    
+    log_progress(f"JSON файл создан: {json_path}", "SUCCESS")
+    return str(json_path)
 
 def create_label_studio_tasks(output_dir, markdown_name, converter_type):
     """Создание JSON файла для Label Studio"""
@@ -899,13 +920,13 @@ def main():
     if len(sys.argv) < 2:
         # Если нет аргументов, используем тестовый файл автоматически
         test_pdf = "../personal_folder/The FEBS Journal - 2013 - Antony - The hallmarks of Parkinson s disease.pdf"
-        if os.path.exists(test_pdf):
+        if Path(test_pdf).exists():
             pdf_path = test_pdf
         else:
             log_progress("Тестовый PDF файл не найден. Укажите путь к PDF файлу как аргумент.", "ERROR")
-        return
+            return
     else:
-    pdf_path = sys.argv[1]
+        pdf_path = sys.argv[1]
     
     # Опциональная папка выхода
     output_dir = sys.argv[2] if len(sys.argv) > 2 else "markdown_output"

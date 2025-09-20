@@ -92,7 +92,7 @@ export default function Data_extraction() {
                     
                     // Проверяем реальный статус через API маркера
                     try {
-                        const response = await fetch(`http://localhost:8000/marker/status/doc/${d.doc_id}`);
+                        const response = await fetch(`http://localhost:8000/api/marker/status/doc/${d.doc_id}`);
                         if (response.ok) {
                             const markerStatus = await response.json();
                             if (markerStatus.status === 'processing') {
@@ -220,7 +220,7 @@ export default function Data_extraction() {
             if (current.processing_status !== 'annotated') {
                 try {
                     // Проверяем статус через API маркера
-                    const response = await fetch(`http://localhost:8000/marker/status/doc/${current.uid}`);
+                    const response = await fetch(`http://localhost:8000/api/marker/status/doc/${current.uid}`);
                     if (response.ok) {
                         const status = await response.json();
                         if (status.status === 'ready' && status.percent === 100) {
@@ -341,7 +341,7 @@ export default function Data_extraction() {
     const downloadPDF = () => {
         if (selectedDocument) {
             const link = document.createElement('a');
-            link.href = `http://localhost:8000/api/pdf/document/${selectedDocument.uid}/download`;
+            link.href = `http://localhost:8000/api/s3/buckets/knowledge-map-pdfs/objects/documents/${selectedDocument.uid}/${selectedDocument.uid}.pdf`;
             link.download = selectedDocument.original_filename;
             document.body.appendChild(link);
             link.click();

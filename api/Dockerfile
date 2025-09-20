@@ -5,11 +5,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-# 1) Установка системных зависимостей (curl) с очисткой
-RUN set -eux; \
-    apt-get update -o Acquire::Retries=3 --fix-missing; \
-    apt-get install -y --no-install-recommends curl; \
-    rm -rf /var/lib/apt/lists/*
+# 1) Установка системных зависимостей с retry логикой
+RUN for i in 1 2 3; do \
+        apt-get update --fix-missing && \
+        apt-get install -y --no-install-recommends --fix-missing \
+            curl \
+            && rm -rf /var/lib/apt/lists/* \
+            && apt-get clean \
+        && break || sleep 10; \
+    done
 
 # 2) Копируем pyproject и lock-файл
 COPY pyproject.toml poetry.lock* ./
@@ -21,8 +25,11 @@ RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.create false
 
 # 5) Обновляем lock-файл (если pyproject изменился) и устанавливаем только production-зависимости
-RUN poetry lock --no-interaction --no-ansi \
-    && poetry install --only=main --no-root --no-interaction --no-ansi
+RUN for i in 1 2 3; do \
+        poetry lock --no-interaction --no-ansi && \
+        poetry install --only=main --no-root --no-interaction --no-ansi \
+        && break || sleep 5; \
+    done
 
 # 6) Копируем исходный код
 COPY . .

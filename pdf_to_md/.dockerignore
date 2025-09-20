@@ -1,0 +1,90 @@
+# Git и версионирование
+.git
+.gitignore
+.gitattributes
+
+# Документация
+README.md
+*.md
+docs/
+
+# Тесты
+tests/
+*_test.py
+test_*.py
+
+# Логи
+*.log
+logs/
+
+# Временные файлы
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS файлы
+.DS_Store
+Thumbs.db
+
+# Poetry
+poetry.lock
+
+# Локальные данные и большие файлы
+data/
+models/
+markdown_output/
+s3_simulation/
+*.pdf
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Исключаем ненужные файлы из marker_models, но оставляем необходимые
+marker_models/**/__pycache__/
+marker_models/**/*.pyc
+marker_models/**/*.pyo
+marker_models/**/*.pyd
+marker_models/**/.*
+marker_models/**/logs/
+marker_models/**/temp/
+marker_models/**/tmp/
+marker_models/**/*.bin
+marker_models/**/*.safetensors
+marker_models/**/*.h5
+marker_models/**/*.pkl
+marker_models/**/*.joblib
+
+# Большие файлы Hugging Face Hub
+marker_models/hub/**/*.bin
+marker_models/hub/**/*.safetensors
+marker_models/hub/**/*.h5
+marker_models/hub/**/*.pkl
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Временные и кэш файлы
+*.tmp
+*.cache
+.cache/
+.tmp/
+
+# Локальные скрипты
+demo_*.py
+*_demo.py

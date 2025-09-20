@@ -536,8 +536,6 @@ volumes:
   s3_data:
   auth_proto:
   ai_models:
-  nebula_storage0:
-    driver: local
 
 networks:
   knowledge_map_network:

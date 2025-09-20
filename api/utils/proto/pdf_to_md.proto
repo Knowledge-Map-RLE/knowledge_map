@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package pdf_to_md;
+
+// Сервис для конвертации PDF в Markdown
+service PDFToMarkdownService {
+    // Конвертация PDF в Markdown
+    rpc ConvertPDF(ConvertPDFRequest) returns (ConvertPDFResponse);
+    
+    // Получение списка доступных моделей
+    rpc GetModels(GetModelsRequest) returns (GetModelsResponse);
+    
+    // Установка модели по умолчанию
+    rpc SetDefaultModel(SetDefaultModelRequest) returns (SetDefaultModelResponse);
+    
+    // Включение/отключение модели
+    rpc EnableModel(EnableModelRequest) returns (EnableModelResponse);
+    
+    // Конвертация с отслеживанием прогресса (streaming)
+    rpc ConvertPDFWithProgress(ConvertPDFRequest) returns (stream ProgressUpdate);
+}
+
+// Запрос на конвертацию PDF
+message ConvertPDFRequest {
+    bytes pdf_content = 1;
+    optional string model_id = 2;
+    optional string doc_id = 3;
+}
+
+// Ответ на конвертацию PDF
+message ConvertPDFResponse {
+    bool success = 1;
+    string doc_id = 2;
+    string markdown_content = 3;
+    map<string, bytes> images = 4;
+    optional string metadata_json = 5;
+    string message = 6;
+}
+
+// Обновление прогресса
+message ProgressUpdate {
+    string doc_id = 1;
+    int32 percent = 2;
+    string phase = 3;
+    string message = 4;
+}
+
+// Информация о модели
+message ModelInfo {
+    string name = 1;
+    string description = 2;
+    bool enabled = 3;
+    bool default = 4;
+}
+
+// Запрос на получение моделей
+message GetModelsRequest {
+}
+
+// Ответ со списком моделей
+message GetModelsResponse {
+    map<string, ModelInfo> models = 1;
+    string default_model = 2;
+}
+
+// Запрос на установку модели по умолчанию
+message SetDefaultModelRequest {
+    string model_id = 1;
+}
+
+// Ответ на установку модели по умолчанию
+message SetDefaultModelResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Запрос на включение/отключение модели
+message EnableModelRequest {
+    string model_id = 1;
+    bool enabled = 2;
+}
+
+// Ответ на включение/отключение модели
+message EnableModelResponse {
+    bool success = 1;
+    string message = 2;
+}
