@@ -170,6 +170,9 @@ function Start-PdfToMdService {
     Write-ColorOutput "Installing dependencies for pdf_to_md..." $InfoColor
     Push-Location $pdfToMdDir
     try {
+        # Try to update lock file first
+        Write-ColorOutput "Updating poetry lock file..." $InfoColor
+        poetry lock 2>$null
         poetry install
     }
     catch {

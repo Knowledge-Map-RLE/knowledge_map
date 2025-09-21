@@ -3,9 +3,32 @@ import logging
 from typing import Dict, Any, Optional, Callable
 from pathlib import Path as SysPath
 
-from .marker_utils import _run_marker_on_pdf as marker_legacy_convert
-from .marker_proper_model import marker_proper_model
-from .huridocs_model import huridocs_model
+# Импорты с обработкой ошибок
+try:
+    from .marker_utils import _run_marker_on_pdf as marker_legacy_convert
+    MARKER_LEGACY_AVAILABLE = True
+except ImportError:
+    MARKER_LEGACY_AVAILABLE = False
+
+try:
+    from .marker_proper_model import marker_proper_model
+    MARKER_PROPER_AVAILABLE = True
+except ImportError:
+    MARKER_PROPER_AVAILABLE = False
+
+try:
+    from .huridocs_model import huridocs_model
+    HURIDOCS_AVAILABLE = True
+except ImportError:
+    HURIDOCS_AVAILABLE = False
+
+# Import Docling model
+try:
+    from ..services.models.docling_model import DoclingModel
+    DOCLING_AVAILABLE = True
+except ImportError as e:
+    print(f"Docling not available: {e}")
+    DOCLING_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -15,39 +38,109 @@ class ModelRegistry:
     
     def __init__(self):
         self._models: Dict[str, Any] = {}
-        self._default_model: str = "huridocs"
+        # Определяем модель по умолчанию
+        if DOCLING_AVAILABLE:
+            self._default_model = "docling"
+        elif HURIDOCS_AVAILABLE:
+            self._default_model = "huridocs"
+        elif MARKER_PROPER_AVAILABLE:
+            self._default_model = "marker_proper"
+        elif MARKER_LEGACY_AVAILABLE:
+            self._default_model = "marker_legacy"
+        else:
+            self._default_model = "docling"  # Fallback
         self._register_models()
     
     def _register_models(self):
         """Регистрирует доступные модели"""
-        # HURIDOCS (модель по умолчанию)
-        self._models["huridocs"] = {
-            "name": "HURIDOCS",
-            "description": "HURIDOCS PDF Document Layout Analysis - анализ структуры PDF и преобразование в Markdown",
-            "convert_func": huridocs_model.convert_pdf_to_markdown,
-            "enabled": True,
-            "default": True
-        }
+        # Docling (модель по умолчанию, если доступна)
+        if DOCLING_AVAILABLE:
+            docling_model = DoclingModel()
+            self._models["docling"] = {
+                "name": "Docling",
+                "description": "Docling PDF to Markdown conversion with advanced document understanding",
+                "convert_func": self._docling_convert_wrapper,
+                "enabled": True,
+                "default": True
+            }
+        
+        # HURIDOCS (резервная модель)
+        if HURIDOCS_AVAILABLE:
+            self._models["huridocs"] = {
+                "name": "HURIDOCS",
+                "description": "HURIDOCS PDF Document Layout Analysis - анализ структуры PDF и преобразование в Markdown",
+                "convert_func": huridocs_model.convert_pdf_to_markdown,
+                "enabled": True,
+                "default": not DOCLING_AVAILABLE  # По умолчанию только если Docling недоступен
+            }
         
         # Marker Proper (альтернативная модель)
-        self._models["marker_proper"] = {
-            "name": "Marker Proper",
-            "description": "Улучшенная модель Marker с оптимизированной обработкой",
-            "convert_func": marker_proper_model.convert_pdf_to_markdown,
-            "enabled": True,
-            "default": False
-        }
+        if MARKER_PROPER_AVAILABLE:
+            self._models["marker_proper"] = {
+                "name": "Marker Proper",
+                "description": "Улучшенная модель Marker с оптимизированной обработкой",
+                "convert_func": marker_proper_model.convert_pdf_to_markdown,
+                "enabled": True,
+                "default": False
+            }
         
         # Marker Legacy (старая модель)
-        self._models["marker_legacy"] = {
-            "name": "Marker Legacy", 
-            "description": "Оригинальная модель Marker с subprocess",
-            "convert_func": marker_legacy_convert,
-            "enabled": True,
-            "default": False
-        }
+        if MARKER_LEGACY_AVAILABLE:
+            self._models["marker_legacy"] = {
+                "name": "Marker Legacy", 
+                "description": "Оригинальная модель Marker с subprocess",
+                "convert_func": marker_legacy_convert,
+                "enabled": True,
+                "default": False
+            }
+        
+        # Store docling model instance for wrapper
+        if DOCLING_AVAILABLE:
+            self._docling_model = docling_model
         
         logger.info(f"[model_registry] Зарегистрировано моделей: {len(self._models)}")
+        if DOCLING_AVAILABLE:
+            logger.info("[model_registry] Docling модель зарегистрирована как модель по умолчанию")
+    
+    async def _docling_convert_wrapper(
+        self, 
+        tmp_dir: SysPath, 
+        *, 
+        on_progress: Optional[Callable[[dict], None]] = None, 
+        doc_id: Optional[str] = None
+    ) -> SysPath:
+        """
+        Wrapper для Docling модели, совместимый с интерфейсом других моделей
+        
+        Args:
+            tmp_dir: Временная директория с PDF файлом
+            on_progress: Callback для отслеживания прогресса
+            doc_id: ID документа для логирования
+            
+        Returns:
+            Путь к директории с результатами конвертации
+        """
+        if not DOCLING_AVAILABLE:
+            raise RuntimeError("Docling model is not available")
+        
+        # Найти PDF файл в временной директории
+        pdf_files = list(tmp_dir.glob("*.pdf"))
+        if not pdf_files:
+            raise FileNotFoundError("No PDF file found in temporary directory")
+        
+        pdf_path = pdf_files[0]
+        
+        # Создать выходную директорию
+        output_dir = tmp_dir / "docling_output"
+        
+        # Выполнить конвертацию
+        result_dir = await self._docling_model.convert(
+            input_path=pdf_path,
+            output_dir=output_dir,
+            on_progress=on_progress
+        )
+        
+        return result_dir
     
     def get_available_models(self) -> Dict[str, Dict[str, Any]]:
         """Возвращает список доступных моделей"""

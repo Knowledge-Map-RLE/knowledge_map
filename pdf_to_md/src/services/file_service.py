@@ -6,9 +6,15 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 from datetime import datetime, timedelta
 
-from ..core.config import settings
-from ..core.logger import get_logger
-from ..core.exceptions import PDFConversionError
+try:
+    from ..core.config import settings
+    from ..core.logger import get_logger
+    from ..core.exceptions import PDFConversionError
+except ImportError:
+    # Fallback for direct execution
+    from core.config import settings
+    from core.logger import get_logger
+    from core.exceptions import PDFConversionError
 
 logger = get_logger(__name__)
 

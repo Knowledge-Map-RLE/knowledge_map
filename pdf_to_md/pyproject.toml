@@ -26,6 +26,7 @@ protobuf = "^4.25.1"
 # PDF processing
 pillow = "^10.1.0"
 pymupdf = "^1.23.0"
+docling = "^1.0.0"
 
 # ML dependencies (CPU optimized) - базовые версии
 torch = {version = "^2.0.0", extras = ["cpu"]}

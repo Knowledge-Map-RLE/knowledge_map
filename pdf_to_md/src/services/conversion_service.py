@@ -7,23 +7,43 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 from datetime import datetime
 
-from ..core.config import settings
-from ..core.logger import get_logger
-from ..core.exceptions import (
-    PDFConversionError,
-    ModelNotFoundError,
-    ModelDisabledError,
-    ConversionTimeoutError
-)
-from ..core.types import (
-    ConversionResult,
-    ConversionProgress,
-    ConversionStatus,
-    ProgressCallback
-)
-from ..core.validators import validate_conversion_request
-from .model_service import ModelService
-from .file_service import FileService
+try:
+    from ..core.config import settings
+    from ..core.logger import get_logger
+    from ..core.exceptions import (
+        PDFConversionError,
+        ModelNotFoundError,
+        ModelDisabledError,
+        ConversionTimeoutError
+    )
+    from ..core.types import (
+        ConversionResult,
+        ConversionProgress,
+        ConversionStatus,
+        ProgressCallback
+    )
+    from ..core.validators import validate_conversion_request
+    from .model_service import ModelService
+    from .file_service import FileService
+except ImportError:
+    # Fallback for direct execution
+    from core.config import settings
+    from core.logger import get_logger
+    from core.exceptions import (
+        PDFConversionError,
+        ModelNotFoundError,
+        ModelDisabledError,
+        ConversionTimeoutError
+    )
+    from core.types import (
+        ConversionResult,
+        ConversionProgress,
+        ConversionStatus,
+        ProgressCallback
+    )
+    from core.validators import validate_conversion_request
+    from .model_service import ModelService
+    from .file_service import FileService
 
 logger = get_logger(__name__)
 
@@ -93,9 +113,14 @@ class ConversionService:
                 pdf_path.write_bytes(pdf_content)
                 
                 # Get model
-                model = self.model_service.get_model(model_id or settings.default_model)
+                default_model_id = self.model_service.get_default_model()
+                logger.info(f"Default model ID from service: {default_model_id}")
+                selected_model_id = model_id or default_model_id
+                logger.info(f"Selected model ID: {selected_model_id}")
+                model = self.model_service.get_model(selected_model_id)
                 if not model:
-                    raise ModelNotFoundError(f"Model {model_id} not found")
+                    raise ModelNotFoundError(f"Model {selected_model_id} not found")
+                logger.info(f"Using model: {model.name} ({type(model).__name__})")
                 
                 if not model.is_enabled:
                     raise ModelDisabledError(f"Model {model_id} is disabled")

@@ -98,7 +98,7 @@ class PDFToMarkdownGRPCClient:
             request = pdf_to_md_pb2.ConvertPDFRequest(
                 pdf_content=pdf_content,
                 doc_id=doc_id,
-                model_id=model_id or "marker"
+                model_id=model_id  # Не передаем model_id, чтобы использовалась модель по умолчанию
             )
             
             # Выполняем gRPC вызов
@@ -154,7 +154,7 @@ class PDFToMarkdownGRPCClient:
             request = pdf_to_md_pb2.ConvertPDFRequest(
                 pdf_content=pdf_content,
                 doc_id=doc_id,
-                model_id=model_id or "marker"
+                model_id=model_id  # Не передаем model_id, чтобы использовалась модель по умолчанию
             )
             
             # Выполняем gRPC вызов с отслеживанием прогресса

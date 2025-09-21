@@ -3,12 +3,21 @@
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 
-from ..core.config import settings
-from ..core.logger import get_logger
-from ..core.exceptions import ModelNotFoundError, ModelDisabledError
-from ..core.types import ModelInfo, ModelStatus
-from .models.base_model import BaseModel
-from .models.marker_model import MarkerModel
+try:
+    from ..core.config import settings
+    from ..core.logger import get_logger
+    from ..core.exceptions import ModelNotFoundError, ModelDisabledError
+    from ..core.types import ModelInfo, ModelStatus
+    from .models.base_model import BaseModel
+    from .models.marker_model import MarkerModel
+except ImportError:
+    # Fallback for direct execution
+    from core.config import settings
+    from core.logger import get_logger
+    from core.exceptions import ModelNotFoundError, ModelDisabledError
+    from core.types import ModelInfo, ModelStatus
+    from .models.base_model import BaseModel
+    from .models.marker_model import MarkerModel
 
 logger = get_logger(__name__)
 
@@ -18,17 +27,34 @@ class ModelService:
     
     def __init__(self):
         self._models: Dict[str, BaseModel] = {}
-        self._default_model_id = settings.default_model
+        self._default_model_id = None  # Will be set in _initialize_models
         self._initialize_models()
     
     def _initialize_models(self) -> None:
         """Initialize available models"""
         try:
-            # Initialize Marker model
-            marker_model = MarkerModel()
-            self._models["marker"] = marker_model
+            # Initialize Docling model (default)
+            try:
+                from .models.docling_model import DoclingModel
+                docling_model = DoclingModel()
+                self._models["docling"] = docling_model
+                self._default_model_id = "docling"
+                logger.info("Docling model initialized as default")
+            except ImportError as e:
+                logger.warning(f"Docling model not available: {e}")
+            
+            # Initialize Marker model (fallback)
+            try:
+                marker_model = MarkerModel()
+                self._models["marker"] = marker_model
+                if "docling" not in self._models:
+                    self._default_model_id = "marker"
+                logger.info("Marker model initialized")
+            except Exception as e:
+                logger.warning(f"Marker model not available: {e}")
             
             logger.info(f"Initialized {len(self._models)} models: {list(self._models.keys())}")
+            logger.info(f"Default model: {self._default_model_id}")
             
         except Exception as e:
             logger.error(f"Failed to initialize models: {e}")
@@ -74,6 +100,7 @@ class ModelService:
         Returns:
             Default model ID
         """
+        logger.info(f"get_default_model() returning: {self._default_model_id}")
         return self._default_model_id
     
     def set_default_model(self, model_id: str) -> bool:
