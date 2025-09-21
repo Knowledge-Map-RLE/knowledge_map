@@ -233,6 +233,19 @@ async def convert_pdf_to_markdown_marker_async(
         # Настраиваем переменные окружения для логирования Marker
         import os
         env = os.environ.copy()
+        
+        # Настраиваем переменные окружения для моделей Marker
+        marker_models_path = Path("./marker_models").absolute()
+        env["HF_HOME"] = str(marker_models_path / "hub")
+        env["TRANSFORMERS_CACHE"] = str(marker_models_path / "hub")
+        env["TORCH_HOME"] = str(marker_models_path)
+        
+        # Отключаем sdpa attention для совместимости с Marker CLI
+        env["TRANSFORMERS_VERBOSITY"] = "error"
+        env["TOKENIZERS_PARALLELISM"] = "false"
+        env["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
+        
+        # Настраиваем логирование Marker
         env["MARKER_LOG_LEVEL"] = "DEBUG"
         env["MARKER_DEBUG"] = "1"
         env["MARKER_VERBOSE"] = "1"
@@ -252,8 +265,12 @@ async def convert_pdf_to_markdown_marker_async(
         
         # Запускаем процесс с включенным логированием Marker
         # Используем bufsize=0 для небуферизованного вывода
+        # Создаем выходную папку для Marker
+        temp_output_dir = Path(output_dir) / "temp_output"
+        temp_output_dir.mkdir(exist_ok=True)
+        
         process = subprocess.Popen([
-            "marker", "--disable_tqdm", str(temp_input_dir)
+            "poetry", "run", "marker", str(temp_input_dir), str(temp_output_dir)
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env, bufsize=0, universal_newlines=True)
         
         # Запускаем мониторинг в отдельном потоке
@@ -398,31 +415,11 @@ async def convert_pdf_to_markdown_marker_async(
         if process.returncode == 0:
             log_progress("Marker конвертация завершена успешно", "SUCCESS")
             
-            # Ищем результаты в conversion_results
-            conversion_results_dir = None
+            # Результаты теперь находятся в temp_output_dir
+            conversion_results_dir = temp_output_dir
             
-            # Проверяем site-packages
-            try:
-                import site
-                site_packages = site.getsitepackages()
-                for sp in site_packages:
-                    conv_dir = Path(sp) / "conversion_results"
-                    if conv_dir.exists():
-                        conversion_results_dir = conv_dir
-                        break
-            except Exception:
-                pass
-            
-            # Также проверяем стандартные места
-            if not conversion_results_dir:
-                import os
-                user_home = Path.home()
-                appdata_path = user_home / "AppData" / "Roaming" / "Python" / f"Python{sys.version_info.major}{sys.version_info.minor}" / "site-packages" / "conversion_results"
-                if appdata_path.exists():
-                    conversion_results_dir = appdata_path
-            
-            if not conversion_results_dir:
-                log_progress("Папка conversion_results не найдена", "ERROR")
+            if not conversion_results_dir.exists():
+                log_progress("Папка с результатами не найдена", "ERROR")
                 return None
             
             # Ищем результаты
@@ -580,8 +577,12 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
         
         # Запускаем процесс с включенным логированием Marker
         # Используем bufsize=0 для небуферизованного вывода
+        # Создаем выходную папку для Marker
+        temp_output_dir = Path(output_dir) / "temp_output"
+        temp_output_dir.mkdir(exist_ok=True)
+        
         process = subprocess.Popen([
-            "marker", "--disable_tqdm", str(temp_input_dir)
+            "marker", str(temp_input_dir), str(temp_output_dir)
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env, bufsize=0, universal_newlines=True)
         
         # Запускаем мониторинг в отдельном потоке
@@ -718,27 +719,10 @@ def convert_pdf_to_markdown_marker(pdf_path, output_dir="markdown_output"):
         if process.returncode == 0:
             log_progress("Marker конвертация завершена успешно", "SUCCESS")
             
-            # Marker сохраняет результаты в conversion_results папке
-            # Ищем папку conversion_results
-            import site
+            # Результаты теперь находятся в temp_output_dir
+            conversion_results_dir = temp_output_dir
             
-            log_progress("Ищем папку с результатами...", "PROGRESS")
-            
-            # Возможные пути для conversion_results
-            possible_paths = [
-                Path(site.getsitepackages()[0]) / "conversion_results",
-                Path.home() / "AppData" / "Roaming" / "Python" / f"Python{sys.version_info.major}{sys.version_info.minor}" / "site-packages" / "conversion_results",
-                Path.cwd() / "conversion_results"
-            ]
-            
-            conversion_results_dir = None
-            for path in possible_paths:
-                if path.exists():
-                    conversion_results_dir = path
-                    log_progress(f"Найдена папка conversion_results: {path}", "DEBUG")
-                    break
-            
-            if not conversion_results_dir:
+            if not conversion_results_dir.exists():
                 log_progress("Папка conversion_results не найдена", "ERROR")
                 return None
             

@@ -215,8 +215,8 @@ function Start-PdfToMdService {
     
     Start-Sleep -Seconds 5
     
-    if (Test-Port -Port 50051 -ServiceName "PDF to MD gRPC") {
-        Write-ColorOutput "PDF to MD service started on port 50051" $SuccessColor
+    if (Test-Port -Port 50053 -ServiceName "PDF to MD gRPC") {
+        Write-ColorOutput "PDF to MD service started on port 50053" $SuccessColor
         return $true
     } else {
         Write-ColorOutput "PDF to MD service failed to start" $ErrorColor
@@ -289,7 +289,7 @@ function Start-ApiService {
     $env:AUTH_SERVICE_HOST = "127.0.0.1"
     $env:AUTH_SERVICE_PORT = "50052"
     $env:PDF_TO_MD_SERVICE_HOST = "127.0.0.1"
-    $env:PDF_TO_MD_SERVICE_PORT = "50051"
+    $env:PDF_TO_MD_SERVICE_PORT = "50053"
     $env:S3_ENDPOINT_URL = "http://127.0.0.1:9000"
     $env:S3_ACCESS_KEY = "minio"
     $env:S3_SECRET_KEY = "minio123456"
@@ -313,6 +313,31 @@ function Start-ApiService {
     # Start service in background with logging
     $logFile = Join-Path $logsDir "api.log"
     $errorFile = Join-Path $logsDir "api_error.log"
+    
+    # Устанавливаем переменные окружения в текущем процессе
+    $env:NEO4J_URI = "bolt://127.0.0.1:7687"
+    $env:NEO4J_USER = "neo4j"
+    $env:NEO4J_PASSWORD = "password"
+    $env:LAYOUT_SERVICE_HOST = "127.0.0.1"
+    $env:LAYOUT_SERVICE_PORT = "50051"
+    $env:AUTH_SERVICE_HOST = "127.0.0.1"
+    $env:AUTH_SERVICE_PORT = "50052"
+    $env:PDF_TO_MD_SERVICE_HOST = "127.0.0.1"
+    $env:PDF_TO_MD_SERVICE_PORT = "50053"
+    $env:S3_ENDPOINT_URL = "http://127.0.0.1:9000"
+    $env:S3_ACCESS_KEY = "minio"
+    $env:S3_SECRET_KEY = "minio123456"
+    $env:S3_REGION = "us-east-1"
+    $env:MARKER_TIMEOUT_SEC = "1800"
+    $env:DEBUG = "true"
+    $env:OMP_NUM_THREADS = "2"
+    $env:MKL_NUM_THREADS = "2"
+    $env:OPENBLAS_NUM_THREADS = "2"
+    $env:NUMEXPR_NUM_THREADS = "2"
+    $env:VECLIB_MAXIMUM_THREADS = "2"
+    $env:NUMBA_NUM_THREADS = "2"
+    $env:PYTORCH_CUDA_ALLOC_CONF = "max_split_size_mb:512"
+    
     $process = Start-Process -FilePath "poetry" -ArgumentList "run", "python", "-m", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000" -WorkingDirectory $apiDir -WindowStyle Hidden -RedirectStandardOutput $logFile -RedirectStandardError $errorFile -PassThru
     
     Start-Sleep -Seconds 5
@@ -337,7 +362,7 @@ function Show-Status {
         @{Name="Redis"; Port=6379; URL=""},
         @{Name="MinIO S3"; Port=9000; URL="http://localhost:9001"},
         @{Name="Auth gRPC"; Port=50052; URL=""},
-        @{Name="PDF to MD gRPC"; Port=50051; URL=""},
+        @{Name="PDF to MD gRPC"; Port=50053; URL=""},
         @{Name="API"; Port=8000; URL="http://localhost:8000"}
     )
     
@@ -358,19 +383,19 @@ function Stop-AllServices {
     Write-ColorOutput "Stopping all services..." $InfoColor
     
     # Stop processes by ports
-    $ports = @(8000, 50051, 50052)
+    $ports = @(8000, 50053, 50052)
     
     foreach ($port in $ports) {
         try {
             $connections = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
             foreach ($connection in $connections) {
-                $pid = $connection.OwningProcess
-                if ($pid -and $pid -gt 0) {
+                $processId = $connection.OwningProcess
+                if ($processId -and $processId -gt 0) {
                     try {
-                        $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
+                        $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
                         if ($process) {
-                            Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
-                            Write-ColorOutput "Stopped process on port $port (PID: $pid, Name: $($process.ProcessName))" $InfoColor
+                            Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
+                            Write-ColorOutput "Stopped process on port $port (PID: $processId, Name: $($process.ProcessName))" $InfoColor
                         }
                     }
                     catch {

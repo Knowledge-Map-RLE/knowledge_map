@@ -12,8 +12,13 @@ from services.data_extraction_service import DataExtractionService
 
 logger = logging.getLogger(__name__)
 
+# Отладочная информация при импорте роутера
+logger.info("[data_extraction_router] Импортируем data_extraction роутер")
+
 router = APIRouter(tags=["data_extraction"])
 data_extraction_service = DataExtractionService()
+
+logger.info("[data_extraction_router] DataExtractionService создан")
 
 
 @router.post("/data_extraction", response_model=DataExtractionResponse)

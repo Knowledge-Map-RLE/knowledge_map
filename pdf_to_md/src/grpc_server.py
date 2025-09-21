@@ -4,7 +4,10 @@ gRPC сервер для PDF to Markdown конвертации
 """
 import asyncio
 import logging
+import socket
 import sys
+import subprocess
+import platform
 from pathlib import Path
 from typing import Dict, Any
 
@@ -53,6 +56,150 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+
+def is_port_available(port: int) -> bool:
+    """Проверяет, доступен ли порт для использования"""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(1)
+            result = s.connect_ex(('localhost', port))
+            return result != 0  # Порт свободен, если соединение не удалось
+    except Exception:
+        return False
+
+
+def get_process_using_port(port: int) -> int:
+    """Возвращает PID процесса, использующего указанный порт"""
+    try:
+        if platform.system() == "Windows":
+            # Для Windows используем netstat
+            result = subprocess.run(
+                ['netstat', '-ano'], 
+                capture_output=True, 
+                text=True, 
+                timeout=10
+            )
+            if result.returncode == 0:
+                for line in result.stdout.split('\n'):
+                    if f':{port}' in line and 'LISTENING' in line:
+                        parts = line.split()
+                        if len(parts) >= 5:
+                            return int(parts[-1])
+        else:
+            # Для Linux/Mac используем lsof
+            result = subprocess.run(
+                ['lsof', '-ti', f':{port}'], 
+                capture_output=True, 
+                text=True, 
+                timeout=10
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                return int(result.stdout.strip())
+    except Exception as e:
+        logger.warning(f"[grpc] Ошибка при поиске процесса на порту {port}: {e}")
+    return None
+
+
+def kill_process_on_port(port: int) -> bool:
+    """Завершает процесс, использующий указанный порт"""
+    pid = get_process_using_port(port)
+    if pid is None:
+        logger.info(f"[grpc] Порт {port} свободен")
+        return True
+    
+    try:
+        logger.warning(f"[grpc] Порт {port} занят процессом PID {pid}, принудительно завершаем процесс...")
+        
+        if platform.system() == "Windows":
+            # Сразу используем принудительное завершение
+            result = subprocess.run(
+                ['taskkill', '/PID', str(pid), '/F'], 
+                capture_output=True, 
+                text=True, 
+                timeout=10
+            )
+            
+            # Если taskkill не сработал, пробуем PowerShell с правами администратора
+            if result.returncode != 0:
+                logger.warning(f"[grpc] taskkill не сработал, пробуем PowerShell с правами администратора...")
+                ps_command = f"Stop-Process -Id {pid} -Force -ErrorAction Stop"
+                result = subprocess.run(
+                    ['powershell', '-Command', ps_command], 
+                    capture_output=True, 
+                    text=True, 
+                    timeout=15
+                )
+            
+            # Если и PowerShell не сработал, пробуем PowerShell с правами администратора
+            if result.returncode != 0:
+                logger.warning(f"[grpc] PowerShell не сработал, пробуем PowerShell с правами администратора...")
+                ps_command = f"Start-Process powershell -ArgumentList '-Command Stop-Process -Id {pid} -Force' -Verb RunAs -WindowStyle Hidden"
+                result = subprocess.run(
+                    ['powershell', '-Command', ps_command], 
+                    capture_output=True, 
+                    text=True, 
+                    timeout=15
+                )
+            
+            # Если и это не сработало, пробуем wmic
+            if result.returncode != 0:
+                logger.warning(f"[grpc] PowerShell с правами администратора не сработал, пробуем wmic...")
+                result = subprocess.run(
+                    ['wmic', 'process', 'where', f'ProcessId={pid}', 'delete'], 
+                    capture_output=True, 
+                    text=True, 
+                    timeout=10
+                )
+        else:
+            # Для Linux/Mac сразу используем SIGKILL
+            result = subprocess.run(
+                ['kill', '-9', str(pid)], 
+                capture_output=True, 
+                text=True, 
+                timeout=10
+            )
+        
+        # Ждем завершения процесса
+        import time
+        time.sleep(3)
+        
+        # Проверяем, освободился ли порт
+        if is_port_available(port):
+            logger.info(f"[grpc] Процесс PID {pid} успешно завершен, порт {port} освобожден")
+            return True
+        else:
+            logger.error(f"[grpc] Процесс PID {pid} не был завершен, порт {port} все еще занят")
+            return False
+            
+    except Exception as e:
+        logger.error(f"[grpc] Ошибка при завершении процесса PID {pid}: {e}")
+        return False
+
+
+def ensure_port_available(port: int) -> bool:
+    """Обеспечивает доступность порта, завершая процессы при необходимости"""
+    if is_port_available(port):
+        logger.info(f"[grpc] Порт {port} доступен")
+        return True
+    
+    logger.warning(f"[grpc] Порт {port} занят, принудительно освобождаем...")
+    
+    # Принудительно завершаем процесс
+    if kill_process_on_port(port):
+        return True
+    
+    # Если не удалось завершить, пробуем еще раз с большей задержкой
+    logger.warning(f"[grpc] Повторная попытка завершения процесса на порту {port}...")
+    import time
+    time.sleep(2)
+    
+    if kill_process_on_port(port):
+        return True
+    
+    logger.error(f"[grpc] Не удалось освободить порт {port} после всех попыток")
+    return False
+
 
 # Логируем запуск
 logger.info("PDF to MD gRPC сервер инициализируется")
@@ -346,16 +493,30 @@ async def serve():
         PDFToMarkdownServicer(), server
     )
     
-    # Настраиваем порт
-    listen_addr = '0.0.0.0:50051'
-    server.add_insecure_port(listen_addr)
+    # Настраиваем порт - всегда используем 50053
+    port = 50053
+    listen_addr = f'0.0.0.0:{port}'
     
-    logger.info(f"[grpc] Запуск сервера на {listen_addr}")
-    
-    await server.start()
-    logger.info("[grpc] Сервер запущен и готов к приему запросов")
-    logger.info("[grpc] Ожидание запросов...")
-    await server.wait_for_termination()
+    try:
+        # Обеспечиваем доступность порта 50053
+        if not ensure_port_available(port):
+            raise RuntimeError(f"Не удалось освободить порт {port}. Сервер не может быть запущен.")
+        
+        server.add_insecure_port(listen_addr)
+        logger.info(f"[grpc] Запуск сервера на {listen_addr}")
+        
+        await server.start()
+        logger.info("[grpc] Сервер запущен и готов к приему запросов")
+        logger.info("[grpc] Ожидание запросов...")
+        await server.wait_for_termination()
+        
+    except RuntimeError as e:
+        logger.error(f"[grpc] Ошибка привязки к порту: {e}")
+        logger.error("[grpc] Сервер не может быть запущен")
+        raise
+    except Exception as e:
+        logger.error(f"[grpc] Неожиданная ошибка при запуске сервера: {e}")
+        raise
 
 
 if __name__ == '__main__':

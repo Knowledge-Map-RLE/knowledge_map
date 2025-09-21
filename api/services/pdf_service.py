@@ -16,7 +16,12 @@ from src.schemas.pdf import (
 from src.models import PDFDocument, PDFAnnotation, User
 from neomodel import DoesNotExist
 from . import settings, get_s3_client
-from .pdf_to_md_client import pdf_to_md_client
+from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
+
+def get_pdf_to_md_client():
+    return get_pdf_to_md_grpc_client_instance()
+
+pdf_to_md_client = get_pdf_to_md_client
 
 logger = logging.getLogger(__name__)
 

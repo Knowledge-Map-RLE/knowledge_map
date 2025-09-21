@@ -1,0 +1,110 @@
+[run]
+# Coverage configuration for PDF to Markdown Service
+
+# Source to measure
+source = src
+
+# Omit patterns
+omit = 
+    */tests/*
+    */test_*
+    */__pycache__/*
+    */venv/*
+    */.venv/*
+    */site-packages/*
+    */migrations/*
+    */settings/*
+    */manage.py
+    */conftest.py
+    */pytest.ini
+    */setup.py
+    */tox.ini
+
+# Branch coverage
+branch = True
+
+# Data file
+data_file = .coverage
+
+# Parallel mode
+parallel = True
+
+# Fail under threshold
+fail_under = 80
+
+[report]
+# Report configuration
+
+# Exclude lines from coverage
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code:
+    def __repr__
+    if self\.debug
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+    # Don't complain about abstract methods
+    @(abc\.)?abstractmethod
+
+# Ignore errors
+ignore_errors = True
+
+# Show missing
+show_missing = True
+
+# Skip covered
+skip_covered = False
+
+# Skip empty
+skip_empty = False
+
+# Sort by coverage percentage
+sort = Cover
+
+# Precision
+precision = 1
+
+[html]
+# HTML report configuration
+
+# Directory for HTML report
+directory = htmlcov
+
+# Title
+title = PDF to Markdown Service Coverage Report
+
+# Show contexts
+show_contexts = True
+
+# Extra CSS
+extra_css = 
+
+# Extra JS
+extra_js = 
+
+[xml]
+# XML report configuration
+
+# Output file
+output = coverage.xml
+
+# Package name
+package = pdf_to_md
+
+[json]
+# JSON report configuration
+
+# Output file
+output = coverage.json
+
+# Pretty print
+pretty_print = True

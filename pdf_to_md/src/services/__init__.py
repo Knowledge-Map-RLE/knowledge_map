@@ -1,1 +1,1 @@
-"""Сервисы"""
+"""Services layer for PDF to Markdown conversion"""

@@ -11,13 +11,16 @@ from fastapi import BackgroundTasks, UploadFile, HTTPException
 from fastapi.responses import StreamingResponse
 
 from utils.hash_utils import _compute_md5
-from .pdf_to_md_client import pdf_to_md_client
-from .pdf_to_md_grpc_client import pdf_to_md_grpc_client
+from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
 from src.schemas.api import DataExtractionResponse, ImportAnnotationsRequest
 from . import settings, get_s3_client
 from .marker_progress import marker_progress_store
 
 logger = logging.getLogger(__name__)
+
+# Отладочная информация о переменных окружения
+import os
+logger.info(f"[data_extraction] Переменные окружения при импорте: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
 
 
 class DataExtractionService:
@@ -84,7 +87,11 @@ class DataExtractionService:
                         pass
 
                 # Используем marker_demo для конвертации PDF в Markdown
-                result = await pdf_to_md_grpc_client.convert_pdf(
+                grpc_client = get_pdf_to_md_grpc_client_instance()
+                logger.info(f"[data_extraction] Используем gRPC клиент: host={grpc_client.host}, port={grpc_client.port}")
+                logger.info(f"[data_extraction] Переменные окружения в момент вызова: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
+                
+                result = await grpc_client.convert_pdf(
                     pdf_content=pdf_bytes,
                     doc_id=doc_id,
                     timeout=3600,
@@ -112,10 +119,11 @@ class DataExtractionService:
                         logger.info(f"[marker_demo] Изображение сохранено: {img_name}")
                 
                 # Сохраняем метаданные если есть
-                if result.get("metadata"):
+                if result.get("metadata_json"):
                     import json
                     meta_path = tmp_dir / f"{doc_id}_meta.json"
-                    meta_path.write_text(json.dumps(result["metadata"], ensure_ascii=False), encoding="utf-8")
+                    # metadata_json уже в формате JSON строки
+                    meta_path.write_text(result["metadata_json"], encoding="utf-8")
                     outputs["meta"] = meta_path
                     logger.info(f"[marker_demo] Метаданные сохранены: {meta_path}")
 

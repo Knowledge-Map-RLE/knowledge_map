@@ -1,8 +1,13 @@
 """Главное приложение FastAPI"""
 import logging
+import os
 from typing import Dict, Any
 
 from fastapi import FastAPI
+
+# Отладочная информация о переменных окружения
+logger = logging.getLogger(__name__)
+logger.info(f"[app] Переменные окружения: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
 from fastapi.middleware.cors import CORSMiddleware
 from strawberry.fastapi import GraphQLRouter
 

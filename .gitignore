@@ -4,6 +4,8 @@ logs/
 node_modules/
 dist/
 test_output/
+test_input/
+.pytest_cache/
 
 __pycache__/
 
