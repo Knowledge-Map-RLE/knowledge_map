@@ -33,7 +33,7 @@ torch = {version = "^2.0.0", extras = ["cpu"]}
 transformers = "^4.30.0"
 accelerate = "^0.20.0"
 safetensors = "^0.3.0"
-huggingface-hub = "^0.16.0"
+huggingface-hub = "^0.23.0"
 
 # Utilities
 click = "^8.1.7"
