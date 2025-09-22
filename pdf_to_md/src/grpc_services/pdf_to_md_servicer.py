@@ -14,6 +14,14 @@ from ...core.exceptions import (
 )
 from ...core.types import ConversionProgress, ConversionStatus
 
+try:
+    from ...services.s3_client import get_s3_client
+    from ...core.config import settings
+except ImportError:
+    # Fallback for testing
+    get_s3_client = None
+    settings = None
+
 logger = get_logger(__name__)
 
 # Import gRPC generated files
@@ -57,7 +65,7 @@ class PDFToMarkdownServicer:
                 return self._create_error_response(request.doc_id, result.error_message)
             
             # Create success response
-            return self._create_success_response(result)
+            return await self._create_success_response(result)
             
         except (FileSizeExceededError, UnsupportedFileTypeError) as e:
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
@@ -215,8 +223,47 @@ class PDFToMarkdownServicer:
                 )
                 context.write(error_update)
     
-    def _create_success_response(self, result):
-        """Create success response"""
+    async def _create_success_response(self, result):
+        """Create success response with image info"""
+        # Prepare image info
+        image_info_list = []
+        if result.images and settings is not None and get_s3_client is not None:
+            s3_client = get_s3_client()
+            
+            for filename, image_data in result.images.items():
+                # Create S3 key
+                s3_key = f"documents/{result.doc_id}/{filename}"
+                
+                # Determine content type
+                content_type = "image/png"
+                if filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg'):
+                    content_type = "image/jpeg"
+                elif filename.lower().endswith('.gif'):
+                    content_type = "image/gif"
+                elif filename.lower().endswith('.bmp'):
+                    content_type = "image/bmp"
+                
+                # Get presigned URL
+                presigned_url = None
+                try:
+                    presigned_url = await s3_client.get_object_url(
+                        bucket_name=settings.s3_bucket_name,
+                        object_key=s3_key,
+                        expiration=3600
+                    )
+                except Exception as e:
+                    logger.warning(f"Failed to generate presigned URL for {filename}: {e}")
+                
+                if pdf_to_md_pb2:
+                    image_info = pdf_to_md_pb2.ImageInfo(
+                        filename=filename,
+                        content_type=content_type,
+                        s3_key=s3_key,
+                        presigned_url=presigned_url or "",
+                        size_bytes=len(image_data)
+                    )
+                    image_info_list.append(image_info)
+        
         if pdf_to_md_pb2 is None:
             return {
                 "success": True,
@@ -231,7 +278,8 @@ class PDFToMarkdownServicer:
             success=True,
             doc_id=result.doc_id,
             markdown_content=result.markdown_content,
-            images=result.images,
+            images=result.images,  # Сохраняем для обратной совместимости
+            image_info=image_info_list,  # Новое поле с расширенной информацией
             metadata_json=json.dumps(result.metadata) if result.metadata else "",
             message="Conversion completed successfully"
         )

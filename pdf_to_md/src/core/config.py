@@ -45,6 +45,13 @@ class Settings(BaseSettings):
     rate_limit_requests: int = Field(default=100, env="RATE_LIMIT_REQUESTS")
     rate_limit_window: int = Field(default=3600, env="RATE_LIMIT_WINDOW")  # seconds
     
+    # S3/MinIO settings
+    s3_endpoint_url: str = Field(default="http://localhost:9000", env="S3_ENDPOINT_URL")
+    s3_access_key: str = Field(default="minio", env="S3_ACCESS_KEY")
+    s3_secret_key: str = Field(default="minio123456", env="S3_SECRET_KEY")
+    s3_region: str = Field(default="us-east-1", env="S3_REGION")
+    s3_bucket_name: str = Field(default="knowledge-map", env="S3_BUCKET_NAME")
+    
     model_config = ConfigDict(
         env_file = ".env",
         env_file_encoding = "utf-8",

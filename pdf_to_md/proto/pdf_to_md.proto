@@ -27,12 +27,22 @@ message ConvertPDFRequest {
     optional string doc_id = 3;
 }
 
+// Информация об изображении
+message ImageInfo {
+    string filename = 1;
+    string content_type = 2;
+    optional string s3_key = 3;
+    optional string presigned_url = 4;
+    int64 size_bytes = 5;
+}
+
 // Ответ на конвертацию PDF
 message ConvertPDFResponse {
     bool success = 1;
     string doc_id = 2;
     string markdown_content = 3;
-    map<string, bytes> images = 4;
+    map<string, bytes> images = 4;  // Сохраняем для обратной совместимости
+    repeated ImageInfo image_info = 7;  // Новое поле с информацией об изображениях
     optional string metadata_json = 5;
     string message = 6;
 }

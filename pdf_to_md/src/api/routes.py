@@ -4,7 +4,7 @@ import asyncio
 from datetime import datetime
 from typing import Dict, Any
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, status, Depends
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 
 from .schemas import (
     ConvertRequest, ConvertResponse, ProgressUpdate, ModelsResponse,
@@ -14,6 +14,12 @@ from .schemas import (
 from .dependencies import get_conversion_service, get_current_user
 from ..core.logger import get_logger
 from ..core.config import settings
+
+try:
+    from ..services.s3_client import get_s3_client
+except ImportError:
+    # Fallback for testing
+    get_s3_client = None
 from ..core.exceptions import (
     PDFConversionError, ModelNotFoundError, ModelDisabledError,
     FileSizeExceededError, UnsupportedFileTypeError
@@ -301,4 +307,158 @@ async def get_active_conversions(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to get active conversions"
+        )
+
+
+@router.get("/documents/{doc_id}/images")
+async def list_document_images(
+    doc_id: str,
+    current_user = Depends(get_current_user)
+):
+    """Get list of images for a document"""
+    try:
+        if not get_s3_client:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="S3 service not available"
+            )
+        
+        s3_client = get_s3_client()
+        prefix = f"documents/{doc_id}/"
+        
+        # List objects in S3
+        contents = await s3_client.list_objects(settings.s3_bucket_name, prefix)
+        
+        # Filter only image files
+        images = []
+        for obj in contents:
+            key = obj.get('Key', '')
+            if key.lower().endswith(('.jpeg', '.jpg', '.png', '.gif', '.bmp')):
+                filename = key.split('/')[-1]  # Get filename from key
+                images.append({
+                    "filename": filename,
+                    "s3_key": key,
+                    "size": obj.get('Size', 0),
+                    "last_modified": obj.get('LastModified', '').isoformat() if obj.get('LastModified') else None
+                })
+        
+        return {
+            "doc_id": doc_id,
+            "images": images,
+            "count": len(images)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error listing document images: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to list document images"
+        )
+
+
+@router.get("/documents/{doc_id}/images/{image_name}")
+async def get_document_image(
+    doc_id: str,
+    image_name: str,
+    current_user = Depends(get_current_user)
+):
+    """Get image from S3"""
+    try:
+        if not get_s3_client:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="S3 service not available"
+            )
+        
+        s3_client = get_s3_client()
+        image_key = f"documents/{doc_id}/{image_name}"
+        
+        # Check if image exists
+        if not await s3_client.object_exists(settings.s3_bucket_name, image_key):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Image not found"
+            )
+        
+        # Download image
+        image_data = await s3_client.download_bytes(settings.s3_bucket_name, image_key)
+        if not image_data:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to download image"
+            )
+        
+        # Determine content type
+        content_type = "image/jpeg"
+        if image_name.lower().endswith('.png'):
+            content_type = "image/png"
+        elif image_name.lower().endswith('.gif'):
+            content_type = "image/gif"
+        elif image_name.lower().endswith('.bmp'):
+            content_type = "image/bmp"
+        
+        return Response(content=image_data, media_type=content_type)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting document image: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get document image"
+        )
+
+
+@router.get("/documents/{doc_id}/images/{image_name}/url")
+async def get_document_image_url(
+    doc_id: str,
+    image_name: str,
+    expiration: int = 3600,
+    current_user = Depends(get_current_user)
+):
+    """Get presigned URL for image"""
+    try:
+        if not get_s3_client:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="S3 service not available"
+            )
+        
+        s3_client = get_s3_client()
+        image_key = f"documents/{doc_id}/{image_name}"
+        
+        # Check if image exists
+        if not await s3_client.object_exists(settings.s3_bucket_name, image_key):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Image not found"
+            )
+        
+        # Generate presigned URL
+        url = await s3_client.get_object_url(
+            bucket_name=settings.s3_bucket_name,
+            object_key=image_key,
+            expiration=expiration
+        )
+        
+        if not url:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to generate presigned URL"
+            )
+        
+        return {
+            "doc_id": doc_id,
+            "image_name": image_name,
+            "presigned_url": url,
+            "expiration": expiration
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating presigned URL: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate presigned URL"
         )
