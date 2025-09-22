@@ -27,7 +27,7 @@ try:
     from ..services.models.docling_model import DoclingModel
     DOCLING_AVAILABLE = True
 except ImportError as e:
-    print(f"Docling not available: {e}")
+    logger.warning(f"Docling not available: {e}")
     DOCLING_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
