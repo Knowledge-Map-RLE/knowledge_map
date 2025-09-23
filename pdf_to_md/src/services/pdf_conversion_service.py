@@ -2,12 +2,14 @@
 import logging
 import tempfile
 import asyncio
+import uuid
 from pathlib import Path as SysPath
 from typing import Dict, Any, Optional, Callable
 
 from ..models.model_registry import model_registry
 from ..models.marker_utils import _collect_marker_outputs
 from ..schemas.api import ConvertResponse, ProgressUpdate
+from .coordinate_extraction_service import coordinate_extraction_service
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,7 @@ class PDFConversionService:
         pdf_content: bytes,
         doc_id: str,
         model_id: Optional[str] = None,
+        use_coordinate_extraction: bool = True,
         on_progress: Optional[Callable[[ProgressUpdate], None]] = None
     ) -> ConvertResponse:
         """
@@ -32,6 +35,7 @@ class PDFConversionService:
             pdf_content: Содержимое PDF файла
             doc_id: ID документа
             model_id: ID модели (если None, используется по умолчанию)
+            use_coordinate_extraction: Использовать координатное извлечение изображений
             on_progress: Callback для отслеживания прогресса
             
         Returns:
@@ -69,40 +73,113 @@ class PDFConversionService:
                     except Exception as e:
                         logger.warning(f"[pdf_conversion] Ошибка отправки прогресса: {e}")
             
-            # Выполняем конвертацию
-            result_dir = await self.model_registry.convert_pdf(
-                tmp_dir,
-                on_progress=_on_progress,
-                doc_id=doc_id,
-                model_id=model_id
-            )
+            # Пытаемся использовать координатное извлечение если включено
+            coordinate_result = None
+            if use_coordinate_extraction:
+                try:
+                    logger.info(f"[pdf_conversion] Попытка координатного извлечения для doc_id={doc_id}")
+                    if on_progress:
+                        on_progress(ProgressUpdate(
+                            doc_id=doc_id,
+                            percent=20,
+                            phase='coordinate_extraction',
+                            message='Извлечение изображений по координатам'
+                        ))
+                    
+                    coordinate_result = await coordinate_extraction_service.extract_images_with_s3(
+                        pdf_path=pdf_path,
+                        document_id=doc_id,
+                        on_progress=lambda data: _on_progress({
+                            "percent": max(20, min(60, data.get('percent', 20))),
+                            "phase": "coordinate_extraction",
+                            "message": data.get('message', 'Извлечение изображений')
+                        })
+                    )
+                    
+                    if coordinate_result['success']:
+                        logger.info(f"[pdf_conversion] Координатное извлечение успешно: {coordinate_result['images_extracted']} изображений")
+                        
+                        # Используем markdown с S3 URL из координатного извлечения
+                        markdown_content = coordinate_result['markdown_content']
+                        
+                        # Создаем структуру изображений для API ответа
+                        images: Dict[str, bytes] = {}
+                        s3_images = []
+                        
+                        for img_info in coordinate_result['extracted_images']:
+                            s3_images.append({
+                                "filename": img_info['filename'],
+                                "s3_url": img_info['s3_url'],
+                                "s3_object_key": img_info['s3_object_key'],
+                                "page_no": img_info['page_no'],
+                                "size_bytes": img_info.get('size_bytes'),
+                                "image_size": img_info.get('image_size')
+                            })
+                        
+                        logger.info(f"[pdf_conversion] Координатное извлечение завершено, используем S3 URL")
+                        
+                    else:
+                        logger.warning(f"[pdf_conversion] Координатное извлечение не удалось: {coordinate_result.get('error')}")
+                        
+                except Exception as e:
+                    logger.warning(f"[pdf_conversion] Ошибка координатного извлечения: {e}")
+                    coordinate_result = None
             
-            # Собираем результаты
-            outputs = await _collect_marker_outputs(result_dir, pdf_stem=doc_id)
-            
-            # Читаем markdown
-            markdown_content = ""
-            if "markdown" in outputs:
-                markdown_path = outputs["markdown"]
-                markdown_content = markdown_path.read_text(encoding="utf-8", errors="ignore")
-                logger.info(f"[pdf_conversion] Markdown прочитан: {len(markdown_content)} символов")
-            else:
-                logger.warning(f"[pdf_conversion] Markdown файл не найден")
-            
-            # Собираем изображения
-            images: Dict[str, bytes] = {}
-            if "images_dir" in outputs:
-                images_dir = outputs["images_dir"]
-                image_extensions = ["*.jpg", "*.jpeg", "*.png", "*.gif", "*.bmp"]
+            # Fallback к стандартной конвертации если координатное извлечение не сработало
+            if not coordinate_result or not coordinate_result.get('success'):
+                logger.info(f"[pdf_conversion] Выполняем стандартную конвертацию для doc_id={doc_id}")
                 
-                for ext in image_extensions:
-                    for img_file in images_dir.glob(ext):
-                        try:
-                            image_data = img_file.read_bytes()
-                            images[img_file.name] = image_data
-                            logger.info(f"[pdf_conversion] Изображение добавлено: {img_file.name} ({len(image_data)} байт)")
-                        except Exception as e:
-                            logger.warning(f"[pdf_conversion] Ошибка чтения изображения {img_file.name}: {e}")
+                if on_progress:
+                    on_progress(ProgressUpdate(
+                        doc_id=doc_id,
+                        percent=30,
+                        phase='standard_conversion',
+                        message='Стандартная конвертация PDF'
+                    ))
+                
+                # Выполняем конвертацию
+                result_dir = await self.model_registry.convert_pdf(
+                    tmp_dir,
+                    on_progress=lambda payload: _on_progress({
+                        **payload,
+                        "percent": max(30, min(80, payload.get('percent', 30))),
+                        "phase": "standard_conversion"
+                    }),
+                    doc_id=doc_id,
+                    model_id=model_id
+                )
+                
+                # Собираем результаты
+                outputs = await _collect_marker_outputs(result_dir, pdf_stem=doc_id)
+                
+                # Читаем markdown
+                markdown_content = ""
+                if "markdown" in outputs:
+                    markdown_path = outputs["markdown"]
+                    markdown_content = markdown_path.read_text(encoding="utf-8", errors="ignore")
+                    logger.info(f"[pdf_conversion] Markdown прочитан: {len(markdown_content)} символов")
+                else:
+                    logger.warning(f"[pdf_conversion] Markdown файл не найден")
+                
+                # Собираем изображения (стандартный способ)
+                images: Dict[str, bytes] = {}
+                s3_images = []
+                
+                if "images_dir" in outputs:
+                    images_dir = outputs["images_dir"]
+                    image_extensions = ["*.jpg", "*.jpeg", "*.png", "*.gif", "*.bmp"]
+                    
+                    for ext in image_extensions:
+                        for img_file in images_dir.glob(ext):
+                            try:
+                                image_data = img_file.read_bytes()
+                                images[img_file.name] = image_data
+                                logger.info(f"[pdf_conversion] Изображение добавлено: {img_file.name} ({len(image_data)} байт)")
+                            except Exception as e:
+                                logger.warning(f"[pdf_conversion] Ошибка чтения изображения {img_file.name}: {e}")
+            else:
+                # Координатное извлечение прошло успешно, изображения уже в s3_images
+                images = {}  # Пустой словарь так как изображения в S3
             
             # Читаем метаданные
             metadata = None
@@ -117,14 +194,23 @@ class PDFConversionService:
             
             logger.info(f"[pdf_conversion] Конвертация завершена успешно: doc_id={doc_id}")
             
-            return ConvertResponse(
-                success=True,
-                doc_id=doc_id,
-                markdown_content=markdown_content,
-                images=images,
-                metadata=metadata,
-                message="Конвертация завершена успешно"
-            )
+            # Подготавливаем дополнительные данные для ответа
+            response_data = {
+                "success": True,
+                "doc_id": doc_id,
+                "markdown_content": markdown_content,
+                "images": images,
+                "metadata": metadata,
+                "message": "Конвертация завершена успешно"
+            }
+            
+            # Добавляем информацию об S3 изображениях если есть
+            if 's3_images' in locals() and s3_images:
+                response_data["s3_images"] = s3_images
+                response_data["extraction_method"] = "coordinate_based_s3" if coordinate_result and coordinate_result.get('success') else "standard"
+                response_data["message"] = f"Конвертация завершена успешно (извлечено {len(s3_images)} изображений в S3)"
+            
+            return ConvertResponse(**response_data)
             
         except Exception as e:
             logger.error(f"[pdf_conversion] Ошибка конвертации doc_id={doc_id}: {e}")

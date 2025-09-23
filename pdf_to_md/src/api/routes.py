@@ -73,6 +73,7 @@ async def convert_pdf(
     file: UploadFile = File(..., description="PDF file to convert"),
     doc_id: str = Form(None, description="Document ID (optional)"),
     model_id: str = Form(None, description="Model ID (optional)"),
+    use_coordinate_extraction: bool = Form(True, description="Use coordinate-based image extraction"),
     conversion_service = Depends(get_conversion_service),
     current_user = Depends(get_current_user)
 ):
@@ -93,14 +94,14 @@ async def convert_pdf(
                 detail="Empty file"
             )
         
-        logger.info(f"Conversion request: doc_id={doc_id}, model_id={model_id}, size={len(pdf_content)} bytes")
+        logger.info(f"Conversion request: doc_id={doc_id}, model_id={model_id}, coordinate_extraction={use_coordinate_extraction}, size={len(pdf_content)} bytes")
         
         # Perform conversion
         result = await conversion_service.convert_pdf(
             pdf_content=pdf_content,
             doc_id=doc_id,
             model_id=model_id,
-            filename=file.filename
+            use_coordinate_extraction=use_coordinate_extraction
         )
         
         # Convert to response format

@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .api.routes import router as api_router
+from .api.s3_routes import router as s3_router
 from .api.middleware import LoggingMiddleware, SecurityMiddleware, RateLimitMiddleware
 from .core.config import settings
 from .core.logger import setup_logging, get_logger
@@ -82,6 +83,7 @@ if settings.enable_rate_limiting:
 
 # Include API routes
 app.include_router(api_router)
+app.include_router(s3_router)
 
 # Add root endpoint
 @app.get("/")

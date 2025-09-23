@@ -14,6 +14,7 @@ except ImportError:
 from .base_model import BaseModel
 
 try:
+    from ..coordinate_extraction_service import coordinate_extraction_service
     from ..s3_client import get_s3_client
     from ...core.config import settings
 except ImportError:
@@ -44,7 +45,8 @@ class DoclingModel(BaseModel):
         self,
         input_path: Path,
         output_dir: Path,
-        on_progress: Optional[Callable[[Dict[str, Any]], None]] = None
+        on_progress: Optional[Callable[[Dict[str, Any]], None]] = None,
+        use_coordinate_extraction: bool = True
     ) -> Path:
         """
         Convert PDF to Markdown using Docling
@@ -96,6 +98,81 @@ class DoclingModel(BaseModel):
                 'phase': 'preparing',
                 'message': 'Preparing document for conversion'
             })
+
+        # NEW: Try coordinate-based extraction first (ALWAYS enabled by default)
+        if use_coordinate_extraction:
+            try:
+                logger.info(f"🎯 Attempting coordinate-based extraction for: {input_path.name}")
+                
+                if on_progress:
+                    on_progress({
+                        'percent': 25,
+                        'phase': 'coordinate_extraction',
+                        'message': 'Извлечение изображений по координатам'
+                    })
+                
+                # Generate document ID from input path
+                document_id = input_path.stem
+                
+                # Use our coordinate extraction service
+                coord_result = await coordinate_extraction_service.extract_images_with_s3(
+                    pdf_path=input_path,
+                    document_id=document_id,
+                    on_progress=lambda data: on_progress({
+                        "percent": max(25, min(80, data.get('percent', 25))),
+                        "phase": "coordinate_extraction",
+                        "message": data.get('message', 'Координатное извлечение')
+                    }) if on_progress else None
+                )
+                
+                if coord_result['success']:
+                    logger.info(f"✅ Coordinate extraction successful: {coord_result['images_extracted']} images")
+                    
+                    # Save markdown to output directory
+                    markdown_path = output_dir / f"{input_path.stem}.md"
+                    markdown_path.write_text(coord_result['markdown_content'], encoding='utf-8')
+                    
+                    # Create fake images directory for compatibility with old code
+                    images_dir = output_dir / "images"
+                    images_dir.mkdir(exist_ok=True)
+                    
+                    # Save S3 image info for compatibility
+                    s3_images_info = output_dir / "s3_images.json"
+                    import json
+                    s3_images_info.write_text(json.dumps(coord_result['extracted_images']), encoding='utf-8')
+                    
+                    logger.info(f"✅ Coordinate-based conversion completed, saved to: {output_dir}")
+                    
+                    if on_progress:
+                        on_progress({
+                            'percent': 100,
+                            'phase': 'completed',
+                            'message': f'Координатное извлечение завершено ({coord_result["images_extracted"]} изображений)'
+                        })
+                    
+                    # Return ConversionResult with markdown and S3 images
+                    from ..core.types import ConversionResult
+                    return ConversionResult(
+                        success=True,
+                        model_name="docling_coordinate_s3",
+                        doc_id=document_id,
+                        markdown=coord_result['markdown_content'],
+                        images={},  # Empty since images are in S3
+                        s3_images=coord_result['extracted_images'],
+                        extraction_method="coordinate_based_s3",
+                        processing_time=None,
+                        model_info={"coordinate_extraction": True, "s3_storage": True},
+                        output_path=str(output_dir)
+                    )
+                    
+                else:
+                    logger.warning(f"⚠️ Coordinate extraction failed: {coord_result.get('error')}")
+                    
+            except Exception as e:
+                logger.warning(f"⚠️ Coordinate extraction error: {e}")
+        
+        # FALLBACK: Continue with standard Docling conversion
+        logger.info("🔄 Falling back to standard Docling conversion")
         
         if on_progress:
             on_progress({

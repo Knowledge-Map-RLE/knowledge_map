@@ -204,6 +204,10 @@ function Start-PdfToMdService {
     $env:VECLIB_MAXIMUM_THREADS = "2"
     $env:NUMBA_NUM_THREADS = "2"
     $env:PYTORCH_CUDA_ALLOC_CONF = "max_split_size_mb:512"
+    $env:S3_ENDPOINT_URL = "http://127.0.0.1:9000"
+    $env:S3_ACCESS_KEY = "minio"
+    $env:S3_SECRET_KEY = "minio123456"
+    $env:S3_REGION = "us-east-1"
     
     # Create logs directory
     $logsDir = Join-Path $pdfToMdDir "logs"
@@ -211,23 +215,41 @@ function Start-PdfToMdService {
         New-Item -Path $logsDir -ItemType Directory -Force
     }
     
-    # Start service in background with logging
+    # Start gRPC service in background with logging
     $logFile = Join-Path $logsDir "pdf_to_md.log"
     $errorFile = Join-Path $logsDir "pdf_to_md_error.log"
-    $process = Start-Process -FilePath "poetry" -ArgumentList "run", "python", "src/grpc_server.py" -WorkingDirectory $pdfToMdDir -WindowStyle Hidden -RedirectStandardOutput $logFile -RedirectStandardError $errorFile -PassThru
+    $grpcProcess = Start-Process -FilePath "poetry" -ArgumentList "run", "python", "src/grpc_server.py" -WorkingDirectory $pdfToMdDir -WindowStyle Hidden -RedirectStandardOutput $logFile -RedirectStandardError $errorFile -PassThru
+    
+    # Also start HTTP API for images on port 8002
+    $httpLogFile = Join-Path $logsDir "pdf_to_md_http.log"
+    $httpErrorFile = Join-Path $logsDir "pdf_to_md_http_error.log"
+    $env:API_BASE_URL = "http://localhost:8002"
+    $httpProcess = Start-Process -FilePath "poetry" -ArgumentList "run", "python", "-m", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8002" -WorkingDirectory $pdfToMdDir -WindowStyle Hidden -RedirectStandardOutput $httpLogFile -RedirectStandardError $httpErrorFile -PassThru
     
     Start-Sleep -Seconds 5
     
-    if (Test-Port -Port 50053 -ServiceName "PDF to MD gRPC") {
-        Write-ColorOutput "PDF to MD service started on port 50053" $SuccessColor
-        return $true
+    $grpcOk = Test-Port -Port 50053 -ServiceName "PDF to MD gRPC"
+    $httpOk = Test-Port -Port 8002 -ServiceName "PDF to MD HTTP API"
+    
+    if ($grpcOk) {
+        Write-ColorOutput "PDF to MD gRPC service started on port 50053" $SuccessColor
     } else {
-        Write-ColorOutput "PDF to MD service failed to start" $ErrorColor
-        if ($process -and !$process.HasExited) {
-            $process.Kill()
+        Write-ColorOutput "PDF to MD gRPC service failed to start" $ErrorColor
+        if ($grpcProcess -and !$grpcProcess.HasExited) {
+            $grpcProcess.Kill()
         }
-        return $false
     }
+    
+    if ($httpOk) {
+        Write-ColorOutput "PDF to MD HTTP API started on port 8002" $SuccessColor
+    } else {
+        Write-ColorOutput "PDF to MD HTTP API failed to start" $ErrorColor
+        if ($httpProcess -and !$httpProcess.HasExited) {
+            $httpProcess.Kill()
+        }
+    }
+    
+    return ($grpcOk -and $httpOk)
 }
 
 function Start-ApiService {
@@ -366,6 +388,7 @@ function Show-Status {
         @{Name="MinIO S3"; Port=9000; URL="http://localhost:9001"},
         @{Name="Auth gRPC"; Port=50052; URL=""},
         @{Name="PDF to MD gRPC"; Port=50053; URL=""},
+        @{Name="PDF to MD HTTP API"; Port=8002; URL="http://localhost:8002"},
         @{Name="API"; Port=8000; URL="http://localhost:8000"}
     )
     
@@ -386,7 +409,7 @@ function Stop-AllServices {
     Write-ColorOutput "Stopping all services..." $InfoColor
     
     # Stop processes by ports
-    $ports = @(8000, 50053, 50052)
+    $ports = @(8000, 8002, 50053, 50052)
     
     foreach ($port in $ports) {
         try {

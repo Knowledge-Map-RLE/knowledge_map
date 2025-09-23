@@ -55,6 +55,7 @@ class ConversionService:
         doc_id: Optional[str] = None,
         model_id: Optional[str] = None,
         output_format: str = "markdown",
+        use_coordinate_extraction: bool = True,
         options: Optional[Dict[str, Any]] = None
     ) -> ConversionResult:
         """Convert PDF to Markdown"""

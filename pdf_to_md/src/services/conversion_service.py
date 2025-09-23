@@ -25,6 +25,7 @@ try:
     from ..core.validators import validate_conversion_request
     from .model_service import ModelService
     from .file_service import FileService
+    from .coordinate_extraction_service import coordinate_extraction_service
 except ImportError:
     # Fallback for direct execution
     from core.config import settings
@@ -44,6 +45,7 @@ except ImportError:
     from core.validators import validate_conversion_request
     from .model_service import ModelService
     from .file_service import FileService
+    from .coordinate_extraction_service import coordinate_extraction_service
 
 logger = get_logger(__name__)
 
@@ -62,6 +64,7 @@ class ConversionService:
         doc_id: Optional[str] = None,
         model_id: Optional[str] = None,
         filename: Optional[str] = None,
+        use_coordinate_extraction: bool = True,
         on_progress: Optional[ProgressCallback] = None
     ) -> ConversionResult:
         """
@@ -72,6 +75,7 @@ class ConversionService:
             doc_id: Document ID (optional)
             model_id: Model ID to use (optional)
             filename: Original filename (optional)
+            use_coordinate_extraction: Use coordinate-based image extraction (default: True)
             on_progress: Progress callback (optional)
             
         Returns:
@@ -148,6 +152,7 @@ class ConversionService:
                         temp_dir=temp_dir,
                         model=model,
                         doc_id=doc_id,
+                        use_coordinate_extraction=use_coordinate_extraction,
                         on_progress=progress_wrapper
                     )
                 )
@@ -202,6 +207,7 @@ class ConversionService:
         temp_dir: Path,
         model: Any,
         doc_id: str,
+        use_coordinate_extraction: bool = True,
         on_progress: Optional[ProgressCallback] = None
     ) -> ConversionResult:
         """
@@ -212,28 +218,106 @@ class ConversionService:
             temp_dir: Temporary directory
             model: Model to use for conversion
             doc_id: Document ID
+            use_coordinate_extraction: Use coordinate-based image extraction
             on_progress: Progress callback
             
         Returns:
             Conversion result
         """
         try:
+            markdown_content = ""
+            images = {}
+            metadata = {}
+            s3_images = []
+            extraction_method = "standard"
+            
+            # Try coordinate-based extraction if enabled
+            if use_coordinate_extraction:
+                try:
+                    logger.info(f"Attempting coordinate-based extraction for doc_id={doc_id}")
+                    
+                    # Progress callback for coordinate extraction
+                    def coord_progress(data):
+                        if on_progress:
+                            # Handle both dict and ConversionProgress objects
+                            if hasattr(data, 'get'):
+                                # It's a dict
+                                on_progress({
+                                    "percent": data.get('percent', 0),
+                                    "phase": "coordinate_extraction",
+                                    "message": data.get('message', 'Извлечение изображений по координатам')
+                                })
+                            else:
+                                # It's a ConversionProgress object - convert to dict
+                                on_progress({
+                                    "percent": getattr(data, 'percent', 0),
+                                    "phase": "coordinate_extraction", 
+                                    "message": getattr(data, 'message', 'Извлечение изображений по координатам')
+                                })
+                    
+                    # Perform coordinate extraction
+                    coord_result = await coordinate_extraction_service.extract_images_with_s3(
+                        pdf_path=pdf_path,
+                        document_id=doc_id,
+                        on_progress=coord_progress
+                    )
+                    
+                    if coord_result['success']:
+                        logger.info(f"Coordinate extraction successful: {coord_result['images_extracted']} images")
+                        markdown_content = coord_result['markdown_content']
+                        s3_images = coord_result['extracted_images']
+                        extraction_method = "coordinate_based_s3"
+                        
+                        # Keep images empty for S3-based extraction (images are in S3, not embedded)
+                        # Legacy images dict stays empty for gRPC compatibility
+                        
+                        # Create result with S3 data
+                        result = ConversionResult(
+                            success=True,
+                            doc_id=doc_id,
+                            markdown_content=markdown_content,  # Правильное поле для markdown
+                            images=images,
+                            metadata=metadata
+                        )
+                        # Add S3 specific data
+                        result.s3_images = s3_images
+                        result.extraction_method = extraction_method
+                        
+                        return result
+                    
+                    else:
+                        logger.warning(f"Coordinate extraction failed: {coord_result.get('error')}")
+                        
+                except Exception as e:
+                    logger.warning(f"Coordinate extraction error: {e}")
+            
+            # Fallback to standard model conversion
+            logger.info(f"Performing standard model conversion for doc_id={doc_id}")
+            
             # Create output directory
             output_dir = temp_dir / "output"
             output_dir.mkdir(exist_ok=True)
+            
+            # Update progress
+            if on_progress:
+                on_progress({
+                    "percent": 20,
+                    "phase": "standard_conversion",
+                    "message": "Стандартная конвертация PDF"
+                })
             
             # Run model conversion
             result_dir = await model.convert(
                 input_path=pdf_path,
                 output_dir=output_dir,
-                on_progress=on_progress
+                use_coordinate_extraction=False,  # Fallback mode - disable coordinate extraction
+                on_progress=lambda data: on_progress({
+                    **(data if hasattr(data, 'get') else {'percent': getattr(data, 'percent', 0), 'message': getattr(data, 'message', 'Обработка')}),
+                    "phase": "standard_conversion"
+                }) if on_progress else None
             )
             
             # Collect results
-            markdown_content = ""
-            images = {}
-            metadata = {}
-            
             # Read markdown file
             markdown_files = list(result_dir.glob("*.md"))
             if markdown_files:
@@ -254,13 +338,16 @@ class ConversionService:
                 except Exception as e:
                     logger.warning(f"Failed to read metadata: {e}")
             
-            return ConversionResult(
+            result = ConversionResult(
                 success=True,
                 doc_id=doc_id,
                 markdown_content=markdown_content,
                 images=images,
                 metadata=metadata
             )
+            result.extraction_method = extraction_method
+            
+            return result
             
         except Exception as e:
             logger.error(f"Model conversion failed for doc_id={doc_id}: {e}")

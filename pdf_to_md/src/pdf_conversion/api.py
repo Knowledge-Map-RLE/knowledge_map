@@ -44,6 +44,7 @@ async def convert_pdf(
     file: UploadFile = File(...),
     model_id: str = Form(default="docling"),
     output_format: str = Form(default="markdown"),
+    use_coordinate_extraction: bool = Form(True, description="Use coordinate-based image extraction"),
     conversion_service: ConversionService = Depends(get_conversion_service),
     current_user = Depends(get_current_user)
 ):
@@ -69,7 +70,8 @@ async def convert_pdf(
         result = await conversion_service.convert_pdf(
             pdf_content=pdf_content,
             model_id=model_id,
-            output_format=output_format
+            output_format=output_format,
+            use_coordinate_extraction=use_coordinate_extraction
         )
         
         return ConvertResponse(

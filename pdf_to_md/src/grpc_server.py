@@ -251,18 +251,39 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
                 result = await self.conversion_service.convert_pdf(
                     pdf_content=request.pdf_content,
                     doc_id=request.doc_id or None,
-                    model_id=request.model_id or None
+                    model_id=request.model_id or None,
+                    use_coordinate_extraction=True  # По умолчанию включено
                 )
                 
                 if result.success:
                     logger.info(f"[grpc] Конвертация завершена успешно: doc_id={request.doc_id}")
+                    
+                    # Handle S3 images vs traditional images
+                    response_images = {}
+                    message = "Конвертация завершена успешно"
+                    
+                    # Check if we have S3 images
+                    if hasattr(result, 's3_images') and result.s3_images:
+                        logger.info(f"[grpc] S3 изображений: {len(result.s3_images)}")
+                        message = f"Конвертация завершена успешно (извлечено {len(result.s3_images)} изображений в S3)"
+                        # For gRPC compatibility, keep images empty (they're in S3)
+                        response_images = {}
+                    else:
+                        # Traditional embedded images - ensure they are bytes
+                        if result.images:
+                            for filename, img_data in result.images.items():
+                                if isinstance(img_data, bytes):
+                                    response_images[filename] = img_data
+                                else:
+                                    logger.warning(f"[grpc] Skipping non-bytes image: {filename} (type: {type(img_data)})")
+                        
                     return pdf_to_md_pb2.ConvertPDFResponse(
                         success=True,
                         doc_id=result.doc_id,
                         markdown_content=result.markdown_content,
-                        images=result.images,
+                        images=response_images,
                         metadata_json=json.dumps(result.metadata) if result.metadata else "",
-                        message="Конвертация завершена успешно"
+                        message=message
                     )
                 else:
                     logger.error(f"[grpc] Ошибка конвертации: {result.error_message}")

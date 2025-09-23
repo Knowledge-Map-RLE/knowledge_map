@@ -61,6 +61,8 @@ class ConversionResult:
     metadata: Optional[Dict[str, Any]] = None
     error_message: Optional[str] = None
     processing_time: Optional[float] = None
+    s3_images: Optional[List[Dict[str, Any]]] = None
+    extraction_method: Optional[str] = None
     
     def __post_init__(self):
         if self.images is None:
@@ -68,7 +70,7 @@ class ConversionResult:
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary"""
-        return {
+        result = {
             "success": self.success,
             "doc_id": self.doc_id,
             "markdown_content": self.markdown_content,
@@ -77,6 +79,14 @@ class ConversionResult:
             "error_message": self.error_message,
             "processing_time": self.processing_time
         }
+        
+        # Add S3 fields if present
+        if self.s3_images is not None:
+            result["s3_images"] = self.s3_images
+        if self.extraction_method is not None:
+            result["extraction_method"] = self.extraction_method
+            
+        return result
 
 
 @dataclass
