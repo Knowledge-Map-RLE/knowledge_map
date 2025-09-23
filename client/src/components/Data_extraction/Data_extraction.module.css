@@ -1,24 +1,35 @@
 @import "tailwindcss";
 
 .dex {
-    @apply w-[75%] h-[500px] absolute grid grid-cols-2 grid-rows-2 gap-4 top-20 left-56 right-96 bottom-20 bg-gray-100 rounded-lg shadow-lg p-4;
+    @apply absolute bg-gray-100 rounded-lg shadow-lg;
+    top: 60px;
+    left: 220px;
+    right: 220px;
+    bottom: 120px;
+    padding: 0; /* убираем gap между main и внешними отступами */
+    display: grid;
+    grid-template-columns: 300px 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 16px;
+    overflow-x: hidden;
 }
 
-.topLeft {
-    @apply w-full h-[200px] flex flex-col p-4 bg-white rounded-lg border border-gray-300;
+.leftColumn {
+    @apply w-full h-full flex flex-col p-2 bg-white rounded-lg border border-gray-300;
+    overflow-x: hidden;
 }
 
-.topRight {
-    @apply w-full h-[200px] flex flex-col p-4 bg-white rounded-lg border border-gray-300;
+.middleColumn {
+    @apply w-full h-full flex flex-col p-2 bg-white rounded-lg border border-gray-300;
+    overflow-x: hidden;
 }
 
-.bottomLeft {
-    @apply w-full h-[2000px] flex flex-col p-4 bg-white rounded-lg border border-gray-300;
+.rightColumn {
+    @apply w-full h-full flex flex-col p-2 bg-white rounded-lg border border-gray-300;
+    overflow-x: hidden;
 }
 
-.bottomRight {
-    @apply w-full h-[2000px] flex flex-col p-4 bg-white rounded-lg border border-gray-300;
-}
+.fullWidth { /* больше не используется */ }
 
 .uploadArea {
     @apply border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer;
@@ -30,10 +41,30 @@
 
 .fileList {
     @apply space-y-2 h-full overflow-y-auto;
+    overflow-x: hidden;
 }
 
 .fileItem {
-    @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors;
+    @apply flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors;
+    position: relative;
+    padding-right: 56px; /* место под кнопку удаления, чтобы текст не сдвигался */
+    overflow: hidden;
+}
+
+.fileItem:hover .deleteButton {
+    opacity: 1;
+}
+
+.deleteButton {
+    @apply bg-red-600 text-white hover:bg-red-700;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
 }
 
 .pdfViewer {
@@ -46,6 +77,7 @@
 
 .markdownViewer {
     @apply w-full h-full border border-gray-300 rounded-lg p-4 overflow-y-auto bg-gray-50;
+    overflow-x: hidden;
 }
 
 .button {

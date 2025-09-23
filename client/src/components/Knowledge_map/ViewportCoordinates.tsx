@@ -69,7 +69,8 @@ export default function ViewportCoordinates() {
         fontFamily: 'Arial, sans-serif',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
         border: '2px solid white',
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        visibility: 'hidden',
       }}
     >
       <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>КООРДИНАТЫ</div>

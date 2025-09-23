@@ -127,7 +127,7 @@ class DataExtractionService:
                     outputs["meta"] = meta_path
                     logger.info(f"[marker_demo] Метаданные сохранены: {meta_path}")
 
-                if "markdown" in outputs:
+                if outputs.get("markdown") is not None:
                     md_bytes = outputs["markdown"].read_bytes()
                     md_key = f"{prefix}{doc_id}.md"
                     await self.s3_client.upload_bytes(
@@ -135,7 +135,7 @@ class DataExtractionService:
                     )
                     logger.info(f"[marker_demo] Загружен markdown: s3://{bucket}/{md_key}")
 
-                if "meta" in outputs:
+                if outputs.get("meta") is not None:
                     meta_bytes = outputs["meta"].read_bytes()
                     meta_key = f"{prefix}{doc_id}_meta.json"
                     await self.s3_client.upload_bytes(
@@ -234,6 +234,7 @@ class DataExtractionService:
         prefix = f"documents/{doc_id}/"
 
         md_key = f"{prefix}{doc_id}.md"
+        pdf_key = f"{prefix}{doc_id}.pdf"
         markdown_text = None
         if await self.s3_client.object_exists(bucket, md_key):
             markdown_text = await self.s3_client.download_text(bucket, md_key)
@@ -257,8 +258,21 @@ class DataExtractionService:
             "markdown": markdown_text,
             "images": images,
         }
+        # Добавляем ссылки на файлы
+        files: Dict[str, Any] = {}
+        if await self.s3_client.object_exists(bucket, pdf_key):
+            files["pdf"] = pdf_key
+        if await self.s3_client.object_exists(bucket, md_key):
+            files["markdown"] = md_key
+        if files:
+            result["files"] = files
         if include_urls:
             result["image_urls"] = image_urls
+            # presigned URL для PDF, если он существует
+            if await self.s3_client.object_exists(bucket, pdf_key):
+                url = await self.s3_client.get_object_url(bucket, pdf_key)
+                if url:
+                    result["pdf_url"] = url
         return result
 
     async def delete_document(self, doc_id: str) -> Dict[str, Any]:

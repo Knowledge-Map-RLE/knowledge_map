@@ -3,6 +3,7 @@ import s from './Data_extraction.module.css';
 import PDFAnnotation from './PDFAnnotation';
 import { uploadPdfForExtraction, importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, deleteDocument as apiDeleteDocument, listDocuments } from '../../services/api';
 import MarkdownAnnotator from './MarkdownAnnotator';
+import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 
 interface PDFDocument {
     uid: string;
@@ -16,6 +17,7 @@ interface PDFDocument {
     keywords?: string[];
     processing_status: string;
     is_processed: boolean;
+    pdf_url?: string;
 }
 
 interface Annotation {
@@ -66,6 +68,7 @@ export default function Data_extraction() {
     const [relations, setRelations] = useState<Relation[]>([]);
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [imageUrls, setImageUrls] = useState<Record<string,string>>({});
+    const [pdfUrl, setPdfUrl] = useState<string>('');
     const [isUploading, setIsUploading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [dragOver, setDragOver] = useState(false);
@@ -107,6 +110,10 @@ export default function Data_extraction() {
                         console.warn(`Не удалось проверить статус для ${d.doc_id}:`, err);
                     }
                     
+                    // формируем возможный pdf url из списка документов, если доступен
+                    const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+                    const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
+
                     return {
                         uid: d.doc_id,
                         original_filename: d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
@@ -114,6 +121,7 @@ export default function Data_extraction() {
                         upload_date: new Date().toISOString(),
                         processing_status: status,
                         is_processed: status === 'annotated',
+                        pdf_url,
                     } as any;
                 }));
                 setDocuments(mapped);
@@ -205,10 +213,21 @@ export default function Data_extraction() {
             } else {
                 setImageUrls({});
             }
+            // Пытаемся извлечь PDF URL из ассетов
+            const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+            const candidate = (assets as any)?.pdf_url || (assets as any)?.files?.pdf_url || (assets as any)?.files?.pdf;
+            if (candidate) {
+                setPdfUrl(String(candidate).startsWith('http') ? String(candidate) : `${base}${candidate}`);
+            } else if (document.pdf_url) {
+                setPdfUrl(document.pdf_url);
+            } else {
+                setPdfUrl('');
+            }
         } catch (err) {
             console.error('Ошибка загрузки документа:', err);
             setMarkdownContent('');
             setImageUrls({});
+            setPdfUrl('');
         }
     };
 
@@ -417,17 +436,16 @@ export default function Data_extraction() {
 
     return (
         <main className={s.dex}>
-            {/* Верхняя левая - загрузка PDF */}
-            <div className={s.topLeft}>
-                <h2 className="text-xl font-bold mb-4">Загрузка PDF документов</h2>
-                
-                {/* Область загрузки */}
+            {/* Левая колонка: Загрузка встроена в список документов */}
+            <div className={s.leftColumn}>
+                <h2 className="text-base font-bold mb-3">Загруженные документы</h2>
                 <div 
-                    className={`${s.uploadArea} ${dragOver ? s.dragover : ''}`}
+                    className={`${s.uploadArea} ${dragOver ? s.dragover : ''} mb-3`}
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onClick={() => fileInputRef.current?.click()}
+                    style={{ position:'sticky', top:0, zIndex:1 }}
                 >
                     <input
                         ref={fileInputRef}
@@ -443,24 +461,18 @@ export default function Data_extraction() {
                         </div>
                     ) : (
                         <div>
-                            <p className="text-lg mb-2">Перетащите PDF файл сюда или нажмите для выбора</p>
-                            <p className="text-sm text-gray-500">Поддерживаются только PDF файлы</p>
+                            <p className="text-sm">Перетащите PDF или нажмите для выбора</p>
                         </div>
                     )}
                 </div>
 
                 {/* Ошибки */}
                 {error && (
-                    <div className="mt-4 p-3 bg-red-100 border border-red-300 rounded-lg text-red-700">
+                    <div className="mb-3 p-2 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm">
                         {error}
                     </div>
                 )}
-            </div>
 
-            {/* Верхняя правая - список документов */}
-            <div className={s.topRight}>
-                <h2 className="text-xl font-bold mb-4">Загруженные документы</h2>
-                
                 <div className={s.fileList}>
                     {documents.map((doc) => (
                         <div 
@@ -468,137 +480,96 @@ export default function Data_extraction() {
                             className={`${s.fileItem} ${selectedDocument?.uid === doc.uid ? 'bg-blue-100' : ''}`}
                             onClick={() => selectDocument(doc)}
                         >
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-2 min-w-0">
                                 <span className={getStatusClass(doc.processing_status)}></span>
-                                <div>
-                                    <p className="font-medium">{doc.original_filename}</p>
-                                    <p className="text-sm text-gray-500">
+                                <div className="min-w-0">
+                                    <p className="font-medium truncate" title={doc.original_filename}>{doc.original_filename}</p>
+                                    <p className="text-xs text-gray-500">
                                         {getStatusText(doc.processing_status)}
                                         {doc.processing_status === 'processing' ? (
-                                            <>
-                                                {' '}
-                                                <span className="text-blue-600 font-semibold">
-                                                    {progressMap[doc.uid] ?? 0}%
-                                                </span>
-                                            </>
+                                            <span className="text-blue-600 font-semibold"> {progressMap[doc.uid] ?? 0}%</span>
                                         ) : null}
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    className={`${s.button} ${s.danger}`}
-                                    onClick={async (e) => {
-                                        e.stopPropagation();
-                                        try {
-                                            await apiDeleteDocument(doc.uid);
-                                            if (selectedDocument?.uid === doc.uid) {
-                                                setSelectedDocument(null);
-                                                setMarkdownContent('');
-                                                setDocId('');
-                                            }
-                                            await loadDocuments();
-                                        } catch {}
-                                    }}
-                                >
-                                    Удалить
-                                </button>
-                            </div>
-                            {doc.processing_status === 'uploaded' && (
-                                <button
-                                    className={`${s.button} ${s.primary}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        startAnnotation();
-                                    }}
-                                    disabled={isProcessing}
-                                >
-                                    Аннотировать
-                                </button>
-                            )}
+                            <button
+                                className={`deleteButton`}
+                                onClick={async (e) => {
+                                    e.stopPropagation();
+                                    try {
+                                        await apiDeleteDocument(doc.uid);
+                                        if (selectedDocument?.uid === doc.uid) {
+                                            setSelectedDocument(null);
+                                            setMarkdownContent('');
+                                            setDocId('');
+                                        }
+                                        await loadDocuments();
+                                    } catch {}
+                                }}
+                            >
+                                Удалить
+                            </button>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Нижняя левая - просмотр PDF и аннотации */}
-            <div className={s.bottomLeft}>
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold">Просмотр и аннотации</h2>
-                    <div className="flex gap-2">
-                        {selectedDocument && (
-                            <>
-                                <button
-                                    onClick={() => setShowAnnotationMode(!showAnnotationMode)}
-                                    className={`${s.button} ${showAnnotationMode ? s.primary : ''} px-4 py-2`}
-                                >
-                                    {showAnnotationMode ? 'Режим просмотра' : 'Аннотатор'}
-                                </button>
-                                <button
-                                    onClick={downloadPDF}
-                                    className={`${s.button} px-4 py-2`}
-                                >
-                                    Скачать PDF
-                                </button>
-                                <label className={`${s.button} px-4 py-2`}>
-                                    Импорт аннотаций
-                                    <input type="file" accept="application/json" className="hidden" onChange={(e) => {
-                                        const f = e.target.files?.[0];
-                                        if (f) onImportAnnotations(f);
-                                    }} />
-                                </label>
-                                <button className={`${s.button} px-4 py-2`} onClick={onExportAnnotations}>Экспорт аннотаций</button>
-                            </>
-                        )}
-                    </div>
-                </div>
-                
-                {selectedDocument ? (
-                    showAnnotationMode ? (
-                        <div className="flex items-center justify-center h-full text-gray-500">
-                            <p>Откройте аннотатор Markdown, созданный для документа (HTML сохраняется рядом в S3).</p>
-                        </div>
+            {/* Нижняя левая - удалено по требованию */}
+            <div style={{ display:'none' }} />
+
+            {/* Средняя колонка: Исходный PDF */}
+            <div className={s.middleColumn}>
+                <h2 className="text-base font-bold mb-3">Исходный PDF</h2>
+                <div id="km-pdf-pane" className={s.pdfViewer} style={{ overflow:'auto' }}>
+                    {pdfUrl ? (
+                        <iframe
+                            id="km-pdf-viewer"
+                            title="PDF"
+                            src={pdfUrl}
+                            style={{ width:'100%', height:'100%', border:'0' }}
+                        />
                     ) : (
-                        <div className={s.pdfViewer}>
-                            <MarkdownAnnotator
-                              docId={docId}
-                              markdown={markdownContent}
-                              images={[]}
-                              imageUrls={imageUrls}
-                              onExport={(json) => {
-                                // скачиваем локально и отправляем в backend при необходимости
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Нет PDF</div>
+                    )}
+                </div>
+            </div>
+
+            {/* Правая колонка: Аннотации в Markdown */}
+            <div className={s.rightColumn}>
+                <h2 className="text-base font-bold mb-3">Аннотации в Markdown</h2>
+                {selectedDocument ? (
+                    <div className={s.markdownViewer} id="km-editor-pane">
+                        <MarkdownEditor
+                            value={markdownContent}
+                            onChange={(md) => setMarkdownContent(md)}
+                            onExportAnnotations={(json) => {
                                 const blob = new Blob([JSON.stringify(json, null, 2)], { type:'application/json' });
                                 const a = document.createElement('a');
                                 a.href = URL.createObjectURL(blob);
                                 a.download = `${docId || 'annotations'}.json`;
                                 a.click();
                                 URL.revokeObjectURL(a.href);
-                              }}
-                              onImport={async (data) => {
+                            }}
+                            onImportAnnotations={async (data) => {
                                 if (!docId) return;
                                 await apiImportAnnotations(docId, data);
-                              }}
-                            />
-                        </div>
-                    )
-                ) : (
-                    <div className="flex items-center justify-center h-full text-gray-500">
-                        <p>Выберите документ для просмотра</p>
-                    </div>
-                )}
-            </div>
-
-            {/* Нижняя правая - аннотации в Markdown */}
-            <div className={s.bottomRight}>
-                <h2 className="text-xl font-bold mb-4">Аннотации в Markdown</h2>
-                
-                {selectedDocument ? (
-                    <div className={s.markdownViewer}>
-                        {markdownContent ? (
-                            <pre className="whitespace-pre-wrap text-sm">{markdownContent}</pre>
-                        ) : (
-                            <p className="text-gray-500">Аннотации не найдены</p>
-                        )}
+                            }}
+                            onEditorReady={(el) => {
+                                // синхронизация прокрутки: простое соотношение процентов
+                                const editorScroller = el;
+                                const pdfPane = document.getElementById('km-pdf-pane') as HTMLElement | null;
+                                if (!pdfPane) return;
+                                const sync = (source: HTMLElement, target: HTMLElement) => {
+                                    const sTop = source.scrollTop;
+                                    const sMax = Math.max(1, source.scrollHeight - source.clientHeight);
+                                    const pct = sTop / sMax;
+                                    const tMax = Math.max(1, target.scrollHeight - target.clientHeight);
+                                    target.scrollTop = pct * tMax;
+                                };
+                                editorScroller.addEventListener('scroll', () => sync(editorScroller, pdfPane));
+                                pdfPane.addEventListener('scroll', () => sync(pdfPane, editorScroller));
+                            }}
+                        />
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full text-gray-500">

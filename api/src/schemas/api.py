@@ -74,6 +74,8 @@ class DocumentAssetsResponse(BaseModel):
     markdown: Optional[str] = None
     images: List[str] = []
     image_urls: Dict[str, str] = {}
+    files: Optional[Dict[str, str]] = None
+    pdf_url: Optional[str] = None
 
 
 class DocumentItem(BaseModel):
