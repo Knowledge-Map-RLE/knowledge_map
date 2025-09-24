@@ -61,6 +61,30 @@ def analyze_database():
             print(f'\n🔗 Статистика связей:')
             print(f'  Исходящие ссылки: {outgoing:,}')
             print(f'  Входящие ссылки: {incoming:,}')
+
+            # Диагностика: узлы-заглушки, созданные только по PMID (без основных полей)
+            result = session.run(
+                """
+                MATCH (n:Article)
+                WHERE (n.title IS NULL OR n.title = '')
+                  AND n.journal IS NULL
+                  AND n.abstract IS NULL
+                  AND (n.authors IS NULL OR size(n.authors) = 0)
+                RETURN count(n) as stub_nodes
+                """
+            )
+            stub_nodes = result.single()['stub_nodes']
+            print(f'\n🧩 Узлы-заглушки (только PMID/минимум полей): {stub_nodes:,}')
+
+            # Диагностика: сколько уникальных цитируемых узлов присутствует всего
+            result = session.run(
+                """
+                MATCH ()-[:BIBLIOGRAPHIC_LINK]->(c:Article)
+                RETURN count(distinct c) as cited_nodes_total
+                """
+            )
+            cited_nodes_total = result.single()['cited_nodes_total']
+            print(f'🧭 Уникальных узлов-целей по ссылкам: {cited_nodes_total:,}')
             
             # Статьи с наибольшим количеством ссылок
             result = session.run('MATCH (n:Article)-[r:BIBLIOGRAPHIC_LINK]->() RETURN n.title as title, n.journal as journal, count(r) as link_count ORDER BY link_count DESC LIMIT 5')

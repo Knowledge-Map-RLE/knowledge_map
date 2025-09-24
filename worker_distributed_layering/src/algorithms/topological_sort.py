@@ -106,7 +106,7 @@ class TopologicalSorter:
             logger.info(f"Обрабатываем уровень {order_counter}-{order_counter + current_batch_size - 1}: {current_batch_size} узлов")
             
             # Разбиваем на батчи для избежания проблем с памятью
-            batch_size = 20000  # Крупнее батчи для уменьшения количества транзакций
+            batch_size = 5000  # Уменьшен размер батча для снижения транзакционной памяти
             for i in range(0, len(node_uids), batch_size):
                 batch_uids = node_uids[i:i + batch_size]
                 batch_data = [

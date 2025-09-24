@@ -41,8 +41,7 @@ export const Block = memo(function Block({
 }: BlockProps) {
   const { id, title, x, y, level, is_pinned } = blockData;
   
-  // Отладочная информация
-  console.log(`[Block] Rendering block: id=${id}, title="${title}", x=${x}, y=${y}, isSelected=${isSelected}, is_pinned=${is_pinned}`);
+  // Отладочные логи отключены для производительности
   const containerRef = useRef<Container>(null);
   const isInitialRender = useRef(true);
 
@@ -60,7 +59,9 @@ export const Block = memo(function Block({
         gsap.to(containerRef.current, { alpha: 1, duration: 0.5, ease: 'power2.inOut' });
         isInitialRender.current = false;
       } else {
-        gsap.to(containerRef.current, { x: safeX, y: safeY, duration: 0.8, ease: 'power3.inOut' });
+        // Быстрая установка без плавной анимации для производительности
+        containerRef.current.x = safeX;
+        containerRef.current.y = safeY;
       }
     }
   }, [x, y]);

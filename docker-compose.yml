@@ -12,9 +12,9 @@ services:
       # Оптимизированные настройки памяти для стабильности
       NEO4J_server_memory_heap_initial__size: "2G"
       NEO4J_server_memory_heap_max__size: "3G"
-      NEO4J_server_memory_pagecache_size: "1G"
+      NEO4J_server_memory_pagecache_size: "2G"
       NEO4J_server_bolt_advertised__address: "127.0.0.1:7687"
-      NEO4J_db_memory_transaction_total_max: "512M"
+      NEO4J_db_memory_transaction_total_max: "2G"
       NEO4J_db_transaction_timeout: "60m"
       # Оптимизированные JVM настройки
       NEO4J_server_jvm_additional: "-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication"
@@ -72,7 +72,7 @@ services:
           memory: 1.5G    # Ограничено
           cpus: '1.0'     # Ограничено
         reservations:
-          memory: 512M    # Минимальная память
+          memory: 2G    # Минимальная память
           cpus: '0.5'     # Минимальные CPU
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]

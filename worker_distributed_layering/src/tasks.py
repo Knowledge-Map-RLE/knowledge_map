@@ -11,7 +11,7 @@ from celery.exceptions import Retry
 import structlog
 
 from .config import get_celery_config, settings
-from .algorithms.distributed_layout import distributed_layout
+from .algorithms.distributed_incremental_layout import distributed_incremental_layout
 from .neo4j_client import neo4j_client
 from .utils.metrics import metrics_collector
 
@@ -50,11 +50,7 @@ def process_large_graph_layout(
         
         try:
             result = loop.run_until_complete(
-                distributed_layout.calculate_distributed_layout(
-                    node_labels=node_labels,
-                    filters=filters,
-                    options=options,
-                )
+                distributed_incremental_layout.calculate_incremental_layout()
             )
         finally:
             loop.close()
@@ -137,12 +133,9 @@ def process_graph_chunk(
         asyncio.set_event_loop(loop)
         
         try:
-            from .algorithms.optimized_layout import high_performance_layout
+            # Временно используем инкрементальный алгоритм и для чанков
             result = loop.run_until_complete(
-                asyncio.to_thread(
-                    high_performance_layout.layout_large_knowledge_map,
-                    nodes, edges, options or {}
-                )
+                distributed_incremental_layout.calculate_incremental_layout()
             )
         finally:
             loop.close()

@@ -9,14 +9,16 @@ extend({ Graphics });
 
 export interface LinkProps {
   linkData: LinkData;
-  blocks: BlockData[];
+  blocks?: BlockData[]; // fallback
+  blockMap?: Map<string, BlockData>;
   isSelected: boolean;
   onClick: () => void;
+  perfMode?: boolean;
 }
 
-export const Link = memo(function Link({ linkData, blocks, isSelected, onClick }: LinkProps) {
-  const source_block = blocks.find(block => block.id === linkData.source_id);
-  const target_block = blocks.find(block => block.id === linkData.target_id);
+export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected, onClick, perfMode = false }: LinkProps) {
+  const source_block = (blockMap ? blockMap.get(linkData.source_id) : undefined) || (blocks || []).find(block => block.id === linkData.source_id);
+  const target_block = (blockMap ? blockMap.get(linkData.target_id) : undefined) || (blocks || []).find(block => block.id === linkData.target_id);
 
   // Состояние для анимируемых точек
   const [animatedPoints, setAnimatedPoints] = useState({
@@ -41,7 +43,7 @@ export const Link = memo(function Link({ linkData, blocks, isSelected, onClick }
       y: target_block.y,
     };
 
-    if (isInitialRender.current) {
+    if (isInitialRender.current || perfMode) {
       setAnimatedPoints({
         source_x: source_point.x,
         source_y: source_point.y,
@@ -64,7 +66,7 @@ export const Link = memo(function Link({ linkData, blocks, isSelected, onClick }
         },
       });
     }
-  }, [source_block?.x, source_block?.y, target_block?.x, target_block?.y]);
+  }, [source_block?.x, source_block?.y, target_block?.x, target_block?.y, perfMode]);
 
 
   const draw = useCallback((g: Graphics) => {

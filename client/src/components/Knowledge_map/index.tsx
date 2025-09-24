@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
 import { Viewport } from './Viewport';
@@ -321,6 +321,56 @@ export default function Knowledge_map() {
     );
   }
 
+  // Подготавливаем memo-структуры для быстрого доступа и culling
+  const viewportBounds = viewportRef.current?.getWorldBounds?.() || null;
+  const screenSize = viewportRef.current?.getScreenSize?.() || null;
+  const currentScale = viewportRef.current?.scale || 1;
+
+  const pad = useMemo(() => {
+    const w = screenSize?.width || 800;
+    const h = screenSize?.height || 600;
+    // Меньше запас при большом зуме
+    const base = 0.35; // 35% экрана
+    return {
+      x: (w * base) / (currentScale || 1),
+      y: (h * base) / (currentScale || 1)
+    };
+  }, [screenSize?.width, screenSize?.height, currentScale]);
+
+  const blockMap = useMemo(() => new Map(blocks.map(b => [b.id, b])), [blocks]);
+
+  const viewBoundsWithPad = useMemo(() => {
+    if (!viewportBounds) return null;
+    return {
+      left: viewportBounds.left - pad.x,
+      right: viewportBounds.right + pad.x,
+      top: viewportBounds.top - pad.y,
+      bottom: viewportBounds.bottom + pad.y,
+    };
+  }, [viewportBounds?.left, viewportBounds?.right, viewportBounds?.top, viewportBounds?.bottom, pad.x, pad.y]);
+
+  const visibleBlocks = useMemo(() => {
+    if (!viewBoundsWithPad) return blocks;
+    const { left, right, top, bottom } = viewBoundsWithPad;
+    return blocks.filter(b => {
+      const x = (b.x ?? 0);
+      const y = (b.y ?? 0);
+      return x >= left && x <= right && y >= top && y <= bottom;
+    });
+  }, [blocks, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
+
+  const visibleLinks = useMemo(() => {
+    if (!viewBoundsWithPad) return links;
+    const { left, right, top, bottom } = viewBoundsWithPad;
+    const isInView = (b?: BlockData) => {
+      if (!b) return false;
+      const x = (b.x ?? 0);
+      const y = (b.y ?? 0);
+      return x >= left && x <= right && y >= top && y <= bottom;
+    };
+    return links.filter(l => isInView(blockMap.get(l.source_id)) || isInView(blockMap.get(l.target_id)));
+  }, [links, blockMap, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
+
   return (
     <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
       {(!pixiReady || isLoading) && (
@@ -348,72 +398,33 @@ export default function Knowledge_map() {
             />
           ))}
 
-          {/* Рендерим связи только если обе вершины в пределах видимой области с запасом */}
-          {(() => {
-            const vb = viewportRef.current?.getWorldBounds?.();
-            if (!vb) return null;
-            const screen = viewportRef.current?.getScreenSize?.();
-            const scale = viewportRef.current?.scale || 1;
-            const padX = ((screen?.width || 800) * 0.5) / scale;
-            const padY = ((screen?.height || 600) * 0.5) / scale;
-            const left = vb.left - padX;
-            const right = vb.right + padX;
-            const top = vb.top - padY;
-            const bottom = vb.bottom + padY;
-            const blockMap = new Map(blocks.map(b => [b.id, b]));
-            const isInView = (b?: BlockData) => {
-              if (!b) return false;
-              const x = (b.x ?? 0);
-              const y = (b.y ?? 0);
-              return x >= left && x <= right && y >= top && y <= bottom;
-            };
-            // Показываем связь, если хотя бы один из концов видим (иначе длинные связи пропадают)
-            const visibleLinks = links.filter(l => isInView(blockMap.get(l.source_id)) || isInView(blockMap.get(l.target_id)));
-            return visibleLinks.map(link => (
-              <Link
-                key={link.id}
-                linkData={link}
-                blocks={blocks}
-                isSelected={selectedLinks.includes(link.id)}
-                onClick={() => handleLinkClick(link.id)}
-              />
-            ));
-          })()}
+          {visibleLinks.map(link => (
+            <Link
+              key={link.id}
+              linkData={link}
+              blockMap={blockMap}
+              isSelected={selectedLinks.includes(link.id)}
+              onClick={() => handleLinkClick(link.id)}
+              perfMode={true}
+            />
+          ))}
           
-          {/* Рендерим блоки с culling по мировым границам viewport с запасом */}
-          {(() => {
-            const vb = viewportRef.current?.getWorldBounds?.();
-            if (!vb) return null;
-            const screen = viewportRef.current?.getScreenSize?.();
-            const scale = viewportRef.current?.scale || 1;
-            const padX = ((screen?.width || 800) * 0.5) / scale;
-            const padY = ((screen?.height || 600) * 0.5) / scale;
-            const left = vb.left - padX;
-            const right = vb.right + padX;
-            const top = vb.top - padY;
-            const bottom = vb.bottom + padY;
-            const visibleBlocks = blocks.filter(b => {
-              const x = (b.x ?? 0);
-              const y = (b.y ?? 0);
-              return x >= left && x <= right && y >= top && y <= bottom;
-            });
-            return visibleBlocks.map(block => (
-              <Block
-                key={block.id}
-                blockData={block}
-                onBlockClick={handleBlockClick}
-                isSelected={selectedBlocks.includes(block.id)}
-                currentMode={currentMode}
-                onArrowClick={handleArrowClick}
-                onBlockPointerDown={handleBlockPointerDown}
-                onBlockMouseEnter={handleBlockMouseEnter}
-                onBlockMouseLeave={handleBlockMouseLeave}
-                onArrowHover={handleArrowHover}
-                onBlockRightClick={handleBlockRightClick}
-                instantBlockClickRef={instantBlockClickRef}
-              />
-            ));
-          })()}
+          {visibleBlocks.map(block => (
+            <Block
+              key={block.id}
+              blockData={block}
+              onBlockClick={handleBlockClick}
+              isSelected={selectedBlocks.includes(block.id)}
+              currentMode={currentMode}
+              onArrowClick={handleArrowClick}
+              onBlockPointerDown={handleBlockPointerDown}
+              onBlockMouseEnter={handleBlockMouseEnter}
+              onBlockMouseLeave={handleBlockMouseLeave}
+              onArrowHover={handleArrowHover}
+              onBlockRightClick={handleBlockRightClick}
+              instantBlockClickRef={instantBlockClickRef}
+            />
+          ))}
           
         </Viewport>
       </Application>

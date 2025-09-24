@@ -162,24 +162,16 @@ export function useDataLoading(): UseDataLoadingResult {
           throw new Error('No blocks found in the response');
         }
 
+        // Backend уже выдаёт координаты и уровни. Не пересчитываем на клиенте.
         const convertedBlocks = data.blocks.map(convertApiBlockToBlockData);
         const convertedLinks = (data.links || []).map(convertApiLinkToLinkData);
         const convertedLevels = (data.levels || []).map(convertApiLevelToLevelData);
         const convertedSublevels = (data.sublevels || []).map(convertApiSublevelToSublevelData);
 
-        // Сначала рассчитываем координаты уровней
-        const levelsWithCoords = calculateLevelCoordinates(convertedLevels, convertedSublevels);
-        
-        // Затем рассчитываем координаты подуровней внутри уровней
-        const sublevelsWithCoords = calculateSublevelCoordinates(convertedSublevels, levelsWithCoords);
-        
-        // И наконец размещаем блоки с разрешением коллизий
-        const blocksWithCoords = calculateBlockCoordinates(convertedBlocks, levelsWithCoords, sublevelsWithCoords, convertedLinks);
-
-        setBlocks(prev => smartUpdateArray(prev, blocksWithCoords));
+        setBlocks(prev => smartUpdateArray(prev, convertedBlocks));
         setLinks(prev => smartUpdateArray(prev, convertedLinks));
-        setLevels(prev => smartUpdateArray(prev, levelsWithCoords));
-        setSublevels(prev => smartUpdateArray(prev, sublevelsWithCoords));
+        setLevels(prev => smartUpdateArray(prev, convertedLevels));
+        setSublevels(prev => smartUpdateArray(prev, convertedSublevels));
 
       } catch (error) {
         setLoadError(error instanceof Error ? error.message : 'Unknown error');
@@ -208,19 +200,10 @@ export function useDataLoading(): UseDataLoadingResult {
       const convertedLevels = (data.levels || []).map(convertApiLevelToLevelData);
       const convertedSublevels = (data.sublevels || []).map(convertApiSublevelToSublevelData);
 
-      // Сначала рассчитываем координаты уровней
-      const levelsWithCoords = calculateLevelCoordinates(convertedLevels, convertedSublevels);
-      
-      // Затем рассчитываем координаты подуровней внутри уровней
-      const sublevelsWithCoords = calculateSublevelCoordinates(convertedSublevels, levelsWithCoords);
-      
-      // И наконец размещаем блоки с разрешением коллизий
-      const blocksWithCoords = calculateBlockCoordinates(convertedBlocks, levelsWithCoords, sublevelsWithCoords, convertedLinks);
-
-      setBlocks(prev => smartUpdateArray(prev, blocksWithCoords));
+      setBlocks(prev => smartUpdateArray(prev, convertedBlocks));
       setLinks(prev => smartUpdateArray(prev, convertedLinks));
-      setLevels(prev => smartUpdateArray(prev, levelsWithCoords));
-      setSublevels(prev => smartUpdateArray(prev, sublevelsWithCoords));
+      setLevels(prev => smartUpdateArray(prev, convertedLevels));
+      setSublevels(prev => smartUpdateArray(prev, convertedSublevels));
 
     } catch (error) {
       console.error('[DataLoading] Error loading around:', error);

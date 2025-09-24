@@ -223,7 +223,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
 
     gfx.clear();
     
-    // Фон
+    // Фон: закрашиваем только при изменении размера или масштаба (минимизация заливок)
     gfx.rect(0, 0, width, height);
     gfx.fill(0xf5f5f5);
 

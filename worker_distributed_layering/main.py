@@ -18,8 +18,7 @@ from src.config import settings, get_celery_config
 from src.utils.metrics import initialize_metrics, metrics_collector
 from src.utils.memory_manager import memory_manager
 from src.neo4j_client import neo4j_client
-from src.tasks import celery_app
-from src.algorithms.distributed_layout import distributed_layout
+from src.algorithms.distributed_incremental_layout import distributed_incremental_layout
 
 # Настройка логирования
 logging.basicConfig(
@@ -52,6 +51,21 @@ class DistributedLayoutWorkerManager:
             # Запускаем фоновые задачи
             await self._start_background_tasks()
             
+            # Автоматически запускаем один цикл инкрементальной укладки в фоне
+            async def _run_initial_layout():
+                logger.info("Scheduling initial incremental layout task (standalone mode)")
+                try:
+                    result = await distributed_incremental_layout.calculate_incremental_layout()
+                    logger.info(
+                        "Initial incremental layout finished",
+                        success=result.get("success", False),
+                        stats=result.get("statistics", {})
+                    )
+                except Exception as e:
+                    logger.error("Initial incremental layout failed", error=str(e))
+
+            self.background_tasks.append(asyncio.create_task(_run_initial_layout()))
+
             logger.info("Standalone worker started successfully")
             
             # Ожидаем сигнал завершения
@@ -78,6 +92,8 @@ class DistributedLayoutWorkerManager:
             
             logger.info("Celery worker components initialized")
             
+            # Импортируем Celery только при необходимости
+            from src.tasks import celery_app
             # Запускаем Celery воркер в отдельном потоке
             import threading
             
@@ -117,17 +133,27 @@ class DistributedLayoutWorkerManager:
             await self._initialize_components()
             
             # Выполняем укладку
-            result = await distributed_layout.calculate_distributed_layout(
-                node_labels=node_labels,
-                filters=filters,
-                options=options
-            )
+            # Алгоритм не принимает параметры; используем текущие настройки из БД
+            result = await distributed_incremental_layout.calculate_incremental_layout()
             
+            try:
+                # Поддержка dataclass LayoutResult
+                success = getattr(result, "success", False)
+                statistics = getattr(result, "statistics", {}) or {}
+                processing_time = statistics.get("processing_time_seconds", 0)
+                nodes_processed = statistics.get("total_blocks", 0)
+            except Exception:
+                success = False
+                processing_time = 0
+                nodes_processed = 0
+                statistics = {}
+
             logger.info(
                 "Single layout task completed",
-                success=result.get("success", False),
-                processing_time=result.get("statistics", {}).get("processing_time_seconds", 0),
-                nodes_processed=result.get("statistics", {}).get("total_blocks", 0),
+                success=success,
+                processing_time=processing_time,
+                nodes_processed=nodes_processed,
+                stats=statistics,
             )
             
             return result

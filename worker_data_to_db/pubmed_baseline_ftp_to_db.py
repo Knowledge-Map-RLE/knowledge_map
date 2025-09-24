@@ -7,8 +7,9 @@ from pathlib import Path
 from queue import Queue
 from threading import Thread
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import xml.etree.ElementTree as ET
-from neo4j import GraphDatabase, exceptions as neo4j_exceptions
+from lxml import etree as LET  # type: ignore
+from typing import Dict, Tuple, List, Any
+from neo4j import GraphDatabase, exceptions as neo4j_exceptions  # type: ignore[attr-defined]
 
 # ========== КОНФИГУРАЦИЯ ==========
 DATA_DIR        = Path(r"D:/Данные/PubMed")
@@ -19,11 +20,11 @@ NEO4J_URI       = "bolt://127.0.0.1:7687"
 NEO4J_USER      = "neo4j"
 NEO4J_PASSWORD  = "password"
 
-MAX_WORKERS       = 2        # потоки парсинга
-WRITER_COUNT      = 1        # число потоков-писателей
+MAX_WORKERS       = 2        # потоки парсинга файлов
+WRITER_COUNT      = 3        # число потоков-писателей
 MAX_WRITE_RETRIES = 3
 WRITE_BACKOFF     = 2
-BATCH_SIZE        = 100      # УМЕНЬШЕН для экономии памяти
+BATCH_SIZE        = 500      # увеличен для сокращения оверхеда транзакций
 POOL_SIZE         = 3
 QUEUE_SIZE        = MAX_WORKERS * 2
 # ==================================
@@ -79,12 +80,8 @@ def ensure_schema():
         for constraint in constraints:
             logger.info(f"  - {constraint.get('name', 'unnamed')}: {constraint.get('description', 'no description')}")
         
-        # Удаляем проблемное ограничение на layer и level, если оно существует
-        try:
-            session.run("DROP CONSTRAINT node_layer_level_unique IF EXISTS")
-            logger.info("Removed problematic layer+level constraint")
-        except Exception as e:
-            logger.info(f"No layer+level constraint to remove: {e}")
+        # Удаляем проблемные constraint'ы на layer/level, если есть
+        drop_problematic_layer_constraints(session)
         
         # Создаём схему для нашего алгоритма укладки
         session.run("""
@@ -101,15 +98,79 @@ def ensure_schema():
         """)
     logger.info("Schema constraints and indexes ensured")
 
+# ========== ОЧИСТКА/СБРОС БАЗЫ ДАННЫХ ==========
+
+def drop_problematic_layer_constraints(session):
+    """Удаляет constraint'ы, связанные с layer/level, если они существуют."""
+    try:
+        # Явно пробуем известное имя (на случай если оно есть)
+        session.run("DROP CONSTRAINT node_layer_level_unique IF EXISTS")
+    except Exception:
+        pass
+    try:
+        constraints = session.run("SHOW CONSTRAINTS").data()
+        for constraint in constraints:
+            constraint_name = constraint.get('name')
+            description = constraint.get('description', '')
+            if constraint_name and ('layer' in constraint_name.lower() or 'level' in constraint_name.lower()):
+                try:
+                    session.run(f"DROP CONSTRAINT {constraint_name}")
+                    logger.info(f"Удалено проблемное ограничение: {constraint_name}")
+                except Exception as e:
+                    logger.warning(f"Не удалось удалить ограничение {constraint_name}: {e}")
+            elif 'layer' in description.lower() or 'level' in description.lower():
+                # В некоторых версиях Neo4j имя может отсутствовать, ориентируемся по описанию
+                logger.warning(f"Обнаружено потенциально проблемное ограничение без имени: {description}")
+    except Exception as e:
+        logger.info(f"Не удалось проверить/удалить проблемные ограничения: {e}")
+
+def apoc_purge_database(session):
+    """Очищает БД с использованием APOC периодических коммитов."""
+    logger.info("APOC: очистка связей...")
+    session.run(
+        """
+        CALL apoc.periodic.iterate(
+          'MATCH ()-[r:BIBLIOGRAPHIC_LINK]->() RETURN r',
+          'DELETE r',
+          {batchSize: 50000, parallel: false}
+        )
+        """
+    )
+    logger.info("APOC: очистка узлов...")
+    session.run(
+        """
+        CALL apoc.periodic.iterate(
+          'MATCH (n:Article) RETURN n',
+          'DELETE n',
+          {batchSize: 50000, parallel: false}
+        )
+        """
+    )
+
+def reset_database_full():
+    """Полная очистка БД от данных статей и проблемных ограничений."""
+    try:
+        logger.info("Начинаем очистку базы данных...")
+        with driver.session() as s:
+            apoc_purge_database(s)
+            drop_problematic_layer_constraints(s)
+        logger.info("База данных полностью очищена")
+    except Exception as e:
+        logger.error(f"Ошибка при очистке базы: {e}")
+        raise
+
 # ========== УЛУЧШЕННЫЕ ФУНКЦИИ ПАРСИНГА ==========
+
+# Предкомпилированный regex года
+YEAR_RE = re.compile(r"\b(19|20)\d{2}\b")
 
 def extract_year_from_date(date_text):
     """Извлекает год из текста даты"""
     if not date_text:
         return None
     
-    # Ищем 4-значный год
-    year_match = re.search(r'\b(19|20)\d{2}\b', str(date_text))
+    # Ищем 4-значный год (предкомпилированный шаблон)
+    year_match = YEAR_RE.search(str(date_text))
     if year_match:
         year = int(year_match.group())
         # Валидация: год должен быть разумным
@@ -139,27 +200,43 @@ def clean_author_name(forename, lastname):
     return full_name if full_name else None
 
 def extract_bibliographic_links_improved(elem, pmid):
-    """Улучшенное извлечение библиографических ссылок"""
+    """Извлечение библиографических ссылок с возможными заголовками цитируемых статей.
+    Возвращает список словарей: {'pmid': <cited_pmid>, 'title': <optional_title>}.
+    """
     links = []
     unique_citations = set()
-    
-    # Извлекаем ссылки из всех возможных ReferenceList (включая вложенные)
-    for reference_list in elem.findall('.//ReferenceList'):
-        # Ищем ArticleId с IdType="pubmed" во всех вложенных ReferenceList
-        for aid in reference_list.findall('.//ArticleId[@IdType="pubmed"]'):
-            txt = aid.text
-            if txt and txt.strip():
-                txt_clean = txt.strip()
-                # Валидация: PMID должен быть числом
-                if txt_clean.isdigit():
-                    citation_key = f"{pmid}->{txt_clean}"
-                    if citation_key not in unique_citations:
-                        unique_citations.add(citation_key)
-                        links.append(txt_clean)
-    
+
+    # Проходим по Reference элементам, чтобы вместе с PMID попытаться достать заголовок
+    for reference in elem.findall('.//ReferenceList/Reference'):
+        # PMID цитируемой статьи
+        cited_pmid_elem = reference.find('.//ArticleId[@IdType="pubmed"]')
+        cited_pmid = cited_pmid_elem.text.strip() if cited_pmid_elem is not None and cited_pmid_elem.text else None
+        if not cited_pmid or not cited_pmid.isdigit():
+            continue
+
+        # Пытаемся извлечь заголовок цитируемой статьи, если он есть в Reference
+        # В PubMed это может быть Reference/Article/ArticleTitle или Reference/ArticleTitle
+        title_elem = reference.find('.//Article/ArticleTitle') or reference.find('.//ArticleTitle')
+        cited_title = None
+        if title_elem is not None:
+            try:
+                cited_title = ''.join(title_elem.itertext()).strip()
+            except Exception:
+                # на всякий случай деградация к .text
+                cited_title = (title_elem.text or '').strip()
+        if cited_title and len(cited_title) > 1000:
+            cited_title = cited_title[:1000] + '...'
+
+        citation_key = f"{pmid}->{cited_pmid}"
+        if citation_key in unique_citations:
+            continue
+        unique_citations.add(citation_key)
+        links.append({'pmid': cited_pmid, 'title': cited_title})
+
     return links
 
 # ========== ЗАПИСЬ ==========
+
 def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
     global driver
 
@@ -185,10 +262,16 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
             tx.run("""
                 UNWIND $rels AS r
                   MERGE (target:Article {uid: r.pmid})
-                  MERGE (source:Article {uid: r.cpmid})
-                  WITH source, target, r
-                  WHERE source <> target
-                  MERGE (source)-[:BIBLIOGRAPHIC_LINK]->(target)
+                    ON CREATE SET
+                      target.title = coalesce(r.pmid_title, target.title)
+                  MERGE (cited:Article {uid: r.cpmid})
+                    ON CREATE SET
+                      cited.title = coalesce(r.cpmid_title, cited.title)
+                    ON MATCH SET
+                      cited.title = coalesce(cited.title, r.cpmid_title)
+                  WITH target, cited
+                  WHERE target <> cited
+                  MERGE (target)-[:BIBLIOGRAPHIC_LINK]->(cited)
             """, rels=rels)
 
     logger.info(f"[WRITE-ENTRY] {path_name}: nodes={len(nodes)}, rels={len(rels)}")
@@ -217,7 +300,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
     return False
 
 # ========== ОЧЕРЕДЬ И ПИСАТЕЛИ ==========
-write_queue = Queue(maxsize=QUEUE_SIZE)
+write_queue: "Queue[Any]" = Queue(maxsize=QUEUE_SIZE)
 
 def writer_loop(id: int):
     logger.info(f"Writer-{id} started")
@@ -246,11 +329,12 @@ def parse_one_file(path: Path):
     count = 0
     total_articles = 0
     rejected_articles = 0
-    rejection_reasons = {}
+    rejection_reasons: Dict[str, int] = {}
     total_rels_found = 0
     
     with gzip.open(path, 'rb') as gf:
-        for _, elem in ET.iterparse(gf, events=("end",)):
+        context = LET.iterparse(gf, events=("end",))
+        for _, elem in context:
             if elem.tag == "PubmedArticle":
                 total_articles += 1
                 
@@ -339,12 +423,19 @@ def parse_one_file(path: Path):
                     nodes.append(data)
                     count += 1
                 
-                # Извлекаем библиографические ссылки
-                article_rels = extract_bibliographic_links_improved(elem, pmid)
-                for link_pmid in article_rels:
-                    rels.append({'pmid': pmid, 'cpmid': link_pmid})
+                # Логируем PMID статьи
+                logger.info(f"[PMID] {pmid}")
+                # Извлекаем библиографические ссылки (с возможными заголовками)
+                cited_list = extract_bibliographic_links_improved(elem, pmid)
+                # Логируем количество ссылок
+                logger.info(f"[PMID {pmid}] links_count={len(cited_list)}")
+                # Логируем каждую ссылку и добавляем в пакет (с заголовками, если есть)
+                for cited in cited_list:
+                    link_pmid = cited['pmid']
+                    link_title = cited.get('title')
+                    rels.append({'pmid': pmid, 'pmid_title': title, 'cpmid': link_pmid, 'cpmid_title': link_title})
                 
-                total_rels_found += len(article_rels)
+                total_rels_found += len(cited_list)
                 elem.clear()
 
                 if count % BATCH_SIZE == 0:
@@ -376,6 +467,7 @@ def parse_one_file(path: Path):
     return path.name
 
 # ========== ГЛАВНЫЙ ПРОЦЕСС ==========
+
 def process_all():
     ensure_schema()
 
@@ -414,92 +506,31 @@ def process_all():
     
     logger.info(f"Общий размер файлов: {total_size:.1f} MB")
     
-    # Обрабатываем все 3 файла
-    files_to_process = latest_files
+    # Временная настройка: обрабатываем только один предпоследний файл (или последний, если файлов < 2)
+    files_to_process = files[-2:-1] if len(files) >= 2 else files[-1:]
+    logger.info(f"Временная настройка: обрабатываем файл: {[f.name for f in files_to_process]}")
     
-    # Очищаем базу данных перед загрузкой нового файла (как в алгоритме укладки)
-    try:
-        logger.info("Начинаем очистку базы данных...")
-        
-        with driver.session() as s:
-            # 1. Очищаем все связи батчами (как в алгоритме укладки)
-            logger.info("Очистка связей...")
-            while True:
-                result = s.run("""
-                    MATCH ()-[r:BIBLIOGRAPHIC_LINK]->()
-                    WITH r LIMIT 5000
-                    DELETE r
-                    RETURN count(r) as deleted_rels
-                """).single()
-                
-                deleted_rels = result["deleted_rels"] if result else 0
-                if deleted_rels == 0:
-                    break
-                logger.info(f"Удалено связей: {deleted_rels}")
-                time.sleep(0.1)
-            
-            # 2. Очищаем все узлы батчами
-            logger.info("Очистка узлов...")
-            while True:
-                result = s.run("""
-                    MATCH (n:Article)
-                    WITH n LIMIT 5000
-                    DELETE n
-                    RETURN count(n) as deleted_nodes
-                """).single()
-                
-                deleted_nodes = result["deleted_nodes"] if result else 0
-                if deleted_nodes == 0:
-                    break
-                logger.info(f"Удалено узлов: {deleted_nodes}")
-                time.sleep(0.1)
-            
-            # 3. Удаляем проблемные ограничения
-            logger.info("Очистка ограничений...")
-            constraints = s.run("SHOW CONSTRAINTS").data()
-            for constraint in constraints:
-                constraint_name = constraint.get('name')
-                if constraint_name and 'layer' in constraint_name.lower():
-                    try:
-                        s.run(f"DROP CONSTRAINT {constraint_name}")
-                        logger.info(f"Удалено ограничение: {constraint_name}")
-                    except Exception as e:
-                        logger.warning(f"Не удалось удалить ограничение {constraint_name}: {e}")
-            
-        logger.info("База данных полностью очищена")
-    except Exception as e:
-        logger.error(f"Ошибка при очистке базы: {e}")
-        # Если очистка не удалась, пробуем мягкую очистку
-        logger.info("Пробуем мягкую очистку...")
-        try:
-            with driver.session() as s:
-                # Мягкая очистка - только сброс статуса укладки
-                s.run("""
-                    MATCH (n:Article)
-                    SET n.layout_status = 'unprocessed',
-                        n.layer = null,
-                        n.level = null,
-                        n.x = null,
-                        n.y = null
-                """)
-                logger.info("Мягкая очистка выполнена успешно")
-        except Exception as soft_e:
-            logger.error(f"Мягкая очистка также не удалась: {soft_e}")
-            logger.info("Продолжаем с обновлением существующих данных...")
+    # Очищаем базу данных перед загрузкой нового файла
+    reset_database_full()
 
     try:
-        for file_to_process in files_to_process:
-            logger.info(f"Начинаем обработку файла: {file_to_process.name}")
-            parse_one_file(file_to_process)
-            logger.info(f"[OK] {file_to_process.name} обработан успешно")
-            
-            # Принудительная очистка памяти после обработки файла
-            import gc
-            gc.collect()
-            time.sleep(2)  # Увеличенная пауза для освобождения памяти
-            logger.info("Память очищена после обработки файла")
+        # Параллельная обработка файлов парсером
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            future_to_file = {executor.submit(parse_one_file, f): f for f in files_to_process}
+            for future in as_completed(future_to_file):
+                file_to_process = future_to_file[future]
+                try:
+                    res = future.result()
+                    logger.info(f"[OK] {res} обработан успешно")
+                except Exception as e:
+                    logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")
+        # Принудительная очистка памяти после партии файлов
+        import gc
+        gc.collect()
+        time.sleep(1)
+        logger.info("Память очищена после обработки файлов")
     except Exception as e:
-        logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")
+        logger.error(f"[PARSE-ERR] Глобальная ошибка обработки: {e}")
 
     # ждём пока писатели обработают всё
     write_queue.join()
