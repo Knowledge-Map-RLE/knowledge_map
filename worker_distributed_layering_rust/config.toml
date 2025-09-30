@@ -1,0 +1,57 @@
+# Конфигурация высокопроизводительного Rust микросервиса укладки графов
+
+[server]
+bind_address = "0.0.0.0"
+grpc_port = 50051
+metrics_port = 9090
+max_connections = 1000
+request_timeout = 300  # секунды
+stream_buffer_size = 1024
+
+[neo4j]
+uri = "bolt://localhost:7687"
+user = "neo4j" 
+password = "password"
+database = "neo4j"
+pool_size = 100
+connection_timeout = 60   # секунды (уменьшен для тестирования)
+transaction_timeout = 600  # секунды (10 минут, уменьшен для тестирования)
+batch_size = 10000
+save_batch_size = 500   # размер батча для сохранения результатов (уменьшен для стабильности)
+save_parallelism = 2    # число параллельных транзакций сохранения (уменьшено для стабильности)
+
+[algorithms]
+block_width = 200.0
+block_height = 80.0
+horizontal_gap = 40.0
+vertical_gap = 50.0
+exclude_isolated_vertices = true
+max_iterations = 1000
+convergence_threshold = 0.001
+optimization_strategy = "Balanced"  # Speed, Balanced, Quality, Memory
+
+[performance]
+worker_threads = 4  # 4 потока для обработки
+chunk_size = 10000
+max_parallel_tasks = 0  # 0 = worker_threads * 2
+enable_simd = true
+enable_gpu = false
+enable_vectorization = true
+process_priority = "High"  # Low, Normal, High, RealTime
+
+[memory]
+memory_limit_bytes = 8589934592  # 8GB
+strategy = "Auto"  # Auto, RamFirst, SsdCache, Streaming
+hot_cache_size = 100000
+warm_cache_size = 1000000
+temp_dir = "/tmp/graph_layout"
+use_memory_mapping = true
+page_size = 4096
+
+[metrics]
+enabled = true
+collection_interval = 10  # секунды
+prometheus_enabled = true
+opentelemetry_enabled = false
+# tracing_endpoint = "http://jaeger:14268/api/traces"
+detail_level = "Detailed"  # Basic, Detailed, Verbose

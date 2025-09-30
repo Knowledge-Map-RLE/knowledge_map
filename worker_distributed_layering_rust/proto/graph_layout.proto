@@ -1,0 +1,318 @@
+syntax = "proto3";
+
+package graph_layout;
+
+// Сервис для высокопроизводительной укладки графов
+service GraphLayoutService {
+    // Основной метод укладки графа
+    rpc ComputeLayout(LayoutRequest) returns (LayoutResponse);
+    
+    // Потоковая укладка для больших графов
+    rpc ComputeLayoutStreaming(LayoutRequest) returns (stream LayoutChunk);
+    
+    // Проверка состояния сервиса
+    rpc GetHealth(HealthRequest) returns (HealthResponse);
+    
+    // Получение метрик производительности
+    rpc GetMetrics(MetricsRequest) returns (MetricsResponse);
+}
+
+// Запрос на укладку графа
+message LayoutRequest {
+    // Идентификатор задачи
+    string task_id = 1;
+    
+    // Список связей графа (только связи, без вершин!)
+    repeated GraphEdge edges = 2;
+    
+    // Параметры алгоритма
+    LayoutOptions options = 3;
+    
+    // Метаданные запроса
+    RequestMetadata metadata = 4;
+}
+
+// Связь в графе (минимальная информация)
+message GraphEdge {
+    // ID источника (Article.uid)
+    string source_id = 1;
+    
+    // ID цели (Article.uid) 
+    string target_id = 2;
+    
+    // Вес связи (опционально)
+    float weight = 3;
+    
+    // Тип связи (опционально)
+    string edge_type = 4;
+}
+
+// Опции алгоритма укладки
+message LayoutOptions {
+    // Размер блока
+    float block_width = 1;
+    float block_height = 2;
+    
+    // Отступы
+    float horizontal_gap = 3;
+    float vertical_gap = 4;
+    
+    // Алгоритмические параметры
+    bool exclude_isolated_vertices = 5;
+    bool optimize_layout = 6;
+    int32 max_iterations = 7;
+    float convergence_threshold = 8;
+    
+    // Параметры производительности
+    int32 chunk_size = 9;
+    int32 max_workers = 10;
+    bool enable_simd = 11;
+    bool enable_gpu = 12;
+    
+    // Стратегия памяти
+    MemoryStrategy memory_strategy = 13;
+}
+
+// Стратегия управления памятью
+enum MemoryStrategy {
+    MEMORY_AUTO = 0;       // Автоматический выбор
+    MEMORY_RAM_FIRST = 1;  // Приоритет RAM
+    MEMORY_SSD_CACHE = 2;  // Использование SSD кеша
+    MEMORY_STREAMING = 3;  // Потоковая обработка
+}
+
+// Метаданные запроса
+message RequestMetadata {
+    // Источник запроса
+    string client_id = 1;
+    
+    // Временная метка
+    int64 timestamp = 2;
+    
+    // Приоритет обработки
+    int32 priority = 3;
+    
+    // Ожидаемое количество вершин
+    int64 estimated_vertex_count = 4;
+    
+    // Ожидаемое количество связей
+    int64 estimated_edge_count = 5;
+}
+
+// Ответ с результатами укладки
+message LayoutResponse {
+    // Успешность выполнения
+    bool success = 1;
+    
+    // Сообщение об ошибке (если есть)
+    string error_message = 2;
+    
+    // Результаты позиционирования
+    repeated VertexPosition positions = 3;
+    
+    // Статистика выполнения
+    LayoutStatistics statistics = 4;
+    
+    // Метаданные ответа
+    ResponseMetadata metadata = 5;
+}
+
+// Чанк данных для потоковой обработки
+message LayoutChunk {
+    // Номер чанка
+    int32 chunk_id = 1;
+    
+    // Общее количество чанков
+    int32 total_chunks = 2;
+    
+    // Позиции в этом чанке
+    repeated VertexPosition positions = 3;
+    
+    // Прогресс обработки (0.0 - 1.0)
+    float progress = 4;
+    
+    // Завершён ли чанк
+    bool is_final = 5;
+}
+
+// Позиция вершины (минимальная информация для возврата в Neo4j)
+message VertexPosition {
+    // ID статьи (Article.uid)
+    string article_id = 1;
+    
+    // Слой (layer)
+    int32 layer = 2;
+    
+    // Уровень (level)
+    int32 level = 3;
+    
+    // Координаты (для визуализации)
+    float x = 4;
+    float y = 5;
+    
+    // Статус вершины
+    VertexStatus status = 6;
+}
+
+// Статус вершины в укладке
+enum VertexStatus {
+    STATUS_UNPROCESSED = 0;
+    STATUS_IN_LONGEST_PATH = 1;
+    STATUS_PLACED = 2;
+    STATUS_PINNED = 3;
+    STATUS_EXCLUDED = 4;
+}
+
+// Статистика выполнения
+message LayoutStatistics {
+    // Время выполнения (мс)
+    int64 processing_time_ms = 1;
+    
+    // Количество обработанных вершин
+    int64 vertices_processed = 2;
+    
+    // Количество обработанных связей
+    int64 edges_processed = 3;
+    
+    // Количество итераций алгоритма
+    int32 iterations_completed = 4;
+    
+    // Использование памяти (байты)
+    int64 memory_used_bytes = 5;
+    
+    // Количество компонент связности
+    int32 connected_components = 6;
+    
+    // Длина самого длинного пути
+    int32 longest_path_length = 7;
+    
+    // Производительность (вершин/сек)
+    float vertices_per_second = 8;
+    
+    // Эффективность алгоритма
+    AlgorithmMetrics algorithm_metrics = 9;
+}
+
+// Метрики алгоритма
+message AlgorithmMetrics {
+    // Сложность топологической сортировки
+    string topo_sort_complexity = 1;
+    
+    // Время топологической сортировки (мс)
+    int64 topo_sort_time_ms = 2;
+    
+    // Время поиска longest path (мс)
+    int64 longest_path_time_ms = 3;
+    
+    // Время размещения вершин (мс) 
+    int64 placement_time_ms = 4;
+    
+    // Количество использованных слоёв
+    int32 layers_used = 5;
+    
+    // Максимальный уровень
+    int32 max_level = 6;
+    
+    // Эффективность использования пространства (0.0 - 1.0)
+    float space_efficiency = 7;
+}
+
+// Метаданные ответа
+message ResponseMetadata {
+    // ID сервера, который обработал запрос
+    string server_id = 1;
+    
+    // Версия алгоритма
+    string algorithm_version = 2;
+    
+    // Временная метка завершения
+    int64 completion_timestamp = 3;
+    
+    // Использованная стратегия памяти
+    MemoryStrategy used_memory_strategy = 4;
+    
+    // Флаги оптимизации
+    OptimizationFlags optimization_flags = 5;
+}
+
+// Флаги использованных оптимизаций
+message OptimizationFlags {
+    bool simd_used = 1;
+    bool gpu_used = 2;
+    bool multi_threading_used = 3;
+    bool memory_mapping_used = 4;
+    bool vectorization_used = 5;
+}
+
+// Проверка здоровья сервиса
+message HealthRequest {
+    string service = 1;
+}
+
+message HealthResponse {
+    enum ServingStatus {
+        UNKNOWN = 0;
+        SERVING = 1;
+        NOT_SERVING = 2;
+        SERVICE_UNKNOWN = 3;
+    }
+    ServingStatus status = 1;
+    
+    // Дополнительная информация о состоянии
+    string message = 2;
+    
+    // Системные метрики
+    SystemMetrics system_metrics = 3;
+}
+
+// Системные метрики
+message SystemMetrics {
+    // Использование CPU (0.0 - 1.0)
+    float cpu_usage = 1;
+    
+    // Использование памяти (байты)
+    int64 memory_usage_bytes = 2;
+    
+    // Доступная память (байты)
+    int64 memory_available_bytes = 3;
+    
+    // Количество активных задач
+    int32 active_tasks = 4;
+    
+    // Uptime сервиса (секунды)
+    int64 uptime_seconds = 5;
+}
+
+// Запрос метрик
+message MetricsRequest {
+    // Типы метрик для возврата
+    repeated string metric_types = 1;
+    
+    // Временной интервал
+    int64 start_timestamp = 2;
+    int64 end_timestamp = 3;
+}
+
+// Ответ с метриками
+message MetricsResponse {
+    // Метрики в формате Prometheus
+    repeated PrometheusMetric metrics = 4;
+    
+    // Временная метка сбора
+    int64 collection_timestamp = 5;
+}
+
+// Метрика в формате Prometheus
+message PrometheusMetric {
+    string name = 1;
+    string help = 2;
+    string metric_type = 3;
+    repeated MetricSample samples = 4;
+}
+
+message MetricSample {
+    repeated string label_names = 1;
+    repeated string label_values = 2;
+    double value = 3;
+    int64 timestamp = 4;
+}

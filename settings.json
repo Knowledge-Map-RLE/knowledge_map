@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "worker_distributed_layering_rust/Cargo.toml"
+    ]
+}

@@ -45,6 +45,7 @@ logging.getLogger('services.pdf_to_md_client').setLevel(logging.INFO)
 
 # Настройка подключения к Neo4j
 neomodel_config.DATABASE_URL = settings.get_database_url()
+neomodel_config.ENCRYPTED = False  # Явно отключаем TLS для Bolt
 logger.info(f"Neo4j connection configured: {settings.NEO4J_URI}")
 
 logger.info(f"Configuring CORS with origins: {ORIGINS}")

@@ -320,45 +320,38 @@ class LayoutService:
             )
 
             # Всего статей (для прогресса) - только со связями
-            total_query = """
-            MATCH (n:Article)
-            WHERE n.layout_status IN ['in_longest_path','placed_layers','placed']
-              AND n.x IS NOT NULL AND n.y IS NOT NULL
-              AND (
-                EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR 
-                EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
-              )
-            RETURN count(n) as total
-            """
+            total_query = (
+                "MATCH (n:Article) "
+                "WHERE (n.layer IS NOT NULL OR n.level IS NOT NULL) "
+                "  AND (EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))) "
+                "RETURN count(n) as total"
+            )
             total_res, _ = db.cypher_query(total_query)
             logger.info(f"Total query result: {total_res}")
             total_articles = int(total_res[0][0]) if total_res and total_res[0] and total_res[0][0] is not None else 0
             logger.info(f"Total articles: {total_articles}")
 
             # Запрос с учетом center_x и center_y для фильтрации по близости
-            nodes_query = """
-            MATCH (n:Article)
-            WHERE n.layout_status IN ['in_longest_path','placed_layers','placed']
-              AND n.x IS NOT NULL AND n.y IS NOT NULL
-              AND (
-                EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR 
-                EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
-              )
-            RETURN n.uid as id,
-                   coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
-                   n.layer as layer,
-                   n.level as level,
-                   coalesce(n.sublevel_id, 0) as sublevel_id,
-                   coalesce(n.is_pinned, false) as is_pinned,
-                   coalesce(n.physical_scale, 0) as physical_scale,
-                   n.x as x,
-                   n.y as y,
-                   n.layout_status as layout_status,
-                   coalesce(n.topo_order, 0) as topo_order,
-                   sqrt((n.x - $center_x) * (n.x - $center_x) + (n.y - $center_y) * (n.y - $center_y)) as distance
-            ORDER BY distance ASC, n.layer ASC, n.topo_order ASC
-            SKIP $offset LIMIT $limit
-            """
+            nodes_query = (
+                "MATCH (n:Article) "
+                "WHERE (n.layer IS NOT NULL OR n.level IS NOT NULL) "
+                "  AND (EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))) "
+                "RETURN n.uid as id, "
+                "       coalesce(n.title, n.name, n.content, toString(n.uid)) as title, "
+                "       n.layer as layer, "
+                "       n.level as level, "
+                "       coalesce(n.sublevel_id, 0) as sublevel_id, "
+                "       coalesce(n.is_pinned, false) as is_pinned, "
+                "       coalesce(n.physical_scale, 0) as physical_scale, "
+                "       n.x as x, "
+                "       n.y as y, "
+                "       n.layout_status as layout_status, "
+                "       coalesce(n.topo_order, 0) as topo_order, "
+                "       sqrt((coalesce(n.x, toFloat(coalesce(n.layer,0)) * $LAYER_SPACING) - $center_x) * (coalesce(n.x, toFloat(coalesce(n.layer,0)) * $LAYER_SPACING) - $center_x) + "
+                "            (coalesce(n.y, toFloat(coalesce(n.level,0)) * $LEVEL_SPACING) - $center_y) * (coalesce(n.y, toFloat(coalesce(n.level,0)) * $LEVEL_SPACING) - $center_y)) as distance "
+                "ORDER BY distance ASC, n.layer ASC, n.topo_order ASC "
+                "SKIP $offset LIMIT $limit"
+            )
             blocks_result, _ = db.cypher_query(
                 nodes_query,
                 {
@@ -366,6 +359,8 @@ class LayoutService:
                     "limit": limit,
                     "center_x": center_x,
                     "center_y": center_y,
+                    "LAYER_SPACING": 240,
+                    "LEVEL_SPACING": 130,
                 },
             )
             logger.info(f"Blocks query result: {len(blocks_result) if blocks_result else 0} rows")

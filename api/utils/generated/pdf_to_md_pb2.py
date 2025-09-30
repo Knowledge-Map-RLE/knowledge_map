@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fpdf_to_md.proto\x12\tpdf_to_md\"l\n\x11\x43onvertPDFRequest\x12\x13\n\x0bpdf_content\x18\x01 \x01(\x0c\x12\x15\n\x08model_id\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x13\n\x06\x64oc_id\x18\x03 \x01(\tH\x01\x88\x01\x01\x42\x0b\n\t_model_idB\t\n\x07_doc_id\"\xf8\x01\n\x12\x43onvertPDFResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0e\n\x06\x64oc_id\x18\x02 \x01(\t\x12\x18\n\x10markdown_content\x18\x03 \x01(\t\x12\x39\n\x06images\x18\x04 \x03(\x0b\x32).pdf_to_md.ConvertPDFResponse.ImagesEntry\x12\x1a\n\rmetadata_json\x18\x05 \x01(\tH\x00\x88\x01\x01\x12\x0f\n\x07message\x18\x06 \x01(\t\x1a-\n\x0bImagesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c:\x02\x38\x01\x42\x10\n\x0e_metadata_json\"Q\n\x0eProgressUpdate\x12\x0e\n\x06\x64oc_id\x18\x01 \x01(\t\x12\x0f\n\x07percent\x18\x02 \x01(\x05\x12\r\n\x05phase\x18\x03 \x01(\t\x12\x0f\n\x07message\x18\x04 \x01(\t\"P\n\tModelInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x03 \x01(\x08\x12\x0f\n\x07\x64\x65\x66\x61ult\x18\x04 \x01(\x08\"\x12\n\x10GetModelsRequest\"\xa9\x01\n\x11GetModelsResponse\x12\x38\n\x06models\x18\x01 \x03(\x0b\x32(.pdf_to_md.GetModelsResponse.ModelsEntry\x12\x15\n\rdefault_model\x18\x02 \x01(\t\x1a\x43\n\x0bModelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.pdf_to_md.ModelInfo:\x02\x38\x01\"*\n\x16SetDefaultModelRequest\x12\x10\n\x08model_id\x18\x01 \x01(\t\";\n\x17SetDefaultModelResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"7\n\x12\x45nableModelRequest\x12\x10\n\x08model_id\x18\x01 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x02 \x01(\x08\"7\n\x13\x45nableModelResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xa6\x03\n\x14PDFToMarkdownService\x12I\n\nConvertPDF\x12\x1c.pdf_to_md.ConvertPDFRequest\x1a\x1d.pdf_to_md.ConvertPDFResponse\x12\x46\n\tGetModels\x12\x1b.pdf_to_md.GetModelsRequest\x1a\x1c.pdf_to_md.GetModelsResponse\x12X\n\x0fSetDefaultModel\x12!.pdf_to_md.SetDefaultModelRequest\x1a\".pdf_to_md.SetDefaultModelResponse\x12L\n\x0b\x45nableModel\x12\x1d.pdf_to_md.EnableModelRequest\x1a\x1e.pdf_to_md.EnableModelResponse\x12S\n\x16\x43onvertPDFWithProgress\x12\x1c.pdf_to_md.ConvertPDFRequest\x1a\x19.pdf_to_md.ProgressUpdate0\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fpdf_to_md.proto\x12\tpdf_to_md\"l\n\x11\x43onvertPDFRequest\x12\x13\n\x0bpdf_content\x18\x01 \x01(\x0c\x12\x15\n\x08model_id\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x13\n\x06\x64oc_id\x18\x03 \x01(\tH\x01\x88\x01\x01\x42\x0b\n\t_model_idB\t\n\x07_doc_id\"\x95\x01\n\tImageInfo\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\x12\x14\n\x0c\x63ontent_type\x18\x02 \x01(\t\x12\x13\n\x06s3_key\x18\x03 \x01(\tH\x00\x88\x01\x01\x12\x1a\n\rpresigned_url\x18\x04 \x01(\tH\x01\x88\x01\x01\x12\x12\n\nsize_bytes\x18\x05 \x01(\x03\x42\t\n\x07_s3_keyB\x10\n\x0e_presigned_url\"\xa2\x02\n\x12\x43onvertPDFResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0e\n\x06\x64oc_id\x18\x02 \x01(\t\x12\x18\n\x10markdown_content\x18\x03 \x01(\t\x12\x39\n\x06images\x18\x04 \x03(\x0b\x32).pdf_to_md.ConvertPDFResponse.ImagesEntry\x12(\n\nimage_info\x18\x07 \x03(\x0b\x32\x14.pdf_to_md.ImageInfo\x12\x1a\n\rmetadata_json\x18\x05 \x01(\tH\x00\x88\x01\x01\x12\x0f\n\x07message\x18\x06 \x01(\t\x1a-\n\x0bImagesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c:\x02\x38\x01\x42\x10\n\x0e_metadata_json\"Q\n\x0eProgressUpdate\x12\x0e\n\x06\x64oc_id\x18\x01 \x01(\t\x12\x0f\n\x07percent\x18\x02 \x01(\x05\x12\r\n\x05phase\x18\x03 \x01(\t\x12\x0f\n\x07message\x18\x04 \x01(\t\"P\n\tModelInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x03 \x01(\x08\x12\x0f\n\x07\x64\x65\x66\x61ult\x18\x04 \x01(\x08\"\x12\n\x10GetModelsRequest\"\xa9\x01\n\x11GetModelsResponse\x12\x38\n\x06models\x18\x01 \x03(\x0b\x32(.pdf_to_md.GetModelsResponse.ModelsEntry\x12\x15\n\rdefault_model\x18\x02 \x01(\t\x1a\x43\n\x0bModelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.pdf_to_md.ModelInfo:\x02\x38\x01\"*\n\x16SetDefaultModelRequest\x12\x10\n\x08model_id\x18\x01 \x01(\t\";\n\x17SetDefaultModelResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"7\n\x12\x45nableModelRequest\x12\x10\n\x08model_id\x18\x01 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x02 \x01(\x08\"7\n\x13\x45nableModelResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xa6\x03\n\x14PDFToMarkdownService\x12I\n\nConvertPDF\x12\x1c.pdf_to_md.ConvertPDFRequest\x1a\x1d.pdf_to_md.ConvertPDFResponse\x12\x46\n\tGetModels\x12\x1b.pdf_to_md.GetModelsRequest\x1a\x1c.pdf_to_md.GetModelsResponse\x12X\n\x0fSetDefaultModel\x12!.pdf_to_md.SetDefaultModelRequest\x1a\".pdf_to_md.SetDefaultModelResponse\x12L\n\x0b\x45nableModel\x12\x1d.pdf_to_md.EnableModelRequest\x1a\x1e.pdf_to_md.EnableModelResponse\x12S\n\x16\x43onvertPDFWithProgress\x12\x1c.pdf_to_md.ConvertPDFRequest\x1a\x19.pdf_to_md.ProgressUpdate0\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,28 +37,30 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GETMODELSRESPONSE_MODELSENTRY']._serialized_options = b'8\001'
   _globals['_CONVERTPDFREQUEST']._serialized_start=30
   _globals['_CONVERTPDFREQUEST']._serialized_end=138
-  _globals['_CONVERTPDFRESPONSE']._serialized_start=141
-  _globals['_CONVERTPDFRESPONSE']._serialized_end=389
-  _globals['_CONVERTPDFRESPONSE_IMAGESENTRY']._serialized_start=326
-  _globals['_CONVERTPDFRESPONSE_IMAGESENTRY']._serialized_end=371
-  _globals['_PROGRESSUPDATE']._serialized_start=391
-  _globals['_PROGRESSUPDATE']._serialized_end=472
-  _globals['_MODELINFO']._serialized_start=474
-  _globals['_MODELINFO']._serialized_end=554
-  _globals['_GETMODELSREQUEST']._serialized_start=556
-  _globals['_GETMODELSREQUEST']._serialized_end=574
-  _globals['_GETMODELSRESPONSE']._serialized_start=577
-  _globals['_GETMODELSRESPONSE']._serialized_end=746
-  _globals['_GETMODELSRESPONSE_MODELSENTRY']._serialized_start=679
-  _globals['_GETMODELSRESPONSE_MODELSENTRY']._serialized_end=746
-  _globals['_SETDEFAULTMODELREQUEST']._serialized_start=748
-  _globals['_SETDEFAULTMODELREQUEST']._serialized_end=790
-  _globals['_SETDEFAULTMODELRESPONSE']._serialized_start=792
-  _globals['_SETDEFAULTMODELRESPONSE']._serialized_end=851
-  _globals['_ENABLEMODELREQUEST']._serialized_start=853
-  _globals['_ENABLEMODELREQUEST']._serialized_end=908
-  _globals['_ENABLEMODELRESPONSE']._serialized_start=910
-  _globals['_ENABLEMODELRESPONSE']._serialized_end=965
-  _globals['_PDFTOMARKDOWNSERVICE']._serialized_start=968
-  _globals['_PDFTOMARKDOWNSERVICE']._serialized_end=1390
+  _globals['_IMAGEINFO']._serialized_start=141
+  _globals['_IMAGEINFO']._serialized_end=290
+  _globals['_CONVERTPDFRESPONSE']._serialized_start=293
+  _globals['_CONVERTPDFRESPONSE']._serialized_end=583
+  _globals['_CONVERTPDFRESPONSE_IMAGESENTRY']._serialized_start=520
+  _globals['_CONVERTPDFRESPONSE_IMAGESENTRY']._serialized_end=565
+  _globals['_PROGRESSUPDATE']._serialized_start=585
+  _globals['_PROGRESSUPDATE']._serialized_end=666
+  _globals['_MODELINFO']._serialized_start=668
+  _globals['_MODELINFO']._serialized_end=748
+  _globals['_GETMODELSREQUEST']._serialized_start=750
+  _globals['_GETMODELSREQUEST']._serialized_end=768
+  _globals['_GETMODELSRESPONSE']._serialized_start=771
+  _globals['_GETMODELSRESPONSE']._serialized_end=940
+  _globals['_GETMODELSRESPONSE_MODELSENTRY']._serialized_start=873
+  _globals['_GETMODELSRESPONSE_MODELSENTRY']._serialized_end=940
+  _globals['_SETDEFAULTMODELREQUEST']._serialized_start=942
+  _globals['_SETDEFAULTMODELREQUEST']._serialized_end=984
+  _globals['_SETDEFAULTMODELRESPONSE']._serialized_start=986
+  _globals['_SETDEFAULTMODELRESPONSE']._serialized_end=1045
+  _globals['_ENABLEMODELREQUEST']._serialized_start=1047
+  _globals['_ENABLEMODELREQUEST']._serialized_end=1102
+  _globals['_ENABLEMODELRESPONSE']._serialized_start=1104
+  _globals['_ENABLEMODELRESPONSE']._serialized_end=1159
+  _globals['_PDFTOMARKDOWNSERVICE']._serialized_start=1162
+  _globals['_PDFTOMARKDOWNSERVICE']._serialized_end=1584
 # @@protoc_insertion_point(module_scope)

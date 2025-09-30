@@ -133,6 +133,25 @@ class DistributedIncrementalLayout:
         self.total_articles_estimate = 0
         self._placed_ids: Set[str] = set()
 
+    async def _check_layout_initialization_needed(self) -> bool:
+        """Проверяет, нужна ли инициализация таблиц укладки"""
+        try:
+            # Проверяем наличие layout_status полей
+            check_query = """
+            MATCH (n:Article) 
+            WHERE n.layout_status IS NOT NULL 
+            RETURN count(n) as initialized_count 
+            LIMIT 1
+            """
+            result = await neo4j_client.execute_query_with_retry(check_query)
+            initialized_count = result[0]["initialized_count"] if result else 0
+            
+            # Если есть хотя бы несколько инициализированных узлов, считаем что инициализация уже была
+            return initialized_count < 1000
+        except Exception as e:
+            logger.warning(f"Не удалось проверить статус инициализации: {e}")
+            return True  # В случае ошибки выполняем инициализацию
+
     async def _db_validate_topo_order(self) -> None:
         """Проверяет корректность topo_order одной транзакцией на стороне БД."""
         logger.info("=== ПРОВЕРКА ТОПОЛОГИЧЕСКОГО ПОРЯДКА (DB) ===")
@@ -473,8 +492,13 @@ class DistributedIncrementalLayout:
         
         logger.info("Инициализация таблиц укладки...")
         try:
-            await self.layout_utils.initialize_layout_tables()
-            logger.info("Таблицы укладки инициализированы")
+            # Проверяем, нужна ли инициализация
+            need_init = await self._check_layout_initialization_needed()
+            if need_init:
+                await self.layout_utils.initialize_layout_tables()
+                logger.info("Таблицы укладки инициализированы")
+            else:
+                logger.info("Таблицы укладки уже инициализированы, пропускаем инициализацию")
         except Exception as e:
             # Из-за ограничений памяти транзакции Neo4j можем пропустить инициализацию (временное решение)
             logger.error(f"Инициализация таблиц укладки пропущена из-за ошибки: {e}")

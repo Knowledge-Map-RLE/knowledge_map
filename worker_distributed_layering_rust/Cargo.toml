@@ -1,0 +1,115 @@
+[package]
+name = "graph-layout-engine"
+version = "0.1.0"
+edition = "2021"
+authors = ["Knowledge Map Team"]
+description = "High-performance Rust-based graph layout engine for distributed processing"
+license = "MIT"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+tokio-stream = "0.1"
+
+# gRPC and protobuf
+tonic = "0.10"
+prost = "0.12"
+prost-types = "0.12"
+
+# Graph algorithms with SIMD optimizations
+petgraph = "0.6"
+rayon = "1.8"
+ndarray = { version = "0.15", features = ["rayon"] }
+ndarray-linalg = "0.16"
+
+# SIMD optimizations
+wide = "0.7"
+
+# Memory-efficient data structures
+hashbrown = "0.14"
+smallvec = "1.11"
+ahash = "0.8"
+
+# Neo4j integration
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+neo4rs = "0.7"
+
+# Configuration and serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+config = "0.13"
+clap = { version = "4.4", features = ["derive"] }
+
+# Logging and observability
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "ansi"] }
+tracing-appender = "0.2"
+tracing-opentelemetry = "0.21"
+opentelemetry = "0.21"
+prometheus = "0.13"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+async-trait = "0.1"
+
+# Utilities
+uuid = { version = "1.6", features = ["v4", "serde"] }
+num-traits = "0.2"
+num-integer = "0.1"
+num_cpus = "1.0"
+toml = "0.8"
+sysinfo = "0.30"
+
+# Memory management and profiling
+mimalloc = { version = "0.1", optional = true }
+jemallocator = { version = "0.5", optional = true }
+
+[dependencies.tower]
+version = "0.4"
+features = ["full"]
+
+
+[build-dependencies]
+tonic-build = "0.10"
+
+[features]
+default = ["mimalloc"]
+mimalloc = ["dep:mimalloc"]
+jemalloc = ["dep:jemallocator"]
+gpu = []
+
+[[bin]]
+name = "graph-layout-server"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
+debug = false
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+
+# Optimize for CPU-bound workloads
+[profile.release.package.petgraph]
+opt-level = 3
+
+[profile.release.package.rayon]
+opt-level = 3
+
+[profile.release.package.ndarray]
+opt-level = 3
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+tokio-test = "0.4"
+proptest = "1.4"
+
+# [[bench]]
+# name = "layout_benchmarks"
+# harness = false
+
+[package.metadata.docs.rs]
+features = ["gpu"]
+rustdoc-args = ["--cfg", "docsrs"]

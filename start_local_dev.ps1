@@ -101,7 +101,8 @@ function Start-AuthService {
     Write-ColorOutput "Installing dependencies for auth..." $InfoColor
     Push-Location $authDir
     try {
-        poetry install
+        # Install dependencies without installing the project as a package
+        poetry install --no-root
     }
     finally {
         Pop-Location
@@ -120,6 +121,7 @@ function Start-AuthService {
     # Start service
     Write-ColorOutput "Starting auth service..." $InfoColor
     $env:NEO4J_URI = "bolt://127.0.0.1:7687"
+    $env:NEO4J_ENCRYPTED = "false"
     $env:REDIS_URL = "redis://127.0.0.1:6379"
     $env:GRPC_HOST = "0.0.0.0"
     $env:GRPC_PORT = "50052"
@@ -252,6 +254,7 @@ function Start-PdfToMdService {
     return ($grpcOk -and $httpOk)
 }
 
+
 function Start-ApiService {
     Write-ColorOutput "Starting API service..." $InfoColor
     
@@ -283,20 +286,42 @@ function Start-ApiService {
         if (-not (Test-Path "utils/generated")) {
             New-Item -Path "utils/generated" -ItemType Directory -Force
         }
-        
-        # Generate proto files for all services
-        poetry run python -m grpc_tools.protoc -I./utils/proto --python_out=./utils/generated --grpc_python_out=./utils/generated ./utils/proto/layout.proto ./utils/proto/auth.proto ./utils/proto/pdf_to_md.proto
-        
+
+        # Resolve proto locations inside current monorepo
+        $graphProto = Join-Path $ScriptRoot "worker_distributed_layering_rust\proto\graph_layout.proto"
+        $authProto  = Join-Path $ScriptRoot "auth\proto\auth.proto"
+        $pdfProto   = Join-Path $ScriptRoot "pdf_to_md\proto\pdf_to_md.proto"
+
+        # Build include dirs for protoc
+        $incGraph = Split-Path $graphProto -Parent
+        $incAuth  = Split-Path $authProto  -Parent
+        $incPdf   = Split-Path $pdfProto   -Parent
+
+        # Validate proto paths
+        if (-not (Test-Path $graphProto)) { Write-ColorOutput "Missing proto: $graphProto" $WarningColor }
+        if (-not (Test-Path $authProto))  { Write-ColorOutput "Missing proto: $authProto"  $WarningColor }
+        if (-not (Test-Path $pdfProto))   { Write-ColorOutput "Missing proto: $pdfProto"   $WarningColor }
+
+        # Generate grpc stubs (any missing file will be ignored by protoc include search order)
+        poetry run python -m grpc_tools.protoc `
+            -I"$incGraph" -I"$incAuth" -I"$incPdf" `
+            --python_out=./utils/generated `
+            --grpc_python_out=./utils/generated `
+            "$graphProto" "$authProto" "$pdfProto"
+
         # Create __init__.py for generated folder
         if (-not (Test-Path "utils/generated/__init__.py")) {
-            New-Item -Path "utils/generated/__init__.py" -ItemType File -Force
+            New-Item -Path "utils/generated/__init__.py" -ItemType File -Force | Out-Null
         }
-        
-        # Fix imports in generated grpc files
-        $grpcFiles = @("utils/generated/layout_pb2_grpc.py", "utils/generated/auth_pb2_grpc.py", "utils/generated/pdf_to_md_pb2_grpc.py")
+
+        # Fix imports in generated grpc files (relative imports)
+        $grpcFiles = @("utils/generated/graph_layout_pb2_grpc.py", "utils/generated/auth_pb2_grpc.py", "utils/generated/pdf_to_md_pb2_grpc.py")
         foreach ($file in $grpcFiles) {
             if (Test-Path $file) {
-                (Get-Content $file) -replace "import layout_pb2 as layout__pb2", "from . import layout_pb2 as layout__pb2" -replace "import auth_pb2 as auth__pb2", "from . import auth_pb2 as auth__pb2" -replace "import pdf_to_md_pb2 as pdf_to_md__pb2", "from . import pdf_to_md_pb2 as pdf_to_md__pb2" | Set-Content $file
+                (Get-Content $file) `
+                    -replace "import graph_layout_pb2 as graph_layout__pb2", "from . import graph_layout_pb2 as graph_layout__pb2" `
+                    -replace "import auth_pb2 as auth__pb2", "from . import auth_pb2 as auth__pb2" `
+                    -replace "import pdf_to_md_pb2 as pdf_to_md__pb2", "from . import pdf_to_md_pb2 as pdf_to_md__pb2" | Set-Content $file
             }
         }
     }
@@ -307,10 +332,11 @@ function Start-ApiService {
     # Start service
     Write-ColorOutput "Starting API service..." $InfoColor
     $env:NEO4J_URI = "bolt://127.0.0.1:7687"
+    $env:NEO4J_ENCRYPTED = "false"
     $env:NEO4J_USER = "neo4j"
     $env:NEO4J_PASSWORD = "password"
     $env:LAYOUT_SERVICE_HOST = "127.0.0.1"
-    $env:LAYOUT_SERVICE_PORT = "50051"
+    $env:LAYOUT_SERVICE_PORT = "50051"  # Rust service port
     $env:AUTH_SERVICE_HOST = "127.0.0.1"
     $env:AUTH_SERVICE_PORT = "50052"
     $env:PDF_TO_MD_SERVICE_HOST = "127.0.0.1"
@@ -344,7 +370,7 @@ function Start-ApiService {
     $env:NEO4J_USER = "neo4j"
     $env:NEO4J_PASSWORD = "password"
     $env:LAYOUT_SERVICE_HOST = "127.0.0.1"
-    $env:LAYOUT_SERVICE_PORT = "50051"
+    $env:LAYOUT_SERVICE_PORT = "50051"  # Rust service port
     $env:AUTH_SERVICE_HOST = "127.0.0.1"
     $env:AUTH_SERVICE_PORT = "50052"
     $env:PDF_TO_MD_SERVICE_HOST = "127.0.0.1"
@@ -626,6 +652,7 @@ catch {
     exit 1
 }
 
+
 # Start services
 Write-ColorOutput "`n1. Starting Docker services..." $InfoColor
 Start-DockerServices
@@ -658,3 +685,7 @@ Write-ColorOutput "  .\start_local_dev.ps1 -Status" $WarningColor
 Write-ColorOutput "`nTo view logs run:" $WarningColor
 Write-ColorOutput "  .\start_local_dev.ps1 -Logs -Service <service_name>" $WarningColor
 Write-ColorOutput "  Example: .\start_local_dev.ps1 -Logs -Service api" $WarningColor
+Write-ColorOutput "`n🦀 Rust Graph Layout service can be started independently:" $SuccessColor
+Write-ColorOutput "  cd worker_distributed_layering_rust && cargo run --release" $InfoColor
+Write-ColorOutput "  - gRPC: localhost:50051" $InfoColor
+Write-ColorOutput "  - Metrics: http://localhost:9090/metrics" $InfoColor

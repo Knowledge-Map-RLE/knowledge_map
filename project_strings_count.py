@@ -9,18 +9,20 @@ from pathlib import Path
 import os
 import re
 import sys
+from typing import List, Tuple, Optional, Pattern, Any, Sequence
 
 BASE = Path(__file__).parent.resolve()
 
 
-def load_gitignore(base: Path):
+def load_gitignore(base: Path) -> List[Tuple[bool, bool, bool, Any, str]]:
     """Загружает правила из .gitignore и компилирует в регулярные выражения.
     Возвращает список паттернов в порядке файла: [(negate, dir_only, has_slash, re_obj, raw_pattern), ...]
     """
     gitignore = base / ".gitignore"
-    patterns = []
+    patterns_raw: List[str] = []
+    compiled: List[Tuple[bool, bool, bool, Any, str]] = []
     if not gitignore.exists():
-        return patterns
+        return compiled
 
     with gitignore.open("r", encoding="utf-8", errors="ignore") as f:
         for raw in f:
@@ -30,9 +32,8 @@ def load_gitignore(base: Path):
             # пропускаем комментарии (начинающиеся с '#'), учитываем возможные пробелы в начале
             if line.lstrip().startswith("#"):
                 continue
-            patterns.append(line)
-    compiled = []
-    for pat in patterns:
+            patterns_raw.append(line)
+    for pat in patterns_raw:
         negate = pat.startswith("!")
         p = pat[1:] if negate else pat
 
@@ -98,14 +99,18 @@ def load_gitignore(base: Path):
             regex = r"^" + regex_body + r"$"
 
         try:
-            cre = re.compile(regex)
+            cre: Optional[Pattern[str]] = re.compile(regex)
         except re.error:
             cre = None
         compiled.append((negate, dir_only, has_slash, cre, pat))
     return compiled
 
 
-def match_gitignore(rel_path_posix: str, is_dir: bool, patterns) -> bool:
+def match_gitignore(
+    rel_path_posix: str,
+    is_dir: bool,
+    patterns: Sequence[Tuple[bool, bool, bool, Any, str]],
+) -> bool:
     """Возвращает True если путь должен быть проигнорирован (по правилам patterns).
     rel_path_posix — путь относительно BASE в posix-формате (без ведущего ./).
     patterns — список, полученный из load_gitignore.
@@ -147,7 +152,12 @@ def count_lines_in_file(path: Path) -> int:
     try:
         cnt = 0
         with path.open("rb") as fh:
-            for _ in fh:
+            for raw in fh:
+                # Пропускаем строки, где содержится только одна фигурная скобка без кода
+                # Разрешаем только пробелы/табуляции/переводы строк вокруг
+                s = raw.strip()
+                if s in (b"{", b"}"):
+                    continue
                 cnt += 1
         return cnt
     except Exception as e:
@@ -158,7 +168,7 @@ def count_lines_in_file(path: Path) -> int:
 
 def main():
     base = BASE
-    patterns = load_gitignore(base)
+    patterns: List[Tuple[bool, bool, bool, Any, str]] = load_gitignore(base)
 
     total_files = 0
     total_lines = 0
@@ -166,6 +176,8 @@ def main():
 
     # на всякий случай пропускаем саму папку .git (обычно не хотим её сканировать)
     git_dirname = ".git"
+    # доп. исключение: не считать содержимое каталога logs
+    skip_dirname_logs = "logs"
 
     for root, dirs, files in os.walk(base):
         root_path = Path(root)
@@ -178,8 +190,8 @@ def main():
         # изменяем dirs на месте, чтобы os.walk не входил в игнорируемые каталоги
         # проходим копию списка, чтобы можно было удалять элементы
         for d in list(dirs):
-            if d == git_dirname:
-                # всегда пропускаем .git
+            if d == git_dirname or d == skip_dirname_logs:
+                # всегда пропускаем .git и logs
                 dirs.remove(d)
                 continue
             child_rel = (Path(rel_root) / d).as_posix() if rel_root != "" else d
@@ -190,6 +202,9 @@ def main():
             file_rel = (Path(rel_root) / f).as_posix() if rel_root != "" else f
             # не считаем сам .gitignore файл (он может быть включён; решение — не считать конфигурационный файл)
             if file_rel == ".gitignore":
+                continue
+            # доп. исключения по имени/расширению
+            if f == "poetry.lock" or f.endswith(".log") or f.endswith(".txt"):
                 continue
             if match_gitignore(file_rel, is_dir=False, patterns=patterns):
                 skipped_by_gitignore += 1

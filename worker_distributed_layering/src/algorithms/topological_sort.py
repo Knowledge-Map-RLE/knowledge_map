@@ -68,7 +68,7 @@ class TopologicalSorter:
                 if exclude_isolated
                 else "MATCH (n:Article) RETURN n\n"
             )
-            + "\",\n          \"SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),\n           n.topo_order = -1,\n           n.visited = false\",\n          {batchSize: 5000, parallel: false}\n        ) YIELD batches, total, errorMessages\n        RETURN batches, total, errorMessages\n        """
+            + "\",\n          \"SET n.in_deg = size([(m:Article)-[:BIBLIOGRAPHIC_LINK]->(n) | m]),\n           n.topo_order = -1,\n           n.visited = false\",\n          {batchSize: 20000, parallel: false}\n        ) YIELD batches, total, errorMessages\n        RETURN batches, total, errorMessages\n        """
         )
         
         async with self.circuit_breaker:
@@ -77,7 +77,7 @@ class TopologicalSorter:
 
         # Основной алгоритм Кана с батчевой обработкой
         order_counter = 0
-        batch_size = 10000
+        batch_size = 50000  # Увеличен размер батча для больших графов
         processed_total = 0
         
         while True:

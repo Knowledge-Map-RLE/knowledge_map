@@ -1,0 +1,90 @@
+# Justfile для автоматизации задач разработки
+
+# Показать все доступные команды
+default:
+    @just --list
+
+# Сборка проекта в debug режиме
+build:
+    cargo build
+
+# Сборка проекта в release режиме
+build-release:
+    cargo build --release
+
+# Запуск сервера
+run:
+    cargo run --bin graph-layout-server
+
+# Запуск с конфигурацией
+run-config config="config.toml":
+    cargo run --bin graph-layout-server -- --config {{config}}
+
+# Запуск тестов
+test:
+    cargo test
+
+# Запуск тестов с выводом
+test-verbose:
+    cargo test -- --nocapture
+
+# Запуск benchmarks
+bench:
+    cargo bench
+
+# Форматирование кода
+fmt:
+    cargo fmt
+
+# Проверка кода
+check:
+    cargo check
+
+# Clippy проверки
+clippy:
+    cargo clippy -- -D warnings
+
+# Генерация документации
+docs:
+    cargo doc --open
+
+# Очистка
+clean:
+    cargo clean
+
+# Сборка Docker образа
+docker-build:
+    docker build -t graph-layout-engine .
+
+# Запуск Docker контейнера
+docker-run:
+    docker run -p 50051:50051 -p 9090:9090 graph-layout-engine
+
+# Проверка здоровья
+health:
+    cargo run --bin graph-layout-server -- --mode health
+
+# Запуск benchmarks
+benchmark:
+    cargo run --bin graph-layout-server -- --mode benchmark
+
+# Установка dependencies
+deps:
+    cargo fetch
+
+# Обновление dependencies
+update:
+    cargo update
+
+# Profiling с perf
+profile:
+    perf record -g cargo run --release --bin graph-layout-server
+    perf report
+
+# Полная проверка перед commit
+ci: fmt clippy test
+    @echo "✅ All checks passed!"
+
+# Создание release build с оптимизациями
+release: clean build-release
+    @echo "🚀 Release build completed!"

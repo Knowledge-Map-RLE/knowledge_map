@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     neo4j_password: str = Field(default="password", env="NEO4J_PASSWORD")
     neo4j_database: str = Field(default="neo4j", env="NEO4J_DATABASE")
     neo4j_pool_size: int = Field(default=50, env="NEO4J_POOL_SIZE")
-    neo4j_connection_timeout: int = Field(default=30, env="NEO4J_CONNECTION_TIMEOUT")
+    neo4j_connection_timeout: int = Field(default=300, env="NEO4J_CONNECTION_TIMEOUT")
     
     # Redis настройки
     redis_url: str = Field(default="redis://localhost:6379/0", env="REDIS_URL")
@@ -86,7 +86,7 @@ def get_neo4j_config() -> dict:
         "database": settings.neo4j_database,
         "max_connection_pool_size": settings.neo4j_pool_size,
         "connection_timeout": settings.neo4j_connection_timeout,
-        "max_transaction_retry_time": 30,
+        "max_transaction_retry_time": 300,
         "encrypted": False,  # Для локальной разработки
     }
 

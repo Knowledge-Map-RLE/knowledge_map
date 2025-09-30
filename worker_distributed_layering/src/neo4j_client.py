@@ -74,7 +74,13 @@ class Neo4jClient:
         if not self.driver:
             await self.connect()
 
-        session = self.driver.session(**kwargs)
+        # Устанавливаем увеличенные таймауты для больших графов
+        session_kwargs = {
+            "default_access_mode": "WRITE",
+            **kwargs
+        }
+        
+        session = self.driver.session(**session_kwargs)
         try:
             yield session
         finally:

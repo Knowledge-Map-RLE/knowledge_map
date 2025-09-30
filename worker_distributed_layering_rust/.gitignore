@@ -1,0 +1,39 @@
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo
+Cargo.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Generated files
+src/generated/*.rs
+!src/generated/.gitkeep
+
+# Environment
+.env
+.env.local
+
+# Documentation
+/doc/
+
+# Benchmarks
+/bench/
+
+# Coverage
+/coverage/
+tarpaulin-report.html
