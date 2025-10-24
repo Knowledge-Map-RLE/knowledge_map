@@ -42,6 +42,8 @@ pub struct Neo4jClient {
 impl Neo4jClient {
     /// Создание нового клиента
     pub async fn new(config: &Config) -> Result<Self> {
+        info!("🔧 Создание Neo4j клиента...");
+        
         let neo4j_config = Neo4jConfig {
             uri: config.neo4j.uri.clone(),
             user: config.neo4j.user.clone(),
@@ -53,7 +55,11 @@ impl Neo4jClient {
             batch_size: config.neo4j.batch_size,
         };
         
+        info!("📡 Параметры подключения: uri={}, database={}, pool_size={}", 
+              neo4j_config.uri, neo4j_config.database, neo4j_config.pool_size);
+        
         // Создаем подключение к Neo4j
+        info!("🔧 Создание конфигурации Neo4j...");
         let graph_config = ConfigBuilder::default()
             .uri(&neo4j_config.uri)
             .user(&neo4j_config.user)
@@ -62,7 +68,13 @@ impl Neo4jClient {
             .build()
             .expect("Failed to build Neo4j config");
         
+        info!("🔌 Установка соединения с Neo4j...");
+        let start_connect = std::time::Instant::now();
+        
         let graph = Graph::connect(graph_config).await.expect("Failed to connect to Neo4j");
+        
+        let connect_time = start_connect.elapsed();
+        info!("✅ Соединение с Neo4j установлено за {:.2?}", connect_time);
         
         Ok(Self {
             config: neo4j_config,
@@ -259,43 +271,157 @@ impl Neo4jClient {
             offset, batch_size
         );
         
-        let mut result = self.graph.execute(query.into()).await?;
-        let mut edges = Vec::new();
+        info!("📝 Выполнение запроса загрузки батча...");
+        let start_query = std::time::Instant::now();
         
-        while let Ok(Some(row)) = result.next().await {
-            let source: String = row.get("source").unwrap_or_default();
-            let target: String = row.get("target").unwrap_or_default();
-            let edge_type: String = row.get("edge_type").unwrap_or_else(|_| "RELATES_TO".to_string());
+        // Попытка с ретраями
+        let max_retries = 3;
+        for attempt in 1..=max_retries {
+            if attempt > 1 {
+                info!("🔄 Повторная попытка {} из {}", attempt, max_retries);
+            }
             
-            edges.push(GraphEdge {
-                source_id: source,
-                target_id: target,
-                edge_type,
-                weight: 1.0,
-            });
+            match self.graph.execute(query.clone().into()).await {
+                Ok(mut result) => {
+                    info!("✅ Запрос выполнен, обработка результатов...");
+                    let mut edges = Vec::new();
+                    let mut row_count = 0;
+                    
+                    // Добавляем таймаут для получения первой строки
+                    let timeout_duration = std::time::Duration::from_secs(60);
+                    info!("⏱️ Ожидание первой строки результата (таймаут {} сек)...", timeout_duration.as_secs());
+                    
+                    loop {
+                        match tokio::time::timeout(timeout_duration, result.next()).await {
+                            Ok(Ok(Some(row))) => {
+                                if row_count == 0 {
+                                    info!("📦 Первая строка получена, обработка данных...");
+                                }
+                                
+                                let source: String = row.get("source").unwrap_or_default();
+                                let target: String = row.get("target").unwrap_or_default();
+                                let edge_type: String = row.get("edge_type").unwrap_or_else(|_| "RELATES_TO".to_string());
+                                
+                                edges.push(GraphEdge {
+                                    source_id: source,
+                                    target_id: target,
+                                    edge_type,
+                                    weight: 1.0,
+                                });
+                                
+                                row_count += 1;
+                                if row_count % 10000 == 0 {
+                                    info!("📊 Обработано {} строк из батча...", row_count);
+                                }
+                            }
+                            Ok(Ok(None)) => {
+                                info!("✅ Конец результатов, обработано {} строк", row_count);
+                                break;
+                            }
+                            Ok(Err(e)) => {
+                                info!("❌ Ошибка при чтении строки: {}", e);
+                                break;
+                            }
+                            Err(_) => {
+                                info!("⏱️ Таймаут при получении строки {} (> {} сек)", row_count + 1, timeout_duration.as_secs());
+                                if attempt < max_retries {
+                                    let backoff_ms = (1u64 << attempt.min(6)) * 500;
+                                    info!("⏳ Ожидание {} мс перед повтором всего батча...", backoff_ms);
+                                    tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
+                                    continue;
+                                }
+                                return Err(anyhow::anyhow!("Таймаут при получении данных после {} попыток", max_retries));
+                            }
+                        }
+                    }
+                    
+                    let query_time = start_query.elapsed();
+                    info!("✅ Загружен батч: {} связей (offset={}, время: {:.2?})", edges.len(), offset, query_time);
+                    return Ok(edges);
+                }
+                Err(e) => {
+                    info!("❌ Ошибка выполнения запроса батча (попытка {}): {}", attempt, e);
+                    if attempt < max_retries {
+                        let backoff_ms = (1u64 << attempt.min(6)) * 500;
+                        info!("⏳ Ожидание {} мс перед повтором...", backoff_ms);
+                        tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
+                        continue;
+                    }
+                    return Err(anyhow::anyhow!("Ошибка загрузки батча после {} попыток: {}", max_retries, e));
+                }
+            }
         }
         
-        info!("✅ Загружен батч: {} связей (offset={})", edges.len(), offset);
-        Ok(edges)
+        Err(anyhow::anyhow!("Не удалось загрузить батч после {} попыток", max_retries))
     }
 
     /// Получение общего количества связей
     pub async fn get_total_edges_count(&self) -> Result<usize> {
+        info!("🔍 Запрос общего количества связей в БД...");
+        
         let query = r#"
         MATCH (a:Article)-[r]->(b:Article)
         WHERE a.uid IS NOT NULL AND b.uid IS NOT NULL 
         RETURN count(r) as total_count
         "#;
         
-        let mut result = self.graph.execute(query.into()).await?;
-        if let Ok(Some(row)) = result.next().await {
-            if let Ok(count) = row.get::<i64>("total_count") {
-                info!("📊 Общее количество связей в БД: {}", count);
-                return Ok(count as usize);
+        info!("📝 Выполнение запроса подсчета связей...");
+        let start_query = std::time::Instant::now();
+        
+        // Попытка с ретраями
+        let max_retries = 3;
+        for attempt in 1..=max_retries {
+            info!("🔄 Попытка {} из {}", attempt, max_retries);
+            
+            match self.graph.execute(query.into()).await {
+                Ok(mut result) => {
+                    info!("✅ Запрос выполнен, получение результата...");
+                    
+                    // Добавляем таймаут для получения результата (60 секунд)
+                    let timeout_duration = std::time::Duration::from_secs(60);
+                    match tokio::time::timeout(timeout_duration, result.next()).await {
+                        Ok(Ok(Some(row))) => {
+                            info!("📦 Результат получен, извлечение данных...");
+                            if let Ok(count) = row.get::<i64>("total_count") {
+                                let query_time = start_query.elapsed();
+                                info!("✅ Общее количество связей в БД: {} (время запроса: {:.2?})", count, query_time);
+                                return Ok(count as usize);
+                            } else {
+                                info!("⚠️ Не удалось извлечь count из результата");
+                            }
+                        }
+                        Ok(Ok(None)) => {
+                            info!("⚠️ Запрос не вернул результатов");
+                        }
+                        Ok(Err(e)) => {
+                            info!("❌ Ошибка получения результата: {}", e);
+                        }
+                        Err(_) => {
+                            info!("⏱️ Таймаут при получении результата (> {} сек)", timeout_duration.as_secs());
+                            if attempt < max_retries {
+                                let backoff_ms = (1u64 << attempt.min(6)) * 500;
+                                info!("⏳ Ожидание {} мс перед повтором...", backoff_ms);
+                                tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
+                                continue;
+                            }
+                            return Err(anyhow::anyhow!("Таймаут при получении результата после {} попыток", max_retries));
+                        }
+                    }
+                }
+                Err(e) => {
+                    info!("❌ Ошибка выполнения запроса (попытка {}): {}", attempt, e);
+                    if attempt < max_retries {
+                        let backoff_ms = (1u64 << attempt.min(6)) * 500;
+                        info!("⏳ Ожидание {} мс перед повтором...", backoff_ms);
+                        tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
+                        continue;
+                    }
+                    return Err(anyhow::anyhow!("Ошибка выполнения запроса после {} попыток: {}", max_retries, e));
+                }
             }
         }
         
-        Err(anyhow::anyhow!("Не удалось получить количество связей"))
+        Err(anyhow::anyhow!("Не удалось получить количество связей после {} попыток", max_retries))
     }
     
     /// Сохранение результатов укладки в Neo4j

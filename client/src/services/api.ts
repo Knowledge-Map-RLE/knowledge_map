@@ -2,6 +2,26 @@
  * API клиент для взаимодействия с бэкендом
  */
 
+const API_BASE_URL = ((import.meta as any).env?.VITE_API_BASE_URL || '').replace(/\/$/, '');
+
+const withBase = (path: string) => {
+  if (!API_BASE_URL) {
+    return path;
+  }
+  return path.startsWith('/') ? `${API_BASE_URL}${path}` : `${API_BASE_URL}/${path}`;
+};
+
+async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(withBase(path), init);
+  const cloned = response.clone();
+  try {
+    return await response.json() as T;
+  } catch (error) {
+    const bodyPreview = await cloned.text().catch(() => '');
+    throw new Error(`Failed to parse JSON from ${path}: ${bodyPreview.slice(0, 200)}`);
+  }
+}
+
 export interface Block {
     id: string;
   title: string;
@@ -110,43 +130,37 @@ export async function listDocuments(): Promise<{ success: boolean; documents: Ar
 // API функции остаются теми же
 export const api = {
   async loadLayout(): Promise<ApiResponse> {
-    const response = await fetch('/layout/articles_page?offset=0&limit=1000');
-    return response.json();
+    return fetchJson<ApiResponse>('/layout/articles_page?offset=0&limit=1000');
   },
 
   async loadAround(centerX: number, centerY: number, limit: number = 1000): Promise<LoadAroundResponse> {
-    const response = await fetch(`/layout/articles_page?offset=0&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
-    return response.json();
+    return fetchJson<LoadAroundResponse>(`/layout/articles_page?offset=0&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
   },
 
   async loadArticlesPage(offset: number = 0, limit: number = 2000, centerX: number = 0, centerY: number = 0): Promise<ApiResponse> {
-    const response = await fetch(`/layout/articles_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
-    return response.json();
+    return fetchJson<ApiResponse>(`/layout/articles_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
   },
 
   async createBlock(data: Partial<Block>): Promise<{ success: boolean; block: Block }> {
-    const response = await fetch('/api/blocks', {
+    return fetchJson<{ success: boolean; block: Block }>('/api/blocks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    return response.json();
   },
 
   async updateBlock(id: string, data: Partial<Block>): Promise<{ success: boolean; block: Block }> {
-    const response = await fetch(`/api/blocks/${id}`, {
+    return fetchJson<{ success: boolean; block: Block }>(`/api/blocks/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    return response.json();
   },
 
   async deleteBlock(id: string): Promise<{ success: boolean }> {
-    const response = await fetch(`/api/blocks/${id}`, {
+    return fetchJson<{ success: boolean }>(`/api/blocks/${id}`, {
       method: 'DELETE',
     });
-    return response.json();
   },
 };
 
@@ -161,23 +175,20 @@ export async function loadAround(centerX: number, centerY: number, limit: number
 
 export async function edgesByViewport(bounds: {left:number; right:number; top:number; bottom:number}): Promise<{blocks: Partial<Block>[]; links: Partial<Link>[]}>
 {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/articles/edges_by_viewport`, {
+  return fetchJson<{blocks: Partial<Block>[]; links: Partial<Link>[]}>('/api/articles/edges_by_viewport', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(bounds)
   });
-  return res.json();
 }
 
 // Обёртки для удобства использования в хуках
 export async function createBlock(name: string): Promise<{ success: boolean; block: any }> {
-  const response = await fetch('/api/blocks', {
+  return fetchJson<{ success: boolean; block: any }>('/api/blocks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content: name })
   });
-  return response.json();
 }
 
 export async function deleteBlock(id: string): Promise<{ success: boolean }> {
@@ -185,73 +196,62 @@ export async function deleteBlock(id: string): Promise<{ success: boolean }> {
 }
 
 export async function createLink(sourceId: string, targetId: string): Promise<{ success: boolean; link: any }> {
-  const response = await fetch('/api/links', {
+  return fetchJson<{ success: boolean; link: any }>('/api/links', {
         method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source_id: sourceId, target_id: targetId })
   });
-    return response.json();
 }
 
 export async function deleteLink(id: string): Promise<{ success: boolean }> {
-  const response = await fetch(`/api/links/${id}`, {
+  return fetchJson<{ success: boolean }>(`/api/links/${id}`, {
     method: 'DELETE'
   });
-    return response.json();
 }
 
 export async function createBlockAndLink(
   sourceId: string,
   direction: 'to_source' | 'from_source'
 ): Promise<{ success: boolean; new_block?: any; new_link?: any; error?: string }> {
-  const response = await fetch('/api/create_block_and_link', {
+  return fetchJson<{ success: boolean; new_block?: any; new_link?: any; error?: string }>('/api/create_block_and_link', {
         method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source_id: sourceId, direction })
   });
-  return response.json();
 }
 
 export async function pinBlock(blockId: string): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`/api/blocks/${blockId}/pin`, {
+  return fetchJson<{ success: boolean; error?: string }>(`/api/blocks/${blockId}/pin`, {
     method: 'POST'
   });
-    return response.json();
 }
 
 export async function unpinBlock(blockId: string): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`/api/blocks/${blockId}/unpin`, {
+  return fetchJson<{ success: boolean; error?: string }>(`/api/blocks/${blockId}/unpin`, {
     method: 'POST'
   });
-    return response.json();
 }
 
 export async function pinBlockWithScale(blockId: string, physicalScale: number): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`/api/blocks/${blockId}/pin_with_scale`, {
+  return fetchJson<{ success: boolean; error?: string }>(`/api/blocks/${blockId}/pin_with_scale`, {
             method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ physical_scale: physicalScale })
   });
-  return response.json();
 }
 
 export async function moveBlockToLevel(blockId: string, targetLevel: number): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`/api/blocks/${blockId}/move_level`, {
+  return fetchJson<{ success: boolean; error?: string }>(`/api/blocks/${blockId}/move_level`, {
             method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ target_level: targetLevel })
   });
-  return response.json();
 }
 
 // NLP: загрузка markdown файла из S3 через бэкенд
 export async function getNLPMarkdown(filename: string): Promise<{ content?: string; error?: string }> {
   try {
-    const response = await fetch(`/api/nlp/markdown/${encodeURIComponent(filename)}`);
-        if (!response.ok) {
-      return { error: `HTTP ${response.status}` };
-    }
-    return response.json();
+    return await fetchJson<{ content?: string; error?: string }>(`/api/nlp/markdown/${encodeURIComponent(filename)}`);
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Network error';
     return { error: message };

@@ -313,14 +313,6 @@ export default function Knowledge_map() {
     }
   }, [creatingBlock, editingText, blocks, setBlocks, handleAddBlock, handleCreateNewBlock]);
 
-  if (loadError) {
-    return (
-      <div className={styles.knowledge_map} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
-        Ошибка загрузки: {loadError}
-      </div>
-    );
-  }
-
   // Подготавливаем memo-структуры для быстрого доступа и culling
   const viewportBounds = viewportRef.current?.getWorldBounds?.() || null;
   const screenSize = viewportRef.current?.getScreenSize?.() || null;
@@ -370,6 +362,14 @@ export default function Knowledge_map() {
     };
     return links.filter(l => isInView(blockMap.get(l.source_id)) || isInView(blockMap.get(l.target_id)));
   }, [links, blockMap, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
+  if (loadError) {
+    return (
+      <div className={styles.knowledge_map} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
+        Ошибка загрузки: {loadError}
+      </div>
+    );
+  }
+
 
   return (
     <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>

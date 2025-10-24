@@ -236,13 +236,8 @@ async fn run_batch_layout(layout_service: &GraphLayoutServer, config: &Config) -
     info!("📊 Загрузка данных графа из Neo4j...");
     
     // Получаем общее количество связей
-    let total_edges_in_db = layout_service.neo4j_client.get_total_edges_count().await?;
-    info!("📈 Всего связей в БД: {}", total_edges_in_db);
-    
-    // ОГРАНИЧЕНИЕ ДЛЯ ТЕСТИРОВАНИЯ: обрабатываем только первые 100000 связей
-    let max_edges_for_testing = 100000;
-    let total_edges = total_edges_in_db.min(max_edges_for_testing);
-    info!("🧪 ОГРАНИЧЕНИЕ ДЛЯ ТЕСТИРОВАНИЯ: обрабатываем {} из {} связей", total_edges, total_edges_in_db);
+    let total_edges = layout_service.neo4j_client.get_total_edges_count().await?;
+    info!("📈 Всего связей в БД: {}", total_edges);
     
     // Определяем размер батча из конфигурации
     let batch_size = config.neo4j.batch_size;
@@ -264,17 +259,11 @@ async fn run_batch_layout(layout_service: &GraphLayoutServer, config: &Config) -
         let progress = (processed_edges as f64 / total_edges as f64) * 100.0;
         info!("📊 Прогресс: {:.1}% ({}/{} связей)", progress, processed_edges.min(total_edges), total_edges);
         
-        // Если это последний батч или достигли лимита для тестирования, обрабатываем накопленные данные
-        if batch_num == total_batches - 1 || all_edges.len() >= batch_size * 10 || processed_edges >= max_edges_for_testing {
+        // Если это последний батч или накопили достаточно данных, обрабатываем их
+        if batch_num == total_batches - 1 || all_edges.len() >= batch_size * 10 {
             info!("🧮 Запуск укладки для {} накопленных связей", all_edges.len());
             process_edges_batch(layout_service, &all_edges, config).await?;
             all_edges.clear();
-            
-            // Прерываем обработку если достигли лимита для тестирования
-            if processed_edges >= max_edges_for_testing {
-                info!("🧪 Достигнут лимит тестирования ({} связей), завершаем обработку", max_edges_for_testing);
-                break;
-            }
         }
     }
     
