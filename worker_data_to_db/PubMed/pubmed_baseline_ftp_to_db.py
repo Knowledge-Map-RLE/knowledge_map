@@ -11,6 +11,12 @@ from lxml import etree as LET  # type: ignore
 from typing import Dict, Tuple, List, Any
 from neo4j import GraphDatabase, exceptions as neo4j_exceptions  # type: ignore[attr-defined]
 
+# ========== LOADER DISABLED ==========
+# This loader is DISABLED as per project requirements.
+# Use PubMed Central loader (pmc_oa_bulk_to_db.py) instead.
+# Reason: PubMed Central data has more comprehensive reference sections.
+LOADER_DISABLED = True
+
 # ========== КОНФИГУРАЦИЯ ==========
 DATA_DIR        = Path(r"D:/Данные/PubMed")
 LOG_FILE        = Path("./logs/article_to_neo4j.log")
@@ -259,19 +265,23 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.layout_status = 'unprocessed'
             """, nodes=nodes)
         if rels:
+            # УНИФИЦИРОВАННАЯ СЕМАНТИКА SOURCE/TARGET:
+            # Направление: SOURCE (cited, старая) -> TARGET (citing, новая)
             tx.run("""
                 UNWIND $rels AS r
-                  MERGE (target:Article {uid: r.pmid})
+                  MERGE (source:Article {uid: r.source_pmid})
                     ON CREATE SET
-                      target.title = coalesce(r.pmid_title, target.title)
-                  MERGE (cited:Article {uid: r.cpmid})
-                    ON CREATE SET
-                      cited.title = coalesce(r.cpmid_title, cited.title)
+                      source.title = coalesce(r.source_title, source.title)
                     ON MATCH SET
-                      cited.title = coalesce(cited.title, r.cpmid_title)
-                  WITH target, cited
-                  WHERE target <> cited
-                  MERGE (target)-[:BIBLIOGRAPHIC_LINK]->(cited)
+                      source.title = coalesce(source.title, r.source_title)
+                  MERGE (target:Article {uid: r.target_pmid})
+                    ON CREATE SET
+                      target.title = coalesce(r.target_title, target.title)
+                    ON MATCH SET
+                      target.title = coalesce(target.title, r.target_title)
+                  WITH source, target
+                  WHERE source <> target
+                  MERGE (source)-[:BIBLIOGRAPHIC_LINK]->(target)
             """, rels=rels)
 
     logger.info(f"[WRITE-ENTRY] {path_name}: nodes={len(nodes)}, rels={len(rels)}")
@@ -429,11 +439,20 @@ def parse_one_file(path: Path):
                 cited_list = extract_bibliographic_links_improved(elem, pmid)
                 # Логируем количество ссылок
                 logger.info(f"[PMID {pmid}] links_count={len(cited_list)}")
+                # УНИФИЦИРОВАННАЯ СЕМАНТИКА SOURCE/TARGET:
+                # - SOURCE (left): cited reference (старая статья) - низкие слои
+                # - TARGET (right): citing article (новая статья) - высокие слои
+                # - Направление: SOURCE -> TARGET (старая -> новая)
                 # Логируем каждую ссылку и добавляем в пакет (с заголовками, если есть)
                 for cited in cited_list:
                     link_pmid = cited['pmid']
                     link_title = cited.get('title')
-                    rels.append({'pmid': pmid, 'pmid_title': title, 'cpmid': link_pmid, 'cpmid_title': link_title})
+                    rels.append({
+                        'source_pmid': link_pmid,      # SOURCE: cited reference (старая)
+                        'source_title': link_title,
+                        'target_pmid': pmid,           # TARGET: citing article (новая)
+                        'target_title': title
+                    })
                 
                 total_rels_found += len(cited_list)
                 elem.clear()
@@ -553,6 +572,24 @@ def process_all():
     logger.info("Обработка завершена.")
 
 if __name__ == "__main__":
+    if LOADER_DISABLED:
+        print("="*70)
+        print("PUBMED LOADER IS DISABLED")
+        print("="*70)
+        print()
+        print("This data loader has been disabled as per project requirements.")
+        print()
+        print("Reason:")
+        print("  - PubMed XML files have limited bibliographic reference data")
+        print("  - PubMed Central provides more comprehensive reference sections")
+        print("  - To avoid data quality issues, only PMC loader should be used")
+        print()
+        print("To load data, please use:")
+        print("  python worker_data_to_db/PubMed_Central/pmc_oa_bulk_to_db.py")
+        print()
+        print("="*70)
+        exit(0)
+
     start = time.time()
     process_all()
     logger.info(f"Finished in {time.time() - start:.1f}s")

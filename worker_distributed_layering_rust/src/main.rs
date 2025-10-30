@@ -20,18 +20,20 @@ Rust-based микросервис для высокопроизводитель�
 - Размещение вершин: O(V²) → O(V) с эффективными структурами данных
 
 */
+#![allow(dead_code)]
 
 use std::net::SocketAddr;
 
 use anyhow::Result;
 use clap::Parser;
 use tonic::transport::Server;
-use tracing::{info, error};
+use tracing::{info, warn, error};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer};
 
 mod config;
 mod algorithms;
 mod data_structures;
+mod db_optimizer;
 mod memory;
 mod metrics;
 mod neo4j;
@@ -44,6 +46,7 @@ pub mod generated {
 }
 
 use crate::config::Config;
+use crate::db_optimizer::DatabaseOptimizer;
 use crate::server::GraphLayoutServer;
 
 #[cfg(feature = "mimalloc")]
@@ -201,7 +204,7 @@ fn init_logging(level: &str) -> Result<()> {
 /// Автоматическая укладка графа
 async fn run_auto_layout(config: Config) -> Result<()> {
     info!("🔄 Запуск автоматической укладки графа...");
-    
+
     // Создание сервиса укладки графов
     info!("🔧 Создание GraphLayoutServer...");
     let layout_service = match GraphLayoutServer::new(config.clone()).await {
@@ -214,6 +217,18 @@ async fn run_auto_layout(config: Config) -> Result<()> {
             return Err(e);
         }
     };
+
+    // Подготовка базы данных: проверка и создание индексов
+    info!("🔧 Подготовка базы данных...");
+    let db_optimizer = DatabaseOptimizer::new(layout_service.neo4j_client.graph());
+    match db_optimizer.prepare_database().await {
+        Ok(_) => {
+            info!("✅ База данных подготовлена");
+        },
+        Err(e) => {
+            warn!("⚠️ Ошибка подготовки базы данных: {}. Продолжаем без оптимизаций.", e);
+        }
+    }
     
     info!("🧮 Начинаем батчевую обработку...");
     // Батчевая обработка

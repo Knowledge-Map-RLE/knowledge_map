@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 const useArticlesData = () => {
     const [blocks, setBlocks] = useState<any[]>([]);
@@ -8,9 +8,16 @@ const useArticlesData = () => {
     const [isBootLoading, setIsBootLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [pageOffset, setPageOffset] = useState(0);
-    const [pageLimit] = useState(1000);
+    const [pageLimit] = useState(100);  // ОПТИМИЗАЦИЯ: уменьшено с 1000 до 100
     const loadedBlockIdsRef = { current: new Set<string>() };
     const loadedLinkIdsRef = { current: new Set<string>() };
+
+    // ОПТИМИЗАЦИЯ: Создаём Map для O(1) поиска блоков
+    const blockMap = useMemo(() => {
+        const map = new Map<string, any>();
+        blocks.forEach(block => map.set(block.id, block));
+        return map;
+    }, [blocks]);
 
     const processServerBlocks = useCallback((serverBlocks: any[]) => {
         console.log(`[processServerBlocks] Обрабатываем ${serverBlocks.length} блоков с сервера`);
@@ -37,20 +44,15 @@ const useArticlesData = () => {
         return processedBlocks;
     }, []);
 
+    // ОПТИМИЗАЦИЯ: Убрана зависимость от blocks.length - предотвращает каскадные ре-рендеры
     const updateBlocks = useCallback((newBlocks: any[]) => {
-        console.log(`[updateBlocks] Обновляем блоки. Текущих: ${blocks.length}, новых: ${newBlocks.length}`);
-        
         setBlocks(prevBlocks => {
             const existingIds = new Set(prevBlocks.map(b => b.id));
             const blocksToAdd = newBlocks.filter(b => !existingIds.has(b.id));
-            const updatedBlocks = [...prevBlocks, ...blocksToAdd];
-            
-            console.log(`[updateBlocks] Добавлено ${blocksToAdd.length} новых блоков, всего: ${updatedBlocks.length}`);
-            return updatedBlocks;
+            if (blocksToAdd.length === 0) return prevBlocks; // Предотвращаем лишний ре-рендер
+            return [...prevBlocks, ...blocksToAdd];
         });
-        
-        console.log(`[updateBlocks] Состояние обновлено, текущий blocks.length: ${blocks.length}`);
-    }, [blocks.length]);
+    }, []);
 
     const updateLinks = useCallback((newLinks: any[]) => {
         console.log(`[updateLinks] Обновляем связи. Текущих: ${links.length}, новых: ${newLinks.length}`);
@@ -94,6 +96,7 @@ const useArticlesData = () => {
 
     return {
         blocks,
+        blockMap,  // ОПТИМИЗАЦИЯ: Добавлен Map для O(1) поиска блоков
         links,
         levels,
         isLoading,

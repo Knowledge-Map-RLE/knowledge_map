@@ -9,12 +9,19 @@ export interface BlockData {
   physical_scale?: number;
 }
 
+export interface PolylinePoint {
+  x: number;
+  y: number;
+}
+
 export interface LinkData {
   id: string;
   source_id: string;
   target_id: string;
   source_block?: BlockData;
   target_block?: BlockData;
+  metadata?: Record<string, unknown>;
+  polyline?: PolylinePoint[];
 }
 
 export interface LevelData {

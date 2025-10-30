@@ -1,4 +1,5 @@
 import { Application } from '@pixi/react';
+import { useMemo } from 'react';  // ОПТИМИЗАЦИЯ: Для Set мемоизации
 import { Viewport } from '../../Knowledge_map/Viewport';
 import { Link } from '../../Knowledge_map/Link';
 import { Level } from '../../Knowledge_map/Level';
@@ -12,6 +13,7 @@ import type { EditMode } from '../../Knowledge_map/types';
 interface ArticlesRendererProps {
   viewportRef: React.RefObject<ViewportRef>;
   blocks: BlockData[];
+  blockMap?: Map<string, BlockData>;  // ОПТИМИЗАЦИЯ: Map для O(1) поиска
   links: LinkData[];
   levels: any[];
   sublevels: any[];
@@ -36,6 +38,7 @@ interface ArticlesRendererProps {
 export function ArticlesRenderer({
   viewportRef,
   blocks,
+  blockMap,  // ОПТИМИЗАЦИЯ: Принимаем Map
   links,
   levels,
   sublevels,
@@ -56,6 +59,10 @@ export function ArticlesRenderer({
   onBlockRightClick,
   onSublevelClick
 }: ArticlesRendererProps) {
+  // ОПТИМИЗАЦИЯ: Создаём Set для O(1) проверки selection вместо O(n) Array.includes()
+  const selectedBlocksSet = useMemo(() => new Set(selectedBlocks), [selectedBlocks]);
+  const selectedLinksSet = useMemo(() => new Set(selectedLinks), [selectedLinks]);
+
   return (
     <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
       <Viewport 
@@ -89,25 +96,26 @@ export function ArticlesRenderer({
             key={link.id}
             linkData={link}
             blocks={blocks}
-            isSelected={selectedLinks.includes(link.id)}
+            blockMap={blockMap}  // ОПТИМИЗАЦИЯ: Передаём Map для O(1) поиска
+            isSelected={selectedLinksSet.has(link.id)}  // ОПТИМИЗАЦИЯ: Set.has() вместо Array.includes()
             onClick={() => onLinkClick(link.id)}
           />
         ))}
-        
+
         {/* Тестовая вершина в начале координат */}
-        <TestNode 
-          x={0} 
-          y={0} 
-          text="Тестовая вершина (0,0)" 
+        <TestNode
+          x={0}
+          y={0}
+          text="Тестовая вершина (0,0)"
         />
-        
+
         {/* Рендерим все блоки отдельно */}
         {blocks.map(block => (
           <Block
             key={block.id}
             blockData={block}
             onBlockClick={onBlockClick}
-            isSelected={selectedBlocks.includes(block.id)}
+            isSelected={selectedBlocksSet.has(block.id)}  // ОПТИМИЗАЦИЯ: Set.has() вместо Array.includes()
             currentMode={currentMode}
             onArrowClick={onArrowClick}
             onBlockPointerDown={onBlockPointerDown}

@@ -82,7 +82,12 @@ impl Neo4jClient {
             connected: Arc::new(RwLock::new(true)),
         })
     }
-    
+
+    /// Получить ссылку на граф
+    pub fn graph(&self) -> Arc<Graph> {
+        Arc::clone(&self.graph)
+    }
+
     /// Подключение к Neo4j (заглушка)
     pub async fn connect(&self) -> Result<()> {
         info!("🔌 Подключение к Neo4j: {}", self.config.uri);
@@ -357,105 +362,126 @@ impl Neo4jClient {
 
     /// Получение общего количества связей
     pub async fn get_total_edges_count(&self) -> Result<usize> {
-        info!("🔍 Запрос общего количества связей в БД...");
-        
-        let query = r#"
-        MATCH (a:Article)-[r]->(b:Article)
-        WHERE a.uid IS NOT NULL AND b.uid IS NOT NULL 
-        RETURN count(r) as total_count
-        "#;
-        
-        info!("📝 Выполнение запроса подсчета связей...");
-        let start_query = std::time::Instant::now();
-        
-        // Попытка с ретраями
-        let max_retries = 3;
-        for attempt in 1..=max_retries {
-            info!("🔄 Попытка {} из {}", attempt, max_retries);
-            
-            match self.graph.execute(query.into()).await {
-                Ok(mut result) => {
-                    info!("✅ Запрос выполнен, получение результата...");
-                    
-                    // Добавляем таймаут для получения результата (60 секунд)
-                    let timeout_duration = std::time::Duration::from_secs(60);
-                    match tokio::time::timeout(timeout_duration, result.next()).await {
-                        Ok(Ok(Some(row))) => {
-                            info!("📦 Результат получен, извлечение данных...");
-                            if let Ok(count) = row.get::<i64>("total_count") {
-                                let query_time = start_query.elapsed();
-                                info!("✅ Общее количество связей в БД: {} (время запроса: {:.2?})", count, query_time);
-                                return Ok(count as usize);
-                            } else {
-                                info!("⚠️ Не удалось извлечь count из результата");
-                            }
-                        }
-                        Ok(Ok(None)) => {
-                            info!("⚠️ Запрос не вернул результатов");
-                        }
-                        Ok(Err(e)) => {
-                            info!("❌ Ошибка получения результата: {}", e);
-                        }
-                        Err(_) => {
-                            info!("⏱️ Таймаут при получении результата (> {} сек)", timeout_duration.as_secs());
-                            if attempt < max_retries {
-                                let backoff_ms = (1u64 << attempt.min(6)) * 500;
-                                info!("⏳ Ожидание {} мс перед повтором...", backoff_ms);
-                                tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
-                                continue;
-                            }
-                            return Err(anyhow::anyhow!("Таймаут при получении результата после {} попыток", max_retries));
-                        }
-                    }
-                }
+        let queries = [
+            (
+                "CALL db.stats.retrieve('GRAPH COUNTS') YIELD data RETURN data['relationshipCount'] AS total_count",
+                "db.stats.retrieve('GRAPH COUNTS')"
+            ),
+            (
+                "CALL apoc.meta.stats() YIELD relCount RETURN relCount AS total_count",
+                "apoc.meta.stats()"
+            ),
+            (
+                "MATCH (a:Article)-[r]->(b:Article) WHERE a.uid IS NOT NULL AND b.uid IS NOT NULL RETURN count(r) AS total_count",
+                "fallback MATCH count"
+            ),
+        ];
+
+        let mut last_error = None;
+
+        for (query, description) in queries {
+            match self.run_edges_count_query(query, description).await {
+                Ok(count) => return Ok(count),
                 Err(e) => {
-                    info!("❌ Ошибка выполнения запроса (попытка {}): {}", attempt, e);
-                    if attempt < max_retries {
-                        let backoff_ms = (1u64 << attempt.min(6)) * 500;
-                        info!("⏳ Ожидание {} мс перед повтором...", backoff_ms);
-                        tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
-                        continue;
-                    }
-                    return Err(anyhow::anyhow!("Ошибка выполнения запроса после {} попыток: {}", max_retries, e));
+                    info!("⚠️ {} не сработал: {}", description, e);
+                    last_error = Some(e);
                 }
             }
         }
-        
-        Err(anyhow::anyhow!("Не удалось получить количество связей после {} попыток", max_retries))
+
+        Err(last_error.unwrap_or_else(|| anyhow::anyhow!("Не удалось получить количество связей из Neo4j")))
     }
-    
-    /// Сохранение результатов укладки в Neo4j
+
+    async fn run_edges_count_query(&self, query: &str, description: &str) -> Result<usize> {
+        info!("📊 Получаем общее число связей через {}", description);
+
+        let max_retries = 3;
+        let timeout_duration = std::time::Duration::from_secs(60);
+        let start_query = std::time::Instant::now();
+
+        for attempt in 1..=max_retries {
+            info!("🔄 Попытка {} из {} ({})", attempt, max_retries, description);
+
+            let mut result = match self.graph.execute(Query::new(query.to_string())).await {
+                Ok(result) => result,
+                Err(e) => {
+                    info!("❌ Ошибка выполнения {}: {}", description, e);
+                    if attempt < max_retries {
+                        let backoff_ms = (1u64 << attempt.min(6)) * 500;
+                        info!("⏳ Повтор через {} мс", backoff_ms);
+                        tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
+                        continue;
+                    }
+                    return Err(anyhow::anyhow!("{} завершился ошибкой: {}", description, e));
+                }
+            };
+
+            match tokio::time::timeout(timeout_duration, result.next()).await {
+                Ok(Ok(Some(row))) => {
+                    if let Ok(count) = row.get::<i64>("total_count") {
+                        let query_time = start_query.elapsed();
+                        info!("✅ {} → {} связей (за {:.2?})", description, count, query_time);
+                        return Ok(count as usize);
+                    } else {
+                        return Err(anyhow::anyhow!("{} не вернул поле total_count", description));
+                    }
+                }
+                Ok(Ok(None)) => {
+                    return Err(anyhow::anyhow!("{} вернул пустой результат", description));
+                }
+                Ok(Err(e)) => {
+                    info!("❌ Ошибка получения строки {}: {}", description, e);
+                }
+                Err(_) => {
+                    info!("⌛ {} не ответил за {} секунд", description, timeout_duration.as_secs());
+                }
+            }
+
+            if attempt < max_retries {
+                let backoff_ms = (1u64 << attempt.min(6)) * 500;
+                info!("⏳ Повтор {} через {} мс", description, backoff_ms);
+                tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
+            }
+        }
+
+        Err(anyhow::anyhow!(
+            "{} не дал результата за {} попытки",
+            description,
+            max_retries
+        ))
+    }
+
     pub async fn save_layout_results(&self, positions: &[VertexPosition]) -> Result<()> {
         self.save_layout_results_with_batch_size(positions, 1000).await
     }
 
     /// Сохранение результатов укладки в Neo4j с настраиваемым размером батча
+    /// Save layout results to Neo4j using the configured batch size and run graph post-processing.
     pub async fn save_layout_results_with_batch_size(&self, positions: &[VertexPosition], batch_size: usize) -> Result<()> {
         use neo4rs::Query;
         use std::collections::HashMap;
 
-        info!("💾 Сохранение результатов укладки в Neo4j: {} позиций", positions.len());
-        
+        info!("Saving layout positions to Neo4j: {} rows", positions.len());
+
         if positions.is_empty() {
-            info!("⚠️ Нет позиций для сохранения");
+            info!("No layout positions provided; skipping save.");
             return Ok(());
         }
 
-        // 0) Убедимся, что есть индекс по uid для быстрого MATCH
         let ensure_index = Query::new(
             "CREATE INDEX article_uid IF NOT EXISTS FOR (a:Article) ON (a.uid)".to_string()
         );
-        let _ = self.graph.execute(ensure_index).await; // best-effort
+        let _ = self.graph.execute(ensure_index).await;
 
-        // Батчевое сохранение с прогресс-индикатором и UNWIND
         let total_positions = positions.len();
         let total_batches = (total_positions + batch_size - 1) / batch_size;
-        info!("🔄 Батчевое сохранение: {} батчей по {} позиций", total_batches, batch_size);
+        info!(
+            "Saving layout using {} batches with up to {} rows each",
+            total_batches, batch_size
+        );
         let start_time = std::time::Instant::now();
 
-        // Ограничим параллелизм, чтобы не перегрузить пул соединений
-        // Читаем параллелизм из конфигурации, по умолчанию 4
-        let max_parallel = 2; // Фиксированное значение для стабильности
+        let max_parallel = 2;
         let semaphore = std::sync::Arc::new(tokio::sync::Semaphore::new(max_parallel));
 
         let mut join_handles = Vec::with_capacity(total_batches);
@@ -465,21 +491,20 @@ impl Neo4jClient {
 
             let start_idx = batch_num * batch_size;
             let end_idx = (start_idx + batch_size).min(total_positions);
-
-            // Копируем слайс для таска
             let slice = positions[start_idx..end_idx].to_vec();
 
             let handle = tokio::spawn(async move {
                 let _permit = permit;
-                // Транзакция на батч
-                // Ретраи с экспоненциальной задержкой
                 let mut attempt = 0u32;
                 let max_attempts = 5u32;
+
                 loop {
                     let mut txn = match graph.start_txn().await {
                         Ok(t) => t,
                         Err(e) => {
-                            if attempt >= max_attempts { return Err(anyhow::anyhow!(e)); }
+                            if attempt >= max_attempts {
+                                return Err(anyhow::anyhow!(e));
+                            }
                             attempt += 1;
                             let backoff_ms = (1u64 << attempt.min(6)) * 100;
                             tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
@@ -502,12 +527,15 @@ impl Neo4jClient {
                         "UNWIND $rows AS row \
                         MATCH (a:Article {uid: row.uid}) \
                         SET a.layer = row.layer, a.level = row.level, a.x = row.x, a.y = row.y".to_string()
-                    ).param("rows", rows);
+                    )
+                    .param("rows", rows);
 
                     match txn.run(q).await {
                         Ok(_) => {
                             if let Err(e) = txn.commit().await {
-                                if attempt >= max_attempts { return Err(anyhow::anyhow!(e)); }
+                                if attempt >= max_attempts {
+                                    return Err(anyhow::anyhow!(e));
+                                }
                                 attempt += 1;
                                 let backoff_ms = (1u64 << attempt.min(6)) * 100;
                                 tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
@@ -516,7 +544,9 @@ impl Neo4jClient {
                             break anyhow::Ok(());
                         }
                         Err(e) => {
-                            if attempt >= max_attempts { return Err(anyhow::anyhow!(e)); }
+                            if attempt >= max_attempts {
+                                return Err(anyhow::anyhow!(e));
+                            }
                             attempt += 1;
                             let backoff_ms = (1u64 << attempt.min(6)) * 100;
                             tokio::time::sleep(std::time::Duration::from_millis(backoff_ms)).await;
@@ -526,35 +556,164 @@ impl Neo4jClient {
             });
 
             join_handles.push((batch_num, start_idx, end_idx, handle));
-
-            // Логируем прогресс на основании завершения задач
-            // (ниже after-await loop)
         }
 
-        // Собираем результаты и логируем прогресс по мере завершения
-        let mut completed = 0usize;
+        let mut completed: usize = 0;
         for (batch_num, start_idx, end_idx, handle) in join_handles {
             let res = handle.await;
             if let Err(e) = res {
-                return Err(anyhow::anyhow!("Ошибка сохранения батча {}: {}", batch_num + 1, e));
+                return Err(anyhow::anyhow!(
+                    "Failed to join layout batch task {}: {}",
+                    batch_num + 1,
+                    e
+                ));
             }
             if let Err(e) = res.unwrap() {
-                return Err(anyhow::anyhow!("Ошибка выполнения транзакции батча {}: {}", batch_num + 1, e));
+                return Err(anyhow::anyhow!(
+                    "Layout batch {} failed: {}",
+                    batch_num + 1,
+                    e
+                ));
             }
 
-            completed = end_idx;
+            completed += end_idx.saturating_sub(start_idx);
             let progress = (completed as f64 / total_positions as f64) * 100.0;
             let elapsed = start_time.elapsed();
-            let rate = (completed as f64 / elapsed.as_secs_f64()).max(0.0);
-            info!("📥 Сохранение батча {}/{} (позиции {}-{})", batch_num + 1, total_batches, start_idx, end_idx.saturating_sub(1));
-            info!("📊 Прогресс сохранения: {:.1}% ({}/{} позиций, {:.0} позиций/сек)", progress, completed, total_positions, rate);
+            let rate = if elapsed.as_secs_f64() > 0.0 {
+                completed as f64 / elapsed.as_secs_f64()
+            } else {
+                0.0
+            };
+
+            info!(
+                "Finished layout batch {}/{} (rows {}-{})",
+                batch_num + 1,
+                total_batches,
+                start_idx,
+                end_idx.saturating_sub(1)
+            );
+            info!(
+                "Layout save progress: {:.1}% ({}/{} rows, {:.0} rows/sec)",
+                progress,
+                completed,
+                total_positions,
+                rate
+            );
         }
 
         let total_time = start_time.elapsed();
-        let rate = total_positions as f64 / total_time.as_secs_f64();
-        info!("✅ Результаты укладки сохранены в Neo4j за {:.2?} (скорость: {:.0} позиций/сек)", total_time, rate);
+        let save_rate = if total_time.as_secs_f64() > 0.0 {
+            total_positions as f64 / total_time.as_secs_f64()
+        } else {
+            0.0
+        };
+        info!(
+            "Completed writing layout to Neo4j in {:.2?} ({:.0} rows/sec)",
+            total_time,
+            save_rate
+        );
+
+        info!("Starting layout post-processing in Neo4j...");
+        self.post_process_layout().await?;
+
         Ok(())
     }
+
+    /// Post-process layout data to remove isolated vertices.
+    /// Note: Edge reversal is no longer needed as edges are correctly oriented during graph construction.
+    pub async fn post_process_layout(&self) -> Result<()> {
+        let start_time = std::time::Instant::now();
+        info!("Running layout post-processing tasks...");
+
+        let removed_vertices = self.remove_isolated_vertices().await?;
+
+        let elapsed = start_time.elapsed();
+        info!(
+            "Post-processing finished in {:.1}s ({} isolated vertices cleaned)",
+            elapsed.as_secs_f32(),
+            removed_vertices
+        );
+
+        Ok(())
+    }
+
+    // REMOVED: fix_inverted_edges() function
+    // This function was incorrectly reversing ~1M edges due to wrong validation logic.
+    // The edges in Neo4j are stored correctly as: citing article -> cited article (newer -> older)
+    // The internal graph construction now reverses edges during build to ensure proper topological ordering.
+    // See algorithms/mod.rs for the correct edge reversal during graph construction.
+
+
+    async fn remove_isolated_vertices(&self) -> Result<usize> {
+        use neo4rs::Query;
+
+        info!("Scanning for isolated vertices with layout coordinates...");
+
+        let count_query = Query::new(
+            "MATCH (n:Article) \
+             WHERE (n.x IS NOT NULL OR n.layer IS NOT NULL) \
+               AND NOT (n)-[:BIBLIOGRAPHIC_LINK]-() \
+               AND NOT ()-[:BIBLIOGRAPHIC_LINK]-(n) \
+             RETURN count(n) AS isolated_count"
+                .to_string(),
+        );
+
+        let mut result = self.graph.execute(count_query).await?;
+        let isolated_count = match result.next().await? {
+            Some(record) => record.get::<i64>("isolated_count").unwrap_or(0) as usize,
+            None => 0,
+        };
+
+        if isolated_count == 0 {
+            info!("No isolated vertices require cleanup.");
+            return Ok(0);
+        }
+
+        info!(
+            "Found {} isolated vertices with layout data; removing coordinates...",
+            isolated_count
+        );
+
+        let mut total_removed = 0usize;
+        let batch_size = 10_000usize;
+
+        loop {
+            let remove_query = Query::new(
+                format!(
+                    "MATCH (n:Article) \
+                     WHERE (n.x IS NOT NULL OR n.layer IS NOT NULL) \
+                       AND NOT (n)-[:BIBLIOGRAPHIC_LINK]-() \
+                       AND NOT ()-[:BIBLIOGRAPHIC_LINK]-(n) \
+                     WITH n LIMIT {} \
+                     REMOVE n.x, n.y, n.layer, n.level \
+                     RETURN count(n) AS removed_count",
+                    batch_size
+                )
+            );
+
+            let mut result = self.graph.execute(remove_query).await?;
+            let removed = match result.next().await? {
+                Some(record) => record.get::<i64>("removed_count").unwrap_or(0) as usize,
+                None => 0,
+            };
+
+            if removed == 0 {
+                break;
+            }
+
+            total_removed += removed;
+            info!(
+                "Cleared layout properties from {} vertices (total {}/{})",
+                removed,
+                total_removed,
+                isolated_count
+            );
+        }
+
+        Ok(total_removed)
+    }
+
+
     
     /// Проверка здоровья соединения (заглушка)
     pub async fn health_check(&self) -> Result<()> {

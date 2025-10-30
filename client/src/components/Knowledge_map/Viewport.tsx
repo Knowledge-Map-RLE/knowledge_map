@@ -112,13 +112,13 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       };
 
       const onPointerMove = (e: PointerEvent) => {
-        if (!dragWorld.current || !containerRef.current || !isDragging) return;
-        
+        if (!dragWorld.current || !containerRef.current) return;
+
         const rect = canvas.getBoundingClientRect();
         const sx = e.clientX - rect.left;
         const sy = e.clientY - rect.top;
         const cnt = containerRef.current;
-        
+
         const screenPos = cnt.toGlobal(dragWorld.current);
         cnt.position.x += sx - screenPos.x;
         cnt.position.y += sy - screenPos.y;
@@ -127,7 +127,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
 
       const onPointerUp = (e: PointerEvent) => {
         if (e.button !== 2) return;
-        if (isDragging) {
+        if (dragWorld.current) {
           setIsDragging(false);
           dragWorld.current = null;
           console.log('DOM: Stopped dragging');
@@ -136,13 +136,11 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       };
       
       const onContextMenu = (e: Event) => e.preventDefault();
-      
-      // Условно добавляем обработчики - НЕ добавляем если контекстное меню активно
-      if (!isBlockContextMenuActive) {
-        canvas.addEventListener('pointerdown', onPointerDown);
-        canvas.addEventListener('pointermove', onPointerMove);
-        canvas.addEventListener('pointerup', onPointerUp);
-      }
+
+      // Добавляем обработчики (проверка контекстного меню внутри onPointerDown)
+      canvas.addEventListener('pointerdown', onPointerDown);
+      canvas.addEventListener('pointermove', onPointerMove);
+      canvas.addEventListener('pointerup', onPointerUp);
       canvas.addEventListener('contextmenu', onContextMenu);
       
       return () => {
@@ -154,7 +152,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [app, isBlockContextMenuActive, blockRightClickRef, instantBlockClickRef, isDragging]);
+  }, [app, isBlockContextMenuActive, blockRightClickRef, instantBlockClickRef, emit]);
   
   // Зум через DOM события
   useEffect(() => {
@@ -196,9 +194,9 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         canvas.removeEventListener('wheel', onWheel);
       };
     }, 500);
-    
+
     return () => clearTimeout(timer);
-  }, [app]);
+  }, [app, emit]);
 
   // Динамическая сетка через useTick
   useTick(() => {

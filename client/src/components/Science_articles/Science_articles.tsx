@@ -53,6 +53,7 @@ export default function Science_articles() {
   // Используем новый хук для загрузки данных
   const {
     blocks,
+    blockMap,  // ОПТИМИЗАЦИЯ: Map для O(1) поиска блоков
     links,
     isLoading,
     isBootLoading,
@@ -260,6 +261,7 @@ export default function Science_articles() {
       <ArticlesRenderer
         viewportRef={viewportRef}
         blocks={blocks}
+        blockMap={blockMap}  // ОПТИМИЗАЦИЯ: Map для O(1) поиска в Link
         links={links}
         levels={levels}
         sublevels={sublevels}

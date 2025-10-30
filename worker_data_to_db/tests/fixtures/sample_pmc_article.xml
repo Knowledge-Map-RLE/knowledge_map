@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns:xlink="http://www.w3.org/1999/xlink">
+  <front>
+    <article-meta>
+      <article-id pub-id-type="pmid">12345678</article-id>
+      <article-id pub-id-type="pmc">PMC1234567</article-id>
+      <article-id pub-id-type="doi">10.1234/example.2023.001</article-id>
+      <title-group>
+        <article-title>Sample Article for Testing Reference Extraction</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Smith</surname>
+            <given-names>John</given-names>
+          </name>
+        </contrib>
+      </contrib-group>
+      <pub-date>
+        <year>2023</year>
+      </pub-date>
+      <journal-meta>
+        <journal-title>Test Journal</journal-title>
+      </journal-meta>
+      <abstract>
+        <p>This is a sample article for testing bibliographic reference extraction.</p>
+      </abstract>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Sample content here.</p>
+    </sec>
+  </body>
+  <back>
+    <ref-list>
+      <title>References</title>
+      <ref id="ref1">
+        <element-citation>
+          <person-group person-group-type="author">
+            <name>
+              <surname>Author1</surname>
+              <given-names>A</given-names>
+            </name>
+          </person-group>
+          <article-title>First reference article</article-title>
+          <source>Journal A</source>
+          <year>2020</year>
+          <pub-id pub-id-type="pmid">11111111</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="ref2">
+        <element-citation>
+          <person-group person-group-type="author">
+            <name>
+              <surname>Author2</surname>
+              <given-names>B</given-names>
+            </name>
+          </person-group>
+          <article-title>Second reference article</article-title>
+          <source>Journal B</source>
+          <year>2021</year>
+          <pub-id pub-id-type="pmcid">PMC2222222</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="ref3">
+        <element-citation>
+          <person-group person-group-type="author">
+            <name>
+              <surname>Author3</surname>
+              <given-names>C</given-names>
+            </name>
+          </person-group>
+          <article-title>Third reference article with DOI</article-title>
+          <source>Journal C</source>
+          <year>2022</year>
+          <pub-id pub-id-type="doi">10.5555/test.2022.003</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="ref4">
+        <element-citation>
+          <person-group person-group-type="author">
+            <name>
+              <surname>Author4</surname>
+              <given-names>D</given-names>
+            </name>
+          </person-group>
+          <article-title>Fourth reference with URL only</article-title>
+          <source>Journal D</source>
+          <year>2019</year>
+          <ext-link ext-link-type="uri" xlink:href="https://example.com/article/4">https://example.com/article/4</ext-link>
+        </element-citation>
+      </ref>
+      <ref id="ref5">
+        <element-citation>
+          <person-group person-group-type="author">
+            <name>
+              <surname>Author5</surname>
+              <given-names>E</given-names>
+            </name>
+          </person-group>
+          <article-title>Fifth reference with multiple IDs</article-title>
+          <source>Journal E</source>
+          <year>2023</year>
+          <pub-id pub-id-type="pmid">55555555</pub-id>
+          <pub-id pub-id-type="pmcid">PMC5555555</pub-id>
+          <pub-id pub-id-type="doi">10.6666/multi.2023.005</pub-id>
+        </element-citation>
+      </ref>
+    </ref-list>
+  </back>
+</article>

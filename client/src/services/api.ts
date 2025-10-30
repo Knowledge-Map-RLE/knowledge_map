@@ -40,6 +40,7 @@ export interface Link {
   source_id: string;
   target_id: string;
     metadata?: Record<string, any>;
+    polyline?: unknown;
 }
 
 export interface Level {
@@ -175,7 +176,7 @@ export async function loadAround(centerX: number, centerY: number, limit: number
 
 export async function edgesByViewport(bounds: {left:number; right:number; top:number; bottom:number}): Promise<{blocks: Partial<Block>[]; links: Partial<Link>[]}>
 {
-  return fetchJson<{blocks: Partial<Block>[]; links: Partial<Link>[]}>('/api/articles/edges_by_viewport', {
+  return fetchJson<{blocks: Partial<Block>[]; links: Partial<Link>[]}>('/layout/api/articles/edges_by_viewport', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(bounds)

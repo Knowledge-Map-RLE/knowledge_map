@@ -5,6 +5,7 @@ import { edgesByViewport } from '../../../services/api';
 export function useArticlesDataLoader(viewportRef?: any) {
   const {
     blocks,
+    blockMap,  // ОПТИМИЗАЦИЯ: Добавлен Map для передачи в компоненты
     links,
     isLoading,
     isBootLoading,
@@ -208,6 +209,7 @@ export function useArticlesDataLoader(viewportRef?: any) {
 
   return {
     blocks,
+    blockMap,  // ОПТИМИЗАЦИЯ: Передаём Map для O(1) поиска в компонентах
     links,
     isLoading,
     isBootLoading,

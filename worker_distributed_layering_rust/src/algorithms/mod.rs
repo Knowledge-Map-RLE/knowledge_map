@@ -33,6 +33,7 @@ use crate::generated::{LayoutOptions, LayoutStatistics};
 use crate::neo4j::{GraphEdge, VertexPosition};
 use anyhow::Result;
 use std::collections::HashMap;
+use serde_json;
 
 /// Трейт для алгоритмов укладки графов
 pub trait LayoutAlgorithm: Send + Sync {
@@ -126,12 +127,26 @@ impl HighPerformanceLayoutEngine {
             options.enable_simd,
         )?;
         
-        let vertex_placer = vertex_placement::OptimalVertexPlacer::new(
-            options.block_width,
-            options.block_height,
-            options.horizontal_gap,
-            options.vertical_gap,
-        )?;
+        // Create vertex placer with custom configuration
+        let placement_config = vertex_placement::PlacementConfig {
+            block_width: options.block_width,
+            block_height: options.block_height,
+            horizontal_gap: options.horizontal_gap,
+            vertical_gap: options.vertical_gap,
+        };
+
+        let opt_options = vertex_placement::OptimizationOptions {
+            compact_layout: options.optimize_layout,
+            max_iterations: 10,
+        };
+
+        let edge_options = vertex_placement::EdgeRoutingOptions::default();
+
+        let vertex_placer = vertex_placement::OptimalVertexPlacer::with_config(
+            placement_config,
+            opt_options,
+            edge_options,
+        );
         
         let memory_manager = memory_optimized::MemoryManager::new(
             crate::generated::MemoryStrategy::try_from(options.memory_strategy).unwrap_or(crate::generated::MemoryStrategy::MemoryAuto),
@@ -215,11 +230,11 @@ impl HighPerformanceLayoutEngine {
         use crate::data_structures::GraphBuilder;
         use std::collections::HashSet;
         use tracing::info;
-        
+
         let mut builder = GraphBuilder::new();
         let mut unique_edges = HashSet::new();
         let mut added_count = 0;
-        
+
         // Добавление связей с фильтрацией и дедупликацией
         for edge in edges {
             // Пропускаем пустые и self-loop связи
@@ -229,23 +244,44 @@ impl HighPerformanceLayoutEngine {
             if edge.source_id == edge.target_id {
                 continue;
             }
-            
+
             // Пропускаем дубликаты
             let edge_key = (&edge.source_id, &edge.target_id);
             if !unique_edges.insert(edge_key) {
                 continue;
             }
-            
+
+            // УНИФИЦИРОВАННАЯ СЕМАНТИКА SOURCE/TARGET:
+            //
+            // SOURCE (left, слева):
+            // - Старая cited статья из reference list
+            // - Получает НИЗКИЕ слои (0, 1, 2...) - слева на графе
+            // - Это наиболее цитируемые статьи
+            //
+            // TARGET (right, справа):
+            // - Новая citing статья
+            // - Получает ВЫСОКИЕ слои - справа на графе
+            // - Это статьи которые цитируют SOURCE
+            //
+            // Направление: SOURCE -> TARGET (старая -> новая)
+            //
+            // В Neo4j хранится ТАК ЖЕ: SOURCE -> TARGET (cited -> citing)
+            // НЕ разворачиваем! Используем как есть.
+            //
+            // BFS корректно работает с этим направлением:
+            // - Вершины без входящих рёбер (старые, SOURCE) получают слой 0
+            // - Вершины, цитирующие их (новые, TARGET) получают более высокие слои
+            //
             builder.add_edge(
-                edge.source_id.clone(),
-                edge.target_id.clone(),
+                edge.source_id.clone(),  // SOURCE: cited reference (старая статья)
+                edge.target_id.clone(),  // TARGET: citing article (новая статья)
                 edge.weight,
             )?;
             added_count += 1;
         }
-        
-        info!("🏗️ Добавлено {} уникальных связей в граф", added_count);
-        
+
+        info!("🏗️ Добавлено {} уникальных связей в граф (SOURCE->TARGET, cited->citing)", added_count);
+
         builder.build()
     }
 }
@@ -298,17 +334,28 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
         info!("=== ШАГ 4: РАЗМЕЩЕНИЕ ВЕРШИН ===");
         info!("📍 Размещение вершин с оптимизацией пространства...");
         let placement_start = Instant::now();
-        let positions = self.vertex_placer.place_vertices(
+        let (positions, edge_paths) = self.vertex_placer.place_vertices(
             &graph,
             &longest_path,
             &topo_order.order,
-            options,
         ).await?;
         let placement_time = placement_start.elapsed().as_millis() as u64;
         info!("✅ Размещение вершин завершено за {} мс", placement_time);
         info!("📌 Размещено {} вершин", positions.len());
         
         let total_time = start_time.elapsed().as_millis() as u64;
+
+        let edge_paths_payload = if edge_paths.is_empty() {
+            None
+        } else {
+            let mut map = HashMap::new();
+            for ((src, dst), points) in &edge_paths {
+                let key = format!("{}->{}", src, dst);
+                let value: Vec<[f32; 2]> = points.iter().map(|(x, y)| [*x, *y]).collect();
+                map.insert(key, value);
+            }
+            Some(serde_json::to_string(&map)?)
+        };
         
         info!("=== ШАГ 5: ФИНАЛИЗАЦИЯ ===");
         info!("📊 Создание статистики и метаданных...");
@@ -328,9 +375,14 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
                 topo_sort_time_ms: topo_time as i64,
                 longest_path_time_ms: lp_time as i64,
                 placement_time_ms: placement_time as i64,
-                layers_used: self.vertex_placer.get_layer_count() as i32,
-                max_level: self.vertex_placer.get_max_level() as i32,
-                space_efficiency: self.vertex_placer.get_space_efficiency(),
+                layers_used: self.vertex_placer.get_stats().layers_used as i32,
+                max_level: positions.iter().map(|p| p.level).max().unwrap_or(0),
+                space_efficiency: if self.vertex_placer.get_stats().vertices_placed > 0 {
+                    self.vertex_placer.get_stats().vertices_placed as f32 /
+                    (self.vertex_placer.get_stats().layers_used * self.vertex_placer.get_stats().vertices_placed / self.vertex_placer.get_stats().layers_used) as f32
+                } else {
+                    0.0
+                },
             }),
         };
         
@@ -348,6 +400,9 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
                 params.insert("chunk_size".to_string(), options.chunk_size.to_string());
                 params.insert("max_workers".to_string(), options.max_workers.to_string());
                 params.insert("simd_enabled".to_string(), options.enable_simd.to_string());
+                if let Some(ref payload) = edge_paths_payload {
+                    params.insert("edge_paths".to_string(), payload.clone());
+                }
                 params
             },
         };
