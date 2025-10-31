@@ -14,12 +14,14 @@ mod layer_assignment;
 mod placement;
 mod optimization;
 mod edge_routing;
+mod global_layer_state;
 
 // Re-export public types
 pub use stats::PlacementStats;
-pub use placement::{VertexPosition, PlacementConfig, OccupiedPositions};
+pub use placement::{VertexPosition, PlacementConfig, OccupiedPositions, place_all_vertices};
 pub use optimization::{OptimizationOptions, count_edge_crossings};
 pub use edge_routing::{EdgeRoutingOptions, calculate_edge_length, get_edge_statistics};
+pub use global_layer_state::{GlobalLayerState, LayerStatistics};
 
 use anyhow::Result;
 use std::collections::HashMap;

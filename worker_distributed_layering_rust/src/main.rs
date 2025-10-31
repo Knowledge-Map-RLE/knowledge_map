@@ -142,7 +142,7 @@ async fn main() -> Result<()> {
             run_benchmarks().await?;
         },
         ServerMode::Test => {
-            info!("🧪 Запуск тестов");
+            info!("🧪 Запуск тестов укладки");
             run_tests().await?;
         },
     }
@@ -244,162 +244,112 @@ async fn run_auto_layout(config: Config) -> Result<()> {
     }
 }
 
-/// Батчевая обработка графа
+/// Батчевая обработка графа с глобальным назначением слоёв
 async fn run_batch_layout(layout_service: &GraphLayoutServer, config: &Config) -> Result<()> {
     use tracing::info;
-    
+    use crate::algorithms::vertex_placement::{GlobalLayerState, PlacementConfig};
+
+    info!("=== БАТЧЕВАЯ ОБРАБОТКА С ГЛОБАЛЬНЫМ НАЗНАЧЕНИЕМ СЛОЁВ ===");
     info!("📊 Загрузка данных графа из Neo4j...");
-    
+
     // Получаем общее количество связей
     let total_edges = layout_service.neo4j_client.get_total_edges_count().await?;
     info!("📈 Всего связей в БД: {}", total_edges);
-    
+
     // Определяем размер батча из конфигурации
     let batch_size = config.neo4j.batch_size;
     let total_batches = (total_edges + batch_size - 1) / batch_size;
-    
-    info!("🔄 Батчевая обработка: {} батчей по {} связей", total_batches, batch_size);
-    
-    let mut all_edges = Vec::new();
-    let mut processed_edges = 0;
-    
+
+    info!("🔄 Будет загружено {} батчей по {} связей", total_batches, batch_size);
+
+    // Фаза 1: Глобальное назначение слоёв
+    info!("=== ФАЗА 1: ГЛОБАЛЬНОЕ НАЗНАЧЕНИЕ СЛОЁВ ===");
+    let mut global_state = GlobalLayerState::new();
+
     for batch_num in 0..total_batches {
         let offset = batch_num * batch_size;
-        info!("📥 Обработка батча {}/{} (offset={})", batch_num + 1, total_batches, offset);
-        
+        info!("📥 Загрузка батча {}/{} (offset={})", batch_num + 1, total_batches, offset);
+
         let batch_edges = layout_service.neo4j_client.load_graph_edges_batch(batch_size, offset).await?;
-        all_edges.extend(batch_edges);
-        processed_edges += batch_size;
-        
-        let progress = (processed_edges as f64 / total_edges as f64) * 100.0;
-        info!("📊 Прогресс: {:.1}% ({}/{} связей)", progress, processed_edges.min(total_edges), total_edges);
-        
-        // Если это последний батч или накопили достаточно данных, обрабатываем их
-        if batch_num == total_batches - 1 || all_edges.len() >= batch_size * 10 {
-            info!("🧮 Запуск укладки для {} накопленных связей", all_edges.len());
-            process_edges_batch(layout_service, &all_edges, config).await?;
-            all_edges.clear();
+
+        // Конвертируем в формат (source, target)
+        // Направление сохраняется как есть из Neo4j
+        let edge_tuples: Vec<(String, String)> = batch_edges
+            .into_iter()
+            .map(|e| (e.source_id, e.target_id))
+            .collect();
+
+        info!("📊 Добавление {} связей в глобальное состояние", edge_tuples.len());
+        global_state.add_edges_batch(&edge_tuples)?;
+
+        // Обновляем слои после каждого батча
+        info!("🔄 Обновление слоёв после добавления батча");
+        let updates = global_state.propagate_until_convergence()?;
+
+        let progress = ((batch_num + 1) as f64 / total_batches as f64) * 100.0;
+        info!("📊 Прогресс: {:.1}% ({}/{} батчей), {} обновлений слоёв",
+              progress, batch_num + 1, total_batches, updates);
+
+        // Периодически выводим статистику
+        if (batch_num + 1) % 10 == 0 || batch_num == total_batches - 1 {
+            global_state.log_statistics();
         }
     }
-    
-    // Обрабатываем оставшиеся данные
-    if !all_edges.is_empty() {
-        info!("🧮 Финальная обработка {} оставшихся связей", all_edges.len());
-        process_edges_batch(layout_service, &all_edges, config).await?;
+
+    info!("=== ФАЗА 1 ЗАВЕРШЕНА ===");
+    global_state.log_statistics();
+
+    // Валидация слоёв
+    info!("🔍 Валидация назначенных слоёв...");
+    let invalid_edges = global_state.validate_layers();
+    if invalid_edges > 0 {
+        info!("⚠️ Обнаружено {} невалидных связей (возможно, циклы)", invalid_edges);
     }
-    
+
+    // Фаза 2: Размещение вершин по координатам
+    info!("=== ФАЗА 2: РАЗМЕЩЕНИЕ ВЕРШИН ПО КООРДИНАТАМ ===");
+    let layer_map = global_state.get_layer_map();
+
+    let placement_config = PlacementConfig {
+        block_width: config.algorithms.block_width,
+        block_height: config.algorithms.block_height,
+        horizontal_gap: config.algorithms.horizontal_gap,
+        vertical_gap: config.algorithms.vertical_gap,
+    };
+
+    info!("📍 Размещение {} вершин на основе глобальных слоёв", layer_map.len());
+    let positions = crate::algorithms::vertex_placement::place_all_vertices(
+        layer_map,
+        &placement_config,
+    );
+
+    // Конвертируем в формат Neo4j
+    let neo4j_positions: Vec<crate::neo4j::VertexPosition> = positions
+        .into_iter()
+        .map(|p| crate::neo4j::VertexPosition {
+            article_id: p.vertex_id,
+            layer: p.layer,
+            level: p.level,
+            x: p.x,
+            y: p.y,
+        })
+        .collect();
+
+    info!("📊 Подготовлено {} позиций для сохранения", neo4j_positions.len());
+
+    // Фаза 3: Сохранение результатов
+    info!("=== ФАЗА 3: СОХРАНЕНИЕ РЕЗУЛЬТАТОВ В NEO4J ===");
+    layout_service.neo4j_client.save_layout_results_with_batch_size(
+        &neo4j_positions,
+        config.neo4j.save_batch_size
+    ).await?;
+
+    info!("✅ Результаты успешно сохранены в Neo4j");
+    info!("=== ВСЕ ФАЗЫ ЗАВЕРШЕНЫ УСПЕШНО ===");
+
     Ok(())
 }
 
-/// Обработка батча связей
-async fn process_edges_batch(layout_service: &GraphLayoutServer, edges: &[crate::neo4j::GraphEdge], config: &Config) -> Result<()> {
-    use tracing::info;
-    
-    if edges.is_empty() {
-        return Ok(());
-    }
-    
-    let edge_count = edges.len();
-    info!("📊 Обработка батча: {} связей", edge_count);
-    
-    if edges.is_empty() {
-        info!("⚠️ Граф пуст, укладка не требуется");
-        return Ok(());
-    }
-    
-    // Создание запроса для укладки
-    let request = generated::LayoutRequest {
-        task_id: "auto_layout".to_string(),
-        edges: edges.iter().map(|edge| generated::GraphEdge {
-            source_id: edge.source_id.clone(),
-            target_id: edge.target_id.clone(),
-            edge_type: edge.edge_type.clone(),
-            weight: edge.weight,
-        }).collect(),
-        options: Some(generated::LayoutOptions {
-            block_width: 200.0,
-            block_height: 80.0,
-            horizontal_gap: 40.0,
-            vertical_gap: 50.0,
-            exclude_isolated_vertices: true,
-            optimize_layout: true,
-            max_iterations: 1000,
-            convergence_threshold: 0.001,
-            chunk_size: 1000,
-            max_workers: 4,
-            enable_simd: true,
-            enable_gpu: false,
-            memory_strategy: generated::MemoryStrategy::MemoryAuto as i32,
-        }),
-        metadata: Some(generated::RequestMetadata {
-            client_id: "auto_layout_client".to_string(),
-            timestamp: chrono::Utc::now().timestamp(),
-            priority: 1,
-            estimated_vertex_count: 1000,
-            estimated_edge_count: edge_count as i64,
-        }),
-    };
-    
-    // Выполнение укладки
-    info!("=== ЗАПУСК АВТОМАТИЧЕСКОЙ УКЛАДКИ ГРАФА ===");
-    info!("🧮 Начало выполнения алгоритма укладки...");
-    info!("📊 Загружено {} связей для обработки", edge_count);
-    let start_time = std::time::Instant::now();
-    
-    // Используем прямой вызов алгоритма вместо gRPC
-    use crate::generated::graph_layout_service_server::GraphLayoutService;
-    let response = GraphLayoutService::compute_layout(layout_service, tonic::Request::new(request)).await?;
-    let layout_result = response.into_inner();
-    
-    let duration = start_time.elapsed();
-    info!("=== УКЛАДКА ЗАВЕРШЕНА ===");
-    info!("⏱️ Время выполнения: {:.2?}", duration);
-    info!("📊 Обработано позиций: {}", layout_result.positions.len());
-    
-    // Подробная статистика
-    if let Some(stats) = &layout_result.statistics {
-        info!("=== СТАТИСТИКА УКЛАДКИ ===");
-        info!("📈 Всего вершин: {}", stats.vertices_processed);
-        info!("🔗 Всего связей: {}", stats.edges_processed);
-        info!("🔄 Компоненты связности: {}", stats.connected_components);
-        info!("📏 Длина самого длинного пути: {}", stats.longest_path_length);
-        info!("⚡ Скорость обработки: {:.1} вершин/сек", stats.vertices_per_second);
-        
-        if let Some(metrics) = &stats.algorithm_metrics {
-            info!("🧮 Время топологической сортировки: {} мс", metrics.topo_sort_time_ms);
-            info!("🛤️ Время поиска самого длинного пути: {} мс", metrics.longest_path_time_ms);
-            info!("📍 Время размещения вершин: {} мс", metrics.placement_time_ms);
-            info!("🏗️ Использовано слоёв: {}", metrics.layers_used);
-            info!("📊 Максимальный уровень: {}", metrics.max_level);
-            info!("💾 Эффективность использования пространства: {:.1}%", metrics.space_efficiency * 100.0);
-        }
-    }
-    
-    // Сохранение результатов в Neo4j
-    info!("💾 Сохранение результатов в Neo4j...");
-    let positions: Vec<crate::neo4j::VertexPosition> = layout_result.positions.into_iter().map(|pos| {
-        crate::neo4j::VertexPosition {
-            article_id: pos.article_id,
-            layer: pos.layer,
-            level: pos.level,
-            x: pos.x,
-            y: pos.y,
-        }
-    }).collect();
-    
-    info!("📊 Подготовлено {} позиций для сохранения", positions.len());
-    layout_service.neo4j_client.save_layout_results_with_batch_size(&positions, config.neo4j.save_batch_size).await?;
-    info!("✅ Результаты сохранены в Neo4j");
-    
-    // Вывод статистики
-    info!("📈 Статистика укладки:");
-    info!("  - Связей обработано: {}", edge_count);
-    info!("  - Вершин размещено: {}", positions.len());
-    info!("  - Время выполнения: {:?}", duration);
-    info!("  - Скорость: {:.2} связей/сек", edge_count as f64 / duration.as_secs_f64());
-    
-    Ok(())
-}
 
 /// Запуск gRPC сервера
 async fn run_server(address: String, config: Config) -> Result<()> {
@@ -453,13 +403,25 @@ async fn run_benchmarks() -> Result<()> {
 
 /// Запуск тестов
 async fn run_tests() -> Result<()> {
-    info!("🧪 Запуск тестов корректности...");
-    
-    // Тест на маленьком графе
-    // Тест на среднем графе
-    // Тест на большом графе
-    // Тест сравнения с эталонным результатом
-    
-    println!("✅ Все тесты пройдены");
+    info!("🧪 Запуск тестов корректности укладки графа...");
+    println!();
+
+    // Путь к тестовому GML файлу
+    let gml_path = "tests/artifacts/test_graph.gml";
+
+    if std::path::Path::new(gml_path).exists() {
+        println!("=== ТЕСТ 1: Укладка из GML файла ===\n");
+        graph_layout_engine::test_layout::test_layout_from_gml(gml_path)?;
+        println!("\n{}\n", "=".repeat(60));
+    } else {
+        println!("⚠️ GML файл не найден: {}", gml_path);
+        println!("⚠️ Запуск теста на встроенном графе вместо этого\n");
+
+        println!("=== ТЕСТ 1: Укладка встроенного тестового графа ===\n");
+        graph_layout_engine::test_layout::test_layout()?;
+        println!("\n{}\n", "=".repeat(60));
+    }
+
+    println!("✅ Все тесты успешно завершены\n");
     Ok(())
 }

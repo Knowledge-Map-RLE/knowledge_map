@@ -23,6 +23,7 @@ pub mod memory;
 pub mod metrics;
 pub mod neo4j;
 pub mod server;
+pub mod test_layout;
 
 // Re-export основных типов
 pub use algorithms::{HighPerformanceLayoutEngine, LayoutAlgorithm, LayoutResult};

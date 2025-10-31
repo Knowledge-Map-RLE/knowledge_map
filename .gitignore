@@ -13,3 +13,5 @@ __pycache__/
 .env
 .venv/
 worker_distributed_layering_rust/tests/artifacts/
+
+target/

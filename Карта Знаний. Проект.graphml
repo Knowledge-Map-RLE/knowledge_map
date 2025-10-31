@@ -444,7 +444,7 @@
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="198.21524718837873" width="208.79819020227524" x="-2415.1755071665457" y="1336.9094839949478"/>
+              <y:Geometry height="198.21524718837873" width="208.79819020227524" x="-2415.1755071665457" y="1757.6206066876732"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="70.66796875" x="0.0" xml:space="preserve" y="0.0">      PubMed</y:NodeLabel>
@@ -470,7 +470,7 @@
         <node id="n3::n0">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="150.0" x="-2397.209890919915" y="1369.3157339949478"/>
+              <y:Geometry height="70.0" width="150.0" x="-2397.209890919915" y="1790.0268566876732"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="15.9013671875">PubMed baseline данные</y:NodeLabel>
@@ -481,7 +481,7 @@
         <node id="n3::n1">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="150.0" x="-2397.209890919915" y="1450.1247311833263"/>
+              <y:Geometry height="70.0" width="150.0" x="-2397.209890919915" y="1870.8358538760517"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="15.9013671875">PubMed Central данные</y:NodeLabel>
@@ -496,7 +496,7 @@
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="316.00279061427545" width="2182.136631691631" x="-1619.467840688819" y="996.1091488183492"/>
+              <y:Geometry height="316.00279061427545" width="2182.136631691631" x="-1619.467840688819" y="1416.8202715110747"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.99609375" x="0.0" xml:space="preserve" y="0.0">      База данных Neo4j</y:NodeLabel>
@@ -522,7 +522,7 @@
         <node id="n4::n0">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="100.53321836925954" x="-1473.9346223195596" y="1142.899497149636"/>
+              <y:Geometry height="70.0" width="100.53321836925954" x="-1473.9346223195596" y="1563.6106198423615"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="100.53321836925954" x="0.0" xml:space="preserve" y="7.85205078125">ЗАГРУЖЕНЫ ДАННЫЕ В Neo4j</y:NodeLabel>
@@ -533,7 +533,7 @@
         <node id="n4::n1">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="100.53321836925954" x="-1473.9346223195596" y="1028.7126644433492"/>
+              <y:Geometry height="70.0" width="100.53321836925954" x="-1473.9346223195596" y="1449.4237871360747"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="70.39453125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="100.53321836925954" x="0.0" xml:space="preserve" y="-0.197265625">СДЕЛАН РЕЗЕРВНЫЙ ДАМП ДАННЫХ</y:NodeLabel>
@@ -544,7 +544,7 @@
         <node id="n4::n2">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="100.53321836925954" x="-737.5508238354296" y="1142.899497149636"/>
+              <y:Geometry height="70.0" width="100.53321836925954" x="-737.5508238354296" y="1563.6106198423615"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="70.39453125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="100.53321836925954" x="0.0" xml:space="preserve" y="-0.197265625">ОТДАНЫ ДАННЫЕ БАЗОЙ ДАННЫХ</y:NodeLabel>
@@ -555,7 +555,7 @@
         <node id="n4::n3">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="100.53321836925954" x="-900.8113523312402" y="1047.9623553747024"/>
+              <y:Geometry height="70.0" width="100.53321836925954" x="-900.8113523312402" y="1468.6734780674278"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="100.53321836925954" x="0.0" xml:space="preserve" y="7.85205078125">ПОЛУЧЕН Cypher ЗАПРОС</y:NodeLabel>
@@ -566,7 +566,7 @@
         <node id="n4::n4">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="100.53321836925954" x="-900.81135233124" y="1142.899497149636"/>
+              <y:Geometry height="70.0" width="100.53321836925954" x="-900.81135233124" y="1563.6106198423615"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="70.39453125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="100.53321836925954" x="0.0" xml:space="preserve" y="-0.197265625">ВОЗВРАЩЁН РЕЗУЛЬТАТ БАЗОЙ ДАННЫХ</y:NodeLabel>
@@ -577,7 +577,7 @@
         <node id="n4::n5">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="100.53321836925954" x="-1604.467840688819" y="1142.899497149636"/>
+              <y:Geometry height="70.0" width="100.53321836925954" x="-1604.467840688819" y="1563.6106198423615"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="100.53321836925954" x="0.0" xml:space="preserve" y="7.85205078125">ЗАПУЩЕНА Neo4j БАЗА ДАННЫХ</y:NodeLabel>
@@ -588,7 +588,7 @@
         <node id="n4::n6">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="136.3887053231624" x="-1343.4014039503" y="1226.9146738076247"/>
+              <y:Geometry height="70.0" width="136.3887053231624" x="-1343.4014039503" y="1647.6257965003501"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="70.39453125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.3887053231624" x="0.0" xml:space="preserve" y="-0.197265625">СОХРАНЕНЫ КООРДИНАТЫ ВЕРШИН В БАЗЕ ДАННЫХ</y:NodeLabel>
@@ -603,7 +603,7 @@
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="198.685962582147" width="1554.6690250795978" x="-990.4076554076846" y="792.2202976654764"/>
+              <y:Geometry height="198.685962582147" width="1554.6690250795978" x="-990.4076554076846" y="1212.9314203582019"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="213.373046875" x="0.0" xml:space="preserve" y="0.0">      API шлюз публичный (Gateway)</y:NodeLabel>
@@ -629,7 +629,7 @@
         <node id="n5::n0">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="143.23181388009345" x="-922.1606500866569" y="880.2598311547397"/>
+              <y:Geometry height="70.0" width="143.23181388009345" x="-922.1606500866569" y="1300.9709538474651"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="70.39453125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="143.23181388009345" x="0.0" xml:space="preserve" y="-0.197265625">ПОЛУЧЕН ЗАПРОС НА СОЗДАНИЕ БЛОКА С ДАННЫМИ</y:NodeLabel>
@@ -640,7 +640,7 @@
         <node id="n5::n1">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="142.02949878163065" x="-758.2989640416151" y="880.2598311547397"/>
+              <y:Geometry height="70.0" width="142.02949878163065" x="-758.2989640416151" y="1300.9709538474651"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="142.02949878163065" x="0.0" xml:space="preserve" y="7.85205078125">ОТПРАВЛЕН ОТВЕТ НА ЗАПРОС СОЗДАНИЯ БЛОКА</y:NodeLabel>
@@ -760,7 +760,7 @@ SALES</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="167.03583437758823" width="773.1674985529246" x="578.8355005098692" y="794.3899987239542"/>
+              <y:Geometry height="167.03583437758823" width="773.1674985529246" x="578.8355005098692" y="1215.1011214166797"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="231.91796875" x="0.0" xml:space="preserve" y="0.0">      API для разработчиков (Developer)</y:NodeLabel>
@@ -789,7 +789,7 @@ SALES</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="176.20690125908595" width="283.68603074924226" x="-2037.8138754518586" y="1390.0777893253853"/>
+              <y:Geometry height="176.20690125908595" width="283.68603074924226" x="-2037.8138754518586" y="1810.7889120181108"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="243.326171875" x="0.0" xml:space="preserve" y="0.0">      Сервис загрузки. Получение данных</y:NodeLabel>
@@ -816,7 +816,7 @@ SALES</y:NodeLabel>
           <data key="d4" xml:space="preserve"/>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="150.0" x="-2006.272371504313" y="1457.79758416507"/>
+              <y:Geometry height="70.0" width="150.0" x="-2006.272371504313" y="1878.5087068577955"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="7.85205078125">ПОЛУЧЕН СПИСОК ФАЙЛОВ И MD5 ХЕШЕЙ ПО FTP</y:NodeLabel>
@@ -1014,7 +1014,7 @@ SALES</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="167.035834377588" width="2241.6668429335014" x="-1671.1674260443556" y="1346.1957208768613"/>
+              <y:Geometry height="167.035834377588" width="2241.6668429335014" x="-1671.1674260443556" y="1766.9068435695867"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="109.1171875" x="0.0" xml:space="preserve" y="0.0">      S3 хранилище</y:NodeLabel>
@@ -1040,7 +1040,7 @@ SALES</y:NodeLabel>
         <node id="n14::n0">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="150.0" x="-1505.9190202612638" y="1417.6253602924592"/>
+              <y:Geometry height="70.0" width="150.0" x="-1505.9190202612638" y="1838.3364829851846"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="7.85205078125">ЗАГРУЖЕНЫ ВСЕ ДАННЫЕ В ХРАНИЛИЩЕ</y:NodeLabel>
@@ -1051,7 +1051,7 @@ SALES</y:NodeLabel>
         <node id="n14::n1">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="100.53321836925943" x="-1656.1674260443556" y="1382.500766807923"/>
+              <y:Geometry height="70.0" width="100.53321836925943" x="-1656.1674260443556" y="1803.2118895006483"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="100.53321836925943" x="0.0" xml:space="preserve" y="15.9013671875">СОЗДАНО S3 ХРАНИЛИЩЕ</y:NodeLabel>
@@ -1066,7 +1066,7 @@ SALES</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="427.439240589375" width="488.03862793665735" x="-1679.0855682091042" y="2048.4271149927436"/>
+              <y:Geometry height="427.439240589375" width="488.03862793665735" x="-1679.0855682091042" y="2469.138237685469"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="104.025390625" x="0.0" xml:space="preserve" y="0.0">      Level of detail</y:NodeLabel>
@@ -1092,7 +1092,7 @@ SALES</y:NodeLabel>
         <node id="n15::n0">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="109.84230927835051" x="-1497.099028310709" y="2084.0143649284914"/>
+              <y:Geometry height="70.0" width="109.84230927835051" x="-1497.099028310709" y="2504.725487621217"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="109.84230927835051" x="0.0" xml:space="preserve" y="15.9013671875">Level of detail. LOD</y:NodeLabel>
@@ -1103,7 +1103,7 @@ SALES</y:NodeLabel>
         <node id="n15::n1">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="132.8660519587629" x="-1659.9650802694719" y="2084.0143649284914"/>
+              <y:Geometry height="70.0" width="132.8660519587629" x="-1659.9650802694719" y="2504.725487621217"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="132.8660519587629" x="0.0" xml:space="preserve" y="15.9013671875">КЛАСТЕРИЗОВАН ГРАФ</y:NodeLabel>
@@ -1114,7 +1114,7 @@ SALES</y:NodeLabel>
         <node id="n15::n2">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="257.402556701031" width="329.3710185567013" x="-1659.9650802694723" y="2169.0849566587262"/>
+              <y:Geometry height="257.402556701031" width="329.3710185567013" x="-1659.9650802694723" y="2589.7960793514517"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="199.18359375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="329.3710185567013" x="0.0" xml:space="preserve" y="29.109481475515622">Нужно
@@ -1130,7 +1130,7 @@ SALES</y:NodeLabel>
         <node id="n15::n3">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="95.11782268041225" x="-1330.594061712771" y="2084.0143649284914"/>
+              <y:Geometry height="70.0" width="95.11782268041225" x="-1330.594061712771" y="2504.725487621217"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="95.11782268041225" x="0.0" xml:space="preserve" y="7.85205078125">РАЗДЕЛЁН ГРАФ НА ТАЙЛЫ</y:NodeLabel>
@@ -1145,7 +1145,7 @@ SALES</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="399.77171542642213" width="1239.1285668940989" x="-2430.1755071665457" y="1618.6553995663212"/>
+              <y:Geometry height="399.7717154264219" width="1239.1285668940989" x="-2430.1755071665457" y="2039.3665222590466"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="119.412109375" x="0.0" xml:space="preserve" y="0.0">      Сервис укладки</y:NodeLabel>
@@ -1171,7 +1171,7 @@ SALES</y:NodeLabel>
         <node id="n16::n0">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="75.89406231499561" x="-2415.1755071665457" y="1736.7075984403584"/>
+              <y:Geometry height="70.0" width="75.89406231499561" x="-2415.1755071665457" y="2157.4187211330836"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="75.89406231499561" x="0.0" xml:space="preserve" y="15.9013671875">ПОЛУЧЕН ГРАФ</y:NodeLabel>
@@ -1182,7 +1182,7 @@ SALES</y:NodeLabel>
         <node id="n16::n1">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="136.3887053231624" x="-1978.988870968197" y="1736.7075984403587"/>
+              <y:Geometry height="70.0" width="136.3887053231624" x="-1978.988870968197" y="2157.418721133084"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.3887053231624" x="0.0" xml:space="preserve" y="7.85205078125">ОСОРТИРОВАНЫ ВЕРШИНЫ ТОПОЛОГИЧЕСКИ</y:NodeLabel>
@@ -1193,7 +1193,7 @@ SALES</y:NodeLabel>
         <node id="n16::n2">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="136.3887053231624" x="-2313.2217735882996" y="1736.7075984403584"/>
+              <y:Geometry height="70.0" width="136.3887053231624" x="-2313.2217735882996" y="2157.4187211330836"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.3887053231624" x="0.0" xml:space="preserve" y="7.85205078125">ПРОВЕРЕН ГРАФ НА АЦИКЛИЧНОСТЬ</y:NodeLabel>
@@ -1204,7 +1204,7 @@ SALES</y:NodeLabel>
         <node id="n16::n3">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="136.3887053231624" x="-2150.773397001886" y="1736.7075984403584"/>
+              <y:Geometry height="70.0" width="136.3887053231624" x="-2150.773397001886" y="2157.4187211330836"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="70.39453125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.3887053231624" x="0.0" xml:space="preserve" y="-0.197265625">ПОЛУЧЕН НАПРАВЛЕННЫЙ АЦИКЛИЧЕСКИЙ ГРАФ</y:NodeLabel>
@@ -1215,7 +1215,7 @@ SALES</y:NodeLabel>
         <node id="n16::n4">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="136.3887053231624" x="-1819.2485921814011" y="1736.7075984403587"/>
+              <y:Geometry height="70.0" width="136.3887053231624" x="-1819.2485921814011" y="2157.418721133084"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.3887053231624" x="0.0" xml:space="preserve" y="7.85205078125">НАЗНАЧЕНЫ УРОВНИ ВЕРШИНАМ</y:NodeLabel>
@@ -1226,7 +1226,7 @@ SALES</y:NodeLabel>
         <node id="n16::n5">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="136.3887053231624" x="-1350.1842789684151" y="1733.3777682367972"/>
+              <y:Geometry height="70.0" width="136.3887053231624" x="-1350.1842789684151" y="2154.0888909295227"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.3887053231624" x="0.0" xml:space="preserve" y="7.85205078125">НАЗНАЧЕНЫ КООРДИНАТЫ БЛОКАМ</y:NodeLabel>
@@ -1237,7 +1237,7 @@ SALES</y:NodeLabel>
         <node id="n16::n6">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="70.0" width="136.3887053231624" x="-1661.7264069516716" y="1733.3777682367972"/>
+              <y:Geometry height="70.0" width="136.3887053231624" x="-1661.7264069516716" y="2154.0888909295227"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.3887053231624" x="0.0" xml:space="preserve" y="15.9013671875">НАЗНАЧЕНЫ СЛОИ ВЕРШИНАМ</y:NodeLabel>
@@ -2305,6 +2305,201 @@ LAYER</y:NodeLabel>
           <y:Shape type="roundrectangle"/>
         </y:ShapeNode>
       </data>
+    </node>
+    <node id="n30" yfiles.foldertype="group">
+      <data key="d6">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Geometry height="265.71813594223397" width="1532.8263332210245" x="-1347.338984067479" y="810.6753340211125"/>
+              <y:Fill color="#F2F2F228" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="59.93359375" x="0.0" xml:space="preserve" y="0.0">      Папки</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+              <y:State closed="false" closedHeight="80.0" closedWidth="100.0" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="34" bottomF="33.510251841385525" left="20" leftF="20.06540252174591" right="40" rightF="39.54992939008389" top="17" topF="17.152527414156452"/>
+            </y:GroupNode>
+            <y:GroupNode>
+              <y:Geometry height="116.95225315806084" width="136.4102512607061" x="-1033.55573977196" y="877.7075073811993"/>
+              <y:Fill color="#F2F2F2" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="123.841796875" x="0.0" xml:space="preserve" y="0.0">      Группа свёрнута</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+              <y:State closed="true" closedHeight="116.95225315806084" closedWidth="136.4102512607061" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="n30:">
+        <node id="n30::n0">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-1312.2735815457331" y="866.5579013749001"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">ai</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n1">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-1132.2735815457331" y="866.5579013749001"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">api</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n2">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-1312.2735815457331" y="957.8832181219609"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">auth</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n3">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-1132.2735815457331" y="957.883218121961"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">client</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n4">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-952.2735815457331" y="957.8832181219609"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">data</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n5">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-952.2735815457331" y="866.5579013749001"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">personal_folder</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n6">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="156.00411628574864" x="-772.2735815457331" y="866.5579013749001"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="156.00411628574864" x="0.0" xml:space="preserve" y="23.95068359375">knowledge_map_core</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n7">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-772.2735815457331" y="957.8832181219609"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">logs</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n8">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-592.2735815457331" y="866.5579013749001"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">nlp</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n9">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-592.2735815457331" y="957.8832181219608"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">notebooks</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n10">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-394.9024543032856" y="866.5579013749002"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">pdf_to_md</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n11">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-394.9024543032856" y="951.3190516826747"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">pdf_to_text</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n12">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-214.9024543032856" y="860.2341114352689"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">prompts</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n13">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-214.9024543032856" y="951.3190516826746"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="22.0986328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="23.95068359375">worker_data_to_db</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n30::n14">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="70.0" width="150.0" x="-19.062580236538565" y="866.5579013749002"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="15.9013671875">worker_distributed_layering_rust</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+      </graph>
     </node>
     <edge id="n1::e0" source="n1::n1" target="n1::n2">
       <data key="d10">

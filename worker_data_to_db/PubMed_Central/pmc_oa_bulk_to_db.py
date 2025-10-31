@@ -104,9 +104,8 @@ def extract_year_from_date_optimized(date_text):
         return None
     year_match = YEAR_RE.search(str(date_text))
     if year_match:
-        year = int(year_match.group())
-        if 1900 <= year <= 2030:
-            return str(year)
+        year = str(int(year_match.group()))
+        return year
     return None
 
 def extract_authors_optimized(root):
