@@ -34,10 +34,10 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - E:/Data_Knowledge_Map/neo4j_data:/data
-      - E:/Data_Knowledge_Map/neo4j_logs:/logs
-      - E:/Data_Knowledge_Map/neo4j_import:/var/lib/neo4j/import
-      - E:/Data_Knowledge_Map/neo4j_plugins:/plugins
+      - D:/Data/Data_Knowledge_Map/neo4j_data:/data
+      - D:/Data/Data_Knowledge_Map/neo4j_logs:/logs
+      - D:/Data/Data_Knowledge_Map/neo4j_import:/var/lib/neo4j/import
+      - D:/Data/Data_Knowledge_Map/neo4j_plugins:/plugins
     networks:
       - knowledge_map_network
     deploy:
@@ -284,7 +284,7 @@ services:
       api:
         condition: service_started
     volumes:
-      - E:/Data_Knowledge_Map/ai_models:/app/models
+      - D:/Data/Data_Knowledge_Map/ai_models:/app/models
     deploy:
       resources:
         limits:

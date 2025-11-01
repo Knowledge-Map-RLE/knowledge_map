@@ -9,7 +9,6 @@ try:
     from ..core.exceptions import ModelNotFoundError, ModelDisabledError
     from ..core.types import ModelInfo, ModelStatus
     from .models.base_model import BaseModel
-    from .models.marker_model import MarkerModel
 except ImportError:
     # Fallback for direct execution
     from core.config import settings
@@ -17,7 +16,6 @@ except ImportError:
     from core.exceptions import ModelNotFoundError, ModelDisabledError
     from core.types import ModelInfo, ModelStatus
     from .models.base_model import BaseModel
-    from .models.marker_model import MarkerModel
 
 logger = get_logger(__name__)
 
@@ -33,7 +31,7 @@ class ModelService:
     def _initialize_models(self) -> None:
         """Initialize available models"""
         try:
-            # Initialize Docling model (default)
+            # Initialize Docling model (единственная модель)
             try:
                 from .models.docling_model import DoclingModel
                 docling_model = DoclingModel()
@@ -41,21 +39,12 @@ class ModelService:
                 self._default_model_id = "docling"
                 logger.info("Docling model initialized as default")
             except ImportError as e:
-                logger.warning(f"Docling model not available: {e}")
-            
-            # Initialize Marker model (fallback)
-            try:
-                marker_model = MarkerModel()
-                self._models["marker"] = marker_model
-                if "docling" not in self._models:
-                    self._default_model_id = "marker"
-                logger.info("Marker model initialized")
-            except Exception as e:
-                logger.warning(f"Marker model not available: {e}")
-            
+                logger.error(f"Docling model not available: {e}")
+                raise
+
             logger.info(f"Initialized {len(self._models)} models: {list(self._models.keys())}")
             logger.info(f"Default model: {self._default_model_id}")
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize models: {e}")
             raise

@@ -10,7 +10,7 @@
       "Bash(curl:*)",
       "Bash(timeout 10 bash:*)",
       "Read(//d/tmp/**)",
-      "Read(//e/Данные/PubMed_Central/**)",
+      "Read(//d/Data/PubMed_Central/**)",
       "Bash(tee:*)",
       "Bash(timeout 5 bash:*)",
       "Bash(timeout 15 bash:*)",
@@ -26,7 +26,16 @@
       "Bash(poetry show:*)",
       "Bash(poetry add:*)",
       "Bash(cat:*)",
-      "Bash(cargo test:*)"
+      "Bash(cargo test:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(npm run dev:*)",
+      "Bash(docker-compose down:*)",
+      "Bash(taskkill /F /PID 23292)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell:*)",
+      "Bash(cmd //c \"taskkill //PID 18668 //F\")",
+      "Bash(cmd /c \"taskkill /PID 18668 /F\")"
     ],
     "deny": [],
     "ask": []

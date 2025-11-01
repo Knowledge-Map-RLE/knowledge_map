@@ -331,6 +331,31 @@ class DataExtractionService:
 
         return {"success": True, "deleted": deleted}
 
+    async def update_markdown(self, doc_id: str, markdown: str) -> Dict[str, Any]:
+        """Обновляет markdown документа в S3."""
+        bucket = settings.S3_BUCKET_NAME
+        md_key = f"documents/{doc_id}/{doc_id}.md"
+
+        # Сохраняем markdown в S3
+        ok = await self.s3_client.upload_bytes(
+            markdown.encode("utf-8"),
+            bucket,
+            md_key,
+            content_type="text/markdown; charset=utf-8"
+        )
+
+        if not ok:
+            raise HTTPException(status_code=500, detail="Не удалось сохранить markdown в S3")
+
+        logger.info(f"[data_extraction] Markdown обновлен: s3://{bucket}/{md_key}")
+
+        return {
+            "success": True,
+            "doc_id": doc_id,
+            "s3_key": md_key,
+            "message": "Markdown успешно сохранен"
+        }
+
     async def list_documents(self) -> Dict[str, Any]:
         """Список документов по префиксу documents/ из S3."""
         bucket = settings.S3_BUCKET_NAME

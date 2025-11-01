@@ -84,6 +84,17 @@ class DocumentItem(BaseModel):
     files: Dict[str, str] = {}
 
 
+class UpdateMarkdownRequest(BaseModel):
+    markdown: str = Field(..., description="Markdown content to save")
+
+
+class UpdateMarkdownResponse(BaseModel):
+    success: bool
+    message: Optional[str] = None
+    doc_id: str
+    s3_key: Optional[str] = None
+
+
 # Схемы для viewport
 class ViewportBounds(BaseModel):
     left: float

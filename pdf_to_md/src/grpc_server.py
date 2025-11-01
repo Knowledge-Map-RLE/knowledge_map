@@ -47,27 +47,25 @@ sys.path.append(str(Path(__file__).parent))
 # Настройка логирования
 import os
 os.makedirs('logs', exist_ok=True)
+
+# Настройка UTF-8 для консольного вывода на Windows
+stream_handler = logging.StreamHandler()
+if hasattr(stream_handler.stream, 'reconfigure'):
+    stream_handler.stream.reconfigure(encoding='utf-8')
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('logs/pdf_to_md.log'),
-        logging.StreamHandler()
+        logging.FileHandler('logs/pdf_to_md.log', encoding='utf-8'),
+        stream_handler
     ]
 )
 logger = logging.getLogger(__name__)
 
-# Импортируем новую архитектуру сервисов
-try:
-    from services.conversion_service import ConversionService
-    NEW_ARCHITECTURE = True
-    logger.info("[grpc] Новая архитектура с Docling доступна")
-except ImportError as e:
-    # Fallback к старой архитектуре
-    logger.warning(f"[grpc] Новая архитектура недоступна: {e}")
-    sys.path.append(str(Path(__file__).parent.parent))
-    from pdf_to_md_marker_demo import convert_pdf_to_markdown_marker_async
-    NEW_ARCHITECTURE = False
+# Импортируем сервис конвертации
+from services.conversion_service import ConversionService
+logger.info("[grpc] Архитектура с Docling загружена")
 
 
 def is_port_available(port: int) -> bool:
@@ -220,24 +218,11 @@ logger.info("PDF to MD gRPC сервер запускается...")
 
 class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
     """gRPC сервис для конвертации PDF в Markdown"""
-    
+
     def __init__(self):
-        if NEW_ARCHITECTURE:
-            # Используем новую архитектуру с поддержкой множественных моделей
-            self.conversion_service = ConversionService()
-            logger.info("[grpc] Инициализирована новая архитектура с поддержкой Docling")
-        else:
-            # Fallback к старой архитектуре
-            self.models = {
-                "marker": {
-                    "name": "Marker PDF to Markdown",
-                    "description": "Конвертер PDF в Markdown с использованием Marker",
-                    "enabled": True,
-                    "default": True
-                }
-            }
-            self.default_model = "marker"
-            logger.info("[grpc] Используется старая архитектура с Marker")
+        # Используем архитектуру с поддержкой Docling
+        self.conversion_service = ConversionService()
+        logger.info("[grpc] Инициализирована архитектура с поддержкой Docling")
     
     async def ConvertPDF(self, request, context):
         """Конвертация PDF в Markdown"""
@@ -245,59 +230,55 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
             logger.info(f"[grpc] Начинаем конвертацию PDF: doc_id={request.doc_id}")
             logger.info(f"[grpc] Получен запрос с размером PDF: {len(request.pdf_content)} байт")
             logger.info(f"[grpc] Запрошенная модель: {request.model_id or 'None (будет использована по умолчанию)'}")
-            
-            if NEW_ARCHITECTURE:
-                # Используем новую архитектуру с поддержкой множественных моделей
-                result = await self.conversion_service.convert_pdf(
-                    pdf_content=request.pdf_content,
-                    doc_id=request.doc_id or None,
-                    model_id=request.model_id or None,
-                    use_coordinate_extraction=True  # По умолчанию включено
-                )
-                
-                if result.success:
-                    logger.info(f"[grpc] Конвертация завершена успешно: doc_id={request.doc_id}")
-                    
-                    # Handle S3 images vs traditional images
+
+            # Используем сервис конвертации с поддержкой Docling
+            result = await self.conversion_service.convert_pdf(
+                pdf_content=request.pdf_content,
+                doc_id=request.doc_id or None,
+                model_id=request.model_id or None,
+                use_coordinate_extraction=True  # По умолчанию включено
+            )
+
+            if result.success:
+                logger.info(f"[grpc] Конвертация завершена успешно: doc_id={request.doc_id}")
+
+                # Handle S3 images vs traditional images
+                response_images = {}
+                message = "Конвертация завершена успешно"
+
+                # Check if we have S3 images
+                if hasattr(result, 's3_images') and result.s3_images:
+                    logger.info(f"[grpc] S3 изображений: {len(result.s3_images)}")
+                    message = f"Конвертация завершена успешно (извлечено {len(result.s3_images)} изображений в S3)"
+                    # For gRPC compatibility, keep images empty (they're in S3)
                     response_images = {}
-                    message = "Конвертация завершена успешно"
-                    
-                    # Check if we have S3 images
-                    if hasattr(result, 's3_images') and result.s3_images:
-                        logger.info(f"[grpc] S3 изображений: {len(result.s3_images)}")
-                        message = f"Конвертация завершена успешно (извлечено {len(result.s3_images)} изображений в S3)"
-                        # For gRPC compatibility, keep images empty (they're in S3)
-                        response_images = {}
-                    else:
-                        # Traditional embedded images - ensure they are bytes
-                        if result.images:
-                            for filename, img_data in result.images.items():
-                                if isinstance(img_data, bytes):
-                                    response_images[filename] = img_data
-                                else:
-                                    logger.warning(f"[grpc] Skipping non-bytes image: {filename} (type: {type(img_data)})")
-                        
-                    return pdf_to_md_pb2.ConvertPDFResponse(
-                        success=True,
-                        doc_id=result.doc_id,
-                        markdown_content=result.markdown_content,
-                        images=response_images,
-                        metadata_json=json.dumps(result.metadata) if result.metadata else "",
-                        message=message
-                    )
                 else:
-                    logger.error(f"[grpc] Ошибка конвертации: {result.error_message}")
-                    return pdf_to_md_pb2.ConvertPDFResponse(
-                        success=False,
-                        doc_id=result.doc_id,
-                        markdown_content="",
-                        images={},
-                        message=f"Ошибка конвертации: {result.error_message}"
-                    )
+                    # Traditional embedded images - ensure they are bytes
+                    if result.images:
+                        for filename, img_data in result.images.items():
+                            if isinstance(img_data, bytes):
+                                response_images[filename] = img_data
+                            else:
+                                logger.warning(f"[grpc] Skipping non-bytes image: {filename} (type: {type(img_data)})")
+
+                return pdf_to_md_pb2.ConvertPDFResponse(
+                    success=True,
+                    doc_id=result.doc_id,
+                    markdown_content=result.markdown_content,
+                    images=response_images,
+                    metadata_json=json.dumps(result.metadata) if result.metadata else "",
+                    message=message
+                )
             else:
-                # Fallback к старой архитектуре
-                return await self._convert_pdf_legacy(request, context)
-                    
+                logger.error(f"[grpc] Ошибка конвертации: {result.error_message}")
+                return pdf_to_md_pb2.ConvertPDFResponse(
+                    success=False,
+                    doc_id=result.doc_id,
+                    markdown_content="",
+                    images={},
+                    message=f"Ошибка конвертации: {result.error_message}"
+                )
+
         except Exception as e:
             logger.error(f"[grpc] Исключение при конвертации: {e}")
             return pdf_to_md_pb2.ConvertPDFResponse(
@@ -308,130 +289,26 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
                 message=f"Исключение: {str(e)}"
             )
     
-    async def _convert_pdf_legacy(self, request, context):
-        """Legacy конвертация PDF в Markdown (старая архитектура)"""
-        # Создаем временный файл
-        import tempfile
-        import os
-        
-        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp_file:
-            temp_file.write(request.pdf_content)
-            temp_pdf_path = temp_file.name
-        
-        try:
-            # Создаем временную папку для результатов
-            temp_dir = tempfile.mkdtemp()
-            try:
-                # Выполняем конвертацию
-                logger.info(f"[grpc] Вызываем convert_pdf_to_markdown_marker_async для {temp_pdf_path}")
-                try:
-                    result = await convert_pdf_to_markdown_marker_async(
-                        pdf_path=temp_pdf_path,
-                        output_dir=temp_dir
-                    )
-                except Exception as e:
-                    logger.error(f"[grpc] Ошибка при вызове convert_pdf_to_markdown_marker_async: {e}")
-                    import traceback
-                    logger.error(f"[grpc] Traceback: {traceback.format_exc()}")
-                    result = None
-                
-                logger.info(f"[grpc] Результат конвертации: {result}")
-                
-                if result and result.get('success'):
-                    # Читаем markdown файл
-                    markdown_path = Path(result['markdown_file'])
-                    markdown_content = markdown_path.read_text(encoding='utf-8')
-                    
-                    # Собираем изображения
-                    images = {}
-                    output_dir = Path(result['output_dir'])
-                    for img_file in output_dir.glob('*.{jpg,jpeg,png,gif,bmp}'):
-                        images[img_file.name] = img_file.read_bytes()
-                    
-                    # Создаем метаданные
-                    metadata = {
-                        "pages_processed": result.get('pages_processed', 0),
-                        "processing_time": result.get('processing_time', 0),
-                        "throughput": result.get('throughput', 0),
-                        "file_size_mb": result.get('file_size_mb', 0),
-                        "images_count": result.get('images_count', 0)
-                    }
-                    
-                    import json
-                    metadata_json = json.dumps(metadata)
-                    
-                    logger.info(f"[grpc] Конвертация завершена успешно: doc_id={request.doc_id}")
-                    
-                    return pdf_to_md_pb2.ConvertPDFResponse(
-                        success=True,
-                        doc_id=request.doc_id or "unknown",
-                        markdown_content=markdown_content,
-                        images=images,
-                        metadata_json=metadata_json,
-                        message="Конвертация завершена успешно"
-                    )
-                else:
-                    error_msg = result.get('error', 'Неизвестная ошибка') if result else 'Ошибка конвертации'
-                    logger.error(f"[grpc] Ошибка конвертации: {error_msg}")
-                    
-                    return pdf_to_md_pb2.ConvertPDFResponse(
-                        success=False,
-                        doc_id=request.doc_id or "unknown",
-                        markdown_content="",
-                        images={},
-                        message=f"Ошибка конвертации: {error_msg}"
-                    )
-            finally:
-                # Удаляем временную папку
-                import shutil
-                try:
-                    shutil.rmtree(temp_dir)
-                except:
-                    pass
-        
-        finally:
-            # Удаляем временный файл
-            try:
-                os.unlink(temp_pdf_path)
-            except:
-                pass
-    
     async def GetModels(self, request, context):
         """Получение списка доступных моделей"""
         try:
-            if NEW_ARCHITECTURE:
-                # Используем новую архитектуру
-                models_data = self.conversion_service.model_service.get_available_models()
-                default_model = self.conversion_service.model_service.get_default_model()
-                
-                models = {}
-                for model_id, model_info in models_data.items():
-                    models[model_id] = pdf_to_md_pb2.ModelInfo(
-                        name=model_info.name,
-                        description=model_info.description,
-                        enabled=(model_info.status.value == "enabled"),
-                        default=model_info.is_default
-                    )
-                
-                return pdf_to_md_pb2.GetModelsResponse(
-                    models=models,
-                    default_model=default_model
+            # Получаем доступные модели из сервиса
+            models_data = self.conversion_service.model_service.get_available_models()
+            default_model = self.conversion_service.model_service.get_default_model()
+
+            models = {}
+            for model_id, model_info in models_data.items():
+                models[model_id] = pdf_to_md_pb2.ModelInfo(
+                    name=model_info.name,
+                    description=model_info.description,
+                    enabled=(model_info.status.value == "enabled"),
+                    default=model_info.is_default
                 )
-            else:
-                # Fallback к старой архитектуре
-                models = {}
-                for model_id, model_info in self.models.items():
-                    models[model_id] = pdf_to_md_pb2.ModelInfo(
-                        name=model_info["name"],
-                        description=model_info["description"],
-                        enabled=model_info["enabled"],
-                        default=model_info["default"]
-                    )
-                
-                return pdf_to_md_pb2.GetModelsResponse(
-                    models=models,
-                    default_model=self.default_model
-                )
+
+            return pdf_to_md_pb2.GetModelsResponse(
+                models=models,
+                default_model=default_model
+            )
         except Exception as e:
             logger.error(f"[grpc] Ошибка получения моделей: {e}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -441,34 +318,13 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
     async def SetDefaultModel(self, request, context):
         """Установка модели по умолчанию"""
         try:
-            if NEW_ARCHITECTURE:
-                # Используем новую архитектуру
-                success = self.conversion_service.model_service.set_default_model(request.model_id)
-                
-                return pdf_to_md_pb2.SetDefaultModelResponse(
-                    success=success,
-                    message=f"Модель {request.model_id} установлена по умолчанию" if success else f"Модель {request.model_id} не найдена"
-                )
-            else:
-                # Fallback к старой архитектуре
-                if request.model_id in self.models:
-                    # Сбрасываем флаг default для всех моделей
-                    for model_info in self.models.values():
-                        model_info["default"] = False
-                    
-                    # Устанавливаем новую модель по умолчанию
-                    self.models[request.model_id]["default"] = True
-                    self.default_model = request.model_id
-                    
-                    return pdf_to_md_pb2.SetDefaultModelResponse(
-                        success=True,
-                        message=f"Модель {request.model_id} установлена по умолчанию"
-                    )
-                else:
-                    return pdf_to_md_pb2.SetDefaultModelResponse(
-                        success=False,
-                        message=f"Модель {request.model_id} не найдена"
-                    )
+            # Устанавливаем модель по умолчанию через сервис
+            success = self.conversion_service.model_service.set_default_model(request.model_id)
+
+            return pdf_to_md_pb2.SetDefaultModelResponse(
+                success=success,
+                message=f"Модель {request.model_id} установлена по умолчанию" if success else f"Модель {request.model_id} не найдена"
+            )
         except Exception as e:
             logger.error(f"[grpc] Ошибка установки модели по умолчанию: {e}")
             return pdf_to_md_pb2.SetDefaultModelResponse(
@@ -479,34 +335,18 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
     async def EnableModel(self, request, context):
         """Включение/отключение модели"""
         try:
-            if NEW_ARCHITECTURE:
-                # Используем новую архитектуру
-                if request.enabled:
-                    success = self.conversion_service.model_service.enable_model(request.model_id)
-                    action = "включена"
-                else:
-                    success = self.conversion_service.model_service.disable_model(request.model_id)
-                    action = "отключена"
-                
-                return pdf_to_md_pb2.EnableModelResponse(
-                    success=success,
-                    message=f"Модель {request.model_id} {action}" if success else f"Модель {request.model_id} не найдена"
-                )
+            # Включаем/отключаем модель через сервис
+            if request.enabled:
+                success = self.conversion_service.model_service.enable_model(request.model_id)
+                action = "включена"
             else:
-                # Fallback к старой архитектуре
-                if request.model_id in self.models:
-                    self.models[request.model_id]["enabled"] = request.enabled
-                    action = "включена" if request.enabled else "отключена"
-                    
-                    return pdf_to_md_pb2.EnableModelResponse(
-                        success=True,
-                        message=f"Модель {request.model_id} {action}"
-                    )
-                else:
-                    return pdf_to_md_pb2.EnableModelResponse(
-                        success=False,
-                        message=f"Модель {request.model_id} не найдена"
-                    )
+                success = self.conversion_service.model_service.disable_model(request.model_id)
+                action = "отключена"
+
+            return pdf_to_md_pb2.EnableModelResponse(
+                success=success,
+                message=f"Модель {request.model_id} {action}" if success else f"Модель {request.model_id} не найдена"
+            )
         except Exception as e:
             logger.error(f"[grpc] Ошибка изменения состояния модели: {e}")
             return pdf_to_md_pb2.EnableModelResponse(
@@ -518,64 +358,34 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
         """Конвертация с отслеживанием прогресса (streaming)"""
         try:
             logger.info(f"[grpc] Начинаем конвертацию с прогрессом: doc_id={request.doc_id}")
-            
-            # Создаем временный файл
-            import tempfile
-            import os
-            
-            with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp_file:
-                temp_file.write(request.pdf_content)
-                temp_pdf_path = temp_file.name
-            
-            try:
-                # Создаем временную папку для результатов
-                with tempfile.TemporaryDirectory() as temp_dir:
-                    # Callback для прогресса
-                    def on_progress(progress_data):
-                        try:
-                            update = pdf_to_md_pb2.ProgressUpdate(
-                                doc_id=request.doc_id or "unknown",
-                                percent=progress_data.get('progress_percent', 0),
-                                phase=progress_data.get('stage', 'processing'),
-                                message=f"Прогресс: {progress_data.get('progress_percent', 0)}%"
-                            )
-                            context.write(update)
-                        except Exception as e:
-                            logger.error(f"[grpc] Ошибка отправки прогресса: {e}")
-                    
-                    # Выполняем конвертацию
-                    result = await convert_pdf_to_markdown_marker_async(
-                        pdf_path=temp_pdf_path,
-                        output_dir=temp_dir,
-                        on_progress=on_progress
-                    )
-                    
-                    if result and result.get('success'):
-                        # Отправляем финальное обновление
-                        final_update = pdf_to_md_pb2.ProgressUpdate(
-                            doc_id=request.doc_id or "unknown",
-                            percent=100,
-                            phase="completed",
-                            message="Конвертация завершена успешно"
-                        )
-                        context.write(final_update)
-                    else:
-                        error_msg = result.get('error', 'Неизвестная ошибка') if result else 'Ошибка конвертации'
-                        error_update = pdf_to_md_pb2.ProgressUpdate(
-                            doc_id=request.doc_id or "unknown",
-                            percent=0,
-                            phase="failed",
-                            message=f"Ошибка: {error_msg}"
-                        )
-                        context.write(error_update)
-            
-            finally:
-                # Удаляем временный файл
-                try:
-                    os.unlink(temp_pdf_path)
-                except:
-                    pass
-                    
+
+            # TODO: Реализовать streaming прогресса для Docling
+            # Пока используем обычную конвертацию
+            result = await self.conversion_service.convert_pdf(
+                pdf_content=request.pdf_content,
+                doc_id=request.doc_id or None,
+                model_id=request.model_id or None,
+                use_coordinate_extraction=True
+            )
+
+            if result.success:
+                # Отправляем финальное обновление
+                final_update = pdf_to_md_pb2.ProgressUpdate(
+                    doc_id=request.doc_id or "unknown",
+                    percent=100,
+                    phase="completed",
+                    message="Конвертация завершена успешно"
+                )
+                yield final_update
+            else:
+                error_update = pdf_to_md_pb2.ProgressUpdate(
+                    doc_id=request.doc_id or "unknown",
+                    percent=0,
+                    phase="failed",
+                    message=f"Ошибка: {result.error_message}"
+                )
+                yield error_update
+
         except Exception as e:
             logger.error(f"[grpc] Исключение при конвертации с прогрессом: {e}")
             error_update = pdf_to_md_pb2.ProgressUpdate(
@@ -584,27 +394,13 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
                 phase="failed",
                 message=f"Исключение: {str(e)}"
             )
-            context.write(error_update)
+            yield error_update
 
 
 async def serve():
     """Запуск gRPC сервера"""
     logger.info("[grpc] Инициализация gRPC сервера")
-    
-    # Проверяем, что Marker доступен
-    try:
-        import marker
-        logger.info("[grpc] Marker успешно импортирован")
-    except ImportError as e:
-        logger.error(f"[grpc] Ошибка импорта Marker: {e}")
-    
-    # Проверяем, что функция конвертации доступна
-    try:
-        from pdf_to_md_marker_demo import convert_pdf_to_markdown_marker_async
-        logger.info("[grpc] Функция convert_pdf_to_markdown_marker_async успешно импортирована")
-    except ImportError as e:
-        logger.error(f"[grpc] Ошибка импорта функции конвертации: {e}")
-    
+
     server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
     
     # Добавляем сервис

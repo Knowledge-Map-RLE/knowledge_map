@@ -20,7 +20,7 @@ from neo4j import GraphDatabase, exceptions as neo4j_exceptions
 from tqdm import tqdm
 
 # ========== КОНФИГУРАЦИЯ ==========
-DATA_DIR        = Path(r"E:/Данные/PubMed_Central")
+DATA_DIR        = Path("D:/Data/PubMed_Central")
 LOG_FILE        = Path("./logs/pmc_oa_bulk_to_db.log")
 CHECKPOINT_FILE = Path("./logs/pmc_parse_checkpoint.txt")
 

@@ -13,8 +13,6 @@ class ModelStatus(str, Enum):
 
 class ModelType(str, Enum):
     DOCLING = "docling"
-    MARKER = "marker"
-    HURIDOCS = "huridocs"
 
 class ModelInfo(BaseModel):
     model_id: str

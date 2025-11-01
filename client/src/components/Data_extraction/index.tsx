@@ -1,7 +1,7 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import s from './Data_extraction.module.css';
 import PDFAnnotation from './PDFAnnotation';
-import { uploadPdfForExtraction, importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, deleteDocument as apiDeleteDocument, listDocuments } from '../../services/api';
+import { uploadPdfForExtraction, importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, deleteDocument as apiDeleteDocument, listDocuments, saveMarkdown } from '../../services/api';
 import MarkdownAnnotator from './MarkdownAnnotator';
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 
@@ -76,9 +76,18 @@ export default function Data_extraction() {
     const [showAnnotationMode, setShowAnnotationMode] = useState(false);
     const [progressMap, setProgressMap] = useState<Record<string, number>>({});
     const [docId, setDocId] = useState<string>('');
-    
+
+    // Новый state для исходного markdown и auto-save
+    const [sourceMarkdown, setSourceMarkdown] = useState<string>('');
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+    const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+
     const fileInputRef = useRef<HTMLInputElement>(null);
     const pdfViewerRef = useRef<HTMLIFrameElement>(null);
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const cursorPositionRef = useRef<number | null>(null);
 
     // Загружаем список документов при монтировании компонента
     useEffect(() => {
@@ -200,11 +209,14 @@ export default function Data_extraction() {
         try {
             const assets = await getDocumentAssets(document.uid);
             if (assets?.markdown) {
+                // Устанавливаем и исходный markdown, и rendered markdown
+                setSourceMarkdown(assets.markdown);
                 setMarkdownContent(assets.markdown);
                 setProgressMap(prev => ({ ...prev, [document.uid]: 100 }));
                 console.log('Markdown загружен:', assets.markdown.length, 'символов');
             } else {
                 console.log('Markdown не найден для документа:', document.uid);
+                setSourceMarkdown('');
                 setMarkdownContent('');
             }
             if (assets?.image_urls) {
@@ -225,11 +237,116 @@ export default function Data_extraction() {
             }
         } catch (err) {
             console.error('Ошибка загрузки документа:', err);
+            setSourceMarkdown('');
             setMarkdownContent('');
             setImageUrls({});
             setPdfUrl('');
         }
     };
+
+    // Обработчик изменений в textarea (Исходный Markdown)
+    const handleSourceMarkdownChange = useCallback((newMarkdown: string) => {
+        // Сохраняем позицию курсора перед обновлением в ref
+        if (textareaRef.current) {
+            cursorPositionRef.current = textareaRef.current.selectionStart;
+        }
+
+        setSourceMarkdown(newMarkdown);
+
+        // НЕ обновляем markdownContent пока textarea в фокусе
+        // Обновление произойдет при потере фокуса
+
+        setSaveStatus('idle');
+
+        // Отменяем предыдущий таймер
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+
+        // Устанавливаем новый таймер для auto-save (1.5 секунды после последнего изменения)
+        saveTimeoutRef.current = setTimeout(async () => {
+            if (!selectedDocument) return;
+
+            try {
+                setSaveStatus('saving');
+                setIsSaving(true);
+
+                await saveMarkdown(selectedDocument.uid, newMarkdown);
+
+                setSaveStatus('saved');
+                setLastSavedAt(new Date());
+                console.log('Markdown автоматически сохранен в S3');
+
+                // Сбрасываем статус 'saved' через 3 секунды
+                setTimeout(() => {
+                    setSaveStatus('idle');
+                }, 3000);
+            } catch (err) {
+                console.error('Ошибка сохранения markdown:', err);
+                setSaveStatus('error');
+                setError('Не удалось сохранить изменения');
+            } finally {
+                setIsSaving(false);
+            }
+        }, 1500);
+    }, [selectedDocument]);
+
+    // Обработчик изменений в MarkdownEditor (Аннотации в Markdown)
+    const handleMarkdownEditorChange = useCallback((newMarkdown: string) => {
+        setMarkdownContent(newMarkdown);
+
+        // Синхронизируем с sourceMarkdown
+        setSourceMarkdown(newMarkdown);
+        setSaveStatus('idle');
+
+        // Отменяем предыдущий таймер
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+
+        // Устанавливаем новый таймер для auto-save
+        saveTimeoutRef.current = setTimeout(async () => {
+            if (!selectedDocument) return;
+
+            try {
+                setSaveStatus('saving');
+                setIsSaving(true);
+
+                await saveMarkdown(selectedDocument.uid, newMarkdown);
+
+                setSaveStatus('saved');
+                setLastSavedAt(new Date());
+                console.log('Markdown автоматически сохранен в S3');
+
+                setTimeout(() => {
+                    setSaveStatus('idle');
+                }, 3000);
+            } catch (err) {
+                console.error('Ошибка сохранения markdown:', err);
+                setSaveStatus('error');
+                setError('Не удалось сохранить изменения');
+            } finally {
+                setIsSaving(false);
+            }
+        }, 1500);
+    }, [selectedDocument]);
+
+    // Восстанавливаем позицию курсора после каждого рендера
+    useLayoutEffect(() => {
+        if (textareaRef.current && cursorPositionRef.current !== null) {
+            textareaRef.current.setSelectionRange(cursorPositionRef.current, cursorPositionRef.current);
+            cursorPositionRef.current = null; // Сбрасываем после восстановления
+        }
+    });
+
+    // Cleanup timeout при unmount
+    useEffect(() => {
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, []);
 
     // Пуллинг прогресса обработки: проверяем реальный статус через API
     useEffect(() => {
@@ -534,14 +651,61 @@ export default function Data_extraction() {
                 </div>
             </div>
 
-            {/* Правая колонка: Аннотации в Markdown */}
+            {/* Новая колонка: Исходный Markdown (редактор) */}
+            <div className={s.sourceMarkdownColumn}>
+                <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-base font-bold">Исходный Markdown</h2>
+                    {/* Индикатор сохранения */}
+                    {saveStatus !== 'idle' && (
+                        <div className={`${s.saveIndicator} ${s[saveStatus]}`}>
+                            {saveStatus === 'saving' && (
+                                <>
+                                    <div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div>
+                                    <span>Сохранение...</span>
+                                </>
+                            )}
+                            {saveStatus === 'saved' && (
+                                <>
+                                    <span>✓</span>
+                                    <span>Сохранено {lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString() : ''}</span>
+                                </>
+                            )}
+                            {saveStatus === 'error' && (
+                                <>
+                                    <span>✗</span>
+                                    <span>Ошибка сохранения</span>
+                                </>
+                            )}
+                        </div>
+                    )}
+                </div>
+                {selectedDocument ? (
+                    <textarea
+                        ref={textareaRef}
+                        className={s.markdownEditor}
+                        value={sourceMarkdown}
+                        onChange={(e) => handleSourceMarkdownChange(e.target.value)}
+                        onBlur={() => {
+                            // Синхронизируем с MarkdownEditor при потере фокуса
+                            setMarkdownContent(sourceMarkdown);
+                        }}
+                        placeholder="Markdown документ будет загружен автоматически..."
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                        Выберите документ для просмотра
+                    </div>
+                )}
+            </div>
+
+            {/* Правая колонка: Аннотации в Markdown (Preview) */}
             <div className={s.rightColumn}>
                 <h2 className="text-base font-bold mb-3">Аннотации в Markdown</h2>
                 {selectedDocument ? (
                     <div className={s.markdownViewer} id="km-editor-pane">
                         <MarkdownEditor
                             value={markdownContent}
-                            onChange={(md) => setMarkdownContent(md)}
+                            onChange={handleMarkdownEditorChange}
                             onExportAnnotations={(json) => {
                                 const blob = new Blob([JSON.stringify(json, null, 2)], { type:'application/json' });
                                 const a = document.createElement('a');

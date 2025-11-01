@@ -11,7 +11,7 @@ from requests.adapters import HTTPAdapter, Retry
 
 BASE_URL = 'ftp.ncbi.nlm.nih.gov'
 BASE_DIR = '/pub/pmc/oa_bulk/oa_comm/xml/'
-LOCAL_DIR = Path('E:/Данные/PubMed_Central')
+LOCAL_DIR = Path('D:/Data/PubMed_Central')
 
 ROOT_DIR = Path(__file__).resolve().parents[1]  # worker_data_to_db
 LOG_FILE = (ROOT_DIR / 'logs' / 'pmc_oa_bulk_download.log')

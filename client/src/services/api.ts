@@ -116,6 +116,19 @@ export async function getDocumentAssets(docId: string): Promise<{ success: boole
   return res.json();
 }
 
+export async function saveMarkdown(docId: string, markdown: string): Promise<{ success: boolean; doc_id: string; s3_key?: string; message?: string }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/markdown`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ markdown })
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
 export async function deleteDocument(docId: string): Promise<{ success: boolean; deleted?: number }> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
   const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}`, { method: 'DELETE' });

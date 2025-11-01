@@ -51,7 +51,20 @@ export default function MarkdownEditor({ value, onChange, onExportAnnotations, o
                     const mod = await import('turndown');
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const TurndownService: any = (mod as any).default || (mod as any).TurndownService || (mod as any);
-                    const td = new TurndownService();
+                    const td = new TurndownService({
+                        headingStyle: 'atx', // Использовать # для заголовков вместо подчеркивания
+                        codeBlockStyle: 'fenced', // Использовать ``` для блоков кода
+                    });
+
+                    // Оставляем таблицы в HTML формате
+                    td.addRule('preserveTables', {
+                        filter: 'table',
+                        replacement: function(content: string, node: any) {
+                            // Возвращаем HTML код таблицы как есть
+                            return '\n' + node.outerHTML + '\n';
+                        }
+                    });
+
                     mdText = td.turndown(html);
                 } catch {
                     mdText = html.replace(/<[^>]*>/g, '');
@@ -120,6 +133,7 @@ export default function MarkdownEditor({ value, onChange, onExportAnnotations, o
         // Синхронизация внешнего Markdown → HTML → редактор (без сброса курсора, только при фактическом изменении)
         const quill = quillInstanceRef.current;
         if (!quill) return;
+
         if ((value || '') === lastAppliedMarkdownRef.current) return;
         setInternalMarkdown(value || '');
         const htmlFromMd = (marked.parse(value || '') as string) || '';

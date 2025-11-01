@@ -3,25 +3,6 @@ import logging
 from typing import Dict, Any, Optional, Callable
 from pathlib import Path as SysPath
 
-# Импорты с обработкой ошибок
-try:
-    from .marker_utils import _run_marker_on_pdf as marker_legacy_convert
-    MARKER_LEGACY_AVAILABLE = True
-except ImportError:
-    MARKER_LEGACY_AVAILABLE = False
-
-try:
-    from .marker_proper_model import marker_proper_model
-    MARKER_PROPER_AVAILABLE = True
-except ImportError:
-    MARKER_PROPER_AVAILABLE = False
-
-try:
-    from .huridocs_model import huridocs_model
-    HURIDOCS_AVAILABLE = True
-except ImportError:
-    HURIDOCS_AVAILABLE = False
-
 # Import Docling model
 try:
     from ..services.models.docling_model import DoclingModel
@@ -41,19 +22,13 @@ class ModelRegistry:
         # Определяем модель по умолчанию
         if DOCLING_AVAILABLE:
             self._default_model = "docling"
-        elif HURIDOCS_AVAILABLE:
-            self._default_model = "huridocs"
-        elif MARKER_PROPER_AVAILABLE:
-            self._default_model = "marker_proper"
-        elif MARKER_LEGACY_AVAILABLE:
-            self._default_model = "marker_legacy"
         else:
             self._default_model = "docling"  # Fallback
         self._register_models()
     
     def _register_models(self):
         """Регистрирует доступные модели"""
-        # Docling (модель по умолчанию, если доступна)
+        # Docling (единственная модель)
         if DOCLING_AVAILABLE:
             docling_model = DoclingModel()
             self._models["docling"] = {
@@ -63,41 +38,9 @@ class ModelRegistry:
                 "enabled": True,
                 "default": True
             }
-        
-        # HURIDOCS (резервная модель)
-        if HURIDOCS_AVAILABLE:
-            self._models["huridocs"] = {
-                "name": "HURIDOCS",
-                "description": "HURIDOCS PDF Document Layout Analysis - анализ структуры PDF и преобразование в Markdown",
-                "convert_func": huridocs_model.convert_pdf_to_markdown,
-                "enabled": True,
-                "default": not DOCLING_AVAILABLE  # По умолчанию только если Docling недоступен
-            }
-        
-        # Marker Proper (альтернативная модель)
-        if MARKER_PROPER_AVAILABLE:
-            self._models["marker_proper"] = {
-                "name": "Marker Proper",
-                "description": "Улучшенная модель Marker с оптимизированной обработкой",
-                "convert_func": marker_proper_model.convert_pdf_to_markdown,
-                "enabled": True,
-                "default": False
-            }
-        
-        # Marker Legacy (старая модель)
-        if MARKER_LEGACY_AVAILABLE:
-            self._models["marker_legacy"] = {
-                "name": "Marker Legacy", 
-                "description": "Оригинальная модель Marker с subprocess",
-                "convert_func": marker_legacy_convert,
-                "enabled": True,
-                "default": False
-            }
-        
-        # Store docling model instance for wrapper
-        if DOCLING_AVAILABLE:
+            # Store docling model instance for wrapper
             self._docling_model = docling_model
-        
+
         logger.info(f"[model_registry] Зарегистрировано моделей: {len(self._models)}")
         if DOCLING_AVAILABLE:
             logger.info("[model_registry] Docling модель зарегистрирована как модель по умолчанию")

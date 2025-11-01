@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     output_dir: Path = Field(default=Path("./markdown_output"), env="OUTPUT_DIR")
     
     # Model settings
-    default_model: str = Field(default="marker", env="DEFAULT_MODEL")
+    default_model: str = Field(default="docling", env="DEFAULT_MODEL")
     model_cache_dir: Path = Field(default=Path("./model_cache"), env="MODEL_CACHE_DIR")
     
     # Logging settings
