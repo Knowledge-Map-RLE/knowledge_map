@@ -35,7 +35,18 @@
       "Bash(taskkill:*)",
       "Bash(powershell:*)",
       "Bash(cmd //c \"taskkill //PID 18668 //F\")",
-      "Bash(cmd /c \"taskkill /PID 18668 /F\")"
+      "Bash(cmd /c \"taskkill /PID 18668 /F\")",
+      "Bash(pip install:*)",
+      "Bash(cmd /c \"taskkill /F /PID 14628\")",
+      "Bash(.venv/Scripts/python:*)",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(echo:*)",
+      "Bash(NEO4J_URI=bolt://localhost:7687 poetry run python:*)",
+      "Bash(find:*)",
+      "Bash(nul)",
+      "Bash(annotation_service.py)",
+      "Bash(cmd /c \"taskkill /F /PID 22728\")",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

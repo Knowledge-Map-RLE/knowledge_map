@@ -4,6 +4,7 @@ import PDFAnnotation from './PDFAnnotation';
 import { uploadPdfForExtraction, importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, deleteDocument as apiDeleteDocument, listDocuments, saveMarkdown } from '../../services/api';
 import MarkdownAnnotator from './MarkdownAnnotator';
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
+import { AnnotationWorkspace } from './Annotation';
 
 interface PDFDocument {
     uid: string;
@@ -258,78 +259,39 @@ export default function Data_extraction() {
 
         setSaveStatus('idle');
 
-        // Отменяем предыдущий таймер
+        // Отменяем предыдущий таймер (если был)
         if (saveTimeoutRef.current) {
             clearTimeout(saveTimeoutRef.current);
         }
+    }, []);
 
-        // Устанавливаем новый таймер для auto-save (1.5 секунды после последнего изменения)
-        saveTimeoutRef.current = setTimeout(async () => {
-            if (!selectedDocument) return;
+    // Функция для ручного сохранения markdown (вызывается по кнопке "Сохранить")
+    const handleManualSave = useCallback(async () => {
+        if (!selectedDocument) return;
 
-            try {
-                setSaveStatus('saving');
-                setIsSaving(true);
+        try {
+            setSaveStatus('saving');
+            setIsSaving(true);
 
-                await saveMarkdown(selectedDocument.uid, newMarkdown);
+            await saveMarkdown(selectedDocument.uid, sourceMarkdown);
 
-                setSaveStatus('saved');
-                setLastSavedAt(new Date());
-                console.log('Markdown автоматически сохранен в S3');
+            setSaveStatus('saved');
+            setLastSavedAt(new Date());
+            console.log('Markdown сохранен в S3');
 
-                // Сбрасываем статус 'saved' через 3 секунды
-                setTimeout(() => {
-                    setSaveStatus('idle');
-                }, 3000);
-            } catch (err) {
-                console.error('Ошибка сохранения markdown:', err);
-                setSaveStatus('error');
-                setError('Не удалось сохранить изменения');
-            } finally {
-                setIsSaving(false);
-            }
-        }, 1500);
-    }, [selectedDocument]);
-
-    // Обработчик изменений в MarkdownEditor (Аннотации в Markdown)
-    const handleMarkdownEditorChange = useCallback((newMarkdown: string) => {
-        setMarkdownContent(newMarkdown);
-
-        // Синхронизируем с sourceMarkdown
-        setSourceMarkdown(newMarkdown);
-        setSaveStatus('idle');
-
-        // Отменяем предыдущий таймер
-        if (saveTimeoutRef.current) {
-            clearTimeout(saveTimeoutRef.current);
+            // Сбрасываем статус 'saved' через 3 секунды
+            setTimeout(() => {
+                setSaveStatus('idle');
+            }, 3000);
+        } catch (err) {
+            console.error('Ошибка сохранения markdown:', err);
+            setSaveStatus('error');
+            setError('Не удалось сохранить изменения');
+        } finally {
+            setIsSaving(false);
         }
+    }, [selectedDocument, sourceMarkdown]);
 
-        // Устанавливаем новый таймер для auto-save
-        saveTimeoutRef.current = setTimeout(async () => {
-            if (!selectedDocument) return;
-
-            try {
-                setSaveStatus('saving');
-                setIsSaving(true);
-
-                await saveMarkdown(selectedDocument.uid, newMarkdown);
-
-                setSaveStatus('saved');
-                setLastSavedAt(new Date());
-                console.log('Markdown автоматически сохранен в S3');
-
-                setTimeout(() => {
-                    setSaveStatus('idle');
-                }, 3000);
-            } catch (err) {
-                console.error('Ошибка сохранения markdown:', err);
-                setSaveStatus('error');
-                setError('Не удалось сохранить изменения');
-            } finally {
-                setIsSaving(false);
-            }
-        }, 1500);
-    }, [selectedDocument]);
 
     // Восстанавливаем позицию курсора после каждого рендера
     useLayoutEffect(() => {
@@ -631,9 +593,6 @@ export default function Data_extraction() {
                 </div>
             </div>
 
-            {/* Нижняя левая - удалено по требованию */}
-            <div style={{ display:'none' }} />
-
             {/* Средняя колонка: Исходный PDF */}
             <div className={s.middleColumn}>
                 <h2 className="text-base font-bold mb-3">Исходный PDF</h2>
@@ -651,7 +610,7 @@ export default function Data_extraction() {
                 </div>
             </div>
 
-            {/* Новая колонка: Исходный Markdown (редактор) */}
+            {/* Колонка: Исходный Markdown с инструментом аннотирования */}
             <div className={s.sourceMarkdownColumn}>
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="text-base font-bold">Исходный Markdown</h2>
@@ -679,18 +638,16 @@ export default function Data_extraction() {
                         </div>
                     )}
                 </div>
-                {selectedDocument ? (
-                    <textarea
-                        ref={textareaRef}
-                        className={s.markdownEditor}
-                        value={sourceMarkdown}
-                        onChange={(e) => handleSourceMarkdownChange(e.target.value)}
-                        onBlur={() => {
-                            // Синхронизируем с MarkdownEditor при потере фокуса
-                            setMarkdownContent(sourceMarkdown);
-                        }}
-                        placeholder="Markdown документ будет загружен автоматически..."
-                    />
+                {selectedDocument && docId ? (
+                    <div style={{ height: 'calc(100% - 50px)' }}>
+                        <AnnotationWorkspace
+                            docId={docId}
+                            text={sourceMarkdown}
+                            readOnly={false}
+                            onTextChange={handleSourceMarkdownChange}
+                            onSave={handleManualSave}
+                        />
+                    </div>
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
                         Выберите документ для просмотра
@@ -698,46 +655,20 @@ export default function Data_extraction() {
                 )}
             </div>
 
-            {/* Правая колонка: Аннотации в Markdown (Preview) */}
+            {/* Правая колонка: Предпросмотр Markdown */}
             <div className={s.rightColumn}>
-                <h2 className="text-base font-bold mb-3">Аннотации в Markdown</h2>
-                {selectedDocument ? (
-                    <div className={s.markdownViewer} id="km-editor-pane">
+                <h2 className="text-base font-bold mb-3">Предпросмотр Markdown</h2>
+                {selectedDocument && docId ? (
+                    <div style={{ height: 'calc(100% - 40px)' }}>
                         <MarkdownEditor
                             value={markdownContent}
-                            onChange={handleMarkdownEditorChange}
-                            onExportAnnotations={(json) => {
-                                const blob = new Blob([JSON.stringify(json, null, 2)], { type:'application/json' });
-                                const a = document.createElement('a');
-                                a.href = URL.createObjectURL(blob);
-                                a.download = `${docId || 'annotations'}.json`;
-                                a.click();
-                                URL.revokeObjectURL(a.href);
-                            }}
-                            onImportAnnotations={async (data) => {
-                                if (!docId) return;
-                                await apiImportAnnotations(docId, data);
-                            }}
-                            onEditorReady={(el) => {
-                                // синхронизация прокрутки: простое соотношение процентов
-                                const editorScroller = el;
-                                const pdfPane = document.getElementById('km-pdf-pane') as HTMLElement | null;
-                                if (!pdfPane) return;
-                                const sync = (source: HTMLElement, target: HTMLElement) => {
-                                    const sTop = source.scrollTop;
-                                    const sMax = Math.max(1, source.scrollHeight - source.clientHeight);
-                                    const pct = sTop / sMax;
-                                    const tMax = Math.max(1, target.scrollHeight - target.clientHeight);
-                                    target.scrollTop = pct * tMax;
-                                };
-                                editorScroller.addEventListener('scroll', () => sync(editorScroller, pdfPane));
-                                pdfPane.addEventListener('scroll', () => sync(pdfPane, editorScroller));
-                            }}
+                            onChange={() => {}}
+                            readOnly={true}
                         />
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full text-gray-500">
-                        <p>Выберите документ для просмотра аннотаций</p>
+                        <p>Выберите документ для предпросмотра</p>
                     </div>
                 )}
             </div>

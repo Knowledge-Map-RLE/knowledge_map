@@ -106,3 +106,83 @@ class ViewportBounds(BaseModel):
 class ViewportEdgesResponse(BaseModel):
     blocks: List[Dict[str, Any]]
     links: List[Dict[str, Any]]
+
+
+# Схемы для аннотаций Markdown
+class CreateAnnotationRequest(BaseModel):
+    """Запрос на создание аннотации"""
+    text: str = Field(..., description="Аннотируемый текст")
+    annotation_type: str = Field(..., description="Тип аннотации")
+    start_offset: int = Field(..., ge=0, description="Начальная позиция в тексте")
+    end_offset: int = Field(..., gt=0, description="Конечная позиция в тексте")
+    color: str = Field(default="#ffeb3b", description="Цвет выделения в hex формате")
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Дополнительные метаданные")
+    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Уверенность NLP модели")
+    user_id: Optional[str] = Field(default=None, description="ID пользователя")
+
+
+class UpdateAnnotationRequest(BaseModel):
+    """Запрос на обновление аннотации"""
+    text: Optional[str] = None
+    annotation_type: Optional[str] = None
+    start_offset: Optional[int] = Field(default=None, ge=0)
+    end_offset: Optional[int] = Field(default=None, gt=0)
+    color: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+class AnnotationOffsetUpdate(BaseModel):
+    """Обновление offset для одной аннотации"""
+    annotation_id: str
+    start_offset: int = Field(..., ge=0)
+    end_offset: int = Field(..., gt=0)
+
+
+class BatchUpdateOffsetsRequest(BaseModel):
+    """Запрос на массовое обновление offset аннотаций"""
+    updates: List[AnnotationOffsetUpdate] = Field(..., description="Список обновлений")
+
+
+class BatchUpdateOffsetsResponse(BaseModel):
+    """Ответ на массовое обновление offset"""
+    success: bool
+    updated_count: int
+    errors: List[str] = []
+
+
+class AnnotationResponse(BaseModel):
+    """Ответ с данными аннотации"""
+    uid: str
+    text: str
+    annotation_type: str
+    start_offset: int
+    end_offset: int
+    color: str
+    metadata: Dict[str, Any]
+    confidence: Optional[float] = None
+    created_date: Optional[str] = None
+
+
+class CreateRelationRequest(BaseModel):
+    """Запрос на создание связи между аннотациями"""
+    target_id: str = Field(..., description="ID целевой аннотации")
+    relation_type: str = Field(..., description="Тип связи")
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Дополнительные метаданные")
+
+
+class RelationResponse(BaseModel):
+    """Ответ с данными связи"""
+    relation_uid: str
+    source_uid: str
+    target_uid: str
+    relation_type: str
+    created_date: Optional[str] = None
+    metadata: Dict[str, Any]
+
+
+# Схемы для NLP анализа
+class NLPAnalyzeRequest(BaseModel):
+    """Запрос на NLP анализ текста"""
+    text: str = Field(..., description="Текст для анализа")
+    start: Optional[int] = Field(default=None, description="Начальная позиция выделения")
+    end: Optional[int] = Field(default=None, description="Конечная позиция выделения")

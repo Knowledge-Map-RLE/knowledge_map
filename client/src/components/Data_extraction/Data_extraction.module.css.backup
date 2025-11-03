@@ -6,35 +6,31 @@
     left: 220px;
     right: 220px;
     bottom: 120px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    overflow-y: auto;
+    padding: 0; /* убираем gap между main и внешними отступами */
+    display: grid;
+    grid-template-columns: 300px 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 16px;
     overflow-x: hidden;
 }
 
 .leftColumn {
-    @apply w-full flex flex-col p-4 bg-white border-b border-gray-300;
-    min-height: calc(100vh - 180px);
+    @apply w-full h-full flex flex-col p-2 bg-white rounded-lg border border-gray-300;
     overflow-x: hidden;
 }
 
 .middleColumn {
-    @apply w-full flex flex-col p-4 bg-white border-b border-gray-300;
-    min-height: calc(100vh - 180px);
+    @apply w-full h-full flex flex-col p-2 bg-white rounded-lg border border-gray-300;
     overflow-x: hidden;
 }
 
 .sourceMarkdownColumn {
-    @apply w-full flex flex-col p-4 bg-white border-b border-gray-300;
-    min-height: calc(100vh - 180px);
+    @apply w-full h-full flex flex-col p-2 bg-white rounded-lg border border-gray-300;
     overflow-x: hidden;
 }
 
 .rightColumn {
-    @apply w-full flex flex-col p-4 bg-white;
-    min-height: calc(100vh - 180px);
+    @apply w-full h-full flex flex-col p-2 bg-white rounded-lg border border-gray-300;
     overflow-x: hidden;
 }
 

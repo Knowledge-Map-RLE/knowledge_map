@@ -15,6 +15,7 @@ from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
 from src.schemas.api import DataExtractionResponse, ImportAnnotationsRequest
 from . import settings, get_s3_client
 from .marker_progress import marker_progress_store
+from src.models import PDFDocument
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ class DataExtractionService:
 
         pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
 
-        async def process_marker_and_upload(pdf_bytes: bytes):
+        async def process_marker_and_upload(pdf_bytes: bytes, filename: str = None):
             await marker_progress_store.init_doc(doc_id)
             
             # Модели загрузятся автоматически при первом запуске Marker
@@ -151,6 +152,28 @@ class DataExtractionService:
                             content_type=mimetypes.guess_type(img.name)[0] or "image/jpeg"
                         )
                         logger.info(f"[marker_demo] Загружено изображение: {img.name}")
+                
+                # Сохраняем документ в Neo4j для поддержки аннотаций
+                try:
+                    # Проверяем, существует ли документ
+                    existing_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                    if not existing_doc:
+                        # Создаем новый документ
+                        pdf_doc = PDFDocument(
+                            uid=doc_id,
+                            original_filename=filename or f"{doc_id}.pdf",
+                            md5_hash=doc_id,
+                            s3_key=pdf_key,
+                            processing_status='annotated',
+                            is_processed=True
+                        ).save()
+                        logger.info(f"[Neo4j] Создан документ {doc_id} для аннотаций")
+                    else:
+                        logger.info(f"[Neo4j] Документ {doc_id} уже существует в Neo4j")
+                except Exception as neo_err:
+                    logger.error(f"[Neo4j] Ошибка сохранения документа {doc_id}: {neo_err}")
+                    # Не прерываем выполнение, т.к. файлы уже загружены в S3
+                
                 await marker_progress_store.complete_doc(doc_id, True)
             except Exception as e:
                 await marker_progress_store.complete_doc(doc_id, False)
@@ -169,7 +192,7 @@ class DataExtractionService:
                 existing_pdf = await self.s3_client.download_bytes(bucket, pdf_key)
                 if not existing_pdf:
                     raise HTTPException(status_code=500, detail="Не удалось прочитать существующий PDF из S3")
-                background_tasks.add_task(process_marker_and_upload, existing_pdf)
+                background_tasks.add_task(process_marker_and_upload, existing_pdf, file.filename)
                 logger.info(f"[marker_demo] Переобработка запущена для существующего PDF: doc_id={doc_id}")
                 return DataExtractionResponse(
                     success=True, doc_id=doc_id, 
@@ -188,7 +211,7 @@ class DataExtractionService:
         if not uploaded:
             raise HTTPException(status_code=500, detail="Не удалось сохранить PDF в S3")
 
-        background_tasks.add_task(process_marker_and_upload, raw)
+        background_tasks.add_task(process_marker_and_upload, raw, file.filename)
 
         return DataExtractionResponse(
             success=True, doc_id=doc_id, 

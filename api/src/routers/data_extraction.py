@@ -7,9 +7,14 @@ from fastapi.responses import StreamingResponse
 
 from src.schemas.api import (
     DataExtractionResponse, ImportAnnotationsRequest, DocumentAssetsResponse,
-    UpdateMarkdownRequest, UpdateMarkdownResponse
+    UpdateMarkdownRequest, UpdateMarkdownResponse,
+    CreateAnnotationRequest, UpdateAnnotationRequest, AnnotationResponse,
+    CreateRelationRequest, RelationResponse, NLPAnalyzeRequest,
+    BatchUpdateOffsetsRequest, BatchUpdateOffsetsResponse
 )
 from services.data_extraction_service import DataExtractionService
+from services.annotation_service import AnnotationService
+from services.nlp_service import NLPService
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +23,10 @@ logger.info("[data_extraction_router] Импортируем data_extraction р�
 
 router = APIRouter(tags=["data_extraction"])
 data_extraction_service = DataExtractionService()
+annotation_service = AnnotationService()
+nlp_service = NLPService()
 
-logger.info("[data_extraction_router] DataExtractionService создан")
+logger.info("[data_extraction_router] DataExtractionService, AnnotationService и NLPService созданы")
 
 
 @router.post("/data_extraction", response_model=DataExtractionResponse)
@@ -104,3 +111,99 @@ async def get_document_image(doc_id: str, image_name: str):
     except Exception as e:
         logger.error(f"Ошибка получения изображения: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==================== ENDPOINTS ДЛЯ АННОТАЦИЙ MARKDOWN ====================
+
+@router.post("/documents/{doc_id}/annotations", response_model=AnnotationResponse)
+async def create_annotation(doc_id: str, request: CreateAnnotationRequest):
+    """Создать новую аннотацию для документа"""
+    return await annotation_service.create_annotation(
+        doc_id=doc_id,
+        text=request.text,
+        annotation_type=request.annotation_type,
+        start_offset=request.start_offset,
+        end_offset=request.end_offset,
+        color=request.color,
+        user_id=request.user_id,
+        metadata=request.metadata,
+        confidence=request.confidence
+    )
+
+
+@router.get("/documents/{doc_id}/annotations")
+async def get_annotations(doc_id: str):
+    """Получить все аннотации документа"""
+    return await annotation_service.get_annotations(doc_id)
+
+
+@router.put("/annotations/{annotation_id}", response_model=AnnotationResponse)
+async def update_annotation(annotation_id: str, request: UpdateAnnotationRequest):
+    """Обновить существующую аннотацию"""
+    return await annotation_service.update_annotation(
+        annotation_id=annotation_id,
+        text=request.text,
+        annotation_type=request.annotation_type,
+        start_offset=request.start_offset,
+        end_offset=request.end_offset,
+        color=request.color,
+        metadata=request.metadata
+    )
+
+
+@router.delete("/annotations/{annotation_id}")
+async def delete_annotation(annotation_id: str):
+    """Удалить аннотацию"""
+    return await annotation_service.delete_annotation(annotation_id)
+
+
+@router.post("/annotations/batch-update-offsets", response_model=BatchUpdateOffsetsResponse)
+async def batch_update_offsets(request: BatchUpdateOffsetsRequest):
+    """Массовое обновление offset аннотаций при редактировании текста"""
+    updates = [update.dict() for update in request.updates]
+    return await annotation_service.batch_update_offsets(updates)
+
+
+# ==================== ENDPOINTS ДЛЯ СВЯЗЕЙ МЕЖДУ АННОТАЦИЯМИ ====================
+
+@router.post("/annotations/{source_id}/relations", response_model=RelationResponse)
+async def create_relation(source_id: str, request: CreateRelationRequest):
+    """Создать связь между двумя аннотациями"""
+    return await annotation_service.create_relation(
+        source_id=source_id,
+        target_id=request.target_id,
+        relation_type=request.relation_type,
+        metadata=request.metadata
+    )
+
+
+@router.delete("/annotations/{source_id}/relations/{target_id}")
+async def delete_relation(source_id: str, target_id: str):
+    """Удалить связь между аннотациями"""
+    return await annotation_service.delete_relation(source_id, target_id)
+
+
+@router.get("/documents/{doc_id}/relations")
+async def get_relations(doc_id: str):
+    """Получить все связи между аннотациями документа"""
+    return await annotation_service.get_relations(doc_id)
+
+
+# ==================== ENDPOINTS ДЛЯ NLP АНАЛИЗА ====================
+
+@router.post("/nlp/analyze")
+async def analyze_text(request: NLPAnalyzeRequest):
+    """
+    NLP анализ текста с помощью spaCy
+    Если указаны start и end, анализируется только выделенный фрагмент
+    """
+    try:
+        if request.start is not None and request.end is not None:
+            # Анализ выделенного фрагмента для подсказок
+            return nlp_service.analyze_selection(request.text, request.start, request.end)
+        else:
+            # Полный анализ текста
+            return nlp_service.analyze_text(request.text)
+    except Exception as e:
+        logger.error(f"Ошибка NLP анализа: {e}")
+        raise HTTPException(status_code=500, detail=f"Ошибка NLP анализа: {str(e)}")

@@ -1,0 +1,24 @@
+.text-annotator {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid #ddd;
+  background: white;
+}
+
+.annotated-text {
+  min-height: 100%;
+}
+
+.text-annotator.relation-mode .annotated-text {
+  cursor: crosshair;
+}
+
+.annotated-text span[data-annotation-id] {
+  transition: all 0.2s ease;
+}
+
+.annotated-text span[data-annotation-id]:hover {
+  filter: brightness(0.9);
+  transform: scale(1.02);
+}

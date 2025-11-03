@@ -212,6 +212,8 @@ class PDFDocument(StructuredNode):
     """Пользователь, загрузивший документ"""
     annotations = RelationshipTo('PDFAnnotation', 'HAS_ANNOTATION')
     """Аннотации документа"""
+    markdown_annotations = RelationshipTo('MarkdownAnnotation', 'HAS_MARKDOWN_ANNOTATION')
+    """Markdown аннотации документа"""
     
     def get_s3_url(self) -> str:
         """Получить S3 URL для файла"""
@@ -276,9 +278,100 @@ class PDFAnnotation(StructuredNode):
         self.bbox_height = height
 
 
+class AnnotationRelationRel(StructuredRel):
+    """Модель отношения между аннотациями Markdown"""
+    uid = UniqueIdProperty(primary_key=True)
+    """Уникальный идентификатор отношения"""
+    relation_type = StringProperty(required=True)
+    """Тип связи (произвольная строка, задаваемая пользователем)"""
+    created_date = DateTimeProperty(default=datetime.utcnow)
+    """Дата создания связи"""
+    metadata = JSONProperty()
+    """Дополнительные метаданные связи"""
+
+
+class MarkdownAnnotation(StructuredNode):
+    """Модель аннотации текста в Markdown документе"""
+
+    # Основные свойства
+    uid = UniqueIdProperty(primary_key=True)
+    """Уникальный идентификатор аннотации"""
+    text = StringProperty(required=True)
+    """Аннотируемый текст"""
+    annotation_type = StringProperty(required=True, index=True)
+    """Тип аннотации: Существительное, Глагол, Прилагательное, Подлежащее, Сказуемое, Ген, Белок, и т.д."""
+
+    # Позиция в тексте
+    start_offset = IntegerProperty(required=True)
+    """Начальная позиция в тексте (индекс символа)"""
+    end_offset = IntegerProperty(required=True)
+    """Конечная позиция в тексте (индекс символа)"""
+
+    # Визуализация
+    color = StringProperty(default="#ffeb3b")
+    """Цвет выделения аннотации в hex формате"""
+
+    # Метаданные
+    metadata = JSONProperty()
+    """Дополнительные метаданные аннотации"""
+    confidence = FloatProperty()
+    """Уверенность NLP модели в аннотации (0.0-1.0), если применимо"""
+    created_date = DateTimeProperty(default=datetime.utcnow)
+    """Дата создания аннотации"""
+
+    # Отношения
+    document = RelationshipFrom('PDFDocument', 'HAS_MARKDOWN_ANNOTATION')
+    """Документ, к которому относится аннотация"""
+    created_by = RelationshipFrom('User', 'CREATED_MARKDOWN_ANNOTATION')
+    """Пользователь, создавший аннотацию"""
+    relations_to = RelationshipTo('MarkdownAnnotation', 'RELATES_TO', model=AnnotationRelationRel)
+    """Связи с другими аннотациями (исходящие)"""
+    relations_from = RelationshipFrom('MarkdownAnnotation', 'RELATES_TO', model=AnnotationRelationRel)
+    """Связи с другими аннотациями (входящие)"""
+
+    def get_position(self) -> dict:
+        """Получить позицию аннотации в тексте"""
+        return {
+            'start': self.start_offset,
+            'end': self.end_offset
+        }
+
+    def create_relation(self, target_annotation, relation_type: str):
+        """Создать связь с другой аннотацией"""
+        return self.relations_to.connect(
+            target_annotation,
+            {
+                'relation_type': relation_type,
+                'created_date': datetime.utcnow()
+            }
+        )
+
+    def get_all_relations(self) -> list:
+        """Получить все связи аннотации (входящие и исходящие)"""
+        outgoing = [
+            {
+                'source_uid': self.uid,
+                'target_uid': rel.uid,
+                'relation_type': self.relations_to.relationship(rel).relation_type,
+                'direction': 'outgoing'
+            }
+            for rel in self.relations_to.all()
+        ]
+        incoming = [
+            {
+                'source_uid': rel.uid,
+                'target_uid': self.uid,
+                'relation_type': self.relations_from.relationship(rel).relation_type,
+                'direction': 'incoming'
+            }
+            for rel in self.relations_from.all()
+        ]
+        return outgoing + incoming
+
+
 class LabelStudioProject(StructuredNode):
     """Модель проекта Label Studio"""
-    
+
     # Основные свойства
     uid = UniqueIdProperty(primary_key=True)
     """Уникальный идентификатор проекта"""
@@ -288,19 +381,19 @@ class LabelStudioProject(StructuredNode):
     """Описание проекта"""
     label_config = StringProperty(required=True)
     """Конфигурация разметки в формате XML"""
-    
+
     # Статус
     is_active = BooleanProperty(default=True)
     """Активен ли проект"""
     created_date = DateTimeProperty(default=datetime.utcnow)
     """Дата создания проекта"""
-    
+
     # Отношения
     created_by = RelationshipFrom('User', 'CREATED_PROJECT')
     """Создатель проекта"""
     documents = RelationshipTo('PDFDocument', 'USES_PROJECT')
     """Документы, использующие этот проект"""
-    
+
     def get_label_config_xml(self) -> str:
         """Получить XML конфигурацию для Label Studio"""
         return self.label_config

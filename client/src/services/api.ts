@@ -271,3 +271,203 @@ export async function getNLPMarkdown(filename: string): Promise<{ content?: stri
     return { error: message };
   }
 }
+
+// ==================== ANNOTATION API ====================
+
+export interface Annotation {
+  uid: string;
+  text: string;
+  annotation_type: string;
+  start_offset: number;
+  end_offset: number;
+  color: string;
+  metadata?: Record<string, any>;
+  confidence?: number;
+  created_date?: string;
+}
+
+export interface AnnotationRelation {
+  relation_uid: string;
+  source_uid: string;
+  target_uid: string;
+  relation_type: string;
+  created_date?: string;
+  metadata?: Record<string, any>;
+}
+
+export interface CreateAnnotationRequest {
+  text: string;
+  annotation_type: string;
+  start_offset: number;
+  end_offset: number;
+  color?: string;
+  metadata?: Record<string, any>;
+  confidence?: number;
+  user_id?: string;
+}
+
+export interface UpdateAnnotationRequest {
+  text?: string;
+  annotation_type?: string;
+  start_offset?: number;
+  end_offset?: number;
+  color?: string;
+  metadata?: Record<string, any>;
+}
+
+export interface CreateRelationRequest {
+  target_id: string;
+  relation_type: string;
+  metadata?: Record<string, any>;
+}
+
+export interface NLPAnalyzeRequest {
+  text: string;
+  start?: number;
+  end?: number;
+}
+
+export interface NLPSuggestion {
+  type: string;
+  category: string;
+  confidence: number;
+  spacy_label?: string;
+}
+
+export interface NLPAnalyzeResponse {
+  success: boolean;
+  suggestions?: NLPSuggestion[];
+  selected_text?: string;
+  token_count?: number;
+  error?: string;
+}
+
+// Создать аннотацию
+export async function createAnnotation(docId: string, request: CreateAnnotationRequest): Promise<Annotation> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/annotations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request)
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Получить все аннотации документа
+export async function getAnnotations(docId: string): Promise<Annotation[]> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/annotations`);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Обновить аннотацию
+export async function updateAnnotation(annotationId: string, request: UpdateAnnotationRequest): Promise<Annotation> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/annotations/${encodeURIComponent(annotationId)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request)
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Удалить аннотацию
+export async function deleteAnnotation(annotationId: string): Promise<{ message: string }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/annotations/${encodeURIComponent(annotationId)}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Массовое обновление offset аннотаций
+export interface AnnotationOffsetUpdate {
+  annotation_id: string;
+  start_offset: number;
+  end_offset: number;
+}
+
+export interface BatchUpdateOffsetsRequest {
+  updates: AnnotationOffsetUpdate[];
+}
+
+export interface BatchUpdateOffsetsResponse {
+  success: boolean;
+  updated_count: number;
+  errors: string[];
+}
+
+export async function batchUpdateAnnotationOffsets(request: BatchUpdateOffsetsRequest): Promise<BatchUpdateOffsetsResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/annotations/batch-update-offsets`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request)
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Создать связь между аннотациями
+export async function createAnnotationRelation(sourceId: string, request: CreateRelationRequest): Promise<AnnotationRelation> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/annotations/${encodeURIComponent(sourceId)}/relations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request)
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Удалить связь между аннотациями
+export async function deleteAnnotationRelation(sourceId: string, targetId: string): Promise<{ message: string }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/annotations/${encodeURIComponent(sourceId)}/relations/${encodeURIComponent(targetId)}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Получить все связи документа
+export async function getAnnotationRelations(docId: string): Promise<AnnotationRelation[]> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/relations`);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// NLP анализ текста
+export async function analyzeText(request: NLPAnalyzeRequest): Promise<NLPAnalyzeResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/nlp/analyze`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request)
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
