@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Annotation } from '../../../services/api';
 import './AnnotationPanel.css';
 
@@ -28,7 +28,9 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
 }) => {
   const [filterType, setFilterType] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
+  const [scrollTop, setScrollTop] = useState(0);
   const selectedGroupRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   // Скролл к выбранной группе
   useEffect(() => {
@@ -69,6 +71,31 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
     a[1].start_offset - b[1].start_offset
   );
 
+  // Виртуализация: показываем только видимые элементы
+  const ITEM_HEIGHT = 120; // Примерная высота одного элемента в пикселях
+  const CONTAINER_HEIGHT = 600; // Высота контейнера
+  const OVERSCAN = 5; // Количество дополнительных элементов сверху и снизу
+
+  const visibleRange = useMemo(() => {
+    const startIndex = Math.max(0, Math.floor(scrollTop / ITEM_HEIGHT) - OVERSCAN);
+    const endIndex = Math.min(
+      groupedByFragment.length,
+      Math.ceil((scrollTop + CONTAINER_HEIGHT) / ITEM_HEIGHT) + OVERSCAN
+    );
+    return { startIndex, endIndex };
+  }, [scrollTop, groupedByFragment.length]);
+
+  const visibleItems = useMemo(() => {
+    return groupedByFragment.slice(visibleRange.startIndex, visibleRange.endIndex);
+  }, [groupedByFragment, visibleRange]);
+
+  const totalHeight = groupedByFragment.length * ITEM_HEIGHT;
+  const offsetY = visibleRange.startIndex * ITEM_HEIGHT;
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setScrollTop(e.currentTarget.scrollTop);
+  };
+
   return (
     <div className="annotation-panel">
       <div className="panel-header">
@@ -97,84 +124,89 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
         </select>
       </div>
 
-      <div className="annotations-list">
+      <div className="annotations-list" ref={listRef} onScroll={handleScroll}>
         {groupedByFragment.length === 0 ? (
           <div className="empty-state">
             <p>Нет аннотаций</p>
             <small>Выделите текст и выберите тип аннотации</small>
           </div>
         ) : (
-          groupedByFragment.map(([fragmentKey, group]) => {
-            const isSelected = group.annotations.some(
-              (ann) => ann.uid === selectedAnnotation?.uid
-            );
-            return (
-              <div
-                key={fragmentKey}
-                ref={isSelected ? selectedGroupRef : null}
-                className={`fragment-group ${isSelected ? 'selected' : ''}`}
-              >
-                <div className="fragment-header">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => onAnnotationSelect(group.annotations)}>
-                      <div className="fragment-text">"{group.text}"</div>
-                      <div className="fragment-meta">
-                        [{group.start_offset} - {group.end_offset}]
+          <div style={{ height: totalHeight, position: 'relative' }}>
+            <div style={{ transform: `translateY(${offsetY}px)` }}>
+              {visibleItems.map(([fragmentKey, group]) => {
+                const isSelected = group.annotations.some(
+                  (ann) => ann.uid === selectedAnnotation?.uid
+                );
+                return (
+                  <div
+                    key={fragmentKey}
+                    ref={isSelected ? selectedGroupRef : null}
+                    className={`fragment-group ${isSelected ? 'selected' : ''}`}
+                    style={{ minHeight: ITEM_HEIGHT }}
+                  >
+                    <div className="fragment-header">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => onAnnotationSelect(group.annotations)}>
+                          <div className="fragment-text">"{group.text}"</div>
+                          <div className="fragment-meta">
+                            [{group.start_offset} - {group.end_offset}]
+                          </div>
+                        </div>
+                        <button
+                          className="delete-fragment-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (window.confirm(`Удалить весь фрагмент с ${group.annotations.length} типами?`)) {
+                              // Удаляем все аннотации во фрагменте
+                              group.annotations.forEach((ann) => onAnnotationDelete(ann.uid));
+                            }
+                          }}
+                          title="Удалить весь фрагмент"
+                          style={{
+                            background: '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            padding: '4px 8px',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            marginLeft: '8px',
+                          }}
+                        >
+                          🗑 Удалить фрагмент
+                        </button>
                       </div>
                     </div>
-                    <button
-                      className="delete-fragment-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (window.confirm(`Удалить весь фрагмент с ${group.annotations.length} типами?`)) {
-                          // Удаляем все аннотации во фрагменте
-                          group.annotations.forEach((ann) => onAnnotationDelete(ann.uid));
-                        }
-                      }}
-                      title="Удалить весь фрагмент"
-                      style={{
-                        background: '#f44336',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        padding: '4px 8px',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        fontWeight: 500,
-                        marginLeft: '8px',
-                      }}
-                    >
-                      🗑 Удалить фрагмент
-                    </button>
-                  </div>
-                </div>
-                <div className="fragment-types">
-                  {group.annotations.map((ann) => (
-                    <div
-                      key={ann.uid}
-                      className="type-badge"
-                      style={{ backgroundColor: ann.color }}
-                      title={ann.annotation_type}
-                    >
-                      {ann.annotation_type}
-                      <button
-                        className="type-remove-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (window.confirm(`Удалить тип "${ann.annotation_type}"?`)) {
-                            onAnnotationDelete(ann.uid);
-                          }
-                        }}
-                        title="Удалить этот тип"
-                      >
-                        ×
-                      </button>
+                    <div className="fragment-types">
+                      {group.annotations.map((ann) => (
+                        <div
+                          key={ann.uid}
+                          className="type-badge"
+                          style={{ backgroundColor: ann.color }}
+                          title={ann.annotation_type}
+                        >
+                          {ann.annotation_type}
+                          <button
+                            className="type-remove-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (window.confirm(`Удалить тип "${ann.annotation_type}"?`)) {
+                                onAnnotationDelete(ann.uid);
+                              }
+                            }}
+                            title="Удалить этот тип"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -24,6 +24,33 @@ import os
 logger.info(f"[data_extraction] Переменные окружения при импорте: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
 
 
+def extract_title_from_markdown(markdown_content: str) -> str | None:
+    """Извлекает заголовок первого уровня из markdown контента.
+
+    Args:
+        markdown_content: Текст markdown документа
+
+    Returns:
+        Заголовок без символа #, или None если не найден
+    """
+    if not markdown_content:
+        return None
+
+    lines = markdown_content.split('\n')
+    for line in lines:
+        line = line.strip()
+        # Ищем заголовок первого уровня: строка начинается с одной решётки и пробела
+        if line.startswith('# ') and not line.startswith('## '):
+            # Убираем '# ' и возвращаем заголовок
+            title = line[2:].strip()
+            if title:
+                logger.info(f"[extract_title] Найден заголовок: {title}")
+                return title
+
+    logger.warning("[extract_title] Заголовок первого уровня не найден в markdown")
+    return None
+
+
 class DataExtractionService:
     """Сервис для извлечения данных из PDF файлов"""
     
@@ -106,11 +133,17 @@ class DataExtractionService:
                 outputs = {"markdown": None, "images_dir": tmp_dir}
                 
                 # Сохраняем markdown во временную директорию
+                extracted_title = None
                 if result.get("markdown_content"):
                     md_path = tmp_dir / f"{doc_id}.md"
                     md_path.write_text(result["markdown_content"], encoding="utf-8", errors="ignore")
                     outputs["markdown"] = md_path
                     logger.info(f"[marker_demo] Markdown сохранен: {md_path}")
+
+                    # Извлекаем заголовок из markdown
+                    extracted_title = extract_title_from_markdown(result["markdown_content"])
+                    if extracted_title:
+                        logger.info(f"[marker_demo] Извлечен заголовок документа: {extracted_title}")
                 
                 # Сохраняем изображения
                 if result.get("images"):
@@ -158,18 +191,25 @@ class DataExtractionService:
                     # Проверяем, существует ли документ
                     existing_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
                     if not existing_doc:
-                        # Создаем новый документ
+                        # Создаем новый документ с заголовком из markdown
                         pdf_doc = PDFDocument(
                             uid=doc_id,
                             original_filename=filename or f"{doc_id}.pdf",
                             md5_hash=doc_id,
                             s3_key=pdf_key,
                             processing_status='annotated',
-                            is_processed=True
+                            is_processed=True,
+                            title=extracted_title  # Сохраняем извлечённый заголовок
                         ).save()
-                        logger.info(f"[Neo4j] Создан документ {doc_id} для аннотаций")
+                        logger.info(f"[Neo4j] Создан документ {doc_id} с заголовком: {extracted_title}")
                     else:
-                        logger.info(f"[Neo4j] Документ {doc_id} уже существует в Neo4j")
+                        # Обновляем существующий документ, если заголовок был извлечён
+                        if extracted_title and not existing_doc.title:
+                            existing_doc.title = extracted_title
+                            existing_doc.save()
+                            logger.info(f"[Neo4j] Обновлён заголовок документа {doc_id}: {extracted_title}")
+                        else:
+                            logger.info(f"[Neo4j] Документ {doc_id} уже существует в Neo4j")
                 except Exception as neo_err:
                     logger.error(f"[Neo4j] Ошибка сохранения документа {doc_id}: {neo_err}")
                     # Не прерываем выполнение, т.к. файлы уже загружены в S3
@@ -380,7 +420,9 @@ class DataExtractionService:
         }
 
     async def list_documents(self) -> Dict[str, Any]:
-        """Список документов по префиксу documents/ из S3."""
+        """Список документов по префиксу documents/ из S3 с метаданными из Neo4j."""
+        from src.models import PDFDocument
+
         bucket = settings.S3_BUCKET_NAME
         contents = await self.s3_client.list_objects(bucket, "documents/")
         doc_map: Dict[str, Dict[str, Any]] = {}
@@ -398,7 +440,9 @@ class DataExtractionService:
                 item = {
                     "doc_id": doc_id,
                     "has_markdown": False,
-                    "files": {}
+                    "files": {},
+                    "title": None,
+                    "original_filename": None,
                 }
                 doc_map[doc_id] = item
             # track files (пока без валидации)
@@ -422,6 +466,18 @@ class DataExtractionService:
             pdf_key = files.get('pdf')
             if pdf_key and not await self.s3_client.object_exists(bucket, pdf_key):
                 files.pop('pdf', None)
+
+        # Получаем метаданные из Neo4j для каждого документа
+        for doc_id, item in doc_map.items():
+            try:
+                # Ищем документ в Neo4j по uid
+                pdf_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                if pdf_doc:
+                    item['title'] = pdf_doc.title
+                    item['original_filename'] = pdf_doc.original_filename
+            except Exception as e:
+                logger.warning(f"Не удалось получить метаданные для документа {doc_id}: {e}")
+
         # Отфильтровываем «пустые» документы: показываем только если есть markdown
         documents = []
         for item in doc_map.values():

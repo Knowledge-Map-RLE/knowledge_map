@@ -4,6 +4,7 @@
 param(
     [switch]$Stop,
     [switch]$Restart,
+    [switch]$HostOnly,
     [switch]$Status,
     [switch]$Logs,
     [string]$Service = ""
@@ -608,6 +609,89 @@ if ($Restart) {
     Start-Sleep -Seconds 3
 }
 
+if ($HostOnly) {
+    Write-ColorOutput "=== Restarting Host Services Only ===" $InfoColor
+    Write-ColorOutput "Docker services (neo4j, redis, s3) will not be touched" $WarningColor
+    Write-ColorOutput ""
+
+    # Check that Docker services are already running
+    Write-ColorOutput "Checking Docker services are running..." $InfoColor
+    if (-not (Test-Port -Port 7687 -ServiceName "Neo4j")) {
+        Write-ColorOutput "Neo4j (port 7687) is not running. Please start Docker services first." $ErrorColor
+        Write-ColorOutput "Run: .\start_local_dev.ps1" $InfoColor
+        exit 1
+    }
+    if (-not (Test-Port -Port 6379 -ServiceName "Redis")) {
+        Write-ColorOutput "Redis (port 6379) is not running. Please start Docker services first." $ErrorColor
+        Write-ColorOutput "Run: .\start_local_dev.ps1" $InfoColor
+        exit 1
+    }
+    if (-not (Test-Port -Port 9000 -ServiceName "S3")) {
+        Write-ColorOutput "S3/MinIO (port 9000) is not running. Please start Docker services first." $ErrorColor
+        Write-ColorOutput "Run: .\start_local_dev.ps1" $InfoColor
+        exit 1
+    }
+    Write-ColorOutput "All Docker services are running" $SuccessColor
+
+    # Stop only host services
+    Write-ColorOutput "`nStopping host services..." $InfoColor
+
+    # Stop Auth service
+    Write-ColorOutput "Stopping Auth service..." $InfoColor
+    $authProcesses = Get-Process | Where-Object { $_.ProcessName -eq "python" -and $_.CommandLine -like "*auth_service.py*" }
+    if ($authProcesses) {
+        $authProcesses | Stop-Process -Force
+        Write-ColorOutput "Auth service stopped" $SuccessColor
+    }
+
+    # Stop PDF to MD service
+    Write-ColorOutput "Stopping PDF to MD service..." $InfoColor
+    $pdfProcesses = Get-Process | Where-Object { $_.ProcessName -eq "python" -and $_.CommandLine -like "*pdf_to_md_service.py*" }
+    if ($pdfProcesses) {
+        $pdfProcesses | Stop-Process -Force
+        Write-ColorOutput "PDF to MD service stopped" $SuccessColor
+    }
+
+    # Stop API service
+    Write-ColorOutput "Stopping API service..." $InfoColor
+    $apiProcesses = Get-Process | Where-Object { $_.ProcessName -eq "python" -and $_.CommandLine -like "*uvicorn*" }
+    if ($apiProcesses) {
+        $apiProcesses | Stop-Process -Force
+        Write-ColorOutput "API service stopped" $SuccessColor
+    }
+
+    Start-Sleep -Seconds 2
+
+    # Start host services
+    Write-ColorOutput "`n1. Starting Auth service..." $InfoColor
+    $authResult = Start-AuthService
+    if (-not $authResult) {
+        Write-ColorOutput "Auth service failed to start - continuing with other services" $WarningColor
+    }
+
+    Write-ColorOutput "`n2. Starting PDF to MD service..." $InfoColor
+    $pdfToMdResult = Start-PdfToMdService
+    if (-not $pdfToMdResult) {
+        Write-ColorOutput "PDF to MD service failed to start - continuing with other services" $WarningColor
+    }
+
+    Write-ColorOutput "`n3. Starting API service..." $InfoColor
+    $apiResult = Start-ApiService
+    if (-not $apiResult) {
+        Write-ColorOutput "API service failed to start - continuing with other services" $WarningColor
+    }
+
+    Write-ColorOutput "`n=== Host services restart completed ===" $SuccessColor
+    Show-Status
+
+    Write-ColorOutput "`nDocker services were not restarted:" $InfoColor
+    Write-ColorOutput "  - Neo4j (port 7687)" $InfoColor
+    Write-ColorOutput "  - Redis (port 6379)" $InfoColor
+    Write-ColorOutput "  - S3/MinIO (port 9000)" $InfoColor
+
+    exit 0
+}
+
 Write-ColorOutput "=== Starting Knowledge Map Microservices ===" $InfoColor
 Write-ColorOutput "Version: PowerShell script for local development" $InfoColor
 Write-ColorOutput ""
@@ -680,6 +764,8 @@ Show-Status
 
 Write-ColorOutput "`nTo stop all services run:" $WarningColor
 Write-ColorOutput "  .\start_local_dev.ps1 -Stop" $WarningColor
+Write-ColorOutput "`nTo restart only host services (keep Docker running):" $WarningColor
+Write-ColorOutput "  .\start_local_dev.ps1 -HostOnly" $WarningColor
 Write-ColorOutput "`nTo check status run:" $WarningColor
 Write-ColorOutput "  .\start_local_dev.ps1 -Status" $WarningColor
 Write-ColorOutput "`nTo view logs run:" $WarningColor

@@ -1,44 +1,83 @@
 @import "tailwindcss";
 
 .dex {
-    @apply absolute bg-gray-100 rounded-lg shadow-lg;
-    top: 60px;
-    left: 220px;
-    right: 220px;
-    bottom: 120px;
+    @apply bg-gray-100 rounded-lg shadow-lg;
+    width: 100%;
+    height: 200vh;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: 0;
+    overflow: hidden;
+}
+
+.headerRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 20px;
+    background: white;
+    border-bottom: 1px solid #d1d5db;
+    min-height: 60px;
+    gap: 20px;
+}
+
+.headerPanel {
+    flex-shrink: 0;
+}
+
+.topRow {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #d1d5db;
+    flex: 1;
+    min-height: 0;
+}
+
+.bottomRow {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.leftColumn {
+    @apply flex flex-col p-4 bg-white border-r border-gray-300;
+    width: 300px;
+    min-width: 300px;
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.leftColumn {
-    @apply w-full flex flex-col p-4 bg-white border-b border-gray-300;
-    min-height: calc(100vh - 180px);
-    overflow-x: hidden;
-}
-
 .middleColumn {
-    @apply w-full flex flex-col p-4 bg-white border-b border-gray-300;
-    min-height: calc(100vh - 180px);
+    @apply flex flex-col p-4 bg-white border-r border-gray-300;
+    flex: 2;
+    height: 100%;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
 .sourceMarkdownColumn {
-    @apply w-full flex flex-col p-4 bg-white border-b border-gray-300;
-    min-height: calc(100vh - 180px);
+    @apply flex flex-col p-4 bg-white;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
 .rightColumn {
-    @apply w-full flex flex-col p-4 bg-white;
-    min-height: calc(100vh - 180px);
+    @apply flex flex-col p-4 bg-white;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
-.fullWidth { /* больше не используется */ }
+.fullWidth {
+    @apply flex flex-col;
+    width: 100%;
+    height: 100%;
+}
 
 .uploadArea {
     @apply border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer;

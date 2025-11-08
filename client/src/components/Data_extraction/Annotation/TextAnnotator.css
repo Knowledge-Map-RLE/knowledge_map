@@ -14,11 +14,4 @@
   cursor: crosshair;
 }
 
-.annotated-text span[data-annotation-id] {
-  transition: all 0.2s ease;
-}
-
-.annotated-text span[data-annotation-id]:hover {
-  filter: brightness(0.9);
-  transform: scale(1.02);
-}
+/* Убраны transition и transform для улучшения производительности */

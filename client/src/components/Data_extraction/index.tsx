@@ -1,10 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import s from './Data_extraction.module.css';
-import PDFAnnotation from './PDFAnnotation';
 import { uploadPdfForExtraction, importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, deleteDocument as apiDeleteDocument, listDocuments, saveMarkdown } from '../../services/api';
-import MarkdownAnnotator from './MarkdownAnnotator';
-import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 import { AnnotationWorkspace } from './Annotation';
+import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
+import Project_title from '../Project_title';
+import Search from '../Search';
+import User from '../User';
+import DocumentContextMenu from './DocumentContextMenu';
 
 interface PDFDocument {
     uid: string;
@@ -21,60 +23,13 @@ interface PDFDocument {
     pdf_url?: string;
 }
 
-interface Annotation {
-    uid: string;
-    annotation_type: string;
-    content: string;
-    confidence?: number;
-    page_number?: number;
-    bbox?: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    };
-    metadata?: any;
-}
-
-interface ManualAnnotation {
-    id: string;
-    type: 'entity' | 'relation';
-    content: string;
-    start: number;
-    end: number;
-    label: string;
-    confidence?: number;
-    page?: number;
-    bbox?: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    };
-}
-
-interface Relation {
-    id: string;
-    source: string;
-    target: string;
-    type: string;
-    confidence?: number;
-}
-
 export default function Data_extraction() {
     const [documents, setDocuments] = useState<PDFDocument[]>([]);
     const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
-    const [annotations, setAnnotations] = useState<Annotation[]>([]);
-    const [manualAnnotations, setManualAnnotations] = useState<ManualAnnotation[]>([]);
-    const [relations, setRelations] = useState<Relation[]>([]);
-    const [markdownContent, setMarkdownContent] = useState<string>('');
-    const [imageUrls, setImageUrls] = useState<Record<string,string>>({});
     const [pdfUrl, setPdfUrl] = useState<string>('');
     const [isUploading, setIsUploading] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
     const [dragOver, setDragOver] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [showAnnotationMode, setShowAnnotationMode] = useState(false);
     const [progressMap, setProgressMap] = useState<Record<string, number>>({});
     const [docId, setDocId] = useState<string>('');
 
@@ -84,11 +39,15 @@ export default function Data_extraction() {
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
     const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
+    // Context menu state
+    const [contextMenu, setContextMenu] = useState<{
+        x: number;
+        y: number;
+        documentId: string;
+    } | null>(null);
+
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const pdfViewerRef = useRef<HTMLIFrameElement>(null);
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const cursorPositionRef = useRef<number | null>(null);
 
     // Загружаем список документов при монтировании компонента
     useEffect(() => {
@@ -98,9 +57,11 @@ export default function Data_extraction() {
     const loadDocuments = async () => {
         try {
             const data = await listDocuments();
+            console.log('Загруженные документы из API:', data);
             if (data?.success && Array.isArray(data.documents)) {
                 // маппинг в локальный тип PDFDocument с проверкой реального статуса
                 const mapped = await Promise.all(data.documents.map(async (d) => {
+                    console.log('Обработка документа:', d);
                     let status = d.has_markdown ? 'annotated' : 'uploaded';
                     
                     // Проверяем реальный статус через API маркера
@@ -126,8 +87,9 @@ export default function Data_extraction() {
 
                     return {
                         uid: d.doc_id,
-                        original_filename: d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
+                        original_filename: d.original_filename || d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
                         md5_hash: d.doc_id,
+                        title: d.title || null,
                         upload_date: new Date().toISOString(),
                         processing_status: status,
                         is_processed: status === 'annotated',
@@ -206,25 +168,16 @@ export default function Data_extraction() {
     const selectDocument = async (document: PDFDocument) => {
         setSelectedDocument(document);
         setDocId(document.uid);
-        // Загружаем markdown и изображения из S3
+        // Загружаем markdown из S3
         try {
             const assets = await getDocumentAssets(document.uid);
             if (assets?.markdown) {
-                // Устанавливаем и исходный markdown, и rendered markdown
                 setSourceMarkdown(assets.markdown);
-                setMarkdownContent(assets.markdown);
                 setProgressMap(prev => ({ ...prev, [document.uid]: 100 }));
                 console.log('Markdown загружен:', assets.markdown.length, 'символов');
             } else {
                 console.log('Markdown не найден для документа:', document.uid);
                 setSourceMarkdown('');
-                setMarkdownContent('');
-            }
-            if (assets?.image_urls) {
-                setImageUrls(assets.image_urls);
-                console.log('Изображения загружены:', Object.keys(assets.image_urls));
-            } else {
-                setImageUrls({});
             }
             // Пытаемся извлечь PDF URL из ассетов
             const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
@@ -239,24 +192,13 @@ export default function Data_extraction() {
         } catch (err) {
             console.error('Ошибка загрузки документа:', err);
             setSourceMarkdown('');
-            setMarkdownContent('');
-            setImageUrls({});
             setPdfUrl('');
         }
     };
 
-    // Обработчик изменений в textarea (Исходный Markdown)
+    // Обработчик изменений в markdown
     const handleSourceMarkdownChange = useCallback((newMarkdown: string) => {
-        // Сохраняем позицию курсора перед обновлением в ref
-        if (textareaRef.current) {
-            cursorPositionRef.current = textareaRef.current.selectionStart;
-        }
-
         setSourceMarkdown(newMarkdown);
-
-        // НЕ обновляем markdownContent пока textarea в фокусе
-        // Обновление произойдет при потере фокуса
-
         setSaveStatus('idle');
 
         // Отменяем предыдущий таймер (если был)
@@ -291,15 +233,6 @@ export default function Data_extraction() {
             setIsSaving(false);
         }
     }, [selectedDocument, sourceMarkdown]);
-
-
-    // Восстанавливаем позицию курсора после каждого рендера
-    useLayoutEffect(() => {
-        if (textareaRef.current && cursorPositionRef.current !== null) {
-            textareaRef.current.setSelectionRange(cursorPositionRef.current, cursorPositionRef.current);
-            cursorPositionRef.current = null; // Сбрасываем после восстановления
-        }
-    });
 
     // Cleanup timeout при unmount
     useEffect(() => {
@@ -349,149 +282,6 @@ export default function Data_extraction() {
         return () => clearInterval(interval);
     }, [selectedDocument]);
 
-    const generateMarkdownFromAnnotations = (anns: Annotation[], manualAnns: ManualAnnotation[] = [], rels: Relation[] = []) => {
-        let markdown = '# Аннотированный документ\n\n';
-        
-        // Группируем автоматические аннотации по типам
-        const groupedAnnotations = anns.reduce((acc, ann) => {
-            if (!acc[ann.annotation_type]) {
-                acc[ann.annotation_type] = [];
-            }
-            acc[ann.annotation_type].push(ann);
-            return acc;
-        }, {} as Record<string, Annotation[]>);
-
-        // Добавляем заголовок
-        if (groupedAnnotations.title) {
-            markdown += `## ${groupedAnnotations.title[0].content}\n\n`;
-        }
-
-        // Добавляем авторов
-        if (groupedAnnotations.author) {
-            markdown += `**Авторы:** ${groupedAnnotations.author.map(a => a.content).join(', ')}\n\n`;
-        }
-
-        // Добавляем аннотацию
-        if (groupedAnnotations.abstract) {
-            markdown += `**Аннотация:**\n${groupedAnnotations.abstract[0].content}\n\n`;
-        }
-
-        // Добавляем ключевые слова
-        if (groupedAnnotations.keyword) {
-            markdown += `**Ключевые слова:** ${groupedAnnotations.keyword.map(k => k.content).join(', ')}\n\n`;
-        }
-
-        // Добавляем остальные автоматические аннотации
-        Object.entries(groupedAnnotations).forEach(([type, items]) => {
-            if (!['title', 'author', 'abstract', 'keyword'].includes(type)) {
-                markdown += `## ${type.charAt(0).toUpperCase() + type.slice(1)}\n\n`;
-                items.forEach(item => {
-                    markdown += `- ${item.content}`;
-                    if (item.confidence) {
-                        markdown += ` (уверенность: ${(item.confidence * 100).toFixed(1)}%)`;
-                    }
-                    markdown += '\n';
-                });
-                markdown += '\n';
-            }
-        });
-
-        // Добавляем ручные аннотации
-        if (manualAnns.length > 0) {
-            markdown += `## Ручные аннотации\n\n`;
-            const groupedManual = manualAnns.reduce((acc, ann) => {
-                if (!acc[ann.label]) {
-                    acc[ann.label] = [];
-                }
-                acc[ann.label].push(ann);
-                return acc;
-            }, {} as Record<string, ManualAnnotation[]>);
-
-            Object.entries(groupedManual).forEach(([label, items]) => {
-                markdown += `### ${label.charAt(0).toUpperCase() + label.slice(1)}\n\n`;
-                items.forEach(item => {
-                    markdown += `- ${item.content}`;
-                    if (item.confidence) {
-                        markdown += ` (уверенность: ${(item.confidence * 100).toFixed(1)}%)`;
-                    }
-                    markdown += '\n';
-                });
-                markdown += '\n';
-            });
-        }
-
-        // Добавляем связи
-        if (rels.length > 0) {
-            markdown += `## Связи\n\n`;
-            rels.forEach(rel => {
-                const sourceAnn = manualAnns.find(a => a.id === rel.source);
-                const targetAnn = manualAnns.find(a => a.id === rel.target);
-                if (sourceAnn && targetAnn) {
-                    markdown += `- **${sourceAnn.content}** → *${rel.type}* → **${targetAnn.content}**\n`;
-                }
-            });
-            markdown += '\n';
-        }
-
-        setMarkdownContent(markdown);
-    };
-
-    const downloadPDF = () => {
-        if (selectedDocument) {
-            const link = document.createElement('a');
-            link.href = `http://localhost:8000/api/s3/buckets/knowledge-map-pdfs/objects/documents/${selectedDocument.uid}/${selectedDocument.uid}.pdf`;
-            link.download = selectedDocument.original_filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    };
-
-    const handleAnnotationsChange = (newAnnotations: ManualAnnotation[], newRelations: Relation[]) => {
-        setManualAnnotations(newAnnotations);
-        setRelations(newRelations);
-        
-        // Обновляем Markdown с учетом ручных аннотаций
-        generateMarkdownFromAnnotations(annotations, newAnnotations, newRelations);
-    };
-
-    // Label Studio удаляем — используем свой аннотатор
-    const createLabelStudioProject = async () => { return; };
-    const openLabelStudioDirectly = () => { return; };
-
-    const loadLabelStudioAnnotations = async () => { return; };
-
-    const startAnnotation = async () => {
-        // Обработка запускается автоматически на бэкенде после загрузки /data_extraction
-        setIsProcessing(true);
-        setTimeout(() => setIsProcessing(false), 5000);
-    };
-
-    const onExportAnnotations = async () => {
-        if (!docId) return;
-        try {
-            const json = await apiExportAnnotations(docId);
-            const a = document.createElement('a');
-            const blob = new Blob([json], { type: 'application/json' });
-            a.href = URL.createObjectURL(blob);
-            a.download = `${docId}_annotations.json`;
-            a.click();
-            URL.revokeObjectURL(a.href);
-        } catch (e) {
-            setError('Не удалось экспортировать аннотации');
-        }
-    };
-
-    const onImportAnnotations = async (file: File) => {
-        if (!docId) return;
-        try {
-            const text = await file.text();
-            const data = JSON.parse(text);
-            await apiImportAnnotations(docId, data);
-        } catch (e) {
-            setError('Не удалось импортировать аннотации');
-        }
-    };
 
     const getStatusClass = (status: string) => {
         switch (status) {
@@ -515,162 +305,192 @@ export default function Data_extraction() {
 
     return (
         <main className={s.dex}>
-            {/* Левая колонка: Загрузка встроена в список документов */}
-            <div className={s.leftColumn}>
-                <h2 className="text-base font-bold mb-3">Загруженные документы</h2>
-                <div 
-                    className={`${s.uploadArea} ${dragOver ? s.dragover : ''} mb-3`}
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onClick={() => fileInputRef.current?.click()}
-                    style={{ position:'sticky', top:0, zIndex:1 }}
-                >
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".pdf"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                    />
-                    {isUploading ? (
-                        <div className="flex flex-col items-center">
-                            <div className={s.loadingSpinner}></div>
-                            <p className="mt-2">Загрузка файла...</p>
-                        </div>
-                    ) : (
-                        <div>
-                            <p className="text-sm">Перетащите PDF или нажмите для выбора</p>
-                        </div>
-                    )}
-                </div>
+            {/* Шапка */}
+            <div className={s.headerRow}>
+                <Project_title className={s.headerPanel} />
+                <Search className={s.headerPanel} />
+                <User className={s.headerPanel} />
+            </div>
 
-                {/* Ошибки */}
-                {error && (
-                    <div className="mb-3 p-2 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm">
-                        {error}
-                    </div>
-                )}
-
-                <div className={s.fileList}>
-                    {documents.map((doc) => (
-                        <div 
-                            key={doc.uid}
-                            className={`${s.fileItem} ${selectedDocument?.uid === doc.uid ? 'bg-blue-100' : ''}`}
-                            onClick={() => selectDocument(doc)}
-                        >
-                            <div className="flex items-center gap-2 min-w-0">
-                                <span className={getStatusClass(doc.processing_status)}></span>
-                                <div className="min-w-0">
-                                    <p className="font-medium truncate" title={doc.original_filename}>{doc.original_filename}</p>
-                                    <p className="text-xs text-gray-500">
-                                        {getStatusText(doc.processing_status)}
-                                        {doc.processing_status === 'processing' ? (
-                                            <span className="text-blue-600 font-semibold"> {progressMap[doc.uid] ?? 0}%</span>
-                                        ) : null}
-                                    </p>
-                                </div>
+            {/* Основная строка: 3 колонки */}
+            <div className={s.topRow}>
+                {/* Левая колонка: Загрузка встроена в список документов */}
+                <div className={s.leftColumn}>
+                    <h2 className="text-base font-bold mb-3">Загруженные документы</h2>
+                    <div
+                        className={`${s.uploadArea} ${dragOver ? s.dragover : ''} mb-3`}
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{ position:'sticky', top:0, zIndex:1 }}
+                    >
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".pdf"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                        />
+                        {isUploading ? (
+                            <div className="flex flex-col items-center">
+                                <div className={s.loadingSpinner}></div>
+                                <p className="mt-2">Загрузка файла...</p>
                             </div>
-                            <button
-                                className={`deleteButton`}
-                                onClick={async (e) => {
-                                    e.stopPropagation();
-                                    try {
-                                        await apiDeleteDocument(doc.uid);
-                                        if (selectedDocument?.uid === doc.uid) {
-                                            setSelectedDocument(null);
-                                            setMarkdownContent('');
-                                            setDocId('');
-                                        }
-                                        await loadDocuments();
-                                    } catch {}
-                                }}
-                            >
-                                Удалить
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
+                        ) : (
+                            <div>
+                                <p className="text-sm">Перетащите PDF или нажмите для выбора</p>
+                            </div>
+                        )}
+                    </div>
 
-            {/* Средняя колонка: Исходный PDF */}
-            <div className={s.middleColumn}>
-                <h2 className="text-base font-bold mb-3">Исходный PDF</h2>
-                <div id="km-pdf-pane" className={s.pdfViewer} style={{ overflow:'auto' }}>
-                    {pdfUrl ? (
-                        <iframe
-                            id="km-pdf-viewer"
-                            title="PDF"
-                            src={pdfUrl}
-                            style={{ width:'100%', height:'100%', border:'0' }}
+                    {/* Ошибки */}
+                    {error && (
+                        <div className="mb-3 p-2 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    <div className={s.fileList}>
+                        {documents.map((doc) => {
+                            // Определяем отображаемое название: title или original_filename
+                            const displayName = doc.title || doc.original_filename || doc.uid;
+
+                            return (
+                                <div
+                                    key={doc.uid}
+                                    className={`${s.fileItem} ${selectedDocument?.uid === doc.uid ? 'bg-blue-100' : ''}`}
+                                    onClick={() => selectDocument(doc)}
+                                    onContextMenu={(e) => {
+                                        e.preventDefault();
+                                        setContextMenu({
+                                            x: e.clientX,
+                                            y: e.clientY,
+                                            documentId: doc.uid,
+                                        });
+                                    }}
+                                >
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <span className={getStatusClass(doc.processing_status)}></span>
+                                        <div className="min-w-0">
+                                            <p className="font-medium truncate" title={displayName}>{displayName}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {getStatusText(doc.processing_status)}
+                                                {doc.processing_status === 'processing' ? (
+                                                    <span className="text-blue-600 font-semibold"> {progressMap[doc.uid] ?? 0}%</span>
+                                                ) : null}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Context Menu */}
+                    {contextMenu && (
+                        <DocumentContextMenu
+                            x={contextMenu.x}
+                            y={contextMenu.y}
+                            onDelete={async () => {
+                                try {
+                                    await apiDeleteDocument(contextMenu.documentId);
+                                    if (selectedDocument?.uid === contextMenu.documentId) {
+                                        setSelectedDocument(null);
+                                        setSourceMarkdown('');
+                                        setDocId('');
+                                    }
+                                    await loadDocuments();
+                                } catch (err) {
+                                    console.error('Ошибка удаления документа:', err);
+                                }
+                            }}
+                            onClose={() => setContextMenu(null)}
                         />
+                    )}
+                </div>
+
+                {/* Средняя колонка: Исходный PDF */}
+                <div className={s.middleColumn}>
+                    <h2 className="text-base font-bold mb-3">Исходный PDF</h2>
+                    <div id="km-pdf-pane" className={s.pdfViewer} style={{ overflow:'auto' }}>
+                        {pdfUrl ? (
+                            <iframe
+                                id="km-pdf-viewer"
+                                title="PDF"
+                                src={pdfUrl}
+                                style={{ width:'100%', height:'100%', border:'0' }}
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Нет PDF</div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Правая колонка: Предпросмотр Markdown (Quill) */}
+                <div className={s.rightColumn}>
+                    <h2 className="text-base font-bold mb-3">Предпросмотр Markdown</h2>
+                    {selectedDocument ? (
+                        <div style={{ height: 'calc(100% - 50px)' }}>
+                            <MarkdownEditor
+                                value={sourceMarkdown}
+                                onChange={() => {}}
+                                readOnly={true}
+                            />
+                        </div>
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Нет PDF</div>
-                    )}
-                </div>
-            </div>
-
-            {/* Колонка: Исходный Markdown с инструментом аннотирования */}
-            <div className={s.sourceMarkdownColumn}>
-                <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-base font-bold">Исходный Markdown</h2>
-                    {/* Индикатор сохранения */}
-                    {saveStatus !== 'idle' && (
-                        <div className={`${s.saveIndicator} ${s[saveStatus]}`}>
-                            {saveStatus === 'saving' && (
-                                <>
-                                    <div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div>
-                                    <span>Сохранение...</span>
-                                </>
-                            )}
-                            {saveStatus === 'saved' && (
-                                <>
-                                    <span>✓</span>
-                                    <span>Сохранено {lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString() : ''}</span>
-                                </>
-                            )}
-                            {saveStatus === 'error' && (
-                                <>
-                                    <span>✗</span>
-                                    <span>Ошибка сохранения</span>
-                                </>
-                            )}
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                            Выберите документ
                         </div>
                     )}
                 </div>
-                {selectedDocument && docId ? (
-                    <div style={{ height: 'calc(100% - 50px)' }}>
-                        <AnnotationWorkspace
-                            docId={docId}
-                            text={sourceMarkdown}
-                            readOnly={false}
-                            onTextChange={handleSourceMarkdownChange}
-                            onSave={handleManualSave}
-                        />
-                    </div>
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                        Выберите документ для просмотра
-                    </div>
-                )}
             </div>
 
-            {/* Правая колонка: Предпросмотр Markdown */}
-            <div className={s.rightColumn}>
-                <h2 className="text-base font-bold mb-3">Предпросмотр Markdown</h2>
-                {selectedDocument && docId ? (
-                    <div style={{ height: 'calc(100% - 40px)' }}>
-                        <MarkdownEditor
-                            value={markdownContent}
-                            onChange={() => {}}
-                            readOnly={true}
-                        />
+            {/* Нижняя строка: Аннотатор */}
+            <div className={s.bottomRow}>
+                <div className={s.fullWidth} style={{ padding: '16px', background: 'white', height: '100%', overflow: 'hidden' }}>
+                    <div className="flex items-center justify-between mb-3">
+                        <h2 className="text-base font-bold">Аннотатор</h2>
+                        {/* Индикатор сохранения */}
+                        {saveStatus !== 'idle' && (
+                            <div className={`${s.saveIndicator} ${s[saveStatus]}`}>
+                                {saveStatus === 'saving' && (
+                                    <>
+                                        <div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div>
+                                        <span>Сохранение...</span>
+                                    </>
+                                )}
+                                {saveStatus === 'saved' && (
+                                    <>
+                                        <span>✓</span>
+                                        <span>Сохранено {lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString() : ''}</span>
+                                    </>
+                                )}
+                                {saveStatus === 'error' && (
+                                    <>
+                                        <span>✗</span>
+                                        <span>Ошибка сохранения</span>
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </div>
-                ) : (
-                    <div className="flex items-center justify-center h-full text-gray-500">
-                        <p>Выберите документ для предпросмотра</p>
-                    </div>
-                )}
+                    {selectedDocument && docId ? (
+                        <div style={{ height: 'calc(100% - 50px)' }}>
+                            <AnnotationWorkspace
+                                docId={docId}
+                                text={sourceMarkdown}
+                                readOnly={false}
+                                onTextChange={handleSourceMarkdownChange}
+                                onSave={handleManualSave}
+                            />
+                        </div>
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                            Выберите документ для аннотирования
+                        </div>
+                    )}
+                </div>
             </div>
         </main>
     );

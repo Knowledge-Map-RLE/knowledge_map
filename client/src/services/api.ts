@@ -283,6 +283,8 @@ export interface Annotation {
   color: string;
   metadata?: Record<string, any>;
   confidence?: number;
+  source?: 'user' | 'spacy' | 'custom';
+  processor_version?: string;
   created_date?: string;
 }
 
@@ -356,10 +358,32 @@ export async function createAnnotation(docId: string, request: CreateAnnotationR
   return res.json();
 }
 
-// Получить все аннотации документа
-export async function getAnnotations(docId: string): Promise<Annotation[]> {
+// Интерфейс для ответа с пагинацией аннотаций
+export interface AnnotationsResponse {
+  annotations: Annotation[];
+  total: number;
+  skip: number;
+  limit: number | null;
+  has_more: boolean;
+}
+
+// Получить аннотации документа с пагинацией и фильтрацией
+export async function getAnnotations(
+  docId: string,
+  skip: number = 0,
+  limit: number | null = null,
+  annotationTypes: string[] | null = null,
+  source: string | null = null
+): Promise<AnnotationsResponse> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/annotations`);
+  const params = new URLSearchParams();
+
+  params.append('skip', skip.toString());
+  if (limit !== null) params.append('limit', limit.toString());
+  if (annotationTypes && annotationTypes.length > 0) params.append('annotation_types', annotationTypes.join(','));
+  if (source) params.append('source', source);
+
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/annotations?${params}`);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${await res.text()}`);
   }
@@ -468,6 +492,40 @@ export async function analyzeText(request: NLPAnalyzeRequest): Promise<NLPAnalyz
   });
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+// Интерфейс для ответа автоаннотации
+export interface AutoAnnotateResponse {
+  success: boolean;
+  doc_id: string;
+  created_annotations: number;
+  created_relations: number;
+  processors_used: string[];
+  text_length: number;
+}
+
+// Автоматическая аннотация документа с помощью spaCy
+export async function autoAnnotateDocument(
+  docId: string,
+  processors: string[] = ['spacy'],
+  annotationTypes: string[] | null = null,
+  minConfidence: number = 0.7
+): Promise<AutoAnnotateResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${docId}/auto-annotate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      processors,
+      annotation_types: annotationTypes,
+      min_confidence: minConfidence
+    })
+  });
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`HTTP ${res.status}: ${errorText}`);
   }
   return res.json();
 }

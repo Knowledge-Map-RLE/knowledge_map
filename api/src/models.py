@@ -318,6 +318,10 @@ class MarkdownAnnotation(StructuredNode):
     """Уверенность NLP модели в аннотации (0.0-1.0), если применимо"""
     created_date = DateTimeProperty(default=datetime.utcnow)
     """Дата создания аннотации"""
+    source = StringProperty(default="user", index=True)
+    """Источник аннотации: user (пользователь), spacy (spaCy), custom (кастомная модель)"""
+    processor_version = StringProperty()
+    """Версия процессора, создавшего аннотацию (например, 'spacy-3.8.7_en_core_web_trf')"""
 
     # Отношения
     document = RelationshipFrom('PDFDocument', 'HAS_MARKDOWN_ANNOTATION')

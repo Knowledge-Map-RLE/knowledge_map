@@ -7,6 +7,8 @@ from fastapi import HTTPException
 from neomodel import db
 
 from src.models import MarkdownAnnotation, PDFDocument, User, AnnotationRelationRel
+from services.nlp_service import NLPService
+from services import get_s3_client, settings
 
 logger = logging.getLogger(__name__)
 
@@ -87,37 +89,86 @@ class AnnotationService:
             logger.error(f"Ошибка создания аннотации: {e}")
             raise HTTPException(status_code=500, detail=f"Ошибка создания аннотации: {str(e)}")
 
-    async def get_annotations(self, doc_id: str) -> List[Dict[str, Any]]:
+    async def get_annotations(
+        self,
+        doc_id: str,
+        skip: int = 0,
+        limit: Optional[int] = None,
+        annotation_types: Optional[List[str]] = None,
+        source: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
-        Получить все аннотации документа
+        Получить аннотации документа с пагинацией и фильтрацией
 
         Args:
             doc_id: ID документа
+            skip: Количество пропускаемых аннотаций
+            limit: Максимальное количество возвращаемых аннотаций (None = все)
+            annotation_types: Фильтр по типам аннотаций
+            source: Фильтр по источнику (user/spacy/custom)
 
         Returns:
-            Список аннотаций
+            Словарь с аннотациями и метаданными пагинации
         """
         try:
             document = PDFDocument.nodes.get_or_none(uid=doc_id)
             if not document:
                 raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
 
-            # Получаем все markdown аннотации документа
-            # Используем Cypher запрос для получения аннотаций
-            query = """
-            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            # Строим Cypher запрос с фильтрами
+            where_clauses = []
+            params = {'doc_id': doc_id, 'skip': skip}
+
+            if annotation_types:
+                where_clauses.append("a.annotation_type IN $annotation_types")
+                params['annotation_types'] = annotation_types
+
+            if source:
+                where_clauses.append("a.source = $source")
+                params['source'] = source
+
+            where_clause = " AND " + " AND ".join(where_clauses) if where_clauses else ""
+
+            # Запрос для подсчета общего количества
+            count_query = f"""
+            MATCH (d:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            {where_clause}
+            RETURN count(a) as total
+            """
+            count_results, _ = db.cypher_query(count_query, params)
+            total_count = count_results[0][0] if count_results else 0
+
+            # Основной запрос с пагинацией
+            limit_clause = f"SKIP $skip LIMIT $limit" if limit else f"SKIP $skip"
+            if limit:
+                params['limit'] = limit
+
+            query = f"""
+            MATCH (d:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            {where_clause}
             RETURN a
             ORDER BY a.start_offset
+            {limit_clause}
             """
-            results, meta = db.cypher_query(query, {'doc_id': doc_id})
+            results, meta = db.cypher_query(query, params)
 
             annotations = []
             for row in results:
                 ann_node = MarkdownAnnotation.inflate(row[0])
                 annotations.append(self._annotation_to_dict(ann_node))
 
-            logger.info(f"Получено {len(annotations)} аннотаций для документа {doc_id}")
-            return annotations
+            logger.info(
+                f"Получено {len(annotations)} из {total_count} аннотаций "
+                f"для документа {doc_id} (skip={skip}, limit={limit})"
+            )
+
+            return {
+                "annotations": annotations,
+                "total": total_count,
+                "skip": skip,
+                "limit": limit,
+                "has_more": (skip + len(annotations)) < total_count
+            }
 
         except HTTPException:
             raise
@@ -430,6 +481,84 @@ class AnnotationService:
             logger.error(f"Критическая ошибка batch update: {e}")
             raise HTTPException(status_code=500, detail=f"Ошибка массового обновления: {str(e)}")
 
+    def _filter_markdown_for_annotation(self, markdown_text: str) -> tuple[str, List[tuple[int, int]]]:
+        """
+        Фильтрует markdown текст, исключая секции metadata и references.
+
+        Args:
+            markdown_text: Исходный markdown текст
+
+        Returns:
+            Tuple из:
+            - Отфильтрованный текст для аннотации
+            - Список (start, end) позиций исключённых секций в исходном тексте
+        """
+        import re
+
+        lines = markdown_text.split('\n')
+        excluded_sections = []
+        filtered_lines = []
+        current_pos = 0
+        in_excluded_section = False
+        section_start = 0
+
+        # Паттерны для определения начала исключаемых секций
+        metadata_pattern = re.compile(r'^---\s*$')
+        references_pattern = re.compile(r'^##?\s*(References|Bibliography|Citations)\s*$', re.IGNORECASE)
+
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            line_with_newline = line + '\n'
+            line_length = len(line_with_newline)
+
+            # Проверяем начало frontmatter metadata (YAML между ---...---)
+            if metadata_pattern.match(line) and i == 0:
+                # Ищем закрывающий ---
+                section_start = current_pos
+                in_excluded_section = True
+                current_pos += line_length
+                i += 1
+
+                while i < len(lines):
+                    line = lines[i]
+                    line_with_newline = line + '\n'
+                    line_length = len(line_with_newline)
+                    current_pos += line_length
+
+                    if metadata_pattern.match(line):
+                        # Конец frontmatter
+                        excluded_sections.append((section_start, current_pos))
+                        in_excluded_section = False
+                        break
+                    i += 1
+                i += 1
+                continue
+
+            # Проверяем начало секции References
+            if references_pattern.match(line):
+                section_start = current_pos
+                # Все что после References - исключаем до конца документа
+                remaining_text = '\n'.join(lines[i:])
+                excluded_sections.append((section_start, len(markdown_text)))
+                # Добавляем все строки до этой секции
+                break
+
+            # Добавляем строку в отфильтрованный текст
+            filtered_lines.append(line)
+            current_pos += line_length
+            i += 1
+
+        filtered_text = '\n'.join(filtered_lines)
+
+        logger.info(
+            f"Фильтрация markdown: исходный размер {len(markdown_text)}, "
+            f"отфильтрованный {len(filtered_text)}, "
+            f"исключено секций: {len(excluded_sections)}"
+        )
+
+        return filtered_text, excluded_sections
+
     def _annotation_to_dict(self, annotation: MarkdownAnnotation) -> Dict[str, Any]:
         """Конвертировать аннотацию в словарь для JSON ответа"""
         return {
@@ -441,6 +570,191 @@ class AnnotationService:
             "color": annotation.color,
             "metadata": annotation.metadata or {},
             "confidence": annotation.confidence,
+            "source": annotation.source,
+            "processor_version": annotation.processor_version,
             "created_date": annotation.created_date.isoformat() if annotation.created_date else None
         }
+
+    async def auto_annotate_document(
+        self,
+        doc_id: str,
+        processors: List[str] = ["spacy"],
+        annotation_types: Optional[List[str]] = None,
+        min_confidence: float = 0.7
+    ) -> Dict[str, Any]:
+        """
+        Автоматическая аннотация документа с помощью NLP процессоров
+
+        Args:
+            doc_id: ID документа
+            processors: Список процессоров для использования
+            annotation_types: Фильтр типов аннотаций (None = все типы)
+            min_confidence: Минимальная уверенность модели (0.0-1.0)
+
+        Returns:
+            Статистика созданных аннотаций и связей
+        """
+        try:
+            # Проверка существования документа
+            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            if not document:
+                raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
+
+            # Получение markdown текста из S3
+            s3_client = get_s3_client()
+            bucket = settings.S3_BUCKET_NAME
+            md_key = f"documents/{doc_id}/{doc_id}.md"
+
+            if not await s3_client.object_exists(bucket, md_key):
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Markdown файл для документа {doc_id} не найден в S3"
+                )
+
+            markdown_text = await s3_client.download_text(bucket, md_key)
+            if not markdown_text:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Markdown файл для документа {doc_id} пустой"
+                )
+
+            logger.info(f"Начало автоаннотации документа {doc_id}, длина текста: {len(markdown_text)}")
+
+            # Фильтруем markdown, исключая metadata и references
+            filtered_text, excluded_sections = self._filter_markdown_for_annotation(markdown_text)
+
+            if not filtered_text or len(filtered_text.strip()) == 0:
+                logger.warning(f"После фильтрации текст документа {doc_id} пустой")
+                return {
+                    "success": True,
+                    "doc_id": doc_id,
+                    "created_annotations": 0,
+                    "created_relations": 0,
+                    "processors_used": [],
+                    "text_length": len(markdown_text),
+                    "filtered_text_length": 0,
+                    "message": "Текст для аннотации пуст после фильтрации metadata и references"
+                }
+
+            logger.info(f"После фильтрации: длина текста {len(filtered_text)}, исключено секций: {len(excluded_sections)}")
+
+            # Инициализация NLP сервиса
+            nlp_service = NLPService()
+
+            # Обработка ОТФИЛЬТРОВАННОГО текста с помощью NLP процессоров
+            results = nlp_service.nlp_manager.process_text(
+                text=filtered_text,
+                processor_names=processors,
+                annotation_types=annotation_types,
+                min_confidence=min_confidence,
+                parallel=False  # Последовательная обработка для стабильности
+            )
+
+            # Статистика
+            created_annotations = 0
+            created_relations = 0
+            annotation_uid_map = {}  # Маппинг (start_offset, end_offset) -> annotation_uid для связей
+
+            # Создание аннотаций в Neo4j
+            for proc_name, result in results.items():
+                logger.info(
+                    f"Процессор {proc_name}: {len(result.annotations)} аннотаций, "
+                    f"{len(result.relations)} связей"
+                )
+
+                # Создание аннотаций
+                for ann_suggestion in result.annotations:
+                    try:
+                        # Создаем аннотацию в Neo4j
+                        annotation = MarkdownAnnotation(
+                            text=ann_suggestion.text,
+                            annotation_type=ann_suggestion.annotation_type,
+                            start_offset=ann_suggestion.start_offset,
+                            end_offset=ann_suggestion.end_offset,
+                            color=ann_suggestion.color,
+                            metadata=ann_suggestion.metadata or {},
+                            confidence=ann_suggestion.confidence,
+                            source=ann_suggestion.source.value,  # "spacy", "user", etc.
+                            processor_version=result.metadata.get("processor_version", ""),
+                            created_date=datetime.utcnow()
+                        ).save()
+
+                        # Связываем с документом
+                        document.markdown_annotations.connect(annotation)
+
+                        # Сохраняем в маппинг для создания связей
+                        key = (ann_suggestion.start_offset, ann_suggestion.end_offset)
+                        annotation_uid_map[key] = annotation.uid
+
+                        created_annotations += 1
+
+                    except Exception as e:
+                        logger.error(
+                            f"Ошибка создания аннотации {ann_suggestion.text} "
+                            f"({ann_suggestion.start_offset}-{ann_suggestion.end_offset}): {e}"
+                        )
+                        continue
+
+                # Создание связей между аннотациями
+                for rel_suggestion in result.relations:
+                    try:
+                        # Ищем аннотации по тексту и позициям
+                        source_key = (rel_suggestion.source_start, rel_suggestion.source_end)
+                        target_key = (rel_suggestion.target_start, rel_suggestion.target_end)
+
+                        source_uid = annotation_uid_map.get(source_key)
+                        target_uid = annotation_uid_map.get(target_key)
+
+                        if not source_uid or not target_uid:
+                            logger.warning(
+                                f"Пропускаем связь: не найдены аннотации для "
+                                f"'{rel_suggestion.source_text}' -> '{rel_suggestion.target_text}'"
+                            )
+                            continue
+
+                        # Получаем аннотации из базы
+                        source_ann = MarkdownAnnotation.nodes.get_or_none(uid=source_uid)
+                        target_ann = MarkdownAnnotation.nodes.get_or_none(uid=target_uid)
+
+                        if not source_ann or not target_ann:
+                            continue
+
+                        # Создаем связь
+                        source_ann.relations_to.connect(target_ann, {
+                            'relation_type': rel_suggestion.relation_type,
+                            'created_date': datetime.utcnow(),
+                            'metadata': rel_suggestion.metadata or {}
+                        })
+
+                        created_relations += 1
+
+                    except Exception as e:
+                        logger.error(
+                            f"Ошибка создания связи {rel_suggestion.source_text} -> "
+                            f"{rel_suggestion.target_text}: {e}"
+                        )
+                        continue
+
+            logger.info(
+                f"Автоаннотация завершена: создано {created_annotations} аннотаций, "
+                f"{created_relations} связей для документа {doc_id}"
+            )
+
+            return {
+                "success": True,
+                "doc_id": doc_id,
+                "created_annotations": created_annotations,
+                "created_relations": created_relations,
+                "processors_used": list(results.keys()),
+                "text_length": len(markdown_text)
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Ошибка автоаннотации документа {doc_id}: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Ошибка автоаннотации: {str(e)}"
+            )
 

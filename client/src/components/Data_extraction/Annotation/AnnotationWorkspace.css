@@ -1,19 +1,34 @@
 .annotation-workspace {
-  display: grid;
-  grid-template-columns: 250px 1fr 300px;
-  grid-template-rows: 1fr;
-  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
   height: 100%;
   width: 100%;
 }
 
 .workspace-toolbar {
-  grid-column: 1;
+  width: 200px;
+  flex-shrink: 0;
+  height: 100%;
   overflow-y: auto;
+  background: white;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.workspace-filters {
+  width: 200px;
+  flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+  background: white;
+  border-radius: 4px;
+  padding: 10px;
 }
 
 .workspace-main {
-  grid-column: 2;
+  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: white;
@@ -89,12 +104,26 @@
   color: #999;
 }
 
-.workspace-panel {
-  grid-column: 3;
+.workspace-annotations-panel {
+  width: 200px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  background: white;
+  border-radius: 4px;
+}
+
+.workspace-relations-panel {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: white;
+  border-radius: 4px;
 }
 
 .panel-tabs {
@@ -128,7 +157,9 @@
   background: #e3f2fd;
 }
 
-.workspace-panel > .panel-tabs + * {
+.workspace-annotations-panel > .panel-tabs + *,
+.workspace-relations-panel > .panel-tabs + *,
+.workspace-filters > * {
   flex: 1;
   overflow-y: auto;
 }
@@ -232,32 +263,41 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 1600px) {
+  .workspace-toolbar,
+  .workspace-filters,
+  .workspace-annotations-panel,
+  .workspace-relations-panel {
+    width: 180px;
+  }
+}
+
 @media (max-width: 1200px) {
-  .annotation-workspace {
-    grid-template-columns: 200px 1fr 250px;
+  .workspace-toolbar,
+  .workspace-filters,
+  .workspace-annotations-panel,
+  .workspace-relations-panel {
+    width: 150px;
   }
 }
 
 @media (max-width: 900px) {
   .annotation-workspace {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+    flex-direction: column;
+    gap: 5px;
   }
 
-  .workspace-toolbar {
-    grid-column: 1;
-    grid-row: 1;
+  .workspace-toolbar,
+  .workspace-filters,
+  .workspace-annotations-panel,
+  .workspace-relations-panel {
+    width: 100%;
+    height: auto;
     max-height: 200px;
   }
 
   .workspace-main {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .workspace-panel {
-    grid-column: 1;
-    grid-row: 3;
-    max-height: 300px;
+    flex: 1;
+    min-height: 400px;
   }
 }

@@ -46,7 +46,10 @@
       "Bash(nul)",
       "Bash(annotation_service.py)",
       "Bash(cmd /c \"taskkill /F /PID 22728\")",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(awk:*)",
+      "Bash(bun run build)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
