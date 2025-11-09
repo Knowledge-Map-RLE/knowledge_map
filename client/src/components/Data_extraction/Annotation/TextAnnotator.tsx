@@ -75,6 +75,8 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
       const hasFocus = textRef.current && document.activeElement === textRef.current;
       if (!hasFocus) {
         setLocalText(text);
+        // Сбрасываем состояние выбора сегментов при изменении текста
+        setSegmentSelectedIndex({});
       }
     }
   }, [text, localText]);
@@ -277,6 +279,11 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     }
   }, [relationMode]);
 
+  // Сброс выбора сегментов при изменении аннотаций
+  useEffect(() => {
+    setSegmentSelectedIndex({});
+  }, [annotations]);
+
   // Добавляем глобальный обработчик выделения текста
   useEffect(() => {
     if (!editable) return;
@@ -288,16 +295,23 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   }, [editable, handleMouseUp]);
 
   // Мемоизированный рендер сегмента текста
-  const renderSegment = useCallback((segment: AnnotatedSegment, index: number) => {
+  const renderSegment = useCallback((segment: AnnotatedSegment, segmentKey: string) => {
     if (segment.annotations.length === 0) {
       // Обычный текст без аннотаций
-      return <span key={index}>{segment.text}</span>;
+      return <span key={segmentKey}>{segment.text}</span>;
     }
 
     // Получаем текущий выбранный индекс для этого сегмента
-    const segmentKey = `${segment.start}-${segment.end}`;
     const currentIndex = segmentSelectedIndex[segmentKey] || 0;
-    const selectedAnnotation = segment.annotations[currentIndex];
+
+    // Проверяем, что индекс валиден
+    const safeIndex = currentIndex < segment.annotations.length ? currentIndex : 0;
+    const selectedAnnotation = segment.annotations[safeIndex];
+
+    // Дополнительная проверка на случай, если аннотация undefined
+    if (!selectedAnnotation) {
+      return <span key={segmentKey}>{segment.text}</span>;
+    }
 
     const isHovered = hoveredAnnotation?.uid === selectedAnnotation.uid;
     const isRelationSource = relationSourceId === selectedAnnotation.uid;
@@ -315,12 +329,12 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     };
 
     const title = segment.annotations
-      .map((ann, idx) => `${idx === currentIndex ? '→ ' : '  '}${ann.annotation_type} (${ann.text})`)
+      .map((ann, idx) => `${idx === safeIndex ? '→ ' : '  '}${ann.annotation_type} (${ann.text})`)
       .join('\n');
 
     return (
       <span
-        key={index}
+        key={segmentKey}
         style={style}
         title={title}
         onClick={(e) => handleAnnotationClick(segment, e)}
@@ -341,6 +355,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     >
       <div style={{ position: 'relative' }}>
         <div
+          key={`text-${text.length}-${annotations.length}`}
           ref={textRef}
           className="annotated-text"
           contentEditable={editable}
@@ -391,11 +406,10 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
             backgroundColor: editable ? '#fafafa' : 'transparent',
           }}
         >
-          {segments.map((segment, index) => (
-            <React.Fragment key={`seg-${segment.start}-${segment.end}-${index}`}>
-              {renderSegment(segment, index)}
-            </React.Fragment>
-          ))}
+          {segments.map((segment, index) => {
+            const segmentKey = `seg-${segment.start}-${segment.end}`;
+            return renderSegment(segment, segmentKey);
+          })}
         </div>
 
         {showRelations && (

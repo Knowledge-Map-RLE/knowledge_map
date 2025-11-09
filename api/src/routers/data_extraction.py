@@ -181,6 +181,12 @@ async def delete_annotation(annotation_id: str):
     return await annotation_service.delete_annotation(annotation_id)
 
 
+@router.delete("/documents/{doc_id}/annotations/all")
+async def delete_all_document_annotations(doc_id: str):
+    """Удалить все аннотации документа"""
+    return await annotation_service.delete_all_annotations(doc_id)
+
+
 @router.post("/annotations/batch-update-offsets", response_model=BatchUpdateOffsetsResponse)
 async def batch_update_offsets(request: BatchUpdateOffsetsRequest):
     """Массовое обновление offset аннотаций при редактировании текста"""

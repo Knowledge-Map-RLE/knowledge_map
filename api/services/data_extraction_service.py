@@ -339,7 +339,23 @@ class DataExtractionService:
         return result
 
     async def delete_document(self, doc_id: str) -> Dict[str, Any]:
-        """Удаляет документ и все его файлы из S3 (префикс documents/{doc_id}/)."""
+        """Удаляет документ и все его файлы из S3 (префикс documents/{doc_id}/), а также все аннотации из Neo4j."""
+        # Сначала удаляем аннотации из Neo4j
+        try:
+            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            if document:
+                # Удаляем все связанные аннотации
+                from neomodel import db
+                query = """
+                MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+                DETACH DELETE a
+                """
+                db.cypher_query(query, {'doc_id': doc_id})
+                logger.info(f"Удалены все аннотации для документа {doc_id}")
+        except Exception as e:
+            logger.error(f"Ошибка удаления аннотаций для документа {doc_id}: {e}")
+
+        # Затем удаляем файлы из S3
         bucket = settings.S3_BUCKET_NAME
         prefix = f"documents/{doc_id}/"
         deleted = 0

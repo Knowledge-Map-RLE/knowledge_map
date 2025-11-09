@@ -111,7 +111,7 @@ export const useAnnotationOffsets = () => {
     const newAnnotationsToDelete = new Set(annotationsToDelete);
 
     const updatedAnnotations = annotations.map((ann) => {
-      const { newStart, newEnd, shouldDelete } = calculateNewOffsets({
+      const { newStart, newEnd: newEndOffset, shouldDelete } = calculateNewOffsets({
         annotation: ann,
         changeStart,
         oldEnd,
@@ -122,12 +122,12 @@ export const useAnnotationOffsets = () => {
       // Проверяем что текст аннотации не изменился
       if (!shouldDelete && ann.start_offset < oldEnd && ann.end_offset > changeStart) {
         const oldAnnotatedText = oldText.substring(ann.start_offset, ann.end_offset);
-        const newAnnotatedText = newText.substring(newStart, newEnd);
+        const newAnnotatedText = newText.substring(newStart, newEndOffset);
 
         if (oldAnnotatedText !== newAnnotatedText) {
           newAnnotationsToDelete.add(ann.uid);
           console.log(`Аннотация ${ann.uid} помечена для удаления (текст изменился: "${oldAnnotatedText}" -> "${newAnnotatedText}")`);
-          return { ...ann, start_offset: newStart, end_offset: newEnd };
+          return { ...ann, start_offset: newStart, end_offset: newEndOffset };
         }
       }
 
@@ -135,7 +135,7 @@ export const useAnnotationOffsets = () => {
         newAnnotationsToDelete.add(ann.uid);
       }
 
-      return { ...ann, start_offset: newStart, end_offset: newEnd };
+      return { ...ann, start_offset: newStart, end_offset: newEndOffset };
     });
 
     setAnnotationsToDelete(newAnnotationsToDelete);
@@ -174,7 +174,7 @@ export const useAnnotationOffsets = () => {
 
           const updates: AnnotationOffsetUpdate[] = [];
           for (const ann of annotations) {
-            const { newStart, newEnd } = calculateNewOffsets({
+            const { newStart, newEnd: newEndOffset } = calculateNewOffsets({
               annotation: ann,
               changeStart,
               oldEnd,
@@ -182,11 +182,11 @@ export const useAnnotationOffsets = () => {
               delta
             });
 
-            if (newStart !== ann.start_offset || newEnd !== ann.end_offset) {
+            if (newStart !== ann.start_offset || newEndOffset !== ann.end_offset) {
               updates.push({
                 annotation_id: ann.uid,
                 start_offset: newStart,
-                end_offset: newEnd
+                end_offset: newEndOffset
               });
             }
           }

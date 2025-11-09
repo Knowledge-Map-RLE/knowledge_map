@@ -12,6 +12,7 @@ import {
   Annotation,
   AnnotationRelation,
   autoAnnotateDocument,
+  deleteAllAnnotations,
 } from '../../../services/api';
 import './AnnotationWorkspace.css';
 
@@ -373,6 +374,37 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [localText, annotations, saveAnnotationOffsets, loadAnnotations, onSave]);
 
+  // Delete all annotations handler
+  const handleDeleteAllAnnotations = useCallback(async () => {
+    const confirmed = confirm(
+      'Вы уверены, что хотите удалить все аннотации этого документа?\n\n' +
+      'Это действие нельзя отменить!'
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const result = await deleteAllAnnotations(docId);
+
+      alert(
+        `Все аннотации успешно удалены!\n\n` +
+        `Удалено аннотаций: ${result.deleted_count}`
+      );
+
+      await loadAnnotations();
+      await loadRelations();
+
+      setSelectedAnnotation(null);
+      setSelectedAnnotationGroup([]);
+      setSelectedTypes([]);
+    } catch (error: any) {
+      alert(
+        'Не удалось удалить аннотации:\n\n' +
+        (error?.message || 'Неизвестная ошибка')
+      );
+    }
+  }, [docId, loadAnnotations, loadRelations]);
+
   // Filter handlers
   const handleResetFilters = useCallback(() => {
     setSelectedCategories([]);
@@ -442,6 +474,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onRelationCreate={handleRelationCreate}
               onAutoAnnotate={handleAutoAnnotate}
               onSave={handleSave}
+              onDeleteAllAnnotations={handleDeleteAllAnnotations}
               isAutoAnnotating={isAutoAnnotating}
               hasUnsavedChanges={hasUnsavedChanges}
               textareaRef={textareaRef}

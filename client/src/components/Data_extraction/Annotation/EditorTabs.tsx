@@ -19,6 +19,7 @@ interface EditorTabsProps {
   onRelationCreate: (sourceId: string, targetId: string) => void;
   onAutoAnnotate: () => void;
   onSave: () => void;
+  onDeleteAllAnnotations: () => void;
   isAutoAnnotating: boolean;
   hasUnsavedChanges: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
@@ -42,6 +43,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onRelationCreate,
   onAutoAnnotate,
   onSave,
+  onDeleteAllAnnotations,
   isAutoAnnotating,
   hasUnsavedChanges,
   textareaRef,
@@ -49,7 +51,15 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
 }, ref) => {
   return (
     <div ref={ref} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div className="main-tabs">
+      <div className="main-tabs" style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '10px',
+        backgroundColor: '#f5f5f5',
+        borderBottom: '1px solid #ddd',
+        borderRadius: '4px 4px 0 0'
+      }}>
         <div style={{ flex: 1 }}></div>
         <button
           className="auto-annotate-button"
@@ -57,7 +67,6 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
           disabled={isAutoAnnotating || readOnly}
           title="Автоматическая аннотация с помощью spaCy"
           style={{
-            marginRight: '10px',
             backgroundColor: isAutoAnnotating ? '#ccc' : '#4CAF50',
             color: 'white',
             border: 'none',
@@ -71,9 +80,37 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
           {isAutoAnnotating ? '⏳ Обработка...' : '🤖 Автоаннотация spaCy'}
         </button>
         <button
+          className="delete-all-button"
+          onClick={onDeleteAllAnnotations}
+          disabled={readOnly}
+          title="Удалить все аннотации документа"
+          style={{
+            backgroundColor: readOnly ? '#ccc' : '#f44336',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            cursor: readOnly ? 'not-allowed' : 'pointer',
+            fontSize: '14px',
+            fontWeight: 'bold'
+          }}
+        >
+          🗑️ Удалить все аннотации
+        </button>
+        <button
           className="save-button"
           onClick={onSave}
           disabled={!hasUnsavedChanges}
+          style={{
+            backgroundColor: !hasUnsavedChanges ? '#ccc' : '#2196F3',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            cursor: !hasUnsavedChanges ? 'not-allowed' : 'pointer',
+            fontSize: '14px',
+            fontWeight: 'bold'
+          }}
         >
           {hasUnsavedChanges ? '💾 Сохранить *' : '💾 Сохранить'}
         </button>

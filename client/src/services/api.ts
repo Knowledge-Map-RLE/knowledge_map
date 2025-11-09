@@ -416,6 +416,19 @@ export async function deleteAnnotation(annotationId: string): Promise<{ message:
   return res.json();
 }
 
+// Удалить все аннотации документа
+export async function deleteAllAnnotations(docId: string): Promise<{ success: boolean; message: string; deleted_count: number }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/annotations/all`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Failed to delete all annotations: ${errText}`);
+  }
+  return res.json();
+}
+
 // Массовое обновление offset аннотаций
 export interface AnnotationOffsetUpdate {
   annotation_id: string;

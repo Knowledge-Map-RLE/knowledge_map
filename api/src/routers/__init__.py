@@ -1,6 +1,6 @@
 # API routers package
-from . import blocks, links, auth, data_extraction, pdf, layout, s3, static, marker
+from . import blocks, links, auth, data_extraction, pdf, layout, s3, static
 
 __all__ = [
-    "blocks", "links", "auth", "data_extraction", "pdf", "layout", "s3", "static", "marker"
+    "blocks", "links", "auth", "data_extraction", "pdf", "layout", "s3", "static"
 ]

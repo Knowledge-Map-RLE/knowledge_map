@@ -9,6 +9,7 @@ from neomodel import db
 from src.models import MarkdownAnnotation, PDFDocument, User, AnnotationRelationRel
 from services.nlp_service import NLPService
 from services import get_s3_client, settings
+from services.markdown_filter import MarkdownFilter
 
 logger = logging.getLogger(__name__)
 
@@ -265,6 +266,45 @@ class AnnotationService:
             logger.error(f"Ошибка удаления аннотации: {e}")
             raise HTTPException(status_code=500, detail=f"Ошибка удаления аннотации: {str(e)}")
 
+    async def delete_all_annotations(self, doc_id: str) -> Dict[str, Any]:
+        """
+        Удалить все аннотации документа
+
+        Args:
+            doc_id: ID документа
+
+        Returns:
+            Информация об удаленных аннотациях
+        """
+        try:
+            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            if not document:
+                raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
+
+            # Удаляем все аннотации документа через Cypher запрос
+            query = """
+            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            WITH count(a) as total
+            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            DETACH DELETE a
+            RETURN total
+            """
+            results, meta = db.cypher_query(query, {'doc_id': doc_id})
+            deleted_count = results[0][0] if results and results[0] else 0
+
+            logger.info(f"Удалено {deleted_count} аннотаций для документа {doc_id}")
+            return {
+                "success": True,
+                "message": f"Удалено {deleted_count} аннотаций",
+                "deleted_count": deleted_count
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Ошибка удаления всех аннотаций документа {doc_id}: {e}")
+            raise HTTPException(status_code=500, detail=f"Ошибка удаления аннотаций: {str(e)}")
+
     async def create_relation(
         self,
         source_id: str,
@@ -481,84 +521,6 @@ class AnnotationService:
             logger.error(f"Критическая ошибка batch update: {e}")
             raise HTTPException(status_code=500, detail=f"Ошибка массового обновления: {str(e)}")
 
-    def _filter_markdown_for_annotation(self, markdown_text: str) -> tuple[str, List[tuple[int, int]]]:
-        """
-        Фильтрует markdown текст, исключая секции metadata и references.
-
-        Args:
-            markdown_text: Исходный markdown текст
-
-        Returns:
-            Tuple из:
-            - Отфильтрованный текст для аннотации
-            - Список (start, end) позиций исключённых секций в исходном тексте
-        """
-        import re
-
-        lines = markdown_text.split('\n')
-        excluded_sections = []
-        filtered_lines = []
-        current_pos = 0
-        in_excluded_section = False
-        section_start = 0
-
-        # Паттерны для определения начала исключаемых секций
-        metadata_pattern = re.compile(r'^---\s*$')
-        references_pattern = re.compile(r'^##?\s*(References|Bibliography|Citations)\s*$', re.IGNORECASE)
-
-        i = 0
-        while i < len(lines):
-            line = lines[i]
-            line_with_newline = line + '\n'
-            line_length = len(line_with_newline)
-
-            # Проверяем начало frontmatter metadata (YAML между ---...---)
-            if metadata_pattern.match(line) and i == 0:
-                # Ищем закрывающий ---
-                section_start = current_pos
-                in_excluded_section = True
-                current_pos += line_length
-                i += 1
-
-                while i < len(lines):
-                    line = lines[i]
-                    line_with_newline = line + '\n'
-                    line_length = len(line_with_newline)
-                    current_pos += line_length
-
-                    if metadata_pattern.match(line):
-                        # Конец frontmatter
-                        excluded_sections.append((section_start, current_pos))
-                        in_excluded_section = False
-                        break
-                    i += 1
-                i += 1
-                continue
-
-            # Проверяем начало секции References
-            if references_pattern.match(line):
-                section_start = current_pos
-                # Все что после References - исключаем до конца документа
-                remaining_text = '\n'.join(lines[i:])
-                excluded_sections.append((section_start, len(markdown_text)))
-                # Добавляем все строки до этой секции
-                break
-
-            # Добавляем строку в отфильтрованный текст
-            filtered_lines.append(line)
-            current_pos += line_length
-            i += 1
-
-        filtered_text = '\n'.join(filtered_lines)
-
-        logger.info(
-            f"Фильтрация markdown: исходный размер {len(markdown_text)}, "
-            f"отфильтрованный {len(filtered_text)}, "
-            f"исключено секций: {len(excluded_sections)}"
-        )
-
-        return filtered_text, excluded_sections
-
     def _annotation_to_dict(self, annotation: MarkdownAnnotation) -> Dict[str, Any]:
         """Конвертировать аннотацию в словарь для JSON ответа"""
         return {
@@ -620,8 +582,11 @@ class AnnotationService:
 
             logger.info(f"Начало автоаннотации документа {doc_id}, длина текста: {len(markdown_text)}")
 
-            # Фильтруем markdown, исключая metadata и references
-            filtered_text, excluded_sections = self._filter_markdown_for_annotation(markdown_text)
+            # Фильтруем markdown, используя новый MarkdownFilter
+            md_filter = MarkdownFilter()
+            filter_result = md_filter.filter_text(markdown_text)
+            filtered_text = filter_result.filtered_text
+            offset_map = filter_result.offset_map
 
             if not filtered_text or len(filtered_text.strip()) == 0:
                 logger.warning(f"После фильтрации текст документа {doc_id} пустой")
@@ -633,10 +598,10 @@ class AnnotationService:
                     "processors_used": [],
                     "text_length": len(markdown_text),
                     "filtered_text_length": 0,
-                    "message": "Текст для аннотации пуст после фильтрации metadata и references"
+                    "message": "Текст для аннотации пуст после фильтрации"
                 }
 
-            logger.info(f"После фильтрации: длина текста {len(filtered_text)}, исключено секций: {len(excluded_sections)}")
+            logger.info(f"После фильтрации: оригинал {len(markdown_text)} -> отфильтровано {len(filtered_text)} символов")
 
             # Инициализация NLP сервиса
             nlp_service = NLPService()
@@ -665,12 +630,22 @@ class AnnotationService:
                 # Создание аннотаций
                 for ann_suggestion in result.annotations:
                     try:
-                        # Создаем аннотацию в Neo4j
+                        # Преобразуем офсеты из отфильтрованного текста в оригинальный
+                        original_start = md_filter.map_offset_to_original(
+                            ann_suggestion.start_offset,
+                            offset_map
+                        )
+                        original_end = md_filter.map_offset_to_original(
+                            ann_suggestion.end_offset,
+                            offset_map
+                        )
+
+                        # Создаем аннотацию в Neo4j с оригинальными офсетами
                         annotation = MarkdownAnnotation(
                             text=ann_suggestion.text,
                             annotation_type=ann_suggestion.annotation_type,
-                            start_offset=ann_suggestion.start_offset,
-                            end_offset=ann_suggestion.end_offset,
+                            start_offset=original_start,
+                            end_offset=original_end,
                             color=ann_suggestion.color,
                             metadata=ann_suggestion.metadata or {},
                             confidence=ann_suggestion.confidence,
@@ -682,8 +657,8 @@ class AnnotationService:
                         # Связываем с документом
                         document.markdown_annotations.connect(annotation)
 
-                        # Сохраняем в маппинг для создания связей
-                        key = (ann_suggestion.start_offset, ann_suggestion.end_offset)
+                        # Сохраняем в маппинг для создания связей (используем оригинальные офсеты)
+                        key = (original_start, original_end)
                         annotation_uid_map[key] = annotation.uid
 
                         created_annotations += 1
@@ -698,9 +673,23 @@ class AnnotationService:
                 # Создание связей между аннотациями
                 for rel_suggestion in result.relations:
                     try:
-                        # Ищем аннотации по тексту и позициям
-                        source_key = (rel_suggestion.source_start, rel_suggestion.source_end)
-                        target_key = (rel_suggestion.target_start, rel_suggestion.target_end)
+                        # Преобразуем офсеты связей в оригинальные
+                        source_start_orig = md_filter.map_offset_to_original(
+                            rel_suggestion.source_start, offset_map
+                        )
+                        source_end_orig = md_filter.map_offset_to_original(
+                            rel_suggestion.source_end, offset_map
+                        )
+                        target_start_orig = md_filter.map_offset_to_original(
+                            rel_suggestion.target_start, offset_map
+                        )
+                        target_end_orig = md_filter.map_offset_to_original(
+                            rel_suggestion.target_end, offset_map
+                        )
+
+                        # Ищем аннотации по оригинальным позициям
+                        source_key = (source_start_orig, source_end_orig)
+                        target_key = (target_start_orig, target_end_orig)
 
                         source_uid = annotation_uid_map.get(source_key)
                         target_uid = annotation_uid_map.get(target_key)

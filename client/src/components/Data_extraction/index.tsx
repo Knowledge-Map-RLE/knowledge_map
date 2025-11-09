@@ -56,50 +56,76 @@ export default function Data_extraction() {
 
     const loadDocuments = async () => {
         try {
+            console.log('Начало загрузки документов...');
             const data = await listDocuments();
             console.log('Загруженные документы из API:', data);
+
+            if (!data) {
+                console.error('API вернул null/undefined');
+                setError('Не удалось загрузить список документов');
+                return;
+            }
+
+            if (!data.success) {
+                console.error('API вернул success=false');
+                setError('Ошибка при загрузке документов');
+                return;
+            }
+
+            if (!Array.isArray(data.documents)) {
+                console.error('data.documents не является массивом:', typeof data.documents);
+                setError('Некорректный формат данных от сервера');
+                return;
+            }
+
+            console.log(`Обработка ${data.documents.length} документов...`);
+
             if (data?.success && Array.isArray(data.documents)) {
                 // маппинг в локальный тип PDFDocument с проверкой реального статуса
-                const mapped = await Promise.all(data.documents.map(async (d) => {
-                    console.log('Обработка документа:', d);
-                    let status = d.has_markdown ? 'annotated' : 'uploaded';
-                    
-                    // Проверяем реальный статус через API маркера
+                const mappedPromises = data.documents.map(async (d) => {
                     try {
-                        const response = await fetch(`http://localhost:8000/api/marker/status/doc/${d.doc_id}`);
-                        if (response.ok) {
-                            const markerStatus = await response.json();
-                            if (markerStatus.status === 'processing') {
-                                status = 'processing';
-                            } else if (markerStatus.status === 'failed') {
-                                status = 'error';
-                            } else if (markerStatus.status === 'ready' && markerStatus.percent === 100) {
-                                status = 'annotated';
-                            }
-                        }
-                    } catch (err) {
-                        console.warn(`Не удалось проверить статус для ${d.doc_id}:`, err);
-                    }
-                    
-                    // формируем возможный pdf url из списка документов, если доступен
-                    const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-                    const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
+                        console.log('Обработка документа:', d);
+                        let status = d.has_markdown ? 'annotated' : 'uploaded';
 
-                    return {
-                        uid: d.doc_id,
-                        original_filename: d.original_filename || d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
-                        md5_hash: d.doc_id,
-                        title: d.title || null,
-                        upload_date: new Date().toISOString(),
-                        processing_status: status,
-                        is_processed: status === 'annotated',
-                        pdf_url,
-                    } as any;
-                }));
+                        // формируем возможный pdf url из списка документов, если доступен
+                        const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+                        const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
+
+                        return {
+                            uid: d.doc_id,
+                            original_filename: d.original_filename || d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
+                            md5_hash: d.doc_id,
+                            title: d.title || null,
+                            upload_date: new Date().toISOString(),
+                            processing_status: status,
+                            is_processed: status === 'annotated',
+                            pdf_url,
+                        } as any;
+                    } catch (err) {
+                        console.error(`Ошибка обработки документа ${d.doc_id}:`, err);
+                        // Возвращаем документ с минимальной информацией даже при ошибке
+                        const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+                        const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
+                        return {
+                            uid: d.doc_id,
+                            original_filename: d.original_filename || d.doc_id + '.pdf',
+                            md5_hash: d.doc_id,
+                            title: d.title || null,
+                            upload_date: new Date().toISOString(),
+                            processing_status: 'error',
+                            is_processed: false,
+                            pdf_url,
+                        } as any;
+                    }
+                });
+                const mapped = await Promise.all(mappedPromises);
+                console.log(`Загружено ${mapped.length} документов, устанавливаем в state...`);
                 setDocuments(mapped);
+                console.log('Документы установлены в state');
             }
         } catch (err) {
             console.error('Ошибка загрузки документов:', err);
+            setError(`Ошибка загрузки документов: ${err instanceof Error ? err.message : String(err)}`);
         }
     };
 
@@ -243,44 +269,6 @@ export default function Data_extraction() {
         };
     }, []);
 
-    // Пуллинг прогресса обработки: проверяем реальный статус через API
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            const current = selectedDocument;
-            if (!current) return;
-            if (current.processing_status !== 'annotated') {
-                try {
-                    // Проверяем статус через API маркера
-                    const response = await fetch(`http://localhost:8000/api/marker/status/doc/${current.uid}`);
-                    if (response.ok) {
-                        const status = await response.json();
-                        if (status.status === 'ready' && status.percent === 100) {
-                            // Документ готов, загружаем markdown
-                            const assets = await getDocumentAssets(current.uid);
-                            if (assets?.markdown) {
-                                setMarkdownContent(assets.markdown);
-                                setImageUrls(assets.image_urls || {});
-                                setProgressMap(prev => ({ ...prev, [current.uid]: 100 }));
-                                // обновляем локальный статус
-                                setSelectedDocument(prev => prev ? { ...prev, processing_status: 'annotated', is_processed: true } as any : prev);
-                                console.log('Обработка завершена, markdown загружен:', assets.markdown.length, 'символов');
-                            }
-                        } else if (status.status === 'processing') {
-                            // Обновляем реальный прогресс
-                            setProgressMap(prev => ({ ...prev, [current.uid]: status.percent || 0 }));
-                        } else if (status.status === 'failed') {
-                            // Обработка не удалась
-                            setProgressMap(prev => ({ ...prev, [current.uid]: 0 }));
-                            setSelectedDocument(prev => prev ? { ...prev, processing_status: 'error' } as any : prev);
-                        }
-                    }
-                } catch (err) {
-                    console.error('Ошибка проверки статуса:', err);
-                }
-            }
-        }, 2000); // Проверяем каждые 2 секунды
-        return () => clearInterval(interval);
-    }, [selectedDocument]);
 
 
     const getStatusClass = (status: string) => {

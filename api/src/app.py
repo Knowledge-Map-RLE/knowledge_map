@@ -19,13 +19,6 @@ from src.middleware import ORIGINS, log_requests, add_cors_headers
 from src.routers import (
     blocks, links, auth, data_extraction, pdf, layout, s3, static
 )
-from src.routers import marker as marker_router
-
-# Новые импорты для прогрева Marker
-import asyncio
-import tempfile
-from pathlib import Path as SysPath
-from services.marker_progress import marker_progress_store
 
 # Настройка логирования
 logging.basicConfig(
@@ -38,8 +31,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Включаем детальное логирование для marker
-logging.getLogger('services.marker_progress').setLevel(logging.INFO)
+# Включаем детальное логирование
 logging.getLogger('services.data_extraction_service').setLevel(logging.INFO)
 logging.getLogger('services.pdf_to_md_client').setLevel(logging.INFO)
 
@@ -83,22 +75,12 @@ app.include_router(pdf.router)
 app.include_router(layout.router)
 app.include_router(s3.router)
 app.include_router(static.router)
-app.include_router(marker_router.router, prefix="/api")
 
 # Подключаем GraphQL
 graphql_app = GraphQLRouter(schema)
 app.include_router(graphql_app, prefix="/graphql")
 
 
-# Прогрев моделей Marker при старте - ОТКЛЮЧЕН
-# Модели будут загружаться при первой обработке документа
-@app.on_event("startup")
-async def _warmup_marker_models() -> None:
-    """Инициализация без прогрева моделей"""
-    logger.info("[marker] Пропускаем прогрев моделей при старте - они загрузятся при первой обработке")
-    # Сбрасываем статус моделей и устанавливаем ready
-    await marker_progress_store.reset_models_status()
-    await marker_progress_store.set_models_status("ready", "Models will be loaded on first use")
 
 
 # Эндпоинты для проверки здоровья
