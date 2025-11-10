@@ -13,6 +13,8 @@ import {
   AnnotationRelation,
   autoAnnotateDocument,
   deleteAllAnnotations,
+  exportAnnotationsCSV,
+  importAnnotationsCSV,
 } from '../../../services/api';
 import './AnnotationWorkspace.css';
 
@@ -37,6 +39,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [selectedColor, setSelectedColor] = useState<string>('#ffeb3b');
   const [relationMode, setRelationMode] = useState(false);
   const [showRelations, setShowRelations] = useState(false);
+  const [largeLineHeight, setLargeLineHeight] = useState(false);
   const [isAutoAnnotating, setIsAutoAnnotating] = useState(false);
 
   // Filter State
@@ -53,6 +56,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation | null>(null);
   const [selectedAnnotationGroup, setSelectedAnnotationGroup] = useState<Annotation[]>([]);
+  const [selectedRelation, setSelectedRelation] = useState<AnnotationRelation | null>(null);
 
   // Text State
   const [localText, setLocalText] = useState(text);
@@ -288,6 +292,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [removeRelation]);
 
+  // Relation click handler
+  const handleRelationClick = useCallback((relation: AnnotationRelation) => {
+    setSelectedRelation(relation);
+  }, []);
+
   // Relation edit handler
   const handleRelationEdit = useCallback(async (relation: AnnotationRelation) => {
     const newType = prompt('Введите новый тип связи:', relation.relation_type);
@@ -405,6 +414,52 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [docId, loadAnnotations, loadRelations]);
 
+  // Export CSV handler
+  const handleExportCSV = useCallback(async () => {
+    try {
+      const blob = await exportAnnotationsCSV(docId);
+
+      // Создать ссылку для скачивания
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `annotations_${docId}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error: any) {
+      alert(
+        'Не удалось экспортировать аннотации:\n\n' +
+        (error?.message || 'Неизвестная ошибка')
+      );
+    }
+  }, [docId]);
+
+  // Import CSV handler
+  const handleImportCSV = useCallback(async (file: File) => {
+    try {
+      const result = await importAnnotationsCSV(docId, file);
+
+      alert(
+        `Импорт завершен успешно!\n\n` +
+        `Создано аннотаций: ${result.created_annotations} из ${result.total_in_file.annotations}\n` +
+        `Создано связей: ${result.created_relations} из ${result.total_in_file.relations}\n\n` +
+        (result.created_annotations < result.total_in_file.annotations ?
+          'Некоторые аннотации были пропущены из-за невалидных данных.' : '')
+      );
+
+      // Перезагрузить аннотации и связи
+      await loadAnnotations();
+      await loadRelations();
+    } catch (error: any) {
+      alert(
+        'Не удалось импортировать аннотации:\n\n' +
+        (error?.message || 'Неизвестная ошибка')
+      );
+    }
+  }, [docId, loadAnnotations, loadRelations]);
+
   // Filter handlers
   const handleResetFilters = useCallback(() => {
     setSelectedCategories([]);
@@ -448,6 +503,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
             onRelationModeToggle={() => setRelationMode(!relationMode)}
             showRelations={showRelations}
             onShowRelationsToggle={() => setShowRelations(!showRelations)}
+            largeLineHeight={largeLineHeight}
+            onLineHeightToggle={() => setLargeLineHeight(!largeLineHeight)}
             selectedTypes={selectedTypes}
             onTypeToggle={handleTypeToggle}
             hasPendingSelection={!!pendingTextSelection || selectedAnnotationGroup.length > 0}
@@ -466,6 +523,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               selectedColor={selectedColor}
               relationMode={relationMode}
               showRelations={showRelations}
+              largeLineHeight={largeLineHeight}
               readOnly={readOnly}
               onTabChange={setMainTab}
               onTextChange={handleTextChange}
@@ -479,6 +537,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               hasUnsavedChanges={hasUnsavedChanges}
               textareaRef={textareaRef}
               textAnnotatorRef={textAnnotatorRef}
+              selectedRelation={selectedRelation}
+              onRelationClick={handleRelationClick}
+              onRelationDelete={handleRelationDelete}
+              onExportCSV={handleExportCSV}
+              onImportCSV={handleImportCSV}
             />
           </ErrorBoundary>
         </div>

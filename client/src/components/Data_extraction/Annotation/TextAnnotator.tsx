@@ -14,8 +14,12 @@ interface TextAnnotatorProps {
   relationMode: boolean;
   onRelationCreate?: (sourceId: string, targetId: string) => void;
   showRelations: boolean;
+  largeLineHeight?: boolean;
   editable?: boolean;
   onTextChange?: (text: string) => void;
+  selectedRelation?: AnnotationRelation | null;
+  onRelationClick?: (relation: AnnotationRelation) => void;
+  onRelationDelete?: (sourceId: string, targetId: string) => void;
 }
 
 interface AnnotatedSegment {
@@ -45,12 +49,17 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   relationMode,
   onRelationCreate,
   showRelations,
+  largeLineHeight = false,
   editable = false,
   onTextChange,
+  selectedRelation = null,
+  onRelationClick,
+  onRelationDelete,
 }, forwardedRef) => {
   const [selection, setSelection] = useState<{ start: number; end: number } | null>(null);
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null);
   const [relationSourceId, setRelationSourceId] = useState<string | null>(null);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; relation: AnnotationRelation } | null>(null);
   const containerRef = (forwardedRef as React.RefObject<HTMLDivElement>) || useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
@@ -65,8 +74,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   // Ключ - это "start-end", значение - индекс в массиве аннотаций сегмента
   const [segmentSelectedIndex, setSegmentSelectedIndex] = useState<Record<string, number>>({});
 
-  // Ограничиваем количество одновременно рендерящихся сегментов для производительности
-  const MAX_RENDERED_SEGMENTS = 5000;
+  // Не используем жесткое ограничение сегментов, вместо этого оптимизируем через объединение
 
   // Синхронизация внешнего text с локальным состоянием
   // Обновляем только когда элемент не в фокусе, чтобы не нарушать редактирование
@@ -187,14 +195,31 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
       });
     }
 
-    // Ограничиваем количество сегментов для производительности
-    if (result.length > MAX_RENDERED_SEGMENTS) {
-      console.warn(`Слишком много сегментов (${result.length}), ограничиваем до ${MAX_RENDERED_SEGMENTS}`);
-      return result.slice(0, MAX_RENDERED_SEGMENTS);
+    // Оптимизация: объединяем соседние сегменты без аннотаций
+    const optimized: AnnotatedSegment[] = [];
+    for (let i = 0; i < result.length; i++) {
+      const segment = result[i];
+
+      if (segment.annotations.length === 0) {
+        // Сегмент без аннотаций - пытаемся объединить с предыдущим
+        if (optimized.length > 0 && optimized[optimized.length - 1].annotations.length === 0) {
+          // Предыдущий сегмент тоже без аннотаций - объединяем
+          const prev = optimized[optimized.length - 1];
+          prev.text += segment.text;
+          prev.end = segment.end;
+        } else {
+          // Просто добавляем
+          optimized.push(segment);
+        }
+      } else {
+        // Сегмент с аннотациями - всегда добавляем отдельно
+        optimized.push(segment);
+      }
     }
 
-    return result;
-  }, [localText, annotations, MAX_RENDERED_SEGMENTS]);
+    console.log(`Сегментов: ${result.length} -> оптимизировано: ${optimized.length}`);
+    return optimized;
+  }, [localText, annotations]);
 
   // Обработка выделения текста
   const handleMouseUp = useCallback((event: MouseEvent) => {
@@ -293,6 +318,15 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
       document.removeEventListener('mouseup', handleMouseUp);
     };
   }, [editable, handleMouseUp]);
+
+  // Закрываем контекстное меню при клике вне его
+  useEffect(() => {
+    const handleClick = () => setContextMenu(null);
+    if (contextMenu) {
+      document.addEventListener('click', handleClick);
+      return () => document.removeEventListener('click', handleClick);
+    }
+  }, [contextMenu]);
 
   // Мемоизированный рендер сегмента текста
   const renderSegment = useCallback((segment: AnnotatedSegment, segmentKey: string) => {
@@ -396,7 +430,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
           }}
           style={{
             whiteSpace: 'pre-wrap',
-            lineHeight: '1.8',
+            lineHeight: largeLineHeight ? '50px' : '1.8',
             fontSize: '14px',
             fontFamily: 'monospace',
             padding: '10px',
@@ -418,7 +452,50 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
             relations={relations}
             annotations={annotations}
             containerRef={textRef}
+            selectedRelation={selectedRelation}
+            onRelationClick={onRelationClick}
+            onRelationContextMenu={(relation, x, y) => setContextMenu({ relation, x, y })}
           />
+        )}
+
+        {contextMenu && (
+          <div
+            style={{
+              position: 'fixed',
+              left: contextMenu.x,
+              top: contextMenu.y,
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              zIndex: 10000,
+              minWidth: '150px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                padding: '8px 12px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                color: '#f44336',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f5f5f5';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
+              onClick={() => {
+                if (onRelationDelete) {
+                  onRelationDelete(contextMenu.relation.source_uid, contextMenu.relation.target_uid);
+                }
+                setContextMenu(null);
+              }}
+            >
+              🗑️ Удалить связь
+            </div>
+          </div>
         )}
       </div>
 
@@ -449,9 +526,12 @@ TextAnnotator.displayName = 'TextAnnotator';
 const RelationLine: React.FC<{
   relation: AnnotationRelation;
   isHighlighted: boolean;
+  isSelected: boolean;
   containerRef: React.RefObject<HTMLDivElement>;
   annotationsVersion: number; // Добавляем версию для принудительного обновления
-}> = ({ relation, isHighlighted, containerRef, annotationsVersion }) => {
+  onRelationClick?: (relation: AnnotationRelation) => void;
+  onRelationContextMenu?: (relation: AnnotationRelation, x: number, y: number) => void;
+}> = ({ relation, isHighlighted, isSelected, containerRef, annotationsVersion, onRelationClick, onRelationContextMenu }) => {
   const [, forceUpdate] = useState({});
   const sourceId = relation.source_uid;
   const targetId = relation.target_uid;
@@ -490,31 +570,73 @@ const RelationLine: React.FC<{
     return null;
   }
 
-  // Кривая Безье для красивой связи
-  const cx1 = x1;
-  const cy1 = y1 + (y2 - y1) / 3;
-  const cx2 = x2;
-  const cy2 = y2 - (y2 - y1) / 3;
+  // 5-точечная ломаная линия для лучшей видимости связей
+  // Точка 1: центр исходного слова (x1, y1)
+  // Точка 2: 20px выше центра исходного слова
+  const upOffset = 20;
+  const point2_x = x1;
+  const point2_y = y1 - upOffset;
+
+  // Точка 3: 20px выше центра целевого слова (горизонтальная линия)
+  const point3_x = x2;
+  const point3_y = y2 - upOffset;
+
+  // Точка 4: совпадает с точкой 3 (для будущей гибкости)
+  // Точка 5: центр целевого слова (x2, y2) со стрелкой
 
   // Выделяем связи при наведении более ярким цветом и толще
-  const strokeColor = isHighlighted ? '#ff5722' : '#2196f3';
-  const strokeWidth = isHighlighted ? 3 : 2;
-  const opacity = isHighlighted ? 0.9 : 0.4;
-  const markerEnd = isHighlighted ? 'url(#arrowhead-highlighted)' : 'url(#arrowhead)';
+  // Выбранная связь имеет приоритет над наведением
+  let strokeColor = '#2196f3';
+  let strokeWidth = 2;
+  let opacity = 0.4;
+
+  if (isSelected) {
+    strokeColor = '#4caf50'; // Зелёный для выбранной связи
+    strokeWidth = 3;
+    opacity = 1.0;
+  } else if (isHighlighted) {
+    strokeColor = '#ff5722'; // Оранжевый при наведении
+    strokeWidth = 3;
+    opacity = 0.9;
+  }
+
+  const markerEnd = isSelected ? 'url(#arrowhead-selected)' :
+                    isHighlighted ? 'url(#arrowhead-highlighted)' :
+                    'url(#arrowhead)';
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRelationClick) {
+      onRelationClick(relation);
+    }
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onRelationContextMenu) {
+      onRelationContextMenu(relation, e.clientX, e.clientY);
+    }
+  };
 
   return (
-    <g>
+    <g
+      onClick={handleClick}
+      onContextMenu={handleContextMenu}
+      style={{ cursor: 'pointer' }}
+    >
       <path
-        d={`M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}`}
+        d={`M ${x1} ${y1} L ${point2_x} ${point2_y} L ${point3_x} ${point3_y} L ${x2} ${y2}`}
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         fill="none"
         opacity={opacity}
         markerEnd={markerEnd}
+        style={{ pointerEvents: 'stroke' }}
       />
       <text
         x={(x1 + x2) / 2}
-        y={(y1 + y2) / 2 - 10}
+        y={point2_y - 5}
         fill={strokeColor}
         fontSize="11px"
         fontWeight="bold"
@@ -536,7 +658,10 @@ const RelationsOverlay: React.FC<{
   relations: AnnotationRelation[];
   annotations: Annotation[];
   containerRef: React.RefObject<HTMLDivElement>;
-}> = memo(({ annotation, relations, annotations, containerRef }) => {
+  selectedRelation?: AnnotationRelation | null;
+  onRelationClick?: (relation: AnnotationRelation) => void;
+  onRelationContextMenu?: (relation: AnnotationRelation, x: number, y: number) => void;
+}> = memo(({ annotation, relations, annotations, containerRef, selectedRelation, onRelationClick, onRelationContextMenu }) => {
   // Версия аннотаций для принудительного обновления (основана на длине массива)
   const annotationsVersion = annotations.length;
 
@@ -580,7 +705,7 @@ const RelationsOverlay: React.FC<{
         left: 0,
         width: '100%',
         height: '100%',
-        pointerEvents: 'none',
+        pointerEvents: 'none', // SVG не принимает события, только его дочерние элементы
         zIndex: 1000,
         transform: 'translateZ(0)', // GPU-ускорение
         willChange: 'transform', // Подсказка браузеру для оптимизации
@@ -592,13 +717,20 @@ const RelationsOverlay: React.FC<{
           relation.target_uid === annotation.uid
         );
 
+        const isSelected = selectedRelation &&
+          selectedRelation.source_uid === relation.source_uid &&
+          selectedRelation.target_uid === relation.target_uid;
+
         return (
           <RelationLine
             key={`${relation.source_uid}-${relation.target_uid}`}
             relation={relation}
             isHighlighted={!!isHighlighted}
+            isSelected={!!isSelected}
             containerRef={containerRef}
             annotationsVersion={annotationsVersion}
+            onRelationClick={onRelationClick}
+            onRelationContextMenu={onRelationContextMenu}
           />
         );
       })}
@@ -622,6 +754,16 @@ const RelationsOverlay: React.FC<{
           orient="auto"
         >
           <polygon points="0 0, 10 3, 0 6" fill="#ff5722" opacity="0.9" />
+        </marker>
+        <marker
+          id="arrowhead-selected"
+          markerWidth="10"
+          markerHeight="10"
+          refX="9"
+          refY="3"
+          orient="auto"
+        >
+          <polygon points="0 0, 10 3, 0 6" fill="#4caf50" opacity="1.0" />
         </marker>
       </defs>
     </svg>

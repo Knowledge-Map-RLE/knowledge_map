@@ -283,7 +283,7 @@ export interface Annotation {
   color: string;
   metadata?: Record<string, any>;
   confidence?: number;
-  source?: 'user' | 'spacy' | 'custom';
+  source?: 'user' | 'spacy' | 'custom' | 'file';
   processor_version?: string;
   created_date?: string;
 }
@@ -535,6 +535,46 @@ export async function autoAnnotateDocument(
       annotation_types: annotationTypes,
       min_confidence: minConfidence
     })
+  });
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`HTTP ${res.status}: ${errorText}`);
+  }
+  return res.json();
+}
+
+// Интерфейс для ответа импорта CSV
+export interface ImportCSVResponse {
+  success: boolean;
+  message: string;
+  created_annotations: number;
+  created_relations: number;
+  total_in_file: {
+    annotations: number;
+    relations: number;
+  };
+}
+
+// Экспорт аннотаций в CSV
+export async function exportAnnotationsCSV(docId: string): Promise<Blob> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/annotations/export-csv?doc_id=${encodeURIComponent(docId)}`);
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`HTTP ${res.status}: ${errorText}`);
+  }
+  return res.blob();
+}
+
+// Импорт аннотаций из CSV
+export async function importAnnotationsCSV(docId: string, file: File): Promise<ImportCSVResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await fetch(`${base}/api/data_extraction/annotations/import-csv?doc_id=${encodeURIComponent(docId)}`, {
+    method: 'POST',
+    body: formData
   });
   if (!res.ok) {
     const errorText = await res.text();

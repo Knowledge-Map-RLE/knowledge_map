@@ -15,6 +15,7 @@ class AnnotationSource(str, Enum):
     USER = "user"
     SPACY = "spacy"
     CUSTOM = "custom"
+    FILE = "file"
 
 
 class AnnotationCategory(str, Enum):

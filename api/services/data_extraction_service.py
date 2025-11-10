@@ -14,7 +14,6 @@ from utils.hash_utils import _compute_md5
 from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
 from src.schemas.api import DataExtractionResponse, ImportAnnotationsRequest
 from . import settings, get_s3_client
-from .marker_progress import marker_progress_store
 from src.models import PDFDocument
 
 logger = logging.getLogger(__name__)
@@ -62,7 +61,7 @@ class DataExtractionService:
         background_tasks: BackgroundTasks, 
         file: UploadFile
     ) -> DataExtractionResponse:
-        """Загрузка PDF, MD5-дедупликация, Marker→Markdown, загрузка md+изображений+json в S3."""
+        """Загрузка PDF, MD5-дедупликация, конвертация в Markdown, загрузка md+изображений+json в S3."""
         if file.content_type not in ("application/pdf", "application/octet-stream"):
             raise HTTPException(status_code=400, detail="Ожидается PDF файл")
 
@@ -77,15 +76,13 @@ class DataExtractionService:
 
         pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
 
-        async def process_marker_and_upload(pdf_bytes: bytes, filename: str = None):
-            await marker_progress_store.init_doc(doc_id)
+        async def process_pdf_and_upload(pdf_bytes: bytes, filename: str = None):
+            # Конвертация PDF в Markdown через gRPC сервис
+            logger.info(f"[pdf_to_md] Начинаем обработку doc_id={doc_id}")
             
-            # Модели загрузятся автоматически при первом запуске Marker
-            logger.info(f"[marker_demo] Начинаем обработку doc_id={doc_id} - модели загрузятся автоматически")
-            
-            tmp_dir = SysPath(tempfile.mkdtemp(prefix="km_marker_"))
+            tmp_dir = SysPath(tempfile.mkdtemp(prefix="km_pdf_"))
             try:
-                logger.info(f"[marker_demo] Начинаем обработку doc_id={doc_id}, tmp_dir={tmp_dir}")
+                logger.info(f"[pdf_to_md] Начинаем обработку doc_id={doc_id}, tmp_dir={tmp_dir}")
                 pdf_name = f"{doc_id}.pdf"
                 tmp_pdf = tmp_dir / pdf_name
                 with open(tmp_pdf, "wb") as f:
@@ -94,27 +91,16 @@ class DataExtractionService:
                 loop = asyncio.get_running_loop()
 
                 def _on_progress(payload: dict) -> None:
-                    """Callback для отслеживания реального прогресса обработки документа из фоновых потоков"""
+                    """Callback для отслеживания прогресса обработки документа"""
                     try:
                         percent = payload.get('percent')
                         phase = payload.get('phase') or 'processing'
-                        # Поддерживаем оба ключа: 'message' и 'last_message'
                         message = payload.get('message') or payload.get('last_message') or ''
-                        if percent is not None:
-                            asyncio.run_coroutine_threadsafe(
-                                marker_progress_store.update_doc(doc_id, percent=percent, phase=phase, last_message=message),
-                                loop
-                            )
-                        else:
-                            # даже без процента обновим last_message для UX
-                            asyncio.run_coroutine_threadsafe(
-                                marker_progress_store.update_doc(doc_id, phase=phase, last_message=message),
-                                loop
-                            )
+                        logger.info(f"[pdf_to_md] Progress: {percent}% - {phase} - {message}")
                     except Exception:
                         pass
 
-                # Используем marker_demo для конвертации PDF в Markdown
+                # Используем gRPC сервис для конвертации PDF в Markdown
                 grpc_client = get_pdf_to_md_grpc_client_instance()
                 logger.info(f"[data_extraction] Используем gRPC клиент: host={grpc_client.host}, port={grpc_client.port}")
                 logger.info(f"[data_extraction] Переменные окружения в момент вызова: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
@@ -138,19 +124,19 @@ class DataExtractionService:
                     md_path = tmp_dir / f"{doc_id}.md"
                     md_path.write_text(result["markdown_content"], encoding="utf-8", errors="ignore")
                     outputs["markdown"] = md_path
-                    logger.info(f"[marker_demo] Markdown сохранен: {md_path}")
+                    logger.info(f"[pdf_to_md] Markdown сохранен: {md_path}")
 
                     # Извлекаем заголовок из markdown
                     extracted_title = extract_title_from_markdown(result["markdown_content"])
                     if extracted_title:
-                        logger.info(f"[marker_demo] Извлечен заголовок документа: {extracted_title}")
+                        logger.info(f"[pdf_to_md] Извлечен заголовок документа: {extracted_title}")
                 
                 # Сохраняем изображения
                 if result.get("images"):
                     for img_name, img_data in result["images"].items():
                         img_path = tmp_dir / img_name
                         img_path.write_bytes(img_data)
-                        logger.info(f"[marker_demo] Изображение сохранено: {img_name}")
+                        logger.info(f"[pdf_to_md] Изображение сохранено: {img_name}")
                 
                 # Сохраняем метаданные если есть
                 if result.get("metadata_json"):
@@ -159,7 +145,7 @@ class DataExtractionService:
                     # metadata_json уже в формате JSON строки
                     meta_path.write_text(result["metadata_json"], encoding="utf-8")
                     outputs["meta"] = meta_path
-                    logger.info(f"[marker_demo] Метаданные сохранены: {meta_path}")
+                    logger.info(f"[pdf_to_md] Метаданные сохранены: {meta_path}")
 
                 if outputs.get("markdown") is not None:
                     md_bytes = outputs["markdown"].read_bytes()
@@ -167,7 +153,7 @@ class DataExtractionService:
                     await self.s3_client.upload_bytes(
                         md_bytes, bucket, md_key, content_type="text/markdown; charset=utf-8"
                     )
-                    logger.info(f"[marker_demo] Загружен markdown: s3://{bucket}/{md_key}")
+                    logger.info(f"[pdf_to_md] Загружен markdown: s3://{bucket}/{md_key}")
 
                 if outputs.get("meta") is not None:
                     meta_bytes = outputs["meta"].read_bytes()
@@ -175,7 +161,7 @@ class DataExtractionService:
                     await self.s3_client.upload_bytes(
                         meta_bytes, bucket, meta_key, content_type="application/json"
                     )
-                    logger.info(f"[marker_demo] Загружен meta: s3://{bucket}/{meta_key}")
+                    logger.info(f"[pdf_to_md] Загружен meta: s3://{bucket}/{meta_key}")
 
                 img_exts = ("*.jpeg", "*.jpg", "*.png")
                 for pattern in img_exts:
@@ -184,7 +170,7 @@ class DataExtractionService:
                             img.read_bytes(), bucket, f"{prefix}{img.name}", 
                             content_type=mimetypes.guess_type(img.name)[0] or "image/jpeg"
                         )
-                        logger.info(f"[marker_demo] Загружено изображение: {img.name}")
+                        logger.info(f"[pdf_to_md] Загружено изображение: {img.name}")
                 
                 # Сохраняем документ в Neo4j для поддержки аннотаций
                 try:
@@ -213,11 +199,10 @@ class DataExtractionService:
                 except Exception as neo_err:
                     logger.error(f"[Neo4j] Ошибка сохранения документа {doc_id}: {neo_err}")
                     # Не прерываем выполнение, т.к. файлы уже загружены в S3
-                
-                await marker_progress_store.complete_doc(doc_id, True)
+
+                logger.info(f"[pdf_to_md] Обработка документа {doc_id} успешно завершена")
             except Exception as e:
-                await marker_progress_store.complete_doc(doc_id, False)
-                logger.exception(f"Marker demo processing failed: {e}")
+                logger.exception(f"PDF to MD processing failed: {e}")
             finally:
                 try:
                     shutil.rmtree(tmp_dir, ignore_errors=True)
@@ -232,8 +217,8 @@ class DataExtractionService:
                 existing_pdf = await self.s3_client.download_bytes(bucket, pdf_key)
                 if not existing_pdf:
                     raise HTTPException(status_code=500, detail="Не удалось прочитать существующий PDF из S3")
-                background_tasks.add_task(process_marker_and_upload, existing_pdf, file.filename)
-                logger.info(f"[marker_demo] Переобработка запущена для существующего PDF: doc_id={doc_id}")
+                background_tasks.add_task(process_pdf_and_upload, existing_pdf, file.filename)
+                logger.info(f"[pdf_to_md] Переобработка запущена для существующего PDF: doc_id={doc_id}")
                 return DataExtractionResponse(
                     success=True, doc_id=doc_id, 
                     message="Конвертация запущена для существующего PDF", 
@@ -251,7 +236,7 @@ class DataExtractionService:
         if not uploaded:
             raise HTTPException(status_code=500, detail="Не удалось сохранить PDF в S3")
 
-        background_tasks.add_task(process_marker_and_upload, raw, file.filename)
+        background_tasks.add_task(process_pdf_and_upload, raw, file.filename)
 
         return DataExtractionResponse(
             success=True, doc_id=doc_id, 

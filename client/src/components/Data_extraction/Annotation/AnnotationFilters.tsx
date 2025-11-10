@@ -84,6 +84,15 @@ const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
             />
             {' '}spaCy
           </label>
+          <label style={{ fontSize: '12px', cursor: 'pointer' }}>
+            <input
+              type="radio"
+              name="source"
+              checked={selectedSource === 'file'}
+              onChange={() => onSourceChange('file')}
+            />
+            {' '}Файл
+          </label>
         </div>
       </div>
 

@@ -11,6 +11,7 @@ interface EditorTabsProps {
   selectedColor: string;
   relationMode: boolean;
   showRelations: boolean;
+  largeLineHeight?: boolean;
   readOnly: boolean;
   onTabChange: (tab: 'text' | 'annotator') => void;
   onTextChange: (text: string) => void;
@@ -24,6 +25,11 @@ interface EditorTabsProps {
   hasUnsavedChanges: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
   textAnnotatorRef: React.RefObject<HTMLDivElement>;
+  selectedRelation?: AnnotationRelation | null;
+  onRelationClick?: (relation: AnnotationRelation) => void;
+  onRelationDelete?: (sourceId: string, targetId: string) => void;
+  onExportCSV?: () => void;
+  onImportCSV?: (file: File) => void;
 }
 
 const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
@@ -35,6 +41,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   selectedColor,
   relationMode,
   showRelations,
+  largeLineHeight = false,
   readOnly,
   onTabChange,
   onTextChange,
@@ -48,7 +55,28 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   hasUnsavedChanges,
   textareaRef,
   textAnnotatorRef,
+  selectedRelation,
+  onRelationClick,
+  onRelationDelete,
+  onExportCSV,
+  onImportCSV,
 }, ref) => {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && onImportCSV) {
+      onImportCSV(file);
+      // Сбросить input для возможности повторного выбора того же файла
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
   return (
     <div ref={ref} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div className="main-tabs" style={{
@@ -97,6 +125,54 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
         >
           🗑️ Удалить все аннотации
         </button>
+        {onImportCSV && (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <button
+              className="import-csv-button"
+              onClick={handleImportClick}
+              disabled={readOnly}
+              title="Импортировать аннотации из CSV"
+              style={{
+                backgroundColor: readOnly ? '#ccc' : '#FF9800',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: readOnly ? 'not-allowed' : 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold'
+              }}
+            >
+              📥 Импортировать CSV
+            </button>
+          </>
+        )}
+        {onExportCSV && (
+          <button
+            className="export-csv-button"
+            onClick={onExportCSV}
+            title="Экспортировать аннотации в CSV"
+            style={{
+              backgroundColor: '#9C27B0',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            📤 Экспортировать CSV
+          </button>
+        )}
         <button
           className="save-button"
           onClick={onSave}
@@ -130,8 +206,12 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
           relationMode={relationMode}
           onRelationCreate={onRelationCreate}
           showRelations={showRelations}
+          largeLineHeight={largeLineHeight}
           editable={!readOnly}
           onTextChange={onTextChange}
+          selectedRelation={selectedRelation}
+          onRelationClick={onRelationClick}
+          onRelationDelete={onRelationDelete}
         />
       </div>
     </div>

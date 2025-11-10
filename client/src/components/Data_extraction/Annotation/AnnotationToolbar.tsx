@@ -11,6 +11,8 @@ interface AnnotationToolbarProps {
   onRelationModeToggle: () => void;
   showRelations: boolean;
   onShowRelationsToggle: () => void;
+  largeLineHeight?: boolean;
+  onLineHeightToggle?: () => void;
   // Для мультиклассификации
   selectedTypes?: string[];
   onTypeToggle?: (type: string) => void;
@@ -26,6 +28,8 @@ const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
   onRelationModeToggle,
   showRelations,
   onShowRelationsToggle,
+  largeLineHeight = false,
+  onLineHeightToggle,
   selectedTypes = [],
   onTypeToggle,
   hasPendingSelection = false,
@@ -147,6 +151,15 @@ const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
         >
           {showRelations ? '👁 Показать связи (вкл)' : '👁 Показать связи'}
         </button>
+        {onLineHeightToggle && (
+          <button
+            className={`mode-button ${largeLineHeight ? 'active' : ''}`}
+            onClick={onLineHeightToggle}
+            title="Увеличить межстрочный интервал для лучшей видимости связей"
+          >
+            {largeLineHeight ? '📏 Большой интервал (вкл)' : '📏 Большой интервал'}
+          </button>
+        )}
       </div>
 
       {(hasPendingSelection ? selectedTypes.length > 0 : selectedType) && (
