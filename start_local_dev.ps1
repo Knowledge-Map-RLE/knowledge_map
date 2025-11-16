@@ -270,6 +270,30 @@ function Start-ApiService {
     Push-Location $apiDir
     try {
         poetry install
+
+        # Download NLP models and data for multi-level NLP system
+        Write-ColorOutput "Checking NLP models and data..." $InfoColor
+
+        # Download NLTK data
+        Write-ColorOutput "Downloading NLTK data (punkt, wordnet, stopwords)..." $InfoColor
+        poetry run python -c "import nltk; nltk.download('punkt', quiet=True); nltk.download('averaged_perceptron_tagger', quiet=True); nltk.download('wordnet', quiet=True); nltk.download('omw-1.4', quiet=True); nltk.download('stopwords', quiet=True)" 2>&1 | Out-Null
+
+        # Check if spaCy model exists, if not download it
+        Write-ColorOutput "Checking spaCy model (en_core_web_sm)..." $InfoColor
+        $spacyCheck = poetry run python -c "import spacy; spacy.load('en_core_web_sm')" 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-ColorOutput "Downloading spaCy model en_core_web_sm..." $InfoColor
+            poetry run python -m spacy download en_core_web_sm
+        } else {
+            Write-ColorOutput "spaCy model already installed" $SuccessColor
+        }
+
+        # Download Stanza models for English
+        Write-ColorOutput "Downloading Stanza models (en)..." $InfoColor
+        poetry run python -c "import stanza; stanza.download('en', verbose=False)" 2>&1 | Out-Null
+        Write-ColorOutput "Stanza models ready" $SuccessColor
+
+        Write-ColorOutput "NLP models and data ready" $SuccessColor
     }
     catch {
         Write-ColorOutput "Failed to install dependencies for api: $($_.Exception.Message)" $WarningColor

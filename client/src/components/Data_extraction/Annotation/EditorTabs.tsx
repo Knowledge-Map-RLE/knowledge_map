@@ -19,6 +19,7 @@ interface EditorTabsProps {
   onAnnotationClick: (annotation: Annotation | Annotation[]) => void;
   onRelationCreate: (sourceId: string, targetId: string) => void;
   onAutoAnnotate: () => void;
+  onMultiLevelAnnotate?: () => void;
   onSave: () => void;
   onDeleteAllAnnotations: () => void;
   isAutoAnnotating: boolean;
@@ -49,6 +50,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onAnnotationClick,
   onRelationCreate,
   onAutoAnnotate,
+  onMultiLevelAnnotate,
   onSave,
   onDeleteAllAnnotations,
   isAutoAnnotating,
@@ -107,6 +109,26 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
         >
           {isAutoAnnotating ? '⏳ Обработка...' : '🤖 Автоаннотация spaCy'}
         </button>
+        {onMultiLevelAnnotate && (
+          <button
+            className="multilevel-annotate-button"
+            onClick={onMultiLevelAnnotate}
+            disabled={isAutoAnnotating || readOnly}
+            title="Multi-level NLP анализ с голосованием (spaCy + NLTK)"
+            style={{
+              backgroundColor: isAutoAnnotating ? '#ccc' : '#2196F3',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              cursor: isAutoAnnotating || readOnly ? 'not-allowed' : 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            {isAutoAnnotating ? '⏳ Обработка...' : '🎯 Multi-Level анализ'}
+          </button>
+        )}
         <button
           className="delete-all-button"
           onClick={onDeleteAllAnnotations}

@@ -5,6 +5,7 @@ import RelationsPanel from './RelationsPanel';
 import AnnotationFilters from './AnnotationFilters';
 import EditorTabs from './EditorTabs';
 import ErrorBoundary from '../../ErrorBoundary';
+import PatternVisualization from '../PatternVisualization/PatternVisualization';
 import { useAnnotations } from './hooks/useAnnotations';
 import { useAnnotationOffsets } from './hooks/useAnnotationOffsets';
 import { useRelations } from './hooks/useRelations';
@@ -12,6 +13,8 @@ import {
   Annotation,
   AnnotationRelation,
   autoAnnotateDocument,
+  autoAnnotateMultilevel,
+  MultiLevelAnalysisResponse,
   deleteAllAnnotations,
   exportAnnotationsCSV,
   importAnnotationsCSV,
@@ -41,6 +44,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [showRelations, setShowRelations] = useState(false);
   const [largeLineHeight, setLargeLineHeight] = useState(false);
   const [isAutoAnnotating, setIsAutoAnnotating] = useState(false);
+  const [graphData, setGraphData] = useState<MultiLevelAnalysisResponse['graph'] | null>(null);
 
   // Filter State
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -254,7 +258,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         setSelectedTypes(newGroup.map((ann) => ann.annotation_type));
       }
     } catch (error: any) {
-      alert('Не удалось удалить аннотацию: ' + (error?.message || 'Неизвестная ошибка'));
+      console.error('Не удалось удалить аннотацию:', error?.message || error);
     }
   }, [removeAnnotation, selectedAnnotationGroup]);
 
@@ -266,7 +270,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     try {
       await editAnnotation(annotation.uid, newType);
     } catch (error: any) {
-      alert('Не удалось обновить аннотацию: ' + (error?.message || 'Неизвестная ошибка'));
+      console.error('Не удалось обновить аннотацию:', error?.message || error);
     }
   }, [editAnnotation]);
 
@@ -277,7 +281,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
     try {
       await createRelation(sourceId, targetId, relationType);
-      alert('Связь успешно создана!');
+      console.log('Связь успешно создана');
     } catch (error: any) {
       handleRelationError(error);
     }
@@ -288,7 +292,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     try {
       await removeRelation(sourceId, targetId);
     } catch (error: any) {
-      alert('Не удалось удалить связь: ' + (error?.message || 'Неизвестная ошибка'));
+      console.error('Не удалось удалить связь:', error?.message || error);
     }
   }, [removeRelation]);
 
@@ -304,9 +308,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
     try {
       await editRelation(relation, newType);
-      alert('Тип связи успешно изменён!');
+      console.log('Тип связи успешно изменён');
     } catch (error: any) {
-      alert('Не удалось изменить тип связи: ' + (error?.message || 'Неизвестная ошибка'));
+      console.error('Не удалось изменить тип связи:', error?.message || error);
     }
   }, [editRelation]);
 
@@ -331,8 +335,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     try {
       const result = await autoAnnotateDocument(docId);
 
-      alert(
-        `Автоаннотация завершена успешно!\n\n` +
+      console.log(
+        'Автоаннотация завершена успешно!\n' +
         `Создано аннотаций: ${result.created_annotations}\n` +
         `Создано связей: ${result.created_relations}\n` +
         `Обработано символов: ${result.text_length}\n` +
@@ -342,12 +346,71 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       await loadAnnotations();
       await loadRelations();
     } catch (error: any) {
-      alert(
-        'Не удалось выполнить автоаннотацию:\n\n' +
-        (error?.message || 'Неизвестная ошибка') +
+      console.error(
+        'Не удалось выполнить автоаннотацию:',
+        error?.message || error,
         '\n\nПроверьте, что:\n' +
         '• Документ сохранен в базе данных\n' +
         '• Markdown файл доступен\n' +
+        '• Сервер NLP запущен и доступен'
+      );
+    } finally {
+      setIsAutoAnnotating(false);
+    }
+  }, [isAutoAnnotating, docId, loadAnnotations, loadRelations]);
+
+  // Multi-level auto-annotate handler
+  const handleMultiLevelAnnotate = useCallback(async () => {
+    if (isAutoAnnotating) return;
+
+    const confirmed = confirm(
+      'Запустить многоуровневый NLP-анализ с голосованием?\n\n' +
+      'Эта система использует несколько NLP-моделей (spaCy + NLTK) с голосованием для повышения точности:\n' +
+      '• Level 1: Токенизация и сегментация предложений\n' +
+      '• Level 2: Морфология и части речи (POS tagging)\n' +
+      '• Level 3: Синтаксис и зависимости (dependency parsing)\n\n' +
+      'Принимаются только аннотации, где минимум 2 модели согласны.\n' +
+      'Результаты будут показаны в аннотаторе и в виде графа ниже.\n\n' +
+      'Процесс может занять 5-10 минут для больших документов.'
+    );
+
+    if (!confirmed) return;
+
+    setIsAutoAnnotating(true);
+
+    try {
+      const result = await autoAnnotateMultilevel(
+        docId,
+        true,  // enable_voting
+        3,     // max_level
+        true,  // create_annotations
+        0.8    // min_confidence
+      );
+
+      // Store graph data for visualization
+      setGraphData(result.graph);
+
+      console.log(
+        'Multi-level анализ завершен успешно!\n' +
+        `Создано аннотаций: ${result.annotations_count || 0}\n` +
+        `Agreement score: ${(result.summary?.agreement_score || 0).toFixed(2)}\n` +
+        `Предложений: ${result.summary?.total_sentences || 0}\n` +
+        `Токенов: ${result.summary?.total_tokens || 0}\n` +
+        `Время обработки: ${result.processing_time.toFixed(2)}s\n` +
+        `Уровни обработки: ${result.processed_levels.join(', ')}\n\n` +
+        `Граф построен: ${result.graph.nodes.length} узлов, ${result.graph.edges.length} связей`
+      );
+
+      await loadAnnotations();
+      await loadRelations();
+    } catch (error: any) {
+      console.error(
+        'Не удалось выполнить multi-level анализ:',
+        error?.message || error,
+        '\n\nПроверьте, что:\n' +
+        '• Документ сохранен в базе данных\n' +
+        '• Markdown файл доступен\n' +
+        '• NLP модели установлены (spaCy, NLTK)\n' +
         '• Сервер NLP запущен и доступен'
       );
     } finally {
@@ -379,7 +442,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       });
     } catch (error) {
       console.error('Ошибка сохранения:', error);
-      alert('Не удалось сохранить изменения');
     }
   }, [localText, annotations, saveAnnotationOffsets, loadAnnotations, onSave]);
 
@@ -395,8 +457,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     try {
       const result = await deleteAllAnnotations(docId);
 
-      alert(
-        `Все аннотации успешно удалены!\n\n` +
+      console.log(
+        'Все аннотации успешно удалены!\n' +
         `Удалено аннотаций: ${result.deleted_count}`
       );
 
@@ -407,9 +469,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       setSelectedAnnotationGroup([]);
       setSelectedTypes([]);
     } catch (error: any) {
-      alert(
-        'Не удалось удалить аннотации:\n\n' +
-        (error?.message || 'Неизвестная ошибка')
+      console.error(
+        'Не удалось удалить аннотации:',
+        error?.message || error
       );
     }
   }, [docId, loadAnnotations, loadRelations]);
@@ -428,10 +490,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      console.log('Аннотации экспортированы в CSV');
     } catch (error: any) {
-      alert(
-        'Не удалось экспортировать аннотации:\n\n' +
-        (error?.message || 'Неизвестная ошибка')
+      console.error(
+        'Не удалось экспортировать аннотации:',
+        error?.message || error
       );
     }
   }, [docId]);
@@ -441,10 +504,10 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     try {
       const result = await importAnnotationsCSV(docId, file);
 
-      alert(
-        `Импорт завершен успешно!\n\n` +
+      console.log(
+        'Импорт завершен успешно!\n' +
         `Создано аннотаций: ${result.created_annotations} из ${result.total_in_file.annotations}\n` +
-        `Создано связей: ${result.created_relations} из ${result.total_in_file.relations}\n\n` +
+        `Создано связей: ${result.created_relations} из ${result.total_in_file.relations}\n` +
         (result.created_annotations < result.total_in_file.annotations ?
           'Некоторые аннотации были пропущены из-за невалидных данных.' : '')
       );
@@ -453,9 +516,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       await loadAnnotations();
       await loadRelations();
     } catch (error: any) {
-      alert(
-        'Не удалось импортировать аннотации:\n\n' +
-        (error?.message || 'Неизвестная ошибка')
+      console.error(
+        'Не удалось импортировать аннотации:',
+        error?.message || error
       );
     }
   }, [docId, loadAnnotations, loadRelations]);
@@ -469,17 +532,17 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   // Error handlers
   const handleAnnotationError = (error: any) => {
     if (error?.message?.includes('404')) {
-      alert('Документ не найден в базе данных. Аннотации пока недоступны для этого документа.');
+      console.error('Документ не найден в базе данных. Аннотации пока недоступны для этого документа.');
     } else {
-      alert('Не удалось создать аннотацию: ' + (error?.message || 'Неизвестная ошибка'));
+      console.error('Не удалось создать аннотацию:', error?.message || error);
     }
   };
 
   const handleRelationError = (error: any) => {
     if (error?.message?.includes('404')) {
-      alert('Документ не найден в базе данных. Связи пока недоступны для этого документа.');
+      console.error('Документ не найден в базе данных. Связи пока недоступны для этого документа.');
     } else {
-      alert('Не удалось создать связь: ' + (error?.message || 'Неизвестная ошибка'));
+      console.error('Не удалось создать связь:', error?.message || error);
     }
   };
 
@@ -491,9 +554,10 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   return (
     <ErrorBoundary>
-      <div className="annotation-workspace">
-        {/* Toolbar */}
-        <div className="workspace-toolbar">
+      <div className="annotation-workspace-container">
+        <div className="annotation-workspace">
+          {/* Toolbar */}
+          <div className="workspace-toolbar">
           <AnnotationToolbar
             selectedType={selectedType}
             selectedColor={selectedColor}
@@ -531,6 +595,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onAnnotationClick={handleAnnotationSelect}
               onRelationCreate={handleRelationCreate}
               onAutoAnnotate={handleAutoAnnotate}
+              onMultiLevelAnnotate={handleMultiLevelAnnotate}
               onSave={handleSave}
               onDeleteAllAnnotations={handleDeleteAllAnnotations}
               isAutoAnnotating={isAutoAnnotating}
@@ -597,6 +662,14 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
             />
           </ErrorBoundary>
         </div>
+        </div>
+
+        {/* Pattern Visualization (below main workspace) */}
+        {graphData && (
+          <ErrorBoundary>
+            <PatternVisualization graphData={graphData} />
+          </ErrorBoundary>
+        )}
       </div>
     </ErrorBoundary>
   );

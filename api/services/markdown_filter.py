@@ -82,29 +82,32 @@ class MarkdownFilter:
 
         lines = text_after_html.split('\n')
         char_pos = 0
-        in_frontmatter = False
+        in_metadata_block = False  # Для блоков метаданных (включая frontmatter)
         in_table = False
         i = 0
 
         while i < len(lines):
             line = lines[i]
 
-            # Проверка frontmatter YAML (начало документа)
-            if self.metadata_pattern.match(line) and i == 0:
-                in_frontmatter = True
-                char_pos += len(line) + 1  # +1 для \n
-                i += 1
-                continue
+            # Проверка начала блока метаданных (--- в любом месте документа)
+            if self.metadata_pattern.match(line):
+                if not in_metadata_block:
+                    # Начало блока метаданных
+                    in_metadata_block = True
+                    logger.info(f"Найден блок метаданных на строке {i}, пропускаем до закрывающего ---")
+                    char_pos += len(line) + 1
+                    i += 1
+                    continue
+                else:
+                    # Конец блока метаданных
+                    in_metadata_block = False
+                    logger.info(f"Конец блока метаданных на строке {i}")
+                    char_pos += len(line) + 1
+                    i += 1
+                    continue
 
-            # Конец frontmatter
-            if in_frontmatter and self.metadata_pattern.match(line):
-                in_frontmatter = False
-                char_pos += len(line) + 1
-                i += 1
-                continue
-
-            # Пропускаем строки внутри frontmatter
-            if in_frontmatter:
+            # Пропускаем строки внутри блока метаданных
+            if in_metadata_block:
                 char_pos += len(line) + 1
                 i += 1
                 continue

@@ -543,6 +543,82 @@ export async function autoAnnotateDocument(
   return res.json();
 }
 
+// Multi-level NLP analysis response
+export interface MultiLevelAnalysisResponse {
+  doc_id: string;
+  text_length: number;
+  sentences: any[];
+  summary: {
+    total_sentences: number;
+    total_tokens: number;
+    agreement_score: number;
+    pos_distribution: Record<string, number>;
+    dependency_distribution: Record<string, number>;
+  };
+  graph: {
+    nodes: Array<{
+      id: number;
+      label: string;
+      type: 'token' | 'entity';
+      pos?: string;
+      entity_type?: string;
+      confidence: number;
+      sources: string[];
+      sentence_idx: number;
+    }>;
+    edges: Array<{
+      source: number;
+      target: number;
+      relation: string;
+      confidence: number;
+      sources?: string[];
+    }>;
+    metadata: {
+      total_nodes: number;
+      total_edges: number;
+      sentences: number;
+    };
+  };
+  created_annotations?: Array<{
+    uid: string;
+    text: string;
+    type: string;
+    confidence: number;
+    start: number;
+    end: number;
+    color: string;
+  }>;
+  annotations_count?: number;
+  processing_time: number;
+  processed_levels: string[];
+}
+
+// Multi-level автоматическая аннотация с голосованием
+export async function autoAnnotateMultilevel(
+  docId: string,
+  enableVoting: boolean = true,
+  maxLevel: number = 3,
+  createAnnotations: boolean = true,
+  minConfidence: number = 0.8
+): Promise<MultiLevelAnalysisResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${docId}/analyze-multilevel`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      enable_voting: enableVoting,
+      max_level: maxLevel,
+      create_annotations: createAnnotations,
+      min_confidence: minConfidence
+    })
+  });
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`HTTP ${res.status}: ${errorText}`);
+  }
+  return res.json();
+}
+
 // Интерфейс для ответа импорта CSV
 export interface ImportCSVResponse {
   success: boolean;

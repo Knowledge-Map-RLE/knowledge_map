@@ -50,7 +50,11 @@
       "Bash(awk:*)",
       "Bash(bun run build)",
       "Bash(git log:*)",
-      "Bash(unset:*)"
+      "Bash(unset:*)",
+      "Bash(cmd /c \"taskkill /F /PID 63844\")",
+      "Bash(poetry run uvicorn:*)",
+      "Bash(start /B poetry run uvicorn:*)",
+      "Bash(api_server.log)"
     ],
     "deny": [],
     "ask": []

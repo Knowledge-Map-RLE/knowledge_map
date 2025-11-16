@@ -28,6 +28,8 @@ psutil = "6.0.0"
 pillow = "<11.0.0"
 marker-pdf = "1.9.3"
 spacy = {version = ">=3.8.7,<4.0", python = ">=3.12,<3.14"}
+nltk = "^3.9.2"
+stanza = "^1.11.0"
 
 
 [build-system]
