@@ -1,7 +1,7 @@
 [project]
 name = "ai"
 version = "0.1.0"
-description = "AI сервис для автоматической разметки PDF научных статей"
+description = "AI Model Service - gRPC сервис для работы с Hugging Face моделями"
 authors = [
     {name = "Dobrosvet",email = "dimaprokofev@yandex.ru"}
 ]
@@ -46,7 +46,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "ai"
 version = "0.1.0"
-description = "AI сервис для автоматической разметки PDF научных статей"
+description = "AI Model Service - gRPC сервис для работы с Hugging Face моделями"
 authors = ["Dobrosvet <dimaprokofev@yandex.ru>"]
 readme = "README.md"
 packages = [{include = "src"}]

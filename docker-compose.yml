@@ -154,6 +154,8 @@ services:
       - LAYOUT_SERVICE_PORT=50051
       - AUTH_SERVICE_HOST=auth
       - AUTH_SERVICE_PORT=50051
+      - AI_MODEL_SERVICE_HOST=ai
+      - AI_MODEL_SERVICE_PORT=50054
       - S3_ENDPOINT_URL=http://s3:9000
       - S3_ACCESS_KEY=minio
       - S3_SECRET_KEY=minio123456
@@ -165,6 +167,8 @@ services:
       neo4j:
         condition: service_healthy
       auth:
+        condition: service_started
+      ai:
         condition: service_started
     volumes:
       - auth_proto:/shared/proto
@@ -200,43 +204,41 @@ services:
     container_name: knowledge_map_ai
     restart: unless-stopped
     ports:
-      - "8001:8001"
+      - "50054:50054"  # gRPC port for AI service
     environment:
-      - NEO4J_URI=bolt://neo4j:7687
-      - NEO4J_USER=neo4j
-      - NEO4J_PASSWORD=password
-      - S3_ENDPOINT_URL=http://s3:9000
-      - S3_ACCESS_KEY=minio
-      - S3_SECRET_KEY=minio123456
-      - API_SERVICE_URL=http://api:8000
-      - MODEL_NAME=microsoft/DialoGPT-medium
+      - GRPC_HOST=0.0.0.0
+      - GRPC_PORT=50054
+      - MODEL_CACHE_DIR=/app/models
+      - DEFAULT_MODEL=meta-llama/Llama-3.2-1B-Instruct
       - MODEL_DEVICE=auto
       - LOG_LEVEL=INFO
+      - DEFAULT_MAX_TOKENS=2048
+      - DEFAULT_TEMPERATURE=0.7
+      - MAX_CONTEXT_LENGTH=100000
+      - CHUNK_OVERLAP=200
     networks:
       - knowledge_map_network
-    depends_on:
-      neo4j:
-        condition: service_healthy
-      s3:
-        condition: service_started
-      api:
-        condition: service_started
     volumes:
       - D:/Data/Data_Knowledge_Map/ai_models:/app/models
     deploy:
       resources:
         limits:
+          memory: 8G      # Increased for Llama model
+          cpus: '4.0'
+        reservations:
           memory: 4G
           cpus: '2.0'
-        reservations:
-          memory: 2G
-          cpus: '1.0'
+    # Enable GPU support if available
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      test: ["CMD", "python", "-c", "import grpc; channel = grpc.insecure_channel('localhost:50054'); channel.close()"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 120s  # More time for model download
 
   client:
     build:

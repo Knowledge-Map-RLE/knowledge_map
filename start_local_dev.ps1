@@ -160,6 +160,79 @@ function Start-AuthService {
     }
 }
 
+function Start-AIService {
+    Write-ColorOutput "Starting AI Model service..." $InfoColor
+
+    $aiDir = Join-Path $ScriptRoot "ai"
+    if (-not (Test-Path $aiDir)) {
+        Write-ColorOutput "Directory $aiDir not found" $ErrorColor
+        return $false
+    }
+
+    # Install dependencies via Poetry
+    Write-ColorOutput "Installing dependencies for ai..." $InfoColor
+    Push-Location $aiDir
+    try {
+        poetry install
+    }
+    catch {
+        Write-ColorOutput "Failed to install dependencies for ai: $($_.Exception.Message)" $WarningColor
+        Write-ColorOutput "Trying to run with existing dependencies..." $InfoColor
+    }
+    finally {
+        Pop-Location
+    }
+
+    # Generate proto files
+    Write-ColorOutput "Generating proto files for ai..." $InfoColor
+    Push-Location $aiDir
+    try {
+        python -m grpc_tools.protoc -I./proto --python_out=./src --grpc_python_out=./src ./proto/ai_model.proto
+    }
+    finally {
+        Pop-Location
+    }
+
+    # Start service
+    Write-ColorOutput "Starting AI Model gRPC service..." $InfoColor
+    $env:GRPC_HOST = "0.0.0.0"
+    $env:GRPC_PORT = "50054"
+    $env:MODEL_CACHE_DIR = "D:/Data/Data_Knowledge_Map/ai_models"
+    $env:DEFAULT_MODEL = "meta-llama/Llama-3.2-1B-Instruct"
+    $env:MODEL_DEVICE = "auto"
+    $env:LOG_LEVEL = "INFO"
+
+    # Create logs directory
+    $logsDir = Join-Path $aiDir "logs"
+    if (-not (Test-Path $logsDir)) {
+        New-Item -Path $logsDir -ItemType Directory -Force
+    }
+
+    # Create model cache directory
+    $modelCacheDir = "D:/Data/Data_Knowledge_Map/ai_models"
+    if (-not (Test-Path $modelCacheDir)) {
+        New-Item -Path $modelCacheDir -ItemType Directory -Force
+    }
+
+    # Start gRPC service in background with logging
+    $logFile = Join-Path $logsDir "ai_model.log"
+    $errorFile = Join-Path $logsDir "ai_model_error.log"
+    $grpcProcess = Start-Process -FilePath "poetry" -ArgumentList "run", "python", "src/grpc_server.py" -WorkingDirectory $aiDir -WindowStyle Hidden -RedirectStandardOutput $logFile -RedirectStandardError $errorFile -PassThru
+
+    Start-Sleep -Seconds 10
+
+    if (Test-Port -Port 50054 -ServiceName "AI Model gRPC") {
+        Write-ColorOutput "AI Model gRPC service started on port 50054" $SuccessColor
+        return $true
+    } else {
+        Write-ColorOutput "AI Model gRPC service failed to start" $ErrorColor
+        if ($grpcProcess -and !$grpcProcess.HasExited) {
+            $grpcProcess.Kill()
+        }
+        return $false
+    }
+}
+
 function Start-PdfToMdService {
     Write-ColorOutput "Starting PDF to MD service..." $InfoColor
     
@@ -316,23 +389,26 @@ function Start-ApiService {
         $graphProto = Join-Path $ScriptRoot "worker_distributed_layering_rust\proto\graph_layout.proto"
         $authProto  = Join-Path $ScriptRoot "auth\proto\auth.proto"
         $pdfProto   = Join-Path $ScriptRoot "pdf_to_md\proto\pdf_to_md.proto"
+        $aiProto    = Join-Path $ScriptRoot "ai\proto\ai_model.proto"
 
         # Build include dirs for protoc
         $incGraph = Split-Path $graphProto -Parent
         $incAuth  = Split-Path $authProto  -Parent
         $incPdf   = Split-Path $pdfProto   -Parent
+        $incAI    = Split-Path $aiProto    -Parent
 
         # Validate proto paths
         if (-not (Test-Path $graphProto)) { Write-ColorOutput "Missing proto: $graphProto" $WarningColor }
         if (-not (Test-Path $authProto))  { Write-ColorOutput "Missing proto: $authProto"  $WarningColor }
         if (-not (Test-Path $pdfProto))   { Write-ColorOutput "Missing proto: $pdfProto"   $WarningColor }
+        if (-not (Test-Path $aiProto))    { Write-ColorOutput "Missing proto: $aiProto"    $WarningColor }
 
         # Generate grpc stubs (any missing file will be ignored by protoc include search order)
         poetry run python -m grpc_tools.protoc `
-            -I"$incGraph" -I"$incAuth" -I"$incPdf" `
+            -I"$incGraph" -I"$incAuth" -I"$incPdf" -I"$incAI" `
             --python_out=./utils/generated `
             --grpc_python_out=./utils/generated `
-            "$graphProto" "$authProto" "$pdfProto"
+            "$graphProto" "$authProto" "$pdfProto" "$aiProto"
 
         # Create __init__.py for generated folder
         if (-not (Test-Path "utils/generated/__init__.py")) {
@@ -340,13 +416,14 @@ function Start-ApiService {
         }
 
         # Fix imports in generated grpc files (relative imports)
-        $grpcFiles = @("utils/generated/graph_layout_pb2_grpc.py", "utils/generated/auth_pb2_grpc.py", "utils/generated/pdf_to_md_pb2_grpc.py")
+        $grpcFiles = @("utils/generated/graph_layout_pb2_grpc.py", "utils/generated/auth_pb2_grpc.py", "utils/generated/pdf_to_md_pb2_grpc.py", "utils/generated/ai_model_pb2_grpc.py")
         foreach ($file in $grpcFiles) {
             if (Test-Path $file) {
                 (Get-Content $file) `
                     -replace "import graph_layout_pb2 as graph_layout__pb2", "from . import graph_layout_pb2 as graph_layout__pb2" `
                     -replace "import auth_pb2 as auth__pb2", "from . import auth_pb2 as auth__pb2" `
-                    -replace "import pdf_to_md_pb2 as pdf_to_md__pb2", "from . import pdf_to_md_pb2 as pdf_to_md__pb2" | Set-Content $file
+                    -replace "import pdf_to_md_pb2 as pdf_to_md__pb2", "from . import pdf_to_md_pb2 as pdf_to_md__pb2" `
+                    -replace "import ai_model_pb2 as ai_model__pb2", "from . import ai_model_pb2 as ai_model__pb2" | Set-Content $file
             }
         }
     }
@@ -366,6 +443,8 @@ function Start-ApiService {
     $env:AUTH_SERVICE_PORT = "50052"
     $env:PDF_TO_MD_SERVICE_HOST = "127.0.0.1"
     $env:PDF_TO_MD_SERVICE_PORT = "50053"
+    $env:AI_MODEL_SERVICE_HOST = "127.0.0.1"
+    $env:AI_MODEL_SERVICE_PORT = "50054"
     $env:S3_ENDPOINT_URL = "http://127.0.0.1:9000"
     $env:S3_ACCESS_KEY = "minio"
     $env:S3_SECRET_KEY = "minio123456"
@@ -400,6 +479,8 @@ function Start-ApiService {
     $env:AUTH_SERVICE_PORT = "50052"
     $env:PDF_TO_MD_SERVICE_HOST = "127.0.0.1"
     $env:PDF_TO_MD_SERVICE_PORT = "50053"
+    $env:AI_MODEL_SERVICE_HOST = "127.0.0.1"
+    $env:AI_MODEL_SERVICE_PORT = "50054"
     $env:S3_ENDPOINT_URL = "http://127.0.0.1:9000"
     $env:S3_ACCESS_KEY = "minio"
     $env:S3_SECRET_KEY = "minio123456"
@@ -432,12 +513,13 @@ function Start-ApiService {
 
 function Show-Status {
     Write-ColorOutput "`n=== Knowledge Map Services Status ===" $InfoColor
-    
+
     $services = @(
         @{Name="Neo4j"; Port=7687; URL="http://localhost:7474"},
         @{Name="Redis"; Port=6379; URL=""},
         @{Name="MinIO S3"; Port=9000; URL="http://localhost:9001"},
         @{Name="Auth gRPC"; Port=50052; URL=""},
+        @{Name="AI Model gRPC"; Port=50054; URL=""},
         @{Name="PDF to MD gRPC"; Port=50053; URL=""},
         @{Name="PDF to MD HTTP API"; Port=8002; URL="http://localhost:8002"},
         @{Name="API"; Port=8000; URL="http://localhost:8000"}
@@ -458,9 +540,9 @@ function Show-Status {
 
 function Stop-AllServices {
     Write-ColorOutput "Stopping all services..." $InfoColor
-    
+
     # Stop processes by ports
-    $ports = @(8000, 8002, 50053, 50052)
+    $ports = @(8000, 8002, 50053, 50052, 50054)
     
     foreach ($port in $ports) {
         try {
@@ -525,6 +607,7 @@ function Show-Logs {
         Write-ColorOutput "  - redis (Docker)" $InfoColor
         Write-ColorOutput "  - s3 (Docker)" $InfoColor
         Write-ColorOutput "  - auth (Host)" $InfoColor
+        Write-ColorOutput "  - ai (Host)" $InfoColor
         Write-ColorOutput "  - pdf_to_md (Host)" $InfoColor
         Write-ColorOutput "  - api (Host)" $InfoColor
         Write-ColorOutput "`nUsage: .\start_local_dev.ps1 -Logs -Service <service_name>" $WarningColor
@@ -551,11 +634,11 @@ function Show-Logs {
         "auth" {
             Write-ColorOutput "Showing Auth service logs (Host)..." $InfoColor
             Write-ColorOutput "Press Ctrl+C to stop monitoring" $WarningColor
-            
+
             $authDir = Join-Path $ScriptRoot "auth"
             $logFile = Join-Path $authDir "logs\auth.log"
             $errorFile = Join-Path $authDir "logs\auth_error.log"
-            
+
             if (Test-Path $logFile) {
                 Write-ColorOutput "Monitoring log file: $logFile" $InfoColor
                 if (Test-Path $errorFile) {
@@ -565,6 +648,25 @@ function Show-Logs {
             } else {
                 Write-ColorOutput "Log file not found: $logFile" $ErrorColor
                 Write-ColorOutput "Auth service may not be running or logging is not configured." $WarningColor
+            }
+        }
+        "ai" {
+            Write-ColorOutput "Showing AI Model service logs (Host)..." $InfoColor
+            Write-ColorOutput "Press Ctrl+C to stop monitoring" $WarningColor
+
+            $aiDir = Join-Path $ScriptRoot "ai"
+            $logFile = Join-Path $aiDir "logs\ai_model.log"
+            $errorFile = Join-Path $aiDir "logs\ai_model_error.log"
+
+            if (Test-Path $logFile) {
+                Write-ColorOutput "Monitoring log file: $logFile" $InfoColor
+                if (Test-Path $errorFile) {
+                    Write-ColorOutput "Also monitoring error file: $errorFile" $InfoColor
+                }
+                Get-Content $logFile -Wait -Tail 50
+            } else {
+                Write-ColorOutput "Log file not found: $logFile" $ErrorColor
+                Write-ColorOutput "AI Model service may not be running or logging is not configured." $WarningColor
             }
         }
         "pdf_to_md" {
@@ -607,7 +709,7 @@ function Show-Logs {
         }
         default {
             Write-ColorOutput "Unknown service: $ServiceName" $ErrorColor
-            Write-ColorOutput "Available services: neo4j, redis, s3, auth, pdf_to_md, api" $InfoColor
+            Write-ColorOutput "Available services: neo4j, redis, s3, auth, ai, pdf_to_md, api" $InfoColor
         }
     }
 }
@@ -693,13 +795,19 @@ if ($HostOnly) {
         Write-ColorOutput "Auth service failed to start - continuing with other services" $WarningColor
     }
 
-    Write-ColorOutput "`n2. Starting PDF to MD service..." $InfoColor
+    Write-ColorOutput "`n2. Starting AI Model service..." $InfoColor
+    $aiResult = Start-AIService
+    if (-not $aiResult) {
+        Write-ColorOutput "AI Model service failed to start - continuing with other services" $WarningColor
+    }
+
+    Write-ColorOutput "`n3. Starting PDF to MD service..." $InfoColor
     $pdfToMdResult = Start-PdfToMdService
     if (-not $pdfToMdResult) {
         Write-ColorOutput "PDF to MD service failed to start - continuing with other services" $WarningColor
     }
 
-    Write-ColorOutput "`n3. Starting API service..." $InfoColor
+    Write-ColorOutput "`n4. Starting API service..." $InfoColor
     $apiResult = Start-ApiService
     if (-not $apiResult) {
         Write-ColorOutput "API service failed to start - continuing with other services" $WarningColor
@@ -771,13 +879,19 @@ if (-not $authResult) {
     Write-ColorOutput "Auth service failed to start - continuing with other services" $WarningColor
 }
 
-Write-ColorOutput "`n3. Starting PDF to MD service..." $InfoColor
+Write-ColorOutput "`n3. Starting AI Model service..." $InfoColor
+$aiResult = Start-AIService
+if (-not $aiResult) {
+    Write-ColorOutput "AI Model service failed to start - continuing with other services" $WarningColor
+}
+
+Write-ColorOutput "`n4. Starting PDF to MD service..." $InfoColor
 $pdfToMdResult = Start-PdfToMdService
 if (-not $pdfToMdResult) {
     Write-ColorOutput "PDF to MD service failed to start - continuing with other services" $WarningColor
 }
 
-Write-ColorOutput "`n4. Starting API service..." $InfoColor
+Write-ColorOutput "`n5. Starting API service..." $InfoColor
 $apiResult = Start-ApiService
 if (-not $apiResult) {
     Write-ColorOutput "API service failed to start - continuing with other services" $WarningColor
