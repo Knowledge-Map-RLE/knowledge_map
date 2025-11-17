@@ -1,4 +1,10 @@
-data/
+# Data directory - content managed by DVC
+/data/datasets/
+/data/*.dvc.tmp
+# But keep .dvc files and .gitkeep
+!/data/.gitkeep
+!/data/datasets.dvc
+
 personal_folder/
 logs/
 node_modules/
@@ -17,3 +23,8 @@ worker_distributed_layering_rust/tests/artifacts/
 
 target/
 nul
+
+# DVC
+/.dvc/cache
+/.dvc/tmp
+/.dvc/plots

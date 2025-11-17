@@ -55,7 +55,8 @@
       "Bash(poetry run uvicorn:*)",
       "Bash(start /B poetry run uvicorn:*)",
       "Bash(api_server.log)",
-      "Bash(patterns_output.txt)"
+      "Bash(patterns_output.txt)",
+      "Bash(poetry run pytest:*)"
     ],
     "deny": [],
     "ask": []

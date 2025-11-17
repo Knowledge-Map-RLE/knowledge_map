@@ -1,3 +1,4 @@
 {
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "dvc.dvcPath": "c:\\Program Files (x86)\\DVC (Data Version Control)\\dvc.exe"
 }
