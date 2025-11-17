@@ -1,0 +1,167 @@
+.container {
+    margin-top: 16px;
+    padding: 14px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+    color: #374151;
+}
+
+.refreshButton {
+    padding: 4px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #374151;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refreshButton:hover:not(:disabled) {
+    background: #f9fafb;
+}
+
+.refreshButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.error {
+    padding: 10px;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    color: #991b1b;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.empty {
+    padding: 20px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.chainsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.chainCard {
+    padding: 12px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.chainHeader {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 11px;
+}
+
+.chainLength {
+    padding: 2px 8px;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.chainConfidence {
+    padding: 2px 8px;
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.chainFlow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.verbNodeWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.entityLabel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 3px 8px;
+    background: #f0f9ff;
+    border-radius: 4px;
+    font-size: 10px;
+    max-width: 120px;
+}
+
+.entityRole {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.entityText {
+    color: #475569;
+    font-weight: 400;
+    text-align: center;
+    word-break: break-word;
+}
+
+.verbNode {
+    padding: 8px 14px;
+    background: white;
+    border: 2px solid #3b82f6;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e40af;
+    min-width: 80px;
+    text-align: center;
+}
+
+.relationArrow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.relationLabel {
+    white-space: nowrap;
+}
+
+.arrowIcon {
+    font-size: 14px;
+}

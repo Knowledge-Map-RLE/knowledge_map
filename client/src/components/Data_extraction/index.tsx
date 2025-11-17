@@ -7,6 +7,7 @@ import Project_title from '../Project_title';
 import Search from '../Search';
 import User from '../User';
 import DocumentContextMenu from './DocumentContextMenu';
+import { PatternGenerator } from './Patterns';
 
 interface PDFDocument {
     uid: string;
@@ -479,6 +480,11 @@ export default function Data_extraction() {
                         </div>
                     )}
                 </div>
+            </div>
+
+            {/* Блок паттернов */}
+            <div className={s.patternsRow}>
+                <PatternGenerator />
             </div>
         </main>
     );

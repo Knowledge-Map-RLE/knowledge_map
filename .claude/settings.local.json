@@ -54,7 +54,8 @@
       "Bash(cmd /c \"taskkill /F /PID 63844\")",
       "Bash(poetry run uvicorn:*)",
       "Bash(start /B poetry run uvicorn:*)",
-      "Bash(api_server.log)"
+      "Bash(api_server.log)",
+      "Bash(patterns_output.txt)"
     ],
     "deny": [],
     "ask": []

@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter
 
 # Импортируем все суб-роутеры
-from . import documents, annotations, relations, nlp, csv_export
+from . import documents, annotations, relations, nlp, csv_export, patterns, action_chains
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +19,8 @@ router.include_router(annotations.router, prefix="")
 router.include_router(relations.router, prefix="")
 router.include_router(nlp.router, prefix="")
 router.include_router(csv_export.router, prefix="")
+router.include_router(patterns.router, prefix="")
+router.include_router(action_chains.router, prefix="")
 
 logger.info("[data_extraction_router] Все суб-роутеры подключены")
 

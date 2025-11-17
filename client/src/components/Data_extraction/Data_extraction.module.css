@@ -40,6 +40,14 @@
     min-height: 0;
 }
 
+.patternsRow {
+    display: flex;
+    padding: 16px 20px;
+    background: #f9fafb;
+    border-top: 1px solid #d1d5db;
+    min-height: 200px;
+}
+
 .leftColumn {
     @apply flex flex-col p-4 bg-white border-r border-gray-300;
     width: 300px;
