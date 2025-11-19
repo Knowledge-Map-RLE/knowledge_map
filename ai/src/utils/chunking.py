@@ -1,8 +1,9 @@
 """Text chunking utilities for handling large prompts."""
 
+import logging
 from typing import List
 
-from loguru import logger
+logger = logging.getLogger(__name__)
 
 
 class TextChunker:

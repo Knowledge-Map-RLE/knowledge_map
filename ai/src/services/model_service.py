@@ -1,8 +1,9 @@
 """Service for managing and executing AI models."""
 
+import logging
 from typing import Dict, Optional
 
-from loguru import logger
+logger = logging.getLogger(__name__)
 
 from src.config import settings
 from src.services.model_registry import registry

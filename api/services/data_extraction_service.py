@@ -172,12 +172,16 @@ class DataExtractionService:
                         )
                         logger.info(f"[pdf_to_md] Загружено изображение: {img.name}")
                 
+                # Извлекаем S3 ключи для markdown версий
+                docling_raw_s3_key = result.get("docling_raw_s3_key")
+                formatted_s3_key = result.get("formatted_s3_key")
+
                 # Сохраняем документ в Neo4j для поддержки аннотаций
                 try:
                     # Проверяем, существует ли документ
                     existing_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
                     if not existing_doc:
-                        # Создаем новый документ с заголовком из markdown
+                        # Создаем новый документ с заголовком из markdown и S3 ключами
                         pdf_doc = PDFDocument(
                             uid=doc_id,
                             original_filename=filename or f"{doc_id}.pdf",
@@ -185,17 +189,35 @@ class DataExtractionService:
                             s3_key=pdf_key,
                             processing_status='annotated',
                             is_processed=True,
-                            title=extracted_title  # Сохраняем извлечённый заголовок
+                            title=extracted_title,  # Сохраняем извлечённый заголовок
+                            docling_raw_md_s3_key=docling_raw_s3_key,
+                            formatted_md_s3_key=formatted_s3_key
                         ).save()
-                        logger.info(f"[Neo4j] Создан документ {doc_id} с заголовком: {extracted_title}")
+                        logger.info(f"[Neo4j] Создан документ {doc_id} с заголовком: {extracted_title}, "
+                                   f"raw_key: {docling_raw_s3_key}, formatted_key: {formatted_s3_key}")
                     else:
-                        # Обновляем существующий документ, если заголовок был извлечён
+                        # Обновляем существующий документ
+                        update_needed = False
                         if extracted_title and not existing_doc.title:
                             existing_doc.title = extracted_title
-                            existing_doc.save()
+                            update_needed = True
                             logger.info(f"[Neo4j] Обновлён заголовок документа {doc_id}: {extracted_title}")
+
+                        # Обновляем S3 ключи если они были получены
+                        if docling_raw_s3_key:
+                            existing_doc.docling_raw_md_s3_key = docling_raw_s3_key
+                            update_needed = True
+                            logger.info(f"[Neo4j] Обновлён raw markdown key: {docling_raw_s3_key}")
+
+                        if formatted_s3_key:
+                            existing_doc.formatted_md_s3_key = formatted_s3_key
+                            update_needed = True
+                            logger.info(f"[Neo4j] Обновлён formatted markdown key: {formatted_s3_key}")
+
+                        if update_needed:
+                            existing_doc.save()
                         else:
-                            logger.info(f"[Neo4j] Документ {doc_id} уже существует в Neo4j")
+                            logger.info(f"[Neo4j] Документ {doc_id} уже существует, обновления не требуются")
                 except Exception as neo_err:
                     logger.error(f"[Neo4j] Ошибка сохранения документа {doc_id}: {neo_err}")
                     # Не прерываем выполнение, т.к. файлы уже загружены в S3
@@ -323,6 +345,100 @@ class DataExtractionService:
                     result["pdf_url"] = url
         return result
 
+    async def get_markdown(self, doc_id: str, version: str = "active") -> Dict[str, Any]:
+        """
+        Получает markdown документа из S3.
+
+        Args:
+            doc_id: ID документа
+            version: Версия markdown файла:
+                - "active": возвращает user версию если есть, иначе formatted, иначе raw
+                - "raw": возвращает raw Docling markdown
+                - "formatted": возвращает AI-форматированный markdown
+                - "user": возвращает пользовательскую версию
+
+        Returns:
+            Dict с markdown контентом и метаданными
+
+        Raises:
+            HTTPException: Если markdown не найден
+        """
+        bucket = settings.S3_BUCKET_NAME
+        prefix = f"documents/{doc_id}/"
+
+        # Получаем документ из Neo4j для определения активной версии
+        try:
+            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+        except Exception as e:
+            logger.error(f"Ошибка получения документа из Neo4j: {e}")
+            document = None
+
+        # Определяем S3 ключ в зависимости от версии
+        if version == "active":
+            # Используем логику из PDFDocument.get_active_markdown_key()
+            if document:
+                if document.user_md_s3_key:
+                    md_key = document.user_md_s3_key
+                elif document.formatted_md_s3_key:
+                    md_key = document.formatted_md_s3_key
+                elif document.docling_raw_md_s3_key:
+                    md_key = document.docling_raw_md_s3_key
+                else:
+                    # Fallback к старому формату
+                    md_key = f"{prefix}{doc_id}.md"
+            else:
+                # Нет записи в Neo4j - используем старый формат
+                md_key = f"{prefix}{doc_id}.md"
+        elif version == "raw":
+            if document and document.docling_raw_md_s3_key:
+                md_key = document.docling_raw_md_s3_key
+            else:
+                # Fallback к ожидаемому имени файла
+                md_key = f"markdown/{doc_id}_docling_raw.md"
+        elif version == "formatted":
+            if document and document.formatted_md_s3_key:
+                md_key = document.formatted_md_s3_key
+            else:
+                # Fallback к ожидаемому имени файла
+                md_key = f"markdown/{doc_id}_formatted.md"
+        elif version == "user":
+            if document and document.user_md_s3_key:
+                md_key = document.user_md_s3_key
+            else:
+                # User версия еще не создана
+                raise HTTPException(
+                    status_code=404,
+                    detail="Пользовательская версия markdown еще не создана"
+                )
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Неверная версия: {version}. Допустимые значения: active, raw, formatted, user"
+            )
+
+        # Проверяем существование файла
+        if not await self.s3_client.object_exists(bucket, md_key):
+            raise HTTPException(
+                status_code=404,
+                detail=f"Markdown не найден для версии '{version}'"
+            )
+
+        # Загружаем markdown
+        markdown_text = await self.s3_client.download_text(bucket, md_key)
+        if markdown_text is None:
+            raise HTTPException(
+                status_code=500,
+                detail="Не удалось загрузить markdown из S3"
+            )
+
+        return {
+            "success": True,
+            "doc_id": doc_id,
+            "version": version,
+            "s3_key": md_key,
+            "markdown": markdown_text
+        }
+
     async def delete_document(self, doc_id: str) -> Dict[str, Any]:
         """Удаляет документ и все его файлы из S3 (префикс documents/{doc_id}/), а также все аннотации из Neo4j."""
         # Сначала удаляем аннотации из Neo4j
@@ -396,9 +512,15 @@ class DataExtractionService:
         return {"success": True, "deleted": deleted}
 
     async def update_markdown(self, doc_id: str, markdown: str) -> Dict[str, Any]:
-        """Обновляет markdown документа в S3."""
+        """
+        Обновляет markdown документа в S3 как пользовательскую версию.
+
+        При первом сохранении создает {doc_id}.md файл в папке markdown/.
+        При последующих сохранениях обновляет этот файл.
+        Также обновляет user_md_s3_key в Neo4j PDFDocument.
+        """
         bucket = settings.S3_BUCKET_NAME
-        md_key = f"documents/{doc_id}/{doc_id}.md"
+        md_key = f"markdown/{doc_id}.md"
 
         # Сохраняем markdown в S3
         ok = await self.s3_client.upload_bytes(
@@ -411,13 +533,26 @@ class DataExtractionService:
         if not ok:
             raise HTTPException(status_code=500, detail="Не удалось сохранить markdown в S3")
 
-        logger.info(f"[data_extraction] Markdown обновлен: s3://{bucket}/{md_key}")
+        logger.info(f"[data_extraction] Пользовательский markdown сохранен: s3://{bucket}/{md_key}")
+
+        # Обновляем Neo4j PDFDocument с user_md_s3_key
+        try:
+            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            if document:
+                document.user_md_s3_key = md_key
+                document.save()
+                logger.info(f"[Neo4j] Обновлен user_md_s3_key для документа {doc_id}: {md_key}")
+            else:
+                logger.warning(f"[Neo4j] Документ {doc_id} не найден в Neo4j, не удалось обновить user_md_s3_key")
+        except Exception as e:
+            logger.error(f"[Neo4j] Ошибка обновления user_md_s3_key для {doc_id}: {e}")
+            # Не прерываем выполнение, т.к. файл уже сохранен в S3
 
         return {
             "success": True,
             "doc_id": doc_id,
             "s3_key": md_key,
-            "message": "Markdown успешно сохранен"
+            "message": "Пользовательский markdown успешно сохранен"
         }
 
     async def list_documents(self) -> Dict[str, Any]:

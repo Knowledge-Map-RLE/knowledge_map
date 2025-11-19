@@ -261,28 +261,60 @@ class ConversionService:
                         document_id=doc_id,
                         on_progress=coord_progress
                     )
-                    
+
+                    logger.info(f"[DEBUG] Coordinate extraction result: success={coord_result.get('success')}, keys={list(coord_result.keys())}")
+
                     if coord_result['success']:
                         logger.info(f"Coordinate extraction successful: {coord_result['images_extracted']} images")
-                        markdown_content = coord_result['markdown_content']
+                        docling_raw_markdown = coord_result['markdown_content']
                         s3_images = coord_result['extracted_images']
                         extraction_method = "coordinate_based_s3"
-                        
-                        # Keep images empty for S3-based extraction (images are in S3, not embedded)
-                        # Legacy images dict stays empty for gRPC compatibility
-                        
-                        # Create result with S3 data
+
+                        # Progress: Save raw Docling markdown to S3
+                        if on_progress:
+                            on_progress({
+                                "percent": 40,
+                                "phase": "save_raw_markdown",
+                                "message": "Сохранение raw Docling markdown в S3"
+                            })
+
+                        # Save raw Docling markdown to S3
+                        from .s3_service import s3_service
+                        raw_md_filename = f"{doc_id}_docling_raw.md"
+                        raw_md_upload = await s3_service.upload_markdown(
+                            markdown_content=docling_raw_markdown,
+                            filename=raw_md_filename,
+                            folder=f"documents/{doc_id}"
+                        )
+
+                        if not raw_md_upload['success']:
+                            raise Exception(f"Failed to save raw markdown to S3: {raw_md_upload.get('error')}")
+
+                        docling_raw_s3_key = raw_md_upload['object_key']
+                        logger.info(f"Saved raw Docling markdown to S3: {docling_raw_s3_key}")
+
+                        # Progress: Conversion complete
+                        if on_progress:
+                            on_progress({
+                                "percent": 90,
+                                "phase": "complete",
+                                "message": "Конвертация завершена"
+                            })
+
+                        # Create result with S3 data (using Docling raw markdown directly, no AI formatting)
                         result = ConversionResult(
                             success=True,
                             doc_id=doc_id,
-                            markdown_content=markdown_content,  # Правильное поле для markdown
+                            markdown_content=docling_raw_markdown,  # Return raw Docling markdown
                             images=images,
                             metadata=metadata
                         )
                         # Add S3 specific data
                         result.s3_images = s3_images
                         result.extraction_method = extraction_method
-                        
+                        result.docling_raw_s3_key = docling_raw_s3_key
+                        result.formatted_s3_key = None  # No AI formatting
+
                         return result
                     
                     else:

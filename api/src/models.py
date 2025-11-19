@@ -199,6 +199,14 @@ class PDFDocument(StructuredNode):
     doi = StringProperty()
     """DOI документа"""
     
+    # Markdown файлы
+    docling_raw_md_s3_key = StringProperty()
+    """S3 ключ к сырому Markdown от Docling (immutable)"""
+    formatted_md_s3_key = StringProperty()
+    """S3 ключ к AI-форматированному Markdown (immutable, initial version)"""
+    user_md_s3_key = StringProperty()
+    """S3 ключ к пользовательской версии Markdown (создается при первом save)"""
+
     # Статус обработки
     is_processed = BooleanProperty(default=False)
     """Обработан ли документ"""
@@ -218,7 +226,26 @@ class PDFDocument(StructuredNode):
     def get_s3_url(self) -> str:
         """Получить S3 URL для файла"""
         return f"s3://{self.s3_bucket}/{self.s3_key}"
-    
+
+    def get_active_markdown_key(self) -> str:
+        """
+        Получить ключ активной версии Markdown
+
+        Логика выбора:
+        1. Если пользователь сохранил свою версию - использовать user_md_s3_key
+        2. Иначе - использовать formatted_md_s3_key (AI-форматированная версия)
+        3. Если formatted_md_s3_key нет - использовать docling_raw_md_s3_key (fallback)
+
+        Returns:
+            str: S3 ключ активной версии Markdown
+        """
+        if self.user_md_s3_key:
+            return self.user_md_s3_key
+        elif self.formatted_md_s3_key:
+            return self.formatted_md_s3_key
+        else:
+            return self.docling_raw_md_s3_key
+
     def get_annotations_by_type(self, annotation_type: str) -> list:
         """Получить аннотации определенного типа"""
         return [ann for ann in self.annotations.all() if ann.annotation_type == annotation_type]

@@ -1,8 +1,9 @@
 """Model registry for managing available AI models."""
 
+import logging
 from typing import Dict, List, Optional
 
-from loguru import logger
+logger = logging.getLogger(__name__)
 
 
 class ModelConfig:
@@ -56,7 +57,24 @@ class ModelRegistry:
                 name="Llama 3.2 1B Instruct",
                 description="Meta's Llama 3.2 1B instruction-tuned model for text generation",
                 max_context_length=128000,
-                model_class="llama_model.LlamaModel",
+                model_class="instruct_model.InstructModel",
+                default_params={
+                    "max_tokens": 2048,
+                    "temperature": 0.7,
+                    "top_p": 0.9,
+                    "top_k": 50,
+                },
+            )
+        )
+
+        # Qwen 2.5 0.5B Instruct
+        self.register_model(
+            ModelConfig(
+                model_id="Qwen/Qwen2.5-0.5B-Instruct",
+                name="Qwen 2.5 0.5B Instruct",
+                description="Alibaba's Qwen 2.5 0.5B instruction-tuned model - fast and lightweight",
+                max_context_length=32000,  # Qwen 2.5 supports 32k context
+                model_class="instruct_model.InstructModel",
                 default_params={
                     "max_tokens": 2048,
                     "temperature": 0.7,
@@ -74,7 +92,7 @@ class ModelRegistry:
         #         name="Llama 3.2 3B Instruct",
         #         description="Larger variant of Llama 3.2",
         #         max_context_length=128000,
-        #         model_class="llama_model.LlamaModel",
+        #         model_class="instruct_model.InstructModel",
         #     )
         # )
 

@@ -1,4 +1,12 @@
-"""Llama model implementation using Hugging Face transformers."""
+"""Generic instruction-tuned model implementation using Hugging Face transformers.
+
+This module provides a universal wrapper for instruction-tuned causal language models
+from Hugging Face, including but not limited to:
+- Llama models (meta-llama/Llama-*)
+- Qwen models (Qwen/Qwen*)
+- Mistral models
+- Any other AutoModelForCausalLM compatible model
+"""
 
 import logging
 import torch
@@ -9,15 +17,19 @@ logger = logging.getLogger(__name__)
 from src.config import settings
 
 
-class LlamaModel:
-    """Llama model implementation for text generation."""
+class InstructModel:
+    """Universal instruction-tuned model implementation for text generation.
+
+    This class provides a generic wrapper around HuggingFace's transformers library
+    that can load and run any instruction-tuned causal language model.
+    """
 
     def __init__(self, model_id: str, device: str = "auto"):
         """
-        Initialize the Llama model.
+        Initialize the instruction-tuned model.
 
         Args:
-            model_id: Hugging Face model identifier
+            model_id: Hugging Face model identifier (e.g., "Qwen/Qwen2.5-0.5B-Instruct")
             device: Device to run the model on (auto, cpu, cuda)
         """
         self.model_id = model_id
@@ -84,13 +96,17 @@ class LlamaModel:
                 "trust_remote_code": True,
                 "torch_dtype": torch.float16 if self.device == "cuda" else torch.float32,
                 "token": token,
+                "low_cpu_mem_usage": True,  # Always use low CPU mem mode
             }
 
             if self.device == "cuda":
-                # Use device_map for automatic GPU placement
+                # Use device_map for automatic GPU placement with memory limits
                 load_kwargs["device_map"] = "auto"
+                # Set max memory per device (7GB for GPU, rest for CPU)
+                load_kwargs["max_memory"] = {0: "7GiB", "cpu": "8GiB"}
             else:
-                load_kwargs["low_cpu_mem_usage"] = True
+                # CPU-only mode
+                load_kwargs["max_memory"] = {"cpu": "8GiB"}
 
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_id,
@@ -133,21 +149,26 @@ class LlamaModel:
             Dictionary with generated text and metadata
         """
         try:
-            # Tokenize input
+            # Tokenize input with max_length limit to prevent OOM
             inputs = self.tokenizer(
                 prompt,
                 return_tensors="pt",
                 padding=True,
                 truncation=True,
+                max_length=18000,  # Hard limit on input tokens
             )
 
             # Move inputs to device
             inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
 
             input_length = inputs["input_ids"].shape[1]
-            logger.debug(f"Input tokens: {input_length}")
+            logger.info(f"Input tokens: {input_length}")
 
-            # Generate
+            # Warn if input is very large
+            if input_length > 16000:
+                logger.warning(f"Large input ({input_length} tokens) may cause memory issues")
+
+            # Generate with memory-efficient settings
             with torch.no_grad():
                 outputs = self.model.generate(
                     **inputs,
@@ -159,6 +180,8 @@ class LlamaModel:
                     do_sample=True,
                     pad_token_id=self.tokenizer.pad_token_id,
                     eos_token_id=self.tokenizer.eos_token_id,
+                    use_cache=True,  # Use KV cache for efficiency
+                    num_beams=1,  # Disable beam search to save memory
                 )
 
             # Decode output
@@ -169,7 +192,11 @@ class LlamaModel:
             )
 
             output_length = len(generated_tokens)
-            logger.debug(f"Generated tokens: {output_length}")
+            logger.info(f"Generated tokens: {output_length}")
+
+            # Clear GPU cache after generation
+            if self.device == "cuda" and torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
             return {
                 "generated_text": generated_text,
@@ -179,6 +206,9 @@ class LlamaModel:
 
         except Exception as e:
             logger.error(f"Error during generation: {e}", exc_info=True)
+            # Clear cache on error too
+            if self.device == "cuda" and torch.cuda.is_available():
+                torch.cuda.empty_cache()
             raise
 
     def get_max_length(self) -> int:

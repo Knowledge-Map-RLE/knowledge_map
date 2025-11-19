@@ -1,11 +1,13 @@
 """gRPC server for AI Model Service."""
 
 import sys
+import logging
 from concurrent import futures
 from datetime import datetime
 
 import grpc
-from loguru import logger
+
+logger = logging.getLogger(__name__)
 
 # Add src to path for imports
 sys.path.insert(0, str(__file__).rsplit("\\", 2)[0])
@@ -207,11 +209,10 @@ class AIModelServicer(ai_model_pb2_grpc.AIModelServiceServicer):
 def serve():
     """Start the gRPC server."""
     # Setup logging
-    logger.remove()  # Remove default handler
-    logger.add(
-        sys.stderr,
-        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
-        level=settings.log_level,
+    logging.basicConfig(
+        level=getattr(logging, settings.log_level.upper(), logging.INFO),
+        format='%(asctime)s | %(levelname)-8s | %(name)s:%(funcName)s:%(lineno)d - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
     )
 
     logger.info("Starting AI Model Service")

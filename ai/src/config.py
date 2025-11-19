@@ -23,13 +23,18 @@ class Settings(BaseSettings):
         description="Directory to cache downloaded models",
     )
     default_model: str = Field(
-        default="meta-llama/Llama-3.2-1B-Instruct",
+        default="Qwen/Qwen2.5-0.5B-Instruct",
         env="DEFAULT_MODEL",
     )
     device: Literal["auto", "cpu", "cuda"] = Field(
         default="auto",
         env="MODEL_DEVICE",
         description="Device to run models on: auto (GPU if available), cpu, or cuda",
+    )
+    hugging_face_token: str | None = Field(
+        default=None,
+        env="HUGGING_FACE_TOKEN",
+        description="Hugging Face API token for accessing gated models",
     )
 
     # Generation defaults
@@ -41,9 +46,9 @@ class Settings(BaseSettings):
 
     # Chunking settings
     max_context_length: int = Field(
-        default=100000,
+        default=18000,
         env="MAX_CONTEXT_LENGTH",
-        description="Maximum context length before chunking",
+        description="Maximum context length before chunking (18k for Qwen 0.5B - smaller chunks to avoid OOM)",
     )
     chunk_overlap: int = Field(
         default=200,

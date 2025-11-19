@@ -1,10 +1,12 @@
 """gRPC client for AI Model Service."""
 
 import os
+import logging
 from typing import Optional
 
 import grpc
-from loguru import logger
+
+logger = logging.getLogger(__name__)
 
 # Import generated proto files
 try:

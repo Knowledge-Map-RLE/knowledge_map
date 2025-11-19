@@ -45,6 +45,8 @@ message ConvertPDFResponse {
     repeated ImageInfo image_info = 7;  // Новое поле с информацией об изображениях
     optional string metadata_json = 5;
     string message = 6;
+    optional string docling_raw_s3_key = 8;  // S3 ключ для raw Docling markdown
+    optional string formatted_s3_key = 9;  // S3 ключ для AI-форматированного markdown
 }
 
 // Обновление прогресса

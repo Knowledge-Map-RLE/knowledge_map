@@ -54,6 +54,30 @@ async def update_document_markdown(doc_id: str, request: UpdateMarkdownRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/documents/{doc_id}/markdown")
+async def get_document_markdown(doc_id: str, version: str = "active"):
+    """
+    Получает markdown документа из S3.
+
+    Args:
+        doc_id: ID документа
+        version: Версия markdown файла
+            - "active" (default): возвращает user версию если есть, иначе formatted, иначе raw
+            - "raw": возвращает raw Docling markdown
+            - "formatted": возвращает AI-форматированный markdown
+            - "user": возвращает пользовательскую версию
+    """
+    try:
+        result = await data_extraction_service.get_markdown(doc_id, version=version)
+        return Response(
+            content=result["markdown"].encode('utf-8'),
+            media_type="text/markdown; charset=utf-8"
+        )
+    except Exception as e:
+        logger.error(f"Ошибка получения markdown: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/documents/{doc_id}/images/{image_name}")
 async def get_document_image(doc_id: str, image_name: str):
     """Получает изображение документа из S3."""

@@ -202,6 +202,19 @@ function Start-AIService {
     $env:MODEL_DEVICE = "auto"
     $env:LOG_LEVEL = "INFO"
 
+    # Load Hugging Face token from .env file
+    $envFile = Join-Path $ScriptRoot ".env"
+    if (Test-Path $envFile) {
+        $envContent = Get-Content $envFile
+        foreach ($line in $envContent) {
+            if ($line -match "^HUGGING_FACE_TOKEN=(.+)$") {
+                $env:HUGGING_FACE_TOKEN = $matches[1]
+                Write-ColorOutput "Loaded Hugging Face token from .env" $InfoColor
+                break
+            }
+        }
+    }
+
     # Create logs directory
     $logsDir = Join-Path $aiDir "logs"
     if (-not (Test-Path $logsDir)) {
@@ -272,7 +285,6 @@ function Start-PdfToMdService {
     # Start service
     Write-ColorOutput "Starting pdf_to_md service..." $InfoColor
     $env:PYTHONUNBUFFERED = "1"
-    $env:MARKER_TIMEOUT_SEC = "1800"
     $env:OMP_NUM_THREADS = "2"
     $env:MKL_NUM_THREADS = "2"
     $env:OPENBLAS_NUM_THREADS = "2"
@@ -449,7 +461,6 @@ function Start-ApiService {
     $env:S3_ACCESS_KEY = "minio"
     $env:S3_SECRET_KEY = "minio123456"
     $env:S3_REGION = "us-east-1"
-    $env:MARKER_TIMEOUT_SEC = "1800"
     $env:DEBUG = "true"
     $env:OMP_NUM_THREADS = "2"
     $env:MKL_NUM_THREADS = "2"
@@ -485,7 +496,6 @@ function Start-ApiService {
     $env:S3_ACCESS_KEY = "minio"
     $env:S3_SECRET_KEY = "minio123456"
     $env:S3_REGION = "us-east-1"
-    $env:MARKER_TIMEOUT_SEC = "1800"
     $env:DEBUG = "true"
     $env:OMP_NUM_THREADS = "2"
     $env:MKL_NUM_THREADS = "2"
@@ -538,12 +548,65 @@ function Show-Status {
     Write-ColorOutput "`nClient runs separately with: bun dev" $WarningColor
 }
 
+function Stop-ServiceByPort {
+    param(
+        [int]$Port,
+        [string]$ServiceName
+    )
+
+    try {
+        $connections = Get-NetTCPConnection -LocalPort $Port -ErrorAction SilentlyContinue
+        foreach ($connection in $connections) {
+            $processId = $connection.OwningProcess
+            if ($processId -and $processId -gt 0) {
+                try {
+                    $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
+                    if ($process) {
+                        Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
+                        Write-ColorOutput "Stopped $ServiceName on port $Port (PID: $processId)" $InfoColor
+                        return $true
+                    }
+                }
+                catch {
+                    # Process might have already exited
+                }
+            }
+        }
+    }
+    catch {
+        # Ignore errors
+    }
+    return $false
+}
+
+function Stop-AuthService {
+    Write-ColorOutput "Stopping Auth service..." $InfoColor
+    Stop-ServiceByPort -Port 50052 -ServiceName "Auth gRPC"
+}
+
+function Stop-AIService {
+    Write-ColorOutput "Stopping AI Model service..." $InfoColor
+    Stop-ServiceByPort -Port 50054 -ServiceName "AI Model gRPC"
+}
+
+function Stop-PdfToMdService {
+    Write-ColorOutput "Stopping PDF to MD service..." $InfoColor
+    $grpcStopped = Stop-ServiceByPort -Port 50053 -ServiceName "PDF to MD gRPC"
+    $httpStopped = Stop-ServiceByPort -Port 8002 -ServiceName "PDF to MD HTTP"
+    return ($grpcStopped -or $httpStopped)
+}
+
+function Stop-ApiService {
+    Write-ColorOutput "Stopping API service..." $InfoColor
+    Stop-ServiceByPort -Port 8000 -ServiceName "API"
+}
+
 function Stop-AllServices {
     Write-ColorOutput "Stopping all services..." $InfoColor
 
     # Stop processes by ports
     $ports = @(8000, 8002, 50053, 50052, 50054)
-    
+
     foreach ($port in $ports) {
         try {
             $connections = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -567,7 +630,7 @@ function Stop-AllServices {
             # Ignore errors
         }
     }
-    
+
     # Also try to stop processes by name patterns
     $processNames = @("python", "uvicorn", "poetry")
     foreach ($processName in $processNames) {
@@ -591,9 +654,254 @@ function Stop-AllServices {
             # Ignore errors
         }
     }
-    
+
     Stop-DockerServices
     Write-ColorOutput "All services stopped" $SuccessColor
+}
+
+function Start-AuthServiceInteractive {
+    Write-ColorOutput "Starting Auth service in interactive mode..." $InfoColor
+    $authDir = Join-Path $ScriptRoot "auth"
+
+    # Install dependencies
+    Write-ColorOutput "Installing dependencies for auth..." $InfoColor
+    Push-Location $authDir
+    poetry install --no-root 2>&1 | Out-Null
+    Pop-Location
+
+    # Generate proto files
+    Write-ColorOutput "Generating proto files for auth..." $InfoColor
+    Push-Location $authDir
+    poetry run python -m grpc_tools.protoc -I proto --python_out=src --grpc_python_out=src proto/auth.proto
+    Pop-Location
+
+    # Set environment variables
+    $env:NEO4J_URI = "bolt://127.0.0.1:7687"
+    $env:NEO4J_ENCRYPTED = "false"
+    $env:REDIS_URL = "redis://127.0.0.1:6379"
+    $env:GRPC_HOST = "0.0.0.0"
+    $env:GRPC_PORT = "50052"
+    $env:SECRET_KEY = "your-secret-key-change-in-production"
+    $env:ALGORITHM = "HS256"
+    $env:ACCESS_TOKEN_EXPIRE_MINUTES = "30"
+    $env:PASSWORD_MIN_LENGTH = "8"
+    $env:RECOVERY_KEYS_COUNT = "10"
+    $env:RECOVERY_KEY_LENGTH = "16"
+    $env:LOGIN_ATTEMPTS_LIMIT = "5"
+    $env:LOGIN_ATTEMPTS_WINDOW = "300"
+
+    Write-ColorOutput "Starting Auth service on port 50052..." $SuccessColor
+    Write-ColorOutput "Press Ctrl+C to stop" $WarningColor
+    Push-Location $authDir
+    poetry run python -m src.main
+    Pop-Location
+}
+
+function Start-AIServiceInteractive {
+    Write-ColorOutput "Starting AI Model service in interactive mode..." $InfoColor
+    $aiDir = Join-Path $ScriptRoot "ai"
+
+    # Install dependencies
+    Write-ColorOutput "Installing dependencies for ai..." $InfoColor
+    Push-Location $aiDir
+    poetry install 2>&1 | Out-Null
+    Pop-Location
+
+    # Generate proto files
+    Write-ColorOutput "Generating proto files for ai..." $InfoColor
+    Push-Location $aiDir
+    poetry run python -m grpc_tools.protoc -I./proto --python_out=./src --grpc_python_out=./src ./proto/ai_model.proto
+    Pop-Location
+
+    # Set environment variables
+    $env:GRPC_HOST = "0.0.0.0"
+    $env:GRPC_PORT = "50054"
+    $env:MODEL_CACHE_DIR = "D:/Data/Data_Knowledge_Map/ai_models"
+    $env:DEFAULT_MODEL = "meta-llama/Llama-3.2-1B-Instruct"
+    $env:MODEL_DEVICE = "auto"
+    $env:LOG_LEVEL = "INFO"
+
+    # Load Hugging Face token from .env file
+    $envFile = Join-Path $ScriptRoot ".env"
+    if (Test-Path $envFile) {
+        $envContent = Get-Content $envFile
+        foreach ($line in $envContent) {
+            if ($line -match "^HUGGING_FACE_TOKEN=(.+)$") {
+                $env:HUGGING_FACE_TOKEN = $matches[1]
+                Write-ColorOutput "Loaded Hugging Face token from .env" $InfoColor
+                break
+            }
+        }
+    }
+
+    Write-ColorOutput "Starting AI Model service on port 50054..." $SuccessColor
+    Write-ColorOutput "Press Ctrl+C to stop" $WarningColor
+    Push-Location $aiDir
+    poetry run python src/grpc_server.py
+    Pop-Location
+}
+
+function Start-PdfToMdServiceInteractive {
+    Write-ColorOutput "Starting PDF to MD service in interactive mode..." $InfoColor
+    $pdfToMdDir = Join-Path $ScriptRoot "pdf_to_md"
+
+    # Install dependencies
+    Write-ColorOutput "Installing dependencies for pdf_to_md..." $InfoColor
+    Push-Location $pdfToMdDir
+    poetry lock 2>&1 | Out-Null
+    poetry install 2>&1 | Out-Null
+    Pop-Location
+
+    # Generate proto files
+    Write-ColorOutput "Generating proto files for pdf_to_md..." $InfoColor
+    Push-Location $pdfToMdDir
+    poetry run python -m grpc_tools.protoc --proto_path=proto --python_out=src --grpc_python_out=src proto/pdf_to_md.proto
+
+    # Generate AI Model proto files for PDF-to-MD service
+    Write-ColorOutput "Generating AI Model proto files for pdf_to_md..." $InfoColor
+    poetry run python -m grpc_tools.protoc -I../ai/proto --python_out=./src --grpc_python_out=./src ../ai/proto/ai_model.proto
+    Pop-Location
+
+    # Set environment variables
+    $env:PYTHONUNBUFFERED = "1"
+    $env:OMP_NUM_THREADS = "2"
+    $env:MKL_NUM_THREADS = "2"
+    $env:OPENBLAS_NUM_THREADS = "2"
+    $env:NUMEXPR_NUM_THREADS = "2"
+    $env:VECLIB_MAXIMUM_THREADS = "2"
+    $env:NUMBA_NUM_THREADS = "2"
+    $env:PYTORCH_CUDA_ALLOC_CONF = "max_split_size_mb:512"
+    $env:S3_ENDPOINT_URL = "http://127.0.0.1:9000"
+    $env:S3_ACCESS_KEY = "minio"
+    $env:S3_SECRET_KEY = "minio123456"
+    $env:S3_REGION = "us-east-1"
+
+    Write-ColorOutput "Starting PDF to MD service on port 50053..." $SuccessColor
+    Write-ColorOutput "Press Ctrl+C to stop" $WarningColor
+    Push-Location $pdfToMdDir
+    poetry run python src/grpc_server.py
+    Pop-Location
+}
+
+function Start-ApiServiceInteractive {
+    Write-ColorOutput "Starting API service in interactive mode..." $InfoColor
+    $apiDir = Join-Path $ScriptRoot "api"
+
+    # Install dependencies
+    Write-ColorOutput "Installing dependencies for api..." $InfoColor
+    Push-Location $apiDir
+    poetry install 2>&1 | Out-Null
+    Pop-Location
+
+    # Generate proto files
+    Write-ColorOutput "Generating proto files for api..." $InfoColor
+    Push-Location $apiDir
+
+    # Create utils/generated directory if it doesn't exist
+    if (-not (Test-Path "utils/generated")) {
+        New-Item -Path "utils/generated" -ItemType Directory -Force | Out-Null
+    }
+
+    $graphProto = Join-Path $ScriptRoot "worker_distributed_layering_rust\proto\graph_layout.proto"
+    $authProto  = Join-Path $ScriptRoot "auth\proto\auth.proto"
+    $pdfProto   = Join-Path $ScriptRoot "pdf_to_md\proto\pdf_to_md.proto"
+    $aiProto    = Join-Path $ScriptRoot "ai\proto\ai_model.proto"
+
+    $incGraph = Split-Path $graphProto -Parent
+    $incAuth  = Split-Path $authProto  -Parent
+    $incPdf   = Split-Path $pdfProto   -Parent
+    $incAI    = Split-Path $aiProto    -Parent
+
+    poetry run python -m grpc_tools.protoc `
+        -I"$incGraph" -I"$incAuth" -I"$incPdf" -I"$incAI" `
+        --python_out=./utils/generated `
+        --grpc_python_out=./utils/generated `
+        "$graphProto" "$authProto" "$pdfProto" "$aiProto"
+
+    if (-not (Test-Path "utils/generated/__init__.py")) {
+        New-Item -Path "utils/generated/__init__.py" -ItemType File -Force | Out-Null
+    }
+
+    # Fix imports
+    $grpcFiles = @("utils/generated/graph_layout_pb2_grpc.py", "utils/generated/auth_pb2_grpc.py", "utils/generated/pdf_to_md_pb2_grpc.py", "utils/generated/ai_model_pb2_grpc.py")
+    foreach ($file in $grpcFiles) {
+        if (Test-Path $file) {
+            (Get-Content $file) `
+                -replace "import graph_layout_pb2 as graph_layout__pb2", "from . import graph_layout_pb2 as graph_layout__pb2" `
+                -replace "import auth_pb2 as auth__pb2", "from . import auth_pb2 as auth__pb2" `
+                -replace "import pdf_to_md_pb2 as pdf_to_md__pb2", "from . import pdf_to_md_pb2 as pdf_to_md__pb2" `
+                -replace "import ai_model_pb2 as ai_model__pb2", "from . import ai_model_pb2 as ai_model__pb2" | Set-Content $file
+        }
+    }
+    Pop-Location
+
+    # Set environment variables
+    $env:NEO4J_URI = "bolt://127.0.0.1:7687"
+    $env:NEO4J_ENCRYPTED = "false"
+    $env:NEO4J_USER = "neo4j"
+    $env:NEO4J_PASSWORD = "password"
+    $env:LAYOUT_SERVICE_HOST = "127.0.0.1"
+    $env:LAYOUT_SERVICE_PORT = "50051"
+    $env:AUTH_SERVICE_HOST = "127.0.0.1"
+    $env:AUTH_SERVICE_PORT = "50052"
+    $env:PDF_TO_MD_SERVICE_HOST = "127.0.0.1"
+    $env:PDF_TO_MD_SERVICE_PORT = "50053"
+    $env:AI_MODEL_SERVICE_HOST = "127.0.0.1"
+    $env:AI_MODEL_SERVICE_PORT = "50054"
+    $env:S3_ENDPOINT_URL = "http://127.0.0.1:9000"
+    $env:S3_ACCESS_KEY = "minio"
+    $env:S3_SECRET_KEY = "minio123456"
+    $env:S3_REGION = "us-east-1"
+    $env:DEBUG = "true"
+    $env:OMP_NUM_THREADS = "2"
+    $env:MKL_NUM_THREADS = "2"
+    $env:OPENBLAS_NUM_THREADS = "2"
+    $env:NUMEXPR_NUM_THREADS = "2"
+    $env:VECLIB_MAXIMUM_THREADS = "2"
+    $env:NUMBA_NUM_THREADS = "2"
+    $env:PYTORCH_CUDA_ALLOC_CONF = "max_split_size_mb:512"
+
+    Write-ColorOutput "Starting API service on port 8000..." $SuccessColor
+    Write-ColorOutput "Press Ctrl+C to stop" $WarningColor
+    Push-Location $apiDir
+    poetry run python -m uvicorn src.app:app --host 0.0.0.0 --port 8000
+    Pop-Location
+}
+
+function Restart-IndividualService {
+    param(
+        [string]$ServiceName
+    )
+
+    Write-ColorOutput "=== Restarting $ServiceName service (interactive mode) ===" $InfoColor
+
+    switch ($ServiceName.ToLower()) {
+        "auth" {
+            Stop-AuthService
+            Start-Sleep -Seconds 2
+            Start-AuthServiceInteractive
+        }
+        "ai" {
+            Stop-AIService
+            Start-Sleep -Seconds 2
+            Start-AIServiceInteractive
+        }
+        "pdf_to_md" {
+            Stop-PdfToMdService
+            Start-Sleep -Seconds 2
+            Start-PdfToMdServiceInteractive
+        }
+        "api" {
+            Stop-ApiService
+            Start-Sleep -Seconds 2
+            Start-ApiServiceInteractive
+        }
+        default {
+            Write-ColorOutput "Unknown service: $ServiceName" $ErrorColor
+            Write-ColorOutput "Available services: auth, ai, pdf_to_md, api" $InfoColor
+            return $false
+        }
+    }
 }
 
 function Show-Logs {
@@ -727,6 +1035,13 @@ if ($Status) {
 
 if ($Logs) {
     Show-Logs -ServiceName $Service
+    exit 0
+}
+
+# Handle selective service restart
+if ($Service -and -not $Logs) {
+    Restart-IndividualService -ServiceName $Service
+    # Note: Service runs in foreground, so we never reach this point unless user stops it
     exit 0
 }
 
@@ -904,6 +1219,11 @@ Write-ColorOutput "`nTo stop all services run:" $WarningColor
 Write-ColorOutput "  .\start_local_dev.ps1 -Stop" $WarningColor
 Write-ColorOutput "`nTo restart only host services (keep Docker running):" $WarningColor
 Write-ColorOutput "  .\start_local_dev.ps1 -HostOnly" $WarningColor
+Write-ColorOutput "`nTo restart individual service (interactive mode with live logs):" $WarningColor
+Write-ColorOutput "  .\start_local_dev.ps1 -Service <service_name>" $WarningColor
+Write-ColorOutput "  Example: .\start_local_dev.ps1 -Service pdf_to_md" $WarningColor
+Write-ColorOutput "  Available: auth, ai, pdf_to_md, api" $InfoColor
+Write-ColorOutput "  Note: Service runs in foreground with live output. Press Ctrl+C to stop." $InfoColor
 Write-ColorOutput "`nTo check status run:" $WarningColor
 Write-ColorOutput "  .\start_local_dev.ps1 -Status" $WarningColor
 Write-ColorOutput "`nTo view logs run:" $WarningColor

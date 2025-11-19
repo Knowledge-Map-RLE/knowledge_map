@@ -47,6 +47,5 @@ tests/
 *.bin
 *.safetensors
 models/
-marker_models/
 conversion_results/
 markdown_output/

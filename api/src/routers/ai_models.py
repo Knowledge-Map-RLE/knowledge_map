@@ -1,9 +1,11 @@
 """Router for AI Models endpoints."""
 
+import logging
 from fastapi import APIRouter, HTTPException, Path, status
-from loguru import logger
 
 from services.ai_model_client import get_ai_model_client
+
+logger = logging.getLogger(__name__)
 from src.schemas.ai_models import (
     GenerateTextRequest,
     GenerateTextResponse,

@@ -177,7 +177,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4G       # Уменьшено после удаления Marker
+          memory: 4G
           cpus: '2.0'
         reservations:
           memory: 2G
@@ -209,13 +209,15 @@ services:
       - GRPC_HOST=0.0.0.0
       - GRPC_PORT=50054
       - MODEL_CACHE_DIR=/app/models
-      - DEFAULT_MODEL=meta-llama/Llama-3.2-1B-Instruct
+      - DEFAULT_MODEL=Qwen/Qwen2.5-0.5B-Instruct
       - MODEL_DEVICE=auto
       - LOG_LEVEL=INFO
       - DEFAULT_MAX_TOKENS=2048
       - DEFAULT_TEMPERATURE=0.7
-      - MAX_CONTEXT_LENGTH=100000
+      - MAX_CONTEXT_LENGTH=18000
       - CHUNK_OVERLAP=200
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
     networks:
       - knowledge_map_network
     volumes:
@@ -230,9 +232,6 @@ services:
           cpus: '2.0'
     # Enable GPU support if available
     runtime: nvidia
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - CUDA_VISIBLE_DEVICES=0
     healthcheck:
       test: ["CMD", "python", "-c", "import grpc; channel = grpc.insecure_channel('localhost:50054'); channel.close()"]
       interval: 30s

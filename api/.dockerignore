@@ -68,9 +68,6 @@ Dockerfile*
 docker-compose*.yml
 .dockerignore
 
-# Model files (will be copied separately)
-# marker_models/  # Закомментировано - нужно копировать в образ
-
 # Development files
 .env.local
 .env.development

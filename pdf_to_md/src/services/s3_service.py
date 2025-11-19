@@ -163,13 +163,66 @@ class S3Service:
         else:
             raise ValueError(f"Unsupported image data type: {type(image_data)}")
     
+    async def upload_markdown(
+        self,
+        markdown_content: str,
+        filename: str,
+        folder: str = "markdown"
+    ) -> Dict[str, Any]:
+        """
+        Загрузить Markdown файл в S3
+
+        Args:
+            markdown_content: Текст Markdown
+            filename: Имя файла
+            folder: Папка в bucket
+
+        Returns:
+            Информация о загруженном файле
+        """
+        try:
+            # Убеждаемся что bucket существует
+            await self.ensure_bucket_exists()
+
+            # Формируем ключ объекта
+            object_key = f"{folder}/{filename}"
+
+            # Конвертируем строку в bytes
+            markdown_bytes = markdown_content.encode('utf-8')
+
+            # Загружаем в S3
+            self.s3_client.put_object(
+                Bucket=self.bucket_name,
+                Key=object_key,
+                Body=markdown_bytes,
+                ContentType='text/markdown; charset=utf-8'
+            )
+
+            logger.info(f"Uploaded markdown: {object_key} ({len(markdown_bytes)} bytes)")
+
+            return {
+                "success": True,
+                "filename": filename,
+                "object_key": object_key,
+                "bucket": self.bucket_name,
+                "size_bytes": len(markdown_bytes)
+            }
+
+        except Exception as e:
+            logger.error(f"Failed to upload markdown: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "filename": filename
+            }
+
     async def download_image(self, object_key: str) -> Dict[str, Any]:
         """
         Скачать изображение из S3
-        
+
         Args:
             object_key: Ключ объекта в S3
-            
+
         Returns:
             Данные изображения
         """
@@ -178,16 +231,16 @@ class S3Service:
                 Bucket=self.bucket_name,
                 Key=object_key
             )
-            
+
             image_data = response['Body'].read()
-            
+
             return {
                 "success": True,
                 "data": image_data,
                 "content_type": response.get('ContentType'),
                 "size_bytes": len(image_data)
             }
-            
+
         except ClientError as e:
             logger.error(f"Failed to download image {object_key}: {e}")
             return {

@@ -56,7 +56,13 @@
       "Bash(start /B poetry run uvicorn:*)",
       "Bash(api_server.log)",
       "Bash(patterns_output.txt)",
-      "Bash(poetry run pytest:*)"
+      "Bash(poetry run pytest:*)",
+      "Bash(Get-Content \"D:\\Knowledge_Map\\pdf_to_md\\logs\\pdf_to_md_service.log\" -Tail 100)",
+      "Bash(poetry lock:*)",
+      "Bash(poetry update:*)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"& ''.\\start_local_dev.ps1'' -Service ai\")",
+      "Bash(.start_local_dev.ps1 -Service ai)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \".\\start_local_dev.ps1\" -Service ai)"
     ],
     "deny": [],
     "ask": []

@@ -12,9 +12,16 @@ AI Model Service - это gRPC микросервис для работы с Hug
 
 ## Текущие модели
 
-- **meta-llama/Llama-3.2-1B-Instruct** (по умолчанию)
+- **Qwen/Qwen2.5-0.5B-Instruct** (по умолчанию)
+  - Instruction-tuned модель от Alibaba
+  - Контекст: 32k токенов (используется 18k для чанков во избежание OOM)
+  - Размер: 0.5B параметров - быстрая и легковесная
+  - Задачи: генерация текста, форматирование документов, извлечение информации
+
+- **meta-llama/Llama-3.2-1B-Instruct**
   - Instruction-tuned модель от Meta
   - Контекст: 128k токенов
+  - Размер: 1B параметров
   - Задачи: генерация текста, форматирование документов, извлечение информации
 
 ## Архитектура
@@ -27,7 +34,7 @@ ai/
 │   ├── config.py               # Конфигурация сервиса
 │   ├── grpc_server.py          # gRPC сервер
 │   ├── models/
-│   │   └── llama_model.py      # Реализация Llama модели
+│   │   └── instruct_model.py   # Универсальная реализация для instruction-tuned моделей
 │   ├── services/
 │   │   ├── model_registry.py  # Реестр моделей
 │   │   └── model_service.py   # Сервис управления моделями
@@ -122,7 +129,7 @@ POST http://localhost:8000/api/ai/{model_id}/
 Пример запроса:
 
 ```bash
-curl -X POST "http://localhost:8000/api/ai/meta-llama/Llama-3.2-1B-Instruct/" \
+curl -X POST "http://localhost:8000/api/ai/Qwen/Qwen2.5-0.5B-Instruct/" \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "Explain quantum computing in simple terms.",
@@ -139,7 +146,7 @@ curl -X POST "http://localhost:8000/api/ai/meta-llama/Llama-3.2-1B-Instruct/" \
   "success": true,
   "generated_text": "Quantum computing is...",
   "message": "Text generated successfully",
-  "model_used": "meta-llama/Llama-3.2-1B-Instruct",
+  "model_used": "Qwen/Qwen2.5-0.5B-Instruct",
   "input_tokens": 128,
   "output_tokens": 256,
   "chunked": false,
@@ -159,7 +166,7 @@ stub = ai_model_pb2_grpc.AIModelServiceStub(channel)
 
 # Генерация текста
 request = ai_model_pb2.GenerateTextRequest(
-    model_id="meta-llama/Llama-3.2-1B-Instruct",
+    model_id="Qwen/Qwen2.5-0.5B-Instruct",
     prompt="Your prompt here",
     max_tokens=512,
     temperature=0.7
@@ -200,7 +207,7 @@ Output ONLY formatted Markdown."""
 
 # Отправка запроса
 response = requests.post(
-    "http://localhost:8000/api/ai/meta-llama/Llama-3.2-1B-Instruct/",
+    "http://localhost:8000/api/ai/Qwen/Qwen2.5-0.5B-Instruct/",
     json={
         "prompt": prompt,
         "max_tokens": 4096,
@@ -221,12 +228,12 @@ formatted_md = response.json()["generated_text"]
 | `GRPC_HOST` | Host для gRPC сервера | `0.0.0.0` |
 | `GRPC_PORT` | Порт для gRPC сервера | `50054` |
 | `MODEL_CACHE_DIR` | Директория для кэша моделей | `./models` |
-| `DEFAULT_MODEL` | Модель по умолчанию | `meta-llama/Llama-3.2-1B-Instruct` |
+| `DEFAULT_MODEL` | Модель по умолчанию | `Qwen/Qwen2.5-0.5B-Instruct` |
 | `MODEL_DEVICE` | Устройство (auto/cpu/cuda) | `auto` |
 | `LOG_LEVEL` | Уровень логирования | `INFO` |
 | `DEFAULT_MAX_TOKENS` | Max токенов по умолчанию | `2048` |
 | `DEFAULT_TEMPERATURE` | Temperature по умолчанию | `0.7` |
-| `MAX_CONTEXT_LENGTH` | Макс. контекст перед chunking | `100000` |
+| `MAX_CONTEXT_LENGTH` | Макс. контекст перед chunking | `18000` |
 | `CHUNK_OVERLAP` | Overlap между чанками | `200` |
 
 ## Добавление новых моделей
@@ -240,7 +247,7 @@ self.register_model(
         name="Model Name",
         description="Model description",
         max_context_length=128000,
-        model_class="llama_model.LlamaModel",  # или новый класс
+        model_class="instruct_model.InstructModel",  # или новый класс
         default_params={
             "max_tokens": 2048,
             "temperature": 0.7,
@@ -281,9 +288,18 @@ curl http://localhost:8000/api/ai/health
 
 ## Производительность
 
-- **GPU (CUDA)**: ~50-100 токенов/сек для Llama-3.2-1B
+### Qwen 2.5 0.5B (модель по умолчанию)
+- **GPU (CUDA)**: ~100-200 токенов/сек
+- **CPU**: ~20-40 токенов/сек
+- **Память**:
+  - Модель: ~2GB VRAM/RAM
+  - Инференс (18k контекст): ~4-6GB VRAM/RAM
+  - Рекомендуется: минимум 8GB VRAM (GTX 1070/1080 или лучше)
+
+### Llama 3.2 1B
+- **GPU (CUDA)**: ~50-100 токенов/сек
 - **CPU**: ~10-20 токенов/сек
-- **Память**: 4-8GB RAM для Llama-3.2-1B (зависит от batch size)
+- **Память**: 4-8GB RAM (зависит от batch size)
 
 ## Troubleshooting
 
@@ -303,11 +319,17 @@ curl http://localhost:8000/api/ai/health
 
 ### Out of Memory
 
-Решения:
-1. Уменьшите `max_tokens`
-2. Включите `enable_chunking=True`
-3. Увеличьте память в docker-compose
-4. Используйте модель меньшего размера
+Сервис уже оптимизирован для работы на GTX 1070 (8GB VRAM):
+- `max_memory` ограничивает использование до 7GB GPU + 8GB RAM
+- `low_cpu_mem_usage=True` снижает пиковое потребление RAM
+- `use_cache=True` использует KV-кэш для эффективности
+- `max_length=18000` жестко ограничивает размер входа
+
+Если всё равно возникает OOM:
+1. Уменьшите `MAX_CONTEXT_LENGTH` до 12000-14000
+2. Уменьшите `ai_max_generation_tokens` до 2048
+3. Закройте другие GPU-приложения
+4. Используйте CPU режим: `MODEL_DEVICE=cpu`
 
 ## Логи
 

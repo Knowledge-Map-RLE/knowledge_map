@@ -261,13 +261,19 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
                             else:
                                 logger.warning(f"[grpc] Skipping non-bytes image: {filename} (type: {type(img_data)})")
 
+                # Prepare S3 keys for response
+                docling_raw_s3_key = getattr(result, 'docling_raw_s3_key', None) or ""
+                formatted_s3_key = getattr(result, 'formatted_s3_key', None) or ""
+
                 return pdf_to_md_pb2.ConvertPDFResponse(
                     success=True,
                     doc_id=result.doc_id,
                     markdown_content=result.markdown_content,
                     images=response_images,
                     metadata_json=json.dumps(result.metadata) if result.metadata else "",
-                    message=message
+                    message=message,
+                    docling_raw_s3_key=docling_raw_s3_key,
+                    formatted_s3_key=formatted_s3_key
                 )
             else:
                 logger.error(f"[grpc] Ошибка конвертации: {result.error_message}")
