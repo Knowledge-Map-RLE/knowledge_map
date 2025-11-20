@@ -62,7 +62,8 @@
       "Bash(poetry update:*)",
       "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"& ''.\\start_local_dev.ps1'' -Service ai\")",
       "Bash(.start_local_dev.ps1 -Service ai)",
-      "Bash(powershell.exe -ExecutionPolicy Bypass -File \".\\start_local_dev.ps1\" -Service ai)"
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \".\\start_local_dev.ps1\" -Service ai)",
+      "Bash(poetry install:*)"
     ],
     "deny": [],
     "ask": []

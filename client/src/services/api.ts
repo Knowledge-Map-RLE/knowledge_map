@@ -631,10 +631,10 @@ export interface ImportCSVResponse {
   };
 }
 
-// Экспорт аннотаций в CSV
-export async function exportAnnotationsCSV(docId: string): Promise<Blob> {
+// Экспорт аннотаций в YAML
+export async function exportAnnotationsYAML(docId: string): Promise<Blob> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/annotations/export-csv?doc_id=${encodeURIComponent(docId)}`);
+  const res = await fetch(`${base}/api/data_extraction/annotations/export-yaml?doc_id=${encodeURIComponent(docId)}`);
   if (!res.ok) {
     const errorText = await res.text();
     throw new Error(`HTTP ${res.status}: ${errorText}`);
@@ -642,15 +642,76 @@ export async function exportAnnotationsCSV(docId: string): Promise<Blob> {
   return res.blob();
 }
 
-// Импорт аннотаций из CSV
-export async function importAnnotationsCSV(docId: string, file: File): Promise<ImportCSVResponse> {
+// Импорт аннотаций из YAML
+export async function importAnnotationsYAML(docId: string, file: File): Promise<ImportCSVResponse> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
   const formData = new FormData();
   formData.append('file', file);
 
-  const res = await fetch(`${base}/api/data_extraction/annotations/import-csv?doc_id=${encodeURIComponent(docId)}`, {
+  const res = await fetch(`${base}/api/data_extraction/annotations/import-yaml?doc_id=${encodeURIComponent(docId)}`, {
     method: 'POST',
     body: formData
+  });
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`HTTP ${res.status}: ${errorText}`);
+  }
+  return res.json();
+}
+
+// ==================== SAVE FOR TESTS API ====================
+
+export interface DataAvailabilityStatus {
+  pdf_exists: boolean;
+  markdown_exists: boolean;
+  has_annotations: boolean;
+  has_relations: boolean;
+  has_chains: boolean;
+  has_patterns: boolean;
+  annotation_count: number;
+  relation_count: number;
+  is_ready: boolean;
+  missing_items: string[];
+}
+
+export interface SaveForTestsRequest {
+  sample_name: string;
+  include_pdf?: boolean;
+  include_patterns?: boolean;
+  include_chains?: boolean;
+  validate?: boolean;
+}
+
+export interface SaveForTestsResponse {
+  success: boolean;
+  sample_id: string;
+  exported_files: string[];
+  validation_result?: any;
+  dvc_command: string;
+  message?: string;
+}
+
+// Проверить доступность данных документа для экспорта
+export async function checkDataAvailability(docId: string): Promise<DataAvailabilityStatus> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/data-availability`);
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`HTTP ${res.status}: ${errorText}`);
+  }
+  return res.json();
+}
+
+// Сохранить документ в тестовый датасет
+export async function saveDocumentForTests(
+  docId: string,
+  request: SaveForTestsRequest
+): Promise<SaveForTestsResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/save-for-tests`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request)
   });
   if (!res.ok) {
     const errorText = await res.text();

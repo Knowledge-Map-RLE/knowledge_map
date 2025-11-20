@@ -186,3 +186,37 @@ class NLPAnalyzeRequest(BaseModel):
     text: str = Field(..., description="Текст для анализа")
     start: Optional[int] = Field(default=None, description="Начальная позиция выделения")
     end: Optional[int] = Field(default=None, description="Конечная позиция выделения")
+
+
+# Схемы для сохранения данных в тестовый датасет
+class SaveForTestsRequest(BaseModel):
+    """Запрос на сохранение документа в тестовый датасет"""
+    sample_name: str = Field(..., pattern="^[a-z0-9_]+$", description="Имя образца (только латиница, цифры и подчёркивание)")
+    include_pdf: bool = Field(default=False, description="Включить PDF файл в экспорт")
+    include_patterns: bool = Field(default=True, description="Включить паттерны в экспорт")
+    include_chains: bool = Field(default=True, description="Включить цепочки действий в экспорт")
+    validate: bool = Field(default=True, description="Валидировать датасет после экспорта")
+
+
+class DataAvailabilityStatus(BaseModel):
+    """Статус доступности данных для экспорта"""
+    pdf_exists: bool = Field(..., description="Наличие PDF файла")
+    markdown_exists: bool = Field(..., description="Наличие Markdown файла")
+    has_annotations: bool = Field(..., description="Наличие аннотаций")
+    has_relations: bool = Field(..., description="Наличие связей между аннотациями")
+    has_chains: bool = Field(..., description="Наличие цепочек действий")
+    has_patterns: bool = Field(..., description="Наличие паттернов")
+    annotation_count: int = Field(default=0, description="Количество аннотаций")
+    relation_count: int = Field(default=0, description="Количество связей")
+    is_ready: bool = Field(..., description="Готовность к экспорту (PDF + MD + аннотации)")
+    missing_items: List[str] = Field(default_factory=list, description="Список отсутствующих компонентов")
+
+
+class SaveForTestsResponse(BaseModel):
+    """Ответ на запрос сохранения в тестовый датасет"""
+    success: bool = Field(..., description="Успешность операции")
+    sample_id: str = Field(..., description="ID созданного образца")
+    exported_files: List[str] = Field(default_factory=list, description="Список экспортированных файлов")
+    validation_result: Optional[Dict[str, Any]] = Field(default=None, description="Результат валидации датасета")
+    dvc_command: str = Field(..., description="Команда для фиксации датасета в DVC")
+    message: Optional[str] = Field(default=None, description="Дополнительное сообщение")

@@ -17,7 +17,7 @@ from src.schema import schema
 
 from src.middleware import ORIGINS, log_requests, add_cors_headers
 from src.routers import (
-    blocks, links, auth, data_extraction, pdf, layout, s3, static, ai_models
+    blocks, links, auth, data_extraction, pdf, layout, s3, static, ai_models, image_proxy
 )
 
 # Настройка логирования
@@ -76,6 +76,7 @@ app.include_router(layout.router)
 app.include_router(s3.router)
 app.include_router(static.router)
 app.include_router(ai_models.router, prefix="/api")
+app.include_router(image_proxy.router)
 
 # Подключаем GraphQL
 graphql_app = GraphQLRouter(schema)

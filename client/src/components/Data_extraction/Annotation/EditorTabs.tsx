@@ -31,6 +31,7 @@ interface EditorTabsProps {
   onRelationDelete?: (sourceId: string, targetId: string) => void;
   onExportCSV?: () => void;
   onImportCSV?: (file: File) => void;
+  onSaveForTests?: () => void;
 }
 
 const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
@@ -62,6 +63,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onRelationDelete,
   onExportCSV,
   onImportCSV,
+  onSaveForTests,
 }, ref) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -193,6 +195,25 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
             }}
           >
             📤 Экспортировать CSV
+          </button>
+        )}
+        {onSaveForTests && (
+          <button
+            className="save-for-tests-button"
+            onClick={onSaveForTests}
+            title="Сохранить документ с аннотациями в тестовый датасет"
+            style={{
+              backgroundColor: '#00BCD4',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            💾 Сохранить для тестов
           </button>
         )}
         <button

@@ -6,6 +6,7 @@ import AnnotationFilters from './AnnotationFilters';
 import EditorTabs from './EditorTabs';
 import ErrorBoundary from '../../ErrorBoundary';
 import PatternVisualization from '../PatternVisualization/PatternVisualization';
+import SaveForTestsDialog from '../SaveForTestsDialog';
 import { useAnnotations } from './hooks/useAnnotations';
 import { useAnnotationOffsets } from './hooks/useAnnotationOffsets';
 import { useRelations } from './hooks/useRelations';
@@ -16,8 +17,8 @@ import {
   autoAnnotateMultilevel,
   MultiLevelAnalysisResponse,
   deleteAllAnnotations,
-  exportAnnotationsCSV,
-  importAnnotationsCSV,
+  exportAnnotationsYAML,
+  importAnnotationsYAML,
 } from '../../../services/api';
 import './AnnotationWorkspace.css';
 
@@ -27,6 +28,7 @@ interface AnnotationWorkspaceProps {
   readOnly?: boolean;
   onTextChange?: (text: string) => void;
   onSave?: () => Promise<void>;
+  documentTitle?: string | null;
 }
 
 const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
@@ -35,6 +37,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   readOnly = false,
   onTextChange,
   onSave,
+  documentTitle = null,
 }) => {
   // UI State
   const [mainTab, setMainTab] = useState<'text' | 'annotator'>('text');
@@ -45,6 +48,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [largeLineHeight, setLargeLineHeight] = useState(false);
   const [isAutoAnnotating, setIsAutoAnnotating] = useState(false);
   const [graphData, setGraphData] = useState<MultiLevelAnalysisResponse['graph'] | null>(null);
+  const [showSaveForTestsDialog, setShowSaveForTestsDialog] = useState(false);
 
   // Filter State
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -476,21 +480,21 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [docId, loadAnnotations, loadRelations]);
 
-  // Export CSV handler
-  const handleExportCSV = useCallback(async () => {
+  // Export YAML handler
+  const handleExportYAML = useCallback(async () => {
     try {
-      const blob = await exportAnnotationsCSV(docId);
+      const blob = await exportAnnotationsYAML(docId);
 
       // Создать ссылку для скачивания
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `annotations_${docId}.csv`;
+      a.download = `annotations_${docId}.yaml`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-      console.log('Аннотации экспортированы в CSV');
+      console.log('Аннотации экспортированы в YAML');
     } catch (error: any) {
       console.error(
         'Не удалось экспортировать аннотации:',
@@ -499,10 +503,10 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [docId]);
 
-  // Import CSV handler
-  const handleImportCSV = useCallback(async (file: File) => {
+  // Import YAML handler
+  const handleImportYAML = useCallback(async (file: File) => {
     try {
-      const result = await importAnnotationsCSV(docId, file);
+      const result = await importAnnotationsYAML(docId, file);
 
       console.log(
         'Импорт завершен успешно!\n' +
@@ -605,8 +609,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               selectedRelation={selectedRelation}
               onRelationClick={handleRelationClick}
               onRelationDelete={handleRelationDelete}
-              onExportCSV={handleExportCSV}
-              onImportCSV={handleImportCSV}
+              onExportCSV={handleExportYAML}
+              onImportCSV={handleImportYAML}
+              onSaveForTests={() => setShowSaveForTestsDialog(true)}
             />
           </ErrorBoundary>
         </div>
@@ -669,6 +674,15 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
           <ErrorBoundary>
             <PatternVisualization graphData={graphData} />
           </ErrorBoundary>
+        )}
+
+        {/* Save For Tests Dialog */}
+        {showSaveForTestsDialog && (
+          <SaveForTestsDialog
+            docId={docId}
+            documentTitle={documentTitle}
+            onClose={() => setShowSaveForTestsDialog(false)}
+          />
         )}
       </div>
     </ErrorBoundary>

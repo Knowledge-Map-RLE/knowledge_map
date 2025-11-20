@@ -472,6 +472,7 @@ export default function Data_extraction() {
                                 readOnly={false}
                                 onTextChange={handleSourceMarkdownChange}
                                 onSave={handleManualSave}
+                                documentTitle={selectedDocument.title || selectedDocument.original_filename}
                             />
                         </div>
                     ) : (

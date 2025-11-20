@@ -164,10 +164,23 @@ async def analyze_document_multilevel(
         if not document:
             raise HTTPException(status_code=404, detail="Document not found")
 
-        # Get markdown text from S3
+        # Get markdown text from S3 using version priority (user > formatted > raw)
         s3_client = get_s3_client()
         bucket = settings.S3_BUCKET_NAME
-        md_key = f"documents/{doc_id}/{doc_id}.md"
+
+        # Determine which markdown version to use
+        md_key = None
+        if document.user_md_s3_key:
+            md_key = document.user_md_s3_key
+        elif document.formatted_md_s3_key:
+            md_key = document.formatted_md_s3_key
+        elif document.docling_raw_md_s3_key:
+            md_key = document.docling_raw_md_s3_key
+        else:
+            # Fallback to old format
+            md_key = f"documents/{doc_id}/{doc_id}.md"
+
+        logger.info(f"Loading markdown from S3 key: {md_key}")
 
         if not await s3_client.object_exists(bucket, md_key):
             raise HTTPException(status_code=400, detail="No markdown text available in S3")

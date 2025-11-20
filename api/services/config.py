@@ -12,10 +12,13 @@ class Settings(BaseSettings):
     # Layout сервис
     LAYOUT_SERVICE_HOST: str = "localhost"
     LAYOUT_SERVICE_PORT: int = 50051
-    
+
     # Auth сервис
     AUTH_SERVICE_HOST: str = "localhost"
     AUTH_SERVICE_PORT: int = 50051
+
+    # PDF to Markdown сервис
+    PDF_TO_MD_SERVICE_URL: str = "http://localhost:8002"
     
     # S3
     AWS_ACCESS_KEY_ID: Optional[str] = None

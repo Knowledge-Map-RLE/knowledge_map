@@ -8,6 +8,9 @@ from src.schemas.api import (
     DocumentAssetsResponse,
     UpdateMarkdownRequest,
     UpdateMarkdownResponse,
+    SaveForTestsRequest,
+    SaveForTestsResponse,
+    DataAvailabilityStatus,
 )
 from services.data_extraction_service import DataExtractionService
 from services import get_s3_client, settings
@@ -108,4 +111,61 @@ async def get_document_image(doc_id: str, image_name: str):
         raise
     except Exception as e:
         logger.error(f"Ошибка получения изображения: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/documents/{doc_id}/data-availability", response_model=DataAvailabilityStatus)
+async def check_document_data_availability(doc_id: str):
+    """
+    Проверяет доступность данных документа для экспорта в тестовый датасет.
+
+    Возвращает информацию о наличии PDF, Markdown, аннотаций, связей, цепочек и паттернов.
+    """
+    try:
+        result = await data_extraction_service.check_data_availability(doc_id)
+        return DataAvailabilityStatus(**result)
+    except Exception as e:
+        logger.error(f"Ошибка проверки доступности данных: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/documents/{doc_id}/save-for-tests", response_model=SaveForTestsResponse)
+async def save_document_for_tests(doc_id: str, request: SaveForTestsRequest):
+    """
+    Экспортирует документ с аннотациями, связями и цепочками в тестовый датасет.
+
+    Документ должен иметь PDF, Markdown и хотя бы одну аннотацию для успешного экспорта.
+    Экспортированные данные сохраняются в ./data/datasets/ и могут быть версионированы через DVC.
+    """
+    try:
+        # Сначала проверяем доступность данных
+        availability = await data_extraction_service.check_data_availability(doc_id)
+
+        if not availability["is_ready"]:
+            missing = ", ".join(availability["missing_items"])
+            raise HTTPException(
+                status_code=400,
+                detail=f"Документ не готов к экспорту. Отсутствуют: {missing}. "
+                       f"Данные попадут в тестовый датасет только после прохождения всех этапов обработки."
+            )
+
+        # Выполняем экспорт
+        result = await data_extraction_service.save_for_tests(
+            doc_id=doc_id,
+            sample_name=request.sample_name,
+            include_pdf=request.include_pdf,
+            include_patterns=request.include_patterns,
+            include_chains=request.include_chains,
+            validate=request.validate
+        )
+
+        if not result["success"]:
+            raise HTTPException(status_code=500, detail=result.get("message", "Ошибка экспорта"))
+
+        return SaveForTestsResponse(**result)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Ошибка сохранения для тестов: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

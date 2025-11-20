@@ -1,11 +1,13 @@
 """Роутер для работы с S3"""
 import logging
 from typing import Dict, Any, Optional
+import httpx
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import Response
 
 from src.schemas.api import S3ListResponse, S3FileResponse, S3UploadResponse
-from services import get_s3_client
+from services import get_s3_client, settings
 
 logger = logging.getLogger(__name__)
 

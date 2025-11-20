@@ -303,7 +303,27 @@ class DataExtractionService:
         bucket = settings.S3_BUCKET_NAME
         prefix = f"documents/{doc_id}/"
 
-        md_key = f"{prefix}{doc_id}.md"
+        # Получаем активную версию markdown используя логику версионирования
+        try:
+            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+        except Exception as e:
+            logger.error(f"Ошибка получения документа из Neo4j: {e}")
+            document = None
+
+        # Определяем S3 ключ для markdown (приоритет: user > formatted > raw > старый формат)
+        md_key = None
+        if document:
+            if document.user_md_s3_key:
+                md_key = document.user_md_s3_key
+            elif document.formatted_md_s3_key:
+                md_key = document.formatted_md_s3_key
+            elif document.docling_raw_md_s3_key:
+                md_key = document.docling_raw_md_s3_key
+
+        # Fallback к старому формату
+        if not md_key:
+            md_key = f"{prefix}{doc_id}.md"
+
         pdf_key = f"{prefix}{doc_id}.pdf"
         markdown_text = None
         if await self.s3_client.object_exists(bucket, md_key):
@@ -620,3 +640,193 @@ class DataExtractionService:
             if item.get('has_markdown'):
                 documents.append(item)
         return {"success": True, "documents": documents}
+
+    async def check_data_availability(self, doc_id: str) -> Dict[str, Any]:
+        """
+        Проверяет доступность всех данных для экспорта в тестовый датасет.
+
+        Args:
+            doc_id: ID документа
+
+        Returns:
+            Dict со статусом доступности данных
+        """
+        from src.models import PDFDocument
+        from neomodel import db
+
+        bucket = settings.S3_BUCKET_NAME
+        prefix = f"documents/{doc_id}/"
+
+        # Проверка PDF
+        pdf_key = f"{prefix}{doc_id}.pdf"
+        pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
+
+        # Проверка Markdown
+        markdown_exists = False
+        document = PDFDocument.nodes.get_or_none(uid=doc_id)
+        if document:
+            # Проверяем активный markdown
+            if document.user_md_s3_key:
+                markdown_exists = await self.s3_client.object_exists(bucket, document.user_md_s3_key)
+            elif document.formatted_md_s3_key:
+                markdown_exists = await self.s3_client.object_exists(bucket, document.formatted_md_s3_key)
+            elif document.docling_raw_md_s3_key:
+                markdown_exists = await self.s3_client.object_exists(bucket, document.docling_raw_md_s3_key)
+
+        if not markdown_exists:
+            # Fallback к старому формату
+            md_key = f"{prefix}{doc_id}.md"
+            markdown_exists = await self.s3_client.object_exists(bucket, md_key)
+
+        # Проверка аннотаций
+        query_annotations = """
+        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+        RETURN count(a) as count
+        """
+        results, _ = db.cypher_query(query_annotations, {"doc_id": doc_id})
+        annotation_count = results[0][0] if results else 0
+        has_annotations = annotation_count > 0
+
+        # Проверка связей
+        query_relations = """
+        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a1:MarkdownAnnotation)
+        MATCH (a1)-[r:RELATES_TO]->(a2:MarkdownAnnotation)
+        RETURN count(r) as count
+        """
+        results, _ = db.cypher_query(query_relations, {"doc_id": doc_id})
+        relation_count = results[0][0] if results else 0
+        has_relations = relation_count > 0
+
+        # Проверка цепочек (action chains)
+        # Паттерны связаны с документом через аннотации (MarkdownAnnotation)
+        query_chains = """
+        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+        MATCH (p1:Pattern {source_token_uid: a.uid})-[r:ACTION_SEQUENCE]->(p2:Pattern)
+        RETURN count(DISTINCT r) as count
+        """
+        results, _ = db.cypher_query(query_chains, {"doc_id": doc_id})
+        chain_count = results[0][0] if results else 0
+        has_chains = chain_count > 0
+
+        # Проверка паттернов
+        # Паттерны связаны с документом через аннотации (MarkdownAnnotation)
+        query_patterns = """
+        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+        MATCH (p:Pattern {source_token_uid: a.uid})
+        RETURN count(DISTINCT p) as count
+        """
+        results, _ = db.cypher_query(query_patterns, {"doc_id": doc_id})
+        pattern_count = results[0][0] if results else 0
+        has_patterns = pattern_count > 0
+
+        # Определяем готовность к экспорту
+        is_ready = pdf_exists and markdown_exists and has_annotations
+
+        # Список отсутствующих компонентов
+        missing_items = []
+        if not pdf_exists:
+            missing_items.append("PDF файл")
+        if not markdown_exists:
+            missing_items.append("Markdown файл")
+        if not has_annotations:
+            missing_items.append("Аннотации")
+
+        return {
+            "pdf_exists": pdf_exists,
+            "markdown_exists": markdown_exists,
+            "has_annotations": has_annotations,
+            "has_relations": has_relations,
+            "has_chains": has_chains,
+            "has_patterns": has_patterns,
+            "annotation_count": annotation_count,
+            "relation_count": relation_count,
+            "is_ready": is_ready,
+            "missing_items": missing_items,
+        }
+
+    async def save_for_tests(
+        self,
+        doc_id: str,
+        sample_name: str,
+        include_pdf: bool = False,
+        include_patterns: bool = True,
+        include_chains: bool = True,
+        validate: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Экспортирует документ в тестовый датасет.
+
+        Args:
+            doc_id: ID документа
+            sample_name: Имя образца для датасета
+            include_pdf: Включить PDF файл
+            include_patterns: Включить паттерны
+            include_chains: Включить цепочки действий
+            validate: Валидировать датасет после экспорта
+
+        Returns:
+            Dict с результатом экспорта
+        """
+        import sys
+        from pathlib import Path
+
+        # Импортируем DatasetExporter
+        api_root = Path(__file__).parent.parent
+        sys.path.insert(0, str(api_root))
+
+        from tools.dataset_builder.export_dataset import DatasetExporter
+
+        try:
+            # Создаем экспортер
+            exporter = DatasetExporter(
+                doc_id=doc_id,
+                output_sample=sample_name,
+                include_pdf=include_pdf
+            )
+
+            # Выполняем экспорт
+            result = await exporter.export_all(
+                include_patterns=include_patterns,
+                include_chains=include_chains
+            )
+
+            if not result["success"]:
+                return {
+                    "success": False,
+                    "sample_id": sample_name,
+                    "exported_files": [],
+                    "message": f"Ошибка экспорта: {', '.join(result['errors'])}",
+                    "dvc_command": "",
+                }
+
+            # Формируем DVC команду
+            dvc_command = "dvc add data/datasets && git add data/datasets.dvc && git commit -m 'Add test dataset: {}'".format(sample_name)
+
+            # Валидация (если запрошена)
+            validation_result = None
+            if validate:
+                try:
+                    from tools.dataset_builder.validate_dataset import validate_dataset_programmatic
+                    validation_result = validate_dataset_programmatic(sample_name)
+                except Exception as ve:
+                    logger.warning(f"Валидация не удалась: {ve}")
+                    validation_result = {"valid": False, "errors": [str(ve)]}
+
+            return {
+                "success": True,
+                "sample_id": sample_name,
+                "exported_files": result["exported_files"],
+                "validation_result": validation_result,
+                "dvc_command": dvc_command,
+                "message": f"Датасет успешно экспортирован: {len(result['exported_files'])} файлов",
+            }
+
+        except Exception as e:
+            logger.error(f"Ошибка при сохранении для тестов: {e}", exc_info=True)
+            return {
+                "success": False,
+                "sample_id": sample_name,
+                "exported_files": [],
+                "message": f"Ошибка: {str(e)}",
+                "dvc_command": "",
+            }

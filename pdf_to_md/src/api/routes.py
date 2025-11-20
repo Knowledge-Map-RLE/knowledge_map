@@ -463,3 +463,55 @@ async def get_document_image_url(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate presigned URL"
         )
+
+
+@router.get("/s3/image/{object_key:path}")
+async def get_s3_image_proxy(
+    object_key: str,
+    current_user = Depends(get_current_user)
+):
+    """Proxy endpoint for S3 images - provides permanent URLs for images stored in S3"""
+    try:
+        if not get_s3_client:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="S3 service not available"
+            )
+
+        s3_client = get_s3_client()
+
+        # Check if image exists
+        if not await s3_client.object_exists(settings.s3_bucket_name, object_key):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Image not found"
+            )
+
+        # Download image
+        image_data = await s3_client.download_bytes(settings.s3_bucket_name, object_key)
+        if not image_data:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to download image"
+            )
+
+        # Determine content type from file extension
+        content_type = "image/jpeg"
+        object_key_lower = object_key.lower()
+        if object_key_lower.endswith('.png'):
+            content_type = "image/png"
+        elif object_key_lower.endswith('.gif'):
+            content_type = "image/gif"
+        elif object_key_lower.endswith('.bmp'):
+            content_type = "image/bmp"
+
+        return Response(content=image_data, media_type=content_type)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error proxying S3 image: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to proxy S3 image"
+        )

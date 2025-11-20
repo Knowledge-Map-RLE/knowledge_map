@@ -117,7 +117,8 @@ class S3Service:
             
             # Формируем постоянную API ссылку для проксирования через FastAPI
             # Эта ссылка не истекает и проксирует изображения из S3
-            api_base_url = os.getenv('API_BASE_URL', 'http://localhost:8002')
+            # Используем основной API (порт 8000), который проксирует запросы к pdf_to_md сервису
+            api_base_url = os.getenv('API_BASE_URL', 'http://localhost:8000')
             image_url = f"{api_base_url}/api/v1/s3/image/{object_key}"
             logger.info(f"Generated permanent API proxy URL")
             
