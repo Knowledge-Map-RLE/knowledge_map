@@ -675,10 +675,6 @@ export interface DataAvailabilityStatus {
 }
 
 export interface SaveForTestsRequest {
-  sample_name: string;
-  include_pdf?: boolean;
-  include_patterns?: boolean;
-  include_chains?: boolean;
   validate?: boolean;
 }
 

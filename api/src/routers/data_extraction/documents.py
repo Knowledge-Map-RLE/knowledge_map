@@ -150,9 +150,9 @@ async def save_document_for_tests(doc_id: str, request: SaveForTestsRequest):
             )
 
         # Выполняем экспорт (PDF, patterns и chains всегда обязательны)
+        # Имя датасета генерируется автоматически
         result = await data_extraction_service.save_for_tests(
             doc_id=doc_id,
-            sample_name=request.sample_name,
             validate=request.validate
         )
 

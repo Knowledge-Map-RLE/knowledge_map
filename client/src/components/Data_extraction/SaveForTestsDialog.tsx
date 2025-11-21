@@ -26,29 +26,9 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
   const [result, setResult] = useState<SaveForTestsResponse | null>(null);
 
   // Настройки экспорта
-  const [sampleName, setSampleName] = useState('');
   const [validate, setValidate] = useState(true);
 
   useEffect(() => {
-    // Генерируем имя образца из названия документа или docId
-    const generateSampleName = () => {
-      let base = documentTitle || docId;
-      // Убираем недопустимые символы и приводим к нижнему регистру
-      base = base
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '_')
-        .replace(/^_+|_+$/g, '');
-      // Ограничиваем длину
-      if (base.length > 30) {
-        base = base.substring(0, 30);
-      }
-      // Добавляем timestamp для уникальности
-      const timestamp = Date.now().toString().slice(-6);
-      return `${base}_${timestamp}`;
-    };
-
-    setSampleName(generateSampleName());
-
     // Проверяем доступность данных
     const fetchAvailability = async () => {
       try {
@@ -63,7 +43,7 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
     };
 
     fetchAvailability();
-  }, [docId, documentTitle]);
+  }, [docId]);
 
   const handleSave = async () => {
     if (!availability?.is_ready) {
@@ -76,7 +56,6 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
       setError(null);
 
       const request: SaveForTestsRequest = {
-        sample_name: sampleName,
         validate,
       };
 
@@ -151,23 +130,12 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
       <div className="export-settings">
         <h3>Настройки экспорта:</h3>
 
-        <div className="form-group">
-          <label htmlFor="sample-name">Имя образца:</label>
-          <input
-            id="sample-name"
-            type="text"
-            value={sampleName}
-            onChange={(e) => setSampleName(e.target.value)}
-            pattern="[a-z0-9_]+"
-            placeholder="sample_001"
-            disabled={saving}
-          />
-          <small>Только латинские буквы, цифры и подчеркивание</small>
-        </div>
-
         <div className="mandatory-info">
           <p>
-            <strong>Обязательные компоненты экспорта:</strong> PDF файл, Markdown, аннотации, паттерны, цепочки действий
+            <strong>Обязательные компоненты:</strong> PDF файл, Markdown, аннотации, паттерны, цепочки действий
+          </p>
+          <p>
+            <strong>Имя датасета:</strong> генерируется автоматически с timestamp и случайным хэшем
           </p>
         </div>
 
@@ -271,7 +239,7 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
             <button className="cancel-button" onClick={onClose} disabled={saving}>
               Отмена
             </button>
-            <button className="save-button" onClick={handleSave} disabled={saving || !sampleName}>
+            <button className="save-button" onClick={handleSave} disabled={saving}>
               {saving ? 'Сохранение...' : 'Сохранить'}
             </button>
           </div>

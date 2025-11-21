@@ -193,8 +193,8 @@ class SaveForTestsRequest(BaseModel):
     """Запрос на сохранение документа в тестовый датасет
 
     PDF, patterns и chains всегда обязательны и включаются автоматически.
+    Имя датасета генерируется автоматически: {md5_hash}_{YYYY}.{MM}.{DD}_{HH}.{mm}.{ss}_{random6}
     """
-    sample_name: str = Field(..., pattern="^[a-z0-9_]+$", description="Имя образца (только латиница, цифры и подчёркивание)")
     validate: bool = Field(default=True, description="Валидировать датасет после экспорта")
 
 

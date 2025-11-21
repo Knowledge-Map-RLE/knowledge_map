@@ -40,10 +40,8 @@ DATASETS_DIR = PROJECT_ROOT / "data" / "datasets"
 class DatasetExporter:
     """Export data from Neo4j and S3 to dataset format"""
 
-    def __init__(self, doc_id: str, output_sample: str, include_pdf: bool = False):
+    def __init__(self, doc_id: str):
         self.doc_id = doc_id
-        self.sample_id = output_sample  # Сохраняем для обратной совместимости
-        self.include_pdf = include_pdf  # Игнорируется, PDF всегда обязателен
         self.s3_client = get_s3_client()
         self.yaml_service = YAMLExportService()
 
@@ -52,13 +50,13 @@ class DatasetExporter:
         timestamp = now.strftime("%Y.%m.%d_%H.%M.%S")
         random_hash = secrets.token_hex(3)  # 6 символов (3 байта в hex)
 
-        self.full_sample_id = f"{self.doc_id}_{timestamp}_{random_hash}"
-        self.dataset_dir = DATASETS_DIR / self.full_sample_id
+        self.sample_id = f"{self.doc_id}_{timestamp}_{random_hash}"
+        self.dataset_dir = DATASETS_DIR / self.sample_id
 
     def create_directories(self):
         """Create output directory if it doesn't exist"""
         self.dataset_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"Created directory {self.full_sample_id}")
+        logger.info(f"Created directory {self.sample_id}")
 
     async def export_document(self) -> Dict[str, Any]:
         """Export document metadata and markdown from Neo4j and S3"""
@@ -276,11 +274,11 @@ class DatasetExporter:
         Returns:
             Dict with export results including success status, files, and counts
         """
-        logger.info(f"=== Exporting dataset for document {self.doc_id} to {self.full_sample_id} ===")
+        logger.info(f"=== Exporting dataset for document {self.doc_id} to {self.sample_id} ===")
 
         result = {
             "success": True,
-            "sample_id": self.full_sample_id,
+            "sample_id": self.sample_id,
             "doc_id": self.doc_id,
             "exported_files": [],
             "errors": [],
@@ -298,30 +296,30 @@ class DatasetExporter:
             # Export document
             await self.export_document()
             result["exported_files"].extend([
-                f"{self.full_sample_id}/metadata.yaml",
-                f"{self.full_sample_id}/document.md",
-                f"{self.full_sample_id}/document.pdf",
+                f"{self.sample_id}/metadata.yaml",
+                f"{self.sample_id}/document.md",
+                f"{self.sample_id}/document.pdf",
             ])
 
             # Export annotations and relations
             annotations = self.export_annotations()
             result["counts"]["annotations"] = len(annotations)
-            result["exported_files"].append(f"{self.full_sample_id}/linguistic.yaml")
+            result["exported_files"].append(f"{self.sample_id}/linguistic.yaml")
 
             relations = self.export_relations()
             result["counts"]["relations"] = len(relations)
             if relations:
-                result["exported_files"].append(f"{self.full_sample_id}/relations.yaml")
+                result["exported_files"].append(f"{self.sample_id}/relations.yaml")
 
             # Export patterns (обязательно)
             patterns = self.export_patterns()
             result["counts"]["patterns"] = len(patterns)
-            result["exported_files"].append(f"{self.full_sample_id}/patterns.yaml")
+            result["exported_files"].append(f"{self.sample_id}/patterns.yaml")
 
             # Export chains (обязательно)
             chains = self.export_action_chains()
             result["counts"]["chains"] = len(chains)
-            result["exported_files"].append(f"{self.full_sample_id}/chains.yaml")
+            result["exported_files"].append(f"{self.sample_id}/chains.yaml")
 
             logger.info(f"=== Export complete ===")
             logger.info(f"Summary: {json.dumps(result['counts'], indent=2)}")
@@ -330,7 +328,6 @@ class DatasetExporter:
             summary_path = self.dataset_dir / "export_summary.yaml"
             summary_data = {
                 "sample_id": self.sample_id,
-                "full_sample_id": self.full_sample_id,
                 "doc_id": self.doc_id,
                 "export_date": datetime.now().isoformat(),
                 "exported_files": result["exported_files"],

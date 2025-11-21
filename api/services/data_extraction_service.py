@@ -751,17 +751,16 @@ class DataExtractionService:
     async def save_for_tests(
         self,
         doc_id: str,
-        sample_name: str,
         validate: bool = True
     ) -> Dict[str, Any]:
         """
         Экспортирует документ в тестовый датасет.
 
         Все компоненты обязательны: PDF, markdown, annotations, patterns, chains.
+        Имя датасета генерируется автоматически: {md5_hash}_{YYYY}.{MM}.{DD}_{HH}.{mm}.{ss}_{random6}
 
         Args:
             doc_id: ID документа
-            sample_name: Имя образца для датасета
             validate: Валидировать датасет после экспорта
 
         Returns:
@@ -777,14 +776,10 @@ class DataExtractionService:
         from tools.dataset_builder.export_dataset import DatasetExporter
 
         try:
-            # Создаем экспортер (PDF всегда обязателен)
-            exporter = DatasetExporter(
-                doc_id=doc_id,
-                output_sample=sample_name,
-                include_pdf=True
-            )
+            # Создаем экспортер с автоматической генерацией имени
+            exporter = DatasetExporter(doc_id=doc_id)
 
-            # Выполняем экспорт (patterns и chains всегда обязательны)
+            # Выполняем экспорт (все компоненты обязательны)
             result = await exporter.export_all()
 
             if not result["success"]:
@@ -796,22 +791,25 @@ class DataExtractionService:
                     "dvc_command": "",
                 }
 
+            # Получаем сгенерированный sample_id из результата экспорта
+            sample_id = result["sample_id"]
+
             # Формируем DVC команду
-            dvc_command = "dvc add data/datasets && git add data/datasets.dvc && git commit -m 'Add test dataset: {}'".format(sample_name)
+            dvc_command = "dvc add data/datasets && git add data/datasets.dvc && git commit -m 'Add test dataset: {}'".format(sample_id)
 
             # Валидация (если запрошена)
             validation_result = None
             if validate:
                 try:
                     from tools.dataset_builder.validate_dataset import validate_dataset_programmatic
-                    validation_result = validate_dataset_programmatic(sample_name)
+                    validation_result = validate_dataset_programmatic(sample_id)
                 except Exception as ve:
                     logger.warning(f"Валидация не удалась: {ve}")
                     validation_result = {"valid": False, "errors": [str(ve)]}
 
             return {
                 "success": True,
-                "sample_id": sample_name,
+                "sample_id": sample_id,
                 "exported_files": result["exported_files"],
                 "validation_result": validation_result,
                 "dvc_command": dvc_command,
@@ -822,7 +820,7 @@ class DataExtractionService:
             logger.error(f"Ошибка при сохранении для тестов: {e}", exc_info=True)
             return {
                 "success": False,
-                "sample_id": sample_name,
+                "sample_id": "",
                 "exported_files": [],
                 "message": f"Ошибка: {str(e)}",
                 "dvc_command": "",
