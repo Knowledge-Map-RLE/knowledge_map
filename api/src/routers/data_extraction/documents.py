@@ -149,13 +149,10 @@ async def save_document_for_tests(doc_id: str, request: SaveForTestsRequest):
                        f"Данные попадут в тестовый датасет только после прохождения всех этапов обработки."
             )
 
-        # Выполняем экспорт
+        # Выполняем экспорт (PDF, patterns и chains всегда обязательны)
         result = await data_extraction_service.save_for_tests(
             doc_id=doc_id,
             sample_name=request.sample_name,
-            include_pdf=request.include_pdf,
-            include_patterns=request.include_patterns,
-            include_chains=request.include_chains,
             validate=request.validate
         )
 

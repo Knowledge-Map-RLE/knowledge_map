@@ -15,6 +15,8 @@ import json
 import logging
 import sys
 import yaml
+import secrets
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
@@ -40,22 +42,23 @@ class DatasetExporter:
 
     def __init__(self, doc_id: str, output_sample: str, include_pdf: bool = False):
         self.doc_id = doc_id
-        self.sample_id = output_sample
-        self.include_pdf = include_pdf
+        self.sample_id = output_sample  # Сохраняем для обратной совместимости
+        self.include_pdf = include_pdf  # Игнорируется, PDF всегда обязателен
         self.s3_client = get_s3_client()
         self.yaml_service = YAMLExportService()
 
-        # Output directories
-        self.doc_dir = DATASETS_DIR / "documents" / self.sample_id
-        self.ann_dir = DATASETS_DIR / "annotations" / self.sample_id
-        self.exp_dir = DATASETS_DIR / "expected" / self.sample_id
+        # Генерируем уникальное имя: {md5_hash}_{YYYY}.{MM}.{DD}_{HH}.{mm}.{ss}_{random6}
+        now = datetime.now()
+        timestamp = now.strftime("%Y.%m.%d_%H.%M.%S")
+        random_hash = secrets.token_hex(3)  # 6 символов (3 байта в hex)
+
+        self.full_sample_id = f"{self.doc_id}_{timestamp}_{random_hash}"
+        self.dataset_dir = DATASETS_DIR / self.full_sample_id
 
     def create_directories(self):
-        """Create output directories if they don't exist"""
-        self.doc_dir.mkdir(parents=True, exist_ok=True)
-        self.ann_dir.mkdir(parents=True, exist_ok=True)
-        self.exp_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"Created directories for sample {self.sample_id}")
+        """Create output directory if it doesn't exist"""
+        self.dataset_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Created directory {self.full_sample_id}")
 
     async def export_document(self) -> Dict[str, Any]:
         """Export document metadata and markdown from Neo4j and S3"""
@@ -76,7 +79,7 @@ class DatasetExporter:
             "upload_date": document.upload_date.isoformat() if document.upload_date else None,
         }
 
-        metadata_path = self.doc_dir / "metadata.yaml"
+        metadata_path = self.dataset_dir / "metadata.yaml"
         self.yaml_service.export_to_yaml(metadata, metadata_path)
         logger.info(f"Exported metadata to {metadata_path}")
 
@@ -110,22 +113,21 @@ class DatasetExporter:
                 logger.info(f"Using legacy markdown from {md_key}")
 
         if markdown:
-            md_path = self.doc_dir / "document.md"
+            md_path = self.dataset_dir / "document.md"
             md_path.write_text(markdown, encoding="utf-8")
             logger.info(f"Exported markdown to {md_path}")
         else:
             logger.warning(f"Markdown not found for document {self.doc_id}")
 
-        # Export PDF if requested
-        if self.include_pdf:
-            pdf_key = f"documents/{self.doc_id}/{self.doc_id}.pdf"
-            if await self.s3_client.object_exists(bucket, pdf_key):
-                pdf_bytes = await self.s3_client.download_bytes(bucket, pdf_key)
-                pdf_path = self.doc_dir / "document.pdf"
-                pdf_path.write_bytes(pdf_bytes)
-                logger.info(f"Exported PDF to {pdf_path} ({len(pdf_bytes)} bytes)")
-            else:
-                logger.warning(f"PDF not found in S3: {pdf_key}")
+        # Export PDF (обязательно)
+        pdf_key = f"documents/{self.doc_id}/{self.doc_id}.pdf"
+        if await self.s3_client.object_exists(bucket, pdf_key):
+            pdf_bytes = await self.s3_client.download_bytes(bucket, pdf_key)
+            pdf_path = self.dataset_dir / "document.pdf"
+            pdf_path.write_bytes(pdf_bytes)
+            logger.info(f"Exported PDF to {pdf_path} ({len(pdf_bytes)} bytes)")
+        else:
+            raise ValueError(f"PDF file is mandatory but not found in S3: {pdf_key}")
 
         return metadata
 
@@ -138,7 +140,7 @@ class DatasetExporter:
         annotations = data.get("annotations", [])
 
         # Save to file
-        linguistic_path = self.ann_dir / "linguistic.yaml"
+        linguistic_path = self.dataset_dir / "linguistic.yaml"
         self.yaml_service.export_to_yaml({"annotations": annotations}, linguistic_path)
 
         logger.info(f"Exported {len(annotations)} annotations to {linguistic_path}")
@@ -153,7 +155,7 @@ class DatasetExporter:
 
         # Save to file
         if relations:
-            relations_path = self.ann_dir / "relations.yaml"
+            relations_path = self.dataset_dir / "relations.yaml"
             self.yaml_service.export_to_yaml({"relations": relations}, relations_path)
             logger.info(f"Exported {len(relations)} relations to {relations_path}")
         else:
@@ -199,13 +201,13 @@ class DatasetExporter:
 
             patterns.append(pattern_data)
 
-        # Save to file
+        # Save to file (обязательно)
         if patterns:
-            patterns_path = self.ann_dir / "patterns.yaml"
+            patterns_path = self.dataset_dir / "patterns.yaml"
             self.yaml_service.export_to_yaml({"patterns": patterns}, patterns_path)
             logger.info(f"Exported {len(patterns)} patterns to {patterns_path}")
         else:
-            logger.info("No patterns found for this document")
+            raise ValueError("Patterns are mandatory but none were found for this document")
 
         return patterns
 
@@ -255,32 +257,30 @@ class DatasetExporter:
 
             chains.append(chain_data)
 
-        # Save to file
+        # Save to file (обязательно)
         if chains:
-            chains_path = self.ann_dir / "chains.yaml"
+            chains_path = self.dataset_dir / "chains.yaml"
             self.yaml_service.export_to_yaml({"chains": chains}, chains_path)
             logger.info(f"Exported {len(chains)} action chains to {chains_path}")
         else:
-            logger.info("No action chains found for this document")
+            raise ValueError("Action chains are mandatory but none were found for this document")
 
         return chains
 
-    async def export_all(self, include_patterns: bool = True, include_chains: bool = True) -> Dict[str, Any]:
+    async def export_all(self) -> Dict[str, Any]:
         """
         Export complete dataset
 
-        Args:
-            include_patterns: Include patterns in export
-            include_chains: Include action chains in export
+        All components are mandatory: PDF, markdown, annotations, relations, patterns, chains
 
         Returns:
             Dict with export results including success status, files, and counts
         """
-        logger.info(f"=== Exporting dataset for document {self.doc_id} to {self.sample_id} ===")
+        logger.info(f"=== Exporting dataset for document {self.doc_id} to {self.full_sample_id} ===")
 
         result = {
             "success": True,
-            "sample_id": self.sample_id,
+            "sample_id": self.full_sample_id,
             "doc_id": self.doc_id,
             "exported_files": [],
             "errors": [],
@@ -298,48 +298,45 @@ class DatasetExporter:
             # Export document
             await self.export_document()
             result["exported_files"].extend([
-                f"documents/{self.sample_id}/metadata.yaml",
-                f"documents/{self.sample_id}/document.md",
+                f"{self.full_sample_id}/metadata.yaml",
+                f"{self.full_sample_id}/document.md",
+                f"{self.full_sample_id}/document.pdf",
             ])
-            if self.include_pdf:
-                result["exported_files"].append(f"documents/{self.sample_id}/document.pdf")
 
             # Export annotations and relations
             annotations = self.export_annotations()
             result["counts"]["annotations"] = len(annotations)
-            result["exported_files"].append(f"annotations/{self.sample_id}/linguistic.yaml")
+            result["exported_files"].append(f"{self.full_sample_id}/linguistic.yaml")
 
             relations = self.export_relations()
             result["counts"]["relations"] = len(relations)
             if relations:
-                result["exported_files"].append(f"annotations/{self.sample_id}/relations.yaml")
+                result["exported_files"].append(f"{self.full_sample_id}/relations.yaml")
 
-            # Export patterns (optional)
-            if include_patterns:
-                patterns = self.export_patterns()
-                result["counts"]["patterns"] = len(patterns)
-                if patterns:
-                    result["exported_files"].append(f"annotations/{self.sample_id}/patterns.yaml")
+            # Export patterns (обязательно)
+            patterns = self.export_patterns()
+            result["counts"]["patterns"] = len(patterns)
+            result["exported_files"].append(f"{self.full_sample_id}/patterns.yaml")
 
-            # Export chains (optional)
-            if include_chains:
-                chains = self.export_action_chains()
-                result["counts"]["chains"] = len(chains)
-                if chains:
-                    result["exported_files"].append(f"annotations/{self.sample_id}/chains.yaml")
+            # Export chains (обязательно)
+            chains = self.export_action_chains()
+            result["counts"]["chains"] = len(chains)
+            result["exported_files"].append(f"{self.full_sample_id}/chains.yaml")
 
             logger.info(f"=== Export complete ===")
             logger.info(f"Summary: {json.dumps(result['counts'], indent=2)}")
 
-            # Save summary
-            summary_path = DATASETS_DIR / f"{self.sample_id}_export_summary.json"
-            with open(summary_path, "w", encoding="utf-8") as f:
-                json.dump({
-                    "sample_id": self.sample_id,
-                    "doc_id": self.doc_id,
-                    "exported_files": result["exported_files"],
-                    "counts": result["counts"],
-                }, f, ensure_ascii=False, indent=2)
+            # Save summary (YAML внутри папки)
+            summary_path = self.dataset_dir / "export_summary.yaml"
+            summary_data = {
+                "sample_id": self.sample_id,
+                "full_sample_id": self.full_sample_id,
+                "doc_id": self.doc_id,
+                "export_date": datetime.now().isoformat(),
+                "exported_files": result["exported_files"],
+                "counts": result["counts"],
+            }
+            self.yaml_service.export_to_yaml(summary_data, summary_path)
 
         except Exception as e:
             logger.error(f"Export failed: {e}", exc_info=True)

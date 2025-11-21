@@ -27,9 +27,6 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
 
   // Настройки экспорта
   const [sampleName, setSampleName] = useState('');
-  const [includePdf, setIncludePdf] = useState(false);
-  const [includePatterns, setIncludePatterns] = useState(true);
-  const [includeChains, setIncludeChains] = useState(true);
   const [validate, setValidate] = useState(true);
 
   useEffect(() => {
@@ -80,9 +77,6 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
 
       const request: SaveForTestsRequest = {
         sample_name: sampleName,
-        include_pdf: includePdf,
-        include_patterns: includePatterns,
-        include_chains: includeChains,
         validate,
       };
 
@@ -124,13 +118,13 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
             <span className="status-icon">{availability.has_relations ? '✓' : '○'}</span>
             <span>Связи ({availability.relation_count})</span>
           </div>
-          <div className={`status-item ${availability.has_chains ? 'ready' : 'optional'}`}>
-            <span className="status-icon">{availability.has_chains ? '✓' : '○'}</span>
-            <span>Цепочки</span>
+          <div className={`status-item ${availability.has_chains ? 'ready' : 'missing'}`}>
+            <span className="status-icon">{availability.has_chains ? '✓' : '✗'}</span>
+            <span>Цепочки (обязательно)</span>
           </div>
-          <div className={`status-item ${availability.has_patterns ? 'ready' : 'optional'}`}>
-            <span className="status-icon">{availability.has_patterns ? '✓' : '○'}</span>
-            <span>Паттерны</span>
+          <div className={`status-item ${availability.has_patterns ? 'ready' : 'missing'}`}>
+            <span className="status-icon">{availability.has_patterns ? '✓' : '✗'}</span>
+            <span>Паттерны (обязательно)</span>
           </div>
         </div>
 
@@ -171,37 +165,13 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
           <small>Только латинские буквы, цифры и подчеркивание</small>
         </div>
 
+        <div className="mandatory-info">
+          <p>
+            <strong>Обязательные компоненты экспорта:</strong> PDF файл, Markdown, аннотации, паттерны, цепочки действий
+          </p>
+        </div>
+
         <div className="checkbox-group">
-          <label>
-            <input
-              type="checkbox"
-              checked={includePdf}
-              onChange={(e) => setIncludePdf(e.target.checked)}
-              disabled={saving}
-            />
-            <span>Включить PDF файл</span>
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              checked={includePatterns}
-              onChange={(e) => setIncludePatterns(e.target.checked)}
-              disabled={saving || !availability.has_patterns}
-            />
-            <span>Включить паттерны {!availability.has_patterns && '(отсутствуют)'}</span>
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              checked={includeChains}
-              onChange={(e) => setIncludeChains(e.target.checked)}
-              disabled={saving || !availability.has_chains}
-            />
-            <span>Включить цепочки действий {!availability.has_chains && '(отсутствуют)'}</span>
-          </label>
-
           <label>
             <input
               type="checkbox"

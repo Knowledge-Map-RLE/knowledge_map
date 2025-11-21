@@ -719,8 +719,8 @@ class DataExtractionService:
         pattern_count = results[0][0] if results else 0
         has_patterns = pattern_count > 0
 
-        # Определяем готовность к экспорту
-        is_ready = pdf_exists and markdown_exists and has_annotations
+        # Определяем готовность к экспорту (все компоненты обязательны)
+        is_ready = pdf_exists and markdown_exists and has_annotations and has_patterns and has_chains
 
         # Список отсутствующих компонентов
         missing_items = []
@@ -730,6 +730,10 @@ class DataExtractionService:
             missing_items.append("Markdown файл")
         if not has_annotations:
             missing_items.append("Аннотации")
+        if not has_patterns:
+            missing_items.append("Паттерны")
+        if not has_chains:
+            missing_items.append("Цепочки действий")
 
         return {
             "pdf_exists": pdf_exists,
@@ -748,20 +752,16 @@ class DataExtractionService:
         self,
         doc_id: str,
         sample_name: str,
-        include_pdf: bool = False,
-        include_patterns: bool = True,
-        include_chains: bool = True,
         validate: bool = True
     ) -> Dict[str, Any]:
         """
         Экспортирует документ в тестовый датасет.
 
+        Все компоненты обязательны: PDF, markdown, annotations, patterns, chains.
+
         Args:
             doc_id: ID документа
             sample_name: Имя образца для датасета
-            include_pdf: Включить PDF файл
-            include_patterns: Включить паттерны
-            include_chains: Включить цепочки действий
             validate: Валидировать датасет после экспорта
 
         Returns:
@@ -777,18 +777,15 @@ class DataExtractionService:
         from tools.dataset_builder.export_dataset import DatasetExporter
 
         try:
-            # Создаем экспортер
+            # Создаем экспортер (PDF всегда обязателен)
             exporter = DatasetExporter(
                 doc_id=doc_id,
                 output_sample=sample_name,
-                include_pdf=include_pdf
+                include_pdf=True
             )
 
-            # Выполняем экспорт
-            result = await exporter.export_all(
-                include_patterns=include_patterns,
-                include_chains=include_chains
-            )
+            # Выполняем экспорт (patterns и chains всегда обязательны)
+            result = await exporter.export_all()
 
             if not result["success"]:
                 return {

@@ -190,11 +190,11 @@ class NLPAnalyzeRequest(BaseModel):
 
 # Схемы для сохранения данных в тестовый датасет
 class SaveForTestsRequest(BaseModel):
-    """Запрос на сохранение документа в тестовый датасет"""
+    """Запрос на сохранение документа в тестовый датасет
+
+    PDF, patterns и chains всегда обязательны и включаются автоматически.
+    """
     sample_name: str = Field(..., pattern="^[a-z0-9_]+$", description="Имя образца (только латиница, цифры и подчёркивание)")
-    include_pdf: bool = Field(default=False, description="Включить PDF файл в экспорт")
-    include_patterns: bool = Field(default=True, description="Включить паттерны в экспорт")
-    include_chains: bool = Field(default=True, description="Включить цепочки действий в экспорт")
     validate: bool = Field(default=True, description="Валидировать датасет после экспорта")
 
 
