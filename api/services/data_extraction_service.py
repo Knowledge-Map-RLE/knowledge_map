@@ -4,6 +4,7 @@ import asyncio
 import tempfile
 import shutil
 import mimetypes
+import re
 from pathlib import Path as SysPath
 from typing import Dict, Any
 
@@ -52,10 +53,62 @@ def extract_title_from_markdown(markdown_content: str) -> str | None:
 
 class DataExtractionService:
     """Сервис для извлечения данных из PDF файлов"""
-    
+
     def __init__(self):
         self.s3_client = get_s3_client()
-    
+
+    def _convert_relative_image_paths(self, markdown_text: str, doc_id: str, request: Any = None) -> str:
+        """
+        Преобразует относительные пути изображений в абсолютные.
+
+        Заменяет пути вида 'page_1_pic_0.png' на полные URL:
+        'http://localhost:8000/api/v1/s3/image/documents/{doc_id}/images/page_1_pic_0.png'
+
+        Args:
+            markdown_text: Исходный markdown с относительными путями
+            doc_id: ID документа
+            request: FastAPI Request объект для определения базового URL (опционально)
+
+        Returns:
+            Markdown с абсолютными путями к изображениям
+        """
+        # Определяем базовый URL в порядке приоритета:
+        # 1. Из request (если передан)
+        # 2. Из настроек API_BASE_URL
+        # 3. Фоллбэк на localhost:8000
+        if request:
+            # Извлекаем из request
+            scheme = request.url.scheme
+            host = request.headers.get('host', f"{settings.API_HOST}:{settings.API_PORT}")
+            base_url = f"{scheme}://{host}"
+        elif settings.API_BASE_URL:
+            # Из настроек
+            base_url = settings.API_BASE_URL
+        else:
+            # Фоллбэк
+            base_url = 'http://localhost:8000'
+
+        image_prefix = f"{base_url}/api/v1/s3/image/documents/{doc_id}/images/"
+
+        # Заменяем относительные пути изображений на абсолютные
+        # Паттерн: ![alt](filename.png) где filename не содержит http
+        def replace_image_path(match):
+            alt_text = match.group(1)
+            image_path = match.group(2)
+
+            # Если путь уже абсолютный (начинается с http), не меняем
+            if image_path.startswith('http://') or image_path.startswith('https://'):
+                return match.group(0)
+
+            # Если путь относительный, добавляем префикс
+            # Используем angle brackets для корректного парсинга URL со слешами в marked
+            return f"![{alt_text}](<{image_prefix}{image_path}>)"
+
+        # Применяем замену для всех изображений
+        result = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', replace_image_path, markdown_text)
+
+        return result
+
     async def upload_and_process_pdf(
         self, 
         background_tasks: BackgroundTasks, 
@@ -74,7 +127,9 @@ class DataExtractionService:
         prefix = f"documents/{doc_id}/"
         pdf_key = f"{prefix}{doc_id}.pdf"
 
+        logger.info(f"[upload_and_process_pdf] Получен файл {file.filename}, doc_id={doc_id}")
         pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
+        logger.info(f"[upload_and_process_pdf] PDF существует в S3: {pdf_exists}")
 
         async def process_pdf_and_upload(pdf_bytes: bytes, filename: str = None):
             # Конвертация PDF в Markdown через gRPC сервис
@@ -209,6 +264,11 @@ class DataExtractionService:
                             update_needed = True
                             logger.info(f"[Neo4j] Обновлён raw markdown key: {docling_raw_s3_key}")
 
+                            # Очищаем старые ключи, которые больше не актуальны
+                            if existing_doc.user_md_s3_key:
+                                logger.info(f"[Neo4j] Очищаем устаревший user_md_s3_key: {existing_doc.user_md_s3_key}")
+                                existing_doc.user_md_s3_key = None
+
                         if formatted_s3_key:
                             existing_doc.formatted_md_s3_key = formatted_s3_key
                             update_needed = True
@@ -232,37 +292,44 @@ class DataExtractionService:
                     pass
 
         if pdf_exists:
+            logger.info(f"[upload_and_process_pdf] PDF уже существует, проверяем markdown")
             # если markdown отсутствует, запускаем конвертацию
             md_key = f"{prefix}{doc_id}.md"
-            if not await self.s3_client.object_exists(bucket, md_key):
+            md_exists = await self.s3_client.object_exists(bucket, md_key)
+            logger.info(f"[upload_and_process_pdf] Markdown существует в S3: {md_exists}")
+            if not md_exists:
                 # скачиваем существующий pdf и запускаем маркер
+                logger.info(f"[upload_and_process_pdf] Markdown не найден, запускаем конвертацию")
                 existing_pdf = await self.s3_client.download_bytes(bucket, pdf_key)
                 if not existing_pdf:
                     raise HTTPException(status_code=500, detail="Не удалось прочитать существующий PDF из S3")
                 background_tasks.add_task(process_pdf_and_upload, existing_pdf, file.filename)
                 logger.info(f"[pdf_to_md] Переобработка запущена для существующего PDF: doc_id={doc_id}")
                 return DataExtractionResponse(
-                    success=True, doc_id=doc_id, 
-                    message="Конвертация запущена для существующего PDF", 
+                    success=True, doc_id=doc_id,
+                    message="Конвертация запущена для существующего PDF",
                     files={"pdf": pdf_key}
                 )
+            logger.info(f"[upload_and_process_pdf] И PDF и Markdown уже существуют, возвращаем дубликат")
             return DataExtractionResponse(
-                success=True, doc_id=doc_id, 
-                message="Дубликат: уже существует", 
+                success=True, doc_id=doc_id,
+                message="Дубликат: уже существует",
                 files={"pdf": pdf_key}
             )
 
+        logger.info(f"[upload_and_process_pdf] PDF не существует, загружаем новый файл")
         uploaded = await self.s3_client.upload_bytes(
             raw, bucket, pdf_key, content_type="application/pdf"
         )
         if not uploaded:
             raise HTTPException(status_code=500, detail="Не удалось сохранить PDF в S3")
 
+        logger.info(f"[upload_and_process_pdf] PDF загружен в S3, запускаем background task для конвертации")
         background_tasks.add_task(process_pdf_and_upload, raw, file.filename)
 
         return DataExtractionResponse(
-            success=True, doc_id=doc_id, 
-            message="Файл принят, конвертация запущена", 
+            success=True, doc_id=doc_id,
+            message="Файл принят, конвертация запущена",
             files={"pdf": pdf_key}
         )
 
@@ -296,9 +363,14 @@ class DataExtractionService:
             raise HTTPException(status_code=500, detail="Не удалось сохранить аннотации")
         return {"success": True, "key": key}
 
-    async def get_document_assets(self, doc_id: str, include_urls: bool = False) -> Dict[str, Any]:
+    async def get_document_assets(self, doc_id: str, include_urls: bool = False, request: Any = None) -> Dict[str, Any]:
         """Возвращает markdown и список изображений (ключей) для документа.
         Если include_urls=True, добавляет presigned URL для изображений.
+
+        Args:
+            doc_id: ID документа
+            include_urls: Добавлять ли presigned URL для изображений
+            request: FastAPI Request объект для определения базового URL
         """
         bucket = settings.S3_BUCKET_NAME
         prefix = f"documents/{doc_id}/"
@@ -326,8 +398,15 @@ class DataExtractionService:
 
         pdf_key = f"{prefix}{doc_id}.pdf"
         markdown_text = None
-        if await self.s3_client.object_exists(bucket, md_key):
+        md_exists = await self.s3_client.object_exists(bucket, md_key)
+        logger.info(f"[get_document_assets] doc_id={doc_id}, md_key={md_key}, exists={md_exists}")
+        if md_exists:
             markdown_text = await self.s3_client.download_text(bucket, md_key)
+            logger.info(f"[get_document_assets] markdown loaded, length={len(markdown_text) if markdown_text else 0}")
+            # ОТКЛЮЧЕНО: Преобразование происходит на клиенте
+            # if markdown_text:
+            #     markdown_text = self._convert_relative_image_paths(markdown_text, doc_id, request=request)
+            #     logger.info(f"[get_document_assets] paths converted, length={len(markdown_text)}")
 
         # перечислим изображения
         contents = await self.s3_client.list_objects(bucket, prefix)
@@ -450,6 +529,9 @@ class DataExtractionService:
                 status_code=500,
                 detail="Не удалось загрузить markdown из S3"
             )
+
+        # Преобразуем относительные пути изображений в абсолютные
+        markdown_text = self._convert_relative_image_paths(markdown_text, doc_id)
 
         return {
             "success": True,
@@ -666,16 +748,21 @@ class DataExtractionService:
                 md_key = None
                 if pdf_doc.user_md_s3_key:
                     md_key = pdf_doc.user_md_s3_key
+                    logger.info(f"[list_documents] doc_id={doc_id}: используем user_md_s3_key={md_key}")
                 elif pdf_doc.formatted_md_s3_key:
                     md_key = pdf_doc.formatted_md_s3_key
+                    logger.info(f"[list_documents] doc_id={doc_id}: используем formatted_md_s3_key={md_key}")
                 elif pdf_doc.docling_raw_md_s3_key:
                     md_key = pdf_doc.docling_raw_md_s3_key
+                    logger.info(f"[list_documents] doc_id={doc_id}: используем docling_raw_md_s3_key={md_key}")
                 else:
                     md_key = f"{prefix}{doc_id}.md"
+                    logger.info(f"[list_documents] doc_id={doc_id}: используем старый формат md_key={md_key}")
 
                 # Проверяем реальное существование файлов в S3
                 pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
                 md_exists = await self.s3_client.object_exists(bucket, md_key)
+                logger.info(f"[list_documents] doc_id={doc_id}: pdf_exists={pdf_exists}, md_exists={md_exists} для ключа {md_key}")
 
                 # Показываем документ только если markdown реально существует
                 if md_exists:

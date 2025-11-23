@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     s3_access_key: str = Field(default="minio", env="S3_ACCESS_KEY")
     s3_secret_key: str = Field(default="minio123456", env="S3_SECRET_KEY")
     s3_region: str = Field(default="us-east-1", env="S3_REGION")
-    s3_bucket_name: str = Field(default="knowledge-map", env="S3_BUCKET_NAME")
+    s3_bucket_name: str = Field(default="knowledge-map-data", env="S3_BUCKET_NAME")
 
     # AI Model Service settings
     ai_model_service_host: str = Field(default="127.0.0.1", env="AI_MODEL_SERVICE_HOST")

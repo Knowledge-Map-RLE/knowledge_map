@@ -74,7 +74,7 @@ class DoclingModel(BaseModel):
 
         # Create output directory
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Progress callback
         if on_progress:
             on_progress({
@@ -84,13 +84,39 @@ class DoclingModel(BaseModel):
             })
 
         # Initialize converter with configuration for image extraction
+        # This may fail with SSL error if models need to be downloaded from HuggingFace
+        converter = None
         try:
             converter = self._create_optimized_converter()
             logger.info("✅ DocumentConverter initialized with optimized image extraction")
         except Exception as e:
-            logger.warning(f"Failed to create optimized converter: {e}, falling back to default")
-            converter = DocumentConverter()
-            logger.info("✅ DocumentConverter initialized with default settings")
+            error_msg = str(e)
+            logger.warning(f"Failed to create optimized converter: {e}")
+
+            # Check if it's an SSL/network error
+            if 'SSL' in error_msg or 'huggingface' in error_msg.lower() or 'connection' in error_msg.lower():
+                logger.error(f"❌ Failed to download Docling model from HuggingFace: {error_msg}")
+                logger.error("Please ensure internet connection is available or download models manually")
+                raise RuntimeError(
+                    "Docling model download failed (SSL/network error). "
+                    "Please check internet connection or download models manually. "
+                    f"Error: {error_msg}"
+                )
+
+            # For other errors, try default converter
+            try:
+                converter = DocumentConverter()
+                logger.info("✅ DocumentConverter initialized with default settings")
+            except Exception as e2:
+                error_msg2 = str(e2)
+                if 'SSL' in error_msg2 or 'huggingface' in error_msg2.lower() or 'connection' in error_msg2.lower():
+                    logger.error(f"❌ Failed to download Docling model with default settings: {error_msg2}")
+                    raise RuntimeError(
+                        "Docling model download failed (SSL/network error). "
+                        "Please check internet connection or download models manually. "
+                        f"Error: {error_msg2}"
+                    )
+                raise
         
         if on_progress:
             on_progress({
@@ -173,16 +199,20 @@ class DoclingModel(BaseModel):
         
         # FALLBACK: Continue with standard Docling conversion
         logger.info("🔄 Falling back to standard Docling conversion")
-        
+
         if on_progress:
             on_progress({
                 'percent': 30,
                 'phase': 'converting',
                 'message': 'Converting PDF to Markdown'
             })
-        
+
         # Convert the document using new API (Docling 2.x)
         # Simply pass the file path - no need for DocumentConversionInput
+        # Use the already initialized converter (no re-initialization needed)
+        if converter is None:
+            raise RuntimeError("Converter not initialized. Cannot proceed with fallback conversion.")
+
         result = converter.convert(str(input_path))
         logger.info("✅ Conversion completed")
         

@@ -42,24 +42,34 @@ class CoordinateExtractionService:
         
         try:
             from docling.document_converter import DocumentConverter
-            
+
             logger.info("=== Coordinate-Based Image Extraction with S3 ===")
-            
+
             if on_progress:
                 on_progress({"percent": 5, "message": "Инициализация S3..."})
-            
+
             # Проверяем S3
             s3_health = await self.s3_service.health_check()
             if not s3_health['success']:
                 raise Exception(f"S3 service unavailable: {s3_health.get('error')}")
-            
+
             if on_progress:
                 on_progress({"percent": 10, "message": "Анализ координат с Docling..."})
-            
+
             # Step 1: Получаем координаты от Docling
             logger.info("Step 1: Получение координат от Docling...")
-            converter = DocumentConverter()
-            result = converter.convert(str(pdf_path))
+            try:
+                converter = DocumentConverter()
+                result = converter.convert(str(pdf_path))
+            except Exception as e:
+                # Если не удалось загрузить модель (SSL ошибка, нет интернета и т.д.)
+                error_msg = str(e)
+                if 'SSL' in error_msg or 'huggingface' in error_msg.lower() or 'connection' in error_msg.lower():
+                    logger.error(f"Failed to download Docling model from HuggingFace: {error_msg}")
+                    logger.info("Falling back to standard conversion without coordinate extraction")
+                    raise Exception(f"Docling model download failed (SSL/network error). Please check internet connection or download models manually.")
+                else:
+                    raise
             
             coordinates = self._extract_coordinates_from_docling(result)
             logger.info(f"Найдено {len(coordinates)} координат изображений")
@@ -229,10 +239,9 @@ class CoordinateExtractionService:
                         
                         logger.info(f"Размер извлеченного изображения: {pil_image.size}")
                         logger.info(f"Режим извлеченного изображения: {pil_image.mode}")
-                        
-                        # Генерируем имя файла
-                        file_id = uuid.uuid4().hex[:8]
-                        filename = f"page_{coord_info['page_no']}_pic_{coord_info['picture_index']}_{file_id}.png"
+
+                        # Генерируем имя файла (без случайной части для предсказуемости)
+                        filename = f"page_{coord_info['page_no']}_pic_{coord_info['picture_index']}.png"
                         
                         # Загружаем в S3
                         upload_result = await self.s3_service.upload_image(
@@ -292,30 +301,30 @@ class CoordinateExtractionService:
             return extracted_images
     
     def _update_markdown_with_s3_urls(self, markdown_content: str, extracted_images: List[Dict]) -> str:
-        """Обновить ссылки на изображения в markdown на S3 URL"""
-        
+        """Обновить ссылки на изображения в markdown с относительными путями"""
+
         if not extracted_images:
             return markdown_content
-        
+
         # Сортируем изображения по picture_index для сохранения порядка
         sorted_images = sorted(extracted_images, key=lambda x: x["picture_index"])
-        
+
         # Заменяем плейсхолдеры <!-- image --> на реальные ссылки на изображения
         lines = markdown_content.split('\n')
         image_count = 0
-        
+
         for i, line in enumerate(lines):
             if '<!-- image -->' in line and image_count < len(sorted_images):
                 image_info = sorted_images[image_count]
-                s3_url = image_info['s3_url']
                 filename = image_info['filename']
-                
-                # Заменяем на правильный синтаксис markdown изображения
-                lines[i] = f"![Изображение {image_count + 1}]({s3_url})"
+
+                # Используем только имя файла (относительный путь)
+                # Клиент сам добавит префикс с doc_id при отображении
+                lines[i] = f"![Изображение {image_count + 1}]({filename})"
                 image_count += 1
-                
-                logger.info(f"Обновлена ссылка на изображение {image_count}: {filename} -> {s3_url}")
-        
+
+                logger.info(f"Обновлена ссылка на изображение {image_count}: {filename} (относительный путь)")
+
         return '\n'.join(lines)
     
     async def get_document_images(self, document_id: str) -> Dict[str, Any]:

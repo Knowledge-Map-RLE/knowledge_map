@@ -103,14 +103,16 @@ class PDFToMarkdownGRPCClient:
             
             # Выполняем gRPC вызов
             response = await self.stub.ConvertPDF(request, timeout=timeout)
-            
+
             return {
                 "success": response.success,
                 "doc_id": response.doc_id,
                 "markdown_content": response.markdown_content,
                 "images": dict(response.images),
                 "metadata_json": response.metadata_json or "",
-                "message": response.message
+                "message": response.message,
+                "docling_raw_s3_key": response.docling_raw_s3_key if hasattr(response, 'docling_raw_s3_key') else None,
+                "formatted_s3_key": response.formatted_s3_key if hasattr(response, 'formatted_s3_key') else None
             }
             
         except Exception as e:
@@ -159,14 +161,16 @@ class PDFToMarkdownGRPCClient:
             
             # Выполняем gRPC вызов с отслеживанием прогресса
             response = await self.stub.ConvertPDFWithProgress(request, timeout=timeout)
-            
+
             return {
                 "success": response.success,
                 "doc_id": response.doc_id,
                 "markdown_content": response.markdown_content,
                 "images": dict(response.images),
                 "metadata_json": response.metadata_json or "",
-                "message": response.message
+                "message": response.message,
+                "docling_raw_s3_key": response.docling_raw_s3_key if hasattr(response, 'docling_raw_s3_key') else None,
+                "formatted_s3_key": response.formatted_s3_key if hasattr(response, 'formatted_s3_key') else None
             }
             
         except Exception as e:

@@ -1,6 +1,6 @@
 """Роутер для работы с документами"""
 import logging
-from fastapi import APIRouter, BackgroundTasks, UploadFile, File, HTTPException
+from fastapi import APIRouter, BackgroundTasks, UploadFile, File, HTTPException, Request
 from fastapi.responses import Response
 
 from src.schemas.api import (
@@ -28,9 +28,9 @@ async def data_extraction_upload(background_tasks: BackgroundTasks, file: Upload
 
 
 @router.get("/documents/{doc_id}/assets", response_model=DocumentAssetsResponse)
-async def get_document_assets(doc_id: str, include_urls: bool = True):
+async def get_document_assets(request: Request, doc_id: str, include_urls: bool = True):
     """Возвращает markdown и список изображений (ключей) для документа."""
-    result = await data_extraction_service.get_document_assets(doc_id, include_urls=include_urls)
+    result = await data_extraction_service.get_document_assets(doc_id, include_urls=include_urls, request=request)
     return DocumentAssetsResponse(**result)
 
 

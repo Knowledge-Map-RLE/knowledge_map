@@ -25,7 +25,7 @@ class S3Service:
         self.access_key = os.getenv('S3_ACCESS_KEY', 'minio')
         self.secret_key = os.getenv('S3_SECRET_KEY', 'minio123456')
         self.region = os.getenv('S3_REGION', 'us-east-1')
-        self.bucket_name = os.getenv('S3_BUCKET_NAME', 'knowledge-map-images')
+        self.bucket_name = os.getenv('S3_BUCKET_NAME', 'knowledge-map-data')
         
         # Конфигурация для MinIO
         self.config = Config(
