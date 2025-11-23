@@ -20,8 +20,8 @@ async def get_s3_image(object_key: str):
     """
     try:
         s3_client = get_s3_client()
-        # Изображения хранятся в отдельном бакете knowledge-map-images
-        bucket = "knowledge-map-images"
+        # Изображения хранятся в основном бакете knowledge-map-data
+        bucket = settings.S3_BUCKET_NAME
 
         logger.info(f"Загрузка изображения из S3: bucket={bucket}, key={object_key}")
 
