@@ -460,76 +460,141 @@ class DataExtractionService:
         }
 
     async def delete_document(self, doc_id: str) -> Dict[str, Any]:
-        """Удаляет документ и все его файлы из S3 (префикс documents/{doc_id}/), а также все аннотации из Neo4j."""
-        # Сначала удаляем аннотации из Neo4j
+        """
+        Удаляет документ и все связанные данные:
+        - Аннотации из Neo4j
+        - Связи между аннотациями
+        - Паттерны (patterns)
+        - Цепочки действий (action chains)
+        - Сам документ PDFDocument из Neo4j
+        - Все файлы из S3 (documents/{doc_id}/ и markdown/{doc_id}*)
+        """
+        from neomodel import db
+
+        # Удаляем все связанные данные из Neo4j одним запросом
         try:
             document = PDFDocument.nodes.get_or_none(uid=doc_id)
             if document:
-                # Удаляем все связанные аннотации
-                from neomodel import db
+                # Комплексное удаление всех связанных данных
                 query = """
-                MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
-                DETACH DELETE a
+                MATCH (d:PDFDocument {uid: $doc_id})
+
+                // Удаляем паттерны, связанные с аннотациями документа
+                OPTIONAL MATCH (d)-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+                OPTIONAL MATCH (p:Pattern {source_token_uid: a.uid})
+                DETACH DELETE p
+
+                // Удаляем все аннотации со всеми связями
+                WITH d, collect(a) as annotations
+                UNWIND annotations as ann
+                DETACH DELETE ann
+
+                // Удаляем сам документ
+                WITH d
+                DETACH DELETE d
+
+                RETURN count(d) as deleted_count
                 """
-                db.cypher_query(query, {'doc_id': doc_id})
-                logger.info(f"Удалены все аннотации для документа {doc_id}")
+                result, _ = db.cypher_query(query, {'doc_id': doc_id})
+                deleted_count = result[0][0] if result else 0
+                logger.info(f"Удалены все данные из Neo4j для документа {doc_id}: аннотации, связи, паттерны, цепочки, документ (удалено: {deleted_count})")
+
+                # Проверяем, что документ действительно удален
+                check_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                if check_doc:
+                    logger.error(f"ОШИБКА: Документ {doc_id} всё ещё существует в Neo4j после удаления!")
+                else:
+                    logger.info(f"Подтверждено: документ {doc_id} успешно удалён из Neo4j")
+            else:
+                logger.warning(f"Документ {doc_id} не найден в Neo4j, нечего удалять")
         except Exception as e:
-            logger.error(f"Ошибка удаления аннотаций для документа {doc_id}: {e}")
+            logger.error(f"Ошибка удаления данных из Neo4j для документа {doc_id}: {e}", exc_info=True)
 
         # Затем удаляем файлы из S3
         bucket = settings.S3_BUCKET_NAME
-        prefix = f"documents/{doc_id}/"
         deleted = 0
 
-        # Многократная попытка удаления на случай eventual consistency
+        # Префиксы для удаления:
+        # 1. documents/{doc_id}/ - основные файлы
+        # 2. markdown/{doc_id}* - версионированные markdown файлы
+        prefixes_to_delete = [
+            f"documents/{doc_id}/",
+            f"markdown/{doc_id}"
+        ]
+
         import asyncio
-        for _ in range(10):
+        for prefix in prefixes_to_delete:
+            # Собираем все ключи для удаления (один раз)
             contents = await self.s3_client.list_objects(bucket, prefix)
-            if not contents:
-                break
+            keys_to_delete = []
+
             for obj in contents:
                 key = obj.get('Key') or obj.get('key') or ''
-                if not key:
-                    continue
+                if key and not key in keys_to_delete:
+                    keys_to_delete.append(key)
+
+            if not keys_to_delete:
+                continue
+
+            # Удаляем все собранные ключи
+            for key in keys_to_delete:
                 ok = await self.s3_client.delete_object(bucket, key)
                 if ok:
                     deleted += 1
-            # Небольшая пауза перед повторной проверкой
-            await asyncio.sleep(0.3)
+                    logger.info(f"Удален S3 объект: {key}")
 
-        # Если ключи всё ещё остаются, пробуем удалить версии (для MinIO/S3 с versioning)
-        remaining = await self.s3_client.list_objects(bucket, prefix)
-        if remaining:
-            try:
-                async with self.s3_client.client_context() as s3:
-                    # Полный цикл удаления всех версий до полного опустошения префикса
-                    for _ in range(10):
+            # Даём время на eventual consistency и повторно пытаемся удалить
+            for retry in range(3):
+                await asyncio.sleep(0.5)
+
+                remaining = await self.s3_client.list_objects(bucket, prefix)
+                if not remaining:
+                    break
+
+                # Если остались файлы - пробуем удалить версии или повторить удаление
+                try:
+                    async with self.s3_client.client_context() as s3:
+                        # Удаление всех версий
                         versions_resp = await s3.list_object_versions(Bucket=bucket, Prefix=prefix)
-                        found_any = False
+
+                        # Удаляем версии
                         for v in versions_resp.get('Versions', []):
-                            key = v.get('Key'); ver = v.get('VersionId')
+                            key = v.get('Key')
+                            ver = v.get('VersionId')
                             if key and ver:
-                                found_any = True
                                 await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
                                 deleted += 1
+                                logger.info(f"Удалена версия S3 объекта: {key} (version: {ver})")
+
+                        # Удаляем delete markers
                         for m in versions_resp.get('DeleteMarkers', []):
-                            key = m.get('Key'); ver = m.get('VersionId')
+                            key = m.get('Key')
+                            ver = m.get('VersionId')
                             if key and ver:
-                                found_any = True
                                 await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
                                 deleted += 1
-                        if not found_any:
-                            break
-            except Exception as e:
-                logging.getLogger(__name__).warning(f"versioned delete failed for {prefix}: {e}")
+                                logger.info(f"Удален delete marker: {key} (version: {ver})")
 
-        # Финальная проверка и логирование оставшихся ключей (если есть)
-        remaining = await self.s3_client.list_objects(bucket, prefix)
-        if remaining:
-            rem_keys = [o.get('Key') or o.get('key') or '' for o in remaining]
-            logging.getLogger(__name__).warning(f"S3 still has keys under {prefix}: {rem_keys}")
+                        # Если версий нет, просто повторяем удаление основных ключей
+                        if not versions_resp.get('Versions') and not versions_resp.get('DeleteMarkers'):
+                            for obj in remaining:
+                                key = obj.get('Key') or obj.get('key') or ''
+                                if key:
+                                    await s3.delete_object(Bucket=bucket, Key=key)
+                                    logger.info(f"Повторное удаление S3 объекта: {key}")
+                                    deleted += 1
+                except Exception as e:
+                    logger.warning(f"Попытка {retry + 1}/3 удаления версий для {prefix}: {e}")
 
-        return {"success": True, "deleted": deleted}
+            # Финальная проверка после всех попыток
+            await asyncio.sleep(1.0)
+            remaining = await self.s3_client.list_objects(bucket, prefix)
+            if remaining:
+                rem_keys = [o.get('Key') or o.get('key') or '' for o in remaining]
+                logger.warning(f"S3 всё ещё содержит ключи под {prefix} после {retry + 1} попыток: {rem_keys}")
+
+        logger.info(f"Успешно удален документ {doc_id}: удалено {deleted} файлов из S3")
+        return {"success": True, "deleted": deleted, "doc_id": doc_id}
 
     async def update_markdown(self, doc_id: str, markdown: str) -> Dict[str, Any]:
         """
@@ -576,69 +641,63 @@ class DataExtractionService:
         }
 
     async def list_documents(self) -> Dict[str, Any]:
-        """Список документов по префиксу documents/ из S3 с метаданными из Neo4j."""
+        """
+        Список документов из Neo4j с проверкой файлов в S3.
+
+        Использует Neo4j как source of truth для избежания проблем с eventual consistency в S3.
+        """
         from src.models import PDFDocument
 
         bucket = settings.S3_BUCKET_NAME
-        contents = await self.s3_client.list_objects(bucket, "documents/")
-        doc_map: Dict[str, Dict[str, Any]] = {}
-        # Сначала собираем кандидатов
-        for obj in contents:
-            key = obj.get('Key') or obj.get('key') or ''
-            if not key.startswith('documents/'):
-                continue
-            parts = key.split('/')
-            if len(parts) < 3:
-                continue
-            doc_id = parts[1]
-            item = doc_map.get(doc_id)
-            if not item:
-                item = {
-                    "doc_id": doc_id,
-                    "has_markdown": False,
-                    "files": {},
-                    "title": None,
-                    "original_filename": None,
-                }
-                doc_map[doc_id] = item
-            # track files (пока без валидации)
-            if key.endswith('.md'):
-                item['files']['markdown'] = key
-            elif key.endswith('.pdf'):
-                item['files']['pdf'] = key
-            elif key.endswith('.json'):
-                item['files']['json'] = key
-
-        # Валидация существования ключей .md/.pdf (обход eventual consistency list_objects)
-        for item in doc_map.values():
-            files = item.get('files', {})
-            # markdown
-            md_key = files.get('markdown')
-            if md_key and await self.s3_client.object_exists(bucket, md_key):
-                item['has_markdown'] = True
-            else:
-                files.pop('markdown', None)
-            # pdf
-            pdf_key = files.get('pdf')
-            if pdf_key and not await self.s3_client.object_exists(bucket, pdf_key):
-                files.pop('pdf', None)
-
-        # Получаем метаданные из Neo4j для каждого документа
-        for doc_id, item in doc_map.items():
-            try:
-                # Ищем документ в Neo4j по uid
-                pdf_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
-                if pdf_doc:
-                    item['title'] = pdf_doc.title
-                    item['original_filename'] = pdf_doc.original_filename
-            except Exception as e:
-                logger.warning(f"Не удалось получить метаданные для документа {doc_id}: {e}")
-
-        # Отфильтровываем «пустые» документы: показываем только если есть markdown
         documents = []
-        for item in doc_map.values():
-            if item.get('has_markdown'):
-                documents.append(item)
+
+        try:
+            # Получаем все документы из Neo4j
+            all_docs = PDFDocument.nodes.all()
+
+            for pdf_doc in all_docs:
+                doc_id = pdf_doc.uid
+                prefix = f"documents/{doc_id}/"
+
+                # Формируем пути к файлам
+                pdf_key = f"{prefix}{doc_id}.pdf"
+
+                # Определяем markdown ключ (приоритет: user > formatted > raw > старый формат)
+                md_key = None
+                if pdf_doc.user_md_s3_key:
+                    md_key = pdf_doc.user_md_s3_key
+                elif pdf_doc.formatted_md_s3_key:
+                    md_key = pdf_doc.formatted_md_s3_key
+                elif pdf_doc.docling_raw_md_s3_key:
+                    md_key = pdf_doc.docling_raw_md_s3_key
+                else:
+                    md_key = f"{prefix}{doc_id}.md"
+
+                # Проверяем реальное существование файлов в S3
+                pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
+                md_exists = await self.s3_client.object_exists(bucket, md_key)
+
+                # Показываем документ только если markdown реально существует
+                if md_exists:
+                    item = {
+                        "doc_id": doc_id,
+                        "has_markdown": True,
+                        "files": {},
+                        "title": pdf_doc.title,
+                        "original_filename": pdf_doc.original_filename,
+                    }
+
+                    # Добавляем файлы только если они реально существуют
+                    if md_exists:
+                        item['files']['markdown'] = md_key
+                    if pdf_exists:
+                        item['files']['pdf'] = pdf_key
+
+                    documents.append(item)
+
+        except Exception as e:
+            logger.error(f"Ошибка получения списка документов: {e}")
+
         return {"success": True, "documents": documents}
 
     async def check_data_availability(self, doc_id: str) -> Dict[str, Any]:

@@ -520,148 +520,6 @@ doi: 10.1111/febs.12335
 	node
 	[
 		id	18
-		label	"Horizontal Swim Lanes"
-		graphics
-		[
-			x	3696.8959173113467
-			y	473.2588256107488
-			w	895.3863192182409
-			h	1804.6480462540717
-			customconfiguration	"YED_TABLE_NODE"
-			group	1
-			autoResize	1
-			closedHeight	80.0
-			closedWidth	100.0
-			borderInsetBottom	1029.2721784405535
-			borderInsetLeft	0.0
-			borderInsetTop	471.972284751629
-			borderInsetRight	972.1123219326839
-			minimalInsetBottom	0.0
-			minimalInsetLeft	0.0
-			minimalInsetTop	0.0
-			minimalInsetRight	0.0
-			closed	0
-			styleproperties
-			[
-				property
-				[
-					name	"yed.table.section.color"
-					valueClass	"java.awt.Color"
-					value	"#7192b2"
-				]
-				property
-				[
-					name	"yed.table.header.height"
-					valueClass	"java.lang.Double"
-					value	"24.0"
-				]
-				property
-				[
-					name	"yed.table.lane.color.main"
-					valueClass	"java.awt.Color"
-					value	"#c4d7ed"
-				]
-				property
-				[
-					name	"yed.table.lane.color.alternating"
-					valueClass	"java.awt.Color"
-					value	"#abc8e2"
-				]
-				property
-				[
-					name	"yed.table.header.color.alternating"
-					valueClass	"java.awt.Color"
-					value	"#abc8e2"
-				]
-				property
-				[
-					name	"yed.table.lane.style"
-					valueClass	"java.lang.String"
-					value	"lane.style.rows"
-				]
-				property
-				[
-					name	"yed.table.header.color.main"
-					valueClass	"java.awt.Color"
-					value	"#c4d7ed"
-				]
-			]
-			fill	"#ECF5FF"
-			fill2	"#0042F440"
-			outline	"#000000"
-			topBorderInset	471.972284751629
-			bottomBorderInset	1029.2721784405535
-			leftBorderInset	0.0
-			rightBorderInset	972.1123219326839
-		]
-		LabelGraphics
-		[
-			text	"Horizontal Swim Lanes"
-			fontSize	15
-			fontName	"Dialog"
-			anchor	"t"
-		]
-		LabelGraphics
-		[
-			text	"&#x427;&#x435;&#x43b;&#x43e;&#x432;&#x435;&#x43a; (1&#x43c;)"
-			fontSize	12
-			fontName	"Dialog"
-			rotationAngle	270.0
-			model	"null"
-		]
-		LabelGraphics
-		[
-			text	"&#x421;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x44b; &#x43e;&#x440;&#x433;&#x430;&#x43d;&#x43e;&#x432; (50&#x441;&#x43c;)"
-			fontSize	12
-			fontName	"Dialog"
-			rotationAngle	270.0
-			model	"null"
-		]
-		LabelGraphics
-		[
-			text	"&#x41a;&#x43b;&#x435;&#x442;&#x43a;&#x430; (1&#x43d;&#x43c;)"
-			fontSize	12
-			fontName	"Dialog"
-			rotationAngle	270.0
-			model	"null"
-		]
-		LabelGraphics
-		[
-			text	"&#x41e;&#x440;&#x433;&#x430;&#x43d;&#x44b; (10&#x441;&#x43c;)"
-			fontSize	12
-			fontName	"Dialog"
-			rotationAngle	270.0
-			model	"null"
-		]
-		LabelGraphics
-		[
-			text	"&#x413;&#x440;&#x443;&#x43f;&#x43f;&#x430; &#x43b;&#x44e;&#x434;&#x435;&#x439; (10&#x43c;)"
-			fontSize	12
-			fontName	"Dialog"
-			rotationAngle	270.0
-			model	"null"
-		]
-		LabelGraphics
-		[
-			text	"&#x421;&#x442;&#x430;&#x442;&#x44c;&#x44f; (1&#x43c;)"
-			fontSize	12
-			fontName	"Dialog"
-			rotationAngle	270.0
-			model	"null"
-		]
-		LabelGraphics
-		[
-			text	"&#x411;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x44c; (1&#x43c;)"
-			fontSize	12
-			fontName	"Dialog"
-			rotationAngle	270.0
-			model	"null"
-		]
-		isGroup	1
-	]
-	node
-	[
-		id	19
 		label	"&#x418;&#x434;&#x438;&#x43e;&#x43f;&#x430;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43a;&#x430;&#x44f; &#x431;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x44c; &#x41f;&#x430;&#x440;&#x43a;&#x438;&#x43d;&#x441;&#x43e;&#x43d;&#x430;"
 		graphics
 		[
@@ -689,7 +547,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	20
+		id	19
 		label	"&#x411;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x44c; &#x410;&#x43b;&#x44c;&#x446;&#x433;&#x435;&#x439;&#x43c;&#x435;&#x440;&#x430;"
 		graphics
 		[
@@ -717,7 +575,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	21
+		id	20
 		label	"&#x42f;&#x432;&#x43b;&#x44f;&#x435;&#x442;&#x441;&#x44f; &#x431;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x44c; &#x410;&#x43b;&#x44c;&#x446;&#x433;&#x435;&#x439;&#x43c;&#x435;&#x440;&#x430; &#x43d;&#x435;&#x439;&#x440;&#x43e;&#x434;&#x435;&#x433;&#x435;&#x43d;&#x435;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43d;&#x44b;&#x43c; &#x437;&#x430;&#x431;&#x43e;&#x43b;&#x435;&#x432;&#x430;&#x43d;&#x438;&#x435;&#x43c;"
 		graphics
 		[
@@ -745,7 +603,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	22
+		id	21
 		label	"&#x42f;&#x432;&#x43b;&#x44f;&#x435;&#x442;&#x441;&#x44f; &#x431;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x44c; &#x41f;&#x430;&#x440;&#x43a;&#x438;&#x43d;&#x441;&#x43e;&#x43d;&#x430; &#x43d;&#x435;&#x439;&#x440;&#x43e;&#x434;&#x435;&#x433;&#x435;&#x43d;&#x435;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43d;&#x44b;&#x43c; &#x437;&#x430;&#x431;&#x43e;&#x43b;&#x435;&#x432;&#x430;&#x43d;&#x438;&#x435;&#x43c;"
 		graphics
 		[
@@ -773,7 +631,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	23
+		id	22
 		label	"&#x41d;&#x435;&#x439;&#x440;&#x43e;&#x434;&#x435;&#x433;&#x435;&#x43d;&#x435;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43d;&#x430;&#x44f; &#x431;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x44c;"
 		graphics
 		[
@@ -801,7 +659,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	24
+		id	23
 		label	"&#x412;&#x43e;&#x437;&#x43d;&#x438;&#x43a; &#x43a;&#x43b;&#x438;&#x43d;&#x438;&#x447;&#x435;&#x441;&#x43a;&#x438;&#x439; &#x441;&#x438;&#x43d;&#x434;&#x440;&#x43e;&#x43c; &#x418;&#x411;&#x41f; &#x445;&#x430;&#x440;&#x430;&#x43a;&#x442;&#x435;&#x440;&#x438;&#x437;&#x443;&#x44e;&#x449;&#x438;&#x439;&#x441;&#x44f; &#x431;&#x440;&#x430;&#x434;&#x438;&#x43a;&#x438;&#x43d;&#x435;&#x437;&#x438;&#x435;&#x439;, &#x442;&#x440;&#x435;&#x43c;&#x43e;&#x440;&#x43e;&#x43c; &#x43f;&#x43e;&#x43a;&#x43e;&#x44f;, &#x440;&#x438;&#x433;&#x438;&#x434;&#x43d;&#x43e;&#x441;&#x442;&#x44c;&#x44e; &#x438; &#x43f;&#x43e;&#x441;&#x442;&#x443;&#x440;&#x430;&#x43b;&#x44c;&#x43d;&#x43e;&#x439; &#x43d;&#x435;&#x441;&#x442;&#x430;&#x431;&#x438;&#x43b;&#x44c;&#x43d;&#x43e;&#x441;&#x442;&#x44c;&#x44e;"
 		graphics
 		[
@@ -829,7 +687,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	25
+		id	24
 		label	"&#x411;&#x440;&#x430;&#x434;&#x438;&#x43a;&#x438;&#x43d;&#x435;&#x437;&#x438;&#x44f;"
 		graphics
 		[
@@ -857,7 +715,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	26
+		id	25
 		label	"&#x422;&#x440;&#x435;&#x43c;&#x43e;&#x440; &#x43f;&#x43e;&#x43a;&#x43e;&#x44f;"
 		graphics
 		[
@@ -885,7 +743,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	27
+		id	26
 		label	"&#x420;&#x438;&#x433;&#x438;&#x434;&#x43d;&#x43e;&#x441;&#x442;&#x44c;"
 		graphics
 		[
@@ -913,7 +771,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	28
+		id	27
 		label	"&#x41f;&#x43e;&#x441;&#x442;&#x443;&#x440;&#x430;&#x43b;&#x44c;&#x43d;&#x430;&#x44f; &#x43d;&#x435;&#x441;&#x442;&#x430;&#x431;&#x438;&#x43b;&#x44c;&#x43d;&#x43e;&#x441;&#x442;&#x44c;"
 		graphics
 		[
@@ -941,7 +799,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	29
+		id	28
 		label	"&#x42f;&#x432;&#x43b;&#x44f;&#x435;&#x442;&#x441;&#x44f; &#x431;&#x440;&#x430;&#x434;&#x438;&#x43a;&#x438;&#x43d;&#x435;&#x437;&#x438;&#x44f; &#x43e;&#x441;&#x43d;&#x43e;&#x432;&#x43d;&#x44b;&#x43c; &#x43f;&#x440;&#x438;&#x437;&#x43d;&#x430;&#x43a;&#x43e;&#x43c; &#x438; &#x43d;&#x435;&#x43e;&#x431;&#x445;&#x43e;&#x434;&#x438;&#x43c;&#x44b;&#x43c; &#x443;&#x441;&#x43b;&#x43e;&#x432;&#x438;&#x435;&#x43c; &#x434;&#x43b;&#x44f; &#x434;&#x438;&#x430;&#x433;&#x43d;&#x43e;&#x441;&#x442;&#x438;&#x43a;&#x438; &#x438;&#x434;&#x438;&#x43e;&#x431;&#x430;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43a;&#x43e;&#x439; &#x431;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x438; &#x41f;&#x430;&#x440;&#x43a;&#x438;&#x43d;&#x441;&#x43e;&#x43d;&#x430;"
 		graphics
 		[
@@ -969,7 +827,7 @@ doi: 10.1111/febs.12335
 	]
 	node
 	[
-		id	30
+		id	29
 		label	"&#x421;&#x442;&#x430;&#x442;&#x44c;&#x44f;
 Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decrement distinguishes progressive supranuclear palsy from Parkinson's disease. Brain 135, 1141-1153."
 		graphics
@@ -999,7 +857,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	31
+		id	30
 		label	"&#x41d;&#x435;&#x43c;&#x43e;&#x442;&#x43e;&#x440;&#x43d;&#x44b;&#x439; &#x441;&#x438;&#x43c;&#x43f;&#x442;&#x43e;&#x43c;"
 		graphics
 		[
@@ -1027,7 +885,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	32
+		id	31
 		label	"&#x427;&#x435;&#x43b;&#x43e;&#x432;&#x435;&#x43a;"
 		graphics
 		[
@@ -1055,7 +913,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	33
+		id	32
 		label	""
 		graphics
 		[
@@ -1075,7 +933,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	34
+		id	33
 		label	""
 		graphics
 		[
@@ -1095,7 +953,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	35
+		id	34
 		label	""
 		graphics
 		[
@@ -1115,7 +973,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	36
+		id	35
 		label	""
 		graphics
 		[
@@ -1135,7 +993,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	37
+		id	36
 		label	""
 		graphics
 		[
@@ -1155,7 +1013,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	38
+		id	37
 		label	""
 		graphics
 		[
@@ -1175,7 +1033,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	39
+		id	38
 		label	""
 		graphics
 		[
@@ -1195,7 +1053,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	40
+		id	39
 		label	""
 		graphics
 		[
@@ -1215,7 +1073,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	41
+		id	40
 		label	""
 		graphics
 		[
@@ -1235,7 +1093,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	42
+		id	41
 		label	""
 		graphics
 		[
@@ -1255,7 +1113,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	43
+		id	42
 		label	""
 		graphics
 		[
@@ -1275,7 +1133,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	44
+		id	43
 		label	""
 		graphics
 		[
@@ -1295,7 +1153,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	45
+		id	44
 		label	""
 		graphics
 		[
@@ -1315,7 +1173,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	46
+		id	45
 		label	""
 		graphics
 		[
@@ -1335,7 +1193,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	47
+		id	46
 		label	""
 		graphics
 		[
@@ -1355,7 +1213,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	48
+		id	47
 		label	""
 		graphics
 		[
@@ -1375,7 +1233,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	49
+		id	48
 		label	""
 		graphics
 		[
@@ -1395,7 +1253,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	50
+		id	49
 		label	""
 		graphics
 		[
@@ -1415,7 +1273,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	51
+		id	50
 		label	""
 		graphics
 		[
@@ -1435,7 +1293,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	52
+		id	51
 		label	""
 		graphics
 		[
@@ -1455,7 +1313,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	53
+		id	52
 		label	""
 		graphics
 		[
@@ -1475,7 +1333,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	54
+		id	53
 		label	""
 		graphics
 		[
@@ -1495,7 +1353,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	55
+		id	54
 		label	""
 		graphics
 		[
@@ -1515,7 +1373,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	56
+		id	55
 		label	""
 		graphics
 		[
@@ -1535,7 +1393,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	57
+		id	56
 		label	""
 		graphics
 		[
@@ -1555,7 +1413,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	58
+		id	57
 		label	""
 		graphics
 		[
@@ -1575,7 +1433,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	59
+		id	58
 		label	""
 		graphics
 		[
@@ -1595,7 +1453,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	60
+		id	59
 		label	""
 		graphics
 		[
@@ -1615,7 +1473,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	61
+		id	60
 		label	""
 		graphics
 		[
@@ -1635,7 +1493,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	62
+		id	61
 		label	""
 		graphics
 		[
@@ -1655,7 +1513,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	63
+		id	62
 		label	""
 		graphics
 		[
@@ -1675,7 +1533,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	64
+		id	63
 		label	""
 		graphics
 		[
@@ -1695,7 +1553,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	65
+		id	64
 		label	""
 		graphics
 		[
@@ -1715,7 +1573,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	66
+		id	65
 		label	"&#x41f;&#x440;&#x435;&#x434;&#x448;&#x435;&#x441;&#x442;&#x432;&#x43e;&#x432;&#x430;&#x442;&#x44c; &#x43c;&#x43e;&#x433;&#x443;&#x442; &#x43d;&#x435;&#x43c;&#x43e;&#x442;&#x43e;&#x440;&#x43d;&#x44b;&#x435; &#x441;&#x438;&#x43c;&#x43f;&#x442;&#x43e;&#x43c;&#x44b; &#x431;&#x43e;&#x43b;&#x435;&#x437;&#x43d;&#x438; &#x41f;&#x430;&#x440;&#x43a;&#x438;&#x43d;&#x441;&#x43e;&#x43d;&#x430; &#x434;&#x432;&#x438;&#x433;&#x430;&#x442;&#x435;&#x43b;&#x44c;&#x43d;&#x44b;&#x43c; &#x440;&#x430;&#x441;&#x441;&#x442;&#x440;&#x43e;&#x439;&#x441;&#x442;&#x432;&#x430;&#x43c;"
 		graphics
 		[
@@ -1743,7 +1601,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	67
+		id	66
 		label	"&#x414;&#x432;&#x438;&#x433;&#x430;&#x442;&#x435;&#x43b;&#x44c;&#x43d;&#x44b;&#x439; &#x441;&#x438;&#x43c;&#x43f;&#x442;&#x43e;&#x43c;"
 		graphics
 		[
@@ -1771,7 +1629,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	68
+		id	67
 		label	""
 		graphics
 		[
@@ -1791,7 +1649,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	69
+		id	68
 		label	""
 		graphics
 		[
@@ -1811,7 +1669,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	70
+		id	69
 		label	"&#x41d;&#x430;&#x440;&#x443;&#x448;&#x435;&#x43d;&#x438;&#x435; &#x441;&#x43d;&#x430;"
 		graphics
 		[
@@ -1839,7 +1697,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	71
+		id	70
 		label	"&#x413;&#x438;&#x43f;&#x43e;&#x441;&#x43c;&#x438;&#x44f;"
 		graphics
 		[
@@ -1867,7 +1725,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	72
+		id	71
 		label	"&#x418;&#x41b;&#x418;"
 		graphics
 		[
@@ -1895,7 +1753,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	73
+		id	72
 		label	"&#x420;&#x430;&#x441;&#x441;&#x442;&#x440;&#x43e;&#x439;&#x441;&#x442;&#x432;&#x43e; &#x43f;&#x43e;&#x432;&#x435;&#x434;&#x435;&#x43d;&#x438;&#x44f; &#x432; &#x444;&#x430;&#x437;&#x435; &#x431;&#x44b;&#x441;&#x442;&#x440;&#x43e;&#x433;&#x43e; &#x441;&#x43d;&#x430;"
 		graphics
 		[
@@ -1923,7 +1781,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	74
+		id	73
 		label	"&#x414;&#x435;&#x43f;&#x440;&#x435;&#x441;&#x441;&#x438;&#x44f;"
 		graphics
 		[
@@ -1951,7 +1809,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	75
+		id	74
 		label	"&#x417;&#x430;&#x43f;&#x43e;&#x440;"
 		graphics
 		[
@@ -1979,7 +1837,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	76
+		id	75
 		label	"&#x414;&#x438;&#x437;&#x430;&#x432;&#x442;&#x43e;&#x43d;&#x43e;&#x43c;&#x43d;&#x44b;&#x439; &#x441;&#x438;&#x43c;&#x43f;&#x442;&#x43e;&#x43c;"
 		graphics
 		[
@@ -2007,7 +1865,7 @@ Ling H, Massey L, Lees AJ, Brown P &amp; Day BL (2012) Hypokinesia without decre
 	]
 	node
 	[
-		id	77
+		id	76
 		label	"&#x421;&#x442;&#x430;&#x442;&#x44c;&#x44f;
 Gallagher D, Lees AJ &amp; Schrag A (2010) What are the most important nonmotor symptoms in patients with Parkinson's disease and are we missing them? Mov Disord 25, 2493-2500."
 		graphics
@@ -2037,7 +1895,7 @@ Gallagher D, Lees AJ &amp; Schrag A (2010) What are the most important nonmotor 
 	]
 	node
 	[
-		id	78
+		id	77
 		label	"&#x421;&#x442;&#x430;&#x442;&#x44c;&#x44f;
 Park A &amp; Stacy M (2009) Non-motor symptoms in Parkinson's disease. J Neurol 256 (Suppl), 293-298."
 		graphics
@@ -2067,7 +1925,7 @@ Park A &amp; Stacy M (2009) Non-motor symptoms in Parkinson's disease. J Neurol 
 	]
 	node
 	[
-		id	79
+		id	78
 		label	"&#x421;&#x442;&#x430;&#x442;&#x44c;&#x44f;
 Simuni T &amp; Sethi K (2008) Nonmotor manifestations of Parkinson's disease. Ann Neurol 64 (Suppl 2), S65-S80."
 		graphics
@@ -2097,7 +1955,7 @@ Simuni T &amp; Sethi K (2008) Nonmotor manifestations of Parkinson's disease. An
 	]
 	node
 	[
-		id	80
+		id	79
 		label	"&#x421;&#x442;&#x430;&#x442;&#x44c;&#x44f;
 Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T (2012) Identifying prodromal Parkinson's disease: pre-motor disorders in Parkinson's disease. Mov Disord 27, 617-626."
 		graphics
@@ -2127,7 +1985,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	node
 	[
-		id	81
+		id	80
 		label	""
 		graphics
 		[
@@ -2147,7 +2005,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	node
 	[
-		id	82
+		id	81
 		label	""
 		graphics
 		[
@@ -2167,7 +2025,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	node
 	[
-		id	83
+		id	82
 		label	""
 		graphics
 		[
@@ -2187,7 +2045,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	node
 	[
-		id	84
+		id	83
 		label	""
 		graphics
 		[
@@ -2207,7 +2065,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	node
 	[
-		id	85
+		id	84
 		label	""
 		graphics
 		[
@@ -2227,7 +2085,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	node
 	[
-		id	86
+		id	85
 		label	""
 		graphics
 		[
@@ -2247,7 +2105,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	node
 	[
-		id	87
+		id	86
 		label	"&#x41d;&#x430;&#x447;&#x438;&#x43d;&#x430;&#x44e;&#x442;&#x441;&#x44f; &#x433;&#x438;&#x43f;&#x43e;&#x441;&#x43c;&#x438;&#x44f; &#x438; &#x440;&#x430;&#x441;&#x441;&#x442;&#x440;&#x43e;&#x439;&#x441;&#x442;&#x432;&#x43e; &#x43f;&#x43e;&#x432;&#x435;&#x434;&#x435;&#x43d;&#x438;&#x44f; &#x432; &#x444;&#x430;&#x437;&#x435; &#x431;&#x44b;&#x441;&#x442;&#x440;&#x43e;&#x433;&#x43e; &#x441;&#x43d;&#x430; &#x447;&#x430;&#x441;&#x442;&#x43e; &#x43d;&#x430;&#x447;&#x438;&#x43d;&#x430;&#x44e;&#x442;&#x441;&#x44f; &#x434;&#x43e; &#x43f;&#x43e;&#x44f;&#x432;&#x43b;&#x435;&#x43d;&#x438;&#x44f; &#x43e;&#x441;&#x43d;&#x43e;&#x432;&#x43d;&#x44b;&#x445; &#x434;&#x432;&#x438;&#x433;&#x430;&#x442;&#x435;&#x43b;&#x44c;&#x43d;&#x44b;&#x445; &#x441;&#x438;&#x43c;&#x43f;&#x442;&#x43e;&#x43c;&#x43e;&#x432;"
 		graphics
 		[
@@ -2275,7 +2133,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	40
+		source	39
 		target	0
 		graphics
 		[
@@ -2304,7 +2162,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	0
-		target	63
+		target	62
 		graphics
 		[
 			smoothBends	1
@@ -2337,7 +2195,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	2
-		target	57
+		target	56
 		graphics
 		[
 			smoothBends	1
@@ -2376,7 +2234,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	40
+		source	39
 		target	6
 		graphics
 		[
@@ -2404,41 +2262,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	43
-		target	50
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.99609375
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
 		source	42
-		target	48
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.99609375
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	35
 		target	49
 		graphics
 		[
@@ -2455,8 +2279,42 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
+		source	41
+		target	47
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.99609375
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	34
+		target	48
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.99609375
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
 		source	7
-		target	58
+		target	57
 		graphics
 		[
 			smoothBends	1
@@ -2472,90 +2330,6 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	11
-		target	42
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	9
-		target	43
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	12
-		target	35
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	6
-		target	64
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	5
-		target	40
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	14
 		target	41
 		graphics
 		[
@@ -2572,8 +2346,92 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
+		source	9
+		target	42
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	12
+		target	34
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	6
+		target	63
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	5
+		target	39
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	14
+		target	40
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
 		source	3
-		target	62
+		target	61
 		graphics
 		[
 			smoothBends	1
@@ -2601,128 +2459,6 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	16
-		target	45
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	13
-		target	39
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	17
-		target	56
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	19
-		target	61
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	20
-		target	60
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
-		source	21
-		target	59
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	22
-		target	55
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	20
-		target	21
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
-		source	23
 		target	44
 		graphics
 		[
@@ -2739,7 +2475,129 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	24
+		source	13
+		target	38
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	17
+		target	55
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	18
+		target	60
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	19
+		target	59
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	20
+		target	58
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	21
+		target	54
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	19
+		target	20
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	22
+		target	43
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	23
 		target	17
 		graphics
 		[
@@ -2751,8 +2609,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	46
-		target	24
+		source	45
+		target	23
 		graphics
 		[
 			smoothBends	1
@@ -2768,8 +2626,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	34
-		target	29
+		source	33
+		target	28
 		graphics
 		[
 			smoothBends	1
@@ -2784,8 +2642,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	29
-		target	53
+		source	28
+		target	52
 		graphics
 		[
 			smoothBends	1
@@ -2800,8 +2658,25 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
+		source	35
+		target	45
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.99609375
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
 		source	36
-		target	46
+		target	45
 		graphics
 		[
 			smoothBends	1
@@ -2818,7 +2693,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	37
-		target	46
+		target	45
 		graphics
 		[
 			smoothBends	1
@@ -2834,25 +2709,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	38
-		target	46
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.99609375
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	24
-		target	54
+		source	23
+		target	53
 		graphics
 		[
 			smoothBends	1
@@ -2867,8 +2725,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	30
-		target	84
+		source	29
+		target	83
 		graphics
 		[
 			smoothBends	1
@@ -2883,8 +2741,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	53
-		target	30
+		source	52
+		target	29
 		graphics
 		[
 			smoothBends	1
@@ -2900,8 +2758,25 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
+		source	24
+		target	33
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
 		source	25
-		target	34
+		target	35
 		graphics
 		[
 			smoothBends	1
@@ -2951,25 +2826,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	28
-		target	38
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	33
-		target	65
+		source	32
+		target	64
 		graphics
 		[
 			smoothBends	1
@@ -2985,8 +2843,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	31
-		target	33
+		source	30
+		target	32
 		graphics
 		[
 			smoothBends	1
@@ -3019,7 +2877,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	32
+		source	31
 		target	4
 		graphics
 		[
@@ -3036,7 +2894,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	68
+		source	67
 		target	4
 		graphics
 		[
@@ -3054,7 +2912,19 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	34
+		source	33
+		target	32
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	35
 		target	33
 		graphics
 		[
@@ -3067,7 +2937,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	36
-		target	34
+		target	35
 		graphics
 		[
 			smoothBends	1
@@ -3090,7 +2960,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	38
+		source	34
 		target	37
 		graphics
 		[
@@ -3102,8 +2972,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	35
-		target	38
+		source	42
+		target	34
 		graphics
 		[
 			smoothBends	1
@@ -3115,7 +2985,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	43
-		target	35
+		target	42
 		graphics
 		[
 			smoothBends	1
@@ -3138,32 +3008,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	45
-		target	44
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#000000"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
-		source	42
-		target	45
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#000000"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
 		source	41
-		target	42
+		target	44
 		graphics
 		[
 			smoothBends	1
@@ -3198,8 +3044,20 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	69
-		target	46
+		source	38
+		target	39
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	68
+		target	45
 		graphics
 		[
 			smoothBends	1
@@ -3215,7 +3073,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	48
+		source	47
 		target	3
 		graphics
 		[
@@ -3227,7 +3085,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	49
+		source	48
 		target	2
 		graphics
 		[
@@ -3239,8 +3097,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	46
-		target	47
+		source	45
+		target	46
 		graphics
 		[
 			smoothBends	1
@@ -3251,7 +3109,19 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	47
+		source	46
+		target	48
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	48
 		target	49
 		graphics
 		[
@@ -3276,6 +3146,18 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	50
+		target	47
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	47
 		target	51
 		graphics
 		[
@@ -3288,31 +3170,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	51
-		target	48
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#000000"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
-		source	48
-		target	52
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#000000"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
-		source	52
-		target	19
+		target	18
 		graphics
 		[
 			smoothBends	1
@@ -3323,7 +3181,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	50
+		source	49
 		target	7
 		graphics
 		[
@@ -3335,7 +3193,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	47
+		source	46
 		target	17
 		graphics
 		[
@@ -3347,8 +3205,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	51
-		target	22
+		source	50
+		target	21
 		graphics
 		[
 			smoothBends	1
@@ -3359,8 +3217,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	34
-		target	46
+		source	33
+		target	45
 		graphics
 		[
 			smoothBends	1
@@ -3375,7 +3233,18 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	54
+		source	53
+		target	52
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#000000"
+		]
+	]
+	edge
+	[
+		source	55
 		target	53
 		graphics
 		[
@@ -3387,7 +3256,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	56
-		target	54
+		target	55
 		graphics
 		[
 			smoothBends	1
@@ -3408,7 +3277,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	58
+		source	54
 		target	57
 		graphics
 		[
@@ -3419,8 +3288,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	55
-		target	58
+		source	61
+		target	54
 		graphics
 		[
 			smoothBends	1
@@ -3431,7 +3300,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	62
-		target	55
+		target	61
 		graphics
 		[
 			smoothBends	1
@@ -3452,30 +3321,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	64
-		target	63
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#000000"
-		]
-	]
-	edge
-	[
-		source	61
-		target	64
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#000000"
-		]
-	]
-	edge
-	[
 		source	60
-		target	61
+		target	63
 		graphics
 		[
 			smoothBends	1
@@ -3496,7 +3343,18 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	86
+		source	58
+		target	59
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#000000"
+		]
+	]
+	edge
+	[
+		source	85
 		target	8
 		graphics
 		[
@@ -3536,8 +3394,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	53
-		target	65
+		source	52
+		target	64
 		graphics
 		[
 			smoothBends	1
@@ -3552,8 +3410,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	33
-		target	69
+		source	32
+		target	68
 		graphics
 		[
 			smoothBends	1
@@ -3569,8 +3427,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	67
-		target	68
+		source	66
+		target	67
 		graphics
 		[
 			smoothBends	1
@@ -3586,8 +3444,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	33
-		target	68
+		source	32
+		target	67
 		graphics
 		[
 			smoothBends	1
@@ -3598,8 +3456,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	68
-		target	69
+		source	67
+		target	68
 		graphics
 		[
 			smoothBends	1
@@ -3614,8 +3472,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	69
-		target	66
+		source	68
+		target	65
 		graphics
 		[
 			smoothBends	1
@@ -3627,7 +3485,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	4
-		target	69
+		target	68
 		graphics
 		[
 			smoothBends	1
@@ -3644,20 +3502,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	72
-		target	67
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
 		source	71
-		target	72
+		target	66
 		graphics
 		[
 			smoothBends	1
@@ -3669,7 +3515,31 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	70
-		target	72
+		target	71
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	69
+		target	71
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	72
+		target	69
 		graphics
 		[
 			smoothBends	1
@@ -3681,7 +3551,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	73
-		target	70
+		target	71
 		graphics
 		[
 			smoothBends	1
@@ -3693,7 +3563,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	74
-		target	72
+		target	71
 		graphics
 		[
 			smoothBends	1
@@ -3705,7 +3575,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	75
-		target	72
+		target	71
 		graphics
 		[
 			smoothBends	1
@@ -3717,13 +3587,34 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	76
-		target	72
+		target	80
 		graphics
 		[
 			smoothBends	1
 			width	3
 			fill	"#B266FF"
 			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xTarget	-1.00390625
+		]
+	]
+	edge
+	[
+		source	65
+		target	76
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-0.9999055514370438
 		]
 	]
 	edge
@@ -3744,25 +3635,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	66
-		target	77
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-0.9999055514370438
-		]
-	]
-	edge
-	[
-		source	78
-		target	82
+		source	79
+		target	84
 		graphics
 		[
 			smoothBends	1
@@ -3777,24 +3651,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	80
-		target	85
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xTarget	-1.00390625
-		]
-	]
-	edge
-	[
-		source	84
-		target	81
+		source	83
+		target	80
 		graphics
 		[
 			smoothBends	1
@@ -3809,8 +3667,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	81
-		target	82
+		source	80
+		target	81
 		graphics
 		[
 			smoothBends	1
@@ -3820,8 +3678,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	82
-		target	83
+		source	81
+		target	82
 		graphics
 		[
 			smoothBends	1
@@ -3849,8 +3707,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	79
-		target	83
+		source	78
+		target	82
 		graphics
 		[
 			smoothBends	1
@@ -3865,8 +3723,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	83
-		target	85
+		source	82
+		target	84
 		graphics
 		[
 			smoothBends	1
@@ -3876,7 +3734,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	82
+		source	81
 		target	8
 		graphics
 		[
@@ -3893,25 +3751,8 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	66
-		target	78
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-		edgeAnchor
-		[
-			xSource	0.9999674479166667
-			xTarget	-0.9999055514370438
-		]
-	]
-	edge
-	[
-		source	66
-		target	79
+		source	65
+		target	77
 		graphics
 		[
 			smoothBends	1
@@ -3928,42 +3769,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	edge
 	[
 		source	65
-		target	86
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#000000"
-		]
-	]
-	edge
-	[
-		source	66
-		target	86
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
-		source	86
-		target	87
-		graphics
-		[
-			smoothBends	1
-			width	3
-			fill	"#B266FF"
-			targetArrow	"standard"
-		]
-	]
-	edge
-	[
-		source	87
-		target	80
+		target	78
 		graphics
 		[
 			smoothBends	1
@@ -3979,7 +3785,59 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	84
+		source	64
+		target	85
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#000000"
+		]
+	]
+	edge
+	[
+		source	65
+		target	85
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	85
+		target	86
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+	]
+	edge
+	[
+		source	86
+		target	79
+		graphics
+		[
+			smoothBends	1
+			width	3
+			fill	"#B266FF"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.9999674479166667
+			xTarget	-0.9999055514370438
+		]
+	]
+	edge
+	[
+		source	83
 		target	1
 		graphics
 		[
@@ -3996,7 +3854,7 @@ Postuma RB, Aarsland D, Barone P, Burn DJ, Hawkes CH, Oertel W &amp; Ziemssen T 
 	]
 	edge
 	[
-		source	32
+		source	31
 		target	1
 		graphics
 		[

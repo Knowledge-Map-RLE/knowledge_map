@@ -1,0 +1,244 @@
+syntax = "proto3";
+
+package nlp;
+
+// Сервис для NLP анализа текста
+service NLPService {
+    // Обработка текста с аннотациями и отношениями
+    rpc ProcessText(ProcessTextRequest) returns (ProcessTextResponse);
+
+    // Обработка выделенного фрагмента текста
+    rpc ProcessSelection(ProcessSelectionRequest) returns (ProcessSelectionResponse);
+
+    // Многоуровневый лингвистический анализ
+    rpc AnalyzeText(AnalyzeTextRequest) returns (AnalyzeTextResponse);
+
+    // Получение списка поддерживаемых типов процессоров
+    rpc GetSupportedTypes(GetSupportedTypesRequest) returns (GetSupportedTypesResponse);
+}
+
+// ============================================================================
+// Базовые перечисления
+// ============================================================================
+
+enum AnnotationSource {
+    ANNOTATION_SOURCE_UNSPECIFIED = 0;
+    USER = 1;
+    SPACY = 2;
+    CUSTOM = 3;
+    FILE = 4;
+    NLTK = 5;
+    STANZA = 6;
+    UDPIPE = 7;
+}
+
+enum AnnotationCategory {
+    ANNOTATION_CATEGORY_UNSPECIFIED = 0;
+    ANNOTATION_PART_OF_SPEECH = 1;
+    ANNOTATION_SYNTAX = 2;
+    ANNOTATION_NAMED_ENTITY = 3;
+    ANNOTATION_MORPHOLOGY = 4;
+    ANNOTATION_SENTENCE_MEMBER = 5;
+    ANNOTATION_SCIENTIFIC_ENTITY = 6;
+    ANNOTATION_GENERAL_ENTITY = 7;
+}
+
+enum LinguisticLevel {
+    LINGUISTIC_LEVEL_UNSPECIFIED = 0;
+    LEVEL_TOKENIZATION = 1;
+    LEVEL_MORPHOLOGY = 2;
+    LEVEL_SYNTAX = 3;
+    LEVEL_SEMANTIC_ROLES = 4;
+    LEVEL_LEXICAL_SEMANTICS = 5;
+    LEVEL_DISCOURSE = 6;
+}
+
+// ============================================================================
+// Базовые типы данных для аннотаций
+// ============================================================================
+
+message AnnotationSuggestion {
+    string text = 1;
+    string annotation_type = 2;
+    AnnotationCategory category = 3;
+    int32 start_offset = 4;
+    int32 end_offset = 5;
+    float confidence = 6;
+    AnnotationSource source = 7;
+    string color = 8;
+    map<string, string> metadata = 9;
+}
+
+message RelationSuggestion {
+    string source_text = 1;
+    string target_text = 2;
+    int32 source_start = 3;
+    int32 source_end = 4;
+    int32 target_start = 5;
+    int32 target_end = 6;
+    string relation_type = 7;
+    float confidence = 8;
+    AnnotationSource source = 9;
+    map<string, string> metadata = 10;
+}
+
+message ProcessingResult {
+    repeated AnnotationSuggestion annotations = 1;
+    repeated RelationSuggestion relations = 2;
+    string processor_name = 3;
+    string processor_version = 4;
+    float processing_time = 5;
+    map<string, string> metadata = 6;
+}
+
+// ============================================================================
+// Типы данных для многоуровневого анализа
+// ============================================================================
+
+message UnifiedToken {
+    int32 idx = 1;
+    string text = 2;
+    int32 start_char = 3;
+    int32 end_char = 4;
+    string lemma = 5;
+    string pos = 6;
+    string pos_fine = 7;
+    map<string, string> morph = 8;
+    float confidence = 9;
+    repeated string sources = 10;
+    bool is_stop = 11;
+    bool is_punct = 12;
+    bool is_space = 13;
+    bool is_scientific_term = 14;
+    string scientific_category = 15;
+}
+
+message UnifiedDependency {
+    int32 head_idx = 1;
+    int32 dependent_idx = 2;
+    string relation = 3;
+    float confidence = 4;
+    repeated string sources = 5;
+    map<string, string> metadata = 6;
+}
+
+message UnifiedPhrase {
+    string phrase_type = 1;
+    int32 start_idx = 2;
+    int32 end_idx = 3;
+    repeated UnifiedToken tokens = 4;
+    int32 head_idx = 5;
+    float confidence = 6;
+    repeated string sources = 7;
+}
+
+message UnifiedEntity {
+    string text = 1;
+    int32 start_char = 2;
+    int32 end_char = 3;
+    string entity_type = 4;
+    float confidence = 5;
+    repeated string sources = 6;
+    bool is_scientific = 7;
+    string scientific_domain = 8;
+    map<string, string> metadata = 9;
+}
+
+message UnifiedSentence {
+    int32 idx = 1;
+    string text = 2;
+    int32 start_char = 3;
+    int32 end_char = 4;
+    repeated UnifiedToken tokens = 5;
+    repeated UnifiedDependency dependencies = 6;
+    repeated UnifiedPhrase phrases = 7;
+    repeated UnifiedEntity entities = 8;
+    float confidence = 9;
+    map<string, string> metadata = 10;
+}
+
+message UnifiedDocument {
+    string text = 1;
+    repeated UnifiedSentence sentences = 2;
+    repeated UnifiedEntity entities = 3;
+    map<string, string> metadata = 4;
+    float processing_time = 5;
+    repeated string processors_used = 6;
+}
+
+// ============================================================================
+// Запросы и ответы для ProcessText
+// ============================================================================
+
+message ProcessTextRequest {
+    string text = 1;
+    repeated string processor_names = 2;  // Если пусто - использовать все
+    bool merge_results = 3;  // Объединить результаты разных процессоров
+}
+
+message ProcessTextResponse {
+    bool success = 1;
+    repeated ProcessingResult results = 2;
+    ProcessingResult merged_result = 3;  // Заполняется если merge_results=true
+    string message = 4;
+}
+
+// ============================================================================
+// Запросы и ответы для ProcessSelection
+// ============================================================================
+
+message ProcessSelectionRequest {
+    string text = 1;
+    string selection = 2;
+    int32 start_offset = 3;
+    int32 end_offset = 4;
+    repeated string processor_names = 5;
+    bool merge_results = 6;
+}
+
+message ProcessSelectionResponse {
+    bool success = 1;
+    repeated ProcessingResult results = 2;
+    ProcessingResult merged_result = 3;
+    string message = 4;
+}
+
+// ============================================================================
+// Запросы и ответы для AnalyzeText
+// ============================================================================
+
+message AnalyzeTextRequest {
+    string text = 1;
+    repeated LinguisticLevel levels = 2;  // Если пусто - все уровни
+    bool enable_voting = 3;  // Использовать voting между процессорами
+    int32 min_agreement = 4;  // Минимальное количество процессоров для согласия (default: 2)
+}
+
+message AnalyzeTextResponse {
+    bool success = 1;
+    UnifiedDocument document = 2;
+    string message = 3;
+    float processing_time = 4;
+}
+
+// ============================================================================
+// Запросы и ответы для GetSupportedTypes
+// ============================================================================
+
+message ProcessorInfo {
+    string name = 1;
+    string version = 2;
+    string description = 3;
+    repeated AnnotationCategory supported_categories = 4;
+    repeated LinguisticLevel supported_levels = 5;
+    bool available = 6;
+}
+
+message GetSupportedTypesRequest {
+}
+
+message GetSupportedTypesResponse {
+    repeated ProcessorInfo processors = 1;
+    repeated string annotation_types = 2;
+    repeated string relation_types = 3;
+}
