@@ -9,7 +9,12 @@
       "Bash(d:Knowledge_Mapnlpsrcvoting__init__.py)",
       "Bash(poetry lock:*)",
       "Bash(python fix_image_urls.py:*)",
-      "Bash(.venv/Scripts/python.exe:*)"
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(\"d:\\Knowledge_Map\\.venv\\Scripts\\python.exe\" test_modular_version.py)",
+      "Bash(\"d:\\Knowledge_Map\\.venv\\Scripts\\python.exe\" test_improvements.py)",
+      "Bash(\"d:\\Knowledge_Map\\.venv\\Scripts\\python.exe\" -c \"from action_dependency_extraction import ActionExtractor, DAGBuilder; print(''OK: v2.1 integrated successfully'')\")",
+      "Bash(\"d:\\Knowledge_Map\\.venv\\Scripts\\python.exe\" test_v3.py)",
+      "Bash(\"d:\\Knowledge_Map\\.venv\\Scripts\\python.exe\":*)"
     ],
     "deny": [],
     "ask": []
