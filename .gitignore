@@ -5,6 +5,7 @@
 !/data/.gitkeep
 !/data/datasets.dvc
 
+models/
 personal_folder/
 logs/
 node_modules/

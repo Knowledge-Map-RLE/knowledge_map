@@ -131,6 +131,15 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
     def __init__(self):
         """Инициализация сервиса"""
         self.config = get_config()
+        
+        # Setup models on first initialization
+        try:
+            from setup_models import setup_all_models
+            logger.info("Setting up NLP models...")
+            setup_all_models()
+        except Exception as e:
+            logger.warning(f"Error during model setup: {e}")
+        
         self.nlp_manager = NLPManager()
         self.analyzer = MultiLevelAnalyzer()
         logger.info("NLP сервис инициализирован")

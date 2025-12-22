@@ -1,7 +1,7 @@
 services:
   # Neo4j — база данных для хранения графовых данных
   neo4j:
-    image: neo4j:5.13.0
+    image: neo4j:5.15.0
     container_name: knowledge_map_neo4j
     ports:
       - "7474:7474"   # HTTP для Neo4j Browser
@@ -18,10 +18,12 @@ services:
       NEO4J_db_transaction_timeout: "300m"
       # Оптимизированные JVM настройки
       NEO4J_server_jvm_additional: "-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication"
-      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_PLUGINS: '["apoc", "n10s"]'
       NEO4J_dbms_memory_transaction_total_max: "2G"
-      NEO4J_dbms_security_procedures_unrestricted: "apoc.*,gds.*"
-      NEO4J_dbms_security_procedures_allowlist: "apoc.*,gds.*"
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*,gds.*,n10s.*"
+      NEO4J_dbms_security_procedures_allowlist: "apoc.*,gds.*,n10s.*"
+      NEO4J_server_directories_import: "/var/lib/neo4j/import"
+      NEO4J_dbms_security_allow__csv__import__from__file__urls: "true"
       # Дополнительные настройки для стабильности
       NEO4J_server_http_enabled: "true"
       NEO4J_server_http_listen__address: "0.0.0.0:7474"
@@ -156,6 +158,8 @@ services:
       - AUTH_SERVICE_PORT=50051
       - AI_MODEL_SERVICE_HOST=ai
       - AI_MODEL_SERVICE_PORT=50054
+      - NLP_SERVICE_HOST=nlp
+      - NLP_SERVICE_PORT=50055
       - S3_ENDPOINT_URL=http://s3:9000
       - S3_ACCESS_KEY=minio
       - S3_SECRET_KEY=minio123456
@@ -169,6 +173,8 @@ services:
       auth:
         condition: service_started
       ai:
+        condition: service_started
+      nlp:
         condition: service_started
     volumes:
       - auth_proto:/shared/proto
@@ -238,6 +244,51 @@ services:
       timeout: 10s
       retries: 3
       start_period: 120s  # More time for model download
+
+  nlp:
+    build:
+      context: ./nlp
+      dockerfile: Dockerfile
+    container_name: knowledge_map_nlp
+    restart: unless-stopped
+    ports:
+      - "50055:50055"
+    environment:
+      - NLP_HOST=0.0.0.0
+      - NLP_PORT=50055
+      - NLP_MAX_WORKERS=10
+      - NLP_ENABLE_SPACY=true
+      - NLP_ENABLE_NLTK=true
+      - NLP_ENABLE_STANZA=true
+      - NLP_ENABLE_UDPIPE=true
+      - NLP_MIN_AGREEMENT=2
+      - NLP_ENABLE_VOTING=true
+      - NLP_SPACY_MODEL=ru_core_news_sm
+      - NLP_STANZA_LANG=ru
+      - NLP_MAX_TEXT_LENGTH=1000000
+      - NLP_BATCH_SIZE=32
+      - NLP_LOG_LEVEL=INFO
+      - MODEL_CACHE_DIR=/app/models
+    networks:
+      - knowledge_map_network
+    volumes:
+      - D:/Data/Data_Knowledge_Map/nlp_models:/app/models
+      - ./nlp:/app
+      - /app/__pycache__
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD", "python", "-c", "import grpc; channel = grpc.insecure_channel('localhost:50055'); channel.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
 
   client:
     build:

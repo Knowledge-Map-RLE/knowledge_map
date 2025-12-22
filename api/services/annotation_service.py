@@ -606,14 +606,88 @@ class AnnotationService:
             # Инициализация NLP сервиса
             nlp_service = NLPService()
 
-            # Обработка ОТФИЛЬТРОВАННОГО текста с помощью NLP процессоров
-            results = nlp_service.nlp_manager.process_text(
+            # Обработка ОТФИЛЬТРОВАННОГО текста с помощью NLP процессоров через gRPC
+            await nlp_service.grpc_client.connect()
+            grpc_result = await nlp_service.grpc_client.process_text(
                 text=filtered_text,
                 processor_names=processors,
-                annotation_types=annotation_types,
-                min_confidence=min_confidence,
-                parallel=False  # Последовательная обработка для стабильности
+                merge_results=False,
+                timeout=120
             )
+
+            if not grpc_result.get("success", False):
+                error_msg = grpc_result.get("message", "Unknown error")
+                logger.error(f"gRPC ошибка автоаннотации: {error_msg}")
+                raise HTTPException(status_code=500, detail=f"NLP service error: {error_msg}")
+
+            # Преобразуем результаты gRPC в формат, совместимый со старым кодом
+            results = {}
+            for result_dict in grpc_result.get("results", []):
+                proc_name = result_dict.get("processor_name", "unknown")
+                # Преобразуем аннотации из dict в объекты, совместимые со старым форматом
+                annotations_list = []
+                for ann_dict in result_dict.get("annotations", []):
+                    # Фильтруем по annotation_types и min_confidence
+                    if annotation_types and ann_dict.get("annotation_type") not in annotation_types:
+                        continue
+                    if ann_dict.get("confidence", 0.0) < min_confidence:
+                        continue
+                    
+                    # Создаем объект, совместимый с AnnotationSuggestion
+                    from services.nlp_grpc_client import get_nlp_grpc_client
+                    import sys
+                    from pathlib import Path
+                    sys.path.append(str(Path(__file__).parent.parent / "utils" / "generated"))
+                    import nlp_pb2
+                    
+                    class AnnotationSuggestionCompat:
+                        def __init__(self, ann_dict):
+                            self.text = ann_dict.get("text", "")
+                            self.annotation_type = ann_dict.get("annotation_type", "")
+                            self.category = type('obj', (object,), {'value': ann_dict.get("category", "").lower()})()
+                            self.start_offset = ann_dict.get("start_offset", 0)
+                            self.end_offset = ann_dict.get("end_offset", 0)
+                            self.confidence = ann_dict.get("confidence", 0.0)
+                            self.source = type('obj', (object,), {'value': ann_dict.get("source", "").lower()})()
+                            self.color = ann_dict.get("color", "#000000")
+                            self.metadata = ann_dict.get("metadata", {})
+                    
+                    annotations_list.append(AnnotationSuggestionCompat(ann_dict))
+                
+                # Преобразуем relations
+                relations_list = []
+                for rel_dict in result_dict.get("relations", []):
+                    class RelationSuggestionCompat:
+                        def __init__(self, rel_dict):
+                            self.source_text = rel_dict.get("source_text", "")
+                            self.target_text = rel_dict.get("target_text", "")
+                            self.source_start = rel_dict.get("source_start", 0)
+                            self.source_end = rel_dict.get("source_end", 0)
+                            self.target_start = rel_dict.get("target_start", 0)
+                            self.target_end = rel_dict.get("target_end", 0)
+                            self.relation_type = rel_dict.get("relation_type", "")
+                            self.confidence = rel_dict.get("confidence", 0.0)
+                            self.source = type('obj', (object,), {'value': rel_dict.get("source", "").lower()})()
+                            self.metadata = rel_dict.get("metadata", {})
+                    
+                    relations_list.append(RelationSuggestionCompat(rel_dict))
+                
+                # Создаем объект, совместимый с ProcessingResult
+                class ProcessingResultCompat:
+                    def __init__(self, proc_name, annotations, relations, metadata):
+                        self.annotations = annotations
+                        self.relations = relations
+                        self.processor_name = proc_name
+                        self.processor_version = metadata.get("processor_version", "")
+                        self.processing_time = metadata.get("processing_time", 0.0)
+                        self.metadata = metadata
+                
+                results[proc_name] = ProcessingResultCompat(
+                    proc_name,
+                    annotations_list,
+                    relations_list,
+                    result_dict.get("metadata", {})
+                )
 
             # Статистика
             created_annotations = 0

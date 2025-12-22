@@ -35,18 +35,26 @@ RUN for i in 1 2 3; do \
 COPY . .
 
 # 8) Генерируем proto файлы
+# Создаем utils/generated если не существует
+RUN mkdir -p utils/generated
+
+# Генерируем proto файлы для всех сервисов
 RUN python -m grpc_tools.protoc \
     -I./utils/proto \
+    -I../nlp/proto \
     --python_out=./utils/generated \
     --grpc_python_out=./utils/generated \
-    ./utils/proto/layout.proto ./utils/proto/auth.proto
+    ./utils/proto/layout.proto \
+    ./utils/proto/auth.proto \
+    ../nlp/proto/nlp.proto
 
 # Создаем __init__.py для generated папки
 RUN echo "" > utils/generated/__init__.py
 
 # Исправляем импорты в сгенерированных grpc-файлах (делаем их относительными)
 RUN sed -i "s/import layout_pb2 as layout__pb2/from \. import layout_pb2 as layout__pb2/g" utils/generated/layout_pb2_grpc.py \
-    && sed -i "s/import auth_pb2 as auth__pb2/from \. import auth_pb2 as auth__pb2/g" utils/generated/auth_pb2_grpc.py
+    && sed -i "s/import auth_pb2 as auth__pb2/from \. import auth_pb2 as auth__pb2/g" utils/generated/auth_pb2_grpc.py \
+    && sed -i "s/import nlp_pb2 as nlp__pb2/from \. import nlp_pb2 as nlp__pb2/g" utils/generated/nlp_pb2_grpc.py
 
 # 9) Открываем порт
 EXPOSE 8000

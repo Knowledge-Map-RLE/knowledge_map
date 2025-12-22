@@ -1,9 +1,14 @@
 import os
 from typing import Optional
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env.local" if os.path.exists(os.path.join(os.path.dirname(__file__), "..", "..", ".env.local")) else ".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True
+    )
     # База данных
     NEO4J_URI: str = "bolt://localhost:7687"
     NEO4J_USER: str = "neo4j"
@@ -33,15 +38,13 @@ class Settings(BaseSettings):
     # Debug режим
     DEBUG: bool = False
     
-    class Config:
-        env_file = ".env"
     
     def get_database_url(self) -> str:
         # neomodel ожидает формат: bolt://user:password@host:port
-        # self.NEO4J_URI может быть вида bolt://host:port
+        # self.NEO4J_URI может быть вида bolt://host:port или neo4j://host:port
         uri = self.NEO4J_URI
-        # Отбрасываем схему и собираем host:port
-        hostport = uri.replace("bolt://", "")
+        # Отбрасываем схему (bolt:// или neo4j://) и собираем host:port
+        hostport = uri.replace("bolt://", "").replace("neo4j://", "")
         return f"bolt://{self.NEO4J_USER}:{self.NEO4J_PASSWORD}@{hostport}"
 
 

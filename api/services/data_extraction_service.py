@@ -736,6 +736,10 @@ class DataExtractionService:
         try:
             # Получаем все документы из Neo4j
             all_docs = PDFDocument.nodes.all()
+            logger.info(f"[list_documents] Получено документов из Neo4j: {len(list(all_docs))}")
+
+            # Пересоздаем итератор, так как мы уже его использовали для подсчета
+            all_docs = PDFDocument.nodes.all()
 
             for pdf_doc in all_docs:
                 doc_id = pdf_doc.uid
@@ -764,11 +768,11 @@ class DataExtractionService:
                 md_exists = await self.s3_client.object_exists(bucket, md_key)
                 logger.info(f"[list_documents] doc_id={doc_id}: pdf_exists={pdf_exists}, md_exists={md_exists} для ключа {md_key}")
 
-                # Показываем документ только если markdown реально существует
-                if md_exists:
+                # Показываем документ если есть хотя бы PDF или markdown
+                if pdf_exists or md_exists:
                     item = {
                         "doc_id": doc_id,
-                        "has_markdown": True,
+                        "has_markdown": md_exists,
                         "files": {},
                         "title": pdf_doc.title,
                         "original_filename": pdf_doc.original_filename,

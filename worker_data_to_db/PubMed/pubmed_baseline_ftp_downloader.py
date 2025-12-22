@@ -14,7 +14,7 @@ from requests.adapters import HTTPAdapter, Retry
 
 BASE_URL = "ftp.ncbi.nlm.nih.gov"
 BASE_DIR = "/pubmed/baseline/"
-LOCAL_DIR = Path("D:/Данные/PubMed")
+LOCAL_DIR = Path("D:/Data/PubMed")
 LOG_FILE = Path("./logs/download_all_xml_gz.log")
 MAX_WORKERS = 8            # число потоков для параллелизации
 RETRIES = 3                # число повторных попыток пользовательских этапов

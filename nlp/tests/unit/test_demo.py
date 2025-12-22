@@ -1,5 +1,14 @@
-def test_demo1():
-    assert 1 == 1
+def add(a, b):
+    return a + b
 
-def test_demo2(before_after):
-    assert 2 == 3
+
+def test_add_positive_numbers():
+    assert add(2, 3) == 5
+
+
+def test_add_negative_numbers():
+    assert add(-1, -4) == -5
+
+
+def test_add_zero():
+    assert add(10, 0) == 10

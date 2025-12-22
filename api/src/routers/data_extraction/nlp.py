@@ -26,10 +26,10 @@ async def analyze_text(request: NLPAnalyzeRequest):
     try:
         if request.start is not None and request.end is not None:
             # Анализ выделенного фрагмента для подсказок
-            return nlp_service.analyze_selection(request.text, request.start, request.end)
+            return await nlp_service.analyze_selection(request.text, request.start, request.end)
         else:
             # Полный анализ текста
-            return nlp_service.analyze_text(request.text)
+            return await nlp_service.analyze_text(request.text)
     except Exception as e:
         logger.error(f"Ошибка NLP анализа: {e}")
         raise HTTPException(status_code=500, detail=f"Ошибка NLP анализа: {str(e)}")
@@ -127,7 +127,7 @@ async def get_supported_types():
         Словарь категорий и типов аннотаций
     """
     try:
-        return nlp_service.get_all_supported_types()
+        return await nlp_service.get_all_supported_types()
     except Exception as e:
         logger.error(f"Ошибка получения поддерживаемых типов: {e}")
         raise HTTPException(status_code=500, detail=f"Ошибка: {str(e)}")
@@ -191,20 +191,21 @@ async def analyze_document_multilevel(
 
         logger.info(f"Starting multi-level analysis for document {doc_id}, text length: {len(markdown_text)}")
 
-        # Analyze text to get UnifiedDocument (with filtering applied)
-        doc = multilevel_nlp_service.analyze_text_to_document(
+        # Analyze text and get result
+        result = await multilevel_nlp_service.analyze_text(
             text=markdown_text,
             doc_id=doc_id,
             enable_voting=enable_voting,
             max_level=max_level
         )
-
-        # Convert to dict for response
-        analyzer = multilevel_nlp_service._get_analyzer(enable_voting, max_level)
-        result = analyzer.to_dict(doc)
-        summary = analyzer.get_summary(doc)
-        result['summary'] = summary.get('statistics', {})
-        result['graph'] = multilevel_nlp_service._prepare_graph_data(doc)
+        
+        # Get document for creating annotations
+        doc = await multilevel_nlp_service.analyze_text_to_document(
+            text=markdown_text,
+            doc_id=doc_id,
+            enable_voting=enable_voting,
+            max_level=max_level
+        )
 
         # Create annotations if requested
         if create_annotations:
@@ -307,13 +308,23 @@ async def get_multilevel_analyzer_info():
         Analyzer settings and available levels
     """
     try:
-        if multilevel_nlp_service.analyzer:
-            return multilevel_nlp_service.analyzer.get_info()
-        else:
-            return {
-                "status": "not_initialized",
-                "message": "Analyzer will be initialized on first use"
-            }
+        # Получаем информацию о поддерживаемых типах через gRPC
+        from services.nlp_grpc_client import get_nlp_grpc_client
+        
+        grpc_client = get_nlp_grpc_client()
+        await grpc_client.connect()
+        result = await grpc_client.get_supported_types()
+        
+        return {
+            "status": "initialized",
+            "processors": result.get("processors", []),
+            "annotation_types": result.get("annotation_types", []),
+            "relation_types": result.get("relation_types", []),
+            "message": "Using gRPC NLP service"
+        }
     except Exception as e:
         logger.error(f"Error getting analyzer info: {e}")
-        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+        return {
+            "status": "error",
+            "message": f"Error connecting to NLP service: {str(e)}"
+        }

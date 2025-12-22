@@ -4,26 +4,126 @@ Multi-level NLP service for Knowledge Map.
 Provides advanced linguistic analysis with voting and confidence scores.
 """
 
+import asyncio
 from typing import List, Dict, Any, Optional
 import logging
-import sys
-import os
-import warnings
 
-# Suppress spaCy warnings
-warnings.filterwarnings("ignore", category=FutureWarning, module="spacy")
-warnings.filterwarnings("ignore", category=UserWarning, module="spacy")
-
-# Add the api directory to the path if needed
-api_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if api_dir not in sys.path:
-    sys.path.insert(0, api_dir)
-
-from nlp.multilevel_analyzer import MultiLevelAnalyzer
-from nlp.unified_types import UnifiedDocument
+from services.nlp_grpc_client import get_nlp_grpc_client
 from services.markdown_filter import MarkdownFilter
 
 logger = logging.getLogger(__name__)
+
+
+class UnifiedDocumentWrapper:
+    """
+    Обертка для UnifiedDocument из gRPC ответа.
+    Имитирует интерфейс UnifiedDocument для совместимости с существующим кодом.
+    """
+    
+    def __init__(self, doc_dict: Dict[str, Any]):
+        """Инициализация из словаря, полученного из gRPC"""
+        self.text = doc_dict.get("text", "")
+        self.metadata = doc_dict.get("metadata", {})
+        self.processing_time = doc_dict.get("processing_time", 0.0)
+        self.processors_used = doc_dict.get("processors_used", [])
+        
+        # Преобразуем sentences в объекты-обертки
+        self.sentences = [UnifiedSentenceWrapper(s) for s in doc_dict.get("sentences", [])]
+        
+        # Преобразуем entities в объекты-обертки
+        self.entities = [UnifiedEntityWrapper(e) for e in doc_dict.get("entities", [])]
+
+
+class UnifiedSentenceWrapper:
+    """Обертка для UnifiedSentence"""
+    
+    def __init__(self, sent_dict: Dict[str, Any]):
+        self.idx = sent_dict.get("idx", 0)
+        self.text = sent_dict.get("text", "")
+        self.start_char = sent_dict.get("start_char", 0)
+        self.end_char = sent_dict.get("end_char", 0)
+        self.confidence = sent_dict.get("confidence", 0.0)
+        self.metadata = sent_dict.get("metadata", {})
+        
+        # Преобразуем tokens в объекты-обертки
+        self.tokens = [UnifiedTokenWrapper(t) for t in sent_dict.get("tokens", [])]
+        
+        # Преобразуем dependencies в объекты-обертки
+        self.dependencies = [UnifiedDependencyWrapper(d) for d in sent_dict.get("dependencies", [])]
+        
+        # Преобразуем phrases в объекты-обертки
+        self.phrases = [UnifiedPhraseWrapper(p) for p in sent_dict.get("phrases", [])]
+        
+        # Преобразуем entities в объекты-обертки
+        self.entities = [UnifiedEntityWrapper(e) for e in sent_dict.get("entities", [])]
+
+
+class UnifiedTokenWrapper:
+    """Обертка для UnifiedToken"""
+    
+    def __init__(self, token_dict: Dict[str, Any]):
+        self.idx = token_dict.get("idx", 0)
+        self.text = token_dict.get("text", "")
+        self.start_char = token_dict.get("start_char", 0)
+        self.end_char = token_dict.get("end_char", 0)
+        self.lemma = token_dict.get("lemma", "")
+        self.pos = token_dict.get("pos", "")
+        self.pos_fine = token_dict.get("pos_fine", "")
+        self.morph = token_dict.get("morph", {})
+        self.confidence = token_dict.get("confidence", 0.0)
+        self.sources = token_dict.get("sources", [])
+        self.is_stop = token_dict.get("is_stop", False)
+        self.is_punct = token_dict.get("is_punct", False)
+        self.is_space = token_dict.get("is_space", False)
+        self.is_scientific_term = token_dict.get("is_scientific_term", False)
+        self.scientific_category = token_dict.get("scientific_category", "")
+
+
+class UnifiedDependencyWrapper:
+    """Обертка для UnifiedDependency"""
+    
+    def __init__(self, dep_dict: Dict[str, Any]):
+        self.head_idx = dep_dict.get("head_idx", 0)
+        self.dependent_idx = dep_dict.get("dependent_idx", 0)
+        self.relation = dep_dict.get("relation", "")
+        self.confidence = dep_dict.get("confidence", 0.0)
+        self.sources = dep_dict.get("sources", [])
+        self.metadata = dep_dict.get("metadata", {})
+
+
+class UnifiedPhraseWrapper:
+    """Обертка для UnifiedPhrase"""
+    
+    def __init__(self, phrase_dict: Dict[str, Any]):
+        self.phrase_type = phrase_dict.get("phrase_type", "")
+        self.start_idx = phrase_dict.get("start_idx", 0)
+        self.end_idx = phrase_dict.get("end_idx", 0)
+        self.head_idx = phrase_dict.get("head_idx", 0)
+        self.confidence = phrase_dict.get("confidence", 0.0)
+        self.sources = phrase_dict.get("sources", [])
+        self.tokens = [UnifiedTokenWrapper(t) for t in phrase_dict.get("tokens", [])]
+
+
+class UnifiedEntityWrapper:
+    """Обертка для UnifiedEntity"""
+    
+    def __init__(self, entity_dict: Dict[str, Any]):
+        self._text = entity_dict.get("text", "")
+        self.start_char = entity_dict.get("start_char", 0)
+        self.end_char = entity_dict.get("end_char", 0)
+        self.entity_type = entity_dict.get("entity_type", "")
+        self.confidence = entity_dict.get("confidence", 0.0)
+        self.sources = entity_dict.get("sources", [])
+        self.is_scientific = entity_dict.get("is_scientific", False)
+        self.scientific_domain = entity_dict.get("scientific_domain", "")
+        self.metadata = entity_dict.get("metadata", {})
+        # tokens будут установлены отдельно, если нужны
+        self.tokens = []
+    
+    @property
+    def text(self) -> str:
+        """Возвращает текст сущности"""
+        return self._text
 
 
 class MultiLevelNLPService:
@@ -32,24 +132,12 @@ class MultiLevelNLPService:
     """
 
     def __init__(self):
-        """Initialize service with default analyzer."""
-        self.analyzer = None  # Lazy initialization
+        """Initialize service with gRPC client."""
+        self.grpc_client = get_nlp_grpc_client()
         self.markdown_filter = MarkdownFilter()
+        logger.info("MultiLevelNLPService инициализирован с gRPC клиентом")
 
-    def _get_analyzer(self, enable_voting: bool = True, max_level: int = 3) -> MultiLevelAnalyzer:
-        """Get or create analyzer with specified settings."""
-        if self.analyzer is None or \
-           self.analyzer.enable_voting != enable_voting or \
-           self.analyzer.max_level != max_level:
-            self.analyzer = MultiLevelAnalyzer(
-                spacy_model="en_core_sci_lg",  # Use large scientific model for better accuracy
-                enable_voting=enable_voting,
-                min_agreement=2,
-                max_level=max_level
-            )
-        return self.analyzer
-
-    def analyze_text(
+    async def analyze_text(
         self,
         text: str,
         doc_id: Optional[str] = None,
@@ -71,34 +159,59 @@ class MultiLevelNLPService:
         logger.info(f"Starting multi-level analysis (voting={enable_voting}, level={max_level})")
 
         # Analyze and get UnifiedDocument
-        doc = self.analyze_text_to_document(text, doc_id, enable_voting, max_level)
+        doc = await self.analyze_text_to_document(text, doc_id, enable_voting, max_level)
 
-        # Get analyzer for conversion
-        analyzer = self._get_analyzer(enable_voting, max_level)
+        # Convert to dict for response
+        result = self._document_to_dict(doc)
 
-        # Convert to dict
-        result = analyzer.to_dict(doc)
-
-        # Add summary statistics
-        summary = analyzer.get_summary(doc)
-        result['summary'] = summary.get('statistics', {})
+        # Add summary statistics (извлекаем statistics из результата _calculate_summary)
+        summary_dict = self._calculate_summary(doc)
+        result['summary'] = summary_dict.get('statistics', {})
 
         # Add graph data for visualization
         result['graph'] = self._prepare_graph_data(doc)
 
-        logger.info(f"Analysis complete in {doc.processing_time:.2f}s, agreement={result['summary'].get('agreement_score', 0):.2f}")
+        logger.info(f"Analysis complete in {doc.processing_time:.2f}s")
+        
+        # Добавляем обязательные поля для клиента
+        result['doc_id'] = doc_id or doc.metadata.get('doc_id', '')
+        result['text_length'] = len(doc.text)
+        result['processing_time'] = doc.processing_time
+        result['processed_levels'] = self._get_processed_levels(doc)
 
         return result
+    
+    def _get_processed_levels(self, doc: UnifiedDocumentWrapper) -> List[str]:
+        """Определяет обработанные уровни на основе данных документа"""
+        levels = []
+        if not doc.sentences:
+            return levels
+        
+        sent = doc.sentences[0]
+        
+        # Tokenization level - есть токены
+        if sent.tokens:
+            levels.append("tokenization")
+        
+        # Morphology level - есть POS теги
+        if sent.tokens and any(t.pos for t in sent.tokens):
+            levels.append("morphology")
+        
+        # Syntax level - есть зависимости
+        if sent.dependencies:
+            levels.append("syntax")
+        
+        return levels
 
-    def analyze_text_to_document(
+    async def analyze_text_to_document(
         self,
         text: str,
         doc_id: Optional[str] = None,
         enable_voting: bool = True,
         max_level: int = 3
-    ) -> UnifiedDocument:
+    ) -> UnifiedDocumentWrapper:
         """
-        Analyze text and return UnifiedDocument object (with filtering applied).
+        Analyze text and return UnifiedDocumentWrapper object (with filtering applied).
 
         Args:
             text: Input text
@@ -107,7 +220,7 @@ class MultiLevelNLPService:
             max_level: Maximum analysis level (1-3)
 
         Returns:
-            UnifiedDocument with analyzed data
+            UnifiedDocumentWrapper with analyzed data
         """
         # Filter markdown text (skip metadata, tables, references, etc.)
         filtered_result = self.markdown_filter.filter_text(text)
@@ -116,11 +229,41 @@ class MultiLevelNLPService:
 
         logger.info(f"Filtered text: {len(text)} -> {len(filtered_text)} characters")
 
-        # Get analyzer
-        analyzer = self._get_analyzer(enable_voting, max_level)
+        # Определяем уровни анализа на основе max_level
+        levels = []
+        if max_level >= 1:
+            levels.append("tokenization")
+        if max_level >= 2:
+            levels.append("morphology")
+        if max_level >= 3:
+            levels.append("syntax")
 
-        # Analyze filtered text
-        doc = analyzer.analyze(filtered_text, doc_id=doc_id)
+        # Вызываем асинхронный gRPC метод
+        await self.grpc_client.connect()
+        grpc_result = await self.grpc_client.analyze_text(
+            text=filtered_text,
+            levels=levels if levels else None,
+            enable_voting=enable_voting,
+            min_agreement=2,
+            timeout=120
+        )
+
+        if not grpc_result.get("success", False):
+            error_msg = grpc_result.get("message", "Unknown error")
+            logger.error(f"gRPC ошибка анализа текста: {error_msg}")
+            raise Exception(f"NLP service error: {error_msg}")
+
+        # Получаем документ из gRPC ответа
+        doc_dict = grpc_result.get("document")
+        if not doc_dict:
+            raise Exception("No document in gRPC response")
+
+        # Добавляем doc_id в metadata
+        if doc_id:
+            doc_dict["metadata"]["doc_id"] = doc_id
+
+        # Создаем обертку
+        doc = UnifiedDocumentWrapper(doc_dict)
 
         # Map offsets back to original text
         doc = self._remap_offsets_to_original(doc, offset_map)
@@ -132,9 +275,9 @@ class MultiLevelNLPService:
 
     def _remap_offsets_to_original(
         self,
-        doc: UnifiedDocument,
+        doc: UnifiedDocumentWrapper,
         offset_map: List[int]
-    ) -> UnifiedDocument:
+    ) -> UnifiedDocumentWrapper:
         """
         Remap token offsets from filtered text back to original text.
 
@@ -184,7 +327,7 @@ class MultiLevelNLPService:
 
         return doc
 
-    def _prepare_graph_data(self, doc: UnifiedDocument) -> Dict[str, Any]:
+    def _prepare_graph_data(self, doc: UnifiedDocumentWrapper) -> Dict[str, Any]:
         """
         Prepare graph data for Pixi.js visualization.
 
@@ -239,7 +382,7 @@ class MultiLevelNLPService:
                 if entity.confidence >= 0.7:  # Only high-confidence entities
                     node = {
                         'id': node_id,
-                        'label': entity.text(),
+                        'label': entity.text,
                         'type': 'entity',
                         'entity_type': entity.entity_type,
                         'confidence': entity.confidence,
@@ -274,7 +417,7 @@ class MultiLevelNLPService:
 
     def create_annotations_for_database(
         self,
-        doc: UnifiedDocument,
+        doc: UnifiedDocumentWrapper,
         confidence_threshold: float = 0.8
     ) -> List[Dict[str, Any]]:
         """
@@ -333,10 +476,19 @@ class MultiLevelNLPService:
             # Entity annotations
             for entity in sent.entities:
                 if entity.confidence >= 0.7:  # Lower threshold for entities
-                    # Calculate offsets
-                    start_offset = entity.tokens[0].start_char if entity.tokens else 0
-                    end_offset = entity.tokens[-1].end_char if entity.tokens else 0
-                    entity_text = entity.text()
+                    # Calculate offsets - используем start_char и end_char из entity, если есть
+                    # Иначе пытаемся получить из tokens
+                    if entity.start_char > 0 and entity.end_char > 0:
+                        start_offset = entity.start_char
+                        end_offset = entity.end_char
+                    elif entity.tokens and len(entity.tokens) > 0:
+                        start_offset = entity.tokens[0].start_char
+                        end_offset = entity.tokens[-1].end_char
+                    else:
+                        # Пропускаем entity без токенов и без координат
+                        skipped_count += 1
+                        continue
+                    entity_text = entity.text
 
                     # Validate that the text at remapped offsets matches the entity
                     if original_text and start_offset < len(original_text) and end_offset <= len(original_text):
@@ -372,8 +524,8 @@ class MultiLevelNLPService:
 
     def create_relations_for_database(
         self,
-        doc: UnifiedDocument,
-        annotation_uid_map: Dict[int, str],
+        doc: UnifiedDocumentWrapper,
+        annotation_uid_map: Dict[tuple, str],
         confidence_threshold: float = 0.8
     ) -> List[Dict[str, Any]]:
         """
@@ -455,3 +607,134 @@ class MultiLevelNLPService:
             'CHEMICAL': '#9C27B0',  # Purple
         }
         return colors.get(entity_type, '#795548')  # Brown default
+
+    def _document_to_dict(self, doc: UnifiedDocumentWrapper) -> Dict[str, Any]:
+        """Преобразует UnifiedDocumentWrapper в словарь для API ответа"""
+        # Определяем обработанные уровни на основе наличия данных
+        processed_levels = []
+        if doc.sentences and len(doc.sentences) > 0:
+            sent = doc.sentences[0]
+            if sent.tokens:
+                processed_levels.append("tokenization")
+            if sent.tokens and any(t.pos for t in sent.tokens):
+                processed_levels.append("morphology")
+            if sent.dependencies:
+                processed_levels.append("syntax")
+        
+        return {
+            "text": doc.text,
+            "doc_id": doc.metadata.get("doc_id", ""),
+            "text_length": len(doc.text),
+            "sentences": [
+                {
+                    "idx": sent.idx,
+                    "text": sent.text,
+                    "start_char": sent.start_char,
+                    "end_char": sent.end_char,
+                    "tokens": [
+                        {
+                            "idx": token.idx,
+                            "text": token.text,
+                            "start_char": token.start_char,
+                            "end_char": token.end_char,
+                            "lemma": token.lemma,
+                            "pos": token.pos,
+                            "pos_fine": token.pos_fine,
+                            "morph": token.morph,
+                            "confidence": token.confidence,
+                            "sources": token.sources,
+                            "is_stop": token.is_stop,
+                            "is_punct": token.is_punct,
+                            "is_space": token.is_space,
+                        }
+                        for token in sent.tokens
+                    ],
+                    "dependencies": [
+                        {
+                            "head_idx": dep.head_idx,
+                            "dependent_idx": dep.dependent_idx,
+                            "relation": dep.relation,
+                            "confidence": dep.confidence,
+                            "sources": dep.sources,
+                        }
+                        for dep in sent.dependencies
+                    ],
+                    "entities": [
+                        {
+                            "text": ent.text,
+                            "start_char": ent.start_char,
+                            "end_char": ent.end_char,
+                            "entity_type": ent.entity_type,
+                            "confidence": ent.confidence,
+                            "sources": ent.sources,
+                            "is_scientific": ent.is_scientific,
+                        }
+                        for ent in sent.entities
+                    ],
+                    "confidence": sent.confidence,
+                }
+                for sent in doc.sentences
+            ],
+            "entities": [
+                {
+                    "text": ent.text,
+                    "start_char": ent.start_char,
+                    "end_char": ent.end_char,
+                    "entity_type": ent.entity_type,
+                    "confidence": ent.confidence,
+                    "sources": ent.sources,
+                    "is_scientific": ent.is_scientific,
+                }
+                for ent in doc.entities
+            ],
+            "metadata": doc.metadata,
+            "processing_time": doc.processing_time,
+            "processors_used": doc.processors_used,
+            "processed_levels": processed_levels,
+        }
+
+    def _calculate_summary(self, doc: UnifiedDocumentWrapper) -> Dict[str, Any]:
+        """Вычисляет статистику для документа"""
+        total_tokens = sum(len(sent.tokens) for sent in doc.sentences)
+        total_dependencies = sum(len(sent.dependencies) for sent in doc.sentences)
+        total_entities = len(doc.entities)
+        
+        # Вычисляем среднюю уверенность
+        all_confidences = []
+        for sent in doc.sentences:
+            all_confidences.extend([token.confidence for token in sent.tokens])
+            all_confidences.extend([dep.confidence for dep in sent.dependencies])
+        all_confidences.extend([ent.confidence for ent in doc.entities])
+        
+        avg_confidence = sum(all_confidences) / len(all_confidences) if all_confidences else 0.0
+        
+        # Распределение POS тегов
+        pos_distribution = {}
+        for sent in doc.sentences:
+            for token in sent.tokens:
+                pos = token.pos
+                pos_distribution[pos] = pos_distribution.get(pos, 0) + 1
+        
+        # Распределение зависимостей
+        dependency_distribution = {}
+        for sent in doc.sentences:
+            for dep in sent.dependencies:
+                rel = dep.relation
+                dependency_distribution[rel] = dependency_distribution.get(rel, 0) + 1
+        
+        # Вычисляем agreement_score (упрощенная версия - средняя уверенность)
+        agreement_score = avg_confidence
+        
+        return {
+            "statistics": {
+                "total_sentences": len(doc.sentences),
+                "total_tokens": total_tokens,
+                "total_dependencies": total_dependencies,
+                "total_entities": total_entities,
+                "agreement_score": agreement_score,
+                "pos_distribution": pos_distribution,
+                "dependency_distribution": dependency_distribution,
+                "average_confidence": avg_confidence,
+                "processing_time": doc.processing_time,
+            }
+        }

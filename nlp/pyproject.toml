@@ -28,6 +28,8 @@ pymorphy2 = "^0.9.1"
 # Utilities
 networkx = "3.5"
 setuptools = "^80.9.0"
+rdflib = "^7.5.0"
+graphviz = "^0.21"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"

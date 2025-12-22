@@ -269,6 +269,30 @@ function Start-NLPService {
         Pop-Location
     }
 
+    # Setup NLP models
+    Write-ColorOutput "Setting up NLP models and cache..." $InfoColor
+    Push-Location $nlpDir
+    try {
+        # Create model cache directory on host
+        $modelCacheDir = "D:/Data/Data_Knowledge_Map/nlp_models"
+        if (-not (Test-Path $modelCacheDir)) {
+            New-Item -Path $modelCacheDir -ItemType Directory -Force | Out-Null
+        }
+        
+        $env:MODEL_CACHE_DIR = $modelCacheDir
+        
+        # Run setup_models.py to download and cache models
+        Write-ColorOutput "Running NLP model setup script..." $InfoColor
+        poetry run python src/setup_models.py
+        
+        if ($LASTEXITCODE -ne 0) {
+            Write-ColorOutput "Warning: NLP model setup had issues, continuing..." $WarningColor
+        }
+    }
+    finally {
+        Pop-Location
+    }
+
     # Generate proto files
     Write-ColorOutput "Generating proto files for nlp..." $InfoColor
     Push-Location $nlpDir
@@ -295,6 +319,7 @@ function Start-NLPService {
     $env:NLP_MAX_TEXT_LENGTH = "1000000"
     $env:NLP_BATCH_SIZE = "32"
     $env:NLP_LOG_LEVEL = "INFO"
+    $env:MODEL_CACHE_DIR = "D:/Data/Data_Knowledge_Map/nlp_models"
 
     # Create logs directory
     $logsDir = Join-Path $nlpDir "logs"
@@ -430,30 +455,6 @@ function Start-ApiService {
     Push-Location $apiDir
     try {
         poetry install
-
-        # Download NLP models and data for multi-level NLP system
-        Write-ColorOutput "Checking NLP models and data..." $InfoColor
-
-        # Download NLTK data
-        Write-ColorOutput "Downloading NLTK data (punkt, wordnet, stopwords)..." $InfoColor
-        poetry run python -c "import nltk; nltk.download('punkt', quiet=True); nltk.download('averaged_perceptron_tagger', quiet=True); nltk.download('wordnet', quiet=True); nltk.download('omw-1.4', quiet=True); nltk.download('stopwords', quiet=True)" 2>&1 | Out-Null
-
-        # Check if spaCy model exists, if not download it
-        Write-ColorOutput "Checking spaCy model (en_core_web_sm)..." $InfoColor
-        $spacyCheck = poetry run python -c "import spacy; spacy.load('en_core_web_sm')" 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            Write-ColorOutput "Downloading spaCy model en_core_web_sm..." $InfoColor
-            poetry run python -m spacy download en_core_web_sm
-        } else {
-            Write-ColorOutput "spaCy model already installed" $SuccessColor
-        }
-
-        # Download Stanza models for English
-        Write-ColorOutput "Downloading Stanza models (en)..." $InfoColor
-        poetry run python -c "import stanza; stanza.download('en', verbose=False)" 2>&1 | Out-Null
-        Write-ColorOutput "Stanza models ready" $SuccessColor
-
-        Write-ColorOutput "NLP models and data ready" $SuccessColor
     }
     catch {
         Write-ColorOutput "Failed to install dependencies for api: $($_.Exception.Message)" $WarningColor
@@ -505,16 +506,16 @@ function Start-ApiService {
             New-Item -Path "utils/generated/__init__.py" -ItemType File -Force | Out-Null
         }
 
-        # Fix imports in generated grpc files (relative imports)
+        # Fix imports in generated grpc files (convert relative to absolute imports)
         $grpcFiles = @("utils/generated/graph_layout_pb2_grpc.py", "utils/generated/auth_pb2_grpc.py", "utils/generated/pdf_to_md_pb2_grpc.py", "utils/generated/ai_model_pb2_grpc.py", "utils/generated/nlp_pb2_grpc.py")
         foreach ($file in $grpcFiles) {
             if (Test-Path $file) {
                 (Get-Content $file) `
-                    -replace "import graph_layout_pb2 as graph_layout__pb2", "from . import graph_layout_pb2 as graph_layout__pb2" `
-                    -replace "import auth_pb2 as auth__pb2", "from . import auth_pb2 as auth__pb2" `
-                    -replace "import pdf_to_md_pb2 as pdf_to_md__pb2", "from . import pdf_to_md_pb2 as pdf_to_md__pb2" `
-                    -replace "import ai_model_pb2 as ai_model__pb2", "from . import ai_model_pb2 as ai_model__pb2" `
-                    -replace "import nlp_pb2 as nlp__pb2", "from . import nlp_pb2 as nlp__pb2" | Set-Content $file
+                    -replace "from \. import graph_layout_pb2 as graph_layout__pb2", "import graph_layout_pb2 as graph_layout__pb2" `
+                    -replace "from \. import auth_pb2 as auth__pb2", "import auth_pb2 as auth__pb2" `
+                    -replace "from \. import pdf_to_md_pb2 as pdf_to_md__pb2", "import pdf_to_md_pb2 as pdf_to_md__pb2" `
+                    -replace "from \. import ai_model_pb2 as ai_model__pb2", "import ai_model_pb2 as ai_model__pb2" `
+                    -replace "from \. import nlp_pb2 as nlp__pb2", "import nlp_pb2 as nlp__pb2" | Set-Content $file
             }
         }
     }
@@ -948,15 +949,15 @@ function Start-ApiServiceInteractive {
         New-Item -Path "utils/generated/__init__.py" -ItemType File -Force | Out-Null
     }
 
-    # Fix imports
+    # Fix imports (convert relative to absolute imports)
     $grpcFiles = @("utils/generated/graph_layout_pb2_grpc.py", "utils/generated/auth_pb2_grpc.py", "utils/generated/pdf_to_md_pb2_grpc.py", "utils/generated/ai_model_pb2_grpc.py")
     foreach ($file in $grpcFiles) {
         if (Test-Path $file) {
             (Get-Content $file) `
-                -replace "import graph_layout_pb2 as graph_layout__pb2", "from . import graph_layout_pb2 as graph_layout__pb2" `
-                -replace "import auth_pb2 as auth__pb2", "from . import auth_pb2 as auth__pb2" `
-                -replace "import pdf_to_md_pb2 as pdf_to_md__pb2", "from . import pdf_to_md_pb2 as pdf_to_md__pb2" `
-                -replace "import ai_model_pb2 as ai_model__pb2", "from . import ai_model_pb2 as ai_model__pb2" | Set-Content $file
+                -replace "from \. import graph_layout_pb2 as graph_layout__pb2", "import graph_layout_pb2 as graph_layout__pb2" `
+                -replace "from \. import auth_pb2 as auth__pb2", "import auth_pb2 as auth__pb2" `
+                -replace "from \. import pdf_to_md_pb2 as pdf_to_md__pb2", "import pdf_to_md_pb2 as pdf_to_md__pb2" `
+                -replace "from \. import ai_model_pb2 as ai_model__pb2", "import ai_model_pb2 as ai_model__pb2" | Set-Content $file
         }
     }
     Pop-Location
