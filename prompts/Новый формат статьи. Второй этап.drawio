@@ -1,70 +1,77 @@
-<mxfile host="Electron" modified="2025-11-24T04:49:40.045Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.13 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="Hi633d2NAoqN_Py35lxi" version="24.4.13" type="device">
+<mxfile host="Electron" modified="2025-12-11T09:46:56.971Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.13 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="7KFRJMD75vqzjxnKmWIH" version="24.4.13" type="device">
   <diagram name="Страница — 1" id="StWODMb9PkcDyiyz2-C0">
-    <mxGraphModel dx="1247" dy="727" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="823" dy="556" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-1" value="&amp;nbsp;Мы призываем наших коллег принять этот клеточно-ориентированный подход с целью улучшения коммуникации в междисциплинарных исследованиях, нацеленных на молекулярные события, модулирующие межклеточные сигнальные пути и возникающие клинические фенотипы, связанные с БП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-250" value="Блоки начала&lt;br&gt;создают блоки&lt;br&gt;конца" style="endArrow=classic;html=1;rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-238" target="7qZIqy6ZL3z2aXDZ3tAA-237" edge="1">
+          <mxGeometry x="-0.0188" y="-4" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="5691" y="392" as="sourcePoint" />
+            <mxPoint x="5370" y="615" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-1" value="&amp;nbsp;Мы призываем наших коллег принять этот клеточно-ориентированный подход с целью улучшения коммуникации в междисциплинарных исследованиях, нацеленных на молекулярные события, модулирующие межклеточные сигнальные пути и возникающие клинические фенотипы, связанные с БП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="200" y="1200" width="200" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-2" value="Дофамин &lt;font style=&quot;font-size: 14px;&quot; color=&quot;#1976d2&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;открыт&lt;/b&gt;&lt;/font&gt; как нейромедиатор в 1950-х годах." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-2" value="Дофамин &lt;font style=&quot;font-size: 14px;&quot; color=&quot;#1976d2&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;открыт&lt;/b&gt;&lt;/font&gt; как нейромедиатор в 1950-х годах." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="200" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-3" value="Исследования болезни Паркинсона (БП) &lt;b style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#1976d2&quot;&gt;сформировали&amp;nbsp;&lt;/font&gt;&lt;/b&gt;богатую и сложную базу знаний." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-3" value="Исследования болезни Паркинсона (БП) &lt;b style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#1976d2&quot;&gt;сформировали&amp;nbsp;&lt;/font&gt;&lt;/b&gt;богатую и сложную базу знаний." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="280" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-4" value="&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#b266ff&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;С момента&lt;/b&gt;&lt;/font&gt; открытия дофамина как нейромедиатора в 1950-х годах исследования болезни Паркинсона (БП) сформировали богатую и сложную базу знаний, &lt;font style=&quot;font-size: 14px;&quot; color=&quot;#b266ff&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;выявив&lt;/b&gt;&lt;/font&gt;, что БП является возрастным многофакторным заболеванием, на которое влияют как генетические, так и факторы окружающей среды." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-4" value="&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#b266ff&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;С момента&lt;/b&gt;&lt;/font&gt; открытия дофамина как нейромедиатора в 1950-х годах исследования болезни Паркинсона (БП) сформировали богатую и сложную базу знаний, &lt;font style=&quot;font-size: 14px;&quot; color=&quot;#b266ff&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;выявив&lt;/b&gt;&lt;/font&gt;, что БП является возрастным многофакторным заболеванием, на которое влияют как генетические, так и факторы окружающей среды." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="200" y="200" width="200" height="320" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-5" value="Огромная сложность заболевания усиливается нелинейным прогрессированием патогенеза между молекулярными, клеточными и органическими системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-5" value="Огромная сложность заболевания усиливается нелинейным прогрессированием патогенеза между молекулярными, клеточными и органическими системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="200" y="560" width="200" height="200" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-6" value="В этом мини-обзоре мы исследуем сложность БП и предлагаем системный подход, организуя доступную информацию вокруг клеточных признаков заболевания." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-6" value="В этом мини-обзоре мы исследуем сложность БП и предлагаем системный подход, организуя доступную информацию вокруг клеточных признаков заболевания." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="200" y="800" width="200" height="320" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-7" value="Предложения" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-7" value="Предложения" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="200" y="120" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-8" value="Тезисы. Утверждения" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-8" value="Тезисы. Утверждения" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="120" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-9" value="Болезнь Паркинсона (БП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;является&lt;/font&gt;&lt;/b&gt; возрастным многофакторным заболеванием." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-9" value="Болезнь Паркинсона (БП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;является&lt;/font&gt;&lt;/b&gt; возрастным многофакторным заболеванием." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="360" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-10" value="На болезнь Паркинсона (БП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;влияют&lt;/font&gt;&lt;/b&gt; как генетические, так и факторы окружающей среды." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-10" value="На болезнь Паркинсона (БП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;влияют&lt;/font&gt;&lt;/b&gt; как генетические, так и факторы окружающей среды." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="480" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-12" value="Комментарий к тезису" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-12" value="Комментарий к тезису" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="120" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-13" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-13" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="280" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-14" value="Блоки" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-14" value="Блоки (Попытка 1)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="120" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-15" target="7qZIqy6ZL3z2aXDZ3tAA-20">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-15" target="7qZIqy6ZL3z2aXDZ3tAA-20" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-15" value="Дофамин &lt;font style=&quot;font-size: 14px;&quot; color=&quot;#1976d2&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;это&lt;/b&gt;&lt;/font&gt;&amp;nbsp;нейромедиатор" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-15" value="Дофамин &lt;font style=&quot;font-size: 14px;&quot; color=&quot;#1976d2&quot;&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;это&lt;/b&gt;&lt;/font&gt;&amp;nbsp;нейромедиатор" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="200" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-17" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;это&amp;nbsp;&lt;/b&gt;&lt;/font&gt;возрастное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-17" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;это&amp;nbsp;&lt;/b&gt;&lt;/font&gt;возрастное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="340" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-18" value="Совмещено с предыдущим" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-18" value="Совмещено с предыдущим" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="360" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-17" target="7qZIqy6ZL3z2aXDZ3tAA-20">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-17" target="7qZIqy6ZL3z2aXDZ3tAA-20" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1180" y="340" as="sourcePoint" />
             <mxPoint x="1210" y="330" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-20" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Исследована&lt;/b&gt;&lt;/font&gt; болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-20" value="&lt;div&gt;&lt;b style=&quot;color: rgb(255, 215, 0); background-color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;⭐ Цель ⭐&amp;nbsp;&lt;/b&gt;&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Исследована&lt;/b&gt;&lt;/font&gt; болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="280" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-22" target="7qZIqy6ZL3z2aXDZ3tAA-29">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-22" target="7qZIqy6ZL3z2aXDZ3tAA-29" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1180" y="450" />
@@ -72,10 +79,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-22" value="Фактор окружающей среды&amp;nbsp;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;повлиял на&lt;/font&gt;&lt;/b&gt; болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-22" value="Фактор окружающей среды&amp;nbsp;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;повлиял на&lt;/font&gt;&lt;/b&gt; болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="440" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-22" target="7qZIqy6ZL3z2aXDZ3tAA-20">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-22" target="7qZIqy6ZL3z2aXDZ3tAA-20" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1210" y="320" as="sourcePoint" />
             <mxPoint x="1130" y="430" as="targetPoint" />
@@ -85,10 +92,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-25" value="⚠️ В КЗ уже втроена ось времени, дата это метаданные блока, а не его содержимого. Не точная дата" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-25" value="⚠️ В КЗ уже втроена ось времени, дата это метаданные блока, а не его содержимого. Не точная дата" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="180" width="200" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-26" target="7qZIqy6ZL3z2aXDZ3tAA-29">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-26" target="7qZIqy6ZL3z2aXDZ3tAA-29" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1170" y="490" />
@@ -96,10 +103,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-26" value="Генетический фактор&amp;nbsp;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;повлиял на&lt;/font&gt;&lt;/b&gt; болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-26" value="Генетический фактор&amp;nbsp;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;повлиял на&lt;/font&gt;&lt;/b&gt; болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="480" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-26" target="7qZIqy6ZL3z2aXDZ3tAA-20">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-26" target="7qZIqy6ZL3z2aXDZ3tAA-20" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1210" y="460" as="sourcePoint" />
             <mxPoint x="1210" y="300" as="targetPoint" />
@@ -109,13 +116,13 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-28" value="Комментарий к блоку" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-28" value="Комментарий к блоку" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1520" y="120" width="160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-29" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;это&amp;nbsp;&lt;/b&gt;&lt;/font&gt;многофакторное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-29" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;это&amp;nbsp;&lt;/b&gt;&lt;/font&gt;многофакторное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="380" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-29" target="7qZIqy6ZL3z2aXDZ3tAA-20">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-29" target="7qZIqy6ZL3z2aXDZ3tAA-20" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1210" y="320" as="sourcePoint" />
             <mxPoint x="1190" y="370" as="targetPoint" />
@@ -125,43 +132,43 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-33" value="У болезни Паркинсона огромная сложность." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-33" value="У болезни Паркинсона огромная сложность." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="560" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-34" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;усиливается&lt;/b&gt;&lt;/font&gt; нелинейным прогрессированием патогенеза." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-34" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;усиливается&lt;/b&gt;&lt;/font&gt; нелинейным прогрессированием патогенеза." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="600" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-35" value="Патогенез болезни Паркинсона &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;происходит&lt;/font&gt;&lt;/b&gt; между молекулярными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-35" value="Патогенез болезни Паркинсона &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;происходит&lt;/font&gt;&lt;/b&gt; между молекулярными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="640" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-36" value="Патогенез болезни Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;происходит&lt;/b&gt;&lt;/font&gt; между клеточными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-36" value="Патогенез болезни Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;происходит&lt;/b&gt;&lt;/font&gt; между клеточными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="680" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-37" value="Патогенез болезни Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;происходит&lt;/b&gt;&lt;/font&gt; между органическими системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-37" value="Патогенез болезни Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;происходит&lt;/b&gt;&lt;/font&gt; между органическими системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="720" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-38" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-38" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="560" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-39" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;усилена&lt;/b&gt;&lt;/font&gt;&amp;nbsp;нелинейным прогрессированием патогенеза." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-39" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;усилена&lt;/b&gt;&lt;/font&gt;&amp;nbsp;нелинейным прогрессированием патогенеза." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="560" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-40" value="Патогенез болезни Паркинсона&amp;nbsp;&lt;b style=&quot;color: rgb(25, 118, 210);&quot;&gt;произошёл&amp;nbsp;&lt;/b&gt;между молекулярными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-40" value="Патогенез болезни Паркинсона&amp;nbsp;&lt;b style=&quot;color: rgb(25, 118, 210);&quot;&gt;произошёл&amp;nbsp;&lt;/b&gt;между молекулярными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="640" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-41" value="Патогенез болезни Паркинсона&amp;nbsp;&lt;b style=&quot;color: rgb(25, 118, 210);&quot;&gt;произошёл&amp;nbsp;&lt;/b&gt;между клеточными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-41" value="Патогенез болезни Паркинсона&amp;nbsp;&lt;b style=&quot;color: rgb(25, 118, 210);&quot;&gt;произошёл&amp;nbsp;&lt;/b&gt;между клеточными системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="680" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-42" value="Патогенез болезни Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;произошёл&amp;nbsp;&lt;/b&gt;&lt;/font&gt;между органическими системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-42" value="Патогенез болезни Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;произошёл&amp;nbsp;&lt;/b&gt;&lt;/font&gt;между органическими системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="720" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-40" target="7qZIqy6ZL3z2aXDZ3tAA-39">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-40" target="7qZIqy6ZL3z2aXDZ3tAA-39" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1110" y="650" as="sourcePoint" />
             <mxPoint x="1210" y="420" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-41" target="7qZIqy6ZL3z2aXDZ3tAA-39">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-41" target="7qZIqy6ZL3z2aXDZ3tAA-39" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1210" y="660" as="sourcePoint" />
             <mxPoint x="1210" y="600" as="targetPoint" />
@@ -171,7 +178,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-42" target="7qZIqy6ZL3z2aXDZ3tAA-39">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#B266FF;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-42" target="7qZIqy6ZL3z2aXDZ3tAA-39" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1210" y="700" as="sourcePoint" />
             <mxPoint x="1210" y="600" as="targetPoint" />
@@ -181,137 +188,998 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-46" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Исследуется&lt;/b&gt;&lt;/font&gt; сложность болезни Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-46" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Исследуется&lt;/b&gt;&lt;/font&gt; сложность болезни Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="800" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-47" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Предглагается&lt;/b&gt;&lt;/font&gt; системный подход." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-47" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Предглагается&lt;/b&gt;&lt;/font&gt; системный подход." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="900" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-48" value="&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Организуется&lt;/font&gt;&lt;/b&gt; доступная информация вокруг клеточных признаков болезни Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="480" y="1010" width="320" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-48" value="&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Организуется&lt;/font&gt;&lt;/b&gt; доступная информация вокруг клеточных признаков болезни Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="480" y="1000" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-50" value="⚠️ Оценочные суждения. Вода. Тафталогия. Карта Знаний и так использует системный подход. Так же не имеет смысла так как может использоваться любой подход, лишь бы решил задачу. И не важно вокруг чего организуется информация если нам всё равно нужна полная достоверная система и там уже будет видно вокруг чего и как. Также уже были упомянуты клеточные системы." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="800" y="800" width="200" height="250" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-50" value="⚠️ Оценочные суждения. Вода. Тафталогия. Карта Знаний и так использует системный подход. Так же не имеет смысла так как может использоваться любой подход, лишь бы решил задачу. И не важно вокруг чего организуется информация если нам всё равно нужна полная достоверная система и там уже будет видно вокруг чего и как. Также уже были упомянуты клеточные системы." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="800" y="800" width="200" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-51" value="Клеточные признаки болезни Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-51" value="Клеточные признаки болезни Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="1080" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-52" value="Болезь Паркинсона &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;обладает&lt;/font&gt;&lt;/b&gt; клеточными признаками" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-52" value="Болезь Паркинсона &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;обладает&lt;/font&gt;&lt;/b&gt; клеточными признаками" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="1080" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-53" value="Это единственное полезное из данного предложения." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-53" value="Это единственное полезное из данного предложения." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="1080" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-54" value="&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Призываются&lt;/font&gt;&lt;/b&gt; коллегам принять клеточно-ориентированный подход." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-54" value="&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Призываются&lt;/font&gt;&lt;/b&gt; коллегам принять клеточно-ориентированный подход." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="1200" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-55" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Улучшить&amp;nbsp;&lt;/b&gt;&lt;/font&gt;коммуникации в междисциплинарных исследованиях." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-55" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Улучшить&amp;nbsp;&lt;/b&gt;&lt;/font&gt;коммуникации в междисциплинарных исследованиях." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="1240" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-56" value="Исследования &lt;font style=&quot;font-weight: bold;&quot; color=&quot;#1976d2&quot;&gt;нацеливаются&lt;/font&gt;&amp;nbsp;на молекулярные события, &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;модулирующие&lt;/font&gt;&lt;/b&gt; межклеточные сигнальные пути." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="480" y="1280" width="320" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-57" value="Исследования &lt;font style=&quot;font-weight: bold;&quot; color=&quot;#1976d2&quot;&gt;нацеливаются&lt;/font&gt;&amp;nbsp;на &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;возникающие&lt;/font&gt;&lt;/b&gt; клинические фенотипы &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;связанные&lt;/font&gt;&lt;/b&gt; с болезнью Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-56" value="Исследования &lt;font style=&quot;font-weight: bold;&quot; color=&quot;#1976d2&quot;&gt;нацеливаются&lt;/font&gt;&amp;nbsp;на молекулярные события, &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;модулирующие&lt;/font&gt;&lt;/b&gt; межклеточные сигнальные пути." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="480" y="1360" width="320" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-58" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-57" value="Исследования &lt;font style=&quot;font-weight: bold;&quot; color=&quot;#1976d2&quot;&gt;нацеливаются&lt;/font&gt;&amp;nbsp;на &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;возникающие&lt;/font&gt;&lt;/b&gt; клинические фенотипы &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;связанные&lt;/font&gt;&lt;/b&gt; с болезнью Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="480" y="1440" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-58" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="1200" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-59" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-59" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="800" y="1240" width="200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-60" value="Молекулярные события &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;смодулировали&lt;/font&gt;&lt;/b&gt; межклеточные сигнальные пути" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="1280" width="320" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-60" value="Молекулярные события &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;смодулировали&lt;/font&gt;&lt;/b&gt; межклеточные сигнальные пути" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1360" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-62" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;обладает&lt;/b&gt;&lt;/font&gt;&amp;nbsp;фенотипом" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="1400" width="320" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-62" value="Болезнь Паркинсона &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;обладает&lt;/b&gt;&lt;/font&gt;&amp;nbsp;фенотипом" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1480" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-63" value="Статья&lt;br&gt;&lt;br&gt;&lt;div&gt;doi: 10.1111/febs.12335&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;The hallmarks of Parkinson&#39;s disease&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-63" value="Статья&lt;br&gt;&lt;br&gt;&lt;div&gt;doi: 10.1111/febs.12335&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;The hallmarks of Parkinson&#39;s disease&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="40" y="40" width="120" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-64" value="Идиопатическая болезнь Паркинсона (ИБП) является вторым наиболее распространенным нейродегенеративным заболеванием после болезни Альцгеймера и поражает популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="1560" width="200" height="200" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-64" value="Идиопатическая болезнь Паркинсона (ИБП) является вторым наиболее распространенным нейродегенеративным заболеванием после болезни Альцгеймера и поражает популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="1640" width="200" height="200" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-65" value="Абстракт" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-65" value="Абстракт" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="200" y="40" width="1480" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-66" value="Введение" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="200" y="1480" width="1480" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-66" value="Введение" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="200" y="1560" width="1480" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-67" value="Клинический синдром ИБП характеризуется брадикинезией, тремором покоя, ригидностью и постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="1840" width="200" height="160" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-67" value="Клинический синдром ИБП характеризуется брадикинезией, тремором покоя, ригидностью и постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="1920" width="200" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-68" value="Брадикинезия считается основным признаком и необходимым условием для диагностики ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="2040" width="200" height="160" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-68" value="Брадикинезия считается основным признаком и необходимым условием для диагностики ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="2120" width="200" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-69" value="В дополнение к этим двигательным симптомам многие пациенты испытывают широкий спектр немоторных симптомов, которые иногда даже предшествуют типичному двигательному расстройству, такие как гипосмия, нарушения сна (т.е. расстройство поведения в фазе быстрого сна), депрессия, запоры и другие дизавтономные симптомы." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="2400" width="200" height="240" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-69" value="В дополнение к этим двигательным симптомам многие пациенты испытывают широкий спектр немоторных симптомов, которые иногда даже предшествуют типичному двигательному расстройству, такие как гипосмия, нарушения сна (т.е. расстройство поведения в фазе быстрого сна), депрессия, запоры и другие дизавтономные симптомы." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="2480" width="200" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-70" value="В частности, гипосмия и расстройство поведения в фазе быстрого сна часто начинаются до появления основных двигательных симптомов." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="2680" width="200" height="240" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-70" value="В частности, гипосмия и расстройство поведения в фазе быстрого сна часто начинаются до появления основных двигательных симптомов." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="2760" width="200" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-71" value="В этом обзоре мы обсуждаем болезнь Паркинсона в глобальном смысле этого термина (БП), включая ИБП и генетически или экологически индуцированные формы паркинсонизма." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="2960" width="200" height="240" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-71" value="В этом обзоре мы обсуждаем болезнь Паркинсона в глобальном смысле этого термина (БП), включая ИБП и генетически или экологически индуцированные формы паркинсонизма." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="3040" width="200" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-72" value="Действительно, многие клеточные признаки обнаружены как при БП, так и при ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="3240" width="200" height="240" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-72" value="Действительно, многие клеточные признаки обнаружены как при БП, так и при ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="3320" width="200" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-73" value="Считается, что двигательные симптомы БП возникают в первую очередь из-за потери дофаминергических (ДА) нейронов в чёрной субстанции (ЧС), хотя, по-видимому, затронуты и другие нейромедиаторные системы (т.е. глутаматергическая, холинергическая, триптаминергическая, норадренергическая, адренергическая, серотонинергическая и пептидергическая)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="3520" width="200" height="280" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-73" value="Считается, что двигательные симптомы БП возникают в первую очередь из-за потери дофаминергических (ДА) нейронов в чёрной субстанции (ЧС), хотя, по-видимому, затронуты и другие нейромедиаторные системы (т.е. глутаматергическая, холинергическая, триптаминергическая, норадренергическая, адренергическая, серотонинергическая и пептидергическая)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="3600" width="200" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-74" value="Лечение БП в настоящее время является симптоматическим и по существу включает замещение дофамина или подавление патологических нейронных осцилляций посредством глубокой стимуляции мозга." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="200" y="3840" width="200" height="280" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-74" value="Лечение БП в настоящее время является симптоматическим и по существу включает замещение дофамина или подавление патологических нейронных осцилляций посредством глубокой стимуляции мозга." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="200" y="3920" width="200" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-75" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;вторая&lt;/font&gt;&lt;/b&gt; по распространённости среди нейродегенеративных заболеваний после болезни Альцгеймера" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="480" y="1560" width="320" height="80" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-75" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;вторая&lt;/font&gt;&lt;/b&gt; по распространённости среди нейродегенеративных заболеваний после болезни Альцгеймера" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="480" y="1640" width="320" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-76" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;поражает&lt;/font&gt;&lt;/b&gt; популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="480" y="1720" width="320" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-76" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;поражает&lt;/font&gt;&lt;/b&gt; популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="480" y="1800" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-77" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;поразила&lt;/font&gt;&lt;/b&gt; популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-77" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;поразила&lt;/font&gt;&lt;/b&gt; популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1800" width="320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-78" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;вторая&lt;/font&gt;&lt;/b&gt; по распространённости среди нейродегенеративных заболеваний после болезни Альцгеймера" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1640" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-79" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;это&lt;/b&gt;&lt;/font&gt;&amp;nbsp;нейродегенеративное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="1720" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-78" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;вторая&lt;/font&gt;&lt;/b&gt; по распространённости среди нейродегенеративных заболеваний после болезни Альцгеймера" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="1560" width="320" height="80" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-80" value="Альцгеймер &lt;b style=&quot;color: rgb(25, 118, 210);&quot;&gt;это&lt;/b&gt;&amp;nbsp;нейродегенеративное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1760" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-79" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;это&lt;/b&gt;&lt;/font&gt;&amp;nbsp;нейродегенеративное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="1640" width="320" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-81" value="Синдром идиопатической болезни Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;характеризуется&lt;/font&gt;&lt;/b&gt; брадикинезией, тремором покоя, ригидностью и постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="480" y="1920" width="320" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-80" value="Альцгеймер &lt;b style=&quot;color: rgb(25, 118, 210);&quot;&gt;это&lt;/b&gt;&amp;nbsp;нейродегенеративное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="1680" width="320" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-81" value="Синдром идиопатической болезни Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;характеризуется&lt;/font&gt;&lt;/b&gt; брадикинезией, тремором покоя, ригидностью и постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="480" y="1840" width="320" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-82" value="Брадикинезия &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;признак&lt;/b&gt;&lt;/font&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="1840" width="320" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-83" value="Тремор покоя &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;признак&lt;/font&gt;&lt;/b&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="1880" width="320" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-84" value="Ригидность &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;признак&lt;/b&gt;&lt;/font&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-82" value="Брадикинезия &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;признак&lt;/b&gt;&lt;/font&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="1920" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-85" value="Постуральная нестабильность&amp;nbsp;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;признак&lt;/font&gt;&lt;/b&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-83" value="Тремор покоя &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;признак&lt;/font&gt;&lt;/b&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1200" y="1960" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-86" value="Брадикинезия основной и необходимый признак для диагностики синдрома идиопатической болезни Паркинсона (ИБП)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="480" y="2040" width="320" height="160" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-84" value="Ригидность &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;признак&lt;/b&gt;&lt;/font&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="2000" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-87" value="Брадикинезия основной и необходимый признак для диагностики синдрома идиопатической болезни Паркинсона (ИБП)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="2040" width="320" height="80" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-85" value="Постуральная нестабильность&amp;nbsp;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;признак&lt;/font&gt;&lt;/b&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="2040" width="320" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#e1d5e7;strokeColor=#B266FF;strokeWidth=3;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-88" target="7qZIqy6ZL3z2aXDZ3tAA-89">
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-86" value="Брадикинезия основной и необходимый признак для диагностики синдрома идиопатической болезни Паркинсона (ИБП)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="480" y="2120" width="320" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-87" value="Брадикинезия основной и необходимый признак для диагностики синдрома идиопатической болезни Паркинсона (ИБП)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="2120" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#e1d5e7;strokeColor=#B266FF;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-88" target="7qZIqy6ZL3z2aXDZ3tAA-89" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-88" value="&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Выявлена&lt;/font&gt;&lt;/b&gt; брадикинезия" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="2160" width="120" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-88" value="&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Выявлена&lt;/font&gt;&lt;/b&gt; брадикинезия" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="2240" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-89" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Выявлен&lt;/b&gt;&lt;/font&gt; сндром идиопатической болезньи&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;Паркинсона (ИБП)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1360" y="2160" width="240" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-89" value="&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;Выявлен&lt;/b&gt;&lt;/font&gt; сндром идиопатической болезньи&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;Паркинсона (ИБП)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="2240" width="240" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-92" value="⭐ Кандидат для цели&lt;div&gt;Организовать доступную информацию вокруг клеточных признаков болезни Паркинсона&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="970" width="320" height="70" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-92" value="&lt;div&gt;&lt;b style=&quot;color: rgb(255, 215, 0); background-color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;⭐ Цель ⭐&amp;nbsp;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Организована&lt;/font&gt;&lt;/b&gt; доступная информация вокруг клеточных признаков болезни Паркинсона&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1000" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-94" value="&lt;div&gt;&lt;b style=&quot;color: rgb(255, 215, 0); background-color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;⭐ Цель ⭐&amp;nbsp;&lt;/b&gt;&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-weight: bold;&quot; color=&quot;#1976d2&quot;&gt;Принят&lt;/font&gt;&amp;nbsp;клеточно-ориентированный подход" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1200" width="320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-95" value="&lt;div&gt;&lt;b style=&quot;color: rgb(255, 215, 0); background-color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;⭐ Цель ⭐&amp;nbsp;&lt;/b&gt;&lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Улучшены&lt;/font&gt;&lt;/b&gt; коммуникации в междисциплинарных исследованиях, нацеленных на молекулярные события, модулирующие межклеточные сигнальные пути и возникающие клинические фенотипы, связанные с болезнью Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1240" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-96" value="&lt;div&gt;&lt;div&gt;Шпаргалка&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Без этого блока &quot;А&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Не было бы блока &quot;Б&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Если бы мы не знали &quot;А&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Невозможно было бы &quot;Б&quot;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="20" y="240" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-97" value="&lt;div&gt;&lt;b style=&quot;color: rgb(255, 215, 0); background-color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;⭐ Цель ⭐&amp;nbsp;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b style=&quot;color: rgb(25, 118, 210);&quot;&gt;Исследована&lt;/b&gt;&amp;nbsp;сложность&amp;nbsp;болезни Паркинсона&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="800" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-112" value="сформировали" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2218" y="495" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-113" value="богатую" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2410" y="560" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-114" value="сложную" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2410" y="505" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-142" value="когда?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-100" target="7qZIqy6ZL3z2aXDZ3tAA-106" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-146" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-116" target="7qZIqy6ZL3z2aXDZ3tAA-114" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1998" y="565" as="targetPoint" />
+            <mxPoint x="2138" y="565" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-147" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-116" target="7qZIqy6ZL3z2aXDZ3tAA-113" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2008" y="575" as="targetPoint" />
+            <mxPoint x="2148" y="575" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-164" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-112" target="7qZIqy6ZL3z2aXDZ3tAA-116" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2118" y="705" as="targetPoint" />
+            <mxPoint x="1808" y="619" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-168" value="на что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-127" target="7qZIqy6ZL3z2aXDZ3tAA-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1720" y="491.5" as="targetPoint" />
+            <mxPoint x="1902" y="481.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-172" value="что сделали?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-108" target="7qZIqy6ZL3z2aXDZ3tAA-112" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1597.67" y="130" as="targetPoint" />
+            <mxPoint x="2396.003333333334" y="660" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-178" value="чем вызвано?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-109" target="7qZIqy6ZL3z2aXDZ3tAA-181" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1690" y="541.5" as="targetPoint" />
+            <mxPoint x="1631" y="391.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-183" value="что сделали?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-108" target="7qZIqy6ZL3z2aXDZ3tAA-118" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1863" y="205" as="sourcePoint" />
+            <mxPoint x="1550" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-186" value="привели к?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-108" target="7qZIqy6ZL3z2aXDZ3tAA-181" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1821" y="205" as="sourcePoint" />
+            <mxPoint x="1688" y="470" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="2090" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-135" value="с какого момента?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-108" target="7qZIqy6ZL3z2aXDZ3tAA-100" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1466" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-116" value="базу" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2238" y="565" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-117" value="знаний" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2410" y="450" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-153" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-116" target="7qZIqy6ZL3z2aXDZ3tAA-117" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2183" y="646" as="targetPoint" />
+            <mxPoint x="2243" y="634" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-214" value="о чём?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-116" target="7qZIqy6ZL3z2aXDZ3tAA-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2185" y="190" as="targetPoint" />
+            <mxPoint x="2130" y="250" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-122" value="возрастным" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="321.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-123" value="многофакторным" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1720" y="379" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-148" value="какое?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-109" target="7qZIqy6ZL3z2aXDZ3tAA-123" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1970" y="279" as="targetPoint" />
+            <mxPoint x="2210" y="279" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-149" value="какое?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-109" target="7qZIqy6ZL3z2aXDZ3tAA-122" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1980" y="289" as="targetPoint" />
+            <mxPoint x="2220" y="289" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-121" value="является" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="1920" y="217.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-170" value="чем?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-121" target="7qZIqy6ZL3z2aXDZ3tAA-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2275" y="559" as="targetPoint" />
+            <mxPoint x="2045" y="614" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="1995" y="284.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-118" value="выявить" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2060" y="251.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-200" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-118" target="7qZIqy6ZL3z2aXDZ3tAA-121" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1745" y="543" as="targetPoint" />
+            <mxPoint x="1642" y="515" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-127" value="влияют" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2000" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-174" value="что делают?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-181" target="7qZIqy6ZL3z2aXDZ3tAA-127" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1952.5" y="421.5" as="targetPoint" />
+            <mxPoint x="2022.5" y="371.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-150" value="какие?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-181" target="7qZIqy6ZL3z2aXDZ3tAA-129" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1942.5" y="527.95" as="targetPoint" />
+            <mxPoint x="1918" y="661.5026315789473" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-129" value="генетические" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1800" y="476.5" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-133" value="окружающей" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1720" y="433.5" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-134" value="среды" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1740" y="556.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-145" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-134" target="7qZIqy6ZL3z2aXDZ3tAA-133" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2044" y="257.04999999999995" as="targetPoint" />
+            <mxPoint x="2184" y="257.04999999999995" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-181" value="факторы" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1918" y="556.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-155" value="какие?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-181" target="7qZIqy6ZL3z2aXDZ3tAA-134" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1603" y="636.5" as="targetPoint" />
+            <mxPoint x="1803" y="636.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-108" value="исследования" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2218" y="380" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-157" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-108" target="7qZIqy6ZL3z2aXDZ3tAA-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1950" y="179" as="sourcePoint" />
+            <mxPoint x="2080" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-110" value="Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="266.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-109" value="болезни" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1920" y="331.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-213" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-109" target="7qZIqy6ZL3z2aXDZ3tAA-110" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2208" y="314.5" as="sourcePoint" />
+            <mxPoint x="2030" y="349.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-100" value="открытия" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2236" y="285" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-102" value="дофамина" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2378" y="285" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-163" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-100" target="7qZIqy6ZL3z2aXDZ3tAA-102" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2208" y="485" as="sourcePoint" />
+            <mxPoint x="2097" y="605" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-104" value="нейромедиатора" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2576" y="285" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-144" value="в качестве чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-102" target="7qZIqy6ZL3z2aXDZ3tAA-104" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2496" y="325" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-201" value="что это?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-102" target="7qZIqy6ZL3z2aXDZ3tAA-104" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2506" y="345" as="sourcePoint" />
+            <mxPoint x="2646" y="345" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="2496" y="285" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-106" value="1950-ых" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2236" y="200" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-216" value="что делают?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-109" target="7qZIqy6ZL3z2aXDZ3tAA-121" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1974" y="341.5" as="targetPoint" />
+            <mxPoint x="1882" y="290.5" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="1920" y="290.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-217" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-118" target="7qZIqy6ZL3z2aXDZ3tAA-127" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2010" y="257.5" as="targetPoint" />
+            <mxPoint x="2070" y="271.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-218" value="Семантический граф (источник для поиска паттернов)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1720" y="120" width="970" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-219" value="сформировали" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="6000" y="358.75" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-220" value="является" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="6040" y="411.25" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-221" value="выявив" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="6160" y="358.75" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-223" value="влияют" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="6040" y="461.25" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-224" value="открытия" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="5720" y="358.75" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-226" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-223" target="7qZIqy6ZL3z2aXDZ3tAA-221" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="6154" y="488.75" as="sourcePoint" />
+            <mxPoint x="6204" y="488.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-227" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-219" target="7qZIqy6ZL3z2aXDZ3tAA-221" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5987" y="368.75" as="sourcePoint" />
+            <mxPoint x="6043" y="388.33000000000004" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-228" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-230" target="7qZIqy6ZL3z2aXDZ3tAA-219" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5987" y="338.75" as="sourcePoint" />
+            <mxPoint x="6027" y="518.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-229" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-220" target="7qZIqy6ZL3z2aXDZ3tAA-221" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="6158" y="388.75" as="sourcePoint" />
+            <mxPoint x="6222" y="422.75" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-230" value="исследования" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="5840" y="358.75" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-232" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-224" target="7qZIqy6ZL3z2aXDZ3tAA-230" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5997" y="348.75" as="sourcePoint" />
+            <mxPoint x="6047" y="368.75" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-233" value="Зависимость отглагольных слов друг от друга" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5720" y="118.75" width="520" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-235" value="Блоки (Попытка 2). Зависимость действий друг от друга." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="4920" y="118.75" width="760" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-236" value="&lt;font color=&quot;#b266ff&quot;&gt;Сформирована&lt;/font&gt; богатая и сложная база знаний о &lt;font color=&quot;#ff8000&quot;&gt;болезни Паркинсона&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5240" y="290" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-237" value="&lt;font color=&quot;#ff8000&quot;&gt;Болезнь Паркинсона&lt;/font&gt; &lt;font color=&quot;#b266ff&quot;&gt;является&lt;/font&gt; возрастной многофакторной" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5200" y="480" width="160" height="82.5" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-238" value="&lt;font color=&quot;#b266ff&quot;&gt;Выявлено&lt;/font&gt; что &lt;font color=&quot;#ff8000&quot;&gt;болезнь Паркинсона&lt;/font&gt; &lt;font color=&quot;#b266ff&quot;&gt;являетя&lt;/font&gt; возрастной многофакторной" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5440" y="238.75" width="150" height="78.75" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-239" value="Факторы генетические и окружающей среды &lt;font color=&quot;#b266ff&quot;&gt;повлияли&lt;/font&gt;&amp;nbsp;на &lt;font color=&quot;#ff8000&quot;&gt;болезнь Паркинсона&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5200" y="580" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-240" value="&lt;font color=&quot;#ff8000&quot;&gt;Дофамин &lt;/font&gt;&lt;span style=&quot;color: rgb(178, 102, 255);&quot;&gt;открыт &lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;как &lt;/span&gt;&lt;font style=&quot;background-color: initial;&quot; color=&quot;#3399ff&quot;&gt;нейромедиатор &lt;/font&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;в &lt;/span&gt;&lt;font style=&quot;background-color: initial;&quot; color=&quot;#4d9900&quot;&gt;1950-ых&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
+          <mxGeometry x="4920" y="290" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-241" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-239" target="7qZIqy6ZL3z2aXDZ3tAA-247" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5394" y="500" as="sourcePoint" />
+            <mxPoint x="5444" y="499.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-242" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-236" target="7qZIqy6ZL3z2aXDZ3tAA-238" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5227" y="380" as="sourcePoint" />
+            <mxPoint x="5283" y="399.58000000000004" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-243" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-245" target="7qZIqy6ZL3z2aXDZ3tAA-236" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5227" y="290" as="sourcePoint" />
+            <mxPoint x="5267" y="469.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-244" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-237" target="7qZIqy6ZL3z2aXDZ3tAA-238" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5398" y="400" as="sourcePoint" />
+            <mxPoint x="5462" y="434" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-245" value="&lt;font color=&quot;#b266ff&quot;&gt;Проведены&lt;/font&gt; исследования &lt;font color=&quot;#ff8000&quot;&gt;болезни Паркинсона&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5080" y="290" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-246" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-240" target="7qZIqy6ZL3z2aXDZ3tAA-245" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5197" y="301.25" as="sourcePoint" />
+            <mxPoint x="5247" y="321.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-247" value="&lt;font color=&quot;#b266ff&quot;&gt;Выявлено&lt;/font&gt; что факторы генетические и окружающей среды&amp;nbsp;&lt;font color=&quot;#b266ff&quot;&gt;повлияли&lt;/font&gt;&amp;nbsp;на &lt;font color=&quot;#ff8000&quot;&gt;болезнь Паркинсона&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5440" y="342.5" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-248" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-236" target="7qZIqy6ZL3z2aXDZ3tAA-247" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5370" y="330" as="sourcePoint" />
+            <mxPoint x="5410" y="402" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-249" value="Блоки начала&lt;br&gt;создают блоки&lt;br&gt;конца" style="endArrow=classic;html=1;rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-247" target="7qZIqy6ZL3z2aXDZ3tAA-239" edge="1">
+          <mxGeometry x="0.0048" y="1" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="5550" y="540" as="sourcePoint" />
+            <mxPoint x="5470" y="600" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-252" value="болезни" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="720" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-253" value="сложность" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="800" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-254" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-253" target="7qZIqy6ZL3z2aXDZ3tAA-255" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1810" y="680" as="targetPoint" />
+            <mxPoint x="1754" y="763" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-255" value="огромная" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="880" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-256" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-253" target="7qZIqy6ZL3z2aXDZ3tAA-252" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1690" y="830" as="targetPoint" />
+            <mxPoint x="1770" y="830" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-258" value="усиливается" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="1920" y="800" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-259" value="что делает?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-253" target="7qZIqy6ZL3z2aXDZ3tAA-258" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1862" y="700" as="targetPoint" />
+            <mxPoint x="1942" y="700" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-260" value="неленейным" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2200" y="720" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-261" value="прогрессированием" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2080" y="800" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-262" value="патогенеза" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2100" y="720" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-263" value="между" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2240" y="800" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-264" value="молекулярными" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2520" y="860" width="122" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-265" value="клеточными" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2520" y="800" width="122" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-266" value="органическими" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2520" y="740" width="122" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-267" value="системами" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2360" y="800" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-268" value="какими?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-267" target="7qZIqy6ZL3z2aXDZ3tAA-266" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2520" y="830" as="targetPoint" />
+            <mxPoint x="2090" y="650" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-269" value="какими?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-267" target="7qZIqy6ZL3z2aXDZ3tAA-265" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2522" y="780" as="targetPoint" />
+            <mxPoint x="2450" y="812" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-271" value="какими?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-267" target="7qZIqy6ZL3z2aXDZ3tAA-264" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2530" y="830" as="targetPoint" />
+            <mxPoint x="2450" y="830" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-272" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-261" target="7qZIqy6ZL3z2aXDZ3tAA-262" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2391" y="860" as="targetPoint" />
+            <mxPoint x="2310" y="887" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-273" value="чем?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-258" target="7qZIqy6ZL3z2aXDZ3tAA-261" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2146" y="920" as="targetPoint" />
+            <mxPoint x="2158" y="850" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-275" value="каким?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-261" target="7qZIqy6ZL3z2aXDZ3tAA-260" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2281" y="756.5" as="targetPoint" />
+            <mxPoint x="2200" y="783.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-276" value="усиливается" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2960" y="800" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-277" value="прогрессированием" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2760" y="800" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-279" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-277" target="7qZIqy6ZL3z2aXDZ3tAA-276" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3153" y="473" as="sourcePoint" />
+            <mxPoint x="3227" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-280" value="Контекст из 1 предложения:&lt;br&gt;Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1710" y="640" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-281" value="какой?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-252" target="7qZIqy6ZL3z2aXDZ3tAA-280" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1810" y="890" as="targetPoint" />
+            <mxPoint x="1810" y="850" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-282" value="как?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-261" target="7qZIqy6ZL3z2aXDZ3tAA-263" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2271" y="830" as="targetPoint" />
+            <mxPoint x="2210" y="830" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-283" value="чем?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-263" target="7qZIqy6ZL3z2aXDZ3tAA-267" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2411" y="760" as="targetPoint" />
+            <mxPoint x="2350" y="760" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-284" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;curved=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-110" target="7qZIqy6ZL3z2aXDZ3tAA-280" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1690" y="290" as="sourcePoint" />
+            <mxPoint x="1710" y="660" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1650" y="287" />
+              <mxPoint x="1650" y="660" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-287" value="Патегенез &lt;font color=&quot;#ff8000&quot;&gt;болезни Паркинсона&lt;/font&gt; нелинейно &lt;font color=&quot;#b266ff&quot;&gt;спрогрессировал&lt;/font&gt; между органическими, клеточными, молекулярными системами&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="4920" y="778.75" width="200" height="81.25" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-289" value="Огромная сложность &lt;font color=&quot;#ff8000&quot;&gt;болезни Паркинсона&lt;/font&gt; &lt;font color=&quot;#b266ff&quot;&gt;усислилась&lt;/font&gt; прогрессированием патогенеза" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="5160" y="778.75" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-290" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#B266FF;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-287" target="7qZIqy6ZL3z2aXDZ3tAA-289" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5277" y="790" as="sourcePoint" />
+            <mxPoint x="5327" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-291" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-262" target="7qZIqy6ZL3z2aXDZ3tAA-252" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1950" y="730" as="targetPoint" />
+            <mxPoint x="2150" y="810" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-292" value="Сделать вариант статьи убрав все цитирования! Сколько текста останется от исходной сатьи?" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="20" y="440" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-293" value="В этом мини-обзоре мы исследуем сложность БП и предлагаем системный подход, организуя доступную информацию вокруг клеточных признаков заболевания." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1918" y="960" width="200" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-294" value="сокращённо?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-110" target="7qZIqy6ZL3z2aXDZ3tAA-295" edge="1">
+          <mxGeometry x="-0.0189" relative="1" as="geometry">
+            <mxPoint x="1930" y="345" as="sourcePoint" />
+            <mxPoint x="1800" y="240" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-295" value="Болезнь Паркинсона — БП" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1740" y="200" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-1" value="&amp;nbsp;Мы призываем наших коллег принять этот клеточно-ориентированный подход с целью улучшения коммуникации в междисциплинарных исследованиях, нацеленных на молекулярные события, модулирующие межклеточные сигнальные пути и возникающие клинические фенотипы, связанные с БП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1918" y="1320" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-10" value="Подкапотная структура блока (часть исходной семантической сети)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="2720" y="120" width="2160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-11" value="Блок 1" style="swimlane;whiteSpace=wrap;html=1;startSize=20;" vertex="1" parent="1">
+          <mxGeometry x="2720" y="240" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-2" value="когда?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-11" source="r5hXMGkeLYIKXQ5QMk3x-3" target="r5hXMGkeLYIKXQ5QMk3x-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-3" value="открыть" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-11">
+          <mxGeometry x="150" y="100" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-4" value="дофамин" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-11">
+          <mxGeometry x="25" y="100" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-5" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-11" source="r5hXMGkeLYIKXQ5QMk3x-3" target="r5hXMGkeLYIKXQ5QMk3x-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-148" y="240" as="sourcePoint" />
+            <mxPoint x="-259" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-6" value="нейромедиатор" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-11">
+          <mxGeometry x="10" y="30" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-7" value="как что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-11" source="r5hXMGkeLYIKXQ5QMk3x-4" target="r5hXMGkeLYIKXQ5QMk3x-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-9" value="1950-ых" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-11">
+          <mxGeometry x="150" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-20" value="Неявное слово:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;Проведены&lt;/span&gt;&lt;div&gt;(что можно сделать с исследованиями — провести)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="3100" y="171.25" width="190" height="57.5" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-21" value="Блок 2" style="swimlane;whiteSpace=wrap;html=1;startSize=20;" vertex="1" parent="1">
+          <mxGeometry x="3080" y="240" width="270" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-12" value="исследования" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-21">
+          <mxGeometry x="10" y="100" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-13" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-21" source="r5hXMGkeLYIKXQ5QMk3x-12" target="r5hXMGkeLYIKXQ5QMk3x-15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="70" y="25.75" as="sourcePoint" />
+            <mxPoint x="200" y="36.75" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-14" value="Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-21">
+          <mxGeometry x="180" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-15" value="болезнь" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-21">
+          <mxGeometry x="180" y="100" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-16" value="какой?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-21" source="r5hXMGkeLYIKXQ5QMk3x-15" target="r5hXMGkeLYIKXQ5QMk3x-14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="328" y="161.25" as="sourcePoint" />
+            <mxPoint x="150" y="196.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-17" value="проведены" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-21">
+          <mxGeometry x="10" y="30" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-19" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-21" source="r5hXMGkeLYIKXQ5QMk3x-17" target="r5hXMGkeLYIKXQ5QMk3x-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="143.25" as="sourcePoint" />
+            <mxPoint x="190" y="143.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-22" value="с какого момента?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="1" source="r5hXMGkeLYIKXQ5QMk3x-12" target="r5hXMGkeLYIKXQ5QMk3x-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2820" y="460" as="targetPoint" />
+            <mxPoint x="2980" y="450" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-23" value="Связь которая станет межблоковой — она определяет что сначала был Блок 1, затем Блок 2" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2960" y="240" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-37" value="Блок 3" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3470" y="240" width="380" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-24" value="сформировать" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-37">
+          <mxGeometry x="136" y="200" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-25" value="богатая" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-37">
+          <mxGeometry x="288" y="123.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-26" value="сложная" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-37">
+          <mxGeometry x="256" y="40" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-27" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-37" source="r5hXMGkeLYIKXQ5QMk3x-30" target="r5hXMGkeLYIKXQ5QMk3x-26">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-84" y="123.5" as="targetPoint" />
+            <mxPoint x="56" y="123.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-28" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-37" source="r5hXMGkeLYIKXQ5QMk3x-30" target="r5hXMGkeLYIKXQ5QMk3x-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-74" y="133.5" as="targetPoint" />
+            <mxPoint x="66" y="133.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-29" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-37" source="r5hXMGkeLYIKXQ5QMk3x-24" target="r5hXMGkeLYIKXQ5QMk3x-30">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="36" y="263.5" as="targetPoint" />
+            <mxPoint x="-274" y="177.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-30" value="совокупновть&lt;div&gt;(или база)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-37">
+          <mxGeometry x="156" y="123.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-31" value="знаний" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-37">
+          <mxGeometry x="156" y="40" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-32" value="чего?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-37" source="r5hXMGkeLYIKXQ5QMk3x-30" target="r5hXMGkeLYIKXQ5QMk3x-31">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="101" y="204.5" as="targetPoint" />
+            <mxPoint x="161" y="192.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-33" value="о чём?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-37" source="r5hXMGkeLYIKXQ5QMk3x-30" target="r5hXMGkeLYIKXQ5QMk3x-35">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="103" y="-251.5" as="targetPoint" />
+            <mxPoint x="48" y="-191.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-34" value="Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-37">
+          <mxGeometry x="10" y="40" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-35" value="болезнь" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-37">
+          <mxGeometry x="10" y="123.5" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-36" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-37" source="r5hXMGkeLYIKXQ5QMk3x-35" target="r5hXMGkeLYIKXQ5QMk3x-34">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="126" y="-127" as="sourcePoint" />
+            <mxPoint x="-52" y="-92" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-38" value="что сделали?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="1" source="r5hXMGkeLYIKXQ5QMk3x-12" target="r5hXMGkeLYIKXQ5QMk3x-24">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3513.478260869565" y="460" as="targetPoint" />
+            <mxPoint x="3030" y="490" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-39" value="Связь которая станет межблоковой — она определяет что сначала был Блок 2, затем Блок 3" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="3350" y="240" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-43" value="&lt;font color=&quot;#b266ff&quot;&gt;&lt;b&gt;С момента&lt;/b&gt;&lt;/font&gt;&amp;nbsp;открытия дофамина как нейромедиатора в 1950-ых ..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="2720" y="400" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-44" value="... [проведены] исследования болезни Паркинсона (БП) ..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="3080" y="400" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-45" value="... болезни Паркинсона (БП) сформировали богатую и сложную базу знаний&amp;nbsp;..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="3470" y="490" width="380" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-46" value="Блок 4" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3960" y="238.75" width="480" height="251.25" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-49" value="возрастным" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-46">
+          <mxGeometry x="350" y="81.25" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-50" value="многофакторным" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-46">
+          <mxGeometry x="350" y="131.25" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-51" value="какое?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-46" source="r5hXMGkeLYIKXQ5QMk3x-58" target="r5hXMGkeLYIKXQ5QMk3x-50">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="260" y="106.75" as="targetPoint" />
+            <mxPoint x="500" y="106.75" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-52" value="какое?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-46" source="r5hXMGkeLYIKXQ5QMk3x-58" target="r5hXMGkeLYIKXQ5QMk3x-49">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="116.75" as="targetPoint" />
+            <mxPoint x="510" y="116.75" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-53" value="является" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-46">
+          <mxGeometry x="210" y="206.75" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-54" value="чем?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-46" source="r5hXMGkeLYIKXQ5QMk3x-53" target="r5hXMGkeLYIKXQ5QMk3x-58">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="565" y="386.75" as="targetPoint" />
+            <mxPoint x="335" y="441.75" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="280" y="191.25" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-55" value="выявить" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-46">
+          <mxGeometry x="80" y="206.75" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-56" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-46" source="r5hXMGkeLYIKXQ5QMk3x-55" target="r5hXMGkeLYIKXQ5QMk3x-53">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="35" y="532.25" as="targetPoint" />
+            <mxPoint x="-68" y="504.25" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-57" value="Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-46">
+          <mxGeometry x="210" y="61.25" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-58" value="болезнь" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-46">
+          <mxGeometry x="210" y="134.25" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-59" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-46" source="r5hXMGkeLYIKXQ5QMk3x-58" target="r5hXMGkeLYIKXQ5QMk3x-57">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="498" y="142.25" as="sourcePoint" />
+            <mxPoint x="320" y="177.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-60" value="что делают?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-46" source="r5hXMGkeLYIKXQ5QMk3x-58" target="r5hXMGkeLYIKXQ5QMk3x-53">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="264" y="169.25" as="targetPoint" />
+            <mxPoint x="172" y="118.25" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="220" y="191.25" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-61" value="сокращённо?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-46" source="r5hXMGkeLYIKXQ5QMk3x-57" target="r5hXMGkeLYIKXQ5QMk3x-62">
+          <mxGeometry x="-0.0189" relative="1" as="geometry">
+            <mxPoint x="220" y="172.75" as="sourcePoint" />
+            <mxPoint x="90" y="67.75" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-62" value="Болезнь Паркинсона — БП" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-46">
+          <mxGeometry x="10" y="61.25" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-63" value="... выявив что БП является возрастным многофакторным заболеванием&amp;nbsp;..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="3960" y="490" width="480" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-64" value="сделав что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="1" source="r5hXMGkeLYIKXQ5QMk3x-24" target="r5hXMGkeLYIKXQ5QMk3x-55">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3616" y="458" as="targetPoint" />
+            <mxPoint x="3220" y="382" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-65" value="сделав что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="1" source="7qZIqy6ZL3z2aXDZ3tAA-112" target="7qZIqy6ZL3z2aXDZ3tAA-118">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2260" y="390" as="sourcePoint" />
+            <mxPoint x="2138" y="302" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-66" value="Блок 5" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3960" y="574.38" width="400" height="251.25" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-82" value="чем вызвано?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-66" source="r5hXMGkeLYIKXQ5QMk3x-96" target="r5hXMGkeLYIKXQ5QMk3x-93">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-40" y="103.12" as="targetPoint" />
+            <mxPoint x="-99" y="-46.879999999999995" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-85" value="выявить" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="10" y="190.62" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-86" value="влияют" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="188" y="190.62" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-87" value="что делают?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-66" source="r5hXMGkeLYIKXQ5QMk3x-93" target="r5hXMGkeLYIKXQ5QMk3x-86">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="222.5" y="-16.879999999999995" as="targetPoint" />
+            <mxPoint x="292.5" y="-66.88" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-88" value="какие?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-66" source="r5hXMGkeLYIKXQ5QMk3x-93" target="r5hXMGkeLYIKXQ5QMk3x-89">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="212.5" y="89.57000000000005" as="targetPoint" />
+            <mxPoint x="188" y="223.12263157894733" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-89" value="генетические" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="10" y="118.12" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-90" value="окружающая" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="148" y="30.620000000000005" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-91" value="среды" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="10" y="35.620000000000005" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-92" value="какой?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-66" source="r5hXMGkeLYIKXQ5QMk3x-91" target="r5hXMGkeLYIKXQ5QMk3x-90">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="314" y="-181.33000000000004" as="targetPoint" />
+            <mxPoint x="454" y="-181.33000000000004" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-93" value="факторы" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="188" y="118.12" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-94" value="какие?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-66" source="r5hXMGkeLYIKXQ5QMk3x-93" target="r5hXMGkeLYIKXQ5QMk3x-91">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-127" y="198.12" as="targetPoint" />
+            <mxPoint x="73" y="198.12" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-95" value="Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="300" y="118.12" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-96" value="болезнь" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="r5hXMGkeLYIKXQ5QMk3x-66">
+          <mxGeometry x="300" y="30.620000000000005" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-97" value="какая?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-66" source="r5hXMGkeLYIKXQ5QMk3x-96" target="r5hXMGkeLYIKXQ5QMk3x-95">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="478" y="-123.88" as="sourcePoint" />
+            <mxPoint x="300" y="-88.88" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-98" value="что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="r5hXMGkeLYIKXQ5QMk3x-66" source="r5hXMGkeLYIKXQ5QMk3x-85" target="r5hXMGkeLYIKXQ5QMk3x-86">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="-180.88" as="targetPoint" />
+            <mxPoint x="340" y="-166.88" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-81" value="... заболеванием, на которое влияют как генетические, так и факторы окружающей среды." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="3960" y="825.63" width="400" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-99" value="сделав что?" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;" edge="1" parent="1" source="r5hXMGkeLYIKXQ5QMk3x-24" target="r5hXMGkeLYIKXQ5QMk3x-85">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4010" y="475" as="targetPoint" />
+            <mxPoint x="3736" y="471" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5hXMGkeLYIKXQ5QMk3x-100" value="Связи которые станут межблоковыми — они определяют что сначала был Блок 3, затем Блок 4 и 5" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="3850" y="476.5" width="110" height="135" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

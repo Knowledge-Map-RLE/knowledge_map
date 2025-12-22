@@ -1,0 +1,76 @@
+@prefix : <http://example.org/parkinson#> .
+@prefix : <http://www.w3.org/2002/07/#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# ... открытия дофамина как нейромедиатора в 1950-х годах ...
+:открыть a : ;
+    rdfs:label "открыть"@ru ;
+    :что :дофамин ;
+    :когда :1950ых .
+
+:дофамин a : ;
+    rdfs:label "дофамин"@ru ;
+    :как_что :нейромедиатор .
+
+:нейромедиатор a : ;
+    rdfs:label "нейромедиатор"@ru .
+
+:1950ых a : ;
+    rdfs:label "1950-ых"@ru .
+
+# С момента ... исследования болезни Паркинсона (БП) сформировали богатую и сложную базу знаний ...
+:исследование a : ;
+    rdfs:label "исследование"@ru ;
+    rdfs:label "research"@en ;
+    :с_какого_момента :открыть ;
+    :чего :болезнь ;
+    :что_сделали :сформировать.
+
+:проводить a : ;
+    rdfs:label "проводить"@ru ;
+    rdfs:label "conduct"@en ;
+    :что :исследование .
+
+:болезнь a : ;
+    rdfs:label "болезнь"@ru ;
+    rdfs:label "desease"@en ;
+    :какой :Паркинсон .
+
+:Паркинсон a : ;
+    rdfs:label "Паркинсон"@ru ;
+    rdfs:label "Parkinson"@en .
+
+:болезнь:Паркинсон a : ;
+    rdfs:label "болезнь Паркинсона"@ru ;
+    rdfs:label "Parkinson's desease"@en .
+
+:БП a : ;
+    rdfs:label "БП"@ru ;
+    rdfs:label "PD"@en ;
+    :сокращение :болезнь:Паркинсон .
+
+# ... болезни Паркинсона (БП) сформировали богатую и сложную базу знаний ...
+:сформировать a : ;
+    rdfs:label "сформировать"@ru ;
+    rdfs:label "generated"@en ;
+    :что :совокупность .
+
+:совокупность a : ;
+    rdfs:label "совокупность"@ru ;
+    rdfs:label "body"@en ;
+    :о_чём :болезнь ;
+    :чего :знание ;
+    :какая :сложный ;
+    :какая :богатый .
+
+:знание a : ;
+    rdfs:label "знание"@ru ;
+    rdfs:label "knowledge"@en .
+
+:сложный a : ;
+    rdfs:label "сложный"@ru ;
+    rdfs:label "complex"@en .
+
+:богатый a : ;
+    rdfs:label "богатый"@ru ;
+    rdfs:label "rich"@en .
