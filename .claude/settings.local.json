@@ -38,7 +38,12 @@
       "Bash(timeout 15 bash:*)",
       "Bash(findstr:*)",
       "Bash(tree:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(python -m grpc_tools.protoc:*)",
+      "Bash(ls:*)",
+      "Bash(cd:*)",
+      "Bash(python:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

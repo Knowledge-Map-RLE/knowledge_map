@@ -72,11 +72,6 @@ class NLPConfig(BaseSettings):
     max_text_length: int = 1000000  # Maximum text length to process
     batch_size: int = 32
 
-    # Markdown validation settings
-    validate_markdown_on_save: bool = True
-    max_markdown_length: int = 5000000  # 5MB max for markdown documents
-    require_references_section: bool = True
-
     # Logging
     log_level: str = "INFO"
 

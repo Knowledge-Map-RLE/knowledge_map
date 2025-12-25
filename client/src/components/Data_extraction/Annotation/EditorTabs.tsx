@@ -18,7 +18,6 @@ interface EditorTabsProps {
   onTextSelect: (start: number, end: number, text: string) => void;
   onAnnotationClick: (annotation: Annotation | Annotation[]) => void;
   onRelationCreate: (sourceId: string, targetId: string) => void;
-  onAutoAnnotate: () => void;
   onMultiLevelAnnotate?: () => void;
   onSave: () => void;
   onDeleteAllAnnotations: () => void;
@@ -50,7 +49,6 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onTextSelect,
   onAnnotationClick,
   onRelationCreate,
-  onAutoAnnotate,
   onMultiLevelAnnotate,
   onSave,
   onDeleteAllAnnotations,
@@ -82,35 +80,21 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
     }
   };
   return (
-    <div ref={ref} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div ref={ref} style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
       <div className="main-tabs" style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '10px',
-        padding: '10px',
+        gap: '8px',
+        padding: '12px 16px',
         backgroundColor: '#f5f5f5',
         borderBottom: '1px solid #ddd',
-        borderRadius: '4px 4px 0 0'
+        borderRadius: '4px 4px 0 0',
+        flexWrap: 'wrap',
+        flexShrink: 0
       }}>
         <div style={{ flex: 1 }}></div>
-        <button
-          className="auto-annotate-button"
-          onClick={onAutoAnnotate}
-          disabled={isAutoAnnotating || readOnly}
-          title="Автоматическая аннотация с помощью spaCy"
-          style={{
-            backgroundColor: isAutoAnnotating ? '#ccc' : '#4CAF50',
-            color: 'white',
-            border: 'none',
-            padding: '8px 16px',
-            borderRadius: '4px',
-            cursor: isAutoAnnotating || readOnly ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold'
-          }}
-        >
-          {isAutoAnnotating ? '⏳ Обработка...' : '🤖 Автоаннотация spaCy'}
-        </button>
+
+        {/* Multi-Level анализ кнопка */}
         {onMultiLevelAnnotate && (
           <button
             className="multilevel-annotate-button"
@@ -118,37 +102,25 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
             disabled={isAutoAnnotating || readOnly}
             title="Multi-level NLP анализ с голосованием (spaCy + NLTK)"
             style={{
-              backgroundColor: isAutoAnnotating ? '#ccc' : '#2196F3',
-              color: 'white',
+              backgroundColor: isAutoAnnotating ? '#e0e0e0' : '#2196F3',
+              color: isAutoAnnotating ? '#999' : 'white',
               border: 'none',
-              padding: '8px 16px',
+              padding: '10px 16px',
               borderRadius: '4px',
               cursor: isAutoAnnotating || readOnly ? 'not-allowed' : 'pointer',
-              fontSize: '14px',
-              fontWeight: 'bold'
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            {isAutoAnnotating ? '⏳ Обработка...' : '🎯 Multi-Level анализ'}
+            {isAutoAnnotating ? 'Обработка...' : 'Multi-Level анализ'}
           </button>
         )}
-        <button
-          className="delete-all-button"
-          onClick={onDeleteAllAnnotations}
-          disabled={readOnly}
-          title="Удалить все аннотации документа"
-          style={{
-            backgroundColor: readOnly ? '#ccc' : '#f44336',
-            color: 'white',
-            border: 'none',
-            padding: '8px 16px',
-            borderRadius: '4px',
-            cursor: readOnly ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold'
-          }}
-        >
-          🗑️ Удалить все аннотации
-        </button>
+
+        {/* Импорт CSV */}
         {onImportCSV && (
           <>
             <input
@@ -164,20 +136,26 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
               disabled={readOnly}
               title="Импортировать аннотации из CSV"
               style={{
-                backgroundColor: readOnly ? '#ccc' : '#FF9800',
-                color: 'white',
+                backgroundColor: readOnly ? '#e0e0e0' : '#FF9800',
+                color: readOnly ? '#999' : 'white',
                 border: 'none',
-                padding: '8px 16px',
+                padding: '10px 16px',
                 borderRadius: '4px',
                 cursor: readOnly ? 'not-allowed' : 'pointer',
-                fontSize: '14px',
-                fontWeight: 'bold'
+                fontSize: '13px',
+                fontWeight: '500',
+                whiteSpace: 'nowrap',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center'
               }}
             >
-              📥 Импортировать CSV
+              Импорт CSV
             </button>
           </>
         )}
+
+        {/* Экспорт CSV */}
         {onExportCSV && (
           <button
             className="export-csv-button"
@@ -187,16 +165,22 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
               backgroundColor: '#9C27B0',
               color: 'white',
               border: 'none',
-              padding: '8px 16px',
+              padding: '10px 16px',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 'bold'
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            📤 Экспортировать CSV
+            Экспорт CSV
           </button>
         )}
+
+        {/* Сохранить для тестов */}
         {onSaveForTests && (
           <button
             className="save-for-tests-button"
@@ -206,32 +190,66 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
               backgroundColor: '#00BCD4',
               color: 'white',
               border: 'none',
-              padding: '8px 16px',
+              padding: '10px 16px',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 'bold'
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            💾 Сохранить для тестов
+            Сохранить для тестов
           </button>
         )}
+
+        {/* Удалить все аннотации */}
+        <button
+          className="delete-all-button"
+          onClick={onDeleteAllAnnotations}
+          disabled={readOnly}
+          title="Удалить все аннотации документа"
+          style={{
+            backgroundColor: readOnly ? '#e0e0e0' : '#f44336',
+            color: readOnly ? '#999' : 'white',
+            border: 'none',
+            padding: '10px 16px',
+            borderRadius: '4px',
+            cursor: readOnly ? 'not-allowed' : 'pointer',
+            fontSize: '13px',
+            fontWeight: '500',
+            whiteSpace: 'nowrap',
+            height: '36px',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          Удалить все
+        </button>
+
+        {/* Сохранить */}
         <button
           className="save-button"
           onClick={onSave}
           disabled={!hasUnsavedChanges}
           style={{
-            backgroundColor: !hasUnsavedChanges ? '#ccc' : '#2196F3',
-            color: 'white',
+            backgroundColor: !hasUnsavedChanges ? '#e0e0e0' : '#4CAF50',
+            color: !hasUnsavedChanges ? '#999' : 'white',
             border: 'none',
-            padding: '8px 16px',
+            padding: '10px 16px',
             borderRadius: '4px',
             cursor: !hasUnsavedChanges ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold'
+            fontSize: '13px',
+            fontWeight: '500',
+            whiteSpace: 'nowrap',
+            height: '36px',
+            display: 'flex',
+            alignItems: 'center'
           }}
         >
-          {hasUnsavedChanges ? '💾 Сохранить *' : '💾 Сохранить'}
+          {hasUnsavedChanges ? 'Сохранить *' : 'Сохранить'}
         </button>
       </div>
 

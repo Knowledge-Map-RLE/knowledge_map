@@ -15,6 +15,9 @@ service NLPService {
 
     // Получение списка поддерживаемых типов процессоров
     rpc GetSupportedTypes(GetSupportedTypesRequest) returns (GetSupportedTypesResponse);
+
+    // Валидация канонического формата markdown
+    rpc ValidateMarkdown(ValidateMarkdownRequest) returns (ValidateMarkdownResponse);
 }
 
 // ============================================================================
@@ -241,4 +244,49 @@ message GetSupportedTypesResponse {
     repeated ProcessorInfo processors = 1;
     repeated string annotation_types = 2;
     repeated string relation_types = 3;
+}
+
+// ============================================================================
+// Markdown валидация
+// ============================================================================
+
+enum ValidationErrorSeverity {
+    VALIDATION_ERROR_SEVERITY_UNSPECIFIED = 0;
+    VALIDATION_ERROR_SEVERITY_ERROR = 1;
+    VALIDATION_ERROR_SEVERITY_WARNING = 2;
+    VALIDATION_ERROR_SEVERITY_INFO = 3;
+}
+
+message ValidationErrorMessage {
+    string error_type = 1;
+    string message = 2;
+    ValidationErrorSeverity severity = 3;
+    
+    int32 line = 4;
+    int32 column = 5;
+    int32 start_offset = 6;
+    int32 end_offset = 7;
+    
+    string context = 8;
+    string suggestion = 9;
+    
+    map<string, string> metadata = 10;
+}
+
+message ValidateMarkdownRequest {
+    string markdown = 1;
+    bool strict_mode = 2;
+}
+
+message ValidateMarkdownResponse {
+    bool success = 1;
+    bool is_valid = 2;
+    repeated ValidationErrorMessage errors = 3;
+    repeated ValidationErrorMessage warnings = 4;
+    string message = 5;
+    
+    int32 total_errors = 6;
+    int32 total_warnings = 7;
+    
+    map<string, string> metadata = 8;
 }

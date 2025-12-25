@@ -289,6 +289,58 @@ class NLPGRPCClient:
             logger.error(f"[grpc_client] Ошибка в get_supported_types: {e}")
             raise
 
+    async def validate_markdown(self, markdown: str, strict_mode: bool = False, timeout: int = 30) -> Dict[str, Any]:
+        """
+        Валидация канонического формата markdown через gRPC.
+
+        Args:
+            markdown: Markdown текст для валидации
+            strict_mode: Если True, warnings становятся errors (отклонение при любых проблемах)
+            timeout: Таймаут в секундах
+
+        Returns:
+            Результат валидации с ошибками и предупреждениями
+        """
+        try:
+            await self.connect()
+
+            logger.info(f"[grpc_client] Отправляем запрос ValidateMarkdown: длина текста={len(markdown)}, strict_mode={strict_mode}")
+
+            # Создаем запрос
+            request = nlp_pb2.ValidateMarkdownRequest(
+                markdown=markdown,
+                strict_mode=strict_mode
+            )
+
+            # Вызываем метод
+            response = await self.stub.ValidateMarkdown(request, timeout=timeout)
+
+            logger.info(
+                f"[grpc_client] Получен ответ ValidateMarkdown: success={response.success}, "
+                f"is_valid={response.is_valid}, errors={response.total_errors}, warnings={response.total_warnings}"
+            )
+
+            # Конвертируем proto в dict
+            result = {
+                "success": response.success,
+                "is_valid": response.is_valid,
+                "errors": [self._proto_validation_error_to_dict(e) for e in response.errors],
+                "warnings": [self._proto_validation_error_to_dict(w) for w in response.warnings],
+                "message": response.message,
+                "total_errors": response.total_errors,
+                "total_warnings": response.total_warnings,
+                "metadata": dict(response.metadata)
+            }
+
+            return result
+
+        except grpc.RpcError as e:
+            logger.error(f"[grpc_client] gRPC ошибка в validate_markdown: {e.code()}: {e.details()}")
+            raise
+        except Exception as e:
+            logger.error(f"[grpc_client] Ошибка в validate_markdown: {e}")
+            raise
+
     def _proto_result_to_dict(self, result) -> Dict[str, Any]:
         """Конвертирует ProcessingResult из proto в dict"""
         return {
@@ -421,6 +473,26 @@ class NLPGRPCClient:
             "supported_categories": [nlp_pb2.AnnotationCategory.Name(c) for c in info.supported_categories],
             "supported_levels": [nlp_pb2.LinguisticLevel.Name(l) for l in info.supported_levels],
             "available": info.available
+        }
+
+    def _proto_validation_error_to_dict(self, error) -> Dict[str, Any]:
+        """Конвертирует ValidationError из proto в dict"""
+        severity_map = {
+            nlp_pb2.ERROR_SEVERITY_ERROR: "error",
+            nlp_pb2.ERROR_SEVERITY_WARNING: "warning",
+            nlp_pb2.ERROR_SEVERITY_INFO: "info",
+        }
+        return {
+            "error_type": error.error_type,
+            "message": error.message,
+            "severity": severity_map.get(error.severity, "unknown"),
+            "line": error.line if error.line > 0 else None,
+            "column": error.column if error.column > 0 else None,
+            "start_offset": error.start_offset if error.start_offset > 0 else None,
+            "end_offset": error.end_offset if error.end_offset > 0 else None,
+            "context": error.context if error.context else None,
+            "suggestion": error.suggestion if error.suggestion else None,
+            "metadata": dict(error.metadata)
         }
 
 

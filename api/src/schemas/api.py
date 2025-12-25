@@ -86,6 +86,8 @@ class DocumentItem(BaseModel):
 
 class UpdateMarkdownRequest(BaseModel):
     markdown: str = Field(..., description="Markdown content to save")
+    auto_validate: bool = Field(default=True, description="Validate markdown before saving")
+    strict_mode: bool = Field(default=False, description="Reject save if validation fails (strict mode)")
 
 
 class UpdateMarkdownResponse(BaseModel):
@@ -93,6 +95,7 @@ class UpdateMarkdownResponse(BaseModel):
     message: Optional[str] = None
     doc_id: str
     s3_key: Optional[str] = None
+    validation: Optional[Dict[str, Any]] = None
 
 
 # Схемы для viewport
@@ -220,3 +223,38 @@ class SaveForTestsResponse(BaseModel):
     validation_result: Optional[Dict[str, Any]] = Field(default=None, description="Результат валидации датасета")
     dvc_command: str = Field(..., description="Команда для фиксации датасета в DVC")
     message: Optional[str] = Field(default=None, description="Дополнительное сообщение")
+
+# ============================================================================
+# Markdown Validation Schemas
+# ============================================================================
+
+class ValidationErrorSchema(BaseModel):
+    """Схема для одной ошибки валидации"""
+    error_type: str = Field(..., description="Тип ошибки")
+    message: str = Field(..., description="Сообщение об ошибке")
+    severity: str = Field(..., description="Серьёзность: error, warning, info")
+    line: Optional[int] = Field(default=None, description="Номер строки (1-индексированный)")
+    column: Optional[int] = Field(default=None, description="Номер колонки (1-индексированный)")
+    start_offset: Optional[int] = Field(default=None, description="Начало смещения символа")
+    end_offset: Optional[int] = Field(default=None, description="Конец смещения символа")
+    context: Optional[str] = Field(default=None, description="Контекст ошибки")
+    suggestion: Optional[str] = Field(default=None, description="Рекомендация по исправлению")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Дополнительные метаданные")
+
+
+class ValidateMarkdownRequest(BaseModel):
+    """Запрос на валидацию markdown"""
+    markdown: str = Field(..., description="Markdown контент для валидации")
+    strict_mode: bool = Field(default=False, description="Если True, warnings становятся errors")
+
+
+class ValidateMarkdownResponse(BaseModel):
+    """Ответ валидации markdown"""
+    success: bool = Field(..., description="Успешность операции валидации")
+    is_valid: bool = Field(..., description="Является ли markdown валидным")
+    errors: List[ValidationErrorSchema] = Field(default_factory=list, description="Список критических ошибок")
+    warnings: List[ValidationErrorSchema] = Field(default_factory=list, description="Список предупреждений")
+    message: str = Field(..., description="Сообщение о результате валидации")
+    total_errors: int = Field(default=0, description="Общее количество ошибок")
+    total_warnings: int = Field(default=0, description="Общее количество предупреждений")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Метаданные валидации")

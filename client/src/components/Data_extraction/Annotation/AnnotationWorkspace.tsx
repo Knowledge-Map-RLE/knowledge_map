@@ -3,7 +3,7 @@ import AnnotationToolbar from './AnnotationToolbar';
 import AnnotationPanel from './AnnotationPanel';
 import RelationsPanel from './RelationsPanel';
 import AnnotationFilters from './AnnotationFilters';
-import EditorTabs from './EditorTabs';
+import EditorTabsWithValidation from './EditorTabsWithValidation';
 import ErrorBoundary from '../../ErrorBoundary';
 import PatternVisualization from '../PatternVisualization/PatternVisualization';
 import SaveForTestsDialog from '../SaveForTestsDialog';
@@ -13,7 +13,6 @@ import { useRelations } from './hooks/useRelations';
 import {
   Annotation,
   AnnotationRelation,
-  autoAnnotateDocument,
   autoAnnotateMultilevel,
   MultiLevelAnalysisResponse,
   deleteAllAnnotations,
@@ -318,51 +317,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [editRelation]);
 
-  // Auto-annotate handler
-  const handleAutoAnnotate = useCallback(async () => {
-    if (isAutoAnnotating) return;
-
-    const confirmed = confirm(
-      'Запустить автоматическую аннотацию с помощью spaCy?\n\n' +
-      'Это создаст аннотации для всех найденных лингвистических сущностей:\n' +
-      '• Части речи (существительные, глаголы, прилагательные, и т.д.)\n' +
-      '• Члены предложения (подлежащее, сказуемое, дополнение, и т.д.)\n' +
-      '• Именованные сущности (персоны, места, организации, и т.д.)\n' +
-      '• Морфологические признаки (время, род, число, падеж, и т.д.)\n\n' +
-      'Процесс может занять несколько минут для больших документов.'
-    );
-
-    if (!confirmed) return;
-
-    setIsAutoAnnotating(true);
-
-    try {
-      const result = await autoAnnotateDocument(docId);
-
-      console.log(
-        'Автоаннотация завершена успешно!\n' +
-        `Создано аннотаций: ${result.created_annotations}\n` +
-        `Создано связей: ${result.created_relations}\n` +
-        `Обработано символов: ${result.text_length}\n` +
-        `Использованные процессоры: ${result.processors_used.join(', ')}`
-      );
-
-      await loadAnnotations();
-      await loadRelations();
-    } catch (error: any) {
-      console.error(
-        'Не удалось выполнить автоаннотацию:',
-        error?.message || error,
-        '\n\nПроверьте, что:\n' +
-        '• Документ сохранен в базе данных\n' +
-        '• Markdown файл доступен\n' +
-        '• Сервер NLP запущен и доступен'
-      );
-    } finally {
-      setIsAutoAnnotating(false);
-    }
-  }, [isAutoAnnotating, docId, loadAnnotations, loadRelations]);
-
   // Multi-level auto-annotate handler
   const handleMultiLevelAnnotate = useCallback(async () => {
     if (isAutoAnnotating) return;
@@ -582,7 +536,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         {/* Main Editor */}
         <div className="workspace-main">
           <ErrorBoundary>
-            <EditorTabs
+            <EditorTabsWithValidation
               mainTab={mainTab}
               localText={localText}
               visualAnnotations={visualAnnotations}
@@ -598,7 +552,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onTextSelect={handleTextSelect}
               onAnnotationClick={handleAnnotationSelect}
               onRelationCreate={handleRelationCreate}
-              onAutoAnnotate={handleAutoAnnotate}
               onMultiLevelAnnotate={handleMultiLevelAnnotate}
               onSave={handleSave}
               onDeleteAllAnnotations={handleDeleteAllAnnotations}

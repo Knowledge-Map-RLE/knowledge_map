@@ -13,6 +13,7 @@ from src.schemas.api import (
     DataAvailabilityStatus,
 )
 from services.data_extraction_service import DataExtractionService
+from services.nlp_grpc_client import get_nlp_grpc_client
 from services import get_s3_client, settings
 
 logger = logging.getLogger(__name__)
@@ -48,12 +49,81 @@ async def list_documents():
 
 @router.put("/documents/{doc_id}/markdown", response_model=UpdateMarkdownResponse)
 async def update_document_markdown(doc_id: str, request: UpdateMarkdownRequest):
-    """Обновляет markdown документа в S3."""
+    """
+    Обновляет markdown документа в S3 с опциональной валидацией.
+
+    Args:
+        doc_id: ID документа
+        request: UpdateMarkdownRequest с markdown текстом и параметрами валидации
+            - markdown: новый markdown текст
+            - auto_validate: включить валидацию (по умолчанию True)
+            - strict_mode: если True, отклонить сохранение при любых ошибках валидации
+
+    Returns:
+        UpdateMarkdownResponse с результатом сохранения и опциональными результатами валидации
+    """
     try:
+        validation_result = None
+
+        # Авто-валидация если запрошена (по умолчанию: True)
+        if request.auto_validate:
+            logger.info(f"[documents] Запущена валидация markdown для документа {doc_id}")
+
+            try:
+                grpc_client = get_nlp_grpc_client()
+                validation_result = await grpc_client.validate_markdown(
+                    markdown=request.markdown,
+                    strict_mode=request.strict_mode
+                )
+
+                logger.info(
+                    f"[documents] Результат валидации: is_valid={validation_result['is_valid']}, "
+                    f"errors={validation_result['total_errors']}, warnings={validation_result['total_warnings']}"
+                )
+
+                # Отклонить если strict mode и невалидный
+                if request.strict_mode and not validation_result['is_valid']:
+                    logger.warning(
+                        f"[documents] Сохранение отклонено в strict mode: {validation_result['total_errors']} ошибок"
+                    )
+                    raise HTTPException(
+                        status_code=400,
+                        detail={
+                            "error": f"Валидация markdown не пройдена: {validation_result['total_errors']} ошибок",
+                            "validation": validation_result
+                        }
+                    )
+
+            except HTTPException:
+                raise
+            except Exception as e:
+                logger.error(f"[documents] Ошибка валидации markdown: {e}", exc_info=True)
+                # При ошибке валидации в strict mode - отклонить
+                if request.strict_mode:
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"Ошибка валидации markdown: {str(e)}"
+                    )
+                # В обычном режиме логируем но продолжаем
+                logger.warning(f"[documents] Валидация пропущена из-за ошибки, но сохранение продолжится")
+
+        # Сохранить в S3
         result = await data_extraction_service.update_markdown(doc_id, request.markdown)
+
+        # Включить результат валидации если был
+        if validation_result:
+            result['validation'] = validation_result
+            result['message'] = f"Markdown обновлён и прошёл валидацию (errors={validation_result['total_errors']}, warnings={validation_result['total_warnings']})"
+        else:
+            result['message'] = "Markdown обновлён"
+
+        logger.info(f"[documents] Markdown документа {doc_id} успешно обновлён")
         return UpdateMarkdownResponse(**result)
+
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Ошибка обновления markdown: {e}")
+        logger.error(f"[documents] Ошибка обновления markdown: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 

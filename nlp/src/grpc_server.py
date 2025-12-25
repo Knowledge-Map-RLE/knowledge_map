@@ -508,6 +508,87 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
             context.set_details(str(e))
             return nlp_pb2.GetSupportedTypesResponse()
 
+    async def ValidateMarkdown(self, request, context):
+        """Валидация канонического формата markdown"""
+        try:
+            from validation import validate_markdown
+
+            logger.info(f"ValidateMarkdown запрос: длина текста={len(request.markdown)}")
+
+            # Валидировать markdown
+            start_time = time.time()
+            result = validate_markdown(request.markdown, self.config)
+            processing_time = time.time() - start_time
+
+            # Конвертировать ошибки в proto
+            proto_errors = []
+            for error in result.errors:
+                proto_errors.append(self._validation_error_to_proto(error))
+
+            proto_warnings = []
+            for warning in result.warnings:
+                proto_warnings.append(self._validation_error_to_proto(warning))
+
+            # Применить strict mode - warnings становятся errors
+            if request.strict_mode:
+                proto_errors.extend(proto_warnings)
+                proto_warnings = []
+                is_valid = len(proto_errors) == 0
+            else:
+                is_valid = result.is_valid
+
+            # Конвертировать метаданные
+            metadata = {k: str(v) for k, v in result.metadata.items()}
+            metadata['processing_time'] = str(processing_time)
+
+            message = "Валидация пройдена" if is_valid else f"Найдено {result.total_errors} ошибок и {result.total_warnings} предупреждений"
+
+            logger.info(f"ValidateMarkdown завершена: is_valid={is_valid}, errors={result.total_errors}, warnings={result.total_warnings}")
+
+            return nlp_pb2.ValidateMarkdownResponse(
+                success=True,
+                is_valid=is_valid,
+                errors=proto_errors,
+                warnings=proto_warnings,
+                message=message,
+                total_errors=result.total_errors,
+                total_warnings=result.total_warnings,
+                metadata=metadata
+            )
+
+        except Exception as e:
+            logger.error(f"Ошибка в ValidateMarkdown: {e}", exc_info=True)
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(str(e))
+            return nlp_pb2.ValidateMarkdownResponse(
+                success=False,
+                is_valid=False,
+                message=f"Ошибка валидации: {str(e)}"
+            )
+
+    def _validation_error_to_proto(self, error) -> nlp_pb2.ValidationErrorMessage:
+        """Конвертировать ValidationError в proto message"""
+        severity_map = {
+            "error": nlp_pb2.VALIDATION_ERROR_SEVERITY_ERROR,
+            "warning": nlp_pb2.VALIDATION_ERROR_SEVERITY_WARNING,
+            "info": nlp_pb2.VALIDATION_ERROR_SEVERITY_INFO,
+        }
+
+        metadata = {k: str(v) for k, v in error.metadata.items()}
+
+        return nlp_pb2.ValidationErrorMessage(
+            error_type=error.error_type.value,
+            message=error.message,
+            severity=severity_map.get(error.severity.value, nlp_pb2.VALIDATION_ERROR_SEVERITY_UNSPECIFIED),
+            line=error.line or 0,
+            column=error.column or 0,
+            start_offset=error.start_offset or 0,
+            end_offset=error.end_offset or 0,
+            context=error.context or "",
+            suggestion=error.suggestion or "",
+            metadata=metadata
+        )
+
 
 async def serve():
     """Запуск gRPC сервера"""

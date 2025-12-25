@@ -1,0 +1,174 @@
+/* Container */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Toolbar Extra Section */
+.toolbarExtra {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fafbfc;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Editor Wrapper - takes remaining space */
+.editorWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Help Button */
+.helpButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.helpButton:hover:not(:disabled) {
+  background-color: #5568d3;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+}
+
+.helpButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.helpButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.helpIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.helpText {
+  display: none;
+}
+
+/* Show help text on larger screens */
+@media (min-width: 768px) {
+  .helpText {
+    display: inline;
+  }
+}
+
+/* Validating Indicator */
+.validatingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 6px;
+  margin: 0 12px 12px 12px;
+  color: #1565c0;
+  font-size: 13px;
+  font-weight: 500;
+  animation: slideDown 0.2s ease-out;
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  font-size: 16px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Valid Indicator */
+.validIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 6px;
+  margin: 0 12px 12px 12px;
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: 500;
+  animation: slideDown 0.2s ease-out;
+}
+
+.validIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .toolbarExtra {
+    padding: 6px 8px;
+  }
+
+  .helpButton {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .validatingIndicator,
+  .validIndicator {
+    margin: 0 8px 8px 8px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
