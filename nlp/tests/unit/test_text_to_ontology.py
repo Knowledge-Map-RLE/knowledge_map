@@ -13,12 +13,21 @@
 обратно в тоже самое предложение.
 """
 
+import re
+
+from typing import List, Tuple, NamedTuple
+
+from pathlib import Path
 from rdflib import Graph, Namespace, Literal
 from rdflib.namespace import RDF, RDFS, OWL
 from graphviz import Digraph
 
+from src.processors.level1_tokenization_processor import Level1TokenizationProcessor
+from src.multilevel_analyzer import MultiLevelAnalyzer
+
+
 # --------------------
-# RDF graph
+# Тестовый RDF граф
 # --------------------
 
 EX = Namespace("http://example.org/parkinson#")
@@ -148,21 +157,83 @@ def visualize_ontology(rdf_graph, filename="../data/nlp/ontology_test"):
     dot.render(filename, view=True)
 
 
+# --------------------
+# Моё тестирование
+# --------------------
 
+# Вспомогательные функции
+
+def find_h1_headers_simple(markdown_text: str) -> Tuple[List[dict], int]:
+    """Подсчёт заголовков первого уровня"""
+    headers = []
+    pattern = re.compile(r'^# (.+)$', re.MULTILINE)
+    
+    for match in pattern.finditer(markdown_text):
+        headers.append({
+            'text': match.group(1).strip(),
+            'start': match.start(),
+            'end': match.end(),
+            'full_match': match.group(0)
+        })
+    
+    return headers, len(headers)
+
+# Получение текста
+
+def test_tokenization_first_sentence():
+    with open(Path('../data/nlp/Новый формат статьи. Первый этап.eng.md'), 'r', encoding='utf8') as f:
+        text = f.read().strip()
+    
+    # Прежде чем брать первое предложение
+    # Нужно
+    # - отделить текст от мета информации
+    # - (TODO) решить за что принимать заголовки, за структуру/контекст, не за предложения?
+    text_original = text
+
+    parts_one = text_original.split('---')
+    parts_two = parts_one[2].split('## References')
+    
+    meta = parts_one[1].strip()
+    text = parts_two[0].strip()
+    refs = parts_two[1].strip()
+
+
+    # Проверка, что обязательно есть только 1 заголовок первого уровня
+    pattern = re.compile(r'^# ', re.MULTILINE)
+    matches, length = find_h1_headers_simple(text)
+
+    assert length == 1, 'Ошибка. Не каноничный Markdown. Должен быть только один заголовок первого уровня.'
+    print(length)
+
+    # for match in pattern.finditer(text):
+    #     print(f"Найдено на позиции {match.start()}: '{match.group()}'")
+    #     print(f"Строка: {match.span()}")
+
+    # print(text)
+
+    # Подобно Jupyter блокноту, мета информация, заголовки, абзацы, таблицы, илюстрации и описания к ним
+    # могут быть отдельными "ячейками"
+
+
+    # 
+    # process_level_1 = Level1TokenizationProcessor(enable_voting=False)
+    # result = process_level_1.process_text(text)
+    # sentences = [s['text'] for s in result['sentences']]
+
+    # print('ТУТ')
+    # assert str(sentences[6]) == "The hallmarks of Parkinson's disease\n\n## Abstract\n\nSince the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson's disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors."
 
 # --------------------
 # Output
 # --------------------
 
-print(g.serialize(format="turtle"))
+# print(g.serialize(format="turtle"))
 
 # визуальная проверка онтологии
-visualize_ontology(g)
-
-
-
-
+# visualize_ontology(g)
 
 def test_division():
     assert 10 / 2 == 5
 
+if __name__ == '__main__':
+    test_tokenization_first_sentence()

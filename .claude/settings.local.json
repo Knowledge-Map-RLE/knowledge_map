@@ -36,7 +36,9 @@
       "Bash(python -m json.tool:*)",
       "Bash(powershell -Command:*)",
       "Bash(timeout 15 bash:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(tree:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []
