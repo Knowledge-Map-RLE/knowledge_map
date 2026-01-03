@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter
 
 # Импортируем все суб-роутеры
-from . import documents, annotations, relations, nlp, csv_export, patterns, action_chains, markdown_validation
+from . import documents, annotations, relations, nlp, csv_export, ontology, patterns, action_chains, markdown_validation
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +19,7 @@ router.include_router(annotations.router, prefix="")
 router.include_router(relations.router, prefix="")
 router.include_router(nlp.router, prefix="")
 router.include_router(csv_export.router, prefix="")
+router.include_router(ontology.router, prefix="")
 router.include_router(patterns.router, prefix="")
 router.include_router(action_chains.router, prefix="")
 router.include_router(markdown_validation.router, prefix="")

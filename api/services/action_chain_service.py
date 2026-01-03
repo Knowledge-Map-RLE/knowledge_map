@@ -1,9 +1,9 @@
 """
 Action Chain Service
 
-Builds chains of actions (verb patterns) from linguistic patterns in Neo4j.
+Builds chains of actions (verb ontologies) from linguistic ontologies in Neo4j.
 Determines sequence relationships between actions based on:
-1. Direct linguistic dependencies (xcomp, advcl, etc.)
+1. Direct syntactic dependencies (xcomp, advcl, etc.)
 2. Sequence markers (after, then, before, etc.)
 3. Text position (sent_idx, token_idx)
 4. Shared entities (common objects/subjects)
@@ -67,9 +67,9 @@ DEPENDENCY_MAPPING = {
 
 
 @dataclass
-class VerbPattern:
-    """Represents a verb pattern with its metadata"""
-    pattern_id: str
+class VerbOntology:
+    """Represents a verb ontology with its metadata"""
+    ontology_id: str
     verb_text: str
     verb_lemma: str
     sent_idx: int
@@ -80,15 +80,32 @@ class VerbPattern:
     object: Optional[str] = None
     arguments: Optional[List[str]] = None
 
+    # Backward compatibility alias
+    @property
+    def pattern_id(self) -> str:
+        """Backward compatibility: pattern_id is now ontology_id"""
+        return self.ontology_id
+
 
 @dataclass
 class ActionSequence:
     """Represents a sequence relationship between two actions"""
-    from_pattern_id: str
-    to_pattern_id: str
+    from_ontology_id: str
+    to_ontology_id: str
     sequence_type: SequenceType
     confidence: float
     evidence: List[str]
+
+    # Backward compatibility aliases
+    @property
+    def from_pattern_id(self) -> str:
+        """Backward compatibility: from_pattern_id is now from_ontology_id"""
+        return self.from_ontology_id
+
+    @property
+    def to_pattern_id(self) -> str:
+        """Backward compatibility: to_pattern_id is now to_ontology_id"""
+        return self.to_ontology_id
 
 
 class ActionChainService:
@@ -109,60 +126,57 @@ class ActionChainService:
         """Close the Neo4j driver connection"""
         self.driver.close()
 
-    def extract_verb_patterns(self) -> List[VerbPattern]:
+    def extract_verb_ontologies(self) -> List[VerbOntology]:
         """
-        Extract all verb patterns with their metadata and arguments
+        Extract all verb ontologies with their metadata and arguments
         """
         with self.driver.session() as session:
             query = """
-            // Get all verb patterns
-            MATCH (p:Pattern)-[:HAS_POS]->(pos:PatternProperty {type: 'pos', value: 'VERB'})
-            MATCH (p)-[:HAS_TEXT]->(text:PatternProperty {type: 'text'})
-            MATCH (p)-[:HAS_LEMMA]->(lemma:PatternProperty {type: 'lemma'})
-            MATCH (p)-[:HAS_CONFIDENCE]->(conf:PatternProperty {type: 'confidence'})
-
-            // Get original annotation metadata
-            MATCH (ann:MarkdownAnnotation {uid: p.source_token_uid})
+            // Get all verb ontologies
+            MATCH (o:Ontology)-[:HAS_POS]->(pos:OntologyProperty {type: 'pos', value: 'VERB'})
+            MATCH (o)-[:HAS_TEXT]->(text:OntologyProperty {type: 'text'})
+            MATCH (o)-[:HAS_LEMMA]->(lemma:OntologyProperty {type: 'lemma'})
+            MATCH (o)-[:HAS_CONFIDENCE]->(conf:OntologyProperty {type: 'confidence'})
 
             // Get subject (nsubj)
-            OPTIONAL MATCH (p)<-[r_subj:LINGUISTIC_RELATION {relation_type: 'nsubj'}]-(subj:Pattern)
-            OPTIONAL MATCH (subj)-[:HAS_TEXT]->(subj_text:PatternProperty {type: 'text'})
+            OPTIONAL MATCH (o)<-[r_subj:SYNTACTIC_RELATION {relation_type: 'nsubj'}]-(subj:Ontology)
+            OPTIONAL MATCH (subj)-[:HAS_TEXT]->(subj_text:OntologyProperty {type: 'text'})
 
             // Get object (obj)
-            OPTIONAL MATCH (p)-[r_obj:LINGUISTIC_RELATION {relation_type: 'obj'}]->(obj:Pattern)
-            OPTIONAL MATCH (obj)-[:HAS_TEXT]->(obj_text:PatternProperty {type: 'text'})
+            OPTIONAL MATCH (o)-[r_obj:SYNTACTIC_RELATION {relation_type: 'obj'}]->(obj:Ontology)
+            OPTIONAL MATCH (obj)-[:HAS_TEXT]->(obj_text:OntologyProperty {type: 'text'})
 
             // Get all arguments (oblique, etc.)
-            OPTIONAL MATCH (p)-[r_arg:LINGUISTIC_RELATION]->(arg:Pattern)
+            OPTIONAL MATCH (o)-[r_arg:SYNTACTIC_RELATION]->(arg:Ontology)
             WHERE r_arg.relation_type IN ['obl', 'iobj', 'xcomp', 'ccomp']
-            OPTIONAL MATCH (arg)-[:HAS_TEXT]->(arg_text:PatternProperty {type: 'text'})
+            OPTIONAL MATCH (arg)-[:HAS_TEXT]->(arg_text:OntologyProperty {type: 'text'})
 
-            WITH p, text, lemma, conf, ann, subj_text, obj_text, COLLECT(DISTINCT arg_text.value) as arguments
+            WITH o, text, lemma, conf, subj_text, obj_text, COLLECT(DISTINCT arg_text.value) as arguments
 
             RETURN
-                p.pattern_id as pattern_id,
+                o.ontology_id as ontology_id,
                 text.value as verb_text,
                 lemma.value as verb_lemma,
                 conf.value as confidence,
-                p.source_token_uid as source_token_uid,
-                ann.metadata as metadata,
+                o.source_token_uid as source_token_uid,
+                o.sent_idx as sent_idx,
+                o.token_idx as token_idx,
                 subj_text.value as subject,
                 obj_text.value as object,
                 arguments
+            ORDER BY o.sent_idx ASC, o.token_idx ASC
             """
 
             result = session.run(query)
             verbs = []
 
             for record in result:
-                metadata = json.loads(record['metadata']) if record['metadata'] else {}
-
-                verb = VerbPattern(
-                    pattern_id=record['pattern_id'],
+                verb = VerbOntology(
+                    ontology_id=record['ontology_id'],
                     verb_text=record['verb_text'],
                     verb_lemma=record['verb_lemma'],
-                    sent_idx=metadata.get('sent_idx', 0),
-                    token_idx=metadata.get('token_idx', 0),
+                    sent_idx=record['sent_idx'],
+                    token_idx=record['token_idx'],
                     source_token_uid=record['source_token_uid'],
                     confidence=record['confidence'],
                     subject=record['subject'],
@@ -171,26 +185,28 @@ class ActionChainService:
                 )
                 verbs.append(verb)
 
-            # Sort by sentence and token index after parsing metadata
-            verbs.sort(key=lambda v: (v.sent_idx, v.token_idx))
-
-            logger.info(f"Extracted {len(verbs)} verb patterns")
+            logger.info(f"Extracted {len(verbs)} verb ontologies")
             return verbs
 
-    def find_direct_dependency(self, verb1: VerbPattern, verb2: VerbPattern) -> Optional[str]:
+    # Backward compatibility alias
+    def extract_verb_patterns(self) -> List[VerbOntology]:
+        """Backward compatibility: extract_verb_patterns calls extract_verb_ontologies"""
+        return self.extract_verb_ontologies()
+
+    def find_direct_dependency(self, verb1: VerbOntology, verb2: VerbOntology) -> Optional[str]:
         """
-        Check if there's a direct linguistic dependency between two verbs
+        Check if there's a direct syntactic dependency between two verbs
         """
         with self.driver.session() as session:
             query = """
-            MATCH (p1:Pattern {pattern_id: $id1})
-            MATCH (p2:Pattern {pattern_id: $id2})
-            MATCH (p1)-[r:LINGUISTIC_RELATION]-(p2)
+            MATCH (o1:Ontology {ontology_id: $id1})
+            MATCH (o2:Ontology {ontology_id: $id2})
+            MATCH (o1)-[r:SYNTACTIC_RELATION]-(o2)
             WHERE r.relation_type IN ['xcomp', 'advcl', 'ccomp', 'conj']
-            RETURN r.relation_type as rel_type, startNode(r) = p1 as is_outgoing
+            RETURN r.relation_type as rel_type, startNode(r) = o1 as is_outgoing
             """
 
-            result = session.run(query, id1=verb1.pattern_id, id2=verb2.pattern_id)
+            result = session.run(query, id1=verb1.ontology_id, id2=verb2.ontology_id)
             record = result.single()
 
             if record:
@@ -205,10 +221,9 @@ class ActionChainService:
 
         with self.driver.session() as session:
             query = """
-            MATCH (p:Pattern)-[:HAS_TEXT]->(text:PatternProperty {type: 'text'})
-            MATCH (ann:MarkdownAnnotation {uid: p.source_token_uid})
-            WHERE ann.source = 'multilevel_nlp'
-            RETURN text.value as text, ann.metadata as metadata
+            MATCH (o:Ontology)-[:HAS_TEXT]->(text:OntologyProperty {type: 'text'})
+            WHERE o.concept_type = 'token'
+            RETURN text.value as text, o.sent_idx as sent_idx, o.token_idx as token_idx
             """
 
             result = session.run(query)
@@ -216,19 +231,18 @@ class ActionChainService:
 
             for record in result:
                 try:
-                    metadata = json.loads(record['metadata']) if record['metadata'] else {}
                     tokens.append({
                         'text': record['text'].lower(),
-                        'sent_idx': metadata.get('sent_idx', -1),
-                        'token_idx': metadata.get('token_idx', -1)
+                        'sent_idx': record['sent_idx'],
+                        'token_idx': record['token_idx']
                     })
-                except (json.JSONDecodeError, KeyError):
+                except (KeyError, TypeError):
                     continue
 
             self._all_tokens_cache = tokens
             return tokens
 
-    def find_sequence_markers(self, verb1: VerbPattern, verb2: VerbPattern) -> List[Dict[str, Any]]:
+    def find_sequence_markers(self, verb1: VerbOntology, verb2: VerbOntology) -> List[Dict[str, Any]]:
         """
         Find sequence markers between two verbs
         """
@@ -259,9 +273,9 @@ class ActionChainService:
 
         return markers
 
-    def find_shared_entities(self, verb1: VerbPattern, verb2: VerbPattern) -> List[str]:
+    def find_shared_entities(self, verb1: VerbOntology, verb2: VerbOntology) -> List[str]:
         """
-        Find shared entities (objects, subjects) between two verb patterns
+        Find shared entities (objects, subjects) between two verb ontologies
         """
         entities1 = set([verb1.subject, verb1.object] + (verb1.arguments or []))
         entities2 = set([verb2.subject, verb2.object] + (verb2.arguments or []))
@@ -274,8 +288,8 @@ class ActionChainService:
 
     def determine_action_sequence(
         self,
-        verb1: VerbPattern,
-        verb2: VerbPattern
+        verb1: VerbOntology,
+        verb2: VerbOntology
     ) -> Optional[ActionSequence]:
         """
         Determine if two verb patterns form an action sequence
@@ -291,8 +305,8 @@ class ActionChainService:
         sequence_type = SequenceType.SEQUENTIAL
         has_strong_evidence = False
 
-        # Skip if same pattern
-        if verb1.pattern_id == verb2.pattern_id:
+        # Skip if same ontology
+        if verb1.ontology_id == verb2.ontology_id:
             return None
 
         # Skip if verb2 comes before verb1 in text
@@ -347,8 +361,8 @@ class ActionChainService:
         # High confidence threshold to prevent over-connection
         if confidence >= 0.7:
             return ActionSequence(
-                from_pattern_id=verb1.pattern_id,
-                to_pattern_id=verb2.pattern_id,
+                from_ontology_id=verb1.ontology_id,
+                to_ontology_id=verb2.ontology_id,
                 sequence_type=sequence_type,
                 confidence=min(confidence, 1.0),
                 evidence=evidence
@@ -358,22 +372,22 @@ class ActionChainService:
 
     def build_action_chains(self) -> Generator[Dict[str, Any], None, None]:
         """
-        Build action chains from verb patterns with progress reporting
+        Build action chains from verb ontologies with progress reporting
         """
-        # Extract all verb patterns
+        # Extract all verb ontologies
         yield {
             "stage": "extracting_verbs",
-            "message": "Extracting verb patterns..."
+            "message": "Extracting verb ontologies..."
         }
 
-        verbs = self.extract_verb_patterns()
+        verbs = self.extract_verb_ontologies()
         total_pairs = len(verbs) * (len(verbs) - 1) // 2
 
         yield {
             "stage": "extracted_verbs",
             "total_verbs": len(verbs),
             "total_pairs": total_pairs,
-            "message": f"Found {len(verbs)} verb patterns, analyzing {total_pairs} pairs..."
+            "message": f"Found {len(verbs)} verb ontologies, analyzing {total_pairs} pairs..."
         }
 
         # Analyze pairs and build sequences
@@ -438,8 +452,8 @@ class ActionChainService:
             # Check if there's already a path from to_id to from_id
             # If yes, adding from_id -> to_id would create a cycle
             query = """
-            MATCH (start:Pattern {pattern_id: $to_id})
-            MATCH (end:Pattern {pattern_id: $from_id})
+            MATCH (start:Ontology {ontology_id: $to_id})
+            MATCH (end:Ontology {ontology_id: $from_id})
             MATCH path = (start)-[:ACTION_SEQUENCE*]->(end)
             RETURN count(path) > 0 as has_path
             """
@@ -461,22 +475,22 @@ class ActionChainService:
 
             for seq in sequences:
                 # Check if this would create a cycle
-                if self._would_create_cycle(seq.from_pattern_id, seq.to_pattern_id):
+                if self._would_create_cycle(seq.from_ontology_id, seq.to_ontology_id):
                     skipped_cycles += 1
                     continue
 
                 # Use MERGE to create or update relationship
                 # This prevents duplicates by matching on nodes only
                 query = """
-                MATCH (p1:Pattern {pattern_id: $from_id})
-                MATCH (p2:Pattern {pattern_id: $to_id})
+                MATCH (o1:Ontology {ontology_id: $from_id})
+                MATCH (o2:Ontology {ontology_id: $to_id})
 
                 // Check if relationship already exists
-                OPTIONAL MATCH (p1)-[existing:ACTION_SEQUENCE]->(p2)
+                OPTIONAL MATCH (o1)-[existing:ACTION_SEQUENCE]->(o2)
 
-                WITH p1, p2, existing, existing IS NULL as is_new
+                WITH o1, o2, existing, existing IS NULL as is_new
 
-                MERGE (p1)-[r:ACTION_SEQUENCE]->(p2)
+                MERGE (o1)-[r:ACTION_SEQUENCE]->(o2)
                 ON CREATE SET
                     r.sequence_type = $sequence_type,
                     r.confidence = $confidence,
@@ -493,8 +507,8 @@ class ActionChainService:
 
                 result = session.run(
                     query,
-                    from_id=seq.from_pattern_id,
-                    to_id=seq.to_pattern_id,
+                    from_id=seq.from_ontology_id,
+                    to_id=seq.to_ontology_id,
                     sequence_type=seq.sequence_type.value,
                     confidence=seq.confidence,
                     evidence=seq.evidence
@@ -520,16 +534,16 @@ class ActionChainService:
         """
         with self.driver.session() as session:
             query = """
-            MATCH (p1:PatternProperty {type: 'text'})
-            MATCH (p2:PatternProperty {type: 'text'})
-            WHERE p1.value = p2.value
-              AND id(p1) < id(p2)
-              AND p1.value IS NOT NULL
-              AND p1.value <> ''
-            MERGE (p1)-[r:SAME_ENTITY {
+            MATCH (op1:OntologyProperty {type: 'text'})
+            MATCH (op2:OntologyProperty {type: 'text'})
+            WHERE op1.value = op2.value
+              AND id(op1) < id(op2)
+              AND op1.value IS NOT NULL
+              AND op1.value <> ''
+            MERGE (op1)-[r:SAME_ENTITY {
                 confidence: 1.0,
                 created_at: timestamp()
-            }]-(p2)
+            }]-(op2)
             RETURN count(r) as count
             """
 

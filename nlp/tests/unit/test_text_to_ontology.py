@@ -15,92 +15,96 @@
 
 import re
 
-from typing import List, Tuple, NamedTuple
+import spacy
+
+from typing import List, Tuple, NamedTuple, Optional
 
 from pathlib import Path
-from rdflib import Graph, Namespace, Literal
-from rdflib.namespace import RDF, RDFS, OWL
+from rdflib import Graph, Namespace, Literal, URIRef, RDF, RDFS
+from rdflib.namespace import RDF, RDFS, OWL, FOAF, SKOS, DC
 from graphviz import Digraph
 
-from src.processors.level1_tokenization_processor import Level1TokenizationProcessor
-from src.multilevel_analyzer import MultiLevelAnalyzer
+from src.validation.markdown_validator import validate_frontmatter
 
 
 # --------------------
 # Тестовый RDF граф
 # --------------------
 
-EX = Namespace("http://example.org/parkinson#")
+def get_first_sentence_ontology():
+    EX = Namespace("http://example.org/parkinson#")
 
-g = Graph()
-g.bind("", EX)
+    g = Graph()
+    g.bind("", EX)
 
-def concept(name, ru=None, en=None):
-    n = EX[name]
-    g.add((n, RDF.type, OWL.Thing))
-    if ru:
-        g.add((n, RDFS.label, Literal(ru, "ru")))
-    if en:
-        g.add((n, RDFS.label, Literal(en, "en")))
-    return n
+    def concept(name, ru=None, en=None):
+        n = EX[name]
+        g.add((n, RDF.type, OWL.Thing))
+        if ru:
+            g.add((n, RDFS.label, Literal(ru, "ru")))
+        if en:
+            g.add((n, RDFS.label, Literal(en, "en")))
+        return n
 
-def relation(s, p, o):
-    g.add((s, EX[p], o))
-
-
-# --------- Concepts ---------
-
-открыть = concept("открыть", ru="открыть")
-дофамин = concept("дофамин", ru="дофамин")
-нейромедиатор = concept("нейромедиатор", ru="нейромедиатор")
-_1950ых = concept("1950ых", ru="1950-ых")
-
-исследование = concept("исследование", ru="исследование", en="research")
-проводить = concept("проводить", ru="проводить", en="conduct")
-
-болезнь = concept("болезнь", ru="болезнь", en="disease")
-паркинсон = concept("Паркинсон", ru="Паркинсон", en="Parkinson")
-болезнь_Паркинсона = concept(
-    "болезнь_Паркинсона",
-    ru="болезнь Паркинсона",
-    en="Parkinson's disease"
-)
-БП = concept("БП", ru="БП", en="PD")
-
-сформировать = concept("сформировать", ru="сформировать", en="generated")
-совокупность = concept("совокупность", ru="совокупность", en="body")
-знание = concept("знание", ru="знание", en="knowledge")
-сложный = concept("сложный", ru="сложный", en="complex")
-богатый = concept("богатый", ru="богатый", en="rich")
+    def relation(s, p, o):
+        g.add((s, EX[p], o))
 
 
-# --------- Semantic relations (question-based) ---------
+    # --------- Concepts ---------
 
-relation(открыть, "что", дофамин)
-relation(открыть, "когда", _1950ых)
-relation(дофамин, "как_что", нейромедиатор)
+    открыть = concept("открыть", ru="открыть")
+    дофамин = concept("дофамин", ru="дофамин")
+    нейромедиатор = concept("нейромедиатор", ru="нейромедиатор")
+    _1950ых = concept("1950ых", ru="1950-ых")
 
-relation(исследование, "с_какого_момента", открыть)
-relation(исследование, "чего", болезнь)
-relation(исследование, "что_сделали", сформировать)
+    исследование = concept("исследование", ru="исследование", en="research")
+    проводить = concept("проводить", ru="проводить", en="conduct")
 
-relation(проводить, "что", исследование)
+    болезнь = concept("болезнь", ru="болезнь", en="disease")
+    паркинсон = concept("Паркинсон", ru="Паркинсон", en="Parkinson")
+    болезнь_Паркинсона = concept(
+        "болезнь_Паркинсона",
+        ru="болезнь Паркинсона",
+        en="Parkinson's disease"
+    )
+    БП = concept("БП", ru="БП", en="PD")
 
-relation(болезнь, "какой", паркинсон)
-relation(БП, "сокращение", болезнь_Паркинсона)
+    сформировать = concept("сформировать", ru="сформировать", en="generated")
+    совокупность = concept("совокупность", ru="совокупность", en="body")
+    знание = concept("знание", ru="знание", en="knowledge")
+    сложный = concept("сложный", ru="сложный", en="complex")
+    богатый = concept("богатый", ru="богатый", en="rich")
 
-relation(сформировать, "что", совокупность)
-relation(совокупность, "о_чём", болезнь)
-relation(совокупность, "чего", знание)
-relation(совокупность, "какая", сложный)
-relation(совокупность, "какая", богатый)
+
+    # --------- Semantic relations (question-based) ---------
+
+    relation(открыть, "что", дофамин)
+    relation(открыть, "когда", _1950ых)
+    relation(дофамин, "как_что", нейромедиатор)
+
+    relation(исследование, "с_какого_момента", открыть)
+    relation(исследование, "чего", болезнь)
+    relation(исследование, "что_сделали", сформировать)
+
+    relation(проводить, "что", исследование)
+
+    relation(болезнь, "какой", паркинсон)
+    relation(БП, "сокращение", болезнь_Паркинсона)
+
+    relation(сформировать, "что", совокупность)
+    relation(совокупность, "о_чём", болезнь)
+    relation(совокупность, "чего", знание)
+    relation(совокупность, "какая", сложный)
+    relation(совокупность, "какая", богатый)
+
+    return g
 
 
 # --------------------
 # Graphviz visualization (for tests)
 # --------------------
 
-def visualize_ontology(rdf_graph, filename="../data/nlp/ontology_test"):
+def visualize_ontology(rdf_graph, filename):
     dot = Digraph(
         name="Ontology",
         format="png",
@@ -163,27 +167,116 @@ def visualize_ontology(rdf_graph, filename="../data/nlp/ontology_test"):
 
 # Вспомогательные функции
 
-def find_h1_headers_simple(markdown_text: str) -> Tuple[List[dict], int]:
-    """Подсчёт заголовков первого уровня"""
-    headers = []
-    pattern = re.compile(r'^# (.+)$', re.MULTILINE)
+
+
+def text_to_ontology(
+    text: str,
+    nlp: Optional[spacy.language.Language] = None,
+    base_uri: str = "http://example.org/ontology#"
+) -> Graph:
+    """
+    Преобразует текст в онтологию используя spaCy NLP анализ.
+    Использует подход с concept() и relation() для построения графа.
     
-    for match in pattern.finditer(markdown_text):
-        headers.append({
-            'text': match.group(1).strip(),
-            'start': match.start(),
-            'end': match.end(),
-            'full_match': match.group(0)
-        })
+    Args:
+        text: Исходный текст
+        nlp: Модель spaCy
+        base_uri: Базовый URI для онтологии
+        
+    Returns:
+        RDF граф с извлеченными концептами и отношениями
+    """
+    if nlp is None:
+        nlp = spacy.load("en_core_web_sm")
     
-    return headers, len(headers)
+    # Создаем граф и namespace
+    EX = Namespace(base_uri)
+    g = Graph()
+    g.bind("", EX)
+    
+    # Вспомогательные функции для создания концептов и связей
+    def concept(name, label_text=None, lang="en"):
+        """Создает концепт в графе"""
+        n = EX[name]
+        g.add((n, RDF.type, OWL.Thing))
+        if label_text:
+            g.add((n, RDFS.label, Literal(label_text, lang)))
+        return n
+    
+    def relation(subj, pred, obj):
+        """Создает отношение между концептами"""
+        g.add((subj, EX[pred], obj))
+    
+    # Обрабатываем текст через spaCy
+    doc = nlp(text)
+    
+    # Словарь для хранения уже созданных концептов (по лемме)
+    concepts_cache = {}
+    
+    # Создаем концепты для каждого значимого токена
+    for token in doc:
+        # Пропускаем пунктуацию и служебные слова
+        if token.is_punct or token.is_space:
+            continue
+        
+        # Используем лемму как идентификатор концепта
+        lemma = token.lemma_.lower()
+        
+        # Создаем уникальный ID для токена
+        token_id = f"{lemma}_{token.i}"
+        
+        if token_id not in concepts_cache:
+            # Создаем концепт
+            token_concept = concept(token_id, label_text=token.text)
+            concepts_cache[token_id] = token_concept
+    
+    # Создаем отношения на основе синтаксических зависимостей
+    for token in doc:
+        if token.is_punct or token.is_space:
+            continue
+        
+        token_id = f"{token.lemma_.lower()}_{token.i}"
+        token_concept = concepts_cache.get(token_id)
+        
+        if token_concept and token.head != token:
+            head_id = f"{token.head.lemma_.lower()}_{token.head.i}"
+            head_concept = concepts_cache.get(head_id)
+            
+            if head_concept:
+                # Создаем отношение на основе типа зависимости
+                dep_type = token.dep_
+                relation(head_concept, dep_type, token_concept)
+    
+    # Обрабатываем именованные сущности
+    for ent in doc.ents:
+        # Создаем концепт для сущности
+        ent_id = f"entity_{ent.text.replace(' ', '_')}"
+        ent_concept = concept(ent_id, label_text=ent.text)
+        
+        # Добавляем тип сущности
+        ent_type_concept = concept(f"entity_type_{ent.label_}", label_text=ent.label_)
+        relation(ent_concept, "entity_type", ent_type_concept)
+        
+        # Связываем токены сущности с самой сущностью
+        for token in ent:
+            token_id = f"{token.lemma_.lower()}_{token.i}"
+            token_concept = concepts_cache.get(token_id)
+            if token_concept:
+                relation(ent_concept, "has_token", token_concept)
+    
+    return g
+
 
 # Получение текста
 
-def test_tokenization_first_sentence():
+def test_text_to_ontology():
     with open(Path('../data/nlp/Новый формат статьи. Первый этап.eng.md'), 'r', encoding='utf8') as f:
         text = f.read().strip()
     
+    # Если проходит валидация значит у нас уже есть вся необходимая структура Markdown файла
+    validation_result = validate_frontmatter(text)
+
+
     # Прежде чем брать первое предложение
     # Нужно
     # - отделить текст от мета информации
@@ -196,29 +289,25 @@ def test_tokenization_first_sentence():
     meta = parts_one[1].strip()
     text = parts_two[0].strip()
     refs = parts_two[1].strip()
+    
+    nlp = spacy.load("en_core_web_sm")
 
+    text = "Since the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson's disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors."
 
-    # Проверка, что обязательно есть только 1 заголовок первого уровня
-    pattern = re.compile(r'^# ', re.MULTILINE)
-    matches, length = find_h1_headers_simple(text)
+    # Эта онтология должна рассчитываться NLP сервисом и быть там
+    current_first_sentence_ontology = text_to_ontology(text, nlp)
+    # Это тестовая онтология должна быть здесь, захардкожена как эталон
+    test_example_first_sentence_ontology = get_first_sentence_ontology()
 
-    assert length == 1, 'Ошибка. Не каноничный Markdown. Должен быть только один заголовок первого уровня.'
-    print(length)
+    visualize_ontology(current_first_sentence_ontology, "../data/nlp/ontology_current")
+    visualize_ontology(test_example_first_sentence_ontology, "../data/nlp/ontology_test")
 
-    # for match in pattern.finditer(text):
-    #     print(f"Найдено на позиции {match.start()}: '{match.group()}'")
-    #     print(f"Строка: {match.span()}")
+    assert current_first_sentence_ontology.isomorphic(test_example_first_sentence_ontology), 'Ошибка. Текущая онтология первого предложения не соответствет тестовой онтологии первого предложения.'
 
-    # print(text)
 
     # Подобно Jupyter блокноту, мета информация, заголовки, абзацы, таблицы, илюстрации и описания к ним
     # могут быть отдельными "ячейками"
 
-
-    # 
-    # process_level_1 = Level1TokenizationProcessor(enable_voting=False)
-    # result = process_level_1.process_text(text)
-    # sentences = [s['text'] for s in result['sentences']]
 
     # print('ТУТ')
     # assert str(sentences[6]) == "The hallmarks of Parkinson's disease\n\n## Abstract\n\nSince the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson's disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors."
@@ -236,4 +325,4 @@ def test_division():
     assert 10 / 2 == 5
 
 if __name__ == '__main__':
-    test_tokenization_first_sentence()
+    print('Здесь должны быть примеры использования')
