@@ -1,7 +1,4 @@
-"""
-Тесты для преобразования текста в онтологию - расширенная версия с 4 предложениями
-"""
-
+import pytest
 import spacy
 from src.ontology.builder import OntologyBuilder
 from src.ontology.reference.ontologies import (
@@ -18,11 +15,14 @@ from src.ontology.visualization.graph_viz import (
 
 
 def test_multi_sentence_ontology():
-    """Тестирует 4 предложения с межпредложенческими связями"""
+    """Тестирует рефакторенный билдер"""
     
     nlp = spacy.load("en_core_web_sm")
-    builder = OntologyBuilder()
-    # builder.debug = True  # Выключили debug
+    
+    builder = OntologyBuilder(
+        config_path="src/ontology/config/domain_config.json"
+    )
+    builder.debug = True  # Для отладки
     
     sentences = [
         "Since the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson's disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors.",
@@ -42,9 +42,8 @@ def test_multi_sentence_ontology():
     comparisons = []
     f1_scores = []
     
-    print("Processing sentences...\n")
+    print("Processing sentences with REFACTORED builder...\n")
     
-    # Тестируем каждое предложение отдельно
     for i, (text, expected_graph) in enumerate(zip(sentences, expected_ontologies), 1):
         print(f"Sentence {i}: {text[:70]}...")
         
@@ -91,7 +90,7 @@ def test_multi_sentence_ontology():
     overall_f1 = sum(f1_scores) / len(f1_scores) if f1_scores else 0
     
     print("\n" + "="*60)
-    print("OVERALL STATISTICS")
+    print("OVERALL STATISTICS (REFACTORED)")
     print("="*60)
     print(f"\nIndividual F1-Scores:")
     for i, score in enumerate(f1_scores, 1):
@@ -107,7 +106,7 @@ def test_multi_sentence_ontology():
     else:
         print(f"\n✅ OVERALL PASSED: Average F1-Score is {overall_f1:.2%}")
     
-    print("\n🎉 All tests passed successfully!")
+    print("\n🎉 All tests passed successfully with REFACTORED builder!")
 
 
 if __name__ == '__main__':

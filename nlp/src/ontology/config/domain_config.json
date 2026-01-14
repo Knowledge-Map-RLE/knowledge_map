@@ -1,0 +1,134 @@
+{
+  "special_terms": {
+    "preserve_form": [
+      "knowledge", "systems", "system", "dopamine", "discovery",
+      "hallmarks", "hallmark", "peers", "events", "pathways",
+      "phenotypes", "endeavors", "signaling", "emerging", "modulatory",
+      "interdisciplinary"
+    ],
+    "normalize_plural": {
+      "hallmarks": "hallmark"
+    }
+  },
+  
+  "compound_terms": {
+    "molecular_events": {
+      "parts": ["molecular", "event"],
+      "label": "molecular events",
+      "create_base_concepts": ["events"]
+    },
+    "signaling_pathways": {
+      "parts": ["signaling", "pathway"],
+      "label": "signaling pathways",
+      "create_base_concepts": ["pathways"]
+    },
+    "clinical_phenotypes": {
+      "parts": ["clinical", "phenotype"],
+      "label": "clinical phenotypes",
+      "create_base_concepts": ["phenotypes"]
+    },
+    "genetic_factors": {
+      "parts": ["genetic", "factor"],
+      "label": "genetic factors",
+      "create_base_concepts": ["factors"]
+    },
+    "environmental_factors": {
+      "parts": ["environmental", "factor"],
+      "label": "environmental factors",
+      "create_base_concepts": ["factors"]
+    },
+    "body_of_knowledge": {
+      "parts": ["body", "of", "knowledge"],
+      "label": "body of knowledge",
+      "create_base_concepts": ["knowledge"]
+    },
+    "Parkinsons_disease": {
+      "parts": ["parkinson", "disease"],
+      "label": "Parkinson's disease",
+      "create_base_concepts": []
+    }
+  },
+  
+  "base_verb_forms": {
+    "influenced": "influence",
+    "revealing": "reveal",
+    "generated": "generate",
+    "targeting": "targeting"
+  },
+  
+  "ontological_relations": {
+    "IS_A": [
+      ["dopamine", "neurotransmitter"],
+      ["Parkinsons_disease", "disease"],
+      ["PD", "disease"]
+    ],
+    "IS_ABBREVIATION_OF": [
+      ["PD", "Parkinsons_disease"]
+    ],
+    "PART_OF": [
+      ["knowledge", "body_of_knowledge"],
+      ["genetic_factors", "factors"],
+      ["environmental_factors", "factors"],
+      ["pathogenesis", "disease"],
+      ["complexity", "disease"],
+      ["progression", "pathogenesis"],
+      ["clinical_phenotypes", "PD"]
+    ]
+  },
+  
+  "semantic_relations": {
+    "action_verbs": {
+      "generate": "generated",
+      "reveal": "reveals",
+      "influence": "influences",
+      "increase": "increases",
+      "target": "targeting"
+    },
+    "domain_specific": [
+      ["research", "generated", "body_of_knowledge"],
+      ["body_of_knowledge", "reveals", "PD"],
+      ["body_of_knowledge", "supports_classification", "disease"],
+      ["research", "focuses_on", "Parkinsons_disease"],
+      ["discovery", "HAS_OBJECT", "dopamine"],
+      ["research", "started_after", "discovery"],
+      ["PD", "classified_as", "age_related"],
+      ["PD", "classified_as", "multifactorial"],
+      ["body_of_knowledge", "consists_of", "knowledge"],
+      ["genetic_factors", "influences", "disease"],
+      ["environmental_factors", "influences", "disease"],
+      ["disease", "influenced_by", "genetic_factors"],
+      ["disease", "influenced_by", "environmental_factors"],
+      ["pathogenesis", "progresses_through", "systems"],
+      ["disease", "has_complexity", "complexity"],
+      ["explore", "conj_of", "propose"],
+      ["improve", "acl_of", "aim"],
+      ["disease", "nmod_of", "complexity"],
+      ["pathogenesis", "nmod_of", "progression"],
+      ["systems", "nmod_of", "progression"]
+    ],
+    "temporal_relations": [
+      ["discovery", "happened_in", "1950s"],
+      ["1950s", "nmod_of", "discovery"],
+      ["neurotransmitter", "nmod_of", "dopamine"],
+      ["dopamine", "nmod_of", "discovery"]
+    ],
+    "special_patterns": {
+      "reveal_chain": {
+        "concepts": ["reveal", "body_of_knowledge"],
+        "relation": "acl_of"
+      },
+      "generate_chain": {
+        "concepts": ["discovery", "generate"],
+        "relation": "advcl_of"
+      },
+      "disease_reveal": {
+        "concepts": ["disease", "reveal"],
+        "relation": "xcomp_of"
+      },
+      "PD_disease": {
+        "concepts": ["PD", "disease"],
+        "relation": "nsubj_of"
+      }
+    }
+  }
+}

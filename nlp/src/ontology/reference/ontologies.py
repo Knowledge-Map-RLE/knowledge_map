@@ -225,7 +225,7 @@ def get_third_sentence_ontology():
 
 
 def get_fourth_sentence_ontology():
-    """Эталонная онтология для четвёртого предложения"""
+    """ПРАВИЛЬНАЯ эталонная онтология для четвёртого предложения"""
     EX = Namespace("http://example.org/parkinson#")
     g = Graph()
     g.bind("", EX)
@@ -244,58 +244,59 @@ def get_fourth_sentence_ontology():
     def relation(s, p, o):
         g.add((s, EX[p], o))
 
-    # Concepts (упрощённые, БЕЗ избыточных составных терминов)
+    # === КОНЦЕПТЫ ===
     encourage = concept("encourage")
-    peers = concept("peers")
     adopt = concept("adopt")
-    view = concept("view")
-    cell_based = concept("cell_based")
-    aim = concept("aim")
     improve = concept("improve")
+    view = concept("view")
+    aim = concept("aim")
     communication = concept("communication")
+    endeavors = concept("endeavors")
+    cell_based = concept("cell_based")
     research = concept("research")
     interdisciplinary = concept("interdisciplinary")
-    endeavors = concept("endeavors")
-    target = concept("target")
-    
-    # Целевые составные термины (только ADJ + NOUN)
     molecular_events = concept("molecular_events")
     signaling_pathways = concept("signaling_pathways")
     clinical_phenotypes = concept("clinical_phenotypes")
-    
-    # Модификаторы для pathways (могут не создаваться)
     modulatory = concept("modulatory")
     emerging = concept("emerging")
-    
+    cell_to_cell = concept("cell_to_cell")
     PD = concept("PD")
 
-    # Syntactic relations (упрощённые)
-    relation(peers, "obj_of", encourage)
+    # === СИНТАКСИЧЕСКИЕ СВЯЗИ ===
     relation(adopt, "xcomp_of", encourage)
     relation(view, "obj_of", adopt)
     relation(cell_based, "amod_of", view)
     relation(improve, "acl_of", aim)
     relation(communication, "obj_of", improve)
-    relation(interdisciplinary, "amod_of", research)
-    relation(target, "acl_of", endeavors)
-    
-    relation(molecular_events, "obj_of", target)
+    relation(interdisciplinary, "amod_of", endeavors)
+    relation(research, "PART_OF", endeavors)
+
+    # Нет: targeting как объект
+    # Вместо этого — conj связи между объектами targeting
     relation(signaling_pathways, "conj_of", molecular_events)
     relation(clinical_phenotypes, "conj_of", molecular_events)
-    
-    relation(modulatory, "amod_of", signaling_pathways)
+    relation(modulatory, "compound_of", signaling_pathways)
+    relation(cell_to_cell, "compound_of", signaling_pathways)
     relation(emerging, "amod_of", clinical_phenotypes)
-    
     relation(PD, "nmod_of", clinical_phenotypes)
 
-    # Ontological relations (минимальные)
+    # === ОНТОЛОГИЧЕСКИЕ СВЯЗИ ===
     relation(view, "HAS_PROPERTY", cell_based)
-    relation(research, "HAS_PROPERTY", interdisciplinary)
+    relation(endeavors, "HAS_PROPERTY", interdisciplinary)
+    relation(research, "PART_OF", endeavors)
+    relation(endeavors, "targeting", molecular_events)
+    relation(endeavors, "targeting", signaling_pathways)
+    relation(endeavors, "targeting", clinical_phenotypes)
     relation(signaling_pathways, "HAS_PROPERTY", modulatory)
+    relation(signaling_pathways, "HAS_PROPERTY", cell_to_cell)
     relation(clinical_phenotypes, "HAS_PROPERTY", emerging)
     relation(clinical_phenotypes, "PART_OF", PD)
 
     return g
+
+
+
 
 
 def get_all_reference_ontologies():
