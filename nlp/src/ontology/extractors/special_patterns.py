@@ -148,10 +148,35 @@ class SpecialPatternMatcher:
                         if modifier_uri == compound_uri:
                             continue
                         
-                        relations.append((compound_uri, "HAS_PROPERTY", modifier_uri))
-                        relations.append((modifier_uri, "amod_of", compound_uri))
+                        # Проверка на дублирование перед добавлением
+                        if not any(rel[0] == compound_uri and rel[1] == "HAS_PROPERTY" and rel[2] == modifier_uri for rel in relations):
+                            relations.append((compound_uri, "HAS_PROPERTY", modifier_uri))
+                        if not any(rel[0] == modifier_uri and rel[1] == "amod_of" and rel[2] == compound_uri for rel in relations):
+                            relations.append((modifier_uri, "amod_of", compound_uri))
                         if debug:
                             print(f"Added {modifier_concept_name} -> {compound_name} HAS_PROPERTY")
+                # Обработка конъюнктивных модификаторов
+                if token.dep_ == "conj" and token in token_to_concept:
+                    conj_modifier_concept_name = str(token_to_concept[token]).split("#")[-1]
+                    
+                    if conj_modifier_concept_name in compound_name:
+                        if debug:
+                            print(f"Skipping self-conj-modifier: {conj_modifier_concept_name} is part of {compound_name}")
+                        continue
+                    
+                    if conj_modifier_concept_name in concept_cache:
+                        conj_modifier_uri = concept_cache[conj_modifier_concept_name]
+                        
+                        if conj_modifier_uri == compound_uri:
+                            continue
+                        
+                        # Проверка на дублирование перед добавлением
+                        if not any(rel[0] == compound_uri and rel[1] == "HAS_PROPERTY" and rel[2] == conj_modifier_uri for rel in relations):
+                            relations.append((compound_uri, "HAS_PROPERTY", conj_modifier_uri))
+                        if not any(rel[0] == conj_modifier_uri and rel[1] == "amod_of" and rel[2] == compound_uri for rel in relations):
+                            relations.append((conj_modifier_uri, "amod_of", compound_uri))
+                        if debug:
+                            print(f"Added conj {conj_modifier_concept_name} -> {compound_name} HAS_PROPERTY")
         
         # 2. Внешние модификаторы
         for compound_name, data in compound_data.items():
@@ -175,8 +200,11 @@ class SpecialPatternMatcher:
                     [child.doc[child.i + i].text for i in range(5)] == ["cell", "-", "to", "-", "cell"]):
                     cell_to_cell_uri = concept_cache.get("cell_to_cell")
                     if cell_to_cell_uri:
-                        relations.append((cell_to_cell_uri, "compound_of", compound_uri))
-                        relations.append((compound_uri, "HAS_PROPERTY", cell_to_cell_uri))
+                        # Проверка на дублирование перед добавлением
+                        if not any(rel[0] == cell_to_cell_uri and rel[1] == "compound_of" and rel[2] == compound_uri for rel in relations):
+                            relations.append((cell_to_cell_uri, "compound_of", compound_uri))
+                        if not any(rel[0] == compound_uri and rel[1] == "HAS_PROPERTY" and rel[2] == cell_to_cell_uri for rel in relations):
+                            relations.append((compound_uri, "HAS_PROPERTY", cell_to_cell_uri))
                         if debug:
                             print("Added: cell_to_cell --[compound_of]--> signaling_pathways")
             
@@ -189,8 +217,11 @@ class SpecialPatternMatcher:
                             continue
                         if modifier_concept_name in concept_cache:
                             modifier_uri = concept_cache[modifier_concept_name]
-                            relations.append((modifier_uri, "compound_of", compound_uri))
-                            relations.append((compound_uri, "HAS_PROPERTY", modifier_uri))
+                            # Проверка на дублирование перед добавлением
+                            if not any(rel[0] == modifier_uri and rel[1] == "compound_of" and rel[2] == compound_uri for rel in relations):
+                                relations.append((modifier_uri, "compound_of", compound_uri))
+                            if not any(rel[0] == compound_uri and rel[1] == "HAS_PROPERTY" and rel[2] == modifier_uri for rel in relations):
+                                relations.append((compound_uri, "HAS_PROPERTY", modifier_uri))
                             if debug:
                                 print(f"Added external compound: {modifier_concept_name} -> {compound_name} HAS_PROPERTY")
             
@@ -203,8 +234,11 @@ class SpecialPatternMatcher:
                             continue
                         if modifier_concept_name in concept_cache:
                             modifier_uri = concept_cache[modifier_concept_name]
-                            relations.append((compound_uri, "HAS_PROPERTY", modifier_uri))
-                            relations.append((modifier_uri, "amod_of", compound_uri))
+                            # Проверка на дублирование перед добавлением
+                            if not any(rel[0] == compound_uri and rel[1] == "HAS_PROPERTY" and rel[2] == modifier_uri for rel in relations):
+                                relations.append((compound_uri, "HAS_PROPERTY", modifier_uri))
+                            if not any(rel[0] == modifier_uri and rel[1] == "amod_of" and rel[2] == compound_uri for rel in relations):
+                                relations.append((modifier_uri, "amod_of", compound_uri))
                             if debug:
                                 print(f"Added external amod: {modifier_concept_name} -> {compound_name} HAS_PROPERTY")
         

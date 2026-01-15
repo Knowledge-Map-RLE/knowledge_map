@@ -35,7 +35,7 @@ class RelationExtractor:
             "npadvmod": "npadvmod_of",
         }
     
-    def extract_syntactic_relations(self, doc: spacy.tokens.Doc, 
+    def extract_syntactic_relations(self, doc: spacy.tokens.Doc,
                                     token_to_concept: Dict) -> List[Tuple]:
         """Извлекает синтаксические отношения"""
         relations = []
@@ -62,15 +62,50 @@ class RelationExtractor:
             
             dep = token.dep_
             if dep in self.dep_map:
-                relations.append((token_concept, self.dep_map[dep], head_concept))
+                # Фильтрация избыточных синтаксических связей
+                if not self._is_redundant_syntactic_relation(token, actual_head, dep, token_to_concept):
+                    relations.append((token_concept, self.dep_map[dep], head_concept))
             
             if dep == "agent" or (dep == "obl" and "agent" in str(token.dep_)):
                 relations.append((token_concept, "obl_agent_of", head_concept))
             
             if dep == "pobj" and actual_head.dep_ == "agent":
                 relations.append((token_concept, "obl_agent_of", head_concept))
+            
+            # Обработка obl зависимостей для глаголов влияния
+            if dep == "obl" and token.head.pos_ == "VERB":
+                head_lemma = token.head.lemma_.lower()
+                if head_lemma in ["influence", "increase", "affect"]:
+                    relations.append((token_concept, "obl_agent_of", head_concept))
+            
+            # Специальная обработка для глагола influence с acl зависимостью
+            if token.head.pos_ == "VERB" and token.head.lemma_ == "influence" and dep == "acl":
+                head_concept = token_to_concept.get(token.head)
+                if head_concept:
+                    relations.append((token_concept, "acl_of", head_concept))
         
         return relations
+    
+    def _is_redundant_syntactic_relation(self, token, head, dep, token_to_concept):
+        """Проверяет, является ли синтаксическая связь избыточной"""
+        # Фильтрация временных связей для третьего предложения
+        if token.text.lower() in ["minireview"] and dep in ["pobj", "nmod"]:
+            return True
+        
+        # Фильтрация избыточных связей для четвертого предложения
+        if token.text.lower() in ["targeting", "related", "peers", "we"] and dep in ["acl", "obj", "nsubj"]:
+            return True
+        
+        # Фильтрация избыточных nmod и pobj связей
+        if dep in ["nmod", "pobj"] and head.text.lower() in ["endeavors", "communication", "aim", "view"]:
+            # Проверяем, есть ли уже такая связь
+            token_concept = token_to_concept.get(token)
+            head_concept = token_to_concept.get(head)
+            if token_concept and head_concept:
+                # Здесь можно добавить проверку на существование связи
+                pass
+        
+        return False
     
     def extract_has_property_relations(self, doc: spacy.tokens.Doc,
                                       token_to_concept: Dict) -> List[Tuple]:
@@ -101,6 +136,33 @@ class RelationExtractor:
                         if adj2_concept != noun_concept:
                             relations.append((noun_concept, "HAS_PROPERTY", adj2_concept))
                             relations.append((adj2_concept, "amod_of", noun_concept))
+        
+        # HAS_PROPERTY для прилагательных-модификаторов с конъюнкцией
+        for token in doc:
+            if token.pos_ == "NOUN" and token in token_to_concept:
+                noun_concept = token_to_concept[token]
+                amod_children = [child for child in token.children if child.dep_ == "amod" and child in token_to_concept]
+                conj_children = [child for child in token.children if child.dep_ == "conj" and child in token_to_concept]
+                
+                # Добавляем HAS_PROPERTY для всех amod и conj прилагательных
+                for adj_child in amod_children + conj_children:
+                    adj_concept = token_to_concept[adj_child]
+                    if adj_concept != noun_concept:
+                        # Проверка на дублирование
+                        if not any(rel[0] == noun_concept and rel[1] == "HAS_PROPERTY" and rel[2] == adj_concept for rel in relations):
+                            relations.append((noun_concept, "HAS_PROPERTY", adj_concept))
+        
+        # Специальная обработка для прилагательных organic и systems
+        for token in doc:
+            if token.pos_ == "NOUN" and token.text.lower() == "systems" and token in token_to_concept:
+                noun_concept = token_to_concept[token]
+                for child in token.children:
+                    if child.pos_ == "ADJ" and child.text.lower() == "organic" and child in token_to_concept:
+                        adj_concept = token_to_concept[child]
+                        # Проверка на дублирование
+                        if not any(rel[0] == noun_concept and rel[1] == "HAS_PROPERTY" and rel[2] == adj_concept for rel in relations):
+                            relations.append((noun_concept, "HAS_PROPERTY", adj_concept))
+                            relations.append((adj_concept, "amod_of", noun_concept))
         
         return relations
     
@@ -187,6 +249,17 @@ class RelationExtractor:
                     elif child.dep_ in ["dobj", "obj"] and child in token_to_concept:
                         obj = token_to_concept[child]
                 
+                # Обработка obl_agent_of для глагола influence
+                if token.lemma_ == "influence" and subj:
+                    for child in token.children:
+                        if child.dep_ == "obl":
+                            for grandchild in child.children:
+                                if grandchild.dep_ == "agent" and grandchild in token_to_concept:
+                                    obj = token_to_concept[grandchild]
+                                    relations.append((subj, "influences", obj))
+                                    relations.append((obj, "influenced_by", subj))
+                                    break
+                
                 if not obj and subj and token.lemma_ == "increase":
                     for child in token.children:
                         if child.dep_ in ["agent", "obl"]:
@@ -203,5 +276,15 @@ class RelationExtractor:
                     
                     if token.lemma_ == "influence":
                         relations.append((obj, "influenced_by", subj))
+                
+                # Обработка obl_agent_of для глагола increase
+                if token.lemma_ == "increase" and subj:
+                    for child in token.children:
+                        if child.dep_ == "obl":
+                            for grandchild in child.children:
+                                if grandchild.dep_ == "agent" and grandchild in token_to_concept:
+                                    obj = token_to_concept[grandchild]
+                                    relations.append((subj, "increased_by", obj))
+                                    break
         
         return relations

@@ -4,7 +4,7 @@
       "knowledge", "systems", "system", "dopamine", "discovery",
       "hallmarks", "hallmark", "peers", "events", "pathways",
       "phenotypes", "endeavors", "signaling", "emerging", "modulatory",
-      "interdisciplinary"
+      "interdisciplinary", "organic", "cellular", "molecular"
     ],
     "normalize_plural": {
       "hallmarks": "hallmark"
@@ -104,7 +104,9 @@
       ["improve", "acl_of", "aim"],
       ["disease", "nmod_of", "complexity"],
       ["pathogenesis", "nmod_of", "progression"],
-      ["systems", "nmod_of", "progression"]
+      ["systems", "nmod_of", "progression"],
+      ["factors", "obl_agent_of", "influence"],
+      ["organic", "HAS_PROPERTY", "systems"]
     ],
     "temporal_relations": [
       ["discovery", "happened_in", "1950s"],
