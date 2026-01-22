@@ -1,0 +1,7 @@
+digraph KnowledgeMap {
+	graph [fontsize=12 label="Knowledge Map" rankdir=LR]
+	node [fillcolor=lightblue shape=box style="rounded,filled"]
+	block_0 [label="complexity increased by progression" fillcolor=lightblue]
+	block_1 [label="progression happens_between systems" fillcolor=lightblue]
+	block_0 -> block_1
+}

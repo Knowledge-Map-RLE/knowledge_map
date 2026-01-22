@@ -1,0 +1,9 @@
+digraph KnowledgeMap {
+	graph [fontsize=12 label="Knowledge Map" rankdir=LR]
+	node [fillcolor=lightblue shape=box style="rounded,filled"]
+	block_0 [label="research generated body_of_knowledge" fillcolor=lightblue]
+	block_1 [label="body_of_knowledge reveals PD" fillcolor=lightblue]
+	block_2 [label="factors influenced disease" fillcolor=lightblue]
+	block_0 -> block_1
+	block_1 -> block_2
+}

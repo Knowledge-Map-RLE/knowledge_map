@@ -1,0 +1,18 @@
+digraph KnowledgeMap {
+	graph [fontsize=12 label="Knowledge Map" rankdir=LR]
+	node [fillcolor=lightblue shape=box style="rounded,filled"]
+	sentence1_block_0 [label="research generated body_of_knowledge" fillcolor=lightblue]
+	sentence1_block_1 [label="body_of_knowledge reveals PD" fillcolor=lightblue]
+	sentence1_block_2 [label="factors influenced disease" fillcolor=lightblue]
+	sentence2_block_0 [label="complexity increased by progression" fillcolor=lightblue]
+	sentence2_block_1 [label="progression happens_between systems" fillcolor=lightblue]
+	sentence3_block_0 [label="we explore complexity" fillcolor=lightblue]
+	sentence3_block_1 [label="we propose approach" fillcolor=lightblue]
+	sentence4_block_0 [label="we encourage peers" fillcolor=lightblue]
+	sentence4_block_1 [label="peers adopt view" fillcolor=lightblue]
+	sentence1_block_0 -> sentence1_block_1
+	sentence1_block_1 -> sentence1_block_2
+	sentence2_block_0 -> sentence2_block_1
+	sentence3_block_0 -> sentence3_block_1
+	sentence4_block_0 -> sentence4_block_1
+}
