@@ -85,12 +85,49 @@ export interface DataExtractionResponse {
   files?: Record<string, string>;
 }
 
-export async function uploadPdfForExtraction(file: File): Promise<DataExtractionResponse> {
+export async function uploadPdfForExtraction(file: File, onProgress?: (progress: number) => void): Promise<DataExtractionResponse> {
   const form = new FormData();
   form.append('file', file);
+  
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/data_extraction`, { method: 'POST', body: form });
-  return res.json();
+  
+  // If progress tracking is requested, use XMLHttpRequest instead of fetch
+  if (onProgress) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round((event.loaded / event.total) * 100);
+          onProgress(percentComplete);
+        }
+      });
+      
+      xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const response = JSON.parse(xhr.responseText);
+            resolve(response);
+          } catch (e) {
+            reject(new Error('Failed to parse response'));
+          }
+        } else {
+          reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+        }
+      });
+      
+      xhr.addEventListener('error', () => {
+        reject(new Error('Network error'));
+      });
+      
+      xhr.open('POST', `${base}/api/data_extraction/data_extraction`);
+      xhr.send(form);
+    });
+  } else {
+    // Use fetch for simple upload without progress
+    const res = await fetch(`${base}/api/data_extraction/data_extraction`, { method: 'POST', body: form });
+    return res.json();
+  }
 }
 
 export async function importAnnotations(docId: string, annotations: any): Promise<{ success: boolean; key?: string }> {

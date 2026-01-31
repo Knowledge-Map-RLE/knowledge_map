@@ -11,13 +11,15 @@ import { useAnnotations } from './hooks/useAnnotations';
 import { useAnnotationOffsets } from './hooks/useAnnotationOffsets';
 import { useRelations } from './hooks/useRelations';
 import {
-  Annotation,
-  AnnotationRelation,
   autoAnnotateMultilevel,
-  MultiLevelAnalysisResponse,
   deleteAllAnnotations,
   exportAnnotationsYAML,
   importAnnotationsYAML,
+} from '../../../services/api';
+import type {
+  Annotation,
+  AnnotationRelation,
+  MultiLevelAnalysisResponse,
 } from '../../../services/api';
 import './AnnotationWorkspace.css';
 
@@ -28,6 +30,7 @@ interface AnnotationWorkspaceProps {
   onTextChange?: (text: string) => void;
   onSave?: () => Promise<void>;
   documentTitle?: string | null;
+  onUpdateDocumentStatus?: (docId: string, newStatus: string) => void;
 }
 
 const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
@@ -37,6 +40,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   onTextChange,
   onSave,
   documentTitle = null,
+  onUpdateDocumentStatus,
 }) => {
   // UI State
   const [mainTab, setMainTab] = useState<'text' | 'annotator'>('text');
@@ -46,6 +50,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [showRelations, setShowRelations] = useState(false);
   const [largeLineHeight, setLargeLineHeight] = useState(false);
   const [isAutoAnnotating, setIsAutoAnnotating] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState<number | null>(null);
   const [graphData, setGraphData] = useState<MultiLevelAnalysisResponse['graph'] | null>(null);
   const [showSaveForTestsDialog, setShowSaveForTestsDialog] = useState(false);
 
@@ -335,6 +340,21 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     if (!confirmed) return;
 
     setIsAutoAnnotating(true);
+    setAnalysisProgress(0);
+    
+    // Update document status to 'processing' when multi-level analysis starts
+    if (onUpdateDocumentStatus) {
+        onUpdateDocumentStatus(docId, 'processing');
+    }
+
+    // Simulate progress updates
+    const progressInterval = setInterval(() => {
+      setAnalysisProgress(prev => {
+        if (prev === null) return 0;
+        const next = prev + Math.floor(Math.random() * 5) + 1;
+        return next > 95 ? 95 : next; // Cap at 95% until actual completion
+      });
+    }, 500);
 
     try {
       const result = await autoAnnotateMultilevel(
@@ -344,6 +364,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         true,  // create_annotations
         0.8    // min_confidence
       );
+
+      // Set progress to 100% when complete
+      setAnalysisProgress(100);
 
       // Store graph data for visualization
       setGraphData(result.graph);
@@ -361,6 +384,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
       await loadAnnotations();
       await loadRelations();
+      
+      // Update document status to 'ready_for_annotation' when analysis is complete
+      if (onUpdateDocumentStatus) {
+        onUpdateDocumentStatus(docId, 'ready_for_annotation');
+      }
     } catch (error: any) {
       console.error(
         'Не удалось выполнить multi-level анализ:',
@@ -372,7 +400,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         '• Сервер NLP запущен и доступен'
       );
     } finally {
+      clearInterval(progressInterval);
       setIsAutoAnnotating(false);
+      setAnalysisProgress(null);
     }
   }, [isAutoAnnotating, docId, loadAnnotations, loadRelations]);
 
@@ -386,6 +416,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
       if (onSave) {
         await onSave();
+      }
+      
+      // Update document status to 'annotated' after successful save
+      if (onUpdateDocumentStatus) {
+          onUpdateDocumentStatus(docId, 'annotated');
       }
 
       requestAnimationFrame(() => {
@@ -553,6 +588,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onAnnotationClick={handleAnnotationSelect}
               onRelationCreate={handleRelationCreate}
               onMultiLevelAnnotate={handleMultiLevelAnnotate}
+              analysisProgress={analysisProgress}
               onSave={handleSave}
               onDeleteAllAnnotations={handleDeleteAllAnnotations}
               isAutoAnnotating={isAutoAnnotating}

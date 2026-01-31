@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-#root {
-    @apply w-full h-full;
-}
-
 .interface {
     pointer-events: none;
     padding: 10px;
@@ -28,10 +24,6 @@
 .name_slogan {
     grid-area: name_slogan;
     display: flex;
-}
-
-.panel {
-    @apply shadow-md;
 }
 
 .top {

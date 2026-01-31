@@ -5,6 +5,10 @@
     font-weight: bold;
     font-size: 20px;
     line-height: 20px;
+    width: 170px;
+    flex-shrink: 0;
+    border: 1px #CCC solid;
+    border-radius: 40px;
     @apply flex flex-col justify-center items-center;
 }
 

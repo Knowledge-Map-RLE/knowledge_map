@@ -19,6 +19,7 @@ interface EditorTabsProps {
   onAnnotationClick: (annotation: Annotation | Annotation[]) => void;
   onRelationCreate: (sourceId: string, targetId: string) => void;
   onMultiLevelAnnotate?: () => void;
+  analysisProgress?: number | null;
   onSave: () => void;
   onDeleteAllAnnotations: () => void;
   isAutoAnnotating: boolean;
@@ -50,6 +51,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onAnnotationClick,
   onRelationCreate,
   onMultiLevelAnnotate,
+  analysisProgress,
   onSave,
   onDeleteAllAnnotations,
   isAutoAnnotating,
@@ -116,7 +118,15 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
               alignItems: 'center'
             }}
           >
-            {isAutoAnnotating ? 'Обработка...' : 'Multi-Level анализ'}
+            {isAutoAnnotating ? (
+              analysisProgress !== null ? (
+                `Обработано ${analysisProgress}%`
+              ) : (
+                'Обработка...'
+              )
+            ) : (
+              'Multi-Level анализ'
+            )}
           </button>
         )}
 

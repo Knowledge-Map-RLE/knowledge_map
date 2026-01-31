@@ -26,6 +26,7 @@ interface EditorTabsWithValidationProps {
   onAnnotationClick: (annotation: Annotation | Annotation[]) => void;
   onRelationCreate: (sourceId: string, targetId: string) => void;
   onMultiLevelAnnotate?: () => void;
+  analysisProgress?: number | null;
   onSave: () => void;
   onDeleteAllAnnotations: () => void;
   isAutoAnnotating: boolean;
@@ -63,6 +64,7 @@ const EditorTabsWithValidation = React.forwardRef<
       onAnnotationClick,
       onRelationCreate,
       onMultiLevelAnnotate,
+      analysisProgress,
       onSave,
       onDeleteAllAnnotations,
       isAutoAnnotating,
@@ -187,6 +189,7 @@ const EditorTabsWithValidation = React.forwardRef<
             onAnnotationClick={onAnnotationClick}
             onRelationCreate={onRelationCreate}
             onMultiLevelAnnotate={onMultiLevelAnnotate}
+            analysisProgress={analysisProgress}
             onSave={handleSaveWithValidation}
             onDeleteAllAnnotations={onDeleteAllAnnotations}
             isAutoAnnotating={isAutoAnnotating}

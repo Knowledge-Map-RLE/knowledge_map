@@ -1,13 +1,20 @@
 import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import s from './Data_extraction.module.css';
-import { uploadPdfForExtraction, importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, deleteDocument as apiDeleteDocument, listDocuments, saveMarkdown } from '../../services/api';
+import { importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, saveMarkdown } from '../../services/api';
 import { AnnotationWorkspace } from './Annotation';
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 import Project_title from '../Project_title';
 import Search from '../Search';
 import User from '../User';
-import DocumentContextMenu from './DocumentContextMenu';
 import { PatternGenerator } from './Patterns';
+import Document_downloader_ui from './Document_downloader_ui';
+
+// Для исправления ошибки с NodeJS.Timeout
+declare global {
+  namespace NodeJS {
+    interface Timeout {}
+  }
+}
 
 interface PDFDocument {
     uid: string;
@@ -25,13 +32,9 @@ interface PDFDocument {
 }
 
 export default function Data_extraction() {
-    const [documents, setDocuments] = useState<PDFDocument[]>([]);
     const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
     const [pdfUrl, setPdfUrl] = useState<string>('');
-    const [isUploading, setIsUploading] = useState(false);
-    const [dragOver, setDragOver] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [progressMap, setProgressMap] = useState<Record<string, number>>({});
     const [docId, setDocId] = useState<string>('');
 
     // Новый state для исходного markdown и auto-save
@@ -40,157 +43,7 @@ export default function Data_extraction() {
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
     const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
-    // Context menu state
-    const [contextMenu, setContextMenu] = useState<{
-        x: number;
-        y: number;
-        documentId: string;
-    } | null>(null);
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-    // Загружаем список документов при монтировании компонента
-    useEffect(() => {
-        loadDocuments();
-    }, []);
-
-    const loadDocuments = async () => {
-        try {
-            console.log('Начало загрузки документов...');
-            const data = await listDocuments();
-            console.log('Загруженные документы из API:', data);
-
-            if (!data) {
-                console.error('API вернул null/undefined');
-                setError('Не удалось загрузить список документов');
-                return;
-            }
-
-            if (!data.success) {
-                console.error('API вернул success=false');
-                setError('Ошибка при загрузке документов');
-                return;
-            }
-
-            if (!Array.isArray(data.documents)) {
-                console.error('data.documents не является массивом:', typeof data.documents);
-                setError('Некорректный формат данных от сервера');
-                return;
-            }
-
-            console.log(`Обработка ${data.documents.length} документов...`);
-
-            if (data?.success && Array.isArray(data.documents)) {
-                // маппинг в локальный тип PDFDocument с проверкой реального статуса
-                const mappedPromises = data.documents.map(async (d) => {
-                    try {
-                        console.log('Обработка документа:', d);
-                        let status = d.has_markdown ? 'annotated' : 'uploaded';
-
-                        // формируем возможный pdf url из списка документов, если доступен
-                        const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-                        const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
-
-                        return {
-                            uid: d.doc_id,
-                            original_filename: d.original_filename || d.files?.pdf?.split('/').pop() || d.doc_id + '.pdf',
-                            md5_hash: d.doc_id,
-                            title: d.title || null,
-                            upload_date: new Date().toISOString(),
-                            processing_status: status,
-                            is_processed: status === 'annotated',
-                            pdf_url,
-                        } as any;
-                    } catch (err) {
-                        console.error(`Ошибка обработки документа ${d.doc_id}:`, err);
-                        // Возвращаем документ с минимальной информацией даже при ошибке
-                        const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-                        const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
-                        return {
-                            uid: d.doc_id,
-                            original_filename: d.original_filename || d.doc_id + '.pdf',
-                            md5_hash: d.doc_id,
-                            title: d.title || null,
-                            upload_date: new Date().toISOString(),
-                            processing_status: 'error',
-                            is_processed: false,
-                            pdf_url,
-                        } as any;
-                    }
-                });
-                const mapped = await Promise.all(mappedPromises);
-                console.log(`Загружено ${mapped.length} документов, устанавливаем в state...`);
-                setDocuments(mapped);
-                console.log('Документы установлены в state');
-            }
-        } catch (err) {
-            console.error('Ошибка загрузки документов:', err);
-            setError(`Ошибка загрузки документов: ${err instanceof Error ? err.message : String(err)}`);
-        }
-    };
-
-    const handleFileUpload = async (file: File) => {
-        if (!file.type.startsWith('application/pdf')) {
-            setError('Пожалуйста, выберите PDF файл');
-            return;
-        }
-
-        setIsUploading(true);
-        setError(null);
-
-        try {
-            const result = await uploadPdfForExtraction(file);
-            if (result.success) {
-                setDocId(result.doc_id || '');
-                // добавим в список локально
-                const newDoc = {
-                    uid: result.doc_id || '',
-                    original_filename: file.name,
-                    md5_hash: result.doc_id || '',
-                    upload_date: new Date().toISOString(),
-                    processing_status: 'processing',
-                    is_processed: false,
-                } as PDFDocument;
-                setDocuments(prev => [newDoc, ...prev]);
-                setSelectedDocument(newDoc);
-            } else {
-                setError(result.message || 'Ошибка загрузки файла');
-            }
-        } catch (err) {
-            setError('Ошибка загрузки файла');
-            console.error('Ошибка загрузки:', err);
-        } finally {
-            setIsUploading(false);
-        }
-    };
-
-    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            handleFileUpload(file);
-        }
-    };
-
-    const handleDrop = useCallback((event: React.DragEvent) => {
-        event.preventDefault();
-        setDragOver(false);
-        
-        const file = event.dataTransfer.files[0];
-        if (file) {
-            handleFileUpload(file);
-        }
-    }, []);
-
-    const handleDragOver = useCallback((event: React.DragEvent) => {
-        event.preventDefault();
-        setDragOver(true);
-    }, []);
-
-    const handleDragLeave = useCallback((event: React.DragEvent) => {
-        event.preventDefault();
-        setDragOver(false);
-    }, []);
+    const saveTimeoutRef = useRef<number | null>(null);
 
     const selectDocument = async (document: PDFDocument) => {
         setSelectedDocument(document);
@@ -200,7 +53,6 @@ export default function Data_extraction() {
             const assets = await getDocumentAssets(document.uid);
             if (assets?.markdown) {
                 setSourceMarkdown(assets.markdown);
-                setProgressMap(prev => ({ ...prev, [document.uid]: 100 }));
                 console.log('Markdown загружен:', assets.markdown.length, 'символов');
             } else {
                 console.log('Markdown не найден для документа:', document.uid);
@@ -223,6 +75,15 @@ export default function Data_extraction() {
         }
     };
 
+    const updateDocumentStatus = (docId: string, newStatus: string) => {
+        setSelectedDocument(prev => {
+            if (prev && prev.uid === docId) {
+                return { ...prev, processing_status: newStatus, is_processed: newStatus === 'annotated' };
+            }
+            return prev;
+        });
+    };
+
     // Обработчик изменений в markdown
     const handleSourceMarkdownChange = useCallback((newMarkdown: string) => {
         setSourceMarkdown(newMarkdown);
@@ -230,7 +91,7 @@ export default function Data_extraction() {
 
         // Отменяем предыдущий таймер (если был)
         if (saveTimeoutRef.current) {
-            clearTimeout(saveTimeoutRef.current);
+            window.clearTimeout(saveTimeoutRef.current);
         }
     }, []);
 
@@ -247,6 +108,9 @@ export default function Data_extraction() {
             setSaveStatus('saved');
             setLastSavedAt(new Date());
             console.log('Markdown сохранен в S3');
+            
+            // Update document status to 'annotated' after successful save
+            updateDocumentStatus(selectedDocument.uid, 'annotated');
 
             // Сбрасываем статус 'saved' через 3 секунды
             setTimeout(() => {
@@ -265,32 +129,10 @@ export default function Data_extraction() {
     useEffect(() => {
         return () => {
             if (saveTimeoutRef.current) {
-                clearTimeout(saveTimeoutRef.current);
+                window.clearTimeout(saveTimeoutRef.current);
             }
         };
     }, []);
-
-
-
-    const getStatusClass = (status: string) => {
-        switch (status) {
-            case 'uploaded': return s.statusIndicator + ' ' + s.uploaded;
-            case 'processing': return s.statusIndicator + ' ' + s.processing;
-            case 'annotated': return s.statusIndicator + ' ' + s.annotated;
-            case 'error': return s.statusIndicator + ' ' + s.error;
-            default: return s.statusIndicator + ' ' + s.uploaded;
-        }
-    };
-
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case 'uploaded': return 'Загружен';
-            case 'processing': return 'Обрабатывается';
-            case 'annotated': return 'Аннотирован';
-            case 'error': return 'Ошибка';
-            default: return 'Неизвестно';
-        }
-    };
 
     return (
         <main className={s.dex}>
@@ -305,98 +147,17 @@ export default function Data_extraction() {
             <div className={s.topRow}>
                 {/* Левая колонка: Загрузка встроена в список документов */}
                 <div className={s.leftColumn}>
-                    <h2 className="text-base font-bold mb-3">Загруженные документы</h2>
-                    <div
-                        className={`${s.uploadArea} ${dragOver ? s.dragover : ''} mb-3`}
-                        onDrop={handleDrop}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
-                        onClick={() => fileInputRef.current?.click()}
-                        style={{ position:'sticky', top:0, zIndex:1 }}
-                    >
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept=".pdf"
-                            onChange={handleFileSelect}
-                            className="hidden"
-                        />
-                        {isUploading ? (
-                            <div className="flex flex-col items-center">
-                                <div className={s.loadingSpinner}></div>
-                                <p className="mt-2">Загрузка файла...</p>
-                            </div>
-                        ) : (
-                            <div>
-                                <p className="text-sm">Перетащите PDF или нажмите для выбора</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Ошибки */}
-                    {error && (
-                        <div className="mb-3 p-2 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm">
-                            {error}
-                        </div>
-                    )}
-
-                    <div className={s.fileList}>
-                        {documents.map((doc) => {
-                            // Определяем отображаемое название: title или original_filename
-                            const displayName = doc.title || doc.original_filename || doc.uid;
-
-                            return (
-                                <div
-                                    key={doc.uid}
-                                    className={`${s.fileItem} ${selectedDocument?.uid === doc.uid ? 'bg-blue-100' : ''}`}
-                                    onClick={() => selectDocument(doc)}
-                                    onContextMenu={(e) => {
-                                        e.preventDefault();
-                                        setContextMenu({
-                                            x: e.clientX,
-                                            y: e.clientY,
-                                            documentId: doc.uid,
-                                        });
-                                    }}
-                                >
-                                    <div className="flex items-center gap-2 min-w-0">
-                                        <span className={getStatusClass(doc.processing_status)}></span>
-                                        <div className="min-w-0">
-                                            <p className="font-medium truncate" title={displayName}>{displayName}</p>
-                                            <p className="text-xs text-gray-500">
-                                                {getStatusText(doc.processing_status)}
-                                                {doc.processing_status === 'processing' ? (
-                                                    <span className="text-blue-600 font-semibold"> {progressMap[doc.uid] ?? 0}%</span>
-                                                ) : null}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Context Menu */}
-                    {contextMenu && (
-                        <DocumentContextMenu
-                            x={contextMenu.x}
-                            y={contextMenu.y}
-                            onDelete={async () => {
-                                try {
-                                    await apiDeleteDocument(contextMenu.documentId);
-                                    if (selectedDocument?.uid === contextMenu.documentId) {
-                                        setSelectedDocument(null);
-                                        setSourceMarkdown('');
-                                        setDocId('');
-                                    }
-                                    await loadDocuments();
-                                } catch (err) {
-                                    console.error('Ошибка удаления документа:', err);
-                                }
-                            }}
-                            onClose={() => setContextMenu(null)}
-                        />
-                    )}
+                    <Document_downloader_ui
+                        selectedDocument={selectedDocument}
+                        onSelectDocument={selectDocument}
+                        onDocumentsChange={() => {
+                            // При изменении списка документов ничего дополнительно делать не нужно
+                            // setSelectedDocument останется тем же, если документ все еще существует
+                            // или станет null, если выбранного документа больше нет
+                        }}
+                        error={error}
+                        setError={setError}
+                    />
                 </div>
 
                 {/* Средняя колонка: Исходный PDF */}
@@ -473,6 +234,7 @@ export default function Data_extraction() {
                                 onTextChange={handleSourceMarkdownChange}
                                 onSave={handleManualSave}
                                 documentTitle={selectedDocument.title || selectedDocument.original_filename}
+                                onUpdateDocumentStatus={updateDocumentStatus}
                             />
                         </div>
                     ) : (

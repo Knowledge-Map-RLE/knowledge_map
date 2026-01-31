@@ -5,7 +5,7 @@
 }
 
 .avatar {
-    @apply bg-blue-200 h-[40px] w-[40px] rounded-full;
+    @apply bg-blue-200 h-[50px] w-[50px] rounded-full;
 }
 
 .name, .info {
@@ -18,11 +18,12 @@
 }
 
 .auth_buttons {
+    height: 100%;
     @apply flex gap-2;
 }
 
 .auth_button {
-    @apply px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors;
+    @apply px-4 py-2 bg-blue-500 text-white rounded-[5px] hover:bg-blue-600 transition-colors;
     font-size: 14px;
 }
 

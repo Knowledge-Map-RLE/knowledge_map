@@ -71,7 +71,8 @@ function Start-DockerServices {
     Write-ColorOutput "Starting Docker services (neo4j, redis, s3)..." $InfoColor
     
     # Start only required services
-    docker-compose up -d neo4j redis s3
+    # docker-compose up -d neo4j redis s3
+    docker-compose up -d neo4j s3
     
     if ($LASTEXITCODE -ne 0) {
         Write-ColorOutput "Error starting Docker services" $ErrorColor
@@ -80,13 +81,14 @@ function Start-DockerServices {
     
     # Wait for services to start
     Wait-ForService -Port 7687 -ServiceName "Neo4j" -TimeoutSeconds 90
-    Wait-ForService -Port 6379 -ServiceName "Redis" -TimeoutSeconds 30
+    # Wait-ForService -Port 6379 -ServiceName "Redis" -TimeoutSeconds 30
     Wait-ForService -Port 9000 -ServiceName "MinIO S3" -TimeoutSeconds 30
 }
 
 function Stop-DockerServices {
     Write-ColorOutput "Stopping Docker services..." $InfoColor
-    docker-compose stop neo4j redis s3
+    # docker-compose stop neo4j redis s3
+    docker-compose stop neo4j s3
 }
 
 function Start-AuthService {
@@ -123,7 +125,7 @@ function Start-AuthService {
     Write-ColorOutput "Starting auth service..." $InfoColor
     $env:NEO4J_URI = "bolt://127.0.0.1:7687"
     $env:NEO4J_ENCRYPTED = "false"
-    $env:REDIS_URL = "redis://127.0.0.1:6379"
+    # $env:REDIS_URL = "redis://127.0.0.1:6379"
     $env:GRPC_HOST = "0.0.0.0"
     $env:GRPC_PORT = "50052"
     $env:SECRET_KEY = "your-secret-key-change-in-production"
@@ -608,7 +610,7 @@ function Show-Status {
 
     $services = @(
         @{Name="Neo4j"; Port=7687; URL="http://localhost:7474"},
-        @{Name="Redis"; Port=6379; URL=""},
+        # @{Name="Redis"; Port=6379; URL=""},
         @{Name="MinIO S3"; Port=9000; URL="http://localhost:9001"},
         @{Name="Auth gRPC"; Port=50052; URL=""},
         @{Name="AI Model gRPC"; Port=50054; URL=""},
@@ -766,7 +768,7 @@ function Start-AuthServiceInteractive {
     # Set environment variables
     $env:NEO4J_URI = "bolt://127.0.0.1:7687"
     $env:NEO4J_ENCRYPTED = "false"
-    $env:REDIS_URL = "redis://127.0.0.1:6379"
+    # $env:REDIS_URL = "redis://127.0.0.1:6379"
     $env:GRPC_HOST = "0.0.0.0"
     $env:GRPC_PORT = "50052"
     $env:SECRET_KEY = "your-secret-key-change-in-production"
@@ -1044,7 +1046,7 @@ function Show-Logs {
     if ($ServiceName -eq "") {
         Write-ColorOutput "Available services for log monitoring:" $InfoColor
         Write-ColorOutput "  - neo4j (Docker)" $InfoColor
-        Write-ColorOutput "  - redis (Docker)" $InfoColor
+        # Write-ColorOutput "  - redis (Docker)" $InfoColor
         Write-ColorOutput "  - s3 (Docker)" $InfoColor
         Write-ColorOutput "  - auth (Host)" $InfoColor
         Write-ColorOutput "  - ai (Host)" $InfoColor
@@ -1062,11 +1064,11 @@ function Show-Logs {
             Write-ColorOutput "Press Ctrl+C to stop monitoring" $WarningColor
             docker-compose logs -f neo4j
         }
-        "redis" {
-            Write-ColorOutput "Showing Redis logs (Docker)..." $InfoColor
-            Write-ColorOutput "Press Ctrl+C to stop monitoring" $WarningColor
-            docker-compose logs -f redis
-        }
+        # "redis" {
+        #     Write-ColorOutput "Showing Redis logs (Docker)..." $InfoColor
+        #     Write-ColorOutput "Press Ctrl+C to stop monitoring" $WarningColor
+        #     docker-compose logs -f redis
+        # }
         "s3" {
             Write-ColorOutput "Showing MinIO S3 logs (Docker)..." $InfoColor
             Write-ColorOutput "Press Ctrl+C to stop monitoring" $WarningColor
@@ -1214,11 +1216,11 @@ if ($HostOnly) {
         Write-ColorOutput "Run: .\start_local_dev.ps1" $InfoColor
         exit 1
     }
-    if (-not (Test-Port -Port 6379 -ServiceName "Redis")) {
-        Write-ColorOutput "Redis (port 6379) is not running. Please start Docker services first." $ErrorColor
-        Write-ColorOutput "Run: .\start_local_dev.ps1" $InfoColor
-        exit 1
-    }
+    # if (-not (Test-Port -Port 6379 -ServiceName "Redis")) {
+    #     Write-ColorOutput "Redis (port 6379) is not running. Please start Docker services first." $ErrorColor
+    #     Write-ColorOutput "Run: .\start_local_dev.ps1" $InfoColor
+    #     exit 1
+    # }
     if (-not (Test-Port -Port 9000 -ServiceName "S3")) {
         Write-ColorOutput "S3/MinIO (port 9000) is not running. Please start Docker services first." $ErrorColor
         Write-ColorOutput "Run: .\start_local_dev.ps1" $InfoColor
