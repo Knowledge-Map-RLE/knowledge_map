@@ -32,6 +32,7 @@ interface PDFDocument {
 }
 
 export default function Data_extraction() {
+    const [activeTab, setActiveTab] = useState<'pdf' | 'markdown' | 'annotator'>('pdf');
     const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
     const [pdfUrl, setPdfUrl] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
@@ -143,105 +144,104 @@ export default function Data_extraction() {
                 <User className={s.headerPanel} />
             </div>
 
-            {/* Основная строка: 3 колонки */}
-            <div className={s.topRow}>
-                {/* Левая колонка: Загрузка встроена в список документов */}
+            {/* Основная строка */}
+            <div className={s.mainRow}>
+                {/* Левая колонка: Загруженные документы */}
                 <div className={s.leftColumn}>
                     <Document_downloader_ui
                         selectedDocument={selectedDocument}
                         onSelectDocument={selectDocument}
-                        onDocumentsChange={() => {
-                            // При изменении списка документов ничего дополнительно делать не нужно
-                            // setSelectedDocument останется тем же, если документ все еще существует
-                            // или станет null, если выбранного документа больше нет
-                        }}
+                        onDocumentsChange={() => {}}
                         error={error}
                         setError={setError}
                     />
                 </div>
 
-                {/* Средняя колонка: Исходный PDF */}
-                <div className={s.middleColumn}>
-                    <h2 className="text-base font-bold mb-3">Исходный PDF</h2>
-                    <div id="km-pdf-pane" className={s.pdfViewer} style={{ overflow:'auto' }}>
-                        {pdfUrl ? (
-                            <iframe
-                                id="km-pdf-viewer"
-                                title="PDF"
-                                src={pdfUrl}
-                                style={{ width:'100%', height:'100%', border:'0' }}
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Нет PDF</div>
+                {/* Правая панель: вкладки */}
+                <div className={s.rightPanel}>
+                    <div className={s.tabBar}>
+                        <button
+                            className={`${s.tabButton} ${activeTab === 'pdf' ? s.active : ''}`}
+                            onClick={() => setActiveTab('pdf')}
+                        >
+                            Исходный PDF
+                        </button>
+                        <button
+                            className={`${s.tabButton} ${activeTab === 'markdown' ? s.active : ''}`}
+                            onClick={() => setActiveTab('markdown')}
+                        >
+                            Предпросмотр Markdown
+                        </button>
+                        <button
+                            className={`${s.tabButton} ${activeTab === 'annotator' ? s.active : ''}`}
+                            onClick={() => setActiveTab('annotator')}
+                        >
+                            Аннотатор
+                        </button>
+                        {saveStatus !== 'idle' && (
+                            <div className={`${s.saveIndicator} ${s[saveStatus]}`} style={{ marginLeft: 'auto' }}>
+                                {saveStatus === 'saving' && <><div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div><span>Сохранение...</span></>}
+                                {saveStatus === 'saved' && <><span>✓</span><span>Сохранено {lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString() : ''}</span></>}
+                                {saveStatus === 'error' && <><span>✗</span><span>Ошибка сохранения</span></>}
+                            </div>
                         )}
                     </div>
-                </div>
 
-                {/* Правая колонка: Предпросмотр Markdown (Quill) */}
-                <div className={s.rightColumn}>
-                    <h2 className="text-base font-bold mb-3">Предпросмотр Markdown</h2>
-                    {selectedDocument ? (
-                        <div style={{ height: 'calc(100% - 50px)' }}>
-                            <MarkdownEditor
-                                value={sourceMarkdown}
-                                onChange={() => {}}
-                                readOnly={true}
-                            />
-                        </div>
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            Выберите документ
-                        </div>
-                    )}
-                </div>
-            </div>
+                    <div className={s.tabContent}>
+                        {/* PDF */}
+                        {activeTab === 'pdf' && (
+                            <div id="km-pdf-pane" className={s.pdfViewer} style={{ overflow: 'auto', flex: 1, borderRadius: 0, border: 'none' }}>
+                                {pdfUrl ? (
+                                    <iframe
+                                        id="km-pdf-viewer"
+                                        title="PDF"
+                                        src={pdfUrl}
+                                        style={{ width: '100%', height: '100%', border: '0' }}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Нет PDF</div>
+                                )}
+                            </div>
+                        )}
 
-            {/* Нижняя строка: Аннотатор */}
-            <div className={s.bottomRow}>
-                <div className={s.fullWidth} style={{ padding: '16px', background: 'white', height: '100%', overflow: 'hidden' }}>
-                    <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-base font-bold">Аннотатор</h2>
-                        {/* Индикатор сохранения */}
-                        {saveStatus !== 'idle' && (
-                            <div className={`${s.saveIndicator} ${s[saveStatus]}`}>
-                                {saveStatus === 'saving' && (
-                                    <>
-                                        <div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div>
-                                        <span>Сохранение...</span>
-                                    </>
+                        {/* Markdown */}
+                        {activeTab === 'markdown' && (
+                            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                                {selectedDocument ? (
+                                    <MarkdownEditor
+                                        value={sourceMarkdown}
+                                        onChange={() => {}}
+                                        readOnly={true}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                        Выберите документ
+                                    </div>
                                 )}
-                                {saveStatus === 'saved' && (
-                                    <>
-                                        <span>✓</span>
-                                        <span>Сохранено {lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString() : ''}</span>
-                                    </>
-                                )}
-                                {saveStatus === 'error' && (
-                                    <>
-                                        <span>✗</span>
-                                        <span>Ошибка сохранения</span>
-                                    </>
+                            </div>
+                        )}
+
+                        {/* Аннотатор */}
+                        {activeTab === 'annotator' && (
+                            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                                {selectedDocument && docId ? (
+                                    <AnnotationWorkspace
+                                        docId={docId}
+                                        text={sourceMarkdown}
+                                        readOnly={false}
+                                        onTextChange={handleSourceMarkdownChange}
+                                        onSave={handleManualSave}
+                                        documentTitle={selectedDocument.title || selectedDocument.original_filename}
+                                        onUpdateDocumentStatus={updateDocumentStatus}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                        Выберите документ для аннотирования
+                                    </div>
                                 )}
                             </div>
                         )}
                     </div>
-                    {selectedDocument && docId ? (
-                        <div style={{ height: 'calc(100% - 50px)' }}>
-                            <AnnotationWorkspace
-                                docId={docId}
-                                text={sourceMarkdown}
-                                readOnly={false}
-                                onTextChange={handleSourceMarkdownChange}
-                                onSave={handleManualSave}
-                                documentTitle={selectedDocument.title || selectedDocument.original_filename}
-                                onUpdateDocumentStatus={updateDocumentStatus}
-                            />
-                        </div>
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            Выберите документ для аннотирования
-                        </div>
-                    )}
                 </div>
             </div>
         </main>

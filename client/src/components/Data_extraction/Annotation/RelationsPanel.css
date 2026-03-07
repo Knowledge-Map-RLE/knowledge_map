@@ -5,19 +5,6 @@
   background: #f9f9f9;
 }
 
-.panel-header {
-  padding: 15px;
-  background: #fff;
-  border-bottom: 2px solid #ff9800;
-}
-
-.panel-header h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-
 .panel-filters {
   padding: 10px;
   background: #fff;
@@ -63,8 +50,8 @@
   background: white;
   border: 2px solid #ddd;
   border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
   transition: all 0.2s;
   cursor: pointer;
 }

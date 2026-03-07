@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import AnnotationToolbar from './AnnotationToolbar';
 import AnnotationPanel from './AnnotationPanel';
 import RelationsPanel from './RelationsPanel';
-import AnnotationFilters from './AnnotationFilters';
 import EditorTabsWithValidation from './EditorTabsWithValidation';
 import ErrorBoundary from '../../ErrorBoundary';
 import PatternVisualization from '../PatternVisualization/PatternVisualization';
@@ -86,7 +85,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   // Custom Hooks
   const {
     annotations,
-    setAnnotations,
     totalAnnotations,
     loadedAnnotationsCount,
     loading,
@@ -572,15 +570,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
           <div className="workspace-toolbar">
           <AnnotationToolbar
             selectedType={selectedType}
-            selectedColor={selectedColor}
             onTypeSelect={setSelectedType}
             onColorChange={setSelectedColor}
-            relationMode={relationMode}
-            onRelationModeToggle={() => setRelationMode(!relationMode)}
-            showRelations={showRelations}
-            onShowRelationsToggle={() => setShowRelations(!showRelations)}
-            largeLineHeight={largeLineHeight}
-            onLineHeightToggle={() => setLargeLineHeight(!largeLineHeight)}
             selectedTypes={selectedTypes}
             onTypeToggle={handleTypeToggle}
             hasPendingSelection={!!pendingTextSelection || selectedAnnotationGroup.length > 0}
@@ -620,60 +611,61 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onExportCSV={handleExportCSV}
               onImportCSV={handleImportCSV}
               onSaveForTests={() => setShowSaveForTestsDialog(true)}
+              onColorChange={setSelectedColor}
+              onRelationModeToggle={() => setRelationMode(!relationMode)}
+              onShowRelationsToggle={() => setShowRelations(!showRelations)}
+              onLineHeightToggle={() => setLargeLineHeight(!largeLineHeight)}
+              filterProps={{
+                totalAnnotations,
+                loadedAnnotationsCount,
+                annotationsLimit,
+                selectedCategories,
+                selectedSource,
+                isLoadingMore,
+                onCategoriesChange: setSelectedCategories,
+                onSourceChange: setSelectedSource,
+                onLimitChange: setAnnotationsLimit,
+                onLoadMore: loadMoreAnnotations,
+                onResetFilters: handleResetFilters,
+              }}
             />
           </ErrorBoundary>
         </div>
 
-        {/* Filters Panel */}
-        <div className="workspace-filters">
-          <AnnotationFilters
-            totalAnnotations={totalAnnotations}
-            loadedAnnotationsCount={loadedAnnotationsCount}
-            annotationsLimit={annotationsLimit}
-            selectedCategories={selectedCategories}
-            selectedSource={selectedSource}
-            isLoadingMore={isLoadingMore}
-            onCategoriesChange={setSelectedCategories}
-            onSourceChange={setSelectedSource}
-            onLimitChange={setAnnotationsLimit}
-            onLoadMore={loadMoreAnnotations}
-            onResetFilters={handleResetFilters}
-          />
-        </div>
-
-        {/* Annotations Panel */}
-        <div className="workspace-annotations-panel">
-          <div className="panel-tabs">
-            <div style={{ padding: '12px 16px', fontWeight: 'bold', fontSize: '14px', color: '#2196f3' }}>
-              Аннотации ({annotations.length}{totalAnnotations > annotations.length ? ` из ${totalAnnotations}` : ''})
+        {/* Annotations + Relations stacked vertically */}
+        <div className="workspace-side-panels">
+          <div className="workspace-annotations-panel">
+            <div className="panel-tabs">
+              <div style={{ padding: '8px 12px', fontWeight: 'bold', fontSize: '13px', color: '#2196f3' }}>
+                Аннотации ({annotations.length}{totalAnnotations > annotations.length ? ` из ${totalAnnotations}` : ''})
+              </div>
             </div>
+            <ErrorBoundary>
+              <AnnotationPanel
+                annotations={annotations}
+                onAnnotationSelect={handleAnnotationSelect}
+                onAnnotationDelete={handleAnnotationDelete}
+                onAnnotationEdit={handleAnnotationEdit}
+                selectedAnnotation={selectedAnnotation}
+              />
+            </ErrorBoundary>
           </div>
-          <ErrorBoundary>
-            <AnnotationPanel
-              annotations={annotations}
-              onAnnotationSelect={handleAnnotationSelect}
-              onAnnotationDelete={handleAnnotationDelete}
-              onAnnotationEdit={handleAnnotationEdit}
-              selectedAnnotation={selectedAnnotation}
-            />
-          </ErrorBoundary>
-        </div>
 
-        {/* Relations Panel */}
-        <div className="workspace-relations-panel">
-          <div className="panel-tabs">
-            <div style={{ padding: '12px 16px', fontWeight: 'bold', fontSize: '14px', color: '#2196f3' }}>
-              Связи ({relations.length})
+          <div className="workspace-relations-panel">
+            <div className="panel-tabs">
+              <div style={{ padding: '8px 12px', fontWeight: 'bold', fontSize: '13px', color: '#2196f3' }}>
+                Связи ({relations.length})
+              </div>
             </div>
+            <ErrorBoundary>
+              <RelationsPanel
+                relations={relations}
+                annotations={annotations}
+                onRelationDelete={handleRelationDelete}
+                onRelationEdit={handleRelationEdit}
+              />
+            </ErrorBoundary>
           </div>
-          <ErrorBoundary>
-            <RelationsPanel
-              relations={relations}
-              annotations={annotations}
-              onRelationDelete={handleRelationDelete}
-              onRelationEdit={handleRelationEdit}
-            />
-          </ErrorBoundary>
         </div>
         </div>
 

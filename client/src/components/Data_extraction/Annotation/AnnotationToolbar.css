@@ -1,5 +1,5 @@
 .annotation-toolbar {
-  padding: 15px;
+  padding: 10px;
   background: #f9f9f9;
   border: 1px solid #ddd;
   overflow-y: auto;
@@ -7,8 +7,8 @@
 }
 
 .toolbar-section {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -17,33 +17,48 @@
 }
 
 .toolbar-section h4 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
+  margin: 0 0 8px 0;
+  font-size: 13px;
   font-weight: 600;
   color: #333;
 }
 
-.annotation-category {
+.type-search-input {
+  width: 100%;
+  padding: 6px 8px;
   margin-bottom: 10px;
-}
-
-.category-header {
-  user-select: none;
-  transition: background-color 0.2s;
+  font-size: 12px;
+  border: 1px solid #d0d0d0;
   border-radius: 4px;
-  padding: 4px 8px;
+  background: white;
+  outline: none;
+  box-sizing: border-box;
 }
 
-.category-header:hover {
-  background-color: #e0e0e0;
+.type-search-input:focus {
+  border-color: #2196f3;
+}
+
+.annotation-category {
+  margin-bottom: 8px;
+}
+
+.category-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 0 4px 2px;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 6px;
 }
 
 .category-types {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
-  padding-left: 20px;
+  gap: 4px;
+  padding-left: 0;
 }
 
 .type-button {

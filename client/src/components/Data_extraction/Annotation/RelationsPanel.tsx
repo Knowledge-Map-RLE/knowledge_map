@@ -68,10 +68,6 @@ const RelationsPanel: React.FC<RelationsPanelProps> = ({
 
   return (
     <div className="relations-panel">
-      <div className="panel-header">
-        <h3>Связи ({relations.length})</h3>
-      </div>
-
       <div className="panel-filters">
         <select
           value={filterType}

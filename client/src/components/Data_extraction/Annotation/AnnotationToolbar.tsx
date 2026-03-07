@@ -4,16 +4,8 @@ import './AnnotationToolbar.css';
 
 interface AnnotationToolbarProps {
   selectedType: string | null;
-  selectedColor: string;
   onTypeSelect: (type: string) => void;
   onColorChange: (color: string) => void;
-  relationMode: boolean;
-  onRelationModeToggle: () => void;
-  showRelations: boolean;
-  onShowRelationsToggle: () => void;
-  largeLineHeight?: boolean;
-  onLineHeightToggle?: () => void;
-  // Для мультиклассификации
   selectedTypes?: string[];
   onTypeToggle?: (type: string) => void;
   hasPendingSelection?: boolean;
@@ -21,54 +13,46 @@ interface AnnotationToolbarProps {
 
 const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
   selectedType,
-  selectedColor,
   onTypeSelect,
   onColorChange,
-  relationMode,
-  onRelationModeToggle,
-  showRelations,
-  onShowRelationsToggle,
-  largeLineHeight = false,
-  onLineHeightToggle,
   selectedTypes = [],
   onTypeToggle,
   hasPendingSelection = false,
 }) => {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [filterText, setFilterText] = useState<string>('');
 
   const handleTypeClick = (type: string) => {
-    // Если есть выделенный текст и onTypeToggle, используем мультивыбор
     if (hasPendingSelection && onTypeToggle) {
       onTypeToggle(type);
     } else {
-      // Старое поведение для обратной совместимости
       onTypeSelect(type);
       const defaultColor = getDefaultColor(type);
       onColorChange(defaultColor);
     }
   };
 
-  const toggleCategory = (category: string) => {
-    setExpandedCategory(expandedCategory === category ? null : category);
-  };
+  const lowerFilter = filterText.toLowerCase();
 
   return (
     <div className="annotation-toolbar">
       <div className="toolbar-section">
-        <h4>Типы аннотаций</h4>
-        {Object.entries(ANNOTATION_CATEGORIES).map(([category, types]) => (
-          <div key={category} className="annotation-category">
-            <div
-              className="category-header"
-              onClick={() => toggleCategory(category)}
-              style={{ cursor: 'pointer', fontWeight: 'bold', padding: '8px 0' }}
-            >
-              {expandedCategory === category ? '▼' : '▶'} {category}
-            </div>
-            {expandedCategory === category && (
+        <input
+          type="text"
+          className="type-search-input"
+          placeholder="Поиск аннотации..."
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+        />
+        {Object.entries(ANNOTATION_CATEGORIES).map(([category, types]) => {
+          const filteredTypes = lowerFilter
+            ? types.filter((t) => t.toLowerCase().includes(lowerFilter))
+            : types;
+          if (filteredTypes.length === 0) return null;
+          return (
+            <div key={category} className="annotation-category">
+              <div className="category-label">{category}</div>
               <div className="category-types">
-                {types.map((type) => {
+                {filteredTypes.map((type) => {
                   const isSelected = hasPendingSelection
                     ? selectedTypes.includes(type)
                     : selectedType === type;
@@ -78,8 +62,7 @@ const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
                       className={`type-button ${isSelected ? 'selected' : ''}`}
                       onClick={() => handleTypeClick(type)}
                       style={{
-                        backgroundColor:
-                          isSelected ? getDefaultColor(type) : '#f5f5f5',
+                        backgroundColor: isSelected ? getDefaultColor(type) : '#f5f5f5',
                         color: isSelected ? '#000' : '#333',
                         border: isSelected ? '2px solid #000' : '1px solid #ddd',
                       }}
@@ -90,76 +73,9 @@ const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
                   );
                 })}
               </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div className="toolbar-section">
-        <h4>Цвет</h4>
-        <div className="color-picker-container">
-          <div
-            className="color-preview"
-            style={{ backgroundColor: selectedColor }}
-            onClick={() => setShowColorPicker(!showColorPicker)}
-            title="Выбрать цвет"
-          />
-          {showColorPicker && (
-            <div className="color-picker-popup">
-              <input
-                type="color"
-                value={selectedColor}
-                onChange={(e) => onColorChange(e.target.value)}
-              />
-              <div className="predefined-colors">
-                {PREDEFINED_COLORS.map((color) => (
-                  <div
-                    key={color}
-                    className="color-swatch"
-                    style={{ backgroundColor: color }}
-                    onClick={() => {
-                      onColorChange(color);
-                      setShowColorPicker(false);
-                    }}
-                    title={color}
-                  />
-                ))}
-              </div>
-              <button onClick={() => setShowColorPicker(false)}>Закрыть</button>
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="toolbar-section">
-        <h4>Связи</h4>
-        <button
-          className={`mode-button ${relationMode ? 'active' : ''}`}
-          onClick={onRelationModeToggle}
-          title={
-            relationMode
-              ? 'Выйти из режима создания связей'
-              : 'Войти в режим создания связей'
-          }
-        >
-          {relationMode ? '🔗 Режим связей (вкл)' : '🔗 Режим связей'}
-        </button>
-        <button
-          className={`mode-button ${showRelations ? 'active' : ''}`}
-          onClick={onShowRelationsToggle}
-          title={showRelations ? 'Скрыть связи' : 'Показать связи'}
-        >
-          {showRelations ? '👁 Показать связи (вкл)' : '👁 Показать связи'}
-        </button>
-        {onLineHeightToggle && (
-          <button
-            className={`mode-button ${largeLineHeight ? 'active' : ''}`}
-            onClick={onLineHeightToggle}
-            title="Увеличить межстрочный интервал для лучшей видимости связей"
-          >
-            {largeLineHeight ? '📏 Большой интервал (вкл)' : '📏 Большой интервал'}
-          </button>
-        )}
+          );
+        })}
       </div>
 
       {(hasPendingSelection ? selectedTypes.length > 0 : selectedType) && (
@@ -179,7 +95,7 @@ const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
             ) : (
               <div
                 className="selected-type-badge"
-                style={{ backgroundColor: selectedColor }}
+                style={{ backgroundColor: getDefaultColor(selectedType!) }}
               >
                 {selectedType}
               </div>

@@ -72,7 +72,7 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
   );
 
   // Виртуализация: показываем только видимые элементы
-  const ITEM_HEIGHT = 120; // Примерная высота одного элемента в пикселях
+  const ITEM_HEIGHT = 150; // Примерная высота одного элемента в пикселях
   const CONTAINER_HEIGHT = 600; // Высота контейнера
   const OVERSCAN = 5; // Количество дополнительных элементов сверху и снизу
 
@@ -98,10 +98,6 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
 
   return (
     <div className="annotation-panel">
-      <div className="panel-header">
-        <h3>Аннотации ({annotations.length})</h3>
-      </div>
-
       <div className="panel-filters">
         <input
           type="text"
@@ -142,40 +138,26 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
                     key={fragmentKey}
                     ref={isSelected ? selectedGroupRef : null}
                     className={`fragment-group ${isSelected ? 'selected' : ''}`}
-                    style={{ minHeight: ITEM_HEIGHT }}
+                    style={{ minHeight: ITEM_HEIGHT, position: 'relative' }}
                   >
+                    <button
+                      className="delete-fragment-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Удалить весь фрагмент с ${group.annotations.length} типами?`)) {
+                          group.annotations.forEach((ann) => onAnnotationDelete(ann.uid));
+                        }
+                      }}
+                      title="Удалить весь фрагмент"
+                    >
+                      ×
+                    </button>
                     <div className="fragment-header">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => onAnnotationSelect(group.annotations)}>
-                          <div className="fragment-text">"{group.text}"</div>
-                          <div className="fragment-meta">
-                            [{group.start_offset} - {group.end_offset}]
-                          </div>
+                      <div style={{ cursor: 'pointer' }} onClick={() => onAnnotationSelect(group.annotations)}>
+                        <div className="fragment-text">"{group.text}"</div>
+                        <div className="fragment-meta">
+                          [{group.start_offset} - {group.end_offset}]
                         </div>
-                        <button
-                          className="delete-fragment-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (window.confirm(`Удалить весь фрагмент с ${group.annotations.length} типами?`)) {
-                              // Удаляем все аннотации во фрагменте
-                              group.annotations.forEach((ann) => onAnnotationDelete(ann.uid));
-                            }
-                          }}
-                          title="Удалить весь фрагмент"
-                          style={{
-                            background: '#f44336',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            padding: '4px 8px',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                            fontWeight: 500,
-                            marginLeft: '8px',
-                          }}
-                        >
-                          🗑 Удалить фрагмент
-                        </button>
                       </div>
                     </div>
                     <div className="fragment-types">

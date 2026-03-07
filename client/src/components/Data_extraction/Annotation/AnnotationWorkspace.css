@@ -25,15 +25,6 @@
   padding: 10px;
 }
 
-.workspace-filters {
-  width: 200px;
-  flex-shrink: 0;
-  height: 100%;
-  overflow-y: auto;
-  background: white;
-  border-radius: 4px;
-  padding: 10px;
-}
 
 .workspace-main {
   flex: 1;
@@ -113,23 +104,31 @@
   color: #999;
 }
 
-.workspace-annotations-panel {
-  width: 200px;
+.workspace-side-panels {
+  width: 440px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
+  gap: 6px;
+}
+
+.workspace-annotations-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   overflow: hidden;
   background: white;
   border-radius: 4px;
 }
 
 .workspace-relations-panel {
-  width: 200px;
-  flex-shrink: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 0;
   overflow: hidden;
   background: white;
   border-radius: 4px;
@@ -273,20 +272,20 @@
 }
 
 @media (max-width: 1600px) {
-  .workspace-toolbar,
-  .workspace-filters,
-  .workspace-annotations-panel,
-  .workspace-relations-panel {
-    width: 180px;
+  .workspace-toolbar {
+    width: 190px;
+  }
+  .workspace-side-panels {
+    width: 380px;
   }
 }
 
 @media (max-width: 1200px) {
-  .workspace-toolbar,
-  .workspace-filters,
-  .workspace-annotations-panel,
-  .workspace-relations-panel {
-    width: 150px;
+  .workspace-toolbar {
+    width: 160px;
+  }
+  .workspace-side-panels {
+    width: 320px;
   }
 }
 
@@ -297,12 +296,14 @@
   }
 
   .workspace-toolbar,
-  .workspace-filters,
-  .workspace-annotations-panel,
-  .workspace-relations-panel {
+  .workspace-side-panels {
     width: 100%;
     height: auto;
-    max-height: 200px;
+    max-height: 300px;
+  }
+
+  .workspace-side-panels {
+    flex-direction: row;
   }
 
   .workspace-main {
