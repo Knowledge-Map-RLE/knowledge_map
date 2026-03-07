@@ -13,8 +13,10 @@ import { useRelations } from './hooks/useRelations';
 import {
   autoAnnotateMultilevel,
   deleteAllAnnotations,
-  exportAnnotationsYAML,
-  importAnnotationsYAML,
+  createAnnotation,
+  createAnnotationRelation,
+  buildAnnotationsCSV,
+  parseAnnotationsCSV,
 } from '../../../services/api';
 import type {
   Annotation,
@@ -469,50 +471,67 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [docId, loadAnnotations, loadRelations]);
 
-  // Export YAML handler
-  const handleExportYAML = useCallback(async () => {
+  // Export CSV handler
+  const handleExportCSV = useCallback(() => {
     try {
-      const blob = await exportAnnotationsYAML(docId);
-
-      // Создать ссылку для скачивания
+      const csvContent = buildAnnotationsCSV(annotations, relations);
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `annotations_${docId}.yaml`;
+      a.download = `annotations_${docId}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-      console.log('Аннотации экспортированы в YAML');
+      console.log('Аннотации экспортированы в CSV');
     } catch (error: any) {
-      console.error(
-        'Не удалось экспортировать аннотации:',
-        error?.message || error
-      );
+      console.error('Не удалось экспортировать аннотации:', error?.message || error);
     }
-  }, [docId]);
+  }, [docId, annotations, relations]);
 
-  // Import YAML handler
-  const handleImportYAML = useCallback(async (file: File) => {
+  // Import CSV handler
+  const handleImportCSV = useCallback(async (file: File) => {
     try {
-      const result = await importAnnotationsYAML(docId, file);
+      const text = await file.text();
+      const { annotations: annData, relations: relData } = parseAnnotationsCSV(text);
+
+      // Строим карту старый uid → новый uid для корректного создания связей
+      const uidMap = new Map<string, string>();
+      let createdAnnotations = 0;
+
+      for (const ann of annData) {
+        const created = await createAnnotation(docId, {
+          text: ann.text ?? '',
+          annotation_type: ann.annotation_type ?? '',
+          start_offset: ann.start_offset ?? 0,
+          end_offset: ann.end_offset ?? 0,
+          color: ann.color || '#ffeb3b',
+          confidence: ann.confidence,
+        });
+        if (ann.uid) uidMap.set(ann.uid, created.uid);
+        createdAnnotations++;
+      }
+
+      let createdRelations = 0;
+      for (const rel of relData) {
+        const newSource = uidMap.get(rel.source_uid!) ?? rel.source_uid!;
+        const newTarget = uidMap.get(rel.target_uid!) ?? rel.target_uid!;
+        await createAnnotationRelation(newSource, {
+          target_id: newTarget,
+          relation_type: rel.relation_type ?? '',
+        });
+        createdRelations++;
+      }
 
       console.log(
-        'Импорт завершен успешно!\n' +
-        `Создано аннотаций: ${result.created_annotations} из ${result.total_in_file.annotations}\n` +
-        `Создано связей: ${result.created_relations} из ${result.total_in_file.relations}\n` +
-        (result.created_annotations < result.total_in_file.annotations ?
-          'Некоторые аннотации были пропущены из-за невалидных данных.' : '')
+        `Импорт CSV завершен: создано аннотаций ${createdAnnotations}, связей ${createdRelations}`
       );
 
-      // Перезагрузить аннотации и связи
       await loadAnnotations();
       await loadRelations();
     } catch (error: any) {
-      console.error(
-        'Не удалось импортировать аннотации:',
-        error?.message || error
-      );
+      console.error('Не удалось импортировать аннотации:', error?.message || error);
     }
   }, [docId, loadAnnotations, loadRelations]);
 
@@ -598,8 +617,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               selectedRelation={selectedRelation}
               onRelationClick={handleRelationClick}
               onRelationDelete={handleRelationDelete}
-              onExportCSV={handleExportYAML}
-              onImportCSV={handleImportYAML}
+              onExportCSV={handleExportCSV}
+              onImportCSV={handleImportCSV}
               onSaveForTests={() => setShowSaveForTestsDialog(true)}
             />
           </ErrorBoundary>
