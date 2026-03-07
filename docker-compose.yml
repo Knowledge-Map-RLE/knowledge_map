@@ -4,7 +4,7 @@ services:
     image: neo4j:5.15.0
     container_name: knowledge_map_neo4j
     ports:
-      - "7474:7474"   # HTTP для Neo4j Browser
+      - "7575:7474"   # HTTP для Neo4j Browser (7474 reserved by Windows/Hyper-V)
       - "7687:7687"   # Bolt
     environment:
       NEO4J_AUTH: neo4j/password

@@ -244,11 +244,6 @@ export default function Data_extraction() {
                     )}
                 </div>
             </div>
-
-            {/* Блок паттернов */}
-            <div className={s.patternsRow}>
-                <PatternGenerator />
-            </div>
         </main>
     );
 }

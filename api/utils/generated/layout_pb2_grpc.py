@@ -3,9 +3,9 @@
 import grpc
 import warnings
 
-import layout_pb2 as layout__pb2
+from . import layout_pb2 as layout__pb2
 
-GRPC_GENERATED_VERSION = '1.74.0'
+GRPC_GENERATED_VERSION = '1.73.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -143,3 +143,4 @@ class LayoutService(object):
             timeout,
             metadata,
             _registered_method=True)
+
