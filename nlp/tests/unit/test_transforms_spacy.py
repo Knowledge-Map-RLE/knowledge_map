@@ -14,7 +14,7 @@ from nlp.src.transforms.spacy_to_unified import (
     sentence_to_unified,
     document_to_unified,
 )
-from nlp.src.types import LinguisticLevel
+from nlp.src.unified_types import LinguisticLevel
 
 
 @pytest.fixture(scope="session")

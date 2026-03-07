@@ -511,7 +511,7 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
     async def ValidateMarkdown(self, request, context):
         """Валидация канонического формата markdown"""
         try:
-            from validation import validate_markdown
+            from validation.markdown_validator import validate_markdown
 
             logger.info(f"ValidateMarkdown запрос: длина текста={len(request.markdown)}")
 

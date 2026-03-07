@@ -8,7 +8,7 @@ produce the same output for the same input.
 from typing import List, Dict, Set
 from collections import Counter
 
-from ..types import UnifiedToken, CONTENT_POS_TAGS, STOP_POS_TAGS
+from ..unified_types import UnifiedToken, CONTENT_POS_TAGS, STOP_POS_TAGS
 
 
 # ============================================================================

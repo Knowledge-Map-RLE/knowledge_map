@@ -289,6 +289,7 @@ class UnifiedDocument:
     # Processing info
     processed_levels: List[LinguisticLevel] = field(default_factory=list)
     processing_time: float = 0.0
+    processors_used: List[str] = field(default_factory=list)
 
 
 # ============================================================================
@@ -414,3 +415,14 @@ SCIENTIFIC_ENTITY_TYPES = [
     'METHOD', 'PROCEDURE', 'INSTRUMENT', 'SOFTWARE', 'DATASET',
     'CITATION', 'FIGURE', 'TABLE',
 ]
+
+# Content POS tags (non-stop words)
+CONTENT_POS_TAGS = {
+    'NOUN', 'VERB', 'ADJ', 'ADV', 'PROPN', 'NUM',
+    'INTJ', 'SYM', 'X'
+}
+
+# Stop POS tags
+STOP_POS_TAGS = {
+    'ADP', 'AUX', 'CCONJ', 'DET', 'PART', 'PRON', 'SCONJ', 'PUNCT'
+}

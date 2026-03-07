@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from spacy.tokens import Doc, Span, Token
 
-from ..types import (
+from ..unified_types import (
     UnifiedToken,
     UnifiedDependency,
     UnifiedEntity,

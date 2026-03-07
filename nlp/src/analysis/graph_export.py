@@ -6,7 +6,7 @@ Pure functions for converting unified documents to graph representation.
 
 from typing import List, Dict, Tuple, Any
 
-from ..types import UnifiedDocument, UnifiedToken, UnifiedDependency, UnifiedEntity
+from ..unified_types import UnifiedDocument, UnifiedToken, UnifiedDependency, UnifiedEntity
 
 
 # ============================================================================

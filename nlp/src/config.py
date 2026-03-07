@@ -12,7 +12,7 @@ class NLPConfig(BaseSettings):
 
     # Server settings
     host: str = "0.0.0.0"
-    port: int = 50055
+    port: int = 50056
     max_workers: int = 10
 
     # Model cache directory
@@ -24,13 +24,13 @@ class NLPConfig(BaseSettings):
 
     # NLP processors configuration
     enable_spacy: bool = True
-    enable_nltk: bool = True
-    enable_stanza: bool = True
-    enable_udpipe: bool = True
+    enable_nltk: bool = False  # Disable other processors
+    enable_stanza: bool = False  # Disable other processors
+    enable_udpipe: bool = False  # Disable other processors
 
     # Voting system configuration
-    min_agreement: int = 2  # Minimum processors that must agree
-    enable_voting: bool = True
+    min_agreement: int = 1  # Only need 1 processor (spaCy)
+    enable_voting: bool = False  # Disable voting by default
 
     # Language models
     # Default to English and prefer the best available model by default

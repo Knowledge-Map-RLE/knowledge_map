@@ -24,7 +24,7 @@ from ..transforms.spacy_to_unified import (
     extract_noun_phrases,
     extract_verb_phrases,
 )
-from ..types import UnifiedDocument, LinguisticLevel
+from ..unified_types import UnifiedDocument, LinguisticLevel
 
 
 def analyze_syntax(

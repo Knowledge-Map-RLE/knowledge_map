@@ -19,7 +19,7 @@ from .pipelines import (
     analyze_text,
 )
 
-from .types import (
+from .unified_types import (
     UnifiedDocument,
     UnifiedSentence,
     UnifiedToken,

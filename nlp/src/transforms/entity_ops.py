@@ -7,7 +7,7 @@ All functions work with named entities and are purely functional.
 from typing import List, Dict, Set, Tuple, Optional
 from collections import defaultdict
 
-from ..types import UnifiedEntity, UnifiedToken, SCIENTIFIC_ENTITY_TYPES
+from ..unified_types import UnifiedEntity, UnifiedToken, SCIENTIFIC_ENTITY_TYPES
 
 
 # ============================================================================

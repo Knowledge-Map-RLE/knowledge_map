@@ -13,7 +13,7 @@ This is a self-contained pipeline. All dependencies are explicit.
 from typing import Optional
 
 from .syntax import analyze_syntax
-from ..types import UnifiedDocument
+from ..unified_types import UnifiedDocument
 
 
 def analyze_text(

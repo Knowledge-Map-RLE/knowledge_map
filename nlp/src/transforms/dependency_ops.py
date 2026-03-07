@@ -8,7 +8,7 @@ from typing import List, Dict, Set, Tuple, Optional
 
 import networkx as nx
 
-from ..types import UnifiedDependency, UnifiedSentence, UnifiedToken
+from ..unified_types import UnifiedDependency, UnifiedSentence, UnifiedToken
 
 
 # ============================================================================

@@ -7,7 +7,7 @@ Pure functions for analyzing morphological features in documents.
 from typing import Dict, List
 from collections import Counter
 
-from ..types import UnifiedDocument, UnifiedToken
+from ..unified_types import UnifiedDocument, UnifiedToken
 from ..transforms.token_ops import (
     get_pos_distribution,
     get_morph_feature_distribution,

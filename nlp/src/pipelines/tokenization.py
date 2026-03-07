@@ -18,7 +18,7 @@ from typing import Optional
 
 from ..models import load_spacy_model
 from ..transforms.spacy_to_unified import document_to_unified
-from ..types import UnifiedDocument, LinguisticLevel
+from ..unified_types import UnifiedDocument, LinguisticLevel
 
 
 def tokenize(

@@ -10,7 +10,7 @@ from nlp.src.pipelines.tokenization import tokenize
 from nlp.src.pipelines.morphology import analyze_morphology
 from nlp.src.pipelines.syntax import analyze_syntax
 from nlp.src.pipelines.full_analysis import analyze_text
-from nlp.src.types import LinguisticLevel
+from nlp.src.unified_types import LinguisticLevel
 
 
 SAMPLE_TEXT = "Apple released a new iPhone. It is very expensive."

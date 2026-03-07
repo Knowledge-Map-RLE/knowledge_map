@@ -6,7 +6,7 @@ Pure functions for analyzing syntactic structures.
 
 from typing import Dict, List, Optional, Tuple, Any
 
-from ..types import UnifiedDocument, UnifiedSentence, UnifiedToken
+from ..unified_types import UnifiedDocument, UnifiedSentence, UnifiedToken
 from ..transforms.dependency_ops import (
     find_dependencies_by_relation,
     extract_subtree,
