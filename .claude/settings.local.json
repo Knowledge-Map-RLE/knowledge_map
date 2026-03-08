@@ -48,7 +48,8 @@
       "WebFetch(domain:www.ncbi.nlm.nih.gov)",
       "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
       "Bash(.venv/Scripts/python -c \":*)",
-      "Bash(grep -n \"\"\"marked\"\"\" \"d:/Knowledge_Map/client/package.json\")"
+      "Bash(grep -n \"\"\"marked\"\"\" \"d:/Knowledge_Map/client/package.json\")",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

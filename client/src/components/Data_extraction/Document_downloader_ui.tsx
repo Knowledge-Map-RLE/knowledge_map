@@ -203,8 +203,12 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                     setDocuments(prev => prev.some(d => d.uid === resp.doc_id) ? prev : [tempDoc, ...prev]);
                     onSelectDocument(tempDoc);
                     showToast(`⏳ PDF загружается: ${result.title.slice(0, 50)}...`);
-                    // Перезагружаем через 5 сек
-                    setTimeout(() => loadDocuments(), 5000);
+                    // Перезагружаем через 5 сек и обновляем выбранный документ
+                    setTimeout(async () => {
+                        const freshDocs = await loadDocuments();
+                        const updated = freshDocs.find(d => d.uid === resp.doc_id);
+                        if (updated) onSelectDocument(updated);
+                    }, 5000);
                 } else {
                     // Синхронная загрузка (tar.gz → MD или metadata) — перезагружаем список
                     const freshDocs = await loadDocuments();

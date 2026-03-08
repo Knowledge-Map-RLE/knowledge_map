@@ -422,7 +422,16 @@ class PubMedService:
             merged[key] = r
 
         for r in pmc_res:
+            # Сначала пробуем найти по PMID
             existing = merged.get(r.pmid) if r.pmid else None
+            # Если не нашли по PMID — ищем по PMCID среди уже добавленных
+            # (PMC не всегда возвращает PMID, что приводит к дублям в поиске)
+            if existing is None and r.pmcid:
+                existing = next(
+                    (v for v in merged.values()
+                     if v.pmcid and (v.pmcid == r.pmcid or v.pmcid.lstrip("PMC") == r.pmcid.lstrip("PMC"))),
+                    None
+                )
             if existing:
                 # Обогащаем PubMed-запись данными PMC
                 existing.pmcid = r.pmcid or existing.pmcid
@@ -458,7 +467,7 @@ class PubMedService:
             if not meta.get("pmid"):
                 continue
 
-            pmc_data = article_el.find(".//ArticleIdList/ArticleId[@IdType='pmc']")
+            pmc_data = article_el.find("PubmedData/ArticleIdList/ArticleId[@IdType='pmc']")
             pmcid = pmc_data.text if pmc_data is not None else None
             is_oa = pmcid is not None
 
@@ -677,8 +686,8 @@ class PubMedService:
         if article_el is None:
             return None
         meta = _parse_pubmed_article(article_el)
-        # Извлекаем PMCID из ArticleIdList
-        pmc_el = article_el.find(".//ArticleIdList/ArticleId[@IdType='pmc']")
+        # Извлекаем PMCID только из PubmedData/ArticleIdList статьи (не из ReferenceList)
+        pmc_el = article_el.find("PubmedData/ArticleIdList/ArticleId[@IdType='pmc']")
         if pmc_el is not None and pmc_el.text:
             pmcid = pmc_el.text
             if not pmcid.startswith("PMC"):
@@ -1113,6 +1122,12 @@ class PubMedService:
                     existing.docling_raw_md_s3_key = md_key
                 existing.processing_status = processing_status
                 existing.is_processed = processing_status == "annotated"
+                existing.title = title
+                existing.original_filename = filename
+                if pmid:
+                    existing.pubmed_id = pmid
+                if pmcid:
+                    existing.pmc_id = pmcid
                 existing.save()
                 logger.info(f"[pubmed] Neo4j запись обновлена: doc_id={doc_id}")
             else:
