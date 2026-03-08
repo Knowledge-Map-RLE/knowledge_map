@@ -702,11 +702,16 @@ class DataExtractionService:
 
         logger.info(f"[data_extraction] Пользовательский markdown сохранен: s3://{bucket}/{md_key}")
 
-        # Обновляем Neo4j PDFDocument с user_md_s3_key
+        # Обновляем Neo4j PDFDocument с user_md_s3_key и title
+        extracted_title = None
         try:
             document = PDFDocument.nodes.get_or_none(uid=doc_id)
             if document:
                 document.user_md_s3_key = md_key
+                extracted_title = extract_title_from_markdown(markdown)
+                if extracted_title:
+                    document.title = extracted_title
+                    logger.info(f"[Neo4j] Обновлён title для документа {doc_id}: {extracted_title}")
                 document.save()
                 logger.info(f"[Neo4j] Обновлен user_md_s3_key для документа {doc_id}: {md_key}")
             else:
@@ -719,6 +724,7 @@ class DataExtractionService:
             "success": True,
             "doc_id": doc_id,
             "s3_key": md_key,
+            "title": extracted_title,
             "message": "Пользовательский markdown успешно сохранен"
         }
 
@@ -766,6 +772,14 @@ class DataExtractionService:
                 # Проверяем реальное существование файлов в S3
                 pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
                 md_exists = await self.s3_client.object_exists(bucket, md_key)
+
+                # Для PubMed/PMC статей без PDF проверяем также прямой s3_key
+                if not md_exists and not pdf_exists and pdf_doc.s3_key:
+                    direct_exists = await self.s3_client.object_exists(bucket, pdf_doc.s3_key)
+                    if direct_exists:
+                        md_exists = pdf_doc.s3_key.endswith('.md')
+                        pdf_exists = pdf_doc.s3_key.endswith('.pdf')
+
                 logger.info(f"[list_documents] doc_id={doc_id}: pdf_exists={pdf_exists}, md_exists={md_exists} для ключа {md_key}")
 
                 # Показываем документ если есть хотя бы PDF или markdown
@@ -776,6 +790,8 @@ class DataExtractionService:
                         "files": {},
                         "title": pdf_doc.title,
                         "original_filename": pdf_doc.original_filename,
+                        "pubmed_id": pdf_doc.pubmed_id if hasattr(pdf_doc, 'pubmed_id') else None,
+                        "pmc_id": pdf_doc.pmc_id if hasattr(pdf_doc, 'pmc_id') else None,
                     }
 
                     # Добавляем файлы только если они реально существуют

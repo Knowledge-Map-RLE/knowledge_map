@@ -207,6 +207,16 @@ class PDFDocument(StructuredNode):
     user_md_s3_key = StringProperty()
     """S3 ключ к пользовательской версии Markdown (создается при первом save)"""
 
+    # Источник документа
+    source = StringProperty(default="upload")
+    """Источник документа: upload, pubmed, pmc"""
+    pubmed_id = StringProperty()
+    """PubMed PMID"""
+    pmc_id = StringProperty()
+    """PubMed Central PMCID"""
+    is_open_access = BooleanProperty(default=False)
+    """Является ли статья Open Access"""
+
     # Статус обработки
     is_processed = BooleanProperty(default=False)
     """Обработан ли документ"""

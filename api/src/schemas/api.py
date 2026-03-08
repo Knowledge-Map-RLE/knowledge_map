@@ -55,6 +55,41 @@ class S3ListResponse(BaseModel):
     count: int
 
 
+# Схемы для PubMed/PMC поиска и загрузки
+class PubMedSearchResult(BaseModel):
+    pmid: Optional[str] = None
+    pmcid: Optional[str] = None
+    title: str
+    authors: List[str] = []
+    journal: str = ""
+    pub_date: str = ""
+    abstract: str = ""
+    doi: Optional[str] = None
+    is_open_access: bool = False
+    source: str  # "pubmed" | "pmc"
+
+
+class PubMedSearchResponse(BaseModel):
+    success: bool
+    results: List[PubMedSearchResult] = []
+    total: int = 0
+    query: str
+    db: str
+
+
+class PubMedIngestRequest(BaseModel):
+    pmid: Optional[str] = None
+    pmcid: Optional[str] = None
+    source: str = "pubmed"
+
+
+class PubMedIngestResponse(BaseModel):
+    success: bool
+    doc_id: Optional[str] = None
+    message: str
+    processing_status: str = "pending"
+
+
 # Схемы для извлечения данных
 class DataExtractionResponse(BaseModel):
     success: bool
@@ -95,6 +130,7 @@ class UpdateMarkdownResponse(BaseModel):
     message: Optional[str] = None
     doc_id: str
     s3_key: Optional[str] = None
+    title: Optional[str] = None
     validation: Optional[Dict[str, Any]] = None
 
 

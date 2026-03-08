@@ -3,9 +3,103 @@
 :root {
   font-family: PT Sans, Helvetica, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
   font-weight: 400;
-  
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================================
+   Quill editor — readable column width + table overflow
+   ========================================================= */
+
+/*
+  Скролл переносим на React-обёртку (div с overflow-y: auto, полная ширина).
+  .ql-container и .ql-editor растягиваются по высоте содержимого (height: auto).
+  Вертикальный скролл у правого края полного блока, а не у узкой колонки текста.
+*/
+.ql-container {
+  height: auto !important;
+}
+
+.ql-editor {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 15px;
+  line-height: 1.7;
+  /* Скролл перенесён на родительский React div — .ql-editor растягивается по содержимому */
+  overflow-y: visible !important;
+  height: auto !important;
+}
+
+/*
+  Таблица как блочный элемент с горизонтальным скроллом.
+  display: block — таблица не расширяет родителя, занимает max-width: 100%.
+  overflow-x: auto — горизонтальный скролл появляется когда контент шире.
+  Quill задаёт width:100% через JS — сбрасываем в setTimeout в MarkdownEditor.tsx.
+*/
+.ql-editor table {
+  display: block !important;
+  max-width: 100% !important;
+  width: auto !important;
+  overflow-x: auto;
+  table-layout: auto !important;
+  border-collapse: collapse;
+  white-space: nowrap;
+  font-size: 14px;
+  margin: 12px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.ql-editor table::-webkit-scrollbar {
+  height: 6px;
+}
+.ql-editor table::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ql-editor table::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.ql-editor table th,
+.ql-editor table td {
+  border: 1px solid #e5e7eb !important;
+  padding: 6px 12px;
+  text-align: left;
+}
+
+.ql-editor table th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+/* Восстанавливаем нормальный display для строк и ячеек */
+.ql-editor table thead,
+.ql-editor table tbody,
+.ql-editor table tfoot,
+.ql-editor table tr {
+  display: table-row-group;
+}
+.ql-editor table thead {
+  display: table-header-group;
+}
+.ql-editor table tr {
+  display: table-row;
+}
+.ql-editor table th,
+.ql-editor table td {
+  display: table-cell;
+}
+
+/* Изображения: по ширине текстовой колонки */
+.ql-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+  margin: 12px auto;
 }

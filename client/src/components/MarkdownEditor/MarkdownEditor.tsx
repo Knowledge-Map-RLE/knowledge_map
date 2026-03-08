@@ -177,14 +177,23 @@ export default function MarkdownEditor({ value, onChange, onExportAnnotations, o
 
         if ((value || '') === lastAppliedMarkdownRef.current) return;
         setInternalMarkdown(value || '');
-        const htmlFromMd = (marked.parse(value || '') as string) || '';
+        const rawHtml = (marked.parse(value || '') as string) || '';
         const range = quill.getSelection();
-        quill.clipboard.dangerouslyPasteHTML(htmlFromMd, 'silent');
+        quill.clipboard.dangerouslyPasteHTML(rawHtml, 'silent');
         if (range) {
             const length = quill.getLength();
             const index = Math.min(range.index, Math.max(0, length - 1));
             quill.setSelection(index, 0, 'silent');
         }
+        // Сбрасываем inline-стили Quill на таблицах (width:100%, table-layout:fixed)
+        // которые мешают корректному отображению и горизонтальному скроллу через CSS.
+        setTimeout(() => {
+            const root = quill.root;
+            root.querySelectorAll('table').forEach((table) => {
+                (table as HTMLElement).style.removeProperty('width');
+                (table as HTMLElement).style.removeProperty('table-layout');
+            });
+        }, 50);
         lastAppliedMarkdownRef.current = value || '';
     }, [value]);
 
@@ -298,8 +307,9 @@ export default function MarkdownEditor({ value, onChange, onExportAnnotations, o
                     </div>
                 </>
             )}
-            <div style={{ flex: '1 1 auto', minHeight: 0 }}>
-                <div ref={editorContainerRef} style={{ height: '100%' }} />
+            {/* overflow-y: auto здесь — скролл у правого края всего блока, не у узкого .ql-editor */}
+            <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+                <div ref={editorContainerRef} />
             </div>
 
             {/* Модальное окно для выбора меток */}

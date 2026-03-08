@@ -172,9 +172,82 @@ export async function deleteDocument(docId: string): Promise<{ success: boolean;
   return res.json();
 }
 
-export async function listDocuments(): Promise<{ success: boolean; documents: Array<{ doc_id: string; has_markdown: boolean; files: Record<string,string> }> }> {
+export async function listDocuments(): Promise<{ success: boolean; documents: Array<{ doc_id: string; has_markdown: boolean; title?: string; pubmed_id?: string; pmc_id?: string; files: Record<string,string> }> }> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
   const res = await fetch(`${base}/api/data_extraction/documents`);
+  return res.json();
+}
+
+// --- PubMed / PMC ---
+
+export interface PubMedSearchResult {
+  pmid?: string;
+  pmcid?: string;
+  title: string;
+  authors: string[];
+  journal: string;
+  pub_date: string;
+  abstract: string;
+  doi?: string;
+  is_open_access: boolean;
+  source: string;
+}
+
+export interface PubMedSearchResponse {
+  success: boolean;
+  results: PubMedSearchResult[];
+  total: number;
+  query: string;
+  db: string;
+}
+
+export interface PubMedIngestResponse {
+  success: boolean;
+  doc_id?: string;
+  message: string;
+  processing_status: string;
+}
+
+export async function searchPubMed(
+  query: string,
+  limit: number = 10
+): Promise<PubMedSearchResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const params = new URLSearchParams({ query, limit: String(limit) });
+  const res = await fetch(`${base}/api/data_extraction/pubmed/search?${params}`);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+export async function getByPubMedId(id: string): Promise<PubMedSearchResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const params = new URLSearchParams({ id });
+  const res = await fetch(`${base}/api/data_extraction/pubmed/by-id?${params}`);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+export async function ingestPubMedArticle(
+  pmid?: string,
+  pmcid?: string,
+  source: string = 'pubmed'
+): Promise<PubMedIngestResponse> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/pubmed/ingest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pmid, pmcid, source }),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+  }
   return res.json();
 }
 

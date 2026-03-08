@@ -43,7 +43,12 @@
       "Bash(ls:*)",
       "Bash(cd:*)",
       "Bash(python:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "WebSearch",
+      "WebFetch(domain:www.ncbi.nlm.nih.gov)",
+      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
+      "Bash(.venv/Scripts/python -c \":*)",
+      "Bash(grep -n \"\"\"marked\"\"\" \"d:/Knowledge_Map/client/package.json\")"
     ],
     "deny": [],
     "ask": []

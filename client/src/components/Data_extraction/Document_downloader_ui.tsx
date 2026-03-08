@@ -1,6 +1,10 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
 import s from './Document_downloader_ui.module.css';
-import { uploadPdfForExtraction, listDocuments, deleteDocument as apiDeleteDocument } from '../../services/api';
+import {
+    uploadPdfForExtraction, listDocuments, deleteDocument as apiDeleteDocument,
+    searchPubMed, getByPubMedId, ingestPubMedArticle,
+    type PubMedSearchResult
+} from '../../services/api';
 import DocumentContextMenu from './DocumentContextMenu';
 
 interface PDFDocument {
@@ -16,272 +20,299 @@ interface PDFDocument {
     processing_status: string;
     is_processed: boolean;
     pdf_url?: string;
+    pubmed_id?: string;
+    pmc_id?: string;
+}
+
+export interface DocumentListHandle {
+    reloadDocuments: () => Promise<void>;
 }
 
 interface DocumentDownloaderUIProps {
     selectedDocument: PDFDocument | null;
-    onSelectDocument: (document: PDFDocument) => void;
+    onSelectDocument: (document: PDFDocument | null) => void;
     onDocumentsChange: () => void;
     error: string | null;
     setError: (error: string | null) => void;
 }
 
-export default function Document_downloader_ui({
+const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloaderUIProps>(function Document_downloader_ui({
     selectedDocument,
     onSelectDocument,
     onDocumentsChange,
     error,
     setError
-}: DocumentDownloaderUIProps) {
+}, ref) {
     const [documents, setDocuments] = useState<PDFDocument[]>([]);
     const [isUploading, setIsUploading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
     const [progressMap, setProgressMap] = useState<Record<string, number>>({});
-    
-    // Context menu state
-    const [contextMenu, setContextMenu] = useState<{
-        x: number;
-        y: number;
-        documentId: string;
-    } | null>(null);
-    
+    const [contextMenu, setContextMenu] = useState<{ x: number; y: number; documentId: string } | null>(null);
+
+    // PubMed unified search
+    const [pubmedQuery, setPubmedQuery] = useState('');
+    const [pubmedResults, setPubmedResults] = useState<PubMedSearchResult[]>([]);
+    const [isPubMedSearching, setIsPubMedSearching] = useState(false);
+    const pubmedDebounceRef = useRef<number | null>(null);
+
+    // PubMed direct ID search
+    const [pubmedIdQuery, setPubmedIdQuery] = useState('');
+    const [pubmedIdResult, setPubmedIdResult] = useState<PubMedSearchResult | null>(null);
+    const [isPubMedIdSearching, setIsPubMedIdSearching] = useState(false);
+    const pubmedIdDebounceRef = useRef<number | null>(null);
+
+    // Expanded abstract
+    const [expandedAbstract, setExpandedAbstract] = useState<string | null>(null);
+
+    // Toast
+    const [toast, setToast] = useState<string | null>(null);
+
+    const [ingestingId, setIngestingId] = useState<string | null>(null);
+    const [localQuery, setLocalQuery] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Загружаем список документов при монтировании компонента
-    useEffect(() => {
-        loadDocuments();
-    }, []);
+    const showToast = (msg: string) => {
+        setToast(msg);
+        setTimeout(() => setToast(null), 3000);
+    };
 
-    const loadDocuments = async () => {
+    const loadDocuments = async (): Promise<PDFDocument[]> => {
         try {
-            console.log('Начало загрузки документов...');
             const data = await listDocuments();
-            console.log('Загруженные документы из API:', data);
-
-            if (!data) {
-                console.error('API вернул null/undefined');
-                setError('Не удалось загрузить список документов');
-                return;
+            if (!data?.success || !Array.isArray(data.documents)) {
+                setError('Ошибка загрузки документов');
+                return [];
             }
-
-            if (!data.success) {
-                console.error('API вернул success=false');
-                setError('Ошибка при загрузке документов');
-                return;
-            }
-
-            if (!Array.isArray(data.documents)) {
-                console.error('data.documents не является массивом:', typeof data.documents);
-                setError('Некорректный формат данных от сервера');
-                return;
-            }
-
-            console.log(`Обработка ${data.documents.length} документов...`);
-
-            if (data?.success && Array.isArray(data.documents)) {
-                // маппинг в локальный тип PDFDocument с проверкой реального статуса
-                const mapped = data.documents.map((d) => {
-                    try {
-                        console.log('Обработка документа:', d);
-                        // Проверяем, есть ли у документа markdown файл
-                        let status = d.has_markdown ? 'annotated' : 'ready_for_annotation';
-                        
-                        // формируем возможный pdf url из списка документов, если доступен
-                        const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-                        const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
-                        
-                        // Извлекаем имя файла из пути, если доступно
-                        const filename = d.files?.pdf ? d.files.pdf.split('/').pop() || d.doc_id + '.pdf' : d.doc_id + '.pdf';
-                        
-                        console.log('Определение статуса документа:', d.doc_id, 'has_markdown:', d.has_markdown, 'status:', status);
-                        
-                        return {
-                            uid: d.doc_id,
-                            original_filename: filename,
-                            md5_hash: d.doc_id,
-                            title: null, // API не возвращает title в listDocuments
-                            upload_date: new Date().toISOString(),
-                            processing_status: status,
-                            is_processed: status === 'annotated',
-                            pdf_url,
-                        } as PDFDocument;
-                    } catch (err) {
-                        console.error(`Ошибка обработки документа ${d.doc_id}:`, err);
-                        // Возвращаем документ с минимальной информацией даже при ошибке
-                        const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-                        const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
-                        const filename = d.files?.pdf ? d.files.pdf.split('/').pop() || d.doc_id + '.pdf' : d.doc_id + '.pdf';
-                        
-                        return {
-                            uid: d.doc_id,
-                            original_filename: filename,
-                            md5_hash: d.doc_id,
-                            title: null,
-                            upload_date: new Date().toISOString(),
-                            processing_status: 'error',
-                            is_processed: false,
-                            pdf_url,
-                        } as PDFDocument;
-                    }
-                });
-                console.log(`Загружено ${mapped.length} документов, устанавливаем в state...`);
-                setDocuments(mapped);
-                console.log('Документы установлены в state');
-            }
+            const mapped = data.documents.map((d) => {
+                try {
+                    const status = d.has_markdown ? 'annotated' : 'ready_for_annotation';
+                    const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+                    const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
+                    const filename = d.files?.pdf ? d.files.pdf.split('/').pop() || d.doc_id + '.pdf' : d.doc_id + '.pdf';
+                    return {
+                        uid: d.doc_id,
+                        original_filename: filename,
+                        md5_hash: d.doc_id,
+                        title: d.title || undefined,
+                        upload_date: new Date().toISOString(),
+                        processing_status: status,
+                        is_processed: status === 'annotated',
+                        pdf_url,
+                        pubmed_id: d.pubmed_id,
+                        pmc_id: d.pmc_id,
+                    } as PDFDocument;
+                } catch {
+                    return {
+                        uid: d.doc_id,
+                        original_filename: d.doc_id + '.pdf',
+                        md5_hash: d.doc_id,
+                        upload_date: new Date().toISOString(),
+                        processing_status: 'error',
+                        is_processed: false,
+                    } as PDFDocument;
+                }
+            });
+            setDocuments(mapped);
+            return mapped;
         } catch (err) {
-            console.error('Ошибка загрузки документов:', err);
             setError(`Ошибка загрузки документов: ${err instanceof Error ? err.message : String(err)}`);
+            return [];
         }
     };
 
-    const handleFileUpload = async (file: File) => {
-        if (!file.type.startsWith('application/pdf')) {
-            setError('Пожалуйста, выберите PDF файл');
-            return;
-        }
+    useImperativeHandle(ref, () => ({ reloadDocuments: () => loadDocuments().then(() => {}) }));
+    useEffect(() => { loadDocuments(); }, []);
 
+    // Надёжная проверка "уже загружено" по pubmed_id/pmc_id из Neo4j
+    const isAlreadyLoaded = (r: PubMedSearchResult): boolean => {
+        return documents.some(doc => {
+            if (r.pmid && doc.pubmed_id && doc.pubmed_id === r.pmid) return true;
+            if (r.pmcid && doc.pmc_id && doc.pmc_id === r.pmcid) return true;
+            return false;
+        });
+    };
+
+    // --- PubMed text search ---
+    const handlePubMedQueryChange = (value: string) => {
+        setPubmedQuery(value);
+        if (pubmedDebounceRef.current) window.clearTimeout(pubmedDebounceRef.current);
+        if (value.length < 3) { setPubmedResults([]); return; }
+        pubmedDebounceRef.current = window.setTimeout(async () => {
+            setIsPubMedSearching(true);
+            try {
+                const resp = await searchPubMed(value, 10);
+                setPubmedResults(resp.results || []);
+            } catch (err) {
+                console.error('PubMed search error:', err);
+                setPubmedResults([]);
+            } finally {
+                setIsPubMedSearching(false);
+            }
+        }, 500);
+    };
+
+    // --- PubMed direct ID search ---
+    const handlePubMedIdChange = (value: string) => {
+        setPubmedIdQuery(value);
+        setPubmedIdResult(null);
+        // Очищаем текстовые результаты, чтобы не было дублей
+        if (value.trim()) {
+            setPubmedResults([]);
+            setPubmedQuery('');
+        }
+        if (pubmedIdDebounceRef.current) window.clearTimeout(pubmedIdDebounceRef.current);
+        const trimmed = value.trim();
+        if (!trimmed) return;
+        const isPmid = /^\d+$/.test(trimmed);
+        const isPmcid = /^PMC\d+$/i.test(trimmed);
+        if (!isPmid && !isPmcid) return;
+        pubmedIdDebounceRef.current = window.setTimeout(async () => {
+            setIsPubMedIdSearching(true);
+            try {
+                const resp = await getByPubMedId(trimmed);
+                setPubmedIdResult(resp.results?.[0] || null);
+            } catch (err) {
+                console.error('PubMed ID search error:', err);
+            } finally {
+                setIsPubMedIdSearching(false);
+            }
+        }, 400);
+    };
+
+    // --- Ingest article ---
+    const handleIngestArticle = async (result: PubMedSearchResult) => {
+        const key = result.pmid || result.pmcid || '';
+        setIngestingId(key);
+        setError(null);
+        try {
+            const resp = await ingestPubMedArticle(result.pmid, result.pmcid, result.source);
+            if (resp.success && resp.doc_id) {
+                if (resp.processing_status === 'pdf_to_markdown') {
+                    // Асинхронная обработка (Docling) — добавляем временный элемент
+                    const tempDoc: PDFDocument = {
+                        uid: resp.doc_id,
+                        original_filename: result.pmcid || `PMID${result.pmid}` || resp.doc_id,
+                        md5_hash: resp.doc_id,
+                        title: result.title,
+                        upload_date: new Date().toISOString(),
+                        processing_status: 'pdf_to_markdown',
+                        is_processed: false,
+                        pubmed_id: result.pmid,
+                        pmc_id: result.pmcid,
+                    };
+                    setDocuments(prev => prev.some(d => d.uid === resp.doc_id) ? prev : [tempDoc, ...prev]);
+                    onSelectDocument(tempDoc);
+                    showToast(`⏳ PDF загружается: ${result.title.slice(0, 50)}...`);
+                    // Перезагружаем через 5 сек
+                    setTimeout(() => loadDocuments(), 5000);
+                } else {
+                    // Синхронная загрузка (tar.gz → MD или metadata) — перезагружаем список
+                    const freshDocs = await loadDocuments();
+                    const added = freshDocs.find(d => d.uid === resp.doc_id);
+                    if (added) onSelectDocument(added);
+                    const isFullText = result.is_open_access;
+                    showToast(isFullText
+                        ? `✓ Добавлен полный текст: ${result.title.slice(0, 50)}...`
+                        : `✓ Добавлен абстракт: ${result.title.slice(0, 50)}...`
+                    );
+                }
+                onDocumentsChange();
+            } else {
+                setError(resp.message || 'Ошибка загрузки статьи');
+            }
+        } catch (err) {
+            setError(`Ошибка: ${err instanceof Error ? err.message : String(err)}`);
+        } finally {
+            setIngestingId(null);
+        }
+    };
+
+    // --- Delete with optimistic update ---
+    const handleDelete = async (documentId: string) => {
+        // Сначала убираем из UI немедленно
+        setDocuments(prev => prev.filter(d => d.uid !== documentId));
+        setContextMenu(null);
+        if (selectedDocument?.uid === documentId) {
+            // Сбрасываем выбранный документ если удаляем его
+            onSelectDocument(null as any);
+        }
+        try {
+            await apiDeleteDocument(documentId);
+            onDocumentsChange();
+            // Синхронизируем с сервером
+            await loadDocuments();
+        } catch (err) {
+            console.error('Ошибка удаления документа:', err);
+            // Восстанавливаем список при ошибке
+            await loadDocuments();
+        }
+    };
+
+    // --- Local document filter ---
+    const filteredDocuments = localQuery.length >= 3
+        ? documents.filter(doc => {
+            const q = localQuery.toLowerCase();
+            return (doc.title || '').toLowerCase().includes(q)
+                || (doc.original_filename || '').toLowerCase().includes(q);
+        })
+        : documents;
+
+    // --- PDF upload ---
+    const handleFileUpload = async (file: File) => {
+        if (!file.type.startsWith('application/pdf')) { setError('Пожалуйста, выберите PDF файл'); return; }
         setIsUploading(true);
         setError(null);
-        
-        // Create a temporary document for tracking progress
         const tempDocId = 'upload_' + Date.now();
-        const tempDoc = {
-            uid: tempDocId,
-            original_filename: file.name,
-            md5_hash: '',
-            upload_date: new Date().toISOString(),
-            processing_status: 'uploading',
-            is_processed: false,
-        } as PDFDocument;
-        
+        const tempDoc = { uid: tempDocId, original_filename: file.name, md5_hash: '', upload_date: new Date().toISOString(), processing_status: 'uploading', is_processed: false } as PDFDocument;
         setDocuments(prev => [tempDoc, ...prev]);
         onSelectDocument(tempDoc);
-
         try {
             const result = await uploadPdfForExtraction(file, (progress) => {
-                // Update progress for the temporary document
                 setProgressMap(prev => ({ ...prev, [tempDocId]: progress }));
             });
-            
             if (result.success) {
-                console.log('Файл успешно загружен, начинаем преобразование PDF в Markdown');
-                // After upload, start PDF to Markdown conversion
-                const newDoc = {
-                    uid: result.doc_id || '',
-                    original_filename: file.name,
-                    md5_hash: result.doc_id || '',
-                    upload_date: new Date().toISOString(),
-                    processing_status: 'pdf_to_markdown',
-                    is_processed: false,
-                } as PDFDocument;
-                
-                console.log('Создание документа со статусом pdf_to_markdown:', newDoc);
-                
-                setDocuments(prev => {
-                    // Remove temporary document and add real one
-                    const filtered = prev.filter(doc => doc.uid !== tempDocId);
-                    return [newDoc, ...filtered];
-                });
-                
+                const newDoc = { uid: result.doc_id || '', original_filename: file.name, md5_hash: result.doc_id || '', upload_date: new Date().toISOString(), processing_status: 'pdf_to_markdown', is_processed: false } as PDFDocument;
+                setDocuments(prev => [newDoc, ...prev.filter(doc => doc.uid !== tempDocId)]);
                 onSelectDocument(newDoc);
-                
-                // Simulate PDF to Markdown conversion progress
                 let progress = 0;
-                console.log('Начало преобразования PDF в Markdown для документа:', newDoc.uid);
-                setProgressMap(prev => {
-                    const newProgressMap = { ...prev, [newDoc.uid]: progress };
-                    console.log('Обновление progressMap:', newProgressMap);
-                    return newProgressMap;
-                });
-                
+                setProgressMap(prev => ({ ...prev, [newDoc.uid]: progress }));
                 const progressInterval = setInterval(() => {
                     progress += Math.floor(Math.random() * 10) + 5;
                     if (progress >= 100) {
                         progress = 100;
                         clearInterval(progressInterval);
-                        console.log('Преобразование PDF в Markdown завершено для документа:', newDoc.uid);
-                        
-                        // Update document status to ready_for_annotation when conversion is complete
-                        setDocuments(prev => {
-                            const updated = prev.map(doc =>
-                                doc.uid === newDoc.uid
-                                    ? {...doc, processing_status: 'ready_for_annotation'}
-                                    : doc
-                            );
-                            console.log('Обновлен статус документа на ready_for_annotation:', newDoc.uid);
-                            return updated;
-                        });
-                        
+                        setDocuments(prev => prev.map(doc => doc.uid === newDoc.uid ? { ...doc, processing_status: 'ready_for_annotation' } : doc));
                         onDocumentsChange();
                     }
-                    console.log('Прогресс преобразования PDF в Markdown для документа', newDoc.uid, ':', progress, '%');
                     setProgressMap(prev => ({ ...prev, [newDoc.uid]: progress }));
                 }, 200);
-                
-                // Clear progress for this document after 25 seconds
-                setTimeout(() => {
-                    setProgressMap(prev => {
-                        const updated = { ...prev };
-                        delete updated[newDoc.uid];
-                        return updated;
-                    });
-                }, 25000);
+                setTimeout(() => setProgressMap(prev => { const u = { ...prev }; delete u[newDoc.uid]; return u; }), 25000);
             } else {
                 setError(result.message || 'Ошибка загрузки файла');
-                
-                // Remove temporary document on error
                 setDocuments(prev => prev.filter(doc => doc.uid !== tempDocId));
             }
-        } catch (err) {
+        } catch {
             setError('Ошибка загрузки файла');
-            console.error('Ошибка загрузки:', err);
-            
-            // Remove temporary document on error
             setDocuments(prev => prev.filter(doc => doc.uid !== tempDocId));
         } finally {
             setIsUploading(false);
         }
     };
 
-    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            handleFileUpload(file);
-        }
-    };
-
-    const handleDrop = useCallback((event: React.DragEvent) => {
-        event.preventDefault();
-        setDragOver(false);
-        
-        const file = event.dataTransfer.files[0];
-        if (file) {
-            handleFileUpload(file);
-        }
-    }, []);
-
-    const handleDragOver = useCallback((event: React.DragEvent) => {
-        event.preventDefault();
-        setDragOver(true);
-    }, []);
-
-    const handleDragLeave = useCallback((event: React.DragEvent) => {
-        event.preventDefault();
-        setDragOver(false);
-    }, []);
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => { const f = e.target.files?.[0]; if (f) handleFileUpload(f); };
+    const handleDrop = useCallback((e: React.DragEvent) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleFileUpload(f); }, []);
+    const handleDragOver = useCallback((e: React.DragEvent) => { e.preventDefault(); setDragOver(true); }, []);
+    const handleDragLeave = useCallback((e: React.DragEvent) => { e.preventDefault(); setDragOver(false); }, []);
 
     const getStatusClass = (status: string) => {
         switch (status) {
-            case 'uploading': return s.statusIndicator + ' ' + s.processing;
-            case 'pdf_to_markdown': return s.statusIndicator + ' ' + s.processing;
+            case 'uploading': case 'pdf_to_markdown': case 'processing': return s.statusIndicator + ' ' + s.processing;
             case 'ready_for_annotation': return s.statusIndicator + ' ' + s.uploaded;
-            case 'processing': return s.statusIndicator + ' ' + s.processing;
             case 'annotated': return s.statusIndicator + ' ' + s.annotated;
             case 'error': return s.statusIndicator + ' ' + s.error;
             default: return s.statusIndicator + ' ' + s.uploaded;
         }
     };
-
     const getStatusText = (status: string) => {
         switch (status) {
             case 'uploading': return 'Загрузка';
@@ -293,116 +324,189 @@ export default function Document_downloader_ui({
             default: return 'Неизвестно';
         }
     };
-
     const getProgressText = (status: string, docId: string) => {
         const progress = progressMap[docId];
-        console.log('Получение прогресса для документа:', docId, 'статус:', status, 'прогресс:', progress);
-        
-        if (status === 'uploading') {
-            return `Загружено ${progress ?? 0}%`;
-        }
-        if (status === 'pdf_to_markdown') {
-            return `Обработано ${progress ?? 0}%`;
-        }
-        if (status === 'processing') {
-            return `Обработано ${progress ?? 0}%`;
-        }
+        if (status === 'uploading') return `Загружено ${progress ?? 0}%`;
+        if (status === 'pdf_to_markdown' || status === 'processing') return `Обработано ${progress ?? 0}%`;
         return null;
     };
 
-    return (
-        <>
-            <h2 className="text-base font-bold mb-3">Загруженные документы</h2>
-            <div
-                className={`${s.uploadArea} ${dragOver ? s.dragover : ''} mb-3`}
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onClick={() => fileInputRef.current?.click()}
-                style={{ position:'sticky', top:0, zIndex:1 }}
-            >
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                />
-                {isUploading ? (
-                    <div className="flex flex-col items-center">
-                        <div className={s.loadingSpinner}></div>
-                        <p className="mt-2">Загрузка файла...</p>
+    const PubMedResultItem = ({ r }: { r: PubMedSearchResult }) => {
+        const key = r.pmid || r.pmcid || '';
+        const isIngesting = ingestingId === key;
+        const alreadyLoaded = isAlreadyLoaded(r);
+        const abstractKey = r.pmid || r.pmcid || r.title;
+        const isExpanded = expandedAbstract === abstractKey;
+
+        return (
+            <div className={s.pubmedResultItem}>
+                <div className={s.pubmedResultHeader}>
+                    <div className={s.pubmedResultTitle} title={r.title}>{r.title}</div>
+                    <div className={s.pubmedResultBadges}>
+                        {r.is_open_access
+                            ? <span className={s.oaBadgeFull} title="Полный текст доступен">📖 OA</span>
+                            : <span className={s.oaBadgeAbstract} title="Только абстракт">📄</span>
+                        }
                     </div>
-                ) : (
-                    <div>
+                </div>
+                <div className={s.pubmedResultMeta}>
+                    {r.authors.length > 0 && <span>{r.authors.slice(0, 2).join(', ')}{r.authors.length > 2 ? ' et al.' : ''}</span>}
+                    {r.journal && <span>{r.journal}</span>}
+                    {r.pub_date && <span>{r.pub_date}</span>}
+                    {r.pmid && <span>PMID: {r.pmid}</span>}
+                    {r.pmcid && <span>{r.pmcid}</span>}
+                </div>
+                {r.abstract && (
+                    <button className={s.abstractToggle} onClick={() => setExpandedAbstract(isExpanded ? null : abstractKey)}>
+                        {isExpanded ? '▲ Скрыть' : '▼ Абстракт'}
+                    </button>
+                )}
+                {isExpanded && r.abstract && (
+                    <div className={s.abstractText}>{r.abstract}</div>
+                )}
+                <div className={s.pubmedResultFooter}>
+                    {alreadyLoaded ? (
+                        <span className={s.alreadyLoaded}>✓ В списке</span>
+                    ) : (
+                        <button className={s.pubmedAddBtn} onClick={() => handleIngestArticle(r)} disabled={isIngesting}>
+                            {isIngesting ? 'Загрузка...' : '+ Добавить'}
+                        </button>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
+    const isSearching = isPubMedSearching || isPubMedIdSearching;
+    const hasResults = pubmedIdResult !== null || pubmedResults.length > 0;
+
+    return (
+        <div className={s.columnLayout}>
+            {toast && <div className={s.toast}>{toast}</div>}
+
+            {/* Верхний блок: загруженные документы */}
+            <div className={s.topBlock}>
+                <h2 className="text-base font-bold mb-2">Загруженные документы</h2>
+
+                <div
+                    className={`${s.uploadArea} ${dragOver ? s.dragover : ''}`}
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onClick={() => fileInputRef.current?.click()}
+                >
+                    <input ref={fileInputRef} type="file" accept=".pdf" onChange={handleFileSelect} className="hidden" />
+                    {isUploading ? (
+                        <div className="flex flex-col items-center">
+                            <div className={s.loadingSpinner}></div>
+                            <p className="mt-2 text-sm">Загрузка файла...</p>
+                        </div>
+                    ) : (
                         <p className="text-sm">Перетащите PDF или нажмите для выбора</p>
+                    )}
+                </div>
+
+                {error && (
+                    <div className="mt-2 p-2 bg-red-100 border border-red-300 rounded text-red-700 text-xs">
+                        {error}
                     </div>
                 )}
-            </div>
 
-            {/* Ошибки */}
-            {error && (
-                <div className="mb-3 p-2 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm">
-                    {error}
-                </div>
-            )}
+                <input
+                    type="text"
+                    className={`${s.searchInput} mt-2`}
+                    placeholder="Поиск по документам (мин. 3 символа)..."
+                    value={localQuery}
+                    onChange={e => setLocalQuery(e.target.value)}
+                />
 
-            <div className={s.fileList}>
-                {documents.map((doc) => {
-                    // Определяем отображаемое название: title или original_filename
-                    const displayName = doc.title || doc.original_filename || doc.uid;
-                    const progressText = getProgressText(doc.processing_status, doc.uid);
-                    
-                    console.log('Отображение документа:', doc.uid, 'статус:', doc.processing_status, 'прогресс:', progressText);
-                    
-                    return (
-                        <div
-                            key={doc.uid}
-                            className={`${s.fileItem} ${selectedDocument?.uid === doc.uid ? 'bg-blue-100' : ''}`}
-                            onClick={() => onSelectDocument(doc)}
-                            onContextMenu={(e) => {
-                                e.preventDefault();
-                                setContextMenu({
-                                    x: e.clientX,
-                                    y: e.clientY,
-                                    documentId: doc.uid,
-                                });
-                            }}
-                        >
-                            <div className="flex items-center gap-2 min-w-0">
-                                <span className={getStatusClass(doc.processing_status)}></span>
-                                <div className="min-w-0">
-                                    <p className="font-medium truncate" title={displayName}>{displayName}</p>
-                                    <p className="text-xs text-gray-500">
-                                        {getStatusText(doc.processing_status)}
-                                        {progressText && (
-                                            <span className="text-blue-600 font-semibold"> {progressText}</span>
-                                        )}
-                                    </p>
+                <div className={s.fileList}>
+                    {filteredDocuments.map((doc) => {
+                        const displayName = doc.title || doc.original_filename || doc.uid;
+                        const progressText = getProgressText(doc.processing_status, doc.uid);
+                        return (
+                            <div
+                                key={doc.uid}
+                                className={`${s.fileItem} ${selectedDocument?.uid === doc.uid ? 'bg-blue-100' : ''}`}
+                                onClick={() => onSelectDocument(doc)}
+                                onContextMenu={(e) => {
+                                    e.preventDefault();
+                                    setContextMenu({ x: e.clientX, y: e.clientY, documentId: doc.uid });
+                                }}
+                            >
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <span className={getStatusClass(doc.processing_status)}></span>
+                                    <div className="min-w-0">
+                                        <p className="font-medium truncate text-sm" title={displayName}>{displayName}</p>
+                                        <p className="text-xs text-gray-500">
+                                            {getStatusText(doc.processing_status)}
+                                            {progressText && <span className="text-blue-600 font-semibold"> {progressText}</span>}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </div>
 
-            {/* Context Menu */}
+            {/* Нижний блок: поиск PubMed + PMC */}
+            <div className={s.bottomBlock}>
+                <p className="text-sm font-semibold text-gray-700 mb-1.5">Поиск в PubMed и PMC</p>
+
+                <input
+                    type="text"
+                    className={`${s.searchInput} mb-1.5`}
+                    placeholder="Запрос (мин. 3 символа)..."
+                    value={pubmedQuery}
+                    onChange={e => handlePubMedQueryChange(e.target.value)}
+                />
+
+                <input
+                    type="text"
+                    className={`${s.searchInput} mb-1.5`}
+                    placeholder="PMID или PMCID (напр. PMC3836174)..."
+                    value={pubmedIdQuery}
+                    onChange={e => handlePubMedIdChange(e.target.value)}
+                />
+
+                {/* Результаты с оверлей-спиннером */}
+                <div className={s.pubmedResultsWrap}>
+                    {isSearching && (
+                        <div className={s.searchOverlay}>
+                            <div className={s.loadingSpinner} style={{ width: 20, height: 20 }}></div>
+                        </div>
+                    )}
+                    <div className={s.pubmedResults}>
+                        {pubmedIdResult && <PubMedResultItem r={pubmedIdResult} />}
+                        {pubmedResults
+                            .filter(r => !pubmedIdResult || (
+                                r.pmid !== pubmedIdResult.pmid &&
+                                r.pmcid !== pubmedIdResult.pmcid
+                            ))
+                            .map(r => (
+                                <PubMedResultItem key={r.pmid || r.pmcid || r.title} r={r} />
+                            ))}
+                        {!isSearching && pubmedQuery.length >= 3 && !hasResults && (
+                            <p className="text-xs text-gray-400 p-2">Ничего не найдено</p>
+                        )}
+                        {!isSearching && !pubmedQuery && !pubmedIdQuery && (
+                            <p className="text-xs text-gray-300 p-2">Введите запрос или ID статьи</p>
+                        )}
+                    </div>
+                </div>
+            </div>
+
             {contextMenu && (
                 <DocumentContextMenu
                     x={contextMenu.x}
                     y={contextMenu.y}
-                    onDelete={async () => {
-                        try {
-                            await apiDeleteDocument(contextMenu.documentId);
-                            await loadDocuments();
-                            onDocumentsChange();
-                        } catch (err) {
-                            console.error('Ошибка удаления документа:', err);
-                        }
-                    }}
+                    onDelete={() => handleDelete(contextMenu.documentId)}
                     onClose={() => setContextMenu(null)}
                 />
             )}
-        </>
+        </div>
     );
-}
+});
+
+export default Document_downloader_ui;
