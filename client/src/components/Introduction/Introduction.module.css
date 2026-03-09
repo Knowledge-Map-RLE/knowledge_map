@@ -23,10 +23,6 @@
   padding-top: 20px;
 }
 
-.user {
-  flex-shrink: 0;
-}
-
 .start_text {
   display: flex;
   justify-content: center;

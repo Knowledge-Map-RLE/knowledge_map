@@ -1,16 +1,11 @@
 import { Link } from 'react-router-dom';
-import Project_title from '../Project_title';
-import User from '../User';
+import Header from '../Header';
 import s from './RLE_Databases.module.css';
 import Site_map from '../Site_map';
 
 export default function RLE_Databases() {
   return <div className={s.container}>
-    <header className={s.header}>
-      <Project_title className='' />
-      <div style={{ width: '100%' }}></div>
-      <User className={s.user} />
-    </header>
+    <Header showSearch={false} className={s.header} />
     <main>
       <div className={s.start_text}>Подпроект Карты Знаний "Базы данных РПЖ" — базы данных релевантные задаче радикального продления жизни.
       </div>

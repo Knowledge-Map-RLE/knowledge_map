@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+.header {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  height: 60px;
+}
+
+.title {
+  /* flex: 1; */
+  width: 300px;
+}
+
+.search {
+  /* flex: 1; */
+  padding: 10px;
+}
+
+.user {
+  /* flex: 1; */
+  width: 300px;
+}

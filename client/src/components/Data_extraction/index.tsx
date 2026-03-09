@@ -3,9 +3,7 @@ import s from './Data_extraction.module.css';
 import { importAnnotations as apiImportAnnotations, exportAnnotations as apiExportAnnotations, getDocumentAssets, saveMarkdown } from '../../services/api';
 import { AnnotationWorkspace } from './Annotation';
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
-import Project_title from '../Project_title';
-import Search from '../Search';
-import User from '../User';
+import Header from '../Header';
 import { PatternGenerator } from './Patterns';
 import Document_downloader_ui from './Document_downloader_ui';
 import type { DocumentListHandle } from './Document_downloader_ui';
@@ -148,11 +146,7 @@ export default function Data_extraction() {
     return (
         <main className={s.dex}>
             {/* Шапка */}
-            <div className={s.headerRow}>
-                <Project_title className={s.headerPanel} />
-                <Search className={s.headerPanel} />
-                <User className={s.headerPanel} />
-            </div>
+            <Header showSearch={true} className={s.headerRow} />
 
             {/* Основная строка */}
             <div className={s.mainRow}>

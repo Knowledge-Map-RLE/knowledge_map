@@ -1,19 +1,10 @@
 import s from './Knowledge_map_ui.module.css'
-import Project_title from '../Project_title'
-import Search from '../Search'
-import User from '../User'
+import Header from '../Header'
 import { Link } from 'react-router-dom'
 
 export default function Knowledge_map_ui() {
-    const handleDisabledLinkClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-    };
-
     return <div className={s.interface}>
-        <Project_title className={s.panel} />
-        <Search className={s.panel} />
-        <User className={s.panel} />
+        <Header showSearch={true} className={s.header} />
         <div className={`${s.left} ${s.panel}`}>
             <h2 className={s.menu_title}>Меню</h2>
             <nav className={s.main_menu}>

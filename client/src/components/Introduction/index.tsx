@@ -1,15 +1,10 @@
-import Project_title from '../Project_title';
+import Header from '../Header';
 import Site_map from '../Site_map';
-import User from '../User';
 import s from './Introduction.module.css';
 
 export default function Introduction() {
   return <div className={s.container}>
-    <header className={s.header}>
-      <Project_title className='' />
-      <div style={{ width: '100%' }}></div>
-      <User className={s.user} />
-    </header>
+    <Header showSearch={false} className={s.header} />
     <main>
       <div className={s.start_text}>Карта Знаний — инструмент (в разработке) для решения задачи радикального продления жизни
         <br/>

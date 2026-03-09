@@ -8,7 +8,7 @@
     grid-template-rows: 40px 1fr 100px;
     gap: 8px;
     grid-template-areas:
-        'name_slogan top user'
+        'header header header'
         'left center right'
         'info bot minimap';
     
@@ -21,17 +21,9 @@
     pointer-events: auto;
 }
 
-.name_slogan {
-    grid-area: name_slogan;
-    display: flex;
-}
-
-.top {
-    grid-area: top;
-}
-
-.user {
-    grid-area: user;
+.header {
+    grid-area: header;
+    gap: 8px;
 }
 
 .left {

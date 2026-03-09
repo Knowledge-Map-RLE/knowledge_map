@@ -87,20 +87,19 @@ export default function User({ className='' }: { className: string }) {
     if (!isAuthenticated) {
         return (
             <div className={`${s.user} ${className}`}>
-                <div className={s.auth_buttons}>
-                    <button 
-                        onClick={handleLogin}
-                        className={s.auth_button}
-                    >
-                        Вход
-                    </button>
-                    <button 
-                        onClick={handleRegister}
-                        className={s.auth_button}
-                    >
-                        Регистрация
-                    </button>
-                </div>
+                <button 
+                    onClick={handleLogin}
+                    className={s.auth_button}
+                >
+                    Вход
+                </button>
+                <button 
+                    onClick={handleRegister}
+                    className={s.auth_button}
+                >
+                    Регистрация
+                </button>
+
 
                 {/* Модальные окна */}
                 {activeModal === 'login' && (

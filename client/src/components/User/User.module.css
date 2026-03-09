@@ -1,7 +1,24 @@
 @import "tailwindcss";
 
 .user {
-    @apply flex items-center;
+    display: flex;
+    border-left: 1px solid #ccc;
+    padding: 10px;
+    height: 100%;
+    justify-items: center;
+    gap: 10px;
+}
+
+.user > button {
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    @apply bg-blue-500
+}
+
+.user > button:hover {
+    background-color: lightblue;
+    @apply bg-blue-600
 }
 
 .avatar {
@@ -15,16 +32,6 @@
 .user_info {
     @apply flex flex-col;
     font-size: 12px;
-}
-
-.auth_buttons {
-    height: 100%;
-    @apply flex gap-2;
-}
-
-.auth_button {
-    @apply px-4 py-2 bg-blue-500 text-white rounded-[5px] hover:bg-blue-600 transition-colors;
-    font-size: 14px;
 }
 
 .logout_button {

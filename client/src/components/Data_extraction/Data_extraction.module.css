@@ -11,22 +11,6 @@
     overflow: hidden;
 }
 
-.headerRow {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-items: center;
-    padding: 10px 20px;
-    background: white;
-    border-bottom: 1px solid #d1d5db;
-    min-height: 60px;
-    gap: 20px;
-}
-
-/* .headerPanel {
-    flex-shrink: 0;
-} */
-
 .mainRow {
     display: flex;
     flex-direction: row;

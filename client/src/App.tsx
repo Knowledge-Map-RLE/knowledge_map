@@ -15,16 +15,14 @@ function App() {
     <ViewportProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<><Knowledge_map /><Knowledge_map_ui /></>} />
+          <Route path="/" element={<>Лендинг</>} />
+          <Route path="/km" element={<><Knowledge_map /><Knowledge_map_ui /></>} />
           <Route path="/rle_databases" element={<><RLE_Databases/></>} />
           <Route path="/introduction" element={<><Introduction/></>} />
           <Route path="/data_extraction" element={<Data_extraction />} />
           <Route path="/science_articles" element={<><Science_articles /><Knowledge_map_ui /></>} />
           <Route path="/nlp" element={<><NLP /><Knowledge_map_ui /></>} />
         </Routes>
-        
-        {/* Глобальный компонент координат - поверх всех страниц */}
-        <ViewportCoordinates />
       </Router>
     </ViewportProvider>
   )
