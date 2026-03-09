@@ -54,7 +54,8 @@
       "WebFetch(domain:railway.com)",
       "WebFetch(domain:docs.railway.app)",
       "WebFetch(domain:docs.railway.com)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "WebFetch(domain:station.railway.com)"
     ],
     "deny": [],
     "ask": []
