@@ -19,6 +19,11 @@ test_input/
 __pycache__/
 
 .env
+.env.local
+api/.env
+auth/.env
+ai/.env
+nlp/.env
 .venv/
 worker_distributed_layering_rust/tests/artifacts/
 

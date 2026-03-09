@@ -40,12 +40,15 @@ class Settings(BaseSettings):
     
     
     def get_database_url(self) -> str:
-        # neomodel ожидает формат: bolt://user:password@host:port
-        # self.NEO4J_URI может быть вида bolt://host:port или neo4j://host:port
+        # neomodel ожидает формат: scheme://user:password@host:port
+        # Поддерживаем bolt://, neo4j://, bolt+s://, neo4j+s:// (AuraDB)
         uri = self.NEO4J_URI
-        # Отбрасываем схему (bolt:// или neo4j://) и собираем host:port
-        hostport = uri.replace("bolt://", "").replace("neo4j://", "")
-        return f"bolt://{self.NEO4J_USER}:{self.NEO4J_PASSWORD}@{hostport}"
+        for scheme in ("bolt+s", "neo4j+s", "neo4j", "bolt"):
+            prefix = f"{scheme}://"
+            if uri.startswith(prefix):
+                hostport = uri[len(prefix):]
+                return f"{scheme}://{self.NEO4J_USER}:{self.NEO4J_PASSWORD}@{hostport}"
+        return uri
 
 
 settings = Settings()

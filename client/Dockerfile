@@ -16,8 +16,10 @@ FROM nginx:alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Шаблон конфига — подстановка API_HOST происходит при старте контейнера
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 EXPOSE 80
 
+# nginx:alpine официально поддерживает /etc/nginx/templates/ с envsubst
 CMD ["nginx", "-g", "daemon off;"]

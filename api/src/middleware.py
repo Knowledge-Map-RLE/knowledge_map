@@ -1,5 +1,6 @@
 """Middleware для FastAPI приложения"""
 import logging
+import os
 from typing import Callable
 
 from fastapi import Request, Response
@@ -7,7 +8,12 @@ from fastapi import Request, Response
 logger = logging.getLogger(__name__)
 
 # Настройка CORS
-ORIGINS = [
+_extra_origins = [
+    o.strip()
+    for o in os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if o.strip()
+]
+ORIGINS = _extra_origins + [
     "http://localhost:5173",  # Vite dev server
     "http://127.0.0.1:5173",
     "http://localhost:5174",  # Vite dev server (альтернативный порт)

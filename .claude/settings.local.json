@@ -49,7 +49,11 @@
       "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
       "Bash(.venv/Scripts/python -c \":*)",
       "Bash(grep -n \"\"\"marked\"\"\" \"d:/Knowledge_Map/client/package.json\")",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "WebFetch(domain:railway.app)",
+      "WebFetch(domain:railway.com)",
+      "WebFetch(domain:docs.railway.app)",
+      "WebFetch(domain:docs.railway.com)"
     ],
     "deny": [],
     "ask": []
