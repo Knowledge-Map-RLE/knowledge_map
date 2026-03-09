@@ -54,6 +54,7 @@ interface EditorTabsWithValidationProps {
   onExportCSV?: () => void;
   onImportCSV?: (file: File) => void;
   onSaveForTests?: () => void;
+  onDownloadMarkdown?: () => void;
   onValidationChange?: (validation: ValidationResponse | null) => void;
   filterProps?: FilterProps;
   onColorChange?: (color: string) => void;
@@ -97,6 +98,7 @@ const EditorTabsWithValidation = React.forwardRef<
       onExportCSV,
       onImportCSV,
       onSaveForTests,
+      onDownloadMarkdown,
       onValidationChange,
       filterProps,
       onColorChange,
@@ -310,6 +312,7 @@ const EditorTabsWithValidation = React.forwardRef<
             onExportCSV={onExportCSV}
             onImportCSV={onImportCSV}
             onSaveForTests={onSaveForTests}
+            onDownloadMarkdown={onDownloadMarkdown}
           />
         </div>
 

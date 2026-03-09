@@ -32,6 +32,7 @@ interface EditorTabsProps {
   onExportCSV?: () => void;
   onImportCSV?: (file: File) => void;
   onSaveForTests?: () => void;
+  onDownloadMarkdown?: () => void;
 }
 
 const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
@@ -64,6 +65,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onExportCSV,
   onImportCSV,
   onSaveForTests,
+  onDownloadMarkdown,
 }, ref) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -127,6 +129,31 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
             ) : (
               'Multi-Level анализ'
             )}
+          </button>
+        )}
+
+        {/* Загрузить Markdown */}
+        {onDownloadMarkdown && (
+          <button
+            className="download-markdown-button"
+            onClick={onDownloadMarkdown}
+            title="Загрузить Markdown с изображениями в ZIP-архиве"
+            style={{
+              backgroundColor: '#009688',
+              color: 'white',
+              border: 'none',
+              padding: '10px 16px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            Загрузить Markdown
           </button>
         )}
 

@@ -16,6 +16,7 @@
     "@pixi/react": "8.0.2",
     "@tailwindcss/vite": "^4.1.16",
     "gsap": "^3.13.0",
+    "jszip": "^3.10.1",
     "marked": "^16.4.1",
     "pixi.js": "8.9.2",
     "quill": "^2.0.3",

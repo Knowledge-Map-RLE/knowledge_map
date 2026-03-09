@@ -16,6 +16,7 @@ import {
   createAnnotationRelation,
   buildAnnotationsCSV,
   parseAnnotationsCSV,
+  getDocumentAssets,
 } from '../../../services/api';
 import type {
   Annotation,
@@ -488,6 +489,69 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }
   }, [docId, annotations, relations]);
 
+  // Download Markdown as ZIP handler
+  const handleDownloadMarkdown = useCallback(async () => {
+    try {
+      const assets = await getDocumentAssets(docId);
+      if (!assets.success || !assets.markdown) {
+        console.error('Не удалось получить данные документа');
+        return;
+      }
+
+      const JSZip = (await import('jszip')).default;
+      const zip = new JSZip();
+
+      let mdContent = assets.markdown;
+      const imageFolder = zip.folder('images')!;
+
+      // Найти все изображения в markdown (абсолютные URL)
+      const imgRegex = /!\[([^\]]*)\]\(<?(https?:\/\/[^)>\s]+)>?\)/g;
+      const imageMap = new Map<string, string>(); // url → localFilename
+
+      let match: RegExpExecArray | null;
+      while ((match = imgRegex.exec(assets.markdown)) !== null) {
+        const url = match[2];
+        if (!imageMap.has(url)) {
+          const filename = url.split('/').pop()?.split('?')[0] || `image_${imageMap.size}.png`;
+          imageMap.set(url, filename);
+        }
+      }
+
+      // Скачать все изображения и добавить в ZIP
+      for (const [url, filename] of imageMap) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            const blob = await res.blob();
+            imageFolder.file(filename, blob);
+            mdContent = mdContent.replaceAll(url, `images/${filename}`);
+          }
+        } catch {
+          console.warn(`Не удалось скачать изображение: ${url}`);
+        }
+      }
+
+      // Убрать угловые скобки вокруг локальных путей, если были
+      mdContent = mdContent.replace(/!\[([^\]]*)\]\(<(images\/[^>]+)>\)/g, '![$1]($2)');
+
+      zip.file('document.md', mdContent);
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const zipUrl = window.URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = zipUrl;
+      const safeTitle = (documentTitle || 'document').replace(/[^a-zA-Zа-яА-Я0-9_\- ]/g, '').trim().replace(/\s+/g, '_');
+      a.download = `${safeTitle}_${docId}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(zipUrl);
+      console.log('Markdown с изображениями экспортирован в ZIP');
+    } catch (error: any) {
+      console.error('Не удалось создать ZIP-архив:', error?.message || error);
+    }
+  }, [docId, documentTitle]);
+
   // Import CSV handler
   const handleImportCSV = useCallback(async (file: File) => {
     try {
@@ -610,6 +674,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onRelationDelete={handleRelationDelete}
               onExportCSV={handleExportCSV}
               onImportCSV={handleImportCSV}
+              onDownloadMarkdown={handleDownloadMarkdown}
               onSaveForTests={() => setShowSaveForTestsDialog(true)}
               onColorChange={setSelectedColor}
               onRelationModeToggle={() => setRelationMode(!relationMode)}
