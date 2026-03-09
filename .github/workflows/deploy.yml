@@ -73,13 +73,23 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
         run: |
-          railway variables --project $RAILWAY_PROJECT_ID --service api set IMAGE_TAG=${{ steps.tag.outputs.tag }}
-          railway redeploy --project $RAILWAY_PROJECT_ID --service api --yes
+          railway variables set IMAGE_TAG=${{ steps.tag.outputs.tag }} \
+            --project-id $RAILWAY_PROJECT_ID \
+            --service api
+          railway redeploy \
+            --project-id $RAILWAY_PROJECT_ID \
+            --service api \
+            --yes
 
       - name: Deploy client service
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
         run: |
-          railway variables --project $RAILWAY_PROJECT_ID --service client set IMAGE_TAG=${{ steps.tag.outputs.tag }}
-          railway redeploy --project $RAILWAY_PROJECT_ID --service client --yes
+          railway variables set IMAGE_TAG=${{ steps.tag.outputs.tag }} \
+            --project-id $RAILWAY_PROJECT_ID \
+            --service client
+          railway redeploy \
+            --project-id $RAILWAY_PROJECT_ID \
+            --service client \
+            --yes
