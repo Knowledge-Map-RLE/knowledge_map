@@ -65,23 +65,46 @@ jobs:
         id: tag
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy api service
+      - name: Deploy api service via Railway API
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_API_SERVICE_ID }}
+          IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          railway variable set IMAGE_TAG=${{ steps.tag.outputs.tag }}
-          railway redeploy --yes
+          # Set IMAGE_TAG variable
+          curl -sf --request POST \
+            --url https://backboard.railway.com/graphql/v2 \
+            --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$RAILWAY_PROJECT_ID\\\", environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\", name: \\\"IMAGE_TAG\\\", value: \\\"$IMAGE_TAG\\\" }) }\"}"
 
-      - name: Deploy client service
+          # Redeploy service
+          curl -sf --request POST \
+            --url https://backboard.railway.com/graphql/v2 \
+            --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "{\"query\":\"mutation { serviceInstanceRedeploy(environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\") }\"}"
+
+      - name: Deploy client service via Railway API
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_CLIENT_SERVICE_ID }}
+          IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          railway variable set IMAGE_TAG=${{ steps.tag.outputs.tag }}
-          railway redeploy --yes
+          # Set IMAGE_TAG variable
+          curl -sf --request POST \
+            --url https://backboard.railway.com/graphql/v2 \
+            --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$RAILWAY_PROJECT_ID\\\", environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\", name: \\\"IMAGE_TAG\\\", value: \\\"$IMAGE_TAG\\\" }) }\"}"
+
+          # Redeploy service
+          curl -sf --request POST \
+            --url https://backboard.railway.com/graphql/v2 \
+            --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "{\"query\":\"mutation { serviceInstanceRedeploy(environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\") }\"}"
