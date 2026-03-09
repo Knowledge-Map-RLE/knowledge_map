@@ -12,9 +12,7 @@ import grpc
 from grpc import aio
 
 # Импортируем сгенерированные proto файлы
-sys.path.append(str(Path(__file__).parent.parent / "utils" / "generated"))
-import pdf_to_md_pb2
-import pdf_to_md_pb2_grpc
+from utils.generated import pdf_to_md_pb2, pdf_to_md_pb2_grpc
 
 logger = logging.getLogger(__name__)
 

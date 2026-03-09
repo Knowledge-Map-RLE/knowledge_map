@@ -51,9 +51,9 @@ RUN python -m grpc_tools.protoc \
 RUN echo "" > utils/generated/__init__.py
 
 # Исправляем импорты в сгенерированных grpc-файлах (делаем их относительными)
-RUN sed -i "s/import layout_pb2 as layout__pb2/from \. import layout_pb2 as layout__pb2/g" utils/generated/layout_pb2_grpc.py \
-    && sed -i "s/import auth_pb2 as auth__pb2/from \. import auth_pb2 as auth__pb2/g" utils/generated/auth_pb2_grpc.py \
-    && sed -i "s/import nlp_pb2 as nlp__pb2/from \. import nlp_pb2 as nlp__pb2/g" utils/generated/nlp_pb2_grpc.py
+RUN sed -i "s/^import layout_pb2 as layout__pb2$/from . import layout_pb2 as layout__pb2/g" utils/generated/layout_pb2_grpc.py \
+    && sed -i "s/^import auth_pb2 as auth__pb2$/from . import auth_pb2 as auth__pb2/g" utils/generated/auth_pb2_grpc.py \
+    && sed -i "s/^import nlp_pb2 as nlp__pb2$/from . import nlp_pb2 as nlp__pb2/g" utils/generated/nlp_pb2_grpc.py
 
 # 9) Открываем порт
 EXPOSE 8000

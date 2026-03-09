@@ -635,10 +635,7 @@ class AnnotationService:
                     
                     # Создаем объект, совместимый с AnnotationSuggestion
                     from services.nlp_grpc_client import get_nlp_grpc_client
-                    import sys
-                    from pathlib import Path
-                    sys.path.append(str(Path(__file__).parent.parent / "utils" / "generated"))
-                    import nlp_pb2
+                    from utils.generated import nlp_pb2
                     
                     class AnnotationSuggestionCompat:
                         def __init__(self, ann_dict):

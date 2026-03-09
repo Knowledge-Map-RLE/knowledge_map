@@ -12,9 +12,7 @@ import grpc
 from grpc import aio
 
 # Импортируем сгенерированные proto файлы
-sys.path.append(str(Path(__file__).parent.parent / "utils" / "generated"))
-import nlp_pb2
-import nlp_pb2_grpc
+from utils.generated import nlp_pb2, nlp_pb2_grpc
 
 logger = logging.getLogger(__name__)
 
