@@ -41,12 +41,11 @@ RUN mkdir -p utils/generated
 # Генерируем proto файлы для всех сервисов
 RUN python -m grpc_tools.protoc \
     -I./utils/proto \
-    -I../nlp/proto \
     --python_out=./utils/generated \
     --grpc_python_out=./utils/generated \
     ./utils/proto/layout.proto \
     ./utils/proto/auth.proto \
-    ../nlp/proto/nlp.proto
+    ./utils/proto/nlp.proto
 
 # Создаем __init__.py для generated папки
 RUN echo "" > utils/generated/__init__.py
