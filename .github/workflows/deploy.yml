@@ -70,7 +70,7 @@ jobs:
 
       - name: Deploy api service
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_API_SERVICE_ID }}
         run: |
@@ -79,7 +79,7 @@ jobs:
 
       - name: Deploy client service
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_CLIENT_SERVICE_ID }}
         run: |
