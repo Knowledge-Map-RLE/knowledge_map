@@ -232,5 +232,163 @@ curl --request POST \
 | ghcr.io (публичный репо) | $0 |
 | **Итого** | **~$5/мес** |
 
-ghcr.io/knowledge-map-rle/knowledge_map/api:latest
-ghcr.io/knowledge-map-rle/knowledge_map/client:latest
+
+**Финальные образы:**
+- `ghcr.io/knowledge-map-rle/knowledge_map/api:latest`
+- `ghcr.io/knowledge-map-rle/knowledge_map/client:latest`
+
+---
+
+## Проблемы, возникшие при первом деплое, и их решения
+
+### 1. Строчные буквы в имени Docker образа
+
+**Ошибка:** `invalid tag: repository name must be lowercase`
+
+**Причина:** `github.repository` возвращает `Knowledge-Map-RLE/knowledge_map` с заглавными буквами, Docker требует lowercase.
+
+**Решение** в `.github/workflows/deploy.yml`:
+```yaml
+- name: Extract tag name and repo
+  id: tag
+  run: |
+    echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT  # ,, = lowercase
+```
+
+### 2. Dockerfile: nlp.proto вне build context
+
+**Ошибка:** `failed to solve: process grpc_tools.protoc ... exit code: 1`
+
+**Причина:** Dockerfile API пытался скомпилировать `../nlp/proto/nlp.proto` — файл за пределами Docker build context (`./api`).
+
+**Решение:** скопировать `nlp.proto` внутрь контекста и исправить Dockerfile:
+```bash
+cp nlp/proto/nlp.proto api/utils/proto/nlp.proto
+```
+```dockerfile
+# Было: -I../nlp/proto  и  ../nlp/proto/nlp.proto
+# Стало:
+RUN python -m grpc_tools.protoc \
+    -I./utils/proto \
+    --python_out=./utils/generated \
+    --grpc_python_out=./utils/generated \
+    ./utils/proto/layout.proto \
+    ./utils/proto/auth.proto \
+    ./utils/proto/nlp.proto
+```
+
+### 3. Railway CLI — несовместимый синтаксис
+
+**Проблема:** Railway CLI (`@railway/cli`) менял API между версиями. Последовательно не работали варианты:
+- `railway variables --project ID --service api set KEY=VAL` → `unexpected argument '--project'`
+- `railway variable set KEY=VAL --project-id ID` → `unexpected argument '--project-id'`
+- `railway variable set KEY=VAL --yes` → `unexpected argument '--yes'`
+- `railway variable set KEY=VAL` с `RAILWAY_PROJECT_ID` в env → `No linked project found`
+
+**Решение:** отказаться от CLI, использовать Railway GraphQL API напрямую через `curl` (см. раздел "Как работает GitHub Actions workflow").
+
+### 4. Токен Railway: RAILWAY_TOKEN vs RAILWAY_API_TOKEN
+
+**Проблема:** `Invalid RAILWAY_TOKEN`
+
+**Причина:** Railway различает два типа токенов:
+- `RAILWAY_TOKEN` — Project token (ограничен одним проектом, создаётся внутри проекта)
+- `RAILWAY_API_TOKEN` — Account token (создаётся в Account Settings → Tokens)
+
+Для CI/CD нужен `RAILWAY_API_TOKEN`.
+
+### 5. Пакеты ghcr.io приватные по умолчанию
+
+**Ошибка Railway:** `We were unable to connect to the registry for this image`
+
+**Причина:** Пакеты GitHub Container Registry для организаций по умолчанию приватные. Опция сделать их публичными была отключена администратором организации.
+
+**Решение:** Разрешить публикацию публичных пакетов в настройках организации:
+- GitHub → Organization Settings → Packages → Package Creation → разрешить Public
+- Затем для каждого пакета: Package Settings → Change visibility → Public
+
+### 6. ImportError: attempted relative import with no known parent package
+
+**Ошибка:** `from . import nlp_pb2 as nlp__pb2 — ImportError: attempted relative import with no known parent package`
+
+**Причина:** В `services/nlp_grpc_client.py` использовался `sys.path.append` для добавления `utils/generated` в путь поиска модулей, затем `import nlp_pb2_grpc` напрямую. При таком способе Python загружает файл вне пакета, и относительный импорт `from . import` внутри него падает.
+
+**Решение:** заменить `sys.path` хак на пакетный импорт во всех gRPC клиентах:
+```python
+# Было:
+sys.path.append(str(Path(__file__).parent.parent / "utils" / "generated"))
+import nlp_pb2
+import nlp_pb2_grpc
+
+# Стало:
+from utils.generated import nlp_pb2, nlp_pb2_grpc
+```
+
+Исправлено в: `services/nlp_grpc_client.py`, `services/pdf_to_md_grpc_client.py`, `services/annotation_service.py`.
+
+### 7. Отсутствующая зависимость PyYAML
+
+**Ошибка:** `ModuleNotFoundError: No module named 'yaml'`
+
+**Причина:** `pyyaml` использовался в `src/routers/data_extraction/csv_export.py` но не был указан в `pyproject.toml`.
+
+**Решение:** добавить в `api/pyproject.toml`:
+```toml
+pyyaml = "^6.0"
+```
+
+### 8. Private Networking не был включён
+
+**Симптом:** `504 Gateway Timeout` при запросах через nginx.
+
+**Причина:** Railway Private Networking (внутренняя сеть между сервисами) не включён по умолчанию. Без него `api.railway.internal` не резолвится.
+
+**Решение:** Сервис `api` → Settings → Networking → нажать **Enable Private Networking**.
+
+После этого в Variables сервиса `client` указать:
+```
+API_HOST=api
+```
+(Railway рекомендует короткое имя сервиса, а не `api.railway.internal`)
+
+### 9. nginx proxy_pass обрезал /api/ префикс
+
+**Симптом:** `404 Not Found` на всех `/api/...` запросах.
+
+**Причина:** В nginx, если `proxy_pass` содержит URI с `/` в конце (`http://host:8000/`), nginx заменяет `location` prefix на этот URI. Запрос `/api/data_extraction/documents` превращался в `/data_extraction/documents`, но API ожидал полный путь `/api/data_extraction/documents`.
+
+**Решение:** убрать `/` в конце `proxy_pass`:
+```nginx
+# Было (обрезало /api/):
+proxy_pass http://${API_HOST}:8000/;
+
+# Стало (передаёт путь как есть):
+proxy_pass http://${API_HOST}:8000;
+```
+
+---
+
+## Итоговые переменные окружения сервиса `api` на Railway
+
+| Переменная | Значение |
+|-----------|---------|
+| `NEO4J_URI` | `neo4j+s://xxxx.databases.neo4j.io` |
+| `NEO4J_USER` | `neo4j` |
+| `NEO4J_PASSWORD` | (из AuraDB) |
+| `S3_ENDPOINT_URL` | `${{S3.BUCKET_ENDPOINT}}` |
+| `S3_ACCESS_KEY` | `${{S3.BUCKET_ACCESS_KEY_ID}}` |
+| `S3_SECRET_KEY` | `${{S3.BUCKET_SECRET_ACCESS_KEY}}` |
+| `S3_BUCKET_NAME` | `${{S3.BUCKET_NAME}}` |
+| `DEBUG` | `false` |
+| `ALLOWED_ORIGINS` | `https://client-production-xxx.up.railway.app` |
+| `NCBI_EMAIL` | email для NCBI API |
+| `NCBI_TOOL_NAME` | `KnowledgeMap` |
+| `NCBI_API_KEY` | ключ NCBI (опционально) |
+
+## Итоговые переменные окружения сервиса `client` на Railway
+
+| Переменная | Значение |
+|-----------|---------|
+| `API_HOST` | `api` |
+| `PORT` | `80` |

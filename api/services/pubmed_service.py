@@ -561,7 +561,7 @@ class PubMedService:
 
         Автоматически определяет тип ID:
         - Начинается с 'PMC' → запрос в PMC
-        - Иначе → запрос в PubMed как PMID
+        - Иначе → запрос в PubMed как PMID, затем обогащение PMCID через ID Converter
         """
         async with httpx.AsyncClient(timeout=30) as client:
             if article_id.upper().startswith("PMC"):
@@ -572,7 +572,18 @@ class PubMedService:
             else:
                 # Прямой запрос в PubMed по PMID
                 results = await self._fetch_pubmed_metadata(client, [article_id])
-                return results[0] if results else None
+                if not results:
+                    return None
+                result = results[0]
+                # Обогащаем: если PMCID не нашёлся в PubMed XML — проверяем через ID Converter
+                # (некоторые OA-статьи не имеют ArticleId[@IdType='pmc'] в PubMed API)
+                if not result.is_open_access and not result.pmcid:
+                    pmcid = await self._get_pmcid_for_pmid(client, article_id)
+                    if pmcid:
+                        result.pmcid = pmcid
+                        result.is_open_access = True
+                        logger.info(f"[pubmed] fetch_by_id: обогащён PMCID={pmcid} для PMID={article_id} через ID Converter")
+                return result
 
     async def _get_pmcid_for_pmid(self, client: httpx.AsyncClient, pmid: str) -> Optional[str]:
         """Конвертирует PMID в PMCID через ID Converter API"""
@@ -595,6 +606,22 @@ class PubMedService:
             logger.warning(f"[pubmed] Ошибка конвертации PMID→PMCID для {pmid}: {e}")
         return None
 
+    async def _find_pmcid_via_esearch(self, client: httpx.AsyncClient, pmid: str) -> Optional[str]:
+        """Запасной вариант: найти PMCID через поиск в базе PMC по PMID.
+
+        Используется когда ID Converter не вернул PMCID, но статья реально есть в PMC.
+        """
+        try:
+            params = _ncbi_params(db="pmc", term=f"{pmid}[PMID]", retmax="1", retmode="json")
+            resp = await client.get(f"{EUTILS_BASE}/esearch.fcgi", params=params, timeout=15)
+            resp.raise_for_status()
+            id_list = resp.json().get("esearchresult", {}).get("idlist", [])
+            if id_list:
+                return f"PMC{id_list[0]}"
+        except Exception as e:
+            logger.warning(f"[pubmed] Ошибка PMC esearch для PMID {pmid}: {e}")
+        return None
+
     async def _check_oa(self, client: httpx.AsyncClient, pmcid: str) -> Optional[Dict[str, str]]:
         """Проверяет OA статус и получает ссылки на файлы через OA API.
 
@@ -615,6 +642,9 @@ class PubMedService:
             for link_el in root.findall(".//link"):
                 fmt = link_el.get("format", "")
                 href = link_el.get("href", "")
+                if href.startswith("ftp://"):
+                    # NCBI поддерживает HTTPS для тех же путей
+                    href = "https://" + href[len("ftp://"):]
                 if fmt == "pdf" and href:
                     links["pdf"] = href
                 elif fmt == "tgz" and href:
@@ -740,6 +770,11 @@ class PubMedService:
                     pmcid = await self._get_pmcid_for_pmid(client, pmid)
                     logger.info(f"[pubmed] PMCID из ID Converter: {pmcid}")
 
+                # 2b. Запасной вариант: PMC esearch по PMID (если ID Converter не нашёл)
+                if pmid and not pmcid:
+                    pmcid = await self._find_pmcid_via_esearch(client, pmid)
+                    logger.info(f"[pubmed] PMCID из PMC esearch: {pmcid}")
+
                 meta["pmcid"] = pmcid
                 # Устанавливаем source: если есть PMCID → pmc, иначе → pubmed
                 meta["source"] = "pmc" if pmcid else source
@@ -766,13 +801,22 @@ class PubMedService:
                     pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
 
                     if md_exists or pdf_exists:
-                        logger.info(f"[pubmed] Статья {id_str} уже загружена и файлы в S3 есть, doc_id={doc_id}")
-                        return {
-                            "success": True,
-                            "doc_id": doc_id,
-                            "message": "Статья уже загружена",
-                            "processing_status": existing.processing_status or "annotated",
-                        }
+                        # Если статья была загружена без полного текста (не-OA), но теперь у нас есть
+                        # PMCID — удаляем старую запись и перезагружаем с полным текстом
+                        if not existing.is_open_access and pmcid:
+                            logger.info(f"[pubmed] Статья {id_str} была загружена без полного текста, перезагружаем с PMCID={pmcid}")
+                            try:
+                                existing.delete()
+                            except Exception as del_err:
+                                logger.error(f"[pubmed] Ошибка удаления старой записи: {del_err}")
+                        else:
+                            logger.info(f"[pubmed] Статья {id_str} уже загружена и файлы в S3 есть, doc_id={doc_id}")
+                            return {
+                                "success": True,
+                                "doc_id": doc_id,
+                                "message": "Статья уже загружена",
+                                "processing_status": existing.processing_status or "annotated",
+                            }
                     else:
                         logger.warning(f"[pubmed] Запись в Neo4j есть, но файлов в S3 нет для doc_id={doc_id} — повторяем загрузку")
                         # Удаляем неполную запись из Neo4j и перезагружаем
@@ -854,12 +898,25 @@ class PubMedService:
     ) -> Dict[str, Any]:
         """Скачивает tar.gz из PMC, извлекает XML и конвертирует в Markdown"""
         logger.info(f"[pubmed] Скачивание tar.gz: {tgz_url}")
+        pmcid = meta.get("pmcid")
         try:
             resp = await client.get(tgz_url, timeout=120)
             resp.raise_for_status()
             tgz_bytes = resp.content
         except Exception as e:
             logger.error(f"[pubmed] Ошибка скачивания tar.gz: {e}")
+            # Fallback: пробуем получить полный текст через efetch
+            if pmcid:
+                logger.info(f"[pubmed] Fallback на efetch для {pmcid}")
+                pmc_xml = await self._fetch_pmc_fulltext_xml(client, pmcid)
+                if pmc_xml:
+                    image_urls = await self._build_pmc_image_urls_from_xml(pmc_xml, pmcid)
+                    markdown = _pmc_xml_to_markdown(pmc_xml, image_urls=image_urls)
+                    if markdown:
+                        return await self._save_document(
+                            doc_id=doc_id, meta=meta, markdown=markdown,
+                            pdf_bytes=None, is_oa=True,
+                        )
             return await self._ingest_metadata_only(doc_id, meta)
 
         # Извлекаем XML, PDF и изображения из tar.gz
