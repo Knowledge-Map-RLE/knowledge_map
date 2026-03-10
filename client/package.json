@@ -17,7 +17,9 @@
     "@tailwindcss/vite": "^4.1.16",
     "gsap": "^3.13.0",
     "jszip": "^3.10.1",
+    "katex": "^0.16.38",
     "marked": "^16.4.1",
+    "marked-katex-extension": "^5.1.7",
     "pixi.js": "8.9.2",
     "quill": "^2.0.3",
     "quill-delta-to-markdown": "^0.6.0",
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
+    "@types/katex": "^0.16.8",
     "@types/marked": "^6.0.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",

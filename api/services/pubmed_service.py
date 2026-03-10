@@ -160,7 +160,7 @@ def _pmc_xml_to_markdown(
     if abstract_el is not None:
         lines.append("## Abstract\n")
         for p in abstract_el.findall(".//p"):
-            text = "".join(p.itertext()).strip()
+            text = _element_to_text(p).strip()
             if text:
                 title_tag = p.get("content-type") or ""
                 if title_tag:
@@ -218,8 +218,61 @@ def _pmc_xml_to_markdown(
     return "\n".join(lines)
 
 
+_TEX_PREAMBLE_RE = re.compile(
+    r'\\documentclass.*?\\begin\{document\}(.*?)\\end\{document\}',
+    re.DOTALL,
+)
+
+
+def _extract_tex(el: ET.Element) -> Optional[str]:
+    """Извлекает LaTeX из <tex-math>, убирая documentclass-преамбулу и внешние $ / $$."""
+    tex_el = el.find(".//tex-math")
+    if tex_el is None or not tex_el.text:
+        return None
+    raw = tex_el.text.strip()
+    m = _TEX_PREAMBLE_RE.search(raw)
+    if m:
+        raw = m.group(1).strip()
+    # Убираем внешние $$ или $ если они уже есть — мы добавим нужные сами
+    if raw.startswith("$$") and raw.endswith("$$"):
+        raw = raw[2:-2].strip()
+    elif raw.startswith("$") and raw.endswith("$"):
+        raw = raw[1:-1].strip()
+    return raw if raw else None
+
+
+def _element_to_text(el: ET.Element) -> str:
+    """Конвертирует элемент XML в текст, заменяя формулы на LaTeX-нотацию.
+
+    <inline-formula> → $...$
+    <disp-formula>   → $$...$$
+    Всё остальное    → itertext()
+    """
+    parts: List[str] = []
+    if el.text:
+        parts.append(el.text)
+    for child in el:
+        if child.tag == "inline-formula":
+            tex = _extract_tex(child)
+            if tex:
+                parts.append(f"${tex}$")
+            else:
+                parts.append("".join(child.itertext()))
+        elif child.tag == "disp-formula":
+            tex = _extract_tex(child)
+            if tex:
+                parts.append(f"\n\n$$\n{tex}\n$$\n\n")
+            else:
+                parts.append("".join(child.itertext()))
+        else:
+            parts.append(_element_to_text(child))
+        if child.tail:
+            parts.append(child.tail)
+    return "".join(parts)
+
+
 def _render_fig(fig: ET.Element, lines: List[str], image_urls: Dict[str, str]):
-    """Рендерит одну фигуру в markdown: изображение + подпись."""
+    """Рендерит одну фигуру в HTML: изображение + подпись."""
     fig_id = fig.get("id", "")
     label_el = fig.find("label")
     label = "".join(label_el.itertext()).strip() if label_el is not None else ""
@@ -227,23 +280,27 @@ def _render_fig(fig: ET.Element, lines: List[str], image_urls: Dict[str, str]):
     cap = "".join(caption_el.itertext()).strip() if caption_el is not None else ""
 
     img_url = _resolve_fig_image(fig, image_urls)
+    alt = label or fig_id or "Figure"
+
+    html_parts = ['<figure>']
     if img_url:
-        alt = label or fig_id or "Figure"
-        lines.append(f"![{alt}]({img_url})\n")
+        html_parts.append(f'  <img src="{img_url}" alt="{alt}">')
     if label or cap:
-        full_cap = f"**{label}**" if label else ""
-        if cap:
-            full_cap = f"{full_cap} {cap}".strip()
-        lines.append(f"*{full_cap}*\n")
-    lines.append("")
+        caption_text = f"<strong>{label}</strong> {cap}".strip() if label else cap
+        html_parts.append(f'  <figcaption>{caption_text}</figcaption>')
+    html_parts.append('</figure>')
+    lines.append("\n" + "\n".join(html_parts) + "\n")
+
+
+_IMG_QUALITY_ORDER = {".jpg": 0, ".jpeg": 0, ".png": 1, ".tif": 2, ".tiff": 2, ".svg": 3, ".gif": 4}
 
 
 def _resolve_fig_image(fig_el: ET.Element, image_urls: Dict[str, str]) -> Optional[str]:
     """Находит URL изображения для элемента <fig>.
 
     Ищет атрибут xlink:href у <graphic> внутри фигуры и ищет совпадение в image_urls.
+    Среди нескольких совпадений выбирает лучший формат: jpg > png > tif > svg > gif.
     """
-    ns = {"xlink": "http://www.w3.org/1999/xlink"}
     graphic = fig_el.find(".//graphic")
     if graphic is None:
         return None
@@ -252,18 +309,102 @@ def _resolve_fig_image(fig_el: ET.Element, image_urls: Dict[str, str]) -> Option
     if not href:
         return None
 
-    # Убираем расширение для поиска
+    # Базовое имя без расширения и пути
     base = href.rsplit(".", 1)[0] if "." in href else href
     basename = base.rsplit("/", 1)[-1]
 
-    # Ищем совпадение: полное имя, или basename без расширения
+    # Собираем все совпадения с оценкой качества
+    candidates: List[tuple] = []  # (quality, url)
     for key, url in image_urls.items():
         key_base = key.rsplit(".", 1)[0] if "." in key else key
         key_base_short = key_base.rsplit("/", 1)[-1]
         if key == href or key_base == base or key_base_short == basename:
-            return url
+            ext = ("." + key.rsplit(".", 1)[1].lower()) if "." in key else ""
+            quality = _IMG_QUALITY_ORDER.get(ext, 3)
+            candidates.append((quality, url))
 
-    return None
+    if not candidates:
+        return None
+
+    # Возвращаем URL с наименьшим значением quality (лучший формат)
+    candidates.sort(key=lambda x: x[0])
+    return candidates[0][1]
+
+
+def _element_to_text_skip(el: ET.Element, skip_tags: set) -> str:
+    """Как _element_to_text, но пропускает дочерние элементы с тегами из skip_tags."""
+    parts: List[str] = []
+    if el.text:
+        parts.append(el.text)
+    for child in el:
+        if child.tag in skip_tags:
+            if child.tail:
+                parts.append(child.tail)
+            continue
+        if child.tag == "inline-formula":
+            tex = _extract_tex(child)
+            if tex:
+                parts.append(f"${tex}$")
+            else:
+                parts.append("".join(child.itertext()))
+        elif child.tag == "disp-formula":
+            tex = _extract_tex(child)
+            if tex:
+                parts.append(f"\n\n$$\n{tex}\n$$\n\n")
+            else:
+                parts.append("".join(child.itertext()))
+        else:
+            parts.append(_element_to_text_skip(child, skip_tags))
+        if child.tail:
+            parts.append(child.tail)
+    return "".join(parts)
+
+
+def _render_table_wrap(tw: ET.Element, lines: List[str]) -> None:
+    """Рендерит <table-wrap>: подпись + HTML-таблица."""
+    label_el = tw.find("label")
+    caption_el = tw.find(".//caption/p")
+    label = _element_to_text(label_el).strip() if label_el is not None else ""
+    cap = _element_to_text(caption_el).strip() if caption_el is not None else ""
+    full_cap = f"**{label}**" if label else ""
+    if cap:
+        full_cap = f"{full_cap} {cap}".strip()
+    if full_cap:
+        lines.append(f"\n{full_cap}\n")
+    table_el = tw.find(".//table")
+    if table_el is not None:
+        _render_table(table_el, lines)
+
+
+def _render_table(table_el: ET.Element, lines: List[str]) -> None:
+    """Конвертирует NLM <table> (thead/tbody/tr/th/td) в HTML-таблицу (pretty-print)."""
+    rows: List[str] = []
+    rows.append("<table>")
+
+    for thead in table_el.findall("thead"):
+        rows.append("  <thead>")
+        for tr in thead.findall("tr"):
+            rows.append("    <tr>")
+            for c in tr:
+                if c.tag in ("th", "td"):
+                    cell = _element_to_text(c).strip().replace("\n", " ")
+                    rows.append(f"      <th>{cell}</th>")
+            rows.append("    </tr>")
+        rows.append("  </thead>")
+
+    for tbody in table_el.findall("tbody"):
+        rows.append("  <tbody>")
+        for tr in tbody.findall("tr"):
+            rows.append("    <tr>")
+            for c in tr:
+                if c.tag in ("th", "td"):
+                    cell = _element_to_text(c).strip().replace("\n", " ")
+                    rows.append(f"      <td>{cell}</td>")
+            rows.append("    </tr>")
+        rows.append("  </tbody>")
+
+    rows.append("</table>")
+    lines.append("\n" + "\n".join(rows) + "\n")
 
 
 def _render_section(
@@ -297,9 +438,18 @@ def _render_section(
         if tag == "title":
             continue
         elif tag == "p":
-            text = "".join(child.itertext()).strip()
-            if text:
-                lines.append(f"{text}\n")
+            inner_tables = child.findall("table-wrap")
+            if inner_tables:
+                # Текст параграфа без содержимого table-wrap
+                text = _element_to_text_skip(child, skip_tags={"table-wrap"}).strip()
+                if text:
+                    lines.append(f"{text}\n")
+                for tw in inner_tables:
+                    _render_table_wrap(tw, lines)
+            else:
+                text = _element_to_text(child).strip()
+                if text:
+                    lines.append(f"{text}\n")
             # После параграфа вставляем фигуры, на которые он ссылается (floating layout)
             if figs_by_id:
                 for xref in child.findall('.//xref[@ref-type="fig"]'):
@@ -317,13 +467,10 @@ def _render_section(
                 rendered_figs.add(fig_id)
             _render_fig(child, lines, image_urls)
         elif tag == "table-wrap":
-            caption_el = child.find(".//caption/p")
-            if caption_el is not None:
-                cap = "".join(caption_el.itertext()).strip()
-                lines.append(f"*{cap}*\n")
+            _render_table_wrap(child, lines)
         elif tag == "list":
             for item in child.findall("list-item"):
-                item_text = "".join(item.itertext()).strip()
+                item_text = _element_to_text(item).strip()
                 if item_text:
                     lines.append(f"- {item_text}\n")
 
@@ -959,15 +1106,27 @@ class PubMedService:
         prefix = f"documents/{doc_id}/"
         base_url = getattr(settings, "API_BASE_URL", None) or os.getenv("API_BASE_URL", "http://localhost:8000")
 
-        for img_name, img_data in images.items():
+        # Сортируем: сначала качественные форматы (.jpg, .png, .tif), потом .gif
+        # чтобы при конфликте имён (Fig1_HTML.jpg vs Fig1_HTML.gif) побеждал лучший формат
+        QUALITY_ORDER = {".jpg": 0, ".jpeg": 0, ".png": 1, ".tif": 2, ".tiff": 2, ".svg": 3, ".gif": 4}
+        sorted_images = sorted(
+            images.items(),
+            key=lambda kv: QUALITY_ORDER.get(kv[0].rsplit(".", 1)[-1].lower() if "." in kv[0] else "", 99)
+        )
+
+        for img_name, img_data in sorted_images:
             s3_key = f"{prefix}{img_name}"
             content_type = _mimetypes.guess_type(img_name)[0] or "image/jpeg"
             ok = await self.s3_client.upload_bytes(img_data, bucket, s3_key, content_type=content_type)
             if ok:
                 # Формируем URL через API image proxy (такой же как у Docling-изображений)
                 img_url = f"{base_url}/api/v1/s3/image/documents/{doc_id}/{img_name}"
-                # Ключ без расширения для поиска в XML href
                 image_urls[img_name] = img_url
+                # Также регистрируем по имени без расширения — не перезаписываем если уже есть
+                # лучший формат (благодаря сортировке первым идёт jpg/png)
+                base_key = img_name.rsplit(".", 1)[0] if "." in img_name else img_name
+                if base_key not in image_urls:
+                    image_urls[base_key] = img_url
                 logger.info(f"[pubmed] Изображение загружено: {s3_key} → {img_url}")
             else:
                 logger.warning(f"[pubmed] Не удалось загрузить изображение: {img_name}")

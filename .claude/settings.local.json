@@ -55,7 +55,20 @@
       "WebFetch(domain:docs.railway.app)",
       "WebFetch(domain:docs.railway.com)",
       "Bash(xargs:*)",
-      "WebFetch(domain:station.railway.com)"
+      "WebFetch(domain:station.railway.com)",
+      "WebFetch(domain:quilljs.com)",
+      "WebFetch(domain:katex.org)",
+      "WebFetch(domain:marked.js.org)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:docs.mathjax.org)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:unpkg.com)",
+      "Bash(bun add:*)",
+      "WebFetch(domain:lucidar.me)",
+      "Bash(poetry run:*)",
+      "Bash(echo \"exit: $?\")"
     ],
     "deny": [],
     "ask": []

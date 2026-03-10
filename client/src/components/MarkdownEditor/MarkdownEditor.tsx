@@ -1,9 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { marked } from 'marked';
+import 'katex/dist/katex.min.css';
+import markedKatex from 'marked-katex-extension';
+import renderMathInElement from 'katex/contrib/auto-render';
 // @ts-ignore - package may not have types
 import QuillMarkdown from 'quilljs-markdown';
+
+marked.use(markedKatex({ throwOnError: false, nonStandard: true }));
 
 type Annotation = {
     id: number;
@@ -39,6 +44,121 @@ const LABEL_COLORS: Record<string, string> = {
     'Location': '#FCE38A',
     'Event': '#C7CEEA'
 };
+
+// Компонент предпросмотра в readOnly режиме — рендерит Markdown напрямую в HTML,
+// минуя Quill (который стрипает KaTeX HTML через Delta).
+const markdownPreviewStyles = `
+.km-md-preview h1 { font-size: 2em; font-weight: 700; margin: 0.67em 0; }
+.km-md-preview h2 { font-size: 1.5em; font-weight: 700; margin: 0.75em 0; }
+.km-md-preview h3 { font-size: 1.25em; font-weight: 700; margin: 0.83em 0; }
+.km-md-preview h4 { font-size: 1em; font-weight: 700; margin: 1.12em 0; }
+.km-md-preview p { margin: 0.8em 0; line-height: 1.6; }
+.km-md-preview ul { list-style-type: disc; padding-left: 2em; margin: 0.8em 0; }
+.km-md-preview ol { list-style-type: decimal; padding-left: 2em; margin: 0.8em 0; }
+.km-md-preview li { margin: 0.3em 0; }
+.km-md-preview strong { font-weight: 700; }
+.km-md-preview em { font-style: italic; }
+.km-md-preview code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: monospace; font-size: 0.9em; }
+.km-md-preview pre { background: #f4f4f4; padding: 12px; border-radius: 4px; overflow-x: auto; margin: 0.8em 0; }
+.km-md-preview pre code { background: none; padding: 0; }
+.km-md-preview blockquote { border-left: 4px solid #ddd; padding-left: 1em; color: #666; margin: 0.8em 0; }
+.km-md-preview a { color: #0066cc; text-decoration: underline; }
+.km-md-preview img { max-width: 100%; height: auto; border-radius: 4px; margin: 8px 0; }
+.km-md-preview figure { margin: 1.2em 0; text-align: center; }
+.km-md-preview figure img { display: block; margin: 0 auto; }
+.km-md-preview figcaption { font-size: 0.9em; color: #555; margin-top: 6px; font-style: italic; }
+.km-md-preview table { border-collapse: collapse; width: 100%; margin: 0.8em 0; }
+.km-md-preview th, .km-md-preview td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; }
+.km-md-preview th { background: #f5f5f5; font-weight: 700; }
+
+.km-katex-wrap { position: relative; display: inline-block; }
+.km-katex-wrap.block { display: block; text-align: center; margin: 0.8em 0; }
+.km-katex-copy {
+    display: none; position: absolute; top: -6px; right: -6px;
+    background: #fff; border: 1px solid #ccc; border-radius: 4px;
+    padding: 2px 6px; font-size: 11px; cursor: pointer; color: #555;
+    white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    line-height: 1.4; z-index: 10;
+}
+.km-katex-wrap:hover .km-katex-copy { display: block; }
+.km-katex-copy.copied { background: #e6f4ea; color: #2a7a3b; border-color: #a5d6a7; }
+`;
+
+function MarkdownPreview({ value }: { value: string }) {
+    const html = React.useMemo(() => marked.parse(value || '') as string, [value]);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Рендерим формулы внутри HTML-таблиц (marked не обрабатывает $...$ внутри HTML-блоков)
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        // Ищем таблицы с необработанными формулами
+        const tables = container.querySelectorAll('table');
+        tables.forEach((table) => {
+            renderMathInElement(table, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false },
+                ],
+                throwOnError: false,
+            });
+        });
+    }, [html]);
+
+    // Оборачиваем каждый .katex элемент в wrapper с кнопкой копирования LaTeX
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        // Находим все корневые .katex элементы (не вложенные)
+        const katexEls = container.querySelectorAll<HTMLElement>('.katex');
+        katexEls.forEach((el) => {
+            // Пропускаем уже обработанные и вложенные
+            if (el.closest('.km-katex-wrap') || el.parentElement?.classList.contains('km-katex-wrap')) return;
+
+            const latex = el.getAttribute('data-latex') || el.querySelector('annotation[encoding="application/x-tex"]')?.textContent || '';
+            if (!latex) return;
+
+            const isDisplay = el.classList.contains('katex-display') || el.closest('.katex-display') !== null;
+
+            const wrap = document.createElement('span');
+            wrap.className = `km-katex-wrap${isDisplay ? ' block' : ''}`;
+
+            const btn = document.createElement('button');
+            btn.className = 'km-katex-copy';
+            btn.textContent = 'Copy LaTeX';
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(latex).then(() => {
+                    btn.textContent = 'Скопировано!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy LaTeX';
+                        btn.classList.remove('copied');
+                    }, 1500);
+                });
+            });
+
+            el.parentNode?.insertBefore(wrap, el);
+            wrap.appendChild(el);
+            wrap.appendChild(btn);
+        });
+    }, [html]);
+
+    return (
+        <>
+            <style>{markdownPreviewStyles}</style>
+            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+                <div
+                    ref={containerRef}
+                    className="km-md-preview"
+                    style={{ padding: '12px 15px', lineHeight: '1.6', fontSize: '14px', maxWidth: '860px', margin: '0 auto' }}
+                    dangerouslySetInnerHTML={{ __html: html }}
+                />
+            </div>
+        </>
+    );
+}
 
 export default function MarkdownEditor({ value, onChange, onExportAnnotations, onImportAnnotations, onEditorReady, readOnly = false }: MarkdownEditorProps) {
     const editorContainerRef = useRef<HTMLDivElement | null>(null);
@@ -268,6 +388,11 @@ export default function MarkdownEditor({ value, onChange, onExportAnnotations, o
         setShowLabelModal(false);
         setEditingAnnotation(null);
     };
+
+    // В режиме readOnly используем простой HTML-рендер чтобы KaTeX не стрипался Quill
+    if (readOnly) {
+        return <MarkdownPreview value={value} />;
+    }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, height: '100%', position: 'relative' }}>
