@@ -127,7 +127,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
                 'Обработка...'
               )
             ) : (
-              'Multi-Level анализ'
+              'Автоматическая разметка'
             )}
           </button>
         )}

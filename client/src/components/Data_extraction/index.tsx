@@ -166,12 +166,6 @@ export default function Data_extraction() {
                 <div className={s.rightPanel}>
                     <div className={s.tabBar}>
                         <button
-                            className={`${s.tabButton} ${activeTab === 'pdf' ? s.active : ''}`}
-                            onClick={() => setActiveTab('pdf')}
-                        >
-                            Исходный PDF
-                        </button>
-                        <button
                             className={`${s.tabButton} ${activeTab === 'markdown' ? s.active : ''}`}
                             onClick={() => setActiveTab('markdown')}
                         >
@@ -182,6 +176,12 @@ export default function Data_extraction() {
                             onClick={() => setActiveTab('annotator')}
                         >
                             Аннотатор
+                        </button>
+                        <button
+                            className={`${s.tabButton} ${activeTab === 'pdf' ? s.active : ''}`}
+                            onClick={() => setActiveTab('pdf')}
+                        >
+                            Исходный PDF
                         </button>
                         {saveStatus !== 'idle' && (
                             <div className={`${s.saveIndicator} ${s[saveStatus]}`} style={{ marginLeft: 'auto' }}>

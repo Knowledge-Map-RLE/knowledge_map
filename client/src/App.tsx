@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './styles/App.css'
+import Landing from './components/Landing'
 import Introduction from './components/Introduction'
 import Knowledge_map from './components/Knowledge_map'
 import Knowledge_map_ui from './components/Knowledge_map_ui'
@@ -15,7 +16,7 @@ function App() {
     <ViewportProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<>Лендинг</>} />
+          <Route path="/" element={<Landing />} />
           <Route path="/km" element={<><Knowledge_map /><Knowledge_map_ui /></>} />
           <Route path="/rle_databases" element={<><RLE_Databases/></>} />
           <Route path="/introduction" element={<><Introduction/></>} />
