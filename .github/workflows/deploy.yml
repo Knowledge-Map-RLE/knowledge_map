@@ -74,14 +74,14 @@ jobs:
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
           # Set IMAGE_TAG variable
-          curl -sf --request POST \
+          curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
             --data "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$RAILWAY_PROJECT_ID\\\", environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\", name: \\\"IMAGE_TAG\\\", value: \\\"$IMAGE_TAG\\\" }) }\"}"
 
           # Redeploy service
-          curl -sf --request POST \
+          curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
@@ -96,14 +96,14 @@ jobs:
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
           # Set IMAGE_TAG variable
-          curl -sf --request POST \
+          curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
             --data "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$RAILWAY_PROJECT_ID\\\", environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\", name: \\\"IMAGE_TAG\\\", value: \\\"$IMAGE_TAG\\\" }) }\"}"
 
           # Redeploy service
-          curl -sf --request POST \
+          curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
