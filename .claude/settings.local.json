@@ -76,7 +76,10 @@
       "Bash(echo \"exit:$?\")",
       "Bash(.venv/Scripts/python -c \"from web.app import app; print\\(''''web.app imports OK''''\\)\")",
       "Bash(gh issue:*)",
-      "WebFetch(domain:docling-project.github.io)"
+      "WebFetch(domain:docling-project.github.io)",
+      "Bash(railway status:*)",
+      "Bash(railway service:*)",
+      "Bash(railway logs:*)"
     ],
     "deny": [],
     "ask": []
