@@ -79,7 +79,8 @@
       "WebFetch(domain:docling-project.github.io)",
       "Bash(railway status:*)",
       "Bash(railway service:*)",
-      "Bash(railway logs:*)"
+      "Bash(railway logs:*)",
+      "Bash(railway variables:*)"
     ],
     "deny": [],
     "ask": []
