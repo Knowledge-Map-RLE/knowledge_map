@@ -19,9 +19,7 @@ from src.models import PDFDocument
 
 logger = logging.getLogger(__name__)
 
-# Отладочная информация о переменных окружения
 import os
-logger.info(f"[data_extraction] Переменные окружения при импорте: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
 
 
 def extract_title_from_markdown(markdown_content: str) -> str | None:
@@ -44,10 +42,8 @@ def extract_title_from_markdown(markdown_content: str) -> str | None:
             # Убираем '# ' и возвращаем заголовок
             title = line[2:].strip()
             if title:
-                logger.info(f"[extract_title] Найден заголовок: {title}")
                 return title
 
-    logger.warning("[extract_title] Заголовок первого уровня не найден в markdown")
     return None
 
 
@@ -127,17 +123,15 @@ class DataExtractionService:
         prefix = f"documents/{doc_id}/"
         pdf_key = f"{prefix}{doc_id}.pdf"
 
-        logger.info(f"[upload_and_process_pdf] Получен файл {file.filename}, doc_id={doc_id}")
+        logger.info(f"[upload] {file.filename} → doc_id={doc_id}")
         pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
-        logger.info(f"[upload_and_process_pdf] PDF существует в S3: {pdf_exists}")
 
         async def process_pdf_and_upload(pdf_bytes: bytes, filename: str = None):
             # Конвертация PDF в Markdown через gRPC сервис
-            logger.info(f"[pdf_to_md] Начинаем обработку doc_id={doc_id}")
             
             tmp_dir = SysPath(tempfile.mkdtemp(prefix="km_pdf_"))
             try:
-                logger.info(f"[pdf_to_md] Начинаем обработку doc_id={doc_id}, tmp_dir={tmp_dir}")
+                logger.info(f"[pdf_to_md] Начало обработки doc_id={doc_id}")
                 pdf_name = f"{doc_id}.pdf"
                 tmp_pdf = tmp_dir / pdf_name
                 with open(tmp_pdf, "wb") as f:
@@ -146,19 +140,10 @@ class DataExtractionService:
                 loop = asyncio.get_running_loop()
 
                 def _on_progress(payload: dict) -> None:
-                    """Callback для отслеживания прогресса обработки документа"""
-                    try:
-                        percent = payload.get('percent')
-                        phase = payload.get('phase') or 'processing'
-                        message = payload.get('message') or payload.get('last_message') or ''
-                        logger.info(f"[pdf_to_md] Progress: {percent}% - {phase} - {message}")
-                    except Exception:
-                        pass
+                    pass
 
                 # Используем gRPC сервис для конвертации PDF в Markdown
                 grpc_client = get_pdf_to_md_grpc_client_instance()
-                logger.info(f"[data_extraction] Используем gRPC клиент: host={grpc_client.host}, port={grpc_client.port}")
-                logger.info(f"[data_extraction] Переменные окружения в момент вызова: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
                 
                 result = await grpc_client.convert_pdf(
                     pdf_content=pdf_bytes,
@@ -179,28 +164,21 @@ class DataExtractionService:
                     md_path = tmp_dir / f"{doc_id}.md"
                     md_path.write_text(result["markdown_content"], encoding="utf-8", errors="ignore")
                     outputs["markdown"] = md_path
-                    logger.info(f"[pdf_to_md] Markdown сохранен: {md_path}")
 
-                    # Извлекаем заголовок из markdown
                     extracted_title = extract_title_from_markdown(result["markdown_content"])
-                    if extracted_title:
-                        logger.info(f"[pdf_to_md] Извлечен заголовок документа: {extracted_title}")
-                
+
                 # Сохраняем изображения
                 if result.get("images"):
                     for img_name, img_data in result["images"].items():
                         img_path = tmp_dir / img_name
                         img_path.write_bytes(img_data)
-                        logger.info(f"[pdf_to_md] Изображение сохранено: {img_name}")
-                
+
                 # Сохраняем метаданные если есть
                 if result.get("metadata_json"):
                     import json
                     meta_path = tmp_dir / f"{doc_id}_meta.json"
-                    # metadata_json уже в формате JSON строки
                     meta_path.write_text(result["metadata_json"], encoding="utf-8")
                     outputs["meta"] = meta_path
-                    logger.info(f"[pdf_to_md] Метаданные сохранены: {meta_path}")
 
                 if outputs.get("markdown") is not None:
                     md_bytes = outputs["markdown"].read_bytes()
@@ -208,7 +186,6 @@ class DataExtractionService:
                     await self.s3_client.upload_bytes(
                         md_bytes, bucket, md_key, content_type="text/markdown; charset=utf-8"
                     )
-                    logger.info(f"[pdf_to_md] Загружен markdown: s3://{bucket}/{md_key}")
 
                 if outputs.get("meta") is not None:
                     meta_bytes = outputs["meta"].read_bytes()
@@ -216,16 +193,13 @@ class DataExtractionService:
                     await self.s3_client.upload_bytes(
                         meta_bytes, bucket, meta_key, content_type="application/json"
                     )
-                    logger.info(f"[pdf_to_md] Загружен meta: s3://{bucket}/{meta_key}")
-
                 img_exts = ("*.jpeg", "*.jpg", "*.png")
                 for pattern in img_exts:
                     for img in outputs["images_dir"].glob(pattern):
                         await self.s3_client.upload_bytes(
-                            img.read_bytes(), bucket, f"{prefix}{img.name}", 
+                            img.read_bytes(), bucket, f"{prefix}{img.name}",
                             content_type=mimetypes.guess_type(img.name)[0] or "image/jpeg"
                         )
-                        logger.info(f"[pdf_to_md] Загружено изображение: {img.name}")
                 
                 # Извлекаем S3 ключи для markdown версий
                 docling_raw_s3_key = result.get("docling_raw_s3_key")
@@ -236,55 +210,39 @@ class DataExtractionService:
                     # Проверяем, существует ли документ
                     existing_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
                     if not existing_doc:
-                        # Создаем новый документ с заголовком из markdown и S3 ключами
-                        pdf_doc = PDFDocument(
+                        PDFDocument(
                             uid=doc_id,
                             original_filename=filename or f"{doc_id}.pdf",
                             md5_hash=doc_id,
                             s3_key=pdf_key,
                             processing_status='annotated',
                             is_processed=True,
-                            title=extracted_title,  # Сохраняем извлечённый заголовок
+                            title=extracted_title,
                             docling_raw_md_s3_key=docling_raw_s3_key,
                             formatted_md_s3_key=formatted_s3_key
                         ).save()
-                        logger.info(f"[Neo4j] Создан документ {doc_id} с заголовком: {extracted_title}, "
-                                   f"raw_key: {docling_raw_s3_key}, formatted_key: {formatted_s3_key}")
+                        logger.info(f"[pdf_to_md] Документ {doc_id} сохранён в Neo4j")
                     else:
-                        # Обновляем существующий документ
                         update_needed = False
                         if extracted_title and not existing_doc.title:
                             existing_doc.title = extracted_title
                             update_needed = True
-                            logger.info(f"[Neo4j] Обновлён заголовок документа {doc_id}: {extracted_title}")
-
-                        # Обновляем S3 ключи если они были получены
                         if docling_raw_s3_key:
                             existing_doc.docling_raw_md_s3_key = docling_raw_s3_key
-                            update_needed = True
-                            logger.info(f"[Neo4j] Обновлён raw markdown key: {docling_raw_s3_key}")
-
-                            # Очищаем старые ключи, которые больше не актуальны
                             if existing_doc.user_md_s3_key:
-                                logger.info(f"[Neo4j] Очищаем устаревший user_md_s3_key: {existing_doc.user_md_s3_key}")
                                 existing_doc.user_md_s3_key = None
-
+                            update_needed = True
                         if formatted_s3_key:
                             existing_doc.formatted_md_s3_key = formatted_s3_key
                             update_needed = True
-                            logger.info(f"[Neo4j] Обновлён formatted markdown key: {formatted_s3_key}")
-
                         if update_needed:
                             existing_doc.save()
-                        else:
-                            logger.info(f"[Neo4j] Документ {doc_id} уже существует, обновления не требуются")
                 except Exception as neo_err:
                     logger.error(f"[Neo4j] Ошибка сохранения документа {doc_id}: {neo_err}")
-                    # Не прерываем выполнение, т.к. файлы уже загружены в S3
 
-                logger.info(f"[pdf_to_md] Обработка документа {doc_id} успешно завершена")
+                logger.info(f"[pdf_to_md] Обработка документа {doc_id} завершена")
             except Exception as e:
-                logger.exception(f"PDF to MD processing failed: {e}")
+                logger.exception(f"PDF to MD processing failed for {doc_id}: {e}")
             finally:
                 try:
                     shutil.rmtree(tmp_dir, ignore_errors=True)
@@ -292,40 +250,32 @@ class DataExtractionService:
                     pass
 
         if pdf_exists:
-            logger.info(f"[upload_and_process_pdf] PDF уже существует, проверяем markdown")
-            # если markdown отсутствует, запускаем конвертацию
             md_key = f"{prefix}{doc_id}.md"
             md_exists = await self.s3_client.object_exists(bucket, md_key)
-            logger.info(f"[upload_and_process_pdf] Markdown существует в S3: {md_exists}")
             if not md_exists:
-                # скачиваем существующий pdf и запускаем маркер
-                logger.info(f"[upload_and_process_pdf] Markdown не найден, запускаем конвертацию")
                 existing_pdf = await self.s3_client.download_bytes(bucket, pdf_key)
                 if not existing_pdf:
                     raise HTTPException(status_code=500, detail="Не удалось прочитать существующий PDF из S3")
                 background_tasks.add_task(process_pdf_and_upload, existing_pdf, file.filename)
-                logger.info(f"[pdf_to_md] Переобработка запущена для существующего PDF: doc_id={doc_id}")
                 return DataExtractionResponse(
                     success=True, doc_id=doc_id,
                     message="Конвертация запущена для существующего PDF",
                     files={"pdf": pdf_key}
                 )
-            logger.info(f"[upload_and_process_pdf] И PDF и Markdown уже существуют, возвращаем дубликат")
             return DataExtractionResponse(
                 success=True, doc_id=doc_id,
                 message="Дубликат: уже существует",
                 files={"pdf": pdf_key}
             )
 
-        logger.info(f"[upload_and_process_pdf] PDF не существует, загружаем новый файл")
         uploaded = await self.s3_client.upload_bytes(
             raw, bucket, pdf_key, content_type="application/pdf"
         )
         if not uploaded:
             raise HTTPException(status_code=500, detail="Не удалось сохранить PDF в S3")
 
-        logger.info(f"[upload_and_process_pdf] PDF загружен в S3, запускаем background task для конвертации")
         background_tasks.add_task(process_pdf_and_upload, raw, file.filename)
+        logger.info(f"[upload] doc_id={doc_id} загружен, конвертация запущена")
 
         return DataExtractionResponse(
             success=True, doc_id=doc_id,
@@ -398,15 +348,8 @@ class DataExtractionService:
 
         pdf_key = f"{prefix}{doc_id}.pdf"
         markdown_text = None
-        md_exists = await self.s3_client.object_exists(bucket, md_key)
-        logger.info(f"[get_document_assets] doc_id={doc_id}, md_key={md_key}, exists={md_exists}")
-        if md_exists:
+        if await self.s3_client.object_exists(bucket, md_key):
             markdown_text = await self.s3_client.download_text(bucket, md_key)
-            logger.info(f"[get_document_assets] markdown loaded, length={len(markdown_text) if markdown_text else 0}")
-            # ОТКЛЮЧЕНО: Преобразование происходит на клиенте
-            # if markdown_text:
-            #     markdown_text = self._convert_relative_image_paths(markdown_text, doc_id, request=request)
-            #     logger.info(f"[get_document_assets] paths converted, length={len(markdown_text)}")
 
         # перечислим изображения
         contents = await self.s3_client.list_objects(bucket, prefix)
@@ -579,18 +522,15 @@ class DataExtractionService:
                 """
                 result, _ = db.cypher_query(query, {'doc_id': doc_id})
                 deleted_count = result[0][0] if result else 0
-                logger.info(f"Удалены все данные из Neo4j для документа {doc_id}: аннотации, связи, паттерны, цепочки, документ (удалено: {deleted_count})")
+                logger.info(f"[delete] Neo4j: удалено {deleted_count} объектов для doc_id={doc_id}")
 
-                # Проверяем, что документ действительно удален
                 check_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
                 if check_doc:
-                    logger.error(f"ОШИБКА: Документ {doc_id} всё ещё существует в Neo4j после удаления!")
-                else:
-                    logger.info(f"Подтверждено: документ {doc_id} успешно удалён из Neo4j")
+                    logger.error(f"[delete] Документ {doc_id} всё ещё существует в Neo4j после удаления")
             else:
-                logger.warning(f"Документ {doc_id} не найден в Neo4j, нечего удалять")
+                logger.warning(f"[delete] Документ {doc_id} не найден в Neo4j")
         except Exception as e:
-            logger.error(f"Ошибка удаления данных из Neo4j для документа {doc_id}: {e}", exc_info=True)
+            logger.error(f"[delete] Ошибка удаления Neo4j для {doc_id}: {e}", exc_info=True)
 
         # Затем удаляем файлы из S3
         bucket = settings.S3_BUCKET_NAME
@@ -623,7 +563,6 @@ class DataExtractionService:
                 ok = await self.s3_client.delete_object(bucket, key)
                 if ok:
                     deleted += 1
-                    logger.info(f"Удален S3 объект: {key}")
 
             # Даём время на eventual consistency и повторно пытаемся удалить
             for retry in range(3):
@@ -646,36 +585,30 @@ class DataExtractionService:
                             if key and ver:
                                 await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
                                 deleted += 1
-                                logger.info(f"Удалена версия S3 объекта: {key} (version: {ver})")
 
-                        # Удаляем delete markers
                         for m in versions_resp.get('DeleteMarkers', []):
                             key = m.get('Key')
                             ver = m.get('VersionId')
                             if key and ver:
                                 await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
                                 deleted += 1
-                                logger.info(f"Удален delete marker: {key} (version: {ver})")
 
-                        # Если версий нет, просто повторяем удаление основных ключей
                         if not versions_resp.get('Versions') and not versions_resp.get('DeleteMarkers'):
                             for obj in remaining:
                                 key = obj.get('Key') or obj.get('key') or ''
                                 if key:
                                     await s3.delete_object(Bucket=bucket, Key=key)
-                                    logger.info(f"Повторное удаление S3 объекта: {key}")
                                     deleted += 1
                 except Exception as e:
-                    logger.warning(f"Попытка {retry + 1}/3 удаления версий для {prefix}: {e}")
+                    logger.warning(f"[delete] Попытка {retry + 1}/3 для {prefix}: {e}")
 
-            # Финальная проверка после всех попыток
             await asyncio.sleep(1.0)
             remaining = await self.s3_client.list_objects(bucket, prefix)
             if remaining:
                 rem_keys = [o.get('Key') or o.get('key') or '' for o in remaining]
-                logger.warning(f"S3 всё ещё содержит ключи под {prefix} после {retry + 1} попыток: {rem_keys}")
+                logger.warning(f"[delete] Остались объекты под {prefix}: {rem_keys}")
 
-        logger.info(f"Успешно удален документ {doc_id}: удалено {deleted} файлов из S3")
+        logger.info(f"[delete] doc_id={doc_id}: удалено {deleted} файлов из S3")
         return {"success": True, "deleted": deleted, "doc_id": doc_id}
 
     async def update_markdown(self, doc_id: str, markdown: str) -> Dict[str, Any]:
@@ -700,8 +633,6 @@ class DataExtractionService:
         if not ok:
             raise HTTPException(status_code=500, detail="Не удалось сохранить markdown в S3")
 
-        logger.info(f"[data_extraction] Пользовательский markdown сохранен: s3://{bucket}/{md_key}")
-
         # Обновляем Neo4j PDFDocument с user_md_s3_key и title
         extracted_title = None
         try:
@@ -711,14 +642,11 @@ class DataExtractionService:
                 extracted_title = extract_title_from_markdown(markdown)
                 if extracted_title:
                     document.title = extracted_title
-                    logger.info(f"[Neo4j] Обновлён title для документа {doc_id}: {extracted_title}")
                 document.save()
-                logger.info(f"[Neo4j] Обновлен user_md_s3_key для документа {doc_id}: {md_key}")
             else:
-                logger.warning(f"[Neo4j] Документ {doc_id} не найден в Neo4j, не удалось обновить user_md_s3_key")
+                logger.warning(f"[update_markdown] Документ {doc_id} не найден в Neo4j")
         except Exception as e:
-            logger.error(f"[Neo4j] Ошибка обновления user_md_s3_key для {doc_id}: {e}")
-            # Не прерываем выполнение, т.к. файл уже сохранен в S3
+            logger.error(f"[update_markdown] Ошибка обновления Neo4j для {doc_id}: {e}")
 
         return {
             "success": True,
@@ -742,45 +670,31 @@ class DataExtractionService:
         try:
             # Получаем все документы из Neo4j
             all_docs = PDFDocument.nodes.all()
-            logger.info(f"[list_documents] Получено документов из Neo4j: {len(list(all_docs))}")
-
-            # Пересоздаем итератор, так как мы уже его использовали для подсчета
+            # Пересоздаем итератор (первый all() использован для подсчёта)
             all_docs = PDFDocument.nodes.all()
 
             for pdf_doc in all_docs:
                 doc_id = pdf_doc.uid
                 prefix = f"documents/{doc_id}/"
-
-                # Формируем пути к файлам
                 pdf_key = f"{prefix}{doc_id}.pdf"
 
                 # Определяем markdown ключ (приоритет: user > formatted > raw > старый формат)
-                md_key = None
-                if pdf_doc.user_md_s3_key:
-                    md_key = pdf_doc.user_md_s3_key
-                    logger.info(f"[list_documents] doc_id={doc_id}: используем user_md_s3_key={md_key}")
-                elif pdf_doc.formatted_md_s3_key:
-                    md_key = pdf_doc.formatted_md_s3_key
-                    logger.info(f"[list_documents] doc_id={doc_id}: используем formatted_md_s3_key={md_key}")
-                elif pdf_doc.docling_raw_md_s3_key:
-                    md_key = pdf_doc.docling_raw_md_s3_key
-                    logger.info(f"[list_documents] doc_id={doc_id}: используем docling_raw_md_s3_key={md_key}")
-                else:
-                    md_key = f"{prefix}{doc_id}.md"
-                    logger.info(f"[list_documents] doc_id={doc_id}: используем старый формат md_key={md_key}")
+                md_key = (
+                    pdf_doc.user_md_s3_key
+                    or pdf_doc.formatted_md_s3_key
+                    or pdf_doc.docling_raw_md_s3_key
+                    or f"{prefix}{doc_id}.md"
+                )
 
-                # Проверяем реальное существование файлов в S3
                 pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
                 md_exists = await self.s3_client.object_exists(bucket, md_key)
 
-                # Для PubMed/PMC статей без PDF проверяем также прямой s3_key
+                # Для PubMed/PMC статей без PDF проверяем прямой s3_key
                 if not md_exists and not pdf_exists and pdf_doc.s3_key:
                     direct_exists = await self.s3_client.object_exists(bucket, pdf_doc.s3_key)
                     if direct_exists:
                         md_exists = pdf_doc.s3_key.endswith('.md')
                         pdf_exists = pdf_doc.s3_key.endswith('.pdf')
-
-                logger.info(f"[list_documents] doc_id={doc_id}: pdf_exists={pdf_exists}, md_exists={md_exists} для ключа {md_key}")
 
                 # Показываем документ если есть хотя бы PDF или markdown
                 if pdf_exists or md_exists:

@@ -234,7 +234,7 @@ class SaveForTestsRequest(BaseModel):
     PDF, patterns и chains всегда обязательны и включаются автоматически.
     Имя датасета генерируется автоматически: {md5_hash}_{YYYY}.{MM}.{DD}_{HH}.{mm}.{ss}_{random6}
     """
-    validate: bool = Field(default=True, description="Валидировать датасет после экспорта")
+    run_validation: bool = Field(default=True, description="Валидировать датасет после экспорта")
 
 
 class DataAvailabilityStatus(BaseModel):

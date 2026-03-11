@@ -36,15 +36,17 @@ $grpcFiles = @(
     "utils/generated/layout_pb2_grpc.py",
     "utils/generated/auth_pb2_grpc.py"
 )
+# Regex-замены: используем (?m) для многострочного режима,
+# заменяем только строки где import X НЕ предшествует "from ."
 $replacements = @{
-    "import layout_pb2 as layout__pb2" = "from . import layout_pb2 as layout__pb2"
-    "import auth_pb2 as auth__pb2"     = "from . import auth_pb2 as auth__pb2"
+    "(?m)^import layout_pb2 as layout__pb2" = "from . import layout_pb2 as layout__pb2"
+    "(?m)^import auth_pb2 as auth__pb2"     = "from . import auth_pb2 as auth__pb2"
 }
 foreach ($file in $grpcFiles) {
     if (Test-Path $file) {
         $content = Get-Content $file -Raw
-        foreach ($old in $replacements.Keys) {
-            $content = $content -replace [regex]::Escape($old), $replacements[$old]
+        foreach ($pattern in $replacements.Keys) {
+            $content = [regex]::Replace($content, $pattern, $replacements[$pattern])
         }
         Set-Content $file $content
     }
@@ -52,4 +54,4 @@ foreach ($file in $grpcFiles) {
 
 # 5) Start server
 Write-Host "Starting uvicorn on port 8000..."
-poetry run python -m uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
+poetry run python -m uvicorn web.app:app --host 0.0.0.0 --port 8000 --reload

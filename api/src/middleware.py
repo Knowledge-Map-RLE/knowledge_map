@@ -29,10 +29,10 @@ ORIGINS = _extra_origins + [
 
 async def log_requests(request: Request, call_next: Callable) -> Response:
     """Middleware для логирования запросов"""
-    logger.info(f"Request: {request.method} {request.url}")
-    logger.info(f"Headers: {dict(request.headers)}")
+    logger.debug(f"{request.method} {request.url}")
     response = await call_next(request)
-    logger.info(f"Response status: {response.status_code}")
+    if response.status_code >= 400:
+        logger.warning(f"{request.method} {request.url} → {response.status_code}")
     return response
 
 

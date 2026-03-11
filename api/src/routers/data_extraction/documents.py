@@ -223,7 +223,7 @@ async def save_document_for_tests(doc_id: str, request: SaveForTestsRequest):
         # Имя датасета генерируется автоматически
         result = await data_extraction_service.save_for_tests(
             doc_id=doc_id,
-            validate=request.validate
+            validate=request.run_validation
         )
 
         if not result["success"]:

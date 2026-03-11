@@ -1,0 +1,248 @@
+"""
+Layer: Interface Adapters — Repository
+Package: adapters.repositories.annotation_repository
+Responsibility: neomodel-реализация AnnotationRepositoryProtocol.
+
+Allowed imports: neomodel, infrastructure.neo4j.orm_models, domain.models.annotation, domain.exceptions
+Forbidden imports: fastapi, web
+"""
+from __future__ import annotations
+
+import logging
+from datetime import datetime
+from typing import Optional, List, Tuple
+
+from neomodel import db, DoesNotExist
+
+from infrastructure.neo4j.orm_models import (
+    MarkdownAnnotation as OrmAnnotation,
+    PDFDocument as OrmDocument,
+)
+from domain.models.annotation import MarkdownAnnotation, AnnotationRelation
+from domain.exceptions import NotFoundError
+
+logger = logging.getLogger(__name__)
+
+
+def _orm_to_domain(orm_ann: OrmAnnotation) -> MarkdownAnnotation:
+    return MarkdownAnnotation(
+        uid=orm_ann.uid,
+        text=orm_ann.text,
+        annotation_type=orm_ann.annotation_type,
+        start_offset=orm_ann.start_offset,
+        end_offset=orm_ann.end_offset,
+        color=orm_ann.color or "#ffeb3b",
+        metadata=orm_ann.metadata,
+        confidence=orm_ann.confidence,
+        created_date=orm_ann.created_date,
+        source=orm_ann.source or "user",
+        processor_version=orm_ann.processor_version,
+    )
+
+
+class AnnotationRepository:
+    """
+    neomodel-реализация репозитория Markdown-аннотаций.
+    Удовлетворяет AnnotationRepositoryProtocol (structural subtyping).
+    """
+
+    def create(self, annotation: MarkdownAnnotation, doc_id: str) -> MarkdownAnnotation:
+        try:
+            orm_doc = OrmDocument.nodes.get(uid=doc_id)
+        except DoesNotExist:
+            raise NotFoundError("PDFDocument", doc_id)
+
+        orm_ann = OrmAnnotation(
+            text=annotation.text,
+            annotation_type=annotation.annotation_type,
+            start_offset=annotation.start_offset,
+            end_offset=annotation.end_offset,
+            color=annotation.color,
+            metadata=annotation.metadata,
+            confidence=annotation.confidence,
+            source=annotation.source,
+            processor_version=annotation.processor_version,
+        ).save()
+        orm_doc.markdown_annotations.connect(orm_ann)
+        return _orm_to_domain(orm_ann)
+
+    def get_by_id(self, uid: str) -> Optional[MarkdownAnnotation]:
+        try:
+            return _orm_to_domain(OrmAnnotation.nodes.get(uid=uid))
+        except DoesNotExist:
+            return None
+
+    def get_by_document(
+        self,
+        doc_id: str,
+        skip: int = 0,
+        limit: Optional[int] = None,
+        annotation_types: Optional[List[str]] = None,
+        source: Optional[str] = None,
+    ) -> Tuple[List[MarkdownAnnotation], int]:
+        # Строим динамический WHERE
+        conditions = ["(doc)-[:HAS_MARKDOWN_ANNOTATION]->(ann)"]
+        params: dict = {"doc_id": doc_id}
+
+        if annotation_types:
+            conditions.append("ann.annotation_type IN $types")
+            params["types"] = annotation_types
+        if source:
+            conditions.append("ann.source = $source")
+            params["source"] = source
+
+        where_clause = "WHERE " + " AND ".join(conditions)
+
+        count_query = f"""
+        MATCH (doc:PDFDocument {{uid: $doc_id}}), (ann:MarkdownAnnotation)
+        {where_clause}
+        RETURN count(ann) as total
+        """
+        count_result, _ = db.cypher_query(count_query, params)
+        total = count_result[0][0] if count_result else 0
+
+        fetch_query = f"""
+        MATCH (doc:PDFDocument {{uid: $doc_id}}), (ann:MarkdownAnnotation)
+        {where_clause}
+        RETURN ann
+        ORDER BY ann.start_offset
+        SKIP $skip
+        {f"LIMIT $limit" if limit is not None else ""}
+        """
+        fetch_params = {**params, "skip": skip}
+        if limit is not None:
+            fetch_params["limit"] = limit
+
+        result, _ = db.cypher_query(fetch_query, fetch_params)
+        annotations = []
+        for row in result:
+            node = row[0]
+            try:
+                orm_ann = OrmAnnotation.inflate(node)
+                annotations.append(_orm_to_domain(orm_ann))
+            except Exception as e:
+                logger.warning(f"Не удалось разобрать аннотацию: {e}")
+        return annotations, total
+
+    def save(self, annotation: MarkdownAnnotation) -> MarkdownAnnotation:
+        try:
+            orm_ann = OrmAnnotation.nodes.get(uid=annotation.uid)
+        except DoesNotExist:
+            raise NotFoundError("MarkdownAnnotation", annotation.uid)
+
+        orm_ann.text = annotation.text
+        orm_ann.annotation_type = annotation.annotation_type
+        orm_ann.start_offset = annotation.start_offset
+        orm_ann.end_offset = annotation.end_offset
+        orm_ann.color = annotation.color
+        orm_ann.metadata = annotation.metadata
+        orm_ann.confidence = annotation.confidence
+        orm_ann.save()
+        return _orm_to_domain(orm_ann)
+
+    def delete(self, uid: str) -> None:
+        try:
+            orm_ann = OrmAnnotation.nodes.get(uid=uid)
+        except DoesNotExist:
+            raise NotFoundError("MarkdownAnnotation", uid)
+        orm_ann.delete()
+
+    def delete_all_for_document(self, doc_id: str) -> int:
+        result, _ = db.cypher_query(
+            """
+            MATCH (doc:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
+            DETACH DELETE ann
+            RETURN count(ann) as deleted
+            """,
+            {"doc_id": doc_id},
+        )
+        return result[0][0] if result else 0
+
+    def count_for_document(self, doc_id: str) -> int:
+        result, _ = db.cypher_query(
+            "MATCH (doc:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(ann) RETURN count(ann)",
+            {"doc_id": doc_id},
+        )
+        return result[0][0] if result else 0
+
+    def create_relation(
+        self,
+        source_uid: str,
+        target_uid: str,
+        relation_type: str,
+        metadata: Optional[dict] = None,
+    ) -> AnnotationRelation:
+        try:
+            source = OrmAnnotation.nodes.get(uid=source_uid)
+        except DoesNotExist:
+            raise NotFoundError("MarkdownAnnotation", source_uid)
+        try:
+            target = OrmAnnotation.nodes.get(uid=target_uid)
+        except DoesNotExist:
+            raise NotFoundError("MarkdownAnnotation", target_uid)
+
+        rel = source.relations_to.connect(
+            target,
+            {"relation_type": relation_type, "created_date": datetime.utcnow(), "metadata": metadata or {}},
+        )
+        return AnnotationRelation(
+            uid=rel.uid,
+            source_uid=source_uid,
+            target_uid=target_uid,
+            relation_type=relation_type,
+            created_date=rel.created_date,
+            metadata=rel.metadata,
+        )
+
+    def delete_relation(self, source_uid: str, target_uid: str) -> None:
+        db.cypher_query(
+            """
+            MATCH (s:MarkdownAnnotation {uid: $src})-[r:RELATES_TO]->(t:MarkdownAnnotation {uid: $tgt})
+            DELETE r
+            """,
+            {"src": source_uid, "tgt": target_uid},
+        )
+
+    def get_relations_for_document(self, doc_id: str) -> List[AnnotationRelation]:
+        result, _ = db.cypher_query(
+            """
+            MATCH (doc:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(s:MarkdownAnnotation)
+            -[r:RELATES_TO]->(t:MarkdownAnnotation)
+            RETURN s.uid as source_uid, t.uid as target_uid,
+                   r.uid as rel_uid, r.relation_type as rel_type,
+                   r.created_date as created_date, r.metadata as metadata
+            """,
+            {"doc_id": doc_id},
+        )
+        return [
+            AnnotationRelation(
+                uid=str(row[2]) if row[2] else "",
+                source_uid=str(row[0]),
+                target_uid=str(row[1]),
+                relation_type=str(row[3]),
+                created_date=row[4],
+                metadata=row[5],
+            )
+            for row in result
+        ]
+
+    def batch_update_offsets(self, updates: List[dict]) -> Tuple[int, List[str]]:
+        """
+        Массово обновляет start_offset / end_offset.
+        updates: [{"annotation_id": str, "start_offset": int, "end_offset": int}, ...]
+        """
+        updated = 0
+        errors = []
+        for upd in updates:
+            ann_id = upd.get("annotation_id", "")
+            try:
+                orm_ann = OrmAnnotation.nodes.get(uid=ann_id)
+                orm_ann.start_offset = upd["start_offset"]
+                orm_ann.end_offset = upd["end_offset"]
+                orm_ann.save()
+                updated += 1
+            except DoesNotExist:
+                errors.append(f"Аннотация {ann_id} не найдена")
+            except Exception as e:
+                errors.append(f"Ошибка обновления {ann_id}: {e}")
+        return updated, errors

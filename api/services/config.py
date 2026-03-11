@@ -1,3 +1,6 @@
+# TRANSITIONAL — перенаправляет в infrastructure/config.py (удалить в Фазе 5)
+from infrastructure.config import settings, Settings  # noqa: F401
+
 import os
 from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict

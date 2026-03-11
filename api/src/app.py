@@ -1,13 +1,13 @@
-"""Главное приложение FastAPI"""
+"""Главное приложение FastAPI — TRANSITIONAL (будет удалён в Фазе 5).
+Основной app теперь в web/app.py.
+"""
 import logging
 import os
 from typing import Dict, Any
 
 from fastapi import FastAPI
 
-# Отладочная информация о переменных окружения
 logger = logging.getLogger(__name__)
-logger.info(f"[app] Переменные окружения: PDF_TO_MD_SERVICE_HOST={os.getenv('PDF_TO_MD_SERVICE_HOST', 'НЕ УСТАНОВЛЕНА')}, PDF_TO_MD_SERVICE_PORT={os.getenv('PDF_TO_MD_SERVICE_PORT', 'НЕ УСТАНОВЛЕНА')}")
 from fastapi.middleware.cors import CORSMiddleware
 from strawberry.fastapi import GraphQLRouter
 
@@ -40,9 +40,6 @@ database_url = settings.get_database_url()
 neomodel_config.DATABASE_URL = database_url
 if not settings.NEO4J_URI.startswith(("bolt+s://", "neo4j+s://")):
     neomodel_config.ENCRYPTED = False  # Отключаем TLS только для локального Bolt
-logger.info(f"Neo4j connection configured: NEO4J_URI={settings.NEO4J_URI}, DATABASE_URL={database_url}")
-
-logger.info(f"Configuring CORS with origins: {ORIGINS}")
 
 # Создаем приложение FastAPI
 app = FastAPI(

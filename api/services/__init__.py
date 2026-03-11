@@ -1,7 +1,8 @@
-# Services package
-from .config import settings
-from .s3_client import get_s3_client
+# Services package — TRANSITIONAL (удалить в Фазе 5)
+# Перенаправляет импорты в infrastructure/ для обратной совместимости.
+from infrastructure.config import settings
+from infrastructure.s3.s3_storage import get_s3_client
 from .layout_client import get_layout_client, LayoutOptions, LayoutConfig
-from .auth_client import auth_client
+from infrastructure.grpc_clients.auth_grpc_client import auth_client
 
 __all__ = ["settings", "get_s3_client", "get_layout_client", "LayoutOptions", "LayoutConfig", "auth_client"]
