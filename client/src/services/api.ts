@@ -153,6 +153,12 @@ export async function getDocumentAssets(docId: string): Promise<{ success: boole
   return res.json();
 }
 
+export async function getDocumentProgress(docId: string): Promise<{ doc_id: string; processing_status: string; percent: number; phase: string; message: string }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/progress`);
+  return res.json();
+}
+
 export async function saveMarkdown(docId: string, markdown: string): Promise<{ success: boolean; doc_id: string; s3_key?: string; message?: string }> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
   const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/markdown`, {
@@ -602,7 +608,8 @@ export async function getAnnotationRelations(docId: string): Promise<AnnotationR
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${await res.text()}`);
   }
-  return res.json();
+  const data = await res.json();
+  return Array.isArray(data) ? data : (data.relations ?? []);
 }
 
 // NLP анализ текста

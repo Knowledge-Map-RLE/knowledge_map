@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, useEffect, forwardRef, useImperat
 import s from './Document_downloader_ui.module.css';
 import {
     uploadPdfForExtraction, listDocuments, deleteDocument as apiDeleteDocument,
-    searchPubMed, getByPubMedId, ingestPubMedArticle,
+    searchPubMed, getByPubMedId, ingestPubMedArticle, getDocumentProgress,
     type PubMedSearchResult
 } from '../../services/api';
 import DocumentContextMenu from './DocumentContextMenu';
@@ -47,6 +47,7 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
     const [isUploading, setIsUploading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
     const [progressMap, setProgressMap] = useState<Record<string, number>>({});
+    const [progressMessageMap, setProgressMessageMap] = useState<Record<string, string>>({});
     const [contextMenu, setContextMenu] = useState<{ x: number; y: number; documentId: string } | null>(null);
 
     // PubMed unified search
@@ -275,22 +276,48 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                 setProgressMap(prev => ({ ...prev, [tempDocId]: progress }));
             });
             if (result.success) {
-                const newDoc = { uid: result.doc_id || '', original_filename: file.name, md5_hash: result.doc_id || '', upload_date: new Date().toISOString(), processing_status: 'pdf_to_markdown', is_processed: false } as PDFDocument;
+                const isDuplicate = result.message?.includes('Дубликат') || result.message?.includes('уже существует');
+                const initialStatus = isDuplicate ? 'ready_for_annotation' : 'pdf_to_markdown';
+                const newDoc = { uid: result.doc_id || '', original_filename: file.name, md5_hash: result.doc_id || '', upload_date: new Date().toISOString(), processing_status: initialStatus, is_processed: isDuplicate } as PDFDocument;
                 setDocuments(prev => [newDoc, ...prev.filter(doc => doc.uid !== tempDocId)]);
                 onSelectDocument(newDoc);
-                let progress = 0;
-                setProgressMap(prev => ({ ...prev, [newDoc.uid]: progress }));
-                const progressInterval = setInterval(() => {
-                    progress += Math.floor(Math.random() * 10) + 5;
-                    if (progress >= 100) {
-                        progress = 100;
-                        clearInterval(progressInterval);
-                        setDocuments(prev => prev.map(doc => doc.uid === newDoc.uid ? { ...doc, processing_status: 'ready_for_annotation' } : doc));
-                        onDocumentsChange();
-                    }
-                    setProgressMap(prev => ({ ...prev, [newDoc.uid]: progress }));
-                }, 200);
-                setTimeout(() => setProgressMap(prev => { const u = { ...prev }; delete u[newDoc.uid]; return u; }), 25000);
+
+                if (isDuplicate) {
+                    // Дубликат — сразу загружаем актуальные данные
+                    const freshDocs = await loadDocuments();
+                    const updated = freshDocs.find(d => d.uid === result.doc_id);
+                    if (updated) onSelectDocument(updated);
+                    onDocumentsChange();
+                } else {
+                    setProgressMap(prev => ({ ...prev, [newDoc.uid]: 0 }));
+
+                    // Polling реального прогресса через API
+                    const pollProgress = async (docId: string) => {
+                        try {
+                            const prog = await getDocumentProgress(docId);
+                            setProgressMap(prev => ({ ...prev, [docId]: prog.percent }));
+                            if (prog.message) {
+                                setProgressMessageMap(prev => ({ ...prev, [docId]: prog.message }));
+                            }
+                            setDocuments(prev => prev.map(doc =>
+                                doc.uid === docId ? { ...doc, processing_status: prog.processing_status } : doc
+                            ));
+                            if (prog.processing_status === 'pdf_to_markdown' || prog.processing_status === 'uploading') {
+                                setTimeout(() => pollProgress(docId), 2000);
+                            } else {
+                                setProgressMap(prev => { const u = { ...prev }; delete u[docId]; return u; });
+                                setProgressMessageMap(prev => { const u = { ...prev }; delete u[docId]; return u; });
+                                const freshDocs = await loadDocuments();
+                                const updated = freshDocs.find(d => d.uid === docId);
+                                if (updated) onSelectDocument(updated);
+                                onDocumentsChange();
+                            }
+                        } catch {
+                            setTimeout(() => pollProgress(docId), 3000);
+                        }
+                    };
+                    setTimeout(() => pollProgress(newDoc.uid), 2000);
+                }
             } else {
                 setError(result.message || 'Ошибка загрузки файла');
                 setDocuments(prev => prev.filter(doc => doc.uid !== tempDocId));
@@ -330,8 +357,12 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
     };
     const getProgressText = (status: string, docId: string) => {
         const progress = progressMap[docId];
+        const message = progressMessageMap[docId];
         if (status === 'uploading') return `Загружено ${progress ?? 0}%`;
-        if (status === 'pdf_to_markdown' || status === 'processing') return `Обработано ${progress ?? 0}%`;
+        if (status === 'pdf_to_markdown' || status === 'processing') {
+            if (message) return `${progress ?? 0}% — ${message}`;
+            return `Обработано ${progress ?? 0}%`;
+        }
         return null;
     };
 

@@ -26,7 +26,7 @@ def _orm_to_domain(orm_doc: OrmDocument) -> PDFDocument:
         uid=orm_doc.uid,
         original_filename=orm_doc.original_filename,
         md5_hash=orm_doc.md5_hash,
-        s3_bucket=orm_doc.s3_bucket or "knowledge-map-pdfs",
+        s3_bucket=orm_doc.s3_bucket or "knowledge-map-data",
         s3_key=orm_doc.s3_key,
         file_size=orm_doc.file_size,
         upload_date=orm_doc.upload_date,

@@ -56,6 +56,12 @@ export default function Data_extraction() {
         }
         setSelectedDocument(document);
         setDocId(document.uid);
+        // Не загружаем assets для временных документов (пока идёт загрузка)
+        if (document.uid.startsWith('upload_') || document.processing_status === 'uploading') {
+            setSourceMarkdown('');
+            setPdfUrl('');
+            return;
+        }
         // Загружаем markdown из S3
         try {
             const assets = await getDocumentAssets(document.uid);
@@ -237,7 +243,7 @@ export default function Data_extraction() {
                         {/* Аннотатор */}
                         {activeTab === 'annotator' && (
                             <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                                {selectedDocument && docId ? (
+                                {selectedDocument && docId && !['uploading', 'pdf_to_markdown'].includes(selectedDocument.processing_status) ? (
                                     <AnnotationWorkspace
                                         docId={docId}
                                         text={sourceMarkdown}

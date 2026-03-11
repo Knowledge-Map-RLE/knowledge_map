@@ -74,7 +74,9 @@
       "Bash(sed -i '1s/^/\"\"\"\"\"\"\\\\nLayer: Interface Adapters — Controller \\(Web\\) — TRANSITIONAL\\\\nPackage: web.routers.'\"$f\"'\\\\nResponsibility: HTTP route handlers \\(перенесён из src\\\\/routers\\\\/ без изменений\\).\\\\nBusiness logic будет перенесена в use cases в следующих фазах.\\\\n\"\"\"\"\"\"\\\\n/' \"d:/Knowledge_Map/api/web/routers/$f.py\")",
       "Bash(done)",
       "Bash(echo \"exit:$?\")",
-      "Bash(.venv/Scripts/python -c \"from web.app import app; print\\(''''web.app imports OK''''\\)\")"
+      "Bash(.venv/Scripts/python -c \"from web.app import app; print\\(''''web.app imports OK''''\\)\")",
+      "Bash(gh issue:*)",
+      "WebFetch(domain:docling-project.github.io)"
     ],
     "deny": [],
     "ask": []

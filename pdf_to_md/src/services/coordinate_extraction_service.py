@@ -53,16 +53,70 @@ class CoordinateExtractionService:
             if not s3_health['success']:
                 raise Exception(f"S3 service unavailable: {s3_health.get('error')}")
 
+            # Подсчитываем страницы через fitz до Docling
+            total_pages = 0
+            try:
+                _pdf = fitz.open(str(pdf_path))
+                total_pages = len(_pdf)
+                _pdf.close()
+            except Exception:
+                pass
+
             if on_progress:
-                on_progress({"percent": 10, "message": "Анализ координат с Docling..."})
+                on_progress({
+                    "percent": 10,
+                    "phase": "docling_ocr",
+                    "message": f"Распознавание документа ({total_pages} стр.)..." if total_pages else "Распознавание документа..."
+                })
 
             # Step 1: Получаем координаты от Docling
             logger.info("Step 1: Получение координат от Docling...")
+
+            # Перехватываем DEBUG логи Docling о прогрессе страниц
+            # docling.pipeline.base_pipeline логирует на DEBUG:
+            # "Finished converting pages X\N time=..."
+            class _DoclingPageProgressHandler(logging.Handler):
+                def __init__(self, tp, cb):
+                    super().__init__(logging.DEBUG)
+                    self._total = tp
+                    self._cb = cb
+
+                def emit(self, record):
+                    if not self._cb or not self._total:
+                        return
+                    msg = record.getMessage()
+                    if "Finished converting pages" not in msg:
+                        return
+                    try:
+                        # Формат: "Finished converting pages X\N time=..."
+                        token = msg.split("Finished converting pages")[1].strip().split()[0]
+                        # token может быть "3\13" или "3/13"
+                        token = token.replace("\\", "/")
+                        done_str, total_str = token.split("/")
+                        done = int(done_str)
+                        total = int(total_str) if total_str else self._total
+                        pct = 10 + int(60 * done / total) if total else 10
+                        self._cb({
+                            "percent": pct,
+                            "phase": "docling_ocr",
+                            "message": f"Распознавание страниц: {done}/{total}"
+                        })
+                    except Exception:
+                        pass
+
+            _progress_handler = None
+            _docling_logger = logging.getLogger("docling.pipeline.base_pipeline")
+            _prev_level = _docling_logger.level
+            if on_progress and total_pages:
+                _progress_handler = _DoclingPageProgressHandler(total_pages, on_progress)
+                _docling_logger.addHandler(_progress_handler)
+                # Временно снижаем уровень логгера до DEBUG чтобы получать эти сообщения
+                _docling_logger.setLevel(logging.DEBUG)
+
             try:
                 converter = DocumentConverter()
                 result = converter.convert(str(pdf_path))
             except Exception as e:
-                # Если не удалось загрузить модель (SSL ошибка, нет интернета и т.д.)
                 error_msg = str(e)
                 if 'SSL' in error_msg or 'huggingface' in error_msg.lower() or 'connection' in error_msg.lower():
                     logger.error(f"Failed to download Docling model from HuggingFace: {error_msg}")
@@ -70,12 +124,20 @@ class CoordinateExtractionService:
                     raise Exception(f"Docling model download failed (SSL/network error). Please check internet connection or download models manually.")
                 else:
                     raise
+            finally:
+                if _progress_handler:
+                    _docling_logger.removeHandler(_progress_handler)
+                    _docling_logger.setLevel(_prev_level if _prev_level != logging.NOTSET else logging.WARNING)
             
             coordinates = self._extract_coordinates_from_docling(result)
             logger.info(f"Найдено {len(coordinates)} координат изображений")
             
             if on_progress:
-                on_progress({"percent": 30, "message": f"Найдено {len(coordinates)} координат изображений"})
+                on_progress({
+                    "percent": 30,
+                    "phase": "extracting_images",
+                    "message": f"Распознано {total_pages} стр., найдено {len(coordinates)} изображений"
+                })
             
             # Step 2: Извлечение изображений с PyMuPDF и сохранение в S3
             logger.info("Step 2: Извлечение изображений и сохранение в S3...")
@@ -198,9 +260,20 @@ class CoordinateExtractionService:
             s3_folder = f"documents/{document_id}/images" if document_id else "images"
             
             total_coords = len(coordinates)
-            
+            total_pages = len(doc)
+
             for idx, coord_info in enumerate(coordinates):
                 try:
+                    # Прогресс: 30-80% распределяем по изображениям
+                    if on_progress and total_coords > 0:
+                        pct = 30 + int(50 * idx / total_coords)
+                        page_no = coord_info.get("page_no", idx + 1)
+                        on_progress({
+                            "percent": pct,
+                            "phase": "extracting_images",
+                            "message": f"Извлечение изображения {idx + 1}/{total_coords} (стр. {page_no}/{total_pages})"
+                        })
+
                     page_index = coord_info["page_index"]
                     page = doc.load_page(page_index)
                     

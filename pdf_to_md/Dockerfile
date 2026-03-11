@@ -32,7 +32,7 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock* ./
 
 # Установка только основных зависимостей без dev зависимостей
-RUN poetry install --no-dev --no-interaction --no-ansi --no-root && \
+RUN poetry install --only=main --no-interaction --no-ansi --no-root && \
     poetry env info && \
     ls -la /tmp/poetry_cache/virtualenvs/ && \
     mkdir -p /app/.venv && \
@@ -76,9 +76,7 @@ WORKDIR /app
 # Копирование исходного кода
 COPY src/ ./src/
 COPY proto/ ./proto/
-
-# Копирование моделей (критически важно для работы)
-COPY marker_models/ ./marker_models/
+COPY start.sh ./start.sh
 
 # Генерация proto файлов
 RUN python -m grpc_tools.protoc \
@@ -89,11 +87,12 @@ RUN python -m grpc_tools.protoc \
 
 # Создание пользователя для безопасности
 RUN groupadd -r appuser && useradd -r -g appuser appuser && \
+    chmod +x /app/start.sh && \
     chown -R appuser:appuser /app
 USER appuser
 
 # Экспорт портов
-EXPOSE 8002 50051
+EXPOSE 8002 50053
 
-# Команда по умолчанию
-CMD ["/app/.venv/bin/python", "src/grpc_server.py"]
+# Команда по умолчанию — запуск обоих серверов
+CMD ["/app/start.sh"]

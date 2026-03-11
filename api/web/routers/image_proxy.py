@@ -41,14 +41,19 @@ async def get_s3_image(object_key: str):
             raise HTTPException(status_code=500, detail="Не удалось загрузить изображение")
 
         # Определяем content-type по расширению
-        content_type = "image/jpeg"
         object_key_lower = object_key.lower()
-        if object_key_lower.endswith('.png'):
+        if object_key_lower.endswith('.pdf'):
+            content_type = "application/pdf"
+        elif object_key_lower.endswith('.png'):
             content_type = "image/png"
         elif object_key_lower.endswith('.gif'):
             content_type = "image/gif"
         elif object_key_lower.endswith('.bmp'):
             content_type = "image/bmp"
+        elif object_key_lower.endswith('.md') or object_key_lower.endswith('.txt'):
+            content_type = "text/plain; charset=utf-8"
+        else:
+            content_type = "image/jpeg"
 
         return Response(content=image_data, media_type=content_type)
 

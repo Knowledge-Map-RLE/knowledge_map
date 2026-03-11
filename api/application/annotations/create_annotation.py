@@ -52,4 +52,12 @@ def create_annotation(
         source=source,
         processor_version=processor_version,
     )
-    return annotation_repo.create(annotation, doc_id)
+    annotation = annotation_repo.create(annotation, doc_id)
+
+    # При первой аннотации переводим документ в статус 'annotated'
+    doc = document_repo.get_by_id(doc_id)
+    if doc and doc.processing_status == 'ready_for_annotation':
+        import dataclasses
+        document_repo.save(dataclasses.replace(doc, processing_status='annotated'))
+
+    return annotation

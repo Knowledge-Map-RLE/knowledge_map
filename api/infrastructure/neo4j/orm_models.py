@@ -89,7 +89,7 @@ class PDFDocument(StructuredNode):
     uid = UniqueIdProperty(primary_key=True)
     original_filename = StringProperty(required=True, index=True)
     md5_hash = StringProperty(required=True, unique_index=True)
-    s3_bucket = StringProperty(default="knowledge-map-pdfs")
+    s3_bucket = StringProperty(default="knowledge-map-data")
     s3_key = StringProperty(required=True)
     file_size = IntegerProperty()
     upload_date = DateTimeProperty(default=datetime.utcnow)

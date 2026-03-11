@@ -1238,7 +1238,7 @@ class PubMedService:
                     doc.docling_raw_md_s3_key = docling_raw_key
                 if formatted_key:
                     doc.formatted_md_s3_key = formatted_key
-                doc.processing_status = "annotated"
+                doc.processing_status = "ready_for_annotation"
                 doc.is_processed = True
                 doc.save()
 
@@ -1269,7 +1269,7 @@ class PubMedService:
         markdown: Optional[str],
         pdf_bytes: Optional[bytes],
         is_oa: bool,
-        processing_status: str = "annotated",
+        processing_status: str = "ready_for_annotation",
     ) -> Dict[str, Any]:
         """Сохраняет документ в S3 и Neo4j"""
         bucket = self.bucket

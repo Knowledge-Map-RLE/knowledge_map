@@ -362,45 +362,68 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
     
     async def ConvertPDFWithProgress(self, request, context):
         """Конвертация с отслеживанием прогресса (streaming)"""
-        try:
-            logger.info(f"[grpc] Начинаем конвертацию с прогрессом: doc_id={request.doc_id}")
+        doc_id = request.doc_id or "unknown"
+        logger.info(f"[grpc] Начинаем конвертацию с прогрессом: doc_id={doc_id}")
 
-            # TODO: Реализовать streaming прогресса для Docling
-            # Пока используем обычную конвертацию
-            result = await self.conversion_service.convert_pdf(
-                pdf_content=request.pdf_content,
-                doc_id=request.doc_id or None,
-                model_id=request.model_id or None,
-                use_coordinate_extraction=True
+        queue = asyncio.Queue()
+        result_holder = {}
+
+        def on_progress(p):
+            percent = p.get("percent", 0) if hasattr(p, "get") else getattr(p, "percent", 0)
+            phase = p.get("phase", "") if hasattr(p, "get") else getattr(p, "phase", "")
+            message = p.get("message", "") if hasattr(p, "get") else getattr(p, "message", "")
+            queue.put_nowait({"percent": percent, "phase": phase, "message": message})
+
+        async def run():
+            try:
+                result = await self.conversion_service.convert_pdf(
+                    pdf_content=request.pdf_content,
+                    doc_id=request.doc_id or None,
+                    model_id=request.model_id or None,
+                    use_coordinate_extraction=True,
+                    on_progress=on_progress,
+                )
+                result_holder["r"] = result
+            except Exception as e:
+                logger.error(f"[grpc] Ошибка конвертации с прогрессом: {e}")
+                result_holder["error"] = str(e)
+            finally:
+                await queue.put(None)  # sentinel
+
+        task = asyncio.create_task(run())
+
+        while True:
+            item = await queue.get()
+            if item is None:
+                break
+            logger.info(f"[grpc] Прогресс {doc_id}: {item['percent']}% [{item['phase']}]")
+            yield pdf_to_md_pb2.ProgressUpdate(
+                doc_id=doc_id,
+                percent=item["percent"],
+                phase=item["phase"],
+                message=item["message"],
             )
 
-            if result.success:
-                # Отправляем финальное обновление
-                final_update = pdf_to_md_pb2.ProgressUpdate(
-                    doc_id=request.doc_id or "unknown",
-                    percent=100,
-                    phase="completed",
-                    message="Конвертация завершена успешно"
-                )
-                yield final_update
-            else:
-                error_update = pdf_to_md_pb2.ProgressUpdate(
-                    doc_id=request.doc_id or "unknown",
-                    percent=0,
-                    phase="failed",
-                    message=f"Ошибка: {result.error_message}"
-                )
-                yield error_update
+        await task
 
-        except Exception as e:
-            logger.error(f"[grpc] Исключение при конвертации с прогрессом: {e}")
-            error_update = pdf_to_md_pb2.ProgressUpdate(
-                doc_id=request.doc_id or "unknown",
+        result = result_holder.get("r")
+        if result and result.success:
+            logger.info(f"[grpc] Конвертация с прогрессом завершена: doc_id={doc_id}")
+            yield pdf_to_md_pb2.ProgressUpdate(
+                doc_id=doc_id,
+                percent=100,
+                phase="completed",
+                message="Конвертация завершена успешно",
+            )
+        else:
+            error_msg = result_holder.get("error") or (result.error_message if result else "unknown")
+            logger.error(f"[grpc] Ошибка конвертации с прогрессом: {error_msg}")
+            yield pdf_to_md_pb2.ProgressUpdate(
+                doc_id=doc_id,
                 percent=0,
                 phase="failed",
-                message=f"Исключение: {str(e)}"
+                message=f"Ошибка: {error_msg}",
             )
-            yield error_update
 
 
 async def serve():

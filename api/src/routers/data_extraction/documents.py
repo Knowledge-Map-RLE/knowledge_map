@@ -184,6 +184,25 @@ async def get_document_image(doc_id: str, image_name: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/documents/{doc_id}/progress")
+async def get_document_progress(doc_id: str):
+    """Возвращает текущий прогресс конвертации документа."""
+    from services.data_extraction_service import _conversion_progress
+    from src.models import PDFDocument as OrmDoc
+    try:
+        orm_doc = OrmDoc.nodes.get_or_none(uid=doc_id)
+    except Exception:
+        orm_doc = None
+    progress = _conversion_progress.get(doc_id, {})
+    return {
+        "doc_id": doc_id,
+        "processing_status": orm_doc.processing_status if orm_doc else "unknown",
+        "percent": progress.get("percent", 0),
+        "phase": progress.get("phase", ""),
+        "message": progress.get("message", ""),
+    }
+
+
 @router.get("/documents/{doc_id}/data-availability", response_model=DataAvailabilityStatus)
 async def check_document_data_availability(doc_id: str):
     """

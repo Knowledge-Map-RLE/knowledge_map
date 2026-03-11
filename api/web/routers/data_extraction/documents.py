@@ -95,6 +95,10 @@ async def list_documents_route(doc_repo=Depends(get_document_repository)):
                 "processing_status": d.processing_status,
                 "is_processed": d.is_processed,
                 "source": d.source,
+                "has_markdown": d.get_active_markdown_key() is not None,
+                "pubmed_id": d.pubmed_id,
+                "pmc_id": d.pmc_id,
+                "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key else {},
             }
             for d in docs
         ],
@@ -146,6 +150,24 @@ async def update_document_markdown(
         title=result.get("title"),
         validation=validation_result,
     )
+
+
+@router.get("/documents/{doc_id}/progress")
+async def get_document_progress_route(
+    doc_id: str,
+    doc_repo=Depends(get_document_repository),
+):
+    """Возвращает текущий прогресс конвертации документа."""
+    from services.data_extraction_service import _conversion_progress
+    doc = doc_repo.get_by_id(doc_id)
+    progress = _conversion_progress.get(doc_id, {})
+    return {
+        "doc_id": doc_id,
+        "processing_status": doc.processing_status if doc else "unknown",
+        "percent": progress.get("percent", 0),
+        "phase": progress.get("phase", ""),
+        "message": progress.get("message", ""),
+    }
 
 
 @router.get("/documents/{doc_id}/markdown")

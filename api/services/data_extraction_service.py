@@ -21,6 +21,9 @@ logger = logging.getLogger(__name__)
 
 import os
 
+# Хранилище прогресса конвертации (doc_id → {percent, phase, message})
+_conversion_progress: Dict[str, Any] = {}
+
 
 def extract_title_from_markdown(markdown_content: str) -> str | None:
     """Извлекает заголовок первого уровня из markdown контента.
@@ -128,7 +131,17 @@ class DataExtractionService:
 
         async def process_pdf_and_upload(pdf_bytes: bytes, filename: str = None):
             # Конвертация PDF в Markdown через gRPC сервис
-            
+            logger.info(f"[background_task] STARTED process_pdf_and_upload for doc_id={doc_id}")
+
+            # Обновляем статус на pdf_to_markdown
+            try:
+                doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                if doc:
+                    doc.processing_status = 'pdf_to_markdown'
+                    doc.save()
+            except Exception as e:
+                logger.warning(f"[Neo4j] Не удалось обновить статус на pdf_to_markdown: {e}")
+
             tmp_dir = SysPath(tempfile.mkdtemp(prefix="km_pdf_"))
             try:
                 logger.info(f"[pdf_to_md] Начало обработки doc_id={doc_id}")
@@ -137,14 +150,16 @@ class DataExtractionService:
                 with open(tmp_pdf, "wb") as f:
                     f.write(pdf_bytes)
 
-                loop = asyncio.get_running_loop()
-
                 def _on_progress(payload: dict) -> None:
-                    pass
+                    _conversion_progress[doc_id] = {
+                        "percent": payload.get("percent", 0),
+                        "phase": payload.get("phase", "pdf_to_markdown"),
+                        "message": payload.get("message", ""),
+                    }
 
                 # Используем gRPC сервис для конвертации PDF в Markdown
                 grpc_client = get_pdf_to_md_grpc_client_instance()
-                
+
                 result = await grpc_client.convert_pdf(
                     pdf_content=pdf_bytes,
                     doc_id=doc_id,
@@ -215,7 +230,7 @@ class DataExtractionService:
                             original_filename=filename or f"{doc_id}.pdf",
                             md5_hash=doc_id,
                             s3_key=pdf_key,
-                            processing_status='annotated',
+                            processing_status='ready_for_annotation',
                             is_processed=True,
                             title=extracted_title,
                             docling_raw_md_s3_key=docling_raw_s3_key,
@@ -223,45 +238,91 @@ class DataExtractionService:
                         ).save()
                         logger.info(f"[pdf_to_md] Документ {doc_id} сохранён в Neo4j")
                     else:
-                        update_needed = False
+                        update_needed = True
+                        existing_doc.processing_status = 'ready_for_annotation'
+                        existing_doc.is_processed = True
                         if extracted_title and not existing_doc.title:
                             existing_doc.title = extracted_title
-                            update_needed = True
                         if docling_raw_s3_key:
                             existing_doc.docling_raw_md_s3_key = docling_raw_s3_key
                             if existing_doc.user_md_s3_key:
                                 existing_doc.user_md_s3_key = None
-                            update_needed = True
                         if formatted_s3_key:
                             existing_doc.formatted_md_s3_key = formatted_s3_key
-                            update_needed = True
-                        if update_needed:
-                            existing_doc.save()
+                        existing_doc.save()
+                        logger.info(f"[pdf_to_md] Документ {doc_id} обновлён в Neo4j")
+                    # Очищаем прогресс после завершения
+                    _conversion_progress.pop(doc_id, None)
                 except Exception as neo_err:
                     logger.error(f"[Neo4j] Ошибка сохранения документа {doc_id}: {neo_err}")
 
                 logger.info(f"[pdf_to_md] Обработка документа {doc_id} завершена")
             except Exception as e:
                 logger.exception(f"PDF to MD processing failed for {doc_id}: {e}")
+                # Устанавливаем статус error в Neo4j
+                try:
+                    err_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                    if err_doc:
+                        err_doc.processing_status = 'error'
+                        err_doc.save()
+                except Exception:
+                    pass
+                # Обновляем in-memory прогресс
+                _conversion_progress[doc_id] = {
+                    "percent": 0,
+                    "phase": "error",
+                    "message": str(e)[:200],
+                }
             finally:
                 try:
                     shutil.rmtree(tmp_dir, ignore_errors=True)
                 except Exception:
                     pass
 
+        # Создаём запись в Neo4j сразу, до запуска фоновой задачи
+        try:
+            if not PDFDocument.nodes.get_or_none(uid=doc_id):
+                PDFDocument(
+                    uid=doc_id,
+                    original_filename=file.filename or f"{doc_id}.pdf",
+                    md5_hash=doc_id,
+                    s3_key=pdf_key,
+                    processing_status='uploading',
+                    is_processed=False,
+                ).save()
+                logger.info(f"[upload] Документ {doc_id} создан в Neo4j со статусом 'uploading'")
+        except Exception as neo_err:
+            logger.warning(f"[Neo4j] Не удалось создать запись при загрузке: {neo_err}")
+
         if pdf_exists:
-            md_key = f"{prefix}{doc_id}.md"
-            md_exists = await self.s3_client.object_exists(bucket, md_key)
+            # Проверяем все возможные пути markdown
+            md_key_old = f"{prefix}{doc_id}.md"
+            md_key_raw = f"{prefix}{doc_id}_docling_raw.md"
+            md_exists = (
+                await self.s3_client.object_exists(bucket, md_key_old) or
+                await self.s3_client.object_exists(bucket, md_key_raw)
+            )
             if not md_exists:
                 existing_pdf = await self.s3_client.download_bytes(bucket, pdf_key)
                 if not existing_pdf:
                     raise HTTPException(status_code=500, detail="Не удалось прочитать существующий PDF из S3")
+                logger.info(f"[upload] PDF exists but no markdown, launching conversion for doc_id={doc_id}")
                 background_tasks.add_task(process_pdf_and_upload, existing_pdf, file.filename)
                 return DataExtractionResponse(
                     success=True, doc_id=doc_id,
                     message="Конвертация запущена для существующего PDF",
                     files={"pdf": pdf_key}
                 )
+            logger.info(f"[upload] Дубликат с markdown: doc_id={doc_id}")
+            # Обновляем статус если документ был только что создан с uploading
+            try:
+                dup_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                if dup_doc and dup_doc.processing_status == 'uploading':
+                    dup_doc.processing_status = 'ready_for_annotation'
+                    dup_doc.is_processed = True
+                    dup_doc.save()
+            except Exception:
+                pass
             return DataExtractionResponse(
                 success=True, doc_id=doc_id,
                 message="Дубликат: уже существует",
