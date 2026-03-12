@@ -114,7 +114,17 @@ class CoordinateExtractionService:
                 _docling_logger.setLevel(logging.DEBUG)
 
             try:
-                converter = DocumentConverter()
+                import os
+                from docling.datamodel.pipeline_options import PdfPipelineOptions
+                from docling.document_converter import InputFormat, PdfFormatOption
+                artifacts_path = os.environ.get('DOCLING_ARTIFACTS_PATH')
+                if artifacts_path:
+                    pipeline_options = PdfPipelineOptions(artifacts_path=artifacts_path)
+                    converter = DocumentConverter(
+                        format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
+                    )
+                else:
+                    converter = DocumentConverter()
                 result = converter.convert(str(pdf_path))
             except Exception as e:
                 error_msg = str(e)
