@@ -43,18 +43,17 @@ ENV DOCLING_ARTIFACTS_PATH=/app/docling_models \
     HF_HOME=/app/docling_models/hf_cache \
     TORCH_HOME=/app/docling_models/torch_cache \
     HOME=/tmp
-RUN mkdir -p /app/docling_models && \
+RUN mkdir -p /app/docling_models/ds4sd--docling-layout-heron && \
     /app/.venv/bin/python -c "\
 from pathlib import Path; \
 from docling.models.layout_model import LayoutModel; \
-from docling.datamodel.pipeline_options import PdfPipelineOptions; \
-opts = PdfPipelineOptions(); \
-layout_spec = opts.layout_options.model_spec; \
-layout_dir = Path('/app/docling_models') / layout_spec.model_repo_folder; \
+layout_dir = Path('/app/docling_models/ds4sd--docling-layout-heron'); \
 print(f'Downloading layout model to {layout_dir}...'); \
-LayoutModel.download_models(local_dir=layout_dir, progress=True); \
-print('All models downloaded successfully'); \
-" || echo "Model download failed, will download at runtime"
+result = LayoutModel.download_models(local_dir=layout_dir, progress=True); \
+print(f'Downloaded to: {result}'); \
+import os; files = list(layout_dir.iterdir()); \
+print(f'Files: {[f.name for f in files]}'); \
+" && echo "Models downloaded OK"
 
 # Финальный образ
 FROM python:3.11-slim AS runtime

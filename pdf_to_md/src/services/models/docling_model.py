@@ -313,7 +313,8 @@ class DoclingModel(BaseModel):
     
     def _create_optimized_converter(self):
         """Create DocumentConverter with optimized settings for image extraction"""
-        
+        from docling.document_converter import DocumentConverter
+
         # Method 1: Try the best available pipeline - standard_pdf_pipeline
         try:
             from docling.pipeline import standard_pdf_pipeline
