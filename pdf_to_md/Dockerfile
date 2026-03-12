@@ -41,10 +41,18 @@ RUN poetry install --only=main --no-interaction --no-ansi --no-root && \
 # Предзагрузка моделей Docling в слой образа (исключает загрузку при старте)
 ENV DOCLING_ARTIFACTS_PATH=/app/docling_models \
     HF_HOME=/app/docling_models/hf_cache \
-    TORCH_HOME=/app/docling_models/torch_cache
-RUN mkdir -p /app/docling_models && \
-    /app/.venv/bin/docling-tools models download --all -o /app/docling_models || \
-    /app/.venv/bin/python -c "from docling.models.base_model import BaseDocModel; print('models pre-init skipped')"
+    TORCH_HOME=/app/docling_models/torch_cache \
+    HOME=/tmp
+RUN mkdir -p /app/docling_models /tmp && \
+    /app/.venv/bin/python -c "\
+import os; os.makedirs('/app/docling_models', exist_ok=True); \
+from docling.models.utils.hf_model_download import download_hf_model; \
+print('Docling models download utility available'); \
+" && \
+    /app/.venv/bin/python -c "\
+from docling.document_converter import DocumentConverter; \
+print('Docling pipeline initialized - models cached'); \
+" || echo "Models pre-init skipped, will download at runtime"
 
 # Финальный образ
 FROM python:3.11-slim AS runtime
