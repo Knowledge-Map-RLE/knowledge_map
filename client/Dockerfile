@@ -25,5 +25,4 @@ RUN chmod +x /docker-entrypoint-custom.sh
 
 EXPOSE 80
 
-ENTRYPOINT ["/docker-entrypoint-custom.sh"]
-CMD ["/docker-entrypoint.sh", "nginx", "-g", "daemon off;"]
+CMD ["/docker-entrypoint-custom.sh"]
