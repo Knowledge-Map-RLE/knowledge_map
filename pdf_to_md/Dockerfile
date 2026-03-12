@@ -47,11 +47,12 @@ RUN mkdir -p /app/docling_models && \
     /app/.venv/bin/python -c "\
 from pathlib import Path; \
 from docling.models.layout_model import LayoutModel; \
-from docling.models.tableformer_model import TableFormerModel; \
-print('Downloading layout model...'); \
-LayoutModel.download_models(local_dir=Path('/app/docling_models'), progress=True); \
-print('Downloading tableformer model...'); \
-TableFormerModel.download_models(local_dir=Path('/app/docling_models'), progress=True); \
+from docling.datamodel.pipeline_options import PdfPipelineOptions; \
+opts = PdfPipelineOptions(); \
+layout_spec = opts.layout_options.model_spec; \
+layout_dir = Path('/app/docling_models') / layout_spec.model_repo_folder; \
+print(f'Downloading layout model to {layout_dir}...'); \
+LayoutModel.download_models(local_dir=layout_dir, progress=True); \
 print('All models downloaded successfully'); \
 " || echo "Model download failed, will download at runtime"
 
