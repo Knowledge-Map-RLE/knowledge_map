@@ -374,12 +374,12 @@ class DoclingModel(BaseModel):
                 generate_page_images=True,
                 generate_table_images=True,
                 images_scale=1.0,
-                do_picture_classification=True,
-                do_picture_description=True,
+                do_picture_classification=False,
+                do_picture_description=False,
                 do_ocr=True,
                 do_table_structure=True,
-                do_formula_enrichment=True,
-                do_code_enrichment=True,
+                do_formula_enrichment=False,
+                do_code_enrichment=False,
             )
 
             # Create converter with explicit format options

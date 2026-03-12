@@ -119,7 +119,13 @@ class CoordinateExtractionService:
                 from docling.document_converter import InputFormat, PdfFormatOption
                 artifacts_path = os.environ.get('DOCLING_ARTIFACTS_PATH')
                 if artifacts_path:
-                    pipeline_options = PdfPipelineOptions(artifacts_path=artifacts_path)
+                    pipeline_options = PdfPipelineOptions(
+                        artifacts_path=artifacts_path,
+                        do_picture_description=False,
+                        do_picture_classification=False,
+                        do_formula_enrichment=False,
+                        do_code_enrichment=False,
+                    )
                     converter = DocumentConverter(
                         format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
                     )
