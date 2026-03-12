@@ -65,6 +65,9 @@ RUN for i in 1 2 3; do \
             libgomp1 \
             libgcc-s1 \
             libstdc++6 \
+            libxcb1 \
+            libgl1 \
+            libglib2.0-0 \
             && rm -rf /var/lib/apt/lists/* \
             && apt-get clean \
         && break || sleep 10; \
