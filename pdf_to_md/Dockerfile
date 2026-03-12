@@ -80,7 +80,6 @@ RUN /app/.venv/bin/python -c "import docling; print('docling OK')"
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONPATH="/app/src:/app/marker_models:/app/.venv/lib/python3.11/site-packages" \
     PYTHONUNBUFFERED=1 \
-    DOCLING_ARTIFACTS_PATH=/app/docling_models \
     HF_HOME=/app/docling_models/hf_cache \
     TORCH_HOME=/app/docling_models/torch_cache \
     OMP_NUM_THREADS=4

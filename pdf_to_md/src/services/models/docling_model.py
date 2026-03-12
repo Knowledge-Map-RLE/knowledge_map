@@ -105,18 +105,7 @@ class DoclingModel(BaseModel):
 
             # For other errors, try default converter
             try:
-                import os
-                from docling.datamodel.pipeline_options import PdfPipelineOptions
-                from docling.datamodel.base_models import InputFormat
-                from docling.document_converter import PdfFormatOption
-                artifacts_path = os.environ.get('DOCLING_ARTIFACTS_PATH')
-                if artifacts_path:
-                    pipeline_options = PdfPipelineOptions(artifacts_path=artifacts_path)
-                    converter = DocumentConverter(
-                        format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
-                    )
-                else:
-                    converter = DocumentConverter()
+                converter = DocumentConverter()
                 logger.info("✅ DocumentConverter initialized with default settings")
             except Exception as e2:
                 error_msg2 = str(e2)
@@ -365,11 +354,8 @@ class DoclingModel(BaseModel):
             from docling.datamodel.base_models import InputFormat
             from docling.document_converter import PdfFormatOption
 
-            artifacts_path = os.environ.get('DOCLING_ARTIFACTS_PATH')
-
             # Create options with ALL image extraction features enabled for Docling 2.x
             pipeline_options = PdfPipelineOptions(
-                artifacts_path=artifacts_path,
                 generate_picture_images=True,
                 generate_page_images=True,
                 generate_table_images=True,
