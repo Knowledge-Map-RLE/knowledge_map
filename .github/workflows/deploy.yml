@@ -6,77 +6,139 @@ on:
       - 'v*'
 
 jobs:
-  build-and-push:
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.filter.outputs.api }}
+      client: ${{ steps.filter.outputs.client }}
+      pdf_to_md: ${{ steps.filter.outputs.pdf_to_md }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect changed services
+        id: filter
+        run: |
+          # Получаем предыдущий тег для сравнения
+          PREV_TAG=$(git tag --sort=-version:refname | sed -n '2p')
+          if [ -z "$PREV_TAG" ]; then
+            # Первый тег — собираем всё
+            echo "api=true" >> $GITHUB_OUTPUT
+            echo "client=true" >> $GITHUB_OUTPUT
+            echo "pdf_to_md=true" >> $GITHUB_OUTPUT
+          else
+            CHANGED=$(git diff --name-only "$PREV_TAG" HEAD)
+            echo "api=$(echo "$CHANGED" | grep -q '^api/' && echo true || echo false)" >> $GITHUB_OUTPUT
+            echo "client=$(echo "$CHANGED" | grep -q '^client/' && echo true || echo false)" >> $GITHUB_OUTPUT
+            echo "pdf_to_md=$(echo "$CHANGED" | grep -q '^pdf_to_md/' && echo true || echo false)" >> $GITHUB_OUTPUT
+          fi
+
+  build-api:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.api == 'true'
     permissions:
       contents: read
       packages: write
-    outputs:
-      image_tag: ${{ steps.tag.outputs.tag }}
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Extract tag name and repo
+      - name: Extract tag and repo
         id: tag
         run: |
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push api image
-        uses: docker/build-push-action@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
         with:
           context: ./api
           push: true
           tags: |
             ghcr.io/${{ steps.tag.outputs.repo }}/api:${{ steps.tag.outputs.tag }}
             ghcr.io/${{ steps.tag.outputs.repo }}/api:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
 
-      - name: Build and push client image
-        uses: docker/build-push-action@v5
+  build-client:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.client == 'true'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract tag and repo
+        id: tag
+        run: |
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
         with:
           context: ./client
           push: true
           tags: |
             ghcr.io/${{ steps.tag.outputs.repo }}/client:${{ steps.tag.outputs.tag }}
             ghcr.io/${{ steps.tag.outputs.repo }}/client:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=client
+          cache-to: type=gha,mode=max,scope=client
 
-      - name: Build and push pdf_to_md image
-        uses: docker/build-push-action@v5
+  build-pdf-to-md:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.pdf_to_md == 'true'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract tag and repo
+        id: tag
+        run: |
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
         with:
           context: ./pdf_to_md
           push: true
           tags: |
             ghcr.io/${{ steps.tag.outputs.repo }}/pdf-to-md:${{ steps.tag.outputs.tag }}
             ghcr.io/${{ steps.tag.outputs.repo }}/pdf-to-md:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=pdf-to-md
+          cache-to: type=gha,mode=max,scope=pdf-to-md
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build-and-push
+    needs: [build-api, build-client, build-pdf-to-md]
+    # Запускаем deploy даже если некоторые build-* были пропущены
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
     environment: production
-
     steps:
       - name: Extract tag name
         id: tag
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Deploy api service via Railway API
+      - name: Deploy api service
+        if: needs.build-api.result == 'success'
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
@@ -84,21 +146,19 @@ jobs:
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_API_SERVICE_ID }}
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          # Set IMAGE_TAG variable
           curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
             --data "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$RAILWAY_PROJECT_ID\\\", environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\", name: \\\"IMAGE_TAG\\\", value: \\\"$IMAGE_TAG\\\" }) }\"}"
-
-          # Redeploy service
           curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
             --data "{\"query\":\"mutation { serviceInstanceRedeploy(environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\") }\"}"
 
-      - name: Deploy client service via Railway API
+      - name: Deploy client service
+        if: needs.build-client.result == 'success'
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
@@ -106,21 +166,19 @@ jobs:
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_CLIENT_SERVICE_ID }}
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          # Set IMAGE_TAG variable
           curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
             --data "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$RAILWAY_PROJECT_ID\\\", environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\", name: \\\"IMAGE_TAG\\\", value: \\\"$IMAGE_TAG\\\" }) }\"}"
-
-          # Redeploy service
           curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
             --data "{\"query\":\"mutation { serviceInstanceRedeploy(environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\") }\"}"
 
-      - name: Deploy pdf_to_md service via Railway API
+      - name: Deploy pdf_to_md service
+        if: needs.build-pdf-to-md.result == 'success'
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
@@ -128,14 +186,11 @@ jobs:
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_PDF_TO_MD_SERVICE_ID }}
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          # Set IMAGE_TAG variable
           curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \
             --header "Content-Type: application/json" \
             --data "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$RAILWAY_PROJECT_ID\\\", environmentId: \\\"$RAILWAY_ENVIRONMENT_ID\\\", serviceId: \\\"$RAILWAY_SERVICE_ID\\\", name: \\\"IMAGE_TAG\\\", value: \\\"$IMAGE_TAG\\\" }) }\"}"
-
-          # Redeploy service
           curl -f --request POST \
             --url https://backboard.railway.com/graphql/v2 \
             --header "Authorization: Bearer $RAILWAY_API_TOKEN" \

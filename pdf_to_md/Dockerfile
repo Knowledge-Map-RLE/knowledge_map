@@ -33,14 +33,18 @@ COPY pyproject.toml poetry.lock* ./
 
 # Установка только основных зависимостей без dev зависимостей
 RUN poetry install --only=main --no-interaction --no-ansi --no-root && \
-    poetry env info && \
-    ls -la /tmp/poetry_cache/virtualenvs/ && \
     mkdir -p /app/.venv && \
     cp -r /tmp/poetry_cache/virtualenvs/pdf-to-md-service-*/* /app/.venv/ && \
-    ls -la /app/.venv/ && \
-    ls -la /app/.venv/bin/ && \
-    /app/.venv/bin/python -c "import grpc; print('grpc installed successfully')" && \
+    /app/.venv/bin/python -c "import grpc; print('grpc OK')" && \
     rm -rf $POETRY_CACHE_DIR
+
+# Предзагрузка моделей Docling в слой образа (исключает загрузку при старте)
+ENV DOCLING_ARTIFACTS_PATH=/app/docling_models \
+    HF_HOME=/app/docling_models/hf_cache \
+    TORCH_HOME=/app/docling_models/torch_cache
+RUN mkdir -p /app/docling_models && \
+    /app/.venv/bin/docling-tools models download --all -o /app/docling_models || \
+    /app/.venv/bin/python -c "from docling.models.base_model import BaseDocModel; print('models pre-init skipped')"
 
 # Финальный образ
 FROM python:3.11-slim AS runtime
@@ -57,18 +61,20 @@ RUN for i in 1 2 3; do \
         && break || sleep 10; \
     done
 
-# Копирование виртуального окружения из builder
+# Копирование виртуального окружения и предзагруженных моделей из builder
 COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /app/docling_models /app/docling_models
 
-# Проверяем что виртуальное окружение скопировалось правильно
-RUN ls -la /app/.venv/ && \
-    ls -la /app/.venv/bin/ && \
-    ls -la /app/.venv/lib/python3.11/site-packages/ | head -10
+RUN /app/.venv/bin/python -c "import docling; print('docling OK')"
 
 # Добавление venv в PATH
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONPATH="/app/src:/app/marker_models:/app/.venv/lib/python3.11/site-packages" \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    DOCLING_ARTIFACTS_PATH=/app/docling_models \
+    HF_HOME=/app/docling_models/hf_cache \
+    TORCH_HOME=/app/docling_models/torch_cache \
+    OMP_NUM_THREADS=4
 
 # Рабочая директория
 WORKDIR /app
@@ -85,10 +91,11 @@ RUN python -m grpc_tools.protoc \
     --grpc_python_out=src \
     proto/pdf_to_md.proto || echo "Proto generation failed, continuing..."
 
-# Создание пользователя для безопасности
-RUN groupadd -r appuser && useradd -r -g appuser appuser && \
+# Создание пользователя для безопасности с домашней директорией
+RUN groupadd -r appuser && useradd -r -g appuser -m -d /home/appuser appuser && \
     chmod +x /app/start.sh && \
-    chown -R appuser:appuser /app
+    chown -R appuser:appuser /app && \
+    chown -R appuser:appuser /home/appuser
 USER appuser
 
 # Экспорт портов
