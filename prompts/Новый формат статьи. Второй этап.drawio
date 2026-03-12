@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2026-03-12T07:03:30.112Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.13 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="M2qnixguIncHFOQFGgof" version="24.4.13" type="device">
+<mxfile host="Electron" modified="2026-03-12T07:53:44.607Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.13 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="jUekIY5pmhbKaVZwyHmp" version="24.4.13" type="device">
   <diagram name="Страница — 1" id="StWODMb9PkcDyiyz2-C0">
-    <mxGraphModel dx="989" dy="577" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1037" dy="372" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -207,10 +207,10 @@
           <mxGeometry x="720" y="800" width="560" height="40" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-56" value="Молекулярные события&amp;nbsp;&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;смодулировали&lt;/font&gt;&lt;/b&gt;&amp;nbsp;межклеточные сигнальные пути." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="720" y="840" width="560" height="41.25" as="geometry" />
+          <mxGeometry x="720" y="840" width="560" height="40" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-57" value="&lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;Возникли&lt;/font&gt;&lt;/b&gt;&amp;nbsp;клинические фенотипы&amp;nbsp;болезни Паркинсона." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="720" y="881.25" width="560" height="41.25" as="geometry" />
+          <mxGeometry x="720" y="880" width="560" height="40" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-58" value="⚠️ Оценочное суждение. Вода" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1320" y="760" width="360" height="40" as="geometry" />
@@ -228,43 +228,43 @@
           <mxGeometry x="20" y="40" width="160" height="160" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-64" value="Идиопатическая болезнь Паркинсона (ИБП) является вторым наиболее распространенным нейродегенеративным заболеванием после болезни Альцгеймера и поражает популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="1641.25" width="200" height="200" as="geometry" />
+          <mxGeometry x="200" y="1080" width="200" height="200" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-65" value="Абстракт" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="720" y="40" width="960" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-65" value="Абстракт&lt;div&gt;Abstract&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="720" width="960" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-66" value="Введение" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="200" y="2361.25" width="1480" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-66" value="Введение&lt;div&gt;Introduction&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="720" y="980" width="960" height="80" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-67" value="Клинический синдром ИБП характеризуется брадикинезией, тремором покоя, ригидностью и постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="1921.25" width="200" height="160" as="geometry" />
+          <mxGeometry x="200" y="1320" width="200" height="160" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-68" value="Брадикинезия считается основным признаком и необходимым условием для диагностики ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="2121.25" width="200" height="160" as="geometry" />
+          <mxGeometry x="200" y="1520" width="200" height="160" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-69" value="В дополнение к этим двигательным симптомам многие пациенты испытывают широкий спектр немоторных симптомов, которые иногда даже предшествуют типичному двигательному расстройству, такие как гипосмия, нарушения сна (т.е. расстройство поведения в фазе быстрого сна), депрессия, запоры и другие дизавтономные симптомы." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="2481.25" width="200" height="240" as="geometry" />
+          <mxGeometry x="200" y="1800" width="200" height="240" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-70" value="В частности, гипосмия и расстройство поведения в фазе быстрого сна часто начинаются до появления основных двигательных симптомов." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="2761.25" width="200" height="240" as="geometry" />
+          <mxGeometry x="200" y="2080" width="200" height="240" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-71" value="В этом обзоре мы обсуждаем болезнь Паркинсона в глобальном смысле этого термина (БП), включая ИБП и генетически или экологически индуцированные формы паркинсонизма." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="3041.25" width="200" height="240" as="geometry" />
+          <mxGeometry x="-100" y="2850" width="200" height="240" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-72" value="Действительно, многие клеточные признаки обнаружены как при БП, так и при ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="3321.25" width="200" height="240" as="geometry" />
+          <mxGeometry x="200" y="2600" width="200" height="240" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-73" value="Считается, что двигательные симптомы БП возникают в первую очередь из-за потери дофаминергических (ДА) нейронов в чёрной субстанции (ЧС), хотя, по-видимому, затронуты и другие нейромедиаторные системы (т.е. глутаматергическая, холинергическая, триптаминергическая, норадренергическая, адренергическая, серотонинергическая и пептидергическая)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="3601.25" width="200" height="280" as="geometry" />
+          <mxGeometry x="200" y="2880" width="200" height="280" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-74" value="Лечение БП в настоящее время является симптоматическим и по существу включает замещение дофамина или подавление патологических нейронных осцилляций посредством глубокой стимуляции мозга." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="200" y="3921.25" width="200" height="280" as="geometry" />
+          <mxGeometry x="200" y="3200" width="200" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-75" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;вторая&lt;/font&gt;&lt;/b&gt; по распространённости среди нейродегенеративных заболеваний после болезни Альцгеймера" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="720" y="1641.25" width="320" height="80" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-75" value="Идиопатическая болезнь Паркинсона (ИБП)&amp;nbsp;&lt;b style=&quot;&quot;&gt;&lt;font color=&quot;#b266ff&quot;&gt;это&lt;/font&gt;&lt;/b&gt;&amp;nbsp;нейродегенеративное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="720" y="1080" width="560" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-76" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;поражает&lt;/font&gt;&lt;/b&gt; популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="720" y="1801.25" width="320" height="40" as="geometry" />
+        <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-76" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;поразила&lt;/font&gt;&lt;/b&gt;&amp;nbsp;популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="720" y="1240" width="560" height="40" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-77" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;поразила&lt;/font&gt;&lt;/b&gt; популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="3679.96" y="3612" width="320" height="40" as="geometry" />
@@ -279,7 +279,7 @@
           <mxGeometry x="3679.96" y="3572" width="320" height="40" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-81" value="Синдром идиопатической болезни Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#1976d2&quot;&gt;характеризуется&lt;/font&gt;&lt;/b&gt; брадикинезией, тремором покоя, ригидностью и постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="720" y="1921.25" width="320" height="160" as="geometry" />
+          <mxGeometry x="720" y="1320" width="320" height="160" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-82" value="Брадикинезия &lt;font color=&quot;#1976d2&quot;&gt;&lt;b&gt;признак&lt;/b&gt;&lt;/font&gt; синдрома идиопатической болезни Паркинсона (ИБП)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="3679.96" y="3732" width="320" height="40" as="geometry" />
@@ -294,7 +294,7 @@
           <mxGeometry x="3679.96" y="3852" width="320" height="40" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-86" value="Брадикинезия основной и необходимый признак для диагностики синдрома идиопатической болезни Паркинсона (ИБП)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="720" y="2121.25" width="320" height="160" as="geometry" />
+          <mxGeometry x="720" y="1520" width="320" height="160" as="geometry" />
         </mxCell>
         <mxCell id="7qZIqy6ZL3z2aXDZ3tAA-87" value="Брадикинезия основной и необходимый признак для диагностики синдрома идиопатической болезни Паркинсона (ИБП)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="3679.96" y="3932" width="320" height="80" as="geometry" />
@@ -1768,17 +1768,17 @@
         <mxCell id="ulW0zxMnz42PZs7xUlWT-46" value="&lt;font color=&quot;#ff8000&quot;&gt;Болезнь Паркинсона&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;color: rgb(178, 102, 255);&quot;&gt;обладает&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; color: rgb(51, 153, 255);&quot;&gt;клеточными признаками&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
           <mxGeometry x="2600" y="680" width="360" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="ulW0zxMnz42PZs7xUlWT-48" value="&lt;font color=&quot;#ff8000&quot;&gt;Молекулярные события&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;color: rgb(178, 102, 255);&quot;&gt;смодулировали&lt;/span&gt;&lt;div&gt;&lt;font style=&quot;background-color: initial;&quot; color=&quot;#3399ff&quot;&gt;межклеточные сигнальные пути&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
-          <mxGeometry x="2590" y="867.51" width="199" height="80" as="geometry" />
+        <mxCell id="ulW0zxMnz42PZs7xUlWT-48" value="&lt;font color=&quot;#ff8000&quot;&gt;Молекулярные события&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;color: rgb(178, 102, 255);&quot;&gt;смодулировали&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; color: rgb(51, 153, 255);&quot;&gt;межклеточные сигнальные пути&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
+          <mxGeometry x="2600" y="840" width="480" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="ulW0zxMnz42PZs7xUlWT-49" value="&lt;span style=&quot;color: rgb(178, 102, 255);&quot;&gt;Возникли &lt;/span&gt;&lt;font color=&quot;#ff8000&quot;&gt;клинические фенотипы связанные с болезнью Паркинсона&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
-          <mxGeometry x="2590" y="966.26" width="199" height="80" as="geometry" />
+        <mxCell id="ulW0zxMnz42PZs7xUlWT-49" value="&lt;span style=&quot;color: rgb(178, 102, 255);&quot;&gt;Возникли &lt;/span&gt;&lt;font color=&quot;#ff8000&quot;&gt;клинические фенотипы болезни Паркинсона&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
+          <mxGeometry x="2600" y="891.25" width="480" height="38.75" as="geometry" />
         </mxCell>
-        <mxCell id="ulW0zxMnz42PZs7xUlWT-50" value="&lt;font color=&quot;#ff8000&quot;&gt;Идеопатическая болезнь Паркинсона (ИБП) &lt;/font&gt;&lt;font color=&quot;#b266ff&quot;&gt;является&lt;/font&gt;&lt;font color=&quot;#ff8000&quot;&gt; &lt;/font&gt;&lt;font color=&quot;#3399ff&quot;&gt;неродегенеративным заболеванием&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="1641.25" width="199" height="80" as="geometry" />
+        <mxCell id="ulW0zxMnz42PZs7xUlWT-50" value="&lt;font color=&quot;#ff8000&quot;&gt;Идеопатическая болезнь Паркинсона (ИБП) &lt;/font&gt;&lt;font color=&quot;#b266ff&quot;&gt;является&amp;nbsp;&lt;/font&gt;&lt;font color=&quot;#3399ff&quot;&gt;неродегенеративной&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
+          <mxGeometry x="2600" y="1080" width="480" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="ulW0zxMnz42PZs7xUlWT-51" value="&lt;font color=&quot;#ff8000&quot;&gt;Альцгеймер&amp;nbsp;&lt;/font&gt;&lt;font color=&quot;#b266ff&quot;&gt;является&lt;/font&gt;&lt;font color=&quot;#ff8000&quot;&gt; &lt;/font&gt;&lt;font color=&quot;#3399ff&quot;&gt;неродегенеративным заболеванием&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="1730" width="199" height="80" as="geometry" />
+        <mxCell id="ulW0zxMnz42PZs7xUlWT-51" value="&lt;font color=&quot;#ff8000&quot;&gt;Альцгеймер &lt;/font&gt;&lt;font color=&quot;#b266ff&quot;&gt;является&amp;nbsp;&lt;/font&gt;&lt;font color=&quot;#3399ff&quot;&gt;неродегенеративным&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" parent="1" vertex="1">
+          <mxGeometry x="2600" y="1129" width="480" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Ql6PSt7unwl6cr12sRh4-1" value="&lt;div&gt;&lt;div&gt;Вспомогательные вопросы:&amp;nbsp;&lt;span style=&quot;font-weight: normal; background-color: initial;&quot;&gt;Что воспроизводим?&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="2600" y="80" width="920" height="20" as="geometry" />
@@ -1979,19 +1979,67 @@
           <mxGeometry x="2100" y="840" width="90" height="40" as="geometry" />
         </mxCell>
         <mxCell id="gHr533mswfBlHFvUK7O9-81" value="Путь" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="2190" y="840" width="90" height="40" as="geometry" />
+          <mxGeometry x="2190" y="840" width="40" height="40" as="geometry" />
         </mxCell>
         <mxCell id="gHr533mswfBlHFvUK7O9-82" value="Клиническовоть" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1820" y="880" width="110" height="40" as="geometry" />
+          <mxGeometry x="1790" y="880" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="gHr533mswfBlHFvUK7O9-83" value="возникать" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fontColor=#B266FF;" vertex="1" parent="1">
-          <mxGeometry x="1720" y="880" width="100" height="40" as="geometry" />
+          <mxGeometry x="1720" y="880" width="70" height="40" as="geometry" />
         </mxCell>
         <mxCell id="gHr533mswfBlHFvUK7O9-84" value="Фенотип" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="1930" y="880" width="90" height="40" as="geometry" />
+          <mxGeometry x="1900" y="880" width="60" height="40" as="geometry" />
         </mxCell>
         <mxCell id="gHr533mswfBlHFvUK7O9-85" value="Болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="2020" y="880" width="130" height="40" as="geometry" />
+          <mxGeometry x="1960" y="880" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-86" value="Idiopathic Parkinson&#39;s disease (IPD) is the second most common neurodegenerative disease after Alzheimer&#39;s disease, and affects populations worldwide." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1080" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-87" value="The clinical syndrome of IPD is characterized by bradykinesia, resting tremor, rigidity, and postural instability." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1300" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-88" value="Bradykinesia is considered to be the main feature of and the necessary condition for a diagnosis of IPD [1]." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1520" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-89" value="In addition to these motor symptoms, many patients experience a wide range of nonmotor symptoms that sometimes even precede the typical movement disorder, such as hyposmia, sleep disturbances (i.e. rapid eye movement sleep behavior disorder), depression, constipation, and other dysautonomic symptoms [2] [3] [4]." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1800" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-90" value="In particular, hyposmia and rapid eye movement sleep behavior disorder often start prior to the onset of the core motor syndrome [5]. In this review, we discuss." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="2080" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-91" value="Parkinson&#39;s disease in the global sense of the term (PD), including IPD and genetically or environmentally induced forms of parkinsonism." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="2338" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-92" value="Болезнь Паркинсона в глобальном смысле этого термина (БП), включая ИПД и генетически или экологически обусловленные формы паркинсонизма." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="200" y="2338" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-93" value="Indeed, many cellular hallmarks have been found to occur in both PD and IPD." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="2600" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-94" value="The motor symptoms of PD are thought to arise primarily from the loss of dopaminergic (DA) neurons within the substantia nigra (SN), although other neurotransmitter systems (i.e. glutamatergic, cholinergic, tryptaminergic, noradrenergic, adrenergic, serotoninergic, and peptidergic) also appear to be affected." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="2880" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-95" value="Treatment of PD is currently symptomatic, and essentially involves substituting dopamine, or suppressing pathological neuronal oscillations via deep brain stimulation." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="440" y="3200" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-96" value="&lt;div&gt;Возраст как доминирующий фактор риска&lt;br&gt;&lt;/div&gt;Age as a dominant risk factor" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="680" y="3507" width="960" height="83" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-98" value="Альцгеймер&amp;nbsp;&lt;b style=&quot;&quot;&gt;&lt;font color=&quot;#b266ff&quot;&gt;это&lt;/font&gt;&lt;/b&gt;&amp;nbsp;нейродегенеративное заболевание" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1120" width="560" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-99" value="Идиопатическая болезнь Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#b266ff&quot;&gt;поразила&lt;/font&gt;&lt;/b&gt;&amp;nbsp;популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="2600" y="1240" width="520" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-100" value="Идиопатическая болезнь Паркинсона" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="1080" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-101" value="это" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;fontColor=#B266FF;" vertex="1" parent="1">
+          <mxGeometry x="1950" y="1080" width="30" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gHr533mswfBlHFvUK7O9-102" value="Нейродегенаративность" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1980" y="1080" width="150" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
