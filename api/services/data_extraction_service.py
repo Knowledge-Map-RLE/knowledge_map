@@ -564,21 +564,9 @@ class DataExtractionService:
                 # Комплексное удаление всех связанных данных
                 query = """
                 MATCH (d:PDFDocument {uid: $doc_id})
-
-                // Удаляем паттерны, связанные с аннотациями документа
                 OPTIONAL MATCH (d)-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
                 OPTIONAL MATCH (p:Pattern {source_token_uid: a.uid})
-                DETACH DELETE p
-
-                // Удаляем все аннотации со всеми связями
-                WITH d, collect(a) as annotations
-                UNWIND annotations as ann
-                DETACH DELETE ann
-
-                // Удаляем сам документ
-                WITH d
-                DETACH DELETE d
-
+                DETACH DELETE p, a, d
                 RETURN count(d) as deleted_count
                 """
                 result, _ = db.cypher_query(query, {'doc_id': doc_id})
