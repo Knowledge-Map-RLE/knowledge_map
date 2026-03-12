@@ -43,16 +43,17 @@ ENV DOCLING_ARTIFACTS_PATH=/app/docling_models \
     HF_HOME=/app/docling_models/hf_cache \
     TORCH_HOME=/app/docling_models/torch_cache \
     HOME=/tmp
-RUN mkdir -p /app/docling_models /tmp && \
+RUN mkdir -p /app/docling_models && \
     /app/.venv/bin/python -c "\
-import os; os.makedirs('/app/docling_models', exist_ok=True); \
-from docling.models.utils.hf_model_download import download_hf_model; \
-print('Docling models download utility available'); \
-" && \
-    /app/.venv/bin/python -c "\
-from docling.document_converter import DocumentConverter; \
-print('Docling pipeline initialized - models cached'); \
-" || echo "Models pre-init skipped, will download at runtime"
+from pathlib import Path; \
+from docling.models.layout_model import LayoutModel; \
+from docling.models.tableformer_model import TableFormerModel; \
+print('Downloading layout model...'); \
+LayoutModel.download_models(local_dir=Path('/app/docling_models'), progress=True); \
+print('Downloading tableformer model...'); \
+TableFormerModel.download_models(local_dir=Path('/app/docling_models'), progress=True); \
+print('All models downloaded successfully'); \
+" || echo "Model download failed, will download at runtime"
 
 # Финальный образ
 FROM python:3.11-slim AS runtime
