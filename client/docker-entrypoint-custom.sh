@@ -6,6 +6,10 @@ RESOLVER=$(grep -m1 "^nameserver" /etc/resolv.conf | awk '{print $2}')
 if [ -z "$RESOLVER" ]; then
     RESOLVER="8.8.8.8"
 fi
+# Nginx требует IPv6 адреса в квадратных скобках
+if echo "$RESOLVER" | grep -q ":"; then
+    RESOLVER="[$RESOLVER]"
+fi
 echo "Using DNS resolver: $RESOLVER"
 
 # Запускаем стандартные nginx entrypoint скрипты (envsubst и т.д.)
