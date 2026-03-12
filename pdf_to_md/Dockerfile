@@ -46,12 +46,12 @@ ENV DOCLING_ARTIFACTS_PATH=/app/docling_models \
 RUN mkdir -p /app/docling_models/ds4sd--docling-layout-heron && \
     /app/.venv/bin/python -c "\
 from pathlib import Path; \
-from docling.models.layout_model import LayoutModel; \
+from huggingface_hub import snapshot_download; \
 layout_dir = Path('/app/docling_models/ds4sd--docling-layout-heron'); \
-print(f'Downloading layout model to {layout_dir}...'); \
-result = LayoutModel.download_models(local_dir=layout_dir, progress=True); \
+print('Downloading ds4sd/docling-layout-heron...'); \
+result = snapshot_download(repo_id='ds4sd/docling-layout-heron', local_dir=str(layout_dir)); \
 print(f'Downloaded to: {result}'); \
-import os; files = list(layout_dir.iterdir()); \
+files = list(layout_dir.iterdir()); \
 print(f'Files: {[f.name for f in files]}'); \
 " && echo "Models downloaded OK"
 
