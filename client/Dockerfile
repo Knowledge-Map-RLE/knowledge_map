@@ -19,7 +19,11 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Шаблон конфига — подстановка API_HOST происходит при старте контейнера
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
+# Кастомный entrypoint: подставляет DNS resolver из /etc/resolv.conf
+COPY docker-entrypoint-custom.sh /docker-entrypoint-custom.sh
+RUN chmod +x /docker-entrypoint-custom.sh
+
 EXPOSE 80
 
-# nginx:alpine официально поддерживает /etc/nginx/templates/ с envsubst
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint-custom.sh"]
+CMD ["/docker-entrypoint.sh", "nginx", "-g", "daemon off;"]
