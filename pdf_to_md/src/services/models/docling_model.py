@@ -290,6 +290,9 @@ class DoclingModel(BaseModel):
         
         logger.info("✅ Markdown export successful")
         
+        # Конвертируем markdown таблицы в HTML
+        md_content = self._convert_tables_to_html(str(md_content))
+
         # Update image references in markdown content
         if image_files:
             md_content = self._update_image_references(str(md_content), image_files, doc_id)
@@ -1070,6 +1073,50 @@ class DoclingModel(BaseModel):
         
         return buffer.getvalue()
     
+    def _convert_tables_to_html(self, markdown_content: str) -> str:
+        """Конвертирует markdown таблицы в HTML теги."""
+        import re
+        lines = markdown_content.split('\n')
+        result = []
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            if '|' in line and line.strip().startswith('|'):
+                table_lines = []
+                while i < len(lines) and '|' in lines[i] and lines[i].strip().startswith('|'):
+                    table_lines.append(lines[i])
+                    i += 1
+                header = None
+                body_rows = []
+                for tl in table_lines:
+                    cells = [c.strip() for c in tl.strip().strip('|').split('|')]
+                    if all(re.match(r'^[-:]+$', c) for c in cells if c):
+                        continue
+                    if header is None:
+                        header = cells
+                    else:
+                        body_rows.append(cells)
+                if header:
+                    html = ['<table>']
+                    html.append('<thead><tr>')
+                    for h in header:
+                        html.append(f'<th>{h}</th>')
+                    html.append('</tr></thead>')
+                    if body_rows:
+                        html.append('<tbody>')
+                        for row in body_rows:
+                            html.append('<tr>')
+                            for cell in row:
+                                html.append(f'<td>{cell}</td>')
+                            html.append('</tr>')
+                        html.append('</tbody>')
+                    html.append('</table>')
+                    result.append(''.join(html))
+                continue
+            result.append(line)
+            i += 1
+        return '\n'.join(result)
+
     def _update_image_references(
         self,
         markdown_content: str,

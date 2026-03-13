@@ -153,8 +153,11 @@ class CoordinateExtractionService:
             markdown_content = ""
             if hasattr(result, 'document') and result.document:
                 markdown_content = result.document.export_to_markdown()
-                
-                # Обновляем ссылки на изображения на S3 URL
+
+                # Конвертируем markdown таблицы в HTML
+                markdown_content = self._convert_tables_to_html(markdown_content)
+
+                # Обновляем ссылки на изображения на S3 URL (HTML figure теги)
                 markdown_content = self._update_markdown_with_s3_urls(
                     markdown_content, extracted_images
                 )
@@ -373,6 +376,53 @@ class CoordinateExtractionService:
             logger.error(f"Координатное извлечение PyMuPDF не удалось: {e}")
             return extracted_images
     
+    def _convert_tables_to_html(self, markdown_content: str) -> str:
+        """Конвертирует markdown таблицы в HTML теги."""
+        import re
+        lines = markdown_content.split('\n')
+        result = []
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            # Проверяем начало таблицы (строка с |)
+            if '|' in line and line.strip().startswith('|'):
+                table_lines = []
+                while i < len(lines) and '|' in lines[i] and lines[i].strip().startswith('|'):
+                    table_lines.append(lines[i])
+                    i += 1
+                # Пропускаем разделительные строки (|---|---|)
+                header = None
+                body_rows = []
+                for tl in table_lines:
+                    cells = [c.strip() for c in tl.strip().strip('|').split('|')]
+                    if all(re.match(r'^[-:]+$', c) for c in cells if c):
+                        continue  # разделитель
+                    if header is None:
+                        header = cells
+                    else:
+                        body_rows.append(cells)
+
+                if header:
+                    html = ['<table>']
+                    html.append('<thead><tr>')
+                    for h in header:
+                        html.append(f'<th>{h}</th>')
+                    html.append('</tr></thead>')
+                    if body_rows:
+                        html.append('<tbody>')
+                        for row in body_rows:
+                            html.append('<tr>')
+                            for cell in row:
+                                html.append(f'<td>{cell}</td>')
+                            html.append('</tr>')
+                        html.append('</tbody>')
+                    html.append('</table>')
+                    result.append(''.join(html))
+                continue
+            result.append(line)
+            i += 1
+        return '\n'.join(result)
+
     def _update_markdown_with_s3_urls(self, markdown_content: str, extracted_images: List[Dict]) -> str:
         """Обновить ссылки на изображения в markdown с относительными путями"""
 
@@ -390,13 +440,15 @@ class CoordinateExtractionService:
             if '<!-- image -->' in line and image_count < len(sorted_images):
                 image_info = sorted_images[image_count]
                 filename = image_info['filename']
+                s3_key = image_info.get('s3_object_key', '')
+                # Строим API proxy URL через s3_object_key
+                image_url = f"/api/v1/s3/image/{s3_key}" if s3_key else image_info.get('s3_url', filename)
 
-                # Используем только имя файла (относительный путь)
-                # Клиент сам добавит префикс с doc_id при отображении
-                lines[i] = f"![Изображение {image_count + 1}]({filename})"
+                # HTML разметка для изображений
+                lines[i] = f'<figure><img src="{image_url}" alt="Изображение {image_count + 1}" style="max-width:100%"/><figcaption>Рисунок {image_count + 1}</figcaption></figure>'
                 image_count += 1
 
-                logger.info(f"Обновлена ссылка на изображение {image_count}: {filename} (относительный путь)")
+                logger.info(f"Обновлена ссылка на изображение {image_count}: {image_url}")
 
         return '\n'.join(lines)
     

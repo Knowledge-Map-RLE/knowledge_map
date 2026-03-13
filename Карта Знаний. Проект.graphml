@@ -3816,14 +3816,14 @@ LAYER</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="320.82927649637986" width="1862.9738609996853" x="-4406.580160423688" y="6456.0560246088835"/>
+              <y:Geometry height="361.47038977762895" width="2372.096004802071" x="-4915.7023042260735" y="6423.661493358884"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="244.046875" x="0.0" xml:space="preserve" y="0.0">      Сценарии использования. Use cases</y:NodeLabel>
               <y:Shape type="rectangle"/>
               <y:State closed="false" closedHeight="80.0" closedWidth="100.0" innerGraphDisplayEnabled="false"/>
               <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
-              <y:BorderInsets bottom="156" bottomF="156.2012218776499" left="74" leftF="73.92416615544607" right="1248" rightF="1248.2434831749047" top="47" topF="46.82727336872995"/>
+              <y:BorderInsets bottom="22" bottomF="21.710617826075577" left="0" leftF="0.0" right="1248" rightF="1248.2434831749047" top="65" topF="64.71192905604039"/>
             </y:GroupNode>
             <y:GroupNode>
               <y:Geometry height="116.95225315806084" width="136.4102512607061" x="-4406.580160423688" y="6619.325644051333"/>
@@ -3845,7 +3845,7 @@ LAYER</y:NodeLabel>
               <y:Geometry height="70.0" width="150.0" x="-4317.655994268242" y="6535.486813602613"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="7.85205078125">Преобразована научная статья в Markdown</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="7.85205078125">Научная статья преобразована в Markdown</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -3868,6 +3868,32 @@ LAYER</y:NodeLabel>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="38.197265625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="15.9013671875">Экспортированы данные разметки</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n5::n3">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="82.78898561509595" width="150.0" x="-4136.849782598907" y="6624.524825932531"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="86.4931640625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="-1.8520892237020234">Научная статья загружена в ZIP архиве в формате Markdown с картинками</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n5::n4">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="227.64159289551299" width="505.04660064767904" x="-4900.7023042260735" y="6520.779672414925"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="134.7890625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="505.04660064767904" x="0.0" xml:space="preserve" y="46.42626519775695">Аргументы использовать Карту Знаний.
+
+- Можно преобразовать научную статью в Markdwon. Неизвестно как именно ИИ читает PDF. Используя Markdown вы полностью контролируете содержание которое будет прочитано ИИ.
+- Можно делать разметку научной статьи. Для многих целей, например для обучения ИИ.
+- Для поиска сущностей.</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -4832,6 +4858,16 @@ LAYER</y:NodeLabel>
       </data>
     </edge>
     <edge id="n3::e5" source="n3::n6" target="n3::n5">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#B266FF" type="line" width="3.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n5::e0" source="n5::n0" target="n5::n3">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

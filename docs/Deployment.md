@@ -390,5 +390,212 @@ proxy_pass http://${API_HOST}:8000;
 
 | Переменная | Значение |
 |-----------|---------|
-| `API_HOST` | `api` |
+| `API_HOST` | `api.railway.internal` (устарело — не используется) |
+| `API_PUBLIC_HOST` | `api-production-xxxx.up.railway.app` (публичный URL API) |
 | `PORT` | `80` |
+
+---
+
+## Сервис `pdf_to_md` на Railway
+
+```
+pdf_to_md
+  ├── REST API: порт 8080
+  └── gRPC: порт 50053
+```
+
+### Переменные сервиса `pdf_to_md`
+
+| Переменная | Значение |
+|------------|----------|
+| `S3_ENDPOINT_URL` | `${{S3.BUCKET_ENDPOINT}}` |
+| `S3_ACCESS_KEY_ID` | `${{S3.BUCKET_ACCESS_KEY_ID}}` |
+| `S3_SECRET_ACCESS_KEY` | `${{S3.BUCKET_SECRET_ACCESS_KEY}}` |
+| `S3_BUCKET_NAME` | `${{S3.BUCKET_NAME}}` |
+
+### Переменные сервиса `api` для связи с `pdf_to_md`
+
+| Переменная | Значение |
+|------------|----------|
+| `PDF_TO_MD_SERVICE_HOST` | `pdftomd.railway.internal` |
+| `PDF_TO_MD_SERVICE_PORT` | `50053` |
+
+> **Важно:** Railway формирует internal hostname из имени сервиса, убирая дефисы и подчёркивания. Сервис `pdf_to_md` получает hostname `pdftomd.railway.internal`. Проверить реальный hostname можно в `Variables → RAILWAY_PRIVATE_DOMAIN`.
+
+---
+
+## nginx: динамический DNS для Railway
+
+**Проблема:** Railway меняет IP сервисов при каждом редеплое. nginx кеширует IP при старте и перестаёт работать после редеплоя API.
+
+**Решение:** использовать публичный URL API через HTTPS вместо internal hostname.
+
+### nginx.conf
+
+```nginx
+# DNS resolver из /etc/resolv.conf (получается через docker-entrypoint-custom.sh)
+resolver RESOLVER_PLACEHOLDER valid=5s ipv6=off;
+
+location /api/ {
+    set $api_upstream https://${API_PUBLIC_HOST};
+    proxy_pass $api_upstream;
+    proxy_set_header Host ${API_PUBLIC_HOST};
+    proxy_ssl_server_name on;
+    proxy_ssl_name ${API_PUBLIC_HOST};
+    proxy_read_timeout 300s;
+    proxy_send_timeout 300s;
+    proxy_connect_timeout 10s;
+    client_max_body_size 100m;
+}
+```
+
+### docker-entrypoint-custom.sh
+
+Скрипт считывает DNS из `/etc/resolv.conf` и подставляет в `RESOLVER_PLACEHOLDER` перед запуском nginx:
+
+```sh
+RESOLVER=$(grep -m1 "^nameserver" /etc/resolv.conf | awk '{print $2}')
+# IPv6 адрес оборачивается в квадратные скобки (требование nginx)
+if echo "$RESOLVER" | grep -q ":"; then
+    RESOLVER="[$RESOLVER]"
+fi
+# ...затем sed заменяет RESOLVER_PLACEHOLDER в сгенерированном default.conf
+```
+
+### Почему не `api.railway.internal`
+
+Railway internal hostname (`api.railway.internal`) резолвится в IP который меняется при каждом редеплое. Nginx кеширует IP даже при `valid=5s` если upstream помечен как "temporarily disabled". Публичный URL (`api-production-xxxx.up.railway.app`) через Railway edge proxy — стабилен и не зависит от внутренних IP.
+
+---
+
+## Docling: предзагрузка моделей в Docker образ
+
+**Проблема:** При первом запуске Docling скачивает ML-модели (~500MB+) из HuggingFace, что занимает 5-10 мин и требует интернета в контейнере.
+
+**Решение:** скачать модели при сборке Docker образа и запечь в слой.
+
+### Dockerfile (builder stage)
+
+```dockerfile
+ENV DOCLING_ARTIFACTS_PATH=/app/docling_models \
+    HF_HOME=/app/docling_models/hf_cache \
+    HOME=/tmp
+
+RUN mkdir -p /app/docling_models/ds4sd--docling-layout-heron && \
+    /app/.venv/bin/python -c "
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id='ds4sd/docling-layout-heron',
+    local_dir='/app/docling_models/ds4sd--docling-layout-heron'
+)
+"
+```
+
+### Структура папок моделей
+
+```
+/app/docling_models/
+  ds4sd--docling-layout-heron/   ← layout модель (LayoutPredictor)
+    model.safetensors
+    config.json
+    ...
+  hf_cache/                      ← HuggingFace кеш (другие модели)
+```
+
+### Где Docling ищет модели
+
+`LayoutModel.__init__` при `artifacts_path=/app/docling_models`:
+1. Если папка `ds4sd--docling-layout-heron` существует → использует её
+2. Иначе → пытается скачать из HuggingFace
+
+> **Важно:** Имя папки = `repo_id.replace("/", "--")`, т.е. `ds4sd/docling-layout-heron` → `ds4sd--docling-layout-heron`.
+
+### Runtime зависимости для cv2 (tableformer)
+
+Docling использует OpenCV через `tableformer`. Требуется установить:
+
+```dockerfile
+apt-get install -y libxcb1 libgl1 libglib2.0-0
+```
+
+Без этого возникает ошибка: `libxcb.so.1: cannot open shared object file: No such file or directory`
+
+### Отключение ненужных моделей
+
+В production отключены функции требующие дополнительных моделей (VLM, OCR движки):
+
+```python
+pipeline_options = PdfPipelineOptions(
+    do_picture_description=False,   # Требует SmolVLM (~256MB)
+    do_picture_classification=False,
+    do_formula_enrichment=False,
+    do_code_enrichment=False,
+    generate_picture_images=True,
+    do_table_structure=True,
+    do_ocr=True,
+)
+```
+
+---
+
+## GitHub Actions: параллельная сборка
+
+Workflow разделён на 3 параллельных job для сборки + 1 job деплоя:
+
+```yaml
+jobs:
+  changes:      # Определяет какие сервисы изменились
+  build-api:    # Параллельно
+  build-client: # Параллельно
+  build-pdf-to-md: # Параллельно (самый долгий ~40 мин при первой сборке)
+  deploy:       # Ждёт завершения build-* jobs
+```
+
+**Умный триггер:** сравнивает изменения с предыдущим тегом — если изменился только `api/`, собирается только API (~3-5 мин).
+
+**GHA cache:** каждый сервис использует отдельный scope (`scope=api`, `scope=client`, `scope=pdf-to-md`) чтобы кеши не вытесняли друг друга.
+
+---
+
+## Типичные ошибки при деплое Railway
+
+### `504 Gateway Timeout` — nginx не может достучаться до API
+
+Причина: nginx закешировал старый IP API после его редеплоя.
+Решение: использовать публичный URL API (`API_PUBLIC_HOST`) вместо internal.
+
+### `SSL_do_handshake() failed` при HTTPS проксировании
+
+Причина: nginx делает HTTPS запрос но не передаёт правильный SNI.
+Решение: добавить `proxy_ssl_server_name on; proxy_ssl_name ${API_PUBLIC_HOST};`
+
+### `recv() failed (111: Connection refused) while resolving, resolver: 127.0.0.11:53`
+
+Причина: `127.0.0.11` — Docker Compose DNS, недоступен в Railway.
+Решение: использовать DNS из `/etc/resolv.conf` контейнера (в Railway это `fd12::10`).
+
+### `Missing safe tensors file: /app/docling_models/model.safetensors`
+
+Причина: Docling ищет модели напрямую в `DOCLING_ARTIFACTS_PATH`, но они в подпапке.
+Решение: скачивать в `$DOCLING_ARTIFACTS_PATH/ds4sd--docling-layout-heron/` или убрать `DOCLING_ARTIFACTS_PATH` из runtime ENV.
+
+### `libxcb.so.1: cannot open shared object file`
+
+Причина: OpenCV (используется tableformer в Docling) требует X11 библиотеки.
+Решение: установить `libxcb1 libgl1 libglib2.0-0` в Dockerfile runtime stage.
+
+### `DNS resolution failed for pdf-to-md.railway.internal`
+
+Причина: Railway формирует internal hostname убирая дефисы — `pdf_to_md` → `pdftomd.railway.internal`.
+Решение: использовать `RAILWAY_PRIVATE_DOMAIN` переменную сервиса для получения реального hostname.
+
+### `'PdfPipelineOptions' object has no attribute 'backend'`
+
+Причина: устаревший способ передачи `PipelineOptions` в `DocumentConverter.format_options`.
+Решение: использовать `PdfFormatOption(pipeline_options=...)`:
+```python
+from docling.document_converter import PdfFormatOption, InputFormat
+converter = DocumentConverter(
+    format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
+)
+```

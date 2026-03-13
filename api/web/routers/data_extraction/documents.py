@@ -60,12 +60,10 @@ async def get_document_assets_route(
     storage=Depends(get_s3),
 ):
     """Возвращает markdown и список изображений документа."""
-    base_url = f"{request.url.scheme}://{request.headers.get('host', 'localhost:8000')}"
     result = await get_document_assets(
         document_repo=doc_repo,
         storage=storage,
         doc_id=doc_id,
-        base_url=base_url,
     )
     return DocumentAssetsResponse(success=True, **result)
 

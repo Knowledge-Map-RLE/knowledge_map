@@ -323,7 +323,7 @@ services:
       MINIO_CONSOLE_ADDRESS: ":9001"
     command: server /data --console-address ":9001"
     volumes:
-      -  D:/Data/Data_Knowledge_Map/s3_data:/data
+      - s3_data:/data
     networks:
       - knowledge_map_network
     healthcheck:

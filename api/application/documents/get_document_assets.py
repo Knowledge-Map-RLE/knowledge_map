@@ -23,7 +23,7 @@ async def get_document_assets(
     document_repo: DocumentRepositoryProtocol,
     storage: ObjectStorageProtocol,
     doc_id: str,
-    base_url: str = "http://localhost:8000",
+    base_url: str = "",
 ) -> Dict[str, Any]:
     """
     Возвращает markdown и URL изображений документа.
@@ -40,11 +40,14 @@ async def get_document_assets(
 
     # Получаем активный markdown
     active_key = doc.get_active_markdown_key()
+    # Fallback к стандартному пути если ни один S3-ключ не сохранён в Neo4j
+    if not active_key:
+        active_key = f"{prefix}{doc_id}.md"
     markdown = None
     if active_key:
         markdown = await storage.download_text(bucket, active_key)
         if markdown:
-            markdown = _convert_image_paths(markdown, doc_id, base_url)
+            markdown = _convert_image_paths(markdown, doc_id)
 
     # Список изображений
     objects = await storage.list_objects(bucket, prefix=f"{prefix}images/")
@@ -59,7 +62,7 @@ async def get_document_assets(
         name = key.split("/")[-1]
         if name and any(name.lower().endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".webp")):
             image_names.append(name)
-            image_urls[name] = f"{base_url}/api/v1/s3/image/{key}"
+            image_urls[name] = f"/api/v1/s3/image/{key}"
 
     return {
         "doc_id": doc_id,
@@ -69,15 +72,19 @@ async def get_document_assets(
     }
 
 
-def _convert_image_paths(markdown_text: str, doc_id: str, base_url: str) -> str:
-    """Преобразует относительные пути изображений в абсолютные URL."""
-    image_prefix = f"{base_url}/api/v1/s3/image/documents/{doc_id}/images/"
+def _convert_image_paths(markdown_text: str, doc_id: str) -> str:
+    """Преобразует относительные пути изображений в HTML figure/img теги с относительными URL."""
+    image_prefix = f"/api/v1/s3/image/documents/{doc_id}/images/"
 
     def replace_path(match):
         alt = match.group(1)
         path = match.group(2)
         if path.startswith("http://") or path.startswith("https://"):
-            return match.group(0)
-        return f"![{alt}](<{image_prefix}{path}>)"
+            url = path
+        elif path.startswith("/api/"):
+            url = path
+        else:
+            url = f"{image_prefix}{path}"
+        return f'<figure><img src="{url}" alt="{alt}" style="max-width:100%"/><figcaption>{alt}</figcaption></figure>'
 
     return re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace_path, markdown_text)
