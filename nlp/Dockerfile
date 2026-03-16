@@ -57,4 +57,4 @@ ENV NLP_PORT=50055
 ENV MODEL_CACHE_DIR=/app/models
 
 # Run gRPC server
-CMD ["python", "src/grpc_server.py"]
+CMD ["python", "src/main.py"]

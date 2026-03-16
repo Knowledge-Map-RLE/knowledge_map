@@ -58,12 +58,12 @@ class SpacyAdapter(BaseAdapter):
         # Get morphological features
         morph = self.get_morph_features(native_token)
 
-        # Create unified token
+        # Create unified token — native_token.idx is already absolute offset in Doc
         unified_token = UnifiedToken(
             idx=native_token.i,
             text=native_token.text,
-            start_char=sentence_start_char + native_token.idx,
-            end_char=sentence_start_char + native_token.idx + len(native_token.text),
+            start_char=native_token.idx,
+            end_char=native_token.idx + len(native_token.text),
             lemma=native_token.lemma_,
             pos=pos,
             pos_fine=native_token.tag_,
@@ -158,6 +158,8 @@ class SpacyAdapter(BaseAdapter):
             start_idx=native_entity.start,
             end_idx=native_entity.end,
             tokens=entity_tokens,
+            start_char=native_entity.start_char,
+            end_char=native_entity.end_char,
             confidence=confidence,
             sources=[self.create_source_identifier()],
             is_scientific=is_scientific,
@@ -183,7 +185,7 @@ class SpacyAdapter(BaseAdapter):
     ) -> UnifiedSentence:
         """Convert spaCy sentence (Span) to UnifiedSentence."""
 
-        sentence_start_char = doc_start_char + native_sentence.start_char
+        sentence_start_char = native_sentence.start_char  # already absolute in Doc
 
         # Convert tokens
         tokens = []
@@ -217,8 +219,8 @@ class SpacyAdapter(BaseAdapter):
         unified_sentence = UnifiedSentence(
             idx=sentence_idx,
             text=native_sentence.text,
-            start_char=sentence_start_char,
-            end_char=sentence_start_char + len(native_sentence.text),
+            start_char=native_sentence.start_char,
+            end_char=native_sentence.end_char,
             tokens=tokens,
             dependencies=dependencies,
             entities=entities,
@@ -381,6 +383,8 @@ class SpacyAdapter(BaseAdapter):
                     start_idx=ent.start,
                     end_idx=ent.end,
                     tokens=entity_tokens,
+                    start_char=ent.start_char,
+                    end_char=ent.end_char,
                     confidence=1.0,
                     sources=[self.create_source_identifier()],
                     is_scientific=True,

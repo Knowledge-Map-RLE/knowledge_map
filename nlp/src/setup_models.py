@@ -84,80 +84,16 @@ def setup_spacy_models():
             logger.info("spaCy disabled in config, skipping spaCy setup")
             return True
         
-        # Build ordered candidate list: biology-specific -> science -> configured fallback
-        candidates = []
-        if hasattr(config, 'spacy_preferred_bio_models') and config.spacy_preferred_bio_models:
-            candidates.extend(config.spacy_preferred_bio_models)
-        if hasattr(config, 'spacy_preferred_sci_models') and config.spacy_preferred_sci_models:
-            candidates.extend(config.spacy_preferred_sci_models)
-        # ensure configured fallback is considered
-        candidates.append(config.spacy_model)
+        model = config.spacy_model
+        logger.info(f"Loading spaCy model: {model}")
 
-        # Deduplicate while preserving priority order and keep only top-3 candidates
-        seen = set()
-        deduped = []
-        for c in candidates:
-            if c not in seen:
-                deduped.append(c)
-                seen.add(c)
-        # Keep only the top 3 preferred models to limit downloads
-        candidates = deduped[:3]
-
-        logger.info(f"spaCy top-3 candidate models (priority): {candidates}")
-
-        # Try to load models in order. For core models we can use `spacy download`.
-        import subprocess
-        for candidate in candidates:
-            try:
-                logger.info(f"Trying spaCy model '{candidate}'...")
-                nlp = spacy.load(candidate)
-                logger.info(f"  ✓ spaCy model '{candidate}' loaded")
-                # Update config.spacy_model to the actually used model
-                config.spacy_model = candidate
-                return True
-            except Exception:
-                logger.info(f"  - spaCy model '{candidate}' not available locally")
-
-            # If candidate looks like a core spaCy model, try `spacy download` (works for en_core_web_*)
-            if candidate.startswith("en_core_web") or candidate.startswith("en_core_sci"):
-                logger.info(f"  → Attempting to download spaCy model '{candidate}' via spacy download")
-                result = subprocess.run(
-                    [sys.executable, "-m", "spacy", "download", candidate],
-                    capture_output=True,
-                    text=True
-                )
-                if result.returncode == 0:
-                    try:
-                        nlp = spacy.load(candidate)
-                        logger.info(f"  ✓ spaCy model '{candidate}' downloaded and loaded")
-                        config.spacy_model = candidate
-                        return True
-                    except Exception as e:
-                        logger.warning(f"  ✗ Model downloaded but failed to load: {e}")
-                else:
-                    logger.info(f"  - spacy download returned: {result.stderr}")
-
-            # If this is likely a scispaCy model (en_core_sci_*), attempt to pip install scispacy and model
-            if candidate.startswith("en_core_sci"):
-                logger.info("  → Attempting to install scispaCy and the model via pip")
-                try:
-                    # Install scispacy first
-                    subprocess.run([sys.executable, "-m", "pip", "install", "scispacy"], check=False)
-                    # Try installing model by name (may work if wheel available on index)
-                    subprocess.run([sys.executable, "-m", "pip", "install", candidate], check=False)
-                    # After pip install, try to load
-                    try:
-                        nlp = spacy.load(candidate)
-                        logger.info(f"  ✓ scispaCy model '{candidate}' installed and loaded")
-                        config.spacy_model = candidate
-                        return True
-                    except Exception:
-                        logger.info(f"  - pip install did not produce a loadable model for '{candidate}'")
-                except Exception as e:
-                    logger.warning(f"  ✗ pip install attempt failed: {e}")
-
-        logger.error("No preferred spaCy model available. Falling back failed.")
-        return False
+        try:
+            nlp = spacy.load(model)
+            logger.info(f"  ✓ spaCy model '{model}' loaded")
+            return True
+        except Exception as e:
+            logger.error(f"  ✗ Failed to load spaCy model '{model}': {e}")
+            return False
                 
     except ImportError:
         logger.warning("spaCy not installed, skipping spaCy setup")
@@ -320,7 +256,7 @@ def setup_all_models():
         'nltk': setup_nltk_models() if config.enable_nltk else None,
         'spacy': setup_spacy_models() if config.enable_spacy else None,
         'stanza': setup_stanza_models() if config.enable_stanza else None,
-        'hf_transformers': setup_hf_transformers_cache(),
+        'hf_transformers': None,  # HF transformers кэширование отключено
     }
     
     logger.info("=" * 60)

@@ -82,6 +82,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const textAnnotatorRef = useRef<HTMLDivElement>(null);
   const savedTextareaScrollTop = useRef<number>(0);
   const savedAnnotatorScrollTop = useRef<number>(0);
+  const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Custom Hooks
   const {
@@ -140,9 +142,25 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     resetUnsavedOffsets();
   }, [docId, resetUnsavedOffsets]);
 
-  // Sync visual annotations
+  // Cleanup polling on unmount
   useEffect(() => {
-    setVisualAnnotations(annotations);
+    return () => {
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+      if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+    };
+  }, []);
+
+  // Sync visual annotations (preserve scroll — only update if count changes or on first load)
+  useEffect(() => {
+    setVisualAnnotations(prev => {
+      // Always update on first load or when annotation count changes
+      if (prev.length !== annotations.length) return annotations;
+      // Check if any uid changed (new annotations appeared)
+      const prevIds = new Set(prev.map(a => a.id));
+      const hasNew = annotations.some(a => !prevIds.has(a.id));
+      if (hasNew) return annotations;
+      return prev;
+    });
   }, [annotations]);
 
   // Restore scroll positions
@@ -358,7 +376,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     }, 500);
 
     try {
-      const result = await autoAnnotateMultilevel(
+      await autoAnnotateMultilevel(
         docId,
         true,  // enable_voting
         3,     // max_level
@@ -366,33 +384,33 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         0.8    // min_confidence
       );
 
-      // Set progress to 100% when complete
-      setAnalysisProgress(100);
+      console.log('Multi-level анализ запущен в фоне. Аннотации появятся через несколько минут.');
 
-      // Store graph data for visualization
-      setGraphData(result.graph);
+      // Очищаем предыдущий polling если был
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+      if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
 
-      console.log(
-        'Multi-level анализ завершен успешно!\n' +
-        `Создано аннотаций: ${result.annotations_count || 0}\n` +
-        `Agreement score: ${(result.summary?.agreement_score || 0).toFixed(2)}\n` +
-        `Предложений: ${result.summary?.total_sentences || 0}\n` +
-        `Токенов: ${result.summary?.total_tokens || 0}\n` +
-        `Время обработки: ${result.processing_time.toFixed(2)}s\n` +
-        `Уровни обработки: ${result.processed_levels.join(', ')}\n\n` +
-        `Граф построен: ${result.graph.nodes.length} узлов, ${result.graph.edges.length} связей`
-      );
+      // Ждём завершения анализа, периодически обновляя аннотации
+      pollIntervalRef.current = setInterval(async () => {
+        await loadAnnotations();
+        await loadRelations();
+      }, 10000);
 
-      await loadAnnotations();
-      await loadRelations();
-      
-      // Update document status to 'ready_for_annotation' when analysis is complete
-      if (onUpdateDocumentStatus) {
-        onUpdateDocumentStatus(docId, 'ready_for_annotation');
-      }
+      // Остановить polling через 5 минут
+      pollTimeoutRef.current = setTimeout(() => {
+        if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+        setAnalysisProgress(100);
+        setIsAutoAnnotating(false);
+        setAnalysisProgress(null);
+        if (onUpdateDocumentStatus) {
+          onUpdateDocumentStatus(docId, 'ready_for_annotation');
+        }
+      }, 300000);
+
     } catch (error: any) {
       console.error(
-        'Не удалось выполнить multi-level анализ:',
+        'Не удалось запустить multi-level анализ:',
         error?.message || error,
         '\n\nПроверьте, что:\n' +
         '• Документ сохранен в базе данных\n' +
@@ -400,7 +418,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         '• NLP модели установлены (spaCy, NLTK)\n' +
         '• Сервер NLP запущен и доступен'
       );
-    } finally {
       clearInterval(progressInterval);
       setIsAutoAnnotating(false);
       setAnalysisProgress(null);

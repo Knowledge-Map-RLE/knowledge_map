@@ -1,4 +1,5 @@
 """Роутер для NLP анализа и автоаннотации"""
+import json
 import logging
 import asyncio
 from datetime import datetime
@@ -133,42 +134,27 @@ async def get_supported_types():
         raise HTTPException(status_code=500, detail=f"Ошибка: {str(e)}")
 
 
-@router.post("/documents/{doc_id}/analyze-multilevel")
-async def analyze_document_multilevel(
+async def _run_multilevel_analysis(
     doc_id: str,
-    enable_voting: bool = True,
-    max_level: int = 3,
-    create_annotations: bool = True,
-    min_confidence: float = 0.8
+    enable_voting: bool,
+    max_level: int,
+    create_annotations: bool,
+    min_confidence: float
 ):
-    """
-    Multi-level NLP analysis with voting and confidence scores.
-
-    Args:
-        doc_id: Document ID
-        enable_voting: Use voting between multiple processors (spaCy + NLTK)
-        max_level: Maximum analysis level (1-3)
-        create_annotations: Automatically create annotations in database
-        min_confidence: Minimum confidence threshold for annotations
-
-    Returns:
-        Analysis results with annotations and graph data for visualization
-    """
+    """Фоновая задача: полный NLP анализ + сохранение аннотаций."""
     try:
-        # Get document from Neo4j
         from src.models import PDFDocument
         from services import settings
         from services.s3_client import get_s3_client
 
         document = PDFDocument.nodes.get_or_none(uid=doc_id)
         if not document:
-            raise HTTPException(status_code=404, detail="Document not found")
+            logger.error(f"Background NLP: document {doc_id} not found")
+            return
 
-        # Get markdown text from S3 using version priority (user > formatted > raw)
         s3_client = get_s3_client()
         bucket = settings.S3_BUCKET_NAME
 
-        # Determine which markdown version to use
         md_key = None
         if document.user_md_s3_key:
             md_key = document.user_md_s3_key
@@ -177,29 +163,19 @@ async def analyze_document_multilevel(
         elif document.docling_raw_md_s3_key:
             md_key = document.docling_raw_md_s3_key
         else:
-            # Fallback to old format
             md_key = f"documents/{doc_id}/{doc_id}.md"
 
-        logger.info(f"Loading markdown from S3 key: {md_key}")
-
         if not await s3_client.object_exists(bucket, md_key):
-            raise HTTPException(status_code=400, detail="No markdown text available in S3")
+            logger.error(f"Background NLP: no markdown in S3 for {doc_id}")
+            return
 
         markdown_text = await s3_client.download_text(bucket, md_key)
         if not markdown_text:
-            raise HTTPException(status_code=400, detail="Markdown text is empty")
+            logger.error(f"Background NLP: markdown is empty for {doc_id}")
+            return
 
-        logger.info(f"Starting multi-level analysis for document {doc_id}, text length: {len(markdown_text)}")
+        logger.info(f"Background NLP: starting analysis for {doc_id}, text length: {len(markdown_text)}")
 
-        # Analyze text and get result
-        result = await multilevel_nlp_service.analyze_text(
-            text=markdown_text,
-            doc_id=doc_id,
-            enable_voting=enable_voting,
-            max_level=max_level
-        )
-        
-        # Get document for creating annotations
         doc = await multilevel_nlp_service.analyze_text_to_document(
             text=markdown_text,
             doc_id=doc_id,
@@ -207,95 +183,151 @@ async def analyze_document_multilevel(
             max_level=max_level
         )
 
-        # Create annotations if requested
-        if create_annotations:
-            from src.models import MarkdownAnnotation
+        if not create_annotations:
+            logger.info(f"Background NLP: analysis done for {doc_id}, annotations skipped")
+            return
 
-            # Create annotations from the already analyzed document
-            annotations_data = multilevel_nlp_service.create_annotations_for_database(
-                doc,
-                confidence_threshold=min_confidence
-            )
+        from neomodel import db
 
-            # Save to Neo4j
-            created_annotations = []
-            annotation_uid_map = {}  # (sent_idx, token_idx) -> uid
+        annotations_data = multilevel_nlp_service.create_annotations_for_database(
+            doc,
+            confidence_threshold=min_confidence
+        )
 
-            for ann_data in annotations_data:
-                annotation = MarkdownAnnotation(
-                    text=ann_data['text'],
-                    annotation_type=ann_data['annotation_type'],
-                    start_offset=ann_data['start_offset'],
-                    end_offset=ann_data['end_offset'],
-                    color=ann_data['color'],
-                    metadata=ann_data['metadata'],
-                    confidence=ann_data['confidence'],
-                    source=ann_data['source'],
-                    processor_version=ann_data['processor_version']
-                ).save()
+        if not annotations_data:
+            logger.info(f"Background NLP: no annotations to create for {doc_id}")
+            return
 
-                # Connect to document
-                annotation.document.connect(document)
+        import uuid
+        import time as _time
+        now_ts = _time.time()  # Unix timestamp (float) — neomodel DateTimeProperty format
 
-                # Store for relations - use metadata to get sent_idx and token_idx
-                if 'sent_idx' in ann_data['metadata'] and 'token_idx' in ann_data['metadata']:
-                    sent_idx = ann_data['metadata']['sent_idx']
-                    token_idx = ann_data['metadata']['token_idx']
-                    annotation_uid_map[(sent_idx, token_idx)] = annotation.uid
+        annotation_uid_map = {}
+        for ann_data in annotations_data:
+            ann_uid = str(uuid.uuid4())
+            ann_data['_uid'] = ann_uid
+            meta = ann_data.get('metadata', {})
+            if 'sent_idx' in meta and 'token_idx' in meta:
+                annotation_uid_map[(meta['sent_idx'], meta['token_idx'])] = ann_uid
 
-                created_annotations.append({
-                    'uid': annotation.uid,
-                    'text': annotation.text,
-                    'type': annotation.annotation_type,
-                    'confidence': annotation.confidence,
-                    'start': annotation.start_offset,
-                    'end': annotation.end_offset,
-                    'color': annotation.color,
+        BATCH_SIZE = 500
+        batches = [annotations_data[i:i+BATCH_SIZE] for i in range(0, len(annotations_data), BATCH_SIZE)]
+        for batch in batches:
+            params = [
+                {
+                    'uid': a['_uid'],
+                    'text': a['text'],
+                    'annotation_type': a['annotation_type'],
+                    'start_offset': a['start_offset'],
+                    'end_offset': a['end_offset'],
+                    'color': a['color'],
+                    'metadata': json.dumps(a['metadata']),
+                    'confidence': a['confidence'],
+                    'source': a['source'],
+                    'processor_version': a['processor_version'],
+                    'created_date': now_ts,
+                }
+                for a in batch
+            ]
+            db.cypher_query(
+                """
+                UNWIND $rows AS row
+                MATCH (d:PDFDocument {uid: $doc_id})
+                CREATE (a:MarkdownAnnotation {
+                    uid: row.uid,
+                    text: row.text,
+                    annotation_type: row.annotation_type,
+                    start_offset: row.start_offset,
+                    end_offset: row.end_offset,
+                    color: row.color,
+                    metadata: row.metadata,
+                    confidence: row.confidence,
+                    source: row.source,
+                    processor_version: row.processor_version,
+                    created_date: row.created_date
                 })
-
-            # Create relations (dependencies) between annotations
-            relations_data = multilevel_nlp_service.create_relations_for_database(
-                doc,
-                annotation_uid_map,
-                confidence_threshold=min_confidence
+                CREATE (d)-[:HAS_MARKDOWN_ANNOTATION]->(a)
+                """,
+                {'rows': params, 'doc_id': doc_id}
             )
 
-            created_relations = []
-            for rel_data in relations_data:
-                # Get source and target annotations
-                source_ann = MarkdownAnnotation.nodes.get(uid=rel_data['source_uid'])
-                target_ann = MarkdownAnnotation.nodes.get(uid=rel_data['target_uid'])
+        logger.info(f"Background NLP: created {len(annotations_data)} annotations for {doc_id}")
 
-                # Create relation using Neo4j relationship
-                rel = source_ann.relations_to.connect(
-                    target_ann,
+        relations_data = multilevel_nlp_service.create_relations_for_database(
+            doc,
+            annotation_uid_map,
+            confidence_threshold=min_confidence
+        )
+
+        if relations_data:
+            rel_batches = [relations_data[i:i+BATCH_SIZE] for i in range(0, len(relations_data), BATCH_SIZE)]
+            for batch in rel_batches:
+                rel_params = [
                     {
-                        'relation_type': rel_data['relation_type'],
-                        'metadata': rel_data['metadata'],
-                        'created_date': datetime.utcnow()
+                        'src': r['source_uid'],
+                        'tgt': r['target_uid'],
+                        'relation_type': r['relation_type'],
+                        'metadata': json.dumps(r['metadata']),
+                        'created_date': now_ts,
                     }
+                    for r in batch
+                ]
+                db.cypher_query(
+                    """
+                    UNWIND $rows AS row
+                    MATCH (a:MarkdownAnnotation {uid: row.src})
+                    MATCH (b:MarkdownAnnotation {uid: row.tgt})
+                    CREATE (a)-[:RELATES_TO {
+                        relation_type: row.relation_type,
+                        metadata: row.metadata,
+                        created_date: row.created_date
+                    }]->(b)
+                    """,
+                    {'rows': rel_params}
                 )
 
-                created_relations.append({
-                    'type': rel_data['relation_type'],
-                    'source': rel_data['source_uid'],
-                    'target': rel_data['target_uid'],
-                    'confidence': rel_data['confidence'],
-                })
+        logger.info(f"Background NLP: created {len(annotations_data)} annotations and {len(relations_data)} relations for {doc_id}")
 
-            result['created_annotations'] = created_annotations
-            result['annotations_count'] = len(created_annotations)
-            result['created_relations'] = created_relations
-            result['relations_count'] = len(created_relations)
+    except Exception as e:
+        logger.error(f"Background NLP error for {doc_id}: {e}", exc_info=True)
 
-            logger.info(f"Created {len(created_annotations)} annotations and {len(created_relations)} relations for document {doc_id}")
 
-        return result
+@router.post("/documents/{doc_id}/analyze-multilevel")
+async def analyze_document_multilevel(
+    doc_id: str,
+    background_tasks: BackgroundTasks,
+    enable_voting: bool = True,
+    max_level: int = 3,
+    create_annotations: bool = True,
+    min_confidence: float = 0.8
+):
+    """
+    Multi-level NLP analysis with voting and confidence scores.
+    Запускается в фоне — сразу возвращает статус, не блокирует API.
+    """
+    try:
+        from src.models import PDFDocument
+
+        document = PDFDocument.nodes.get_or_none(uid=doc_id)
+        if not document:
+            raise HTTPException(status_code=404, detail="Document not found")
+
+        background_tasks.add_task(
+            _run_multilevel_analysis,
+            doc_id=doc_id,
+            enable_voting=enable_voting,
+            max_level=max_level,
+            create_annotations=create_annotations,
+            min_confidence=min_confidence
+        )
+
+        logger.info(f"Multi-level analysis started in background for {doc_id}")
+        return {"status": "started", "doc_id": doc_id, "message": "Анализ запущен в фоне"}
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error in multi-level analysis: {e}", exc_info=True)
+        logger.error(f"Error starting multi-level analysis: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Analysis error: {str(e)}")
 
 

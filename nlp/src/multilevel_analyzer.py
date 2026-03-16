@@ -9,21 +9,25 @@ import logging
 import time
 from typing import List, Optional, Dict, Any
 from collections import defaultdict
-import spacy
 
-from src.nlp_manager import get_nlp_manager
-from src.base import AnnotationSuggestion, RelationSuggestion
-from src.unified_types import (
-    UnifiedDocument,
-    UnifiedSentence,
-    UnifiedToken,
-    UnifiedDependency,
-    UnifiedEntity,
-    LinguisticLevel
-)
-from src.config import get_config
-from src.adapters.spacy_adapter import SpacyAdapter
-from src.adapters.spacy_processor import SpacyProcessor
+try:
+    from nlp_manager import get_nlp_manager
+    from base import AnnotationSuggestion, RelationSuggestion
+    from unified_types import (
+        UnifiedDocument, UnifiedSentence, UnifiedToken,
+        UnifiedDependency, UnifiedEntity, LinguisticLevel
+    )
+    from config import get_config
+    from adapters.spacy_adapter import SpacyAdapter
+except ImportError:
+    from src.nlp_manager import get_nlp_manager
+    from src.base import AnnotationSuggestion, RelationSuggestion
+    from src.unified_types import (
+        UnifiedDocument, UnifiedSentence, UnifiedToken,
+        UnifiedDependency, UnifiedEntity, LinguisticLevel
+    )
+    from src.config import get_config
+    from src.adapters.spacy_adapter import SpacyAdapter
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +39,7 @@ class MultiLevelAnalyzer:
         """Initialize multi-level analyzer."""
         self.config = get_config()
         self.nlp_manager = get_nlp_manager()
-        self.spacy_processor = SpacyProcessor()
+        self.spacy_processor = self.nlp_manager.processors.get('spacy')
         self.spacy_adapter = SpacyAdapter()
     
     def analyze(
@@ -70,8 +74,8 @@ class MultiLevelAnalyzer:
             ]
         
         # Process text directly with spaCy
-        if self.spacy_processor.nlp is None:
-            raise Exception("spaCy model not loaded")
+        if self.spacy_processor is None or self.spacy_processor.nlp is None:
+            raise Exception("spaCy processor not loaded")
         
         doc = self.spacy_processor.nlp(text)
         print(f"spaCy processed text, found {len(doc.ents)} entities and {len(list(doc.sents))} sentences")

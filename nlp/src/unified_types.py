@@ -141,9 +141,13 @@ class UnifiedEntity:
     Named entity or scientific entity.
     """
     entity_type: str                      # PERSON, ORG, GPE, GENE, PROTEIN, DISEASE, etc.
-    start_idx: int
-    end_idx: int                          # Exclusive
+    start_idx: int                        # First token index (in Doc)
+    end_idx: int                          # Last token index (exclusive, in Doc)
     tokens: List[UnifiedToken]
+
+    # Character offsets (absolute in document)
+    start_char: Optional[int] = None
+    end_char: Optional[int] = None
 
     # Confidence and sources
     confidence: float = 1.0

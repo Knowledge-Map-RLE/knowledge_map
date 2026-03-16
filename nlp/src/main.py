@@ -12,6 +12,7 @@ import time
 from pathlib import Path
 from typing import Dict, Any, List
 
+import re
 import grpc
 from concurrent import futures
 
@@ -61,7 +62,7 @@ logger = logging.getLogger(__name__)
 
 # Импортируем наши модули
 from config import get_config
-from nlp_manager import NLPManager
+from nlp_manager import NLPManager, get_nlp_manager
 from multilevel_analyzer import MultiLevelAnalyzer
 from base import AnnotationSource, AnnotationCategory
 from unified_types import LinguisticLevel
@@ -140,8 +141,8 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
         except Exception as e:
             logger.warning(f"Error during model setup: {e}")
         
-        self.nlp_manager = NLPManager()
-        self.analyzer = MultiLevelAnalyzer()
+        self.nlp_manager = get_nlp_manager()  # создаёт и регистрирует глобальный NLPManager
+        self.analyzer = MultiLevelAnalyzer()  # использует тот же экземпляр через get_nlp_manager()
         logger.info("NLP сервис инициализирован")
 
     def _convert_annotation_to_proto(self, annotation) -> nlp_pb2.AnnotationSuggestion:
@@ -318,6 +319,27 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                 message=f"Ошибка: {str(e)}"
             )
 
+    @staticmethod
+    def _filter_text_for_analysis(text: str):
+        """
+        Убирает YAML front-matter и секцию References из текста перед анализом.
+        Возвращает (filtered_text, char_offset) где char_offset — смещение начала
+        отфильтрованного текста в оригинальном (для корректных offsets в аннотациях).
+        """
+        offset = 0
+        # Убрать YAML front-matter (---...---)
+        frontmatter_match = re.match(r'^---\r?\n.*?\r?\n---\r?\n', text, re.DOTALL)
+        if frontmatter_match:
+            offset = frontmatter_match.end()
+            text = text[offset:]
+
+        # Убрать секцию References (## References и всё после)
+        ref_match = re.search(r'\n##\s+References\b', text, re.IGNORECASE)
+        if ref_match:
+            text = text[:ref_match.start()]
+
+        return text, offset
+
     async def AnalyzeText(self, request, context):
         """Многоуровневый лингвистический анализ"""
         try:
@@ -329,6 +351,11 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                     success=False,
                     message=f"Текст слишком длинный (максимум {self.config.max_text_length} символов)"
                 )
+
+            # Фильтруем front-matter и References, запоминаем смещение
+            analyze_text, char_offset = self._filter_text_for_analysis(request.text)
+            if char_offset > 0 or len(analyze_text) < len(request.text):
+                logger.info(f"Текст после фильтрации: {len(request.text)} -> {len(analyze_text)} символов (offset={char_offset})")
 
             # Конвертируем уровни из proto
             levels_map = {
@@ -343,14 +370,33 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
             levels = [levels_map[l] for l in request.levels] if request.levels else None
             min_agreement = request.min_agreement if request.min_agreement > 0 else self.config.min_agreement
 
-            # Выполняем анализ
+            # Выполняем анализ на отфильтрованном тексте
             start_time = time.time()
             document = self.analyzer.analyze(
-                text=request.text,
+                text=analyze_text,
                 levels=levels,
                 enable_voting=request.enable_voting if request.enable_voting else self.config.enable_voting,
                 min_agreement=min_agreement
             )
+
+            # Корректируем offsets: прибавляем char_offset ко всем позициям
+            if char_offset > 0:
+                for sent in document.sentences:
+                    sent.start_char += char_offset
+                    sent.end_char += char_offset
+                    for token in sent.tokens:
+                        token.start_char += char_offset
+                        token.end_char += char_offset
+                    for entity in sent.entities:
+                        if entity.start_char is not None:
+                            entity.start_char += char_offset
+                        if entity.end_char is not None:
+                            entity.end_char += char_offset
+                for entity in document.entities:
+                    if entity.start_char is not None:
+                        entity.start_char += char_offset
+                    if entity.end_char is not None:
+                        entity.end_char += char_offset
 
             # Конвертируем UnifiedDocument в proto
             proto_doc = self._convert_document_to_proto(document)
@@ -389,7 +435,7 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
 
     def _convert_sentence_to_proto(self, sentence) -> nlp_pb2.UnifiedSentence:
         """Конвертирует UnifiedSentence в proto message"""
-        metadata = {k: str(v) for k, v in sentence.metadata.items()}
+        metadata = {k: str(v) for k, v in getattr(sentence, 'metadata', {}).items()}
 
         return nlp_pb2.UnifiedSentence(
             idx=sentence.idx,
@@ -453,17 +499,28 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
 
     def _convert_entity_to_proto(self, entity) -> nlp_pb2.UnifiedEntity:
         """Конвертирует UnifiedEntity в proto message"""
-        metadata = {k: str(v) for k, v in entity.metadata.items()}
+        metadata = {k: str(v) for k, v in getattr(entity, 'metadata', {}).items()}
+
+        # Derive char offsets: prefer stored start_char/end_char,
+        # fall back to first/last token char offsets
+        start_char = getattr(entity, 'start_char', None)
+        end_char = getattr(entity, 'end_char', None)
+        if start_char is None and entity.tokens:
+            start_char = entity.tokens[0].start_char
+        if end_char is None and entity.tokens:
+            end_char = entity.tokens[-1].end_char
+        start_char = start_char or 0
+        end_char = end_char or 0
 
         return nlp_pb2.UnifiedEntity(
-            text=entity.text,
-            start_char=entity.start_char,
-            end_char=entity.end_char,
+            text=entity.text() if callable(entity.text) else entity.text,
+            start_char=start_char,
+            end_char=end_char,
             entity_type=entity.entity_type,
             confidence=entity.confidence,
             sources=entity.sources,
             is_scientific=entity.is_scientific,
-            scientific_domain=entity.scientific_domain or "",
+            scientific_domain=getattr(entity, 'domain', None) or "",
             metadata=metadata
         )
 

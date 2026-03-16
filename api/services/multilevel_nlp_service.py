@@ -9,7 +9,6 @@ from typing import List, Dict, Any, Optional
 import logging
 
 from services.nlp_grpc_client import get_nlp_grpc_client
-from services.markdown_filter import MarkdownFilter
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +133,6 @@ class MultiLevelNLPService:
     def __init__(self):
         """Initialize service with gRPC client."""
         self.grpc_client = get_nlp_grpc_client()
-        self.markdown_filter = MarkdownFilter()
         logger.info("MultiLevelNLPService инициализирован с gRPC клиентом")
 
     async def analyze_text(
@@ -222,13 +220,6 @@ class MultiLevelNLPService:
         Returns:
             UnifiedDocumentWrapper with analyzed data
         """
-        # Filter markdown text (skip metadata, tables, references, etc.)
-        filtered_result = self.markdown_filter.filter_text(text)
-        filtered_text = filtered_result.filtered_text
-        offset_map = filtered_result.offset_map
-
-        logger.info(f"Filtered text: {len(text)} -> {len(filtered_text)} characters")
-
         # Определяем уровни анализа на основе max_level
         levels = []
         if max_level >= 1:
@@ -238,10 +229,10 @@ class MultiLevelNLPService:
         if max_level >= 3:
             levels.append("syntax")
 
-        # Вызываем асинхронный gRPC метод
+        # Вызываем асинхронный gRPC метод (фильтрация front-matter и References на стороне NLP сервиса)
         await self.grpc_client.connect()
         grpc_result = await self.grpc_client.analyze_text(
-            text=filtered_text,
+            text=text,
             levels=levels if levels else None,
             enable_voting=enable_voting,
             min_agreement=2,
@@ -265,10 +256,7 @@ class MultiLevelNLPService:
         # Создаем обертку
         doc = UnifiedDocumentWrapper(doc_dict)
 
-        # Map offsets back to original text
-        doc = self._remap_offsets_to_original(doc, offset_map)
-
-        # Store original text for validation
+        # Store original text
         doc.metadata['original_text'] = text
 
         return doc
@@ -440,18 +428,6 @@ class MultiLevelNLPService:
                 # Include all tokens (even punct/space) but lower threshold for relations
                 # Skip only spaces, keep punctuation for dependency relations
                 if token.confidence >= 0.5 and not token.is_space:
-                    # Validate that the text at remapped offsets matches the token
-                    if original_text and token.start_char < len(original_text) and token.end_char <= len(original_text):
-                        actual_text = original_text[token.start_char:token.end_char]
-                        if actual_text != token.text:
-                            # Skip this annotation - offset points to filtered content
-                            skipped_count += 1
-                            continue
-                    elif original_text:
-                        # Out of bounds offset
-                        skipped_count += 1
-                        continue
-
                     annotation = {
                         'text': token.text,
                         'annotation_type': token.pos,  # Use UD POS tag directly
@@ -489,18 +465,6 @@ class MultiLevelNLPService:
                         skipped_count += 1
                         continue
                     entity_text = entity.text
-
-                    # Validate that the text at remapped offsets matches the entity
-                    if original_text and start_offset < len(original_text) and end_offset <= len(original_text):
-                        actual_text = original_text[start_offset:end_offset]
-                        if actual_text != entity_text:
-                            # Skip this annotation - offset points to filtered content
-                            skipped_count += 1
-                            continue
-                    elif original_text:
-                        # Out of bounds offset
-                        skipped_count += 1
-                        continue
 
                     annotation = {
                         'text': entity_text,

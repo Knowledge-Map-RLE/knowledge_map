@@ -10,18 +10,22 @@ import time
 from typing import List, Optional, Dict, Any
 from collections import defaultdict
 
-from src.base import BaseNLPProcessor, ProcessingResult, AnnotationSuggestion, AnnotationCategory, AnnotationSource
-from src.unified_types import (
-    UnifiedDocument,
-    UnifiedSentence,
-    UnifiedToken,
-    UnifiedDependency,
-    UnifiedEntity,
-    LinguisticLevel,
-    ProcessorOutput,
-    VotingResult
-)
-from src.config import get_config
+try:
+    from base import BaseNLPProcessor, ProcessingResult, AnnotationSuggestion, AnnotationCategory, AnnotationSource
+    from unified_types import (
+        UnifiedDocument, UnifiedSentence, UnifiedToken,
+        UnifiedDependency, UnifiedEntity, LinguisticLevel,
+        ProcessorOutput, VotingResult
+    )
+    from config import get_config
+except ImportError:
+    from src.base import BaseNLPProcessor, ProcessingResult, AnnotationSuggestion, AnnotationCategory, AnnotationSource
+    from src.unified_types import (
+        UnifiedDocument, UnifiedSentence, UnifiedToken,
+        UnifiedDependency, UnifiedEntity, LinguisticLevel,
+        ProcessorOutput, VotingResult
+    )
+    from src.config import get_config
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +44,10 @@ class NLPManager:
         # Load spaCy processor if enabled
         if self.config.enable_spacy:
             try:
-                from .adapters.spacy_processor import SpacyProcessor
+                try:
+                    from src.adapters.spacy_processor import SpacyProcessor
+                except ImportError:
+                    from adapters.spacy_processor import SpacyProcessor
                 spacy_processor = SpacyProcessor()
                 self.processors['spacy'] = spacy_processor
                 logger.info("Loaded spaCy processor")
