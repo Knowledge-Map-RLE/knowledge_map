@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import AnnotationToolbar from './AnnotationToolbar';
 import AnnotationPanel from './AnnotationPanel';
 import RelationsPanel from './RelationsPanel';
@@ -60,6 +60,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
   const [annotationsLimit, setAnnotationsLimit] = useState(1000);
+  const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(new Set());
 
   // Selection State
   const [pendingTextSelection, setPendingTextSelection] = useState<{
@@ -76,6 +77,13 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [localText, setLocalText] = useState(text);
   const [visualAnnotations, setVisualAnnotations] = useState<Annotation[]>([]);
   const previousTextRef = useRef(text);
+  const visualAnnotationsRef = useRef<Annotation[]>([]);
+  visualAnnotationsRef.current = visualAnnotations;
+
+  // Undo/Redo стек для текста
+  const undoStackRef = useRef<string[]>([]);
+  const redoStackRef = useRef<string[]>([]);
+  const [undoRedoVersion, setUndoRedoVersion] = useState(0);
 
   // Scroll Refs
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -114,13 +122,38 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     setSavedText,
   } = useAnnotationOffsets();
 
+  // Стабильный ref для аннотаций — не вызывает пересоздание useCallback в useRelations
+  const annotationsRef = useRef(annotations);
+  annotationsRef.current = annotations;
+
   const {
     relations,
     loadRelations,
     createRelation,
     removeRelation,
     editRelation,
-  } = useRelations(docId);
+  } = useRelations(docId, annotationsRef);
+
+  // Клиентская фильтрация по типам — мгновенно, без запроса к серверу
+  const visibleAnnotations = useMemo(
+    () => hiddenTypes.size === 0
+      ? annotations
+      : annotations.filter(a => !hiddenTypes.has(a.annotation_type)),
+    [annotations, hiddenTypes]
+  );
+
+  const handleTypeVisibilityToggle = useCallback((type: string, visible: boolean) => {
+    setHiddenTypes(prev => {
+      const next = new Set(prev);
+      if (visible) next.delete(type);
+      else next.add(type);
+      return next;
+    });
+  }, []);
+
+  const handleShowAllTypes = useCallback(() => {
+    setHiddenTypes(new Set());
+  }, []);
 
   // Sync with external text
   useEffect(() => {
@@ -154,14 +187,14 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   useEffect(() => {
     setVisualAnnotations(prev => {
       // Always update on first load or when annotation count changes
-      if (prev.length !== annotations.length) return annotations;
+      if (prev.length !== visibleAnnotations.length) return visibleAnnotations;
       // Check if any uid changed (new annotations appeared)
       const prevIds = new Set(prev.map(a => a.id));
-      const hasNew = annotations.some(a => !prevIds.has(a.id));
-      if (hasNew) return annotations;
+      const hasNew = visibleAnnotations.some(a => !prevIds.has(a.id));
+      if (hasNew) return visibleAnnotations;
       return prev;
     });
-  }, [annotations]);
+  }, [visibleAnnotations]);
 
   // Restore scroll positions
   useEffect(() => {
@@ -180,6 +213,15 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   // Text change handler
   const handleTextChange = useCallback((newText: string) => {
     const oldText = previousTextRef.current;
+
+    if (oldText !== newText) {
+      // Сохраняем предыдущее состояние в стек undo
+      undoStackRef.current.push(oldText);
+      if (undoStackRef.current.length > 100) undoStackRef.current.shift();
+      // Новое изменение сбрасывает redo
+      redoStackRef.current = [];
+    }
+
     setLocalText(newText);
 
     if (onTextChange) {
@@ -194,6 +236,38 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
     previousTextRef.current = newText;
   }, [visualAnnotations, calculateVisualOffsets, setHasUnsavedOffsets, onTextChange]);
+
+  const handleUndo = useCallback(() => {
+    if (undoStackRef.current.length === 0) return;
+    const current = previousTextRef.current;
+    const prev = undoStackRef.current.pop()!;
+    redoStackRef.current.push(current);
+    previousTextRef.current = prev;
+    setLocalText(prev);
+    setUndoRedoVersion(v => v + 1);
+    if (visualAnnotationsRef.current.length > 0) {
+      const updated = calculateVisualOffsets(current, prev, visualAnnotationsRef.current);
+      setVisualAnnotations(updated);
+      setHasUnsavedOffsets(true);
+    }
+    if (onTextChange) onTextChange(prev);
+  }, [onTextChange, calculateVisualOffsets, setHasUnsavedOffsets]);
+
+  const handleRedo = useCallback(() => {
+    if (redoStackRef.current.length === 0) return;
+    const current = previousTextRef.current;
+    const next = redoStackRef.current.pop()!;
+    undoStackRef.current.push(current);
+    previousTextRef.current = next;
+    setLocalText(next);
+    setUndoRedoVersion(v => v + 1);
+    if (visualAnnotationsRef.current.length > 0) {
+      const updated = calculateVisualOffsets(current, next, visualAnnotationsRef.current);
+      setVisualAnnotations(updated);
+      setHasUnsavedOffsets(true);
+    }
+    if (onTextChange) onTextChange(next);
+  }, [onTextChange, calculateVisualOffsets, setHasUnsavedOffsets]);
 
   // Text selection handler
   const handleTextSelect = useCallback((start: number, end: number, selectedText: string) => {
@@ -618,6 +692,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const handleResetFilters = useCallback(() => {
     setSelectedCategories([]);
     setSelectedSource(null);
+    setHiddenTypes(new Set());
   }, []);
 
   // Error handlers
@@ -709,7 +784,14 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
                 onLimitChange: setAnnotationsLimit,
                 onLoadMore: loadMoreAnnotations,
                 onResetFilters: handleResetFilters,
+                annotations,
+                hiddenTypes,
+                onTypeVisibilityToggle: handleTypeVisibilityToggle,
+                onShowAllTypes: handleShowAllTypes,
               }}
+              onUndo={handleUndo}
+              onRedo={handleRedo}
+              forceTextVersion={undoRedoVersion}
             />
           </ErrorBoundary>
         </div>
@@ -724,7 +806,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
             </div>
             <ErrorBoundary>
               <AnnotationPanel
-                annotations={annotations}
+                annotations={visibleAnnotations}
                 onAnnotationSelect={handleAnnotationSelect}
                 onAnnotationDelete={handleAnnotationDelete}
                 onAnnotationEdit={handleAnnotationEdit}
@@ -742,7 +824,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
             <ErrorBoundary>
               <RelationsPanel
                 relations={relations}
-                annotations={annotations}
                 onRelationDelete={handleRelationDelete}
                 onRelationEdit={handleRelationEdit}
               />

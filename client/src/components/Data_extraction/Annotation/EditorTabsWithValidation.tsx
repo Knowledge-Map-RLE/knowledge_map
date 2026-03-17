@@ -22,6 +22,10 @@ export interface FilterProps {
   onLimitChange: (limit: number) => void;
   onLoadMore: () => void;
   onResetFilters: () => void;
+  annotations: Annotation[];
+  hiddenTypes: Set<string>;
+  onTypeVisibilityToggle: (type: string, visible: boolean) => void;
+  onShowAllTypes: () => void;
 }
 
 interface EditorTabsWithValidationProps {
@@ -61,6 +65,9 @@ interface EditorTabsWithValidationProps {
   onRelationModeToggle?: () => void;
   onShowRelationsToggle?: () => void;
   onLineHeightToggle?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  forceTextVersion?: number;
 }
 
 const EditorTabsWithValidation = React.forwardRef<
@@ -105,6 +112,9 @@ const EditorTabsWithValidation = React.forwardRef<
       onRelationModeToggle,
       onShowRelationsToggle,
       onLineHeightToggle,
+      onUndo,
+      onRedo,
+      forceTextVersion,
     },
     ref
   ) => {
@@ -313,6 +323,9 @@ const EditorTabsWithValidation = React.forwardRef<
             onImportCSV={onImportCSV}
             onSaveForTests={onSaveForTests}
             onDownloadMarkdown={onDownloadMarkdown}
+            onUndo={onUndo}
+            onRedo={onRedo}
+            forceTextVersion={forceTextVersion}
           />
         </div>
 

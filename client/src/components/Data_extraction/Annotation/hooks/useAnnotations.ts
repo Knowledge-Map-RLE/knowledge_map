@@ -119,8 +119,13 @@ export const useAnnotations = ({
   }, [docId]);
 
   const removeAnnotation = useCallback(async (annotationId: string) => {
-    await deleteAnnotation(annotationId);
-    await loadAnnotations();
+    setAnnotations(prev => prev.filter(a => a.uid !== annotationId));
+    try {
+      await deleteAnnotation(annotationId);
+    } catch (error) {
+      await loadAnnotations(); // откат при ошибке
+      throw error;
+    }
   }, [loadAnnotations]);
 
   const editAnnotation = useCallback(async (annotationId: string, annotationType: string) => {

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { Annotation } from '../../../services/api';
 import { ANNOTATION_CATEGORIES } from './annotationTypes';
 
 interface AnnotationFiltersProps {
@@ -13,6 +14,10 @@ interface AnnotationFiltersProps {
   onLimitChange: (limit: number) => void;
   onLoadMore: () => void;
   onResetFilters: () => void;
+  annotations: Annotation[];
+  hiddenTypes: Set<string>;
+  onTypeVisibilityToggle: (type: string, visible: boolean) => void;
+  onShowAllTypes: () => void;
 }
 
 const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
@@ -27,6 +32,10 @@ const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
   onLimitChange,
   onLoadMore,
   onResetFilters,
+  annotations,
+  hiddenTypes,
+  onTypeVisibilityToggle,
+  onShowAllTypes,
 }) => {
   const handleCategoryToggle = (category: string, checked: boolean) => {
     if (checked) {
@@ -35,6 +44,20 @@ const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
       onCategoriesChange(selectedCategories.filter(c => c !== category));
     }
   };
+
+  // Подсчёт реальных типов из загруженных аннотаций
+  const typeCount = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const ann of annotations) {
+      counts[ann.annotation_type] = (counts[ann.annotation_type] || 0) + 1;
+    }
+    return counts;
+  }, [annotations]);
+
+  const sortedTypes = useMemo(() => Object.keys(typeCount).sort(), [typeCount]);
+
+  const hasHiddenTypes = hiddenTypes.size > 0;
+  const hasActiveFilters = selectedCategories.length > 0 || selectedSource !== null || hasHiddenTypes;
 
   return (
     <div style={{
@@ -50,6 +73,47 @@ const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
           </div>
         )}
       </div>
+
+      {/* Фильтр по типам из реальных аннотаций */}
+      {sortedTypes.length > 0 && (
+        <div style={{ marginBottom: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '5px' }}>
+            <label style={{ fontSize: '13px', fontWeight: 'bold' }}>
+              Типы в разметке:
+            </label>
+            {hasHiddenTypes && (
+              <button
+                onClick={onShowAllTypes}
+                style={{
+                  fontSize: '11px',
+                  padding: '2px 6px',
+                  backgroundColor: '#2196F3',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '3px',
+                  cursor: 'pointer',
+                }}
+              >
+                Показать все
+              </button>
+            )}
+          </div>
+          <div style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            {sortedTypes.map(type => (
+              <label key={type} style={{ fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input
+                  type="checkbox"
+                  checked={!hiddenTypes.has(type)}
+                  onChange={(e) => onTypeVisibilityToggle(type, e.target.checked)}
+                />
+                <span style={{ opacity: hiddenTypes.has(type) ? 0.5 : 1 }}>
+                  {type} <span style={{ color: '#888' }}>({typeCount[type]})</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Фильтр по источнику */}
       <div style={{ marginBottom: '10px' }}>
@@ -160,7 +224,7 @@ const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
       )}
 
       {/* Кнопка сброса фильтров */}
-      {(selectedCategories.length > 0 || selectedSource !== null) && (
+      {hasActiveFilters && (
         <button
           onClick={onResetFilters}
           style={{

@@ -1,10 +1,9 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { Annotation, AnnotationRelation, deleteAnnotationRelation } from '../../../services/api';
+import { AnnotationRelation } from '../../../services/api';
 import './RelationsPanel.css';
 
 interface RelationsPanelProps {
   relations: AnnotationRelation[];
-  annotations: Annotation[];
   onRelationDelete: (sourceId: string, targetId: string) => void;
   onRelationEdit: (relation: AnnotationRelation) => void;
   onAnnotationHighlight?: (annotationId: string | null) => void;
@@ -12,7 +11,6 @@ interface RelationsPanelProps {
 
 const RelationsPanel: React.FC<RelationsPanelProps> = ({
   relations,
-  annotations,
   onRelationDelete,
   onRelationEdit,
   onAnnotationHighlight,
@@ -30,11 +28,6 @@ const RelationsPanel: React.FC<RelationsPanelProps> = ({
     return !filterType || rel.relation_type === filterType;
   });
 
-  // Найти аннотацию по ID
-  const getAnnotation = (uid: string) => {
-    return annotations.find((ann) => ann.uid === uid);
-  };
-
   const handleDelete = async (sourceId: string, targetId: string) => {
     if (window.confirm('Удалить эту связь?')) {
       onRelationDelete(sourceId, targetId);
@@ -44,7 +37,7 @@ const RelationsPanel: React.FC<RelationsPanelProps> = ({
   // Виртуализация: показываем только видимые элементы
   const ITEM_HEIGHT = 180; // Примерная высота одного элемента связи
   const CONTAINER_HEIGHT = 600; // Высота контейнера
-  const OVERSCAN = 3; // Количество дополнительных элементов
+  const OVERSCAN = 5; // Количество дополнительных элементов
 
   const visibleRange = useMemo(() => {
     const startIndex = Math.max(0, Math.floor(scrollTop / ITEM_HEIGHT) - OVERSCAN);
@@ -92,19 +85,15 @@ const RelationsPanel: React.FC<RelationsPanelProps> = ({
         ) : (
           <div style={{ height: totalHeight, position: 'relative' }}>
             <div style={{ transform: `translateY(${offsetY}px)` }}>
-              {visibleItems.map((relation) => {
-                const sourceAnn = getAnnotation(relation.source_uid);
-                const targetAnn = getAnnotation(relation.target_uid);
-
-                if (!sourceAnn || !targetAnn) return null;
-
+              {visibleItems.map((relation, idx) => {
+                const itemKey = relation.relation_uid || `${relation.source_uid}-${relation.target_uid}-${idx}`;
                 return (
                   <div
-                    key={relation.relation_uid}
-                    className={`relation-item ${hoveredRelation === relation.relation_uid ? 'hovered' : ''}`}
+                    key={itemKey}
+                    className={`relation-item ${hoveredRelation === itemKey ? 'hovered' : ''}`}
                     style={{ minHeight: ITEM_HEIGHT }}
                     onMouseEnter={() => {
-                      setHoveredRelation(relation.relation_uid);
+                      setHoveredRelation(itemKey);
                       if (onAnnotationHighlight) {
                         onAnnotationHighlight(relation.source_uid);
                       }
@@ -140,8 +129,8 @@ const RelationsPanel: React.FC<RelationsPanelProps> = ({
                       <div className="annotation-box source-box">
                         <div className="annotation-label">Источник</div>
                         <div className="annotation-details">
-                          <span className="annotation-type">{sourceAnn.annotation_type}</span>
-                          <span className="annotation-text">"{sourceAnn.text}"</span>
+                          <span className="annotation-type">{relation.source_annotation_type ?? relation.source_uid}</span>
+                          <span className="annotation-text">"{relation.source_text ?? '—'}"</span>
                         </div>
                       </div>
 
@@ -150,8 +139,8 @@ const RelationsPanel: React.FC<RelationsPanelProps> = ({
                       <div className="annotation-box target-box">
                         <div className="annotation-label">Цель</div>
                         <div className="annotation-details">
-                          <span className="annotation-type">{targetAnn.annotation_type}</span>
-                          <span className="annotation-text">"{targetAnn.text}"</span>
+                          <span className="annotation-type">{relation.target_annotation_type ?? relation.target_uid}</span>
+                          <span className="annotation-text">"{relation.target_text ?? '—'}"</span>
                         </div>
                       </div>
                     </div>

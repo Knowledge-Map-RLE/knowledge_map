@@ -20,22 +20,89 @@ interface TextAnnotatorProps {
   selectedRelation?: AnnotationRelation | null;
   onRelationClick?: (relation: AnnotationRelation) => void;
   onRelationDelete?: (sourceId: string, targetId: string) => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  forceTextVersion?: number;
 }
 
-interface AnnotatedSegment {
-  text: string;
-  start: number;
-  end: number;
-  annotations: Annotation[];
-}
+// ── HTML-утилиты ──────────────────────────────────────────────────────────────
 
-// Утилита для преобразования hex в rgba
-const hexToRgba = (hex: string, alpha: number): string => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const escapeAttr = (s: string) =>
+  s.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+// ── Утилиты позиции курсора ───────────────────────────────────────────────────
+
+const getCaretPosition = (el: HTMLElement): number => {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return 0;
+  const range = sel.getRangeAt(0).cloneRange();
+  range.selectNodeContents(el);
+  range.setEnd(sel.getRangeAt(0).endContainer, sel.getRangeAt(0).endOffset);
+  return range.toString().length;
 };
+
+const setCaretPosition = (el: HTMLElement, pos: number) => {
+  const sel = window.getSelection();
+  if (!sel) return;
+  let currentPos = 0;
+  let done = false;
+  const walk = (node: Node) => {
+    if (done) return;
+    if (node.nodeType === Node.TEXT_NODE) {
+      const len = node.textContent?.length || 0;
+      if (currentPos + len >= pos) {
+        const range = document.createRange();
+        range.setStart(node, pos - currentPos);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        done = true;
+      }
+      currentPos += len;
+    } else {
+      node.childNodes.forEach(walk);
+    }
+  };
+  walk(el);
+};
+
+// ── Построитель HTML с аннотациями ────────────────────────────────────────────
+
+const buildAnnotatedHTML = (txt: string, anns: Annotation[]): string => {
+  if (!txt) return '';
+  if (anns.length === 0) return escapeHtml(txt);
+
+  const boundaries = new Set<number>([0, txt.length]);
+  anns.forEach(a => {
+    boundaries.add(a.start_offset);
+    boundaries.add(a.end_offset);
+  });
+  const sorted = Array.from(boundaries).sort((a, b) => a - b);
+
+  let html = '';
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const start = sorted[i];
+    const end = sorted[i + 1];
+    const chunk = escapeHtml(txt.substring(start, end));
+    const segAnns = anns.filter(a => a.start_offset <= start && a.end_offset >= end);
+    if (segAnns.length === 0) {
+      html += chunk;
+    } else {
+      const ann = segAnns[0];
+      const r = parseInt(ann.color.slice(1, 3), 16);
+      const g = parseInt(ann.color.slice(3, 5), 16);
+      const b = parseInt(ann.color.slice(5, 7), 16);
+      const title = segAnns.map(a => `${a.annotation_type} (${a.text})`).join('\n');
+      html += `<span data-ann="${escapeAttr(ann.uid)}" style="background-color:rgba(${r},${g},${b},0.3);border-radius:2px;cursor:pointer;" title="${escapeAttr(title)}">${chunk}</span>`;
+    }
+  }
+  return html;
+};
+
+// ── Основной компонент ────────────────────────────────────────────────────────
 
 const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   text,
@@ -55,194 +122,119 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   selectedRelation = null,
   onRelationClick,
   onRelationDelete,
+  onUndo,
+  onRedo,
+  forceTextVersion,
 }, forwardedRef) => {
   const [selection, setSelection] = useState<{ start: number; end: number } | null>(null);
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null);
   const [relationSourceId, setRelationSourceId] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; relation: AnnotationRelation } | null>(null);
+
   const containerRef = (forwardedRef as React.RefObject<HTMLDivElement>) || useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
-  // Локальное состояние текста для предотвращения потери фокуса
-  const [localText, setLocalText] = useState(text);
-  const cursorPositionRef = useRef<number | null>(null);
-  const scrollPositionRef = useRef<number | null>(null);
-  const windowScrollPositionRef = useRef<{ x: number; y: number } | null>(null);
-  const isUpdatingRef = useRef(false);
+  // Локальный текст хранится в ref — без setState, чтобы не вызывать ре-рендер при вводе
+  const localTextRef = useRef<string>(text);
 
-  // Состояние для отслеживания выбранных индексов в перекрывающихся аннотациях
-  // Ключ - это "start-end", значение - индекс в массиве аннотаций сегмента
-  const [segmentSelectedIndex, setSegmentSelectedIndex] = useState<Record<string, number>>({});
+  // Актуальные аннотации в ref — чтобы debounce и undo/redo всегда видели свежие данные
+  const annotationsRef = useRef<Annotation[]>(annotations);
+  annotationsRef.current = annotations;
 
-  // Не используем жесткое ограничение сегментов, вместо этого оптимизируем через объединение
+  // Актуальные колбэки в ref — capture-обработчик всегда видит свежие функции
+  const onUndoRef = useRef(onUndo);
+  onUndoRef.current = onUndo;
+  const onRedoRef = useRef(onRedo);
+  onRedoRef.current = onRedo;
 
-  // Синхронизация внешнего text с локальным состоянием
-  // Обновляем только когда элемент не в фокусе, чтобы не нарушать редактирование
-  useEffect(() => {
-    if (!isUpdatingRef.current && text !== localText) {
-      const hasFocus = textRef.current && document.activeElement === textRef.current;
-      if (!hasFocus) {
-        setLocalText(text);
-        // Сбрасываем состояние выбора сегментов при изменении текста
-        setSegmentSelectedIndex({});
+  // Ref для таймера debounce
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── applyAnnotatedHTML ──────────────────────────────────────────────────────
+
+  const applyAnnotatedHTML = useCallback((html: string) => {
+    if (!textRef.current) return;
+    const hasFocus = document.activeElement === textRef.current;
+    const pos = hasFocus ? getCaretPosition(textRef.current) : null;
+    textRef.current.innerHTML = html;
+    if (hasFocus) {
+      // innerHTML сбрасывает фокус — возвращаем его обратно
+      textRef.current.focus();
+      if (pos !== null) {
+        setCaretPosition(textRef.current, pos);
       }
     }
-  }, [text, localText]);
+  }, []);
 
-  // Восстановление позиции курсора и прокрутки после обновления
+  // ── scheduleAnnotationRefresh (debounce 800ms) ──────────────────────────────
+
+  const scheduleAnnotationRefresh = useCallback(() => {
+    if (debounceTimerRef.current !== null) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    debounceTimerRef.current = setTimeout(() => {
+      debounceTimerRef.current = null;
+      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current));
+    }, 800);
+  }, [applyAnnotatedHTML]);
+
+  // ── useEffect: монтирование — рендерим начальный HTML ──────────────────────
+
   useEffect(() => {
-    if (editable && (cursorPositionRef.current !== null || scrollPositionRef.current !== null || windowScrollPositionRef.current !== null) && textRef.current) {
-      const restore = () => {
-        try {
-          // Восстановление прокрутки окна
-          if (windowScrollPositionRef.current !== null) {
-            window.scrollTo(windowScrollPositionRef.current.x, windowScrollPositionRef.current.y);
-            windowScrollPositionRef.current = null;
-          }
-
-          // Восстановление прокрутки в контейнере (где overflow: auto)
-          if (scrollPositionRef.current !== null && containerRef.current) {
-            containerRef.current.scrollTop = scrollPositionRef.current;
-            scrollPositionRef.current = null;
-          }
-
-          // Восстановление курсора
-          if (cursorPositionRef.current !== null) {
-            const selection = window.getSelection();
-            if (!selection || !textRef.current) return;
-
-            const targetPosition = cursorPositionRef.current!;
-            let currentPosition = 0;
-            let targetNode: Node | null = null;
-            let targetOffset = 0;
-
-            // Рекурсивная функция для поиска позиции курсора в дереве DOM
-            const findNodeAtPosition = (node: Node): boolean => {
-              if (node.nodeType === Node.TEXT_NODE) {
-                const textLength = node.textContent?.length || 0;
-                if (currentPosition + textLength >= targetPosition) {
-                  targetNode = node;
-                  targetOffset = targetPosition - currentPosition;
-                  return true;
-                }
-                currentPosition += textLength;
-              } else if (node.nodeType === Node.ELEMENT_NODE) {
-                for (let i = 0; i < node.childNodes.length; i++) {
-                  if (findNodeAtPosition(node.childNodes[i])) {
-                    return true;
-                  }
-                }
-              }
-              return false;
-            };
-
-            findNodeAtPosition(textRef.current);
-
-            if (targetNode) {
-              const range = document.createRange();
-              range.setStart(targetNode, Math.min(targetOffset, targetNode.textContent?.length || 0));
-              range.collapse(true);
-              selection.removeAllRanges();
-              selection.addRange(range);
-            }
-
-            cursorPositionRef.current = null;
-          }
-        } catch (e) {
-          // Игнорируем ошибки восстановления курсора
-          cursorPositionRef.current = null;
-          scrollPositionRef.current = null;
-          windowScrollPositionRef.current = null;
-        }
-      };
-
-      // Небольшая задержка для завершения рендера
-      requestAnimationFrame(restore);
+    if (editable && textRef.current) {
+      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current));
     }
-  }, [localText, editable]);
+    // Только при монтировании
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editable]);
 
-  // Разбить текст на сегменты с учетом аннотаций
-  const segments = useMemo(() => {
-    if (!localText || annotations.length === 0) {
-      return [{ text: localText, start: 0, end: localText.length, annotations: [] }];
+  // ── useEffect: смена annotations снаружи — немедленно перерисовываем ───────
+
+  useEffect(() => {
+    if (editable && textRef.current) {
+      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [annotations]); // annotations в deps — чтобы эффект срабатывал при их смене
 
-    // Создаем список всех границ (начало и конец аннотаций)
-    const boundaries = new Set<number>([0, localText.length]);
-    annotations.forEach(ann => {
-      boundaries.add(ann.start_offset);
-      boundaries.add(ann.end_offset);
-    });
+  // ── useEffect: смена text снаружи (не в фокусе) ────────────────────────────
 
-    const sortedBoundaries = Array.from(boundaries).sort((a, b) => a - b);
-    const result: AnnotatedSegment[] = [];
-
-    for (let i = 0; i < sortedBoundaries.length - 1; i++) {
-      const start = sortedBoundaries[i];
-      const end = sortedBoundaries[i + 1];
-      const segmentText = localText.substring(start, end);
-
-      // Найти все аннотации, которые покрывают этот сегмент
-      const segmentAnnotations = annotations.filter(
-        ann => ann.start_offset <= start && ann.end_offset >= end
-      );
-
-      result.push({
-        text: segmentText,
-        start,
-        end,
-        annotations: segmentAnnotations,
-      });
-    }
-
-    // Оптимизация: объединяем соседние сегменты без аннотаций
-    const optimized: AnnotatedSegment[] = [];
-    for (let i = 0; i < result.length; i++) {
-      const segment = result[i];
-
-      if (segment.annotations.length === 0) {
-        // Сегмент без аннотаций - пытаемся объединить с предыдущим
-        if (optimized.length > 0 && optimized[optimized.length - 1].annotations.length === 0) {
-          // Предыдущий сегмент тоже без аннотаций - объединяем
-          const prev = optimized[optimized.length - 1];
-          prev.text += segment.text;
-          prev.end = segment.end;
-        } else {
-          // Просто добавляем
-          optimized.push(segment);
-        }
-      } else {
-        // Сегмент с аннотациями - всегда добавляем отдельно
-        optimized.push(segment);
+  useEffect(() => {
+    const hasFocus = textRef.current && document.activeElement === textRef.current;
+    if (!hasFocus) {
+      localTextRef.current = text;
+      if (editable && textRef.current) {
+        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
 
-    console.log(`Сегментов: ${result.length} -> оптимизировано: ${optimized.length}`);
-    return optimized;
-  }, [localText, annotations]);
+  // ── useEffect: forceTextVersion (undo/redo) — немедленно, без debounce ─────
 
-  // Обработка выделения текста
+  useEffect(() => {
+    if (forceTextVersion !== undefined && forceTextVersion > 0) {
+      localTextRef.current = text;
+      if (textRef.current) {
+        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceTextVersion]);
+
+  // ── Обработка выделения текста ─────────────────────────────────────────────
+
   const handleMouseUp = useCallback((event: MouseEvent) => {
-    // Проверяем, что клик был внутри нашего компонента
-    if (!textRef.current || !textRef.current.contains(event.target as Node)) {
-      return;
-    }
-
+    if (!textRef.current || !textRef.current.contains(event.target as Node)) return;
     if (!editable || relationMode) return;
 
-    // Даём браузеру время завершить выделение
     setTimeout(() => {
       const sel = window.getSelection();
       if (!sel || sel.isCollapsed || !textRef.current) return;
 
       const range = sel.getRangeAt(0);
+      if (!textRef.current.contains(range.commonAncestorContainer)) return;
 
-      // Проверяем, что выделение внутри нашего компонента
-      if (!textRef.current.contains(range.commonAncestorContainer)) {
-        return;
-      }
-
-      // Вычисляем офсеты относительно всего текста
       const preSelectionRange = range.cloneRange();
       preSelectionRange.selectNodeContents(textRef.current);
       preSelectionRange.setEnd(range.startContainer, range.startOffset);
@@ -257,69 +249,58 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     }, 10);
   }, [editable, relationMode, onTextSelect]);
 
-  // Обработка клика на аннотацию с поддержкой циклического переключения
-  const handleAnnotationClick = (segment: AnnotatedSegment, event: React.MouseEvent) => {
-    event.stopPropagation();
+  // ── Наведение на аннотацию ─────────────────────────────────────────────────
 
-    const segmentKey = `${segment.start}-${segment.end}`;
-    const currentIndex = segmentSelectedIndex[segmentKey] || 0;
-
-    if (relationMode) {
-      const selectedAnnotation = segment.annotations[currentIndex];
-      // Режим создания связей
-      if (!relationSourceId) {
-        // Выбрать источник
-        setRelationSourceId(selectedAnnotation.uid);
-      } else if (relationSourceId !== selectedAnnotation.uid) {
-        // Создать связь
-        if (onRelationCreate) {
-          onRelationCreate(relationSourceId, selectedAnnotation.uid);
-        }
-        setRelationSourceId(null);
-      }
-    } else {
-      // Обычный режим - циклически переключаемся между аннотациями
-      const nextIndex = (currentIndex + 1) % segment.annotations.length;
-      setSegmentSelectedIndex({
-        ...segmentSelectedIndex,
-        [segmentKey]: nextIndex,
-      });
-
-      // Передаем выбранную аннотацию
-      const selectedAnnotation = segment.annotations[nextIndex];
-      onAnnotationClick(selectedAnnotation);
-    }
-  };
-
-  // Обработка наведения на аннотацию без debounce для быстрой реакции UI
   const handleAnnotationHover = useCallback((annotation: Annotation | null) => {
     setHoveredAnnotation(annotation);
     onAnnotationHover(annotation);
   }, [onAnnotationHover]);
 
-  // Сброс режима связей при изменении флага
-  useEffect(() => {
-    if (!relationMode) {
-      setRelationSourceId(null);
-    }
-  }, [relationMode]);
+  // ── useEffect: глобальный mouseup ──────────────────────────────────────────
 
-  // Сброс выбора сегментов при изменении аннотаций
-  useEffect(() => {
-    setSegmentSelectedIndex({});
-  }, [annotations]);
-
-  // Добавляем глобальный обработчик выделения текста
   useEffect(() => {
     if (!editable) return;
-
     document.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
+    return () => document.removeEventListener('mouseup', handleMouseUp);
   }, [editable, handleMouseUp]);
 
-  // Закрываем контекстное меню при клике вне его
+  // ── useEffect: сброс режима связей ─────────────────────────────────────────
+
+  useEffect(() => {
+    if (!relationMode) setRelationSourceId(null);
+  }, [relationMode]);
+
+  // ── useEffect: перехват Ctrl+Z / Ctrl+Shift+Z на фазе capture ─────────────
+  // Нужно capture=true, иначе браузер выполняет native undo в contentEditable
+  // синхронно до React-обработчика
+
+  useEffect(() => {
+    if (!editable) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!textRef.current) return;
+      // Проверяем что фокус на нашем div или внутри него
+      const active = document.activeElement;
+      if (active !== textRef.current && !textRef.current.contains(active)) return;
+      if (e.ctrlKey && (e.code === 'KeyZ') && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        onUndoRef.current?.();
+      } else if (e.ctrlKey && (e.code === 'KeyZ') && e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        onRedoRef.current?.();
+      } else if (e.ctrlKey && e.code === 'KeyY') {
+        e.preventDefault();
+        e.stopPropagation();
+        onRedoRef.current?.();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown, { capture: true });
+    return () => document.removeEventListener('keydown', handleKeyDown, { capture: true });
+  }, [editable]);
+
+  // ── useEffect: контекстное меню ────────────────────────────────────────────
+
   useEffect(() => {
     const handleClick = () => setContextMenu(null);
     if (contextMenu) {
@@ -328,58 +309,44 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     }
   }, [contextMenu]);
 
-  // Мемоизированный рендер сегмента текста
-  const renderSegment = useCallback((segment: AnnotatedSegment, segmentKey: string) => {
-    if (segment.annotations.length === 0) {
-      // Обычный текст без аннотаций
-      return <span key={segmentKey}>{segment.text}</span>;
+  // ── Для read-only режима: сегменты для рендера React children ──────────────
+
+  const segments = useMemo(() => {
+    if (!text || annotations.length === 0) {
+      return [{ text, start: 0, end: text.length, annotations: [] as Annotation[] }];
     }
-
-    // Получаем текущий выбранный индекс для этого сегмента
-    const currentIndex = segmentSelectedIndex[segmentKey] || 0;
-
-    // Проверяем, что индекс валиден
-    const safeIndex = currentIndex < segment.annotations.length ? currentIndex : 0;
-    const selectedAnnotation = segment.annotations[safeIndex];
-
-    // Дополнительная проверка на случай, если аннотация undefined
-    if (!selectedAnnotation) {
-      return <span key={segmentKey}>{segment.text}</span>;
+    const boundaries = new Set<number>([0, text.length]);
+    annotations.forEach(ann => {
+      boundaries.add(ann.start_offset);
+      boundaries.add(ann.end_offset);
+    });
+    const sortedBoundaries = Array.from(boundaries).sort((a, b) => a - b);
+    const result: { text: string; start: number; end: number; annotations: Annotation[] }[] = [];
+    for (let i = 0; i < sortedBoundaries.length - 1; i++) {
+      const start = sortedBoundaries[i];
+      const end = sortedBoundaries[i + 1];
+      result.push({
+        text: text.substring(start, end),
+        start,
+        end,
+        annotations: annotations.filter(ann => ann.start_offset <= start && ann.end_offset >= end),
+      });
     }
+    // Объединяем соседние сегменты без аннотаций
+    const optimized: typeof result = [];
+    for (const seg of result) {
+      if (seg.annotations.length === 0 && optimized.length > 0 && optimized[optimized.length - 1].annotations.length === 0) {
+        const prev = optimized[optimized.length - 1];
+        prev.text += seg.text;
+        prev.end = seg.end;
+      } else {
+        optimized.push(seg);
+      }
+    }
+    return optimized;
+  }, [text, annotations]);
 
-    const isHovered = hoveredAnnotation?.uid === selectedAnnotation.uid;
-    const isRelationSource = relationSourceId === selectedAnnotation.uid;
-    const hasMultipleAnnotations = segment.annotations.length > 1;
-
-    const style: React.CSSProperties = {
-      backgroundColor: hexToRgba(selectedAnnotation.color, 0.2),
-      cursor: relationMode ? 'crosshair' : 'pointer',
-      padding: '2px 0',
-      borderRadius: '2px',
-      position: 'relative',
-      border: isHovered ? '1px solid #000' : '1px solid transparent',
-      outline: isRelationSource ? '2px solid #2196f3' : undefined,
-      boxShadow: hasMultipleAnnotations ? '0 0 0 1px rgba(0,0,0,0.2)' : undefined,
-    };
-
-    const title = segment.annotations
-      .map((ann, idx) => `${idx === safeIndex ? '→ ' : '  '}${ann.annotation_type} (${ann.text})`)
-      .join('\n');
-
-    return (
-      <span
-        key={segmentKey}
-        style={style}
-        title={title}
-        onClick={(e) => handleAnnotationClick(segment, e)}
-        onMouseEnter={() => handleAnnotationHover(selectedAnnotation)}
-        onMouseLeave={() => handleAnnotationHover(null)}
-        data-annotation-id={selectedAnnotation.uid}
-      >
-        {segment.text}
-      </span>
-    );
-  }, [segmentSelectedIndex, hoveredAnnotation, relationSourceId, relationMode]);
+  // ── JSX ────────────────────────────────────────────────────────────────────
 
   return (
     <div
@@ -389,43 +356,54 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     >
       <div style={{ position: 'relative' }}>
         <div
-          key={`text-${text.length}-${annotations.length}`}
           ref={textRef}
           className="annotated-text"
           contentEditable={editable}
           suppressContentEditableWarning
           onInput={(e) => {
             if (editable && onTextChange) {
-              // Сохраняем позицию прокрутки окна
-              windowScrollPositionRef.current = {
-                x: window.scrollX || window.pageXOffset,
-                y: window.scrollY || window.pageYOffset
-              };
-
-              // Сохраняем позицию прокрутки из контейнера (где overflow: auto)
-              if (containerRef.current) {
-                scrollPositionRef.current = containerRef.current.scrollTop;
-              }
-
-              // Сохраняем позицию курсора
-              const selection = window.getSelection();
-              if (selection && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(e.currentTarget);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                cursorPositionRef.current = preCaretRange.toString().length;
-              }
-
               const newText = e.currentTarget.textContent || '';
-              isUpdatingRef.current = true;
-              setLocalText(newText);
+              localTextRef.current = newText;
               onTextChange(newText);
-
-              // Сбрасываем флаг после небольшой задержки
-              setTimeout(() => {
-                isUpdatingRef.current = false;
-              }, 50);
+              scheduleAnnotationRefresh();
+            }
+          }}
+          onClick={(e) => {
+            if (!editable) return;
+            const target = e.target as HTMLElement;
+            const annId = target.dataset.ann;
+            if (annId) {
+              const ann = annotations.find(a => a.uid === annId);
+              if (ann) {
+                if (relationMode) {
+                  if (!relationSourceId) {
+                    setRelationSourceId(ann.uid);
+                  } else if (relationSourceId !== ann.uid) {
+                    if (onRelationCreate) onRelationCreate(relationSourceId, ann.uid);
+                    setRelationSourceId(null);
+                  }
+                } else {
+                  onAnnotationClick(ann);
+                }
+              }
+            }
+          }}
+          onMouseMove={(e) => {
+            if (!editable) return;
+            const target = e.target as HTMLElement;
+            const annId = target.dataset.ann;
+            if (annId) {
+              const ann = annotations.find(a => a.uid === annId);
+              if (ann && hoveredAnnotation?.uid !== ann.uid) {
+                handleAnnotationHover(ann);
+              }
+            } else if (hoveredAnnotation !== null) {
+              handleAnnotationHover(null);
+            }
+          }}
+          onMouseLeave={() => {
+            if (editable && hoveredAnnotation !== null) {
+              handleAnnotationHover(null);
             }
           }}
           style={{
@@ -435,14 +413,59 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
             fontFamily: 'monospace',
             padding: '10px',
             userSelect: relationMode ? 'none' : 'text',
-            willChange: 'contents', // Оптимизация для браузера
+            willChange: 'contents',
             outline: editable ? '1px solid #ccc' : 'none',
             backgroundColor: editable ? '#fafafa' : 'transparent',
           }}
         >
-          {segments.map((segment, index) => {
+          {!editable && segments.map((segment) => {
             const segmentKey = `seg-${segment.start}-${segment.end}`;
-            return renderSegment(segment, segmentKey);
+            if (segment.annotations.length === 0) {
+              return <span key={segmentKey}>{segment.text}</span>;
+            }
+            const ann = segment.annotations[0];
+            const r = parseInt(ann.color.slice(1, 3), 16);
+            const g = parseInt(ann.color.slice(3, 5), 16);
+            const b = parseInt(ann.color.slice(5, 7), 16);
+            const isHovered = hoveredAnnotation?.uid === ann.uid;
+            const isRelationSource = relationSourceId === ann.uid;
+            const title = segment.annotations
+              .map(a => `${a.annotation_type} (${a.text})`)
+              .join('\n');
+            return (
+              <span
+                key={segmentKey}
+                data-annotation-id={ann.uid}
+                style={{
+                  backgroundColor: `rgba(${r},${g},${b},0.2)`,
+                  cursor: relationMode ? 'crosshair' : 'pointer',
+                  padding: '2px 0',
+                  borderRadius: '2px',
+                  position: 'relative',
+                  border: isHovered ? '1px solid #000' : '1px solid transparent',
+                  outline: isRelationSource ? '2px solid #2196f3' : undefined,
+                  boxShadow: segment.annotations.length > 1 ? '0 0 0 1px rgba(0,0,0,0.2)' : undefined,
+                }}
+                title={title}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (relationMode) {
+                    if (!relationSourceId) {
+                      setRelationSourceId(ann.uid);
+                    } else if (relationSourceId !== ann.uid) {
+                      if (onRelationCreate) onRelationCreate(relationSourceId, ann.uid);
+                      setRelationSourceId(null);
+                    }
+                  } else {
+                    onAnnotationClick(ann);
+                  }
+                }}
+                onMouseEnter={() => handleAnnotationHover(ann)}
+                onMouseLeave={() => handleAnnotationHover(null)}
+              >
+                {segment.text}
+              </span>
+            );
           })}
         </div>
 
@@ -480,12 +503,8 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
                 fontSize: '14px',
                 color: '#f44336',
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#f5f5f5';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f5f5f5'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
               onClick={() => {
                 if (onRelationDelete) {
                   onRelationDelete(contextMenu.relation.source_uid, contextMenu.relation.target_uid);
@@ -522,107 +541,73 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
 
 TextAnnotator.displayName = 'TextAnnotator';
 
-// Компонент для отдельной связи (без memo для гарантированного обновления)
+// ── RelationLine ──────────────────────────────────────────────────────────────
+
 const RelationLine: React.FC<{
   relation: AnnotationRelation;
   isHighlighted: boolean;
   isSelected: boolean;
   containerRef: React.RefObject<HTMLDivElement>;
-  annotationsVersion: number; // Добавляем версию для принудительного обновления
+  annotationsVersion: number;
   onRelationClick?: (relation: AnnotationRelation) => void;
   onRelationContextMenu?: (relation: AnnotationRelation, x: number, y: number) => void;
 }> = ({ relation, isHighlighted, isSelected, containerRef, annotationsVersion, onRelationClick, onRelationContextMenu }) => {
   const [, forceUpdate] = useState({});
-  const sourceId = relation.source_uid;
-  const targetId = relation.target_uid;
 
-  // Принудительно обновляем компонент после монтирования для поиска элементов
   useEffect(() => {
-    // Небольшая задержка чтобы дать React время отрендерить DOM
     const timer = setTimeout(() => forceUpdate({}), 10);
     return () => clearTimeout(timer);
   }, [annotationsVersion]);
 
   const sourceElement = containerRef.current?.querySelector(
-    `[data-annotation-id="${sourceId}"]`
-  ) as HTMLElement;
+    `[data-annotation-id="${relation.source_uid}"]`
+  ) as HTMLElement | null;
 
   const targetElement = containerRef.current?.querySelector(
-    `[data-annotation-id="${targetId}"]`
-  ) as HTMLElement;
+    `[data-annotation-id="${relation.target_uid}"]`
+  ) as HTMLElement | null;
 
-  if (!sourceElement || !targetElement || !containerRef.current) {
-    return null;
-  }
+  if (!sourceElement || !targetElement || !containerRef.current) return null;
 
   const sourceRect = sourceElement.getBoundingClientRect();
   const targetRect = targetElement.getBoundingClientRect();
   const containerRect = containerRef.current.getBoundingClientRect();
 
-  // Стрелка всегда идёт от source к target - используем относительные координаты
   const x1 = sourceRect.left + sourceRect.width / 2 - containerRect.left;
   const y1 = sourceRect.top + sourceRect.height / 2 - containerRect.top;
   const x2 = targetRect.left + targetRect.width / 2 - containerRect.left;
   const y2 = targetRect.top + targetRect.height / 2 - containerRect.top;
 
-  // Проверка корректности координат
-  if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2)) {
-    return null;
-  }
+  if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2)) return null;
 
-  // 5-точечная ломаная линия для лучшей видимости связей
-  // Точка 1: центр исходного слова (x1, y1)
-  // Точка 2: 20px выше центра исходного слова
   const upOffset = 20;
   const point2_x = x1;
   const point2_y = y1 - upOffset;
-
-  // Точка 3: 20px выше центра целевого слова (горизонтальная линия)
   const point3_x = x2;
   const point3_y = y2 - upOffset;
 
-  // Точка 4: совпадает с точкой 3 (для будущей гибкости)
-  // Точка 5: центр целевого слова (x2, y2) со стрелкой
-
-  // Выделяем связи при наведении более ярким цветом и толще
-  // Выбранная связь имеет приоритет над наведением
   let strokeColor = '#2196f3';
   let strokeWidth = 2;
   let opacity = 0.4;
 
   if (isSelected) {
-    strokeColor = '#4caf50'; // Зелёный для выбранной связи
+    strokeColor = '#4caf50';
     strokeWidth = 3;
     opacity = 1.0;
   } else if (isHighlighted) {
-    strokeColor = '#ff5722'; // Оранжевый при наведении
+    strokeColor = '#ff5722';
     strokeWidth = 3;
     opacity = 0.9;
   }
 
   const markerEnd = isSelected ? 'url(#arrowhead-selected)' :
-                    isHighlighted ? 'url(#arrowhead-highlighted)' :
-                    'url(#arrowhead)';
-
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onRelationClick) {
-      onRelationClick(relation);
-    }
-  };
-
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onRelationContextMenu) {
-      onRelationContextMenu(relation, e.clientX, e.clientY);
-    }
-  };
+    isHighlighted ? 'url(#arrowhead-highlighted)' :
+      'url(#arrowhead)';
 
   return (
     <g
-      onClick={handleClick}
-      onContextMenu={handleContextMenu}
+      onClick={(e) => { e.stopPropagation(); onRelationClick?.(relation); }}
+      onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); onRelationContextMenu?.(relation, e.clientX, e.clientY); }}
       style={{ cursor: 'pointer' }}
     >
       <path
@@ -652,7 +637,8 @@ const RelationLine: React.FC<{
 
 RelationLine.displayName = 'RelationLine';
 
-// Мемоизированный компонент для отображения связей при наведении или всех связей
+// ── RelationsOverlay ──────────────────────────────────────────────────────────
+
 const RelationsOverlay: React.FC<{
   annotation: Annotation | null;
   relations: AnnotationRelation[];
@@ -662,36 +648,25 @@ const RelationsOverlay: React.FC<{
   onRelationClick?: (relation: AnnotationRelation) => void;
   onRelationContextMenu?: (relation: AnnotationRelation, x: number, y: number) => void;
 }> = memo(({ annotation, relations, annotations, containerRef, selectedRelation, onRelationClick, onRelationContextMenu }) => {
-  // Версия аннотаций для принудительного обновления (основана на длине массива)
   const annotationsVersion = annotations.length;
-
-  // Максимальное количество связей для рендеринга (для производительности)
   const MAX_RELATIONS = 1000;
 
-  // Если аннотация указана - показываем только её связи
-  // Иначе показываем все связи для видимых аннотаций
   const relevantRelations = useMemo(() => {
     let filtered: AnnotationRelation[];
-
     if (annotation) {
-      // При наведении - только связи для этой аннотации
       filtered = relations.filter(
         rel => rel.source_uid === annotation.uid || rel.target_uid === annotation.uid
       );
     } else {
-      // При показе всех связей - только для загруженных аннотаций
       const annotationIds = new Set(annotations.map(a => a.uid));
       filtered = relations.filter(
         rel => annotationIds.has(rel.source_uid) && annotationIds.has(rel.target_uid)
       );
     }
-
-    // Ограничиваем количество связей для производительности
     if (filtered.length > MAX_RELATIONS) {
       console.warn(`Слишком много связей (${filtered.length}), показываем только ${MAX_RELATIONS}`);
       return filtered.slice(0, MAX_RELATIONS);
     }
-
     return filtered;
   }, [annotation, relations, annotations]);
 
@@ -705,28 +680,25 @@ const RelationsOverlay: React.FC<{
         left: 0,
         width: '100%',
         height: '100%',
-        pointerEvents: 'none', // SVG не принимает события, только его дочерние элементы
+        pointerEvents: 'none',
         zIndex: 1000,
-        transform: 'translateZ(0)', // GPU-ускорение
-        willChange: 'transform', // Подсказка браузеру для оптимизации
+        transform: 'translateZ(0)',
+        willChange: 'transform',
       }}
     >
       {relevantRelations.map((relation) => {
-        const isHighlighted = annotation && (
-          relation.source_uid === annotation.uid ||
-          relation.target_uid === annotation.uid
+        const isHighlighted = !!annotation && (
+          relation.source_uid === annotation.uid || relation.target_uid === annotation.uid
         );
-
-        const isSelected = selectedRelation &&
+        const isSelected = !!selectedRelation &&
           selectedRelation.source_uid === relation.source_uid &&
           selectedRelation.target_uid === relation.target_uid;
-
         return (
           <RelationLine
             key={`${relation.source_uid}-${relation.target_uid}`}
             relation={relation}
-            isHighlighted={!!isHighlighted}
-            isSelected={!!isSelected}
+            isHighlighted={isHighlighted}
+            isSelected={isSelected}
             containerRef={containerRef}
             annotationsVersion={annotationsVersion}
             onRelationClick={onRelationClick}
@@ -735,34 +707,13 @@ const RelationsOverlay: React.FC<{
         );
       })}
       <defs>
-        <marker
-          id="arrowhead"
-          markerWidth="10"
-          markerHeight="10"
-          refX="9"
-          refY="3"
-          orient="auto"
-        >
+        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
           <polygon points="0 0, 10 3, 0 6" fill="#2196f3" opacity="0.4" />
         </marker>
-        <marker
-          id="arrowhead-highlighted"
-          markerWidth="10"
-          markerHeight="10"
-          refX="9"
-          refY="3"
-          orient="auto"
-        >
+        <marker id="arrowhead-highlighted" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
           <polygon points="0 0, 10 3, 0 6" fill="#ff5722" opacity="0.9" />
         </marker>
-        <marker
-          id="arrowhead-selected"
-          markerWidth="10"
-          markerHeight="10"
-          refX="9"
-          refY="3"
-          orient="auto"
-        >
+        <marker id="arrowhead-selected" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
           <polygon points="0 0, 10 3, 0 6" fill="#4caf50" opacity="1.0" />
         </marker>
       </defs>

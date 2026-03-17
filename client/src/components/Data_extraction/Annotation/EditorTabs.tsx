@@ -33,6 +33,9 @@ interface EditorTabsProps {
   onImportCSV?: (file: File) => void;
   onSaveForTests?: () => void;
   onDownloadMarkdown?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  forceTextVersion?: number;
 }
 
 const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
@@ -66,6 +69,9 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onImportCSV,
   onSaveForTests,
   onDownloadMarkdown,
+  onUndo,
+  onRedo,
+  forceTextVersion,
 }, ref) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -310,6 +316,9 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
           selectedRelation={selectedRelation}
           onRelationClick={onRelationClick}
           onRelationDelete={onRelationDelete}
+          onUndo={onUndo}
+          onRedo={onRedo}
+          forceTextVersion={forceTextVersion}
         />
       </div>
     </div>

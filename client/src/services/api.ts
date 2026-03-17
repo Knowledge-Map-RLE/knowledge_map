@@ -411,6 +411,11 @@ export interface AnnotationRelation {
   relation_type: string;
   created_date?: string;
   metadata?: Record<string, any>;
+  // Денормализованные поля для отображения (заполняются на клиенте)
+  source_annotation_type?: string;
+  source_text?: string;
+  target_annotation_type?: string;
+  target_text?: string;
 }
 
 export interface CreateAnnotationRequest {
@@ -586,7 +591,9 @@ export async function createAnnotationRelation(sourceId: string, request: Create
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${await res.text()}`);
   }
-  return res.json();
+  const data = await res.json();
+  // Бэкенд возвращает {success: true, relation: {...}} — извлекаем вложенный объект
+  return data.relation ?? data;
 }
 
 // Удалить связь между аннотациями
