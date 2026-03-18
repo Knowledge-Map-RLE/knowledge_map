@@ -183,14 +183,12 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     };
   }, []);
 
-  // Sync visual annotations (preserve scroll — only update if count changes or on first load)
+  // Sync visual annotations
   useEffect(() => {
     setVisualAnnotations(prev => {
-      // Always update on first load or when annotation count changes
       if (prev.length !== visibleAnnotations.length) return visibleAnnotations;
-      // Check if any uid changed (new annotations appeared)
-      const prevIds = new Set(prev.map(a => a.id));
-      const hasNew = visibleAnnotations.some(a => !prevIds.has(a.id));
+      const prevIds = new Set(prev.map(a => a.uid));
+      const hasNew = visibleAnnotations.some(a => !prevIds.has(a.uid));
       if (hasNew) return visibleAnnotations;
       return prev;
     });

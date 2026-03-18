@@ -71,12 +71,19 @@ const setCaretPosition = (el: HTMLElement, pos: number) => {
 
 // ── Построитель HTML с аннотациями ────────────────────────────────────────────
 
-const buildAnnotatedHTML = (txt: string, anns: Annotation[]): string => {
+const buildAnnotatedHTML = (txt: string, anns: Annotation[], activeUids?: Set<string>): string => {
   if (!txt) return '';
-  if (anns.length === 0) return escapeHtml(txt);
+  // Фильтруем аннотации с невалидными офсетами
+  const validAnns = anns.filter(a =>
+    a.start_offset >= 0 &&
+    a.end_offset > a.start_offset &&
+    a.end_offset <= txt.length &&
+    txt.substring(a.start_offset, a.end_offset) === a.text
+  );
+  if (validAnns.length === 0) return escapeHtml(txt);
 
   const boundaries = new Set<number>([0, txt.length]);
-  anns.forEach(a => {
+  validAnns.forEach(a => {
     boundaries.add(a.start_offset);
     boundaries.add(a.end_offset);
   });
@@ -87,16 +94,22 @@ const buildAnnotatedHTML = (txt: string, anns: Annotation[]): string => {
     const start = sorted[i];
     const end = sorted[i + 1];
     const chunk = escapeHtml(txt.substring(start, end));
-    const segAnns = anns.filter(a => a.start_offset <= start && a.end_offset >= end);
+    const segAnns = validAnns.filter(a => a.start_offset <= start && a.end_offset >= end);
     if (segAnns.length === 0) {
       html += chunk;
     } else {
-      const ann = segAnns[0];
-      const r = parseInt(ann.color.slice(1, 3), 16);
-      const g = parseInt(ann.color.slice(3, 5), 16);
-      const b = parseInt(ann.color.slice(5, 7), 16);
-      const title = segAnns.map(a => `${a.annotation_type} (${a.text})`).join('\n');
-      html += `<span data-ann="${escapeAttr(ann.uid)}" style="background-color:rgba(${r},${g},${b},0.3);border-radius:2px;cursor:pointer;" title="${escapeAttr(title)}">${chunk}</span>`;
+      // Активная (верхняя) аннотация — та чей uid в activeUids, иначе первая
+      const activeAnn = (activeUids && segAnns.find(a => activeUids.has(a.uid))) ?? segAnns[0];
+      const r = parseInt(activeAnn.color.slice(1, 3), 16);
+      const g = parseInt(activeAnn.color.slice(3, 5), 16);
+      const b = parseInt(activeAnn.color.slice(5, 7), 16);
+      const title = segAnns.map(a => `${a.annotation_type}: "${a.text}"`).join('\n');
+      const allUids = segAnns.map(a => a.uid).join(',');
+      // Невидимые якоря для всех uid — чтобы RelationLine мог найти любую аннотацию в группе
+      const anchors = segAnns.slice(1).map(a =>
+        `<span data-annotation-id="${escapeAttr(a.uid)}" style="position:absolute;pointer-events:none;"></span>`
+      ).join('');
+      html += `<span data-ann="${escapeAttr(activeAnn.uid)}" data-anns="${escapeAttr(allUids)}" data-annotation-id="${escapeAttr(activeAnn.uid)}" style="background-color:rgba(${r},${g},${b},0.25);border-radius:2px;cursor:pointer;position:relative;" title="${escapeAttr(title)}">${chunk}${anchors}</span>`;
     }
   }
   return html;
@@ -130,6 +143,8 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null);
   const [relationSourceId, setRelationSourceId] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; relation: AnnotationRelation } | null>(null);
+  // Активные uid для групп с наложением — ключ: "start-end", значение: uid верхней аннотации
+  const [activeLayerUids, setActiveLayerUids] = useState<Record<string, string>>({});
 
   const containerRef = (forwardedRef as React.RefObject<HTMLDivElement>) || useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -140,6 +155,8 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   // Актуальные аннотации в ref — чтобы debounce и undo/redo всегда видели свежие данные
   const annotationsRef = useRef<Annotation[]>(annotations);
   annotationsRef.current = annotations;
+  const activeLayerUidsRef = useRef<Record<string, string>>({});
+  activeLayerUidsRef.current = activeLayerUids;
 
   // Актуальные колбэки в ref — capture-обработчик всегда видит свежие функции
   const onUndoRef = useRef(onUndo);
@@ -174,7 +191,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     }
     debounceTimerRef.current = setTimeout(() => {
       debounceTimerRef.current = null;
-      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current));
+      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
     }, 800);
   }, [applyAnnotatedHTML]);
 
@@ -182,7 +199,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
 
   useEffect(() => {
     if (editable && textRef.current) {
-      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current));
+      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
     }
     // Только при монтировании
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -192,7 +209,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
 
   useEffect(() => {
     if (editable && textRef.current) {
-      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current));
+      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [annotations]); // annotations в deps — чтобы эффект срабатывал при их смене
@@ -204,7 +221,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     if (!hasFocus) {
       localTextRef.current = text;
       if (editable && textRef.current) {
-        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current));
+        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -216,7 +233,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     if (forceTextVersion !== undefined && forceTextVersion > 0) {
       localTextRef.current = text;
       if (textRef.current) {
-        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current));
+        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -371,21 +388,37 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
           onClick={(e) => {
             if (!editable) return;
             const target = e.target as HTMLElement;
-            const annId = target.dataset.ann;
-            if (annId) {
-              const ann = annotations.find(a => a.uid === annId);
-              if (ann) {
-                if (relationMode) {
-                  if (!relationSourceId) {
-                    setRelationSourceId(ann.uid);
-                  } else if (relationSourceId !== ann.uid) {
-                    if (onRelationCreate) onRelationCreate(relationSourceId, ann.uid);
-                    setRelationSourceId(null);
-                  }
-                } else {
-                  onAnnotationClick(ann);
-                }
+            const span = (target.dataset.ann ? target : target.closest('[data-ann]')) as HTMLElement | null;
+            if (!span) return;
+            const allUids = span.dataset.anns?.split(',').filter(Boolean) ?? [span.dataset.ann!];
+            const allAnns = allUids.map(uid => annotationsRef.current.find(a => a.uid === uid)).filter(Boolean) as Annotation[];
+            if (allAnns.length === 0) return;
+
+            if (relationMode) {
+              const primaryAnn = allAnns[0];
+              if (!relationSourceId) {
+                setRelationSourceId(primaryAnn.uid);
+              } else if (relationSourceId !== primaryAnn.uid) {
+                if (onRelationCreate) onRelationCreate(relationSourceId, primaryAnn.uid);
+                setRelationSourceId(null);
               }
+              return;
+            }
+
+            if (allAnns.length > 1) {
+              // Циклически переключаем верхний слой
+              const segKey = `${allAnns[0].start_offset}-${allAnns[0].end_offset}`;
+              const currentUid = activeLayerUids[segKey] ?? allUids[0];
+              const currentIdx = allUids.indexOf(currentUid);
+              const nextUid = allUids[(currentIdx + 1) % allUids.length];
+              const nextAnn = allAnns.find(a => a.uid === nextUid)!;
+              setActiveLayerUids(prev => ({ ...prev, [segKey]: nextUid }));
+              // Перерисовываем с новым активным слоем
+              const newActiveUids = new Set(Object.values({ ...activeLayerUids, [segKey]: nextUid }));
+              applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current, newActiveUids));
+              onAnnotationClick(nextAnn);
+            } else {
+              onAnnotationClick(allAnns[0]);
             }
           }}
           onMouseMove={(e) => {
