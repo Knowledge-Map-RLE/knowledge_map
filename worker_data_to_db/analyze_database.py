@@ -2,17 +2,12 @@
 """
 Анализ содержимого базы данных Neo4j после загрузки PubMed данных
 """
-from neo4j import GraphDatabase
 import logging
-
-# Подключение к Neo4j
-NEO4J_URI = "bolt://127.0.0.1:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASSWORD = "password"
+from common import get_driver
 
 def analyze_database():
     """Анализирует содержимое базы данных"""
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    driver = get_driver()
     
     try:
         with driver.session() as session:

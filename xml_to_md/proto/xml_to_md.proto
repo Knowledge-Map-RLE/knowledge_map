@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package xml_to_md;
+
+// Сервис для конвертации PubMed/PMC XML в Markdown
+service XmlToMarkdownService {
+    // Конвертация PMC NLM DTD XML в Markdown
+    rpc ConvertPmcXml(ConvertPmcXmlRequest) returns (ConvertXmlResponse);
+
+    // Парсинг PubMed efetch XML → список метаданных статей
+    rpc ParsePubmedMetadata(ParsePubmedMetadataRequest) returns (ParseMetadataResponse);
+}
+
+// Провайдер XML-формата
+enum XmlProvider {
+    PROVIDER_UNSPECIFIED = 0;
+    PMC = 1;     // NLM Journal Archiving and Interchange DTD
+    PUBMED = 2;  // PubMed efetch XML (PubmedArticleSet)
+}
+
+// ── ConvertPmcXml ──────────────────────────────────────────────────────────
+
+message ConvertPmcXmlRequest {
+    bytes xml_bytes = 1;
+
+    // Словарь {имя_файла_изображения: полный_url}
+    // Ключи должны совпадать со значениями xlink:href в элементах <graphic>
+    map<string, string> image_urls = 2;
+
+    // Провайдер для будущего расширения (сейчас только PMC)
+    XmlProvider provider = 3;
+}
+
+message ConvertXmlResponse {
+    bool success = 1;
+    string markdown_content = 2;
+    string message = 3;
+}
+
+// ── ParsePubmedMetadata ────────────────────────────────────────────────────
+
+message ParsePubmedMetadataRequest {
+    // Сырые байты ответа NCBI efetch?db=pubmed&retmode=xml
+    // Должен содержать корневой элемент <PubmedArticleSet>
+    bytes xml_bytes = 1;
+}
+
+message ArticleMetadata {
+    string pmid = 1;
+    string title = 2;
+    repeated string authors = 3;
+    string journal = 4;
+    string pub_date = 5;
+    string abstract = 6;
+    string doi = 7;
+}
+
+message ParseMetadataResponse {
+    bool success = 1;
+    repeated ArticleMetadata articles = 2;
+    string message = 3;
+}

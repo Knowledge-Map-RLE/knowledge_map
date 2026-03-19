@@ -87,7 +87,13 @@
       "Read(//c/Users/dimka/AppData/Local/Programs/Python//**)",
       "Read(//c/Users/dimka/.local/share/**)",
       "Read(//c/Users/dimka/**)",
-      "Bash(/d/Knowledge_Map/api/.venv/Scripts/python.exe -c \":*)"
+      "Bash(/d/Knowledge_Map/api/.venv/Scripts/python.exe -c \":*)",
+      "Bash(for dir:*)",
+      "Bash(do echo:*)",
+      "Read(//d/Knowledge_Map/**)",
+      "Bash(for svc:*)",
+      "Read(//d/Knowledge_Map/$svc/src/**)",
+      "Bash(poetry install:*)"
     ],
     "deny": [],
     "ask": []

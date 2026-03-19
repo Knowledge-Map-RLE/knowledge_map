@@ -5,10 +5,7 @@ import io
 import json
 import logging
 import os
-import re
 import tarfile
-import tempfile
-from pathlib import Path
 from typing import Any, Dict, List, Optional
 from xml.etree import ElementTree as ET
 
@@ -17,6 +14,7 @@ import httpx
 from src.models import PDFDocument
 from src.schemas.api import PubMedSearchResult
 from services import settings, get_s3_client
+from services.xml_to_md_grpc_client import get_xml_to_md_grpc_client
 
 logger = logging.getLogger(__name__)
 
@@ -39,13 +37,18 @@ def _ncbi_params(**kwargs) -> Dict[str, str]:
 
 
 def _text(el: Optional[ET.Element], default: str = "") -> str:
+    """Безопасно извлекает текст из XML элемента (используется для OA API XML, не для статей)."""
     if el is None:
         return default
     return (el.text or "").strip()
 
 
 def _parse_pubmed_article(article_el: ET.Element) -> Dict[str, Any]:
-    """Парсит один PubMedArticle XML-элемент → словарь с метаданными"""
+    """Парсит один PubMedArticle XML-элемент → словарь с метаданными.
+
+    Используется локально в _fetch_pubmed_metadata и _get_pubmed_metadata.
+    Основная логика парсинга вынесена в xml_to_md микросервис (converters/pubmed.py).
+    """
     medline = article_el.find("MedlineCitation")
     if medline is None:
         return {}
@@ -100,381 +103,6 @@ def _parse_pubmed_article(article_el: ET.Element) -> Dict[str, Any]:
         "abstract": abstract,
         "doi": doi,
     }
-
-
-def _pmc_xml_to_markdown(
-    xml_bytes: bytes,
-    image_urls: Optional[Dict[str, str]] = None,
-) -> str:
-    """Конвертирует PMC XML (NLM DTD) в Markdown.
-
-    Args:
-        xml_bytes: XML байты статьи
-        image_urls: словарь {basename_без_расширения: url} для подстановки в <fig>
-                    Ключи — имена файлов изображений (e.g. "pone.0123456.g001"),
-                    значения — полные URL или относительные пути.
-    """
-    try:
-        root = ET.fromstring(xml_bytes)
-    except ET.ParseError as e:
-        logger.error(f"[pmc_xml_to_md] Ошибка парсинга XML: {e}")
-        return ""
-
-    if image_urls is None:
-        image_urls = {}
-
-    lines = []
-
-    # Заголовок
-    title_el = root.find(".//article-title")
-    if title_el is not None:
-        title_text = "".join(title_el.itertext()).strip()
-        lines.append(f"# {title_text}\n")
-
-    # Авторы
-    authors = []
-    for contrib in root.findall(".//contrib[@contrib-type='author']"):
-        surname = contrib.findtext(".//surname", "")
-        given = contrib.findtext(".//given-names", "")
-        if surname:
-            authors.append(f"{surname} {given}".strip())
-    if authors:
-        lines.append(f"**Авторы:** {', '.join(authors)}\n")
-
-    # Журнал и дата
-    journal = root.findtext(".//journal-title", "")
-    year = root.findtext(".//pub-date/year", "")
-    if journal:
-        lines.append(f"**Журнал:** {journal}" + (f" ({year})" if year else "") + "\n")
-
-    # DOI
-    for article_id in root.findall(".//article-id"):
-        if article_id.get("pub-id-type") == "doi":
-            lines.append(f"**DOI:** {article_id.text}\n")
-            break
-
-    lines.append("")
-
-    # Абстракт
-    abstract_el = root.find(".//abstract")
-    if abstract_el is not None:
-        lines.append("## Abstract\n")
-        for p in abstract_el.findall(".//p"):
-            text = _element_to_text(p).strip()
-            if text:
-                title_tag = p.get("content-type") or ""
-                if title_tag:
-                    lines.append(f"**{title_tag}:** {text}\n")
-                else:
-                    lines.append(f"{text}\n")
-        lines.append("")
-
-    # Собираем фигуры из <floats-group> по id (floating layout)
-    # Они будут вставляться после первого параграфа, который на них ссылается
-    figs_by_id: Dict[str, ET.Element] = {}
-    floats = root.find(".//floats-group")
-    if floats is not None:
-        for fig in floats.findall("fig"):
-            fig_id = fig.get("id", "")
-            if fig_id:
-                figs_by_id[fig_id] = fig
-
-    # Также собираем фигуры прямо из body/sec (inline layout)
-    for fig in root.findall(".//body//fig"):
-        fig_id = fig.get("id", "")
-        if fig_id and fig_id not in figs_by_id:
-            figs_by_id[fig_id] = fig
-
-    rendered_figs: set = set()  # track which figs already rendered
-
-    # Основные секции
-    for sec in root.findall(".//body/sec"):
-        _render_section(sec, lines, level=2, image_urls=image_urls,
-                        figs_by_id=figs_by_id, rendered_figs=rendered_figs)
-
-    # Фигуры из <floats-group>, которые так и не встретились в тексте — добавляем в конец
-    remaining = [figs_by_id[fid] for fid in figs_by_id if fid not in rendered_figs]
-    if remaining:
-        lines.append("## Figures\n")
-        for fig in remaining:
-            _render_fig(fig, lines, image_urls)
-
-    # Список литературы (краткий)
-    refs = root.findall(".//ref-list/ref")
-    if refs:
-        lines.append("## References\n")
-        for i, ref in enumerate(refs[:50], 1):
-            mixed_citation = ref.find(".//mixed-citation")
-            element_citation = ref.find(".//element-citation")
-            if mixed_citation is not None:
-                ref_text = "".join(mixed_citation.itertext()).strip()
-            elif element_citation is not None:
-                ref_text = "".join(element_citation.itertext()).strip()
-            else:
-                ref_text = "".join(ref.itertext()).strip()
-            if ref_text:
-                lines.append(f"{i}. {ref_text}\n")
-
-    return "\n".join(lines)
-
-
-_TEX_PREAMBLE_RE = re.compile(
-    r'\\documentclass.*?\\begin\{document\}(.*?)\\end\{document\}',
-    re.DOTALL,
-)
-
-
-def _extract_tex(el: ET.Element) -> Optional[str]:
-    """Извлекает LaTeX из <tex-math>, убирая documentclass-преамбулу и внешние $ / $$."""
-    tex_el = el.find(".//tex-math")
-    if tex_el is None or not tex_el.text:
-        return None
-    raw = tex_el.text.strip()
-    m = _TEX_PREAMBLE_RE.search(raw)
-    if m:
-        raw = m.group(1).strip()
-    # Убираем внешние $$ или $ если они уже есть — мы добавим нужные сами
-    if raw.startswith("$$") and raw.endswith("$$"):
-        raw = raw[2:-2].strip()
-    elif raw.startswith("$") and raw.endswith("$"):
-        raw = raw[1:-1].strip()
-    return raw if raw else None
-
-
-def _element_to_text(el: ET.Element) -> str:
-    """Конвертирует элемент XML в текст, заменяя формулы на LaTeX-нотацию.
-
-    <inline-formula> → $...$
-    <disp-formula>   → $$...$$
-    Всё остальное    → itertext()
-    """
-    parts: List[str] = []
-    if el.text:
-        parts.append(el.text)
-    for child in el:
-        if child.tag == "inline-formula":
-            tex = _extract_tex(child)
-            if tex:
-                parts.append(f"${tex}$")
-            else:
-                parts.append("".join(child.itertext()))
-        elif child.tag == "disp-formula":
-            tex = _extract_tex(child)
-            if tex:
-                parts.append(f"\n\n$$\n{tex}\n$$\n\n")
-            else:
-                parts.append("".join(child.itertext()))
-        else:
-            parts.append(_element_to_text(child))
-        if child.tail:
-            parts.append(child.tail)
-    return "".join(parts)
-
-
-def _render_fig(fig: ET.Element, lines: List[str], image_urls: Dict[str, str]):
-    """Рендерит одну фигуру в HTML: изображение + подпись."""
-    fig_id = fig.get("id", "")
-    label_el = fig.find("label")
-    label = "".join(label_el.itertext()).strip() if label_el is not None else ""
-    caption_el = fig.find(".//caption/p")
-    cap = "".join(caption_el.itertext()).strip() if caption_el is not None else ""
-
-    img_url = _resolve_fig_image(fig, image_urls)
-    alt = label or fig_id or "Figure"
-
-    html_parts = ['<figure>']
-    if img_url:
-        html_parts.append(f'  <img src="{img_url}" alt="{alt}">')
-    if label or cap:
-        caption_text = f"<strong>{label}</strong> {cap}".strip() if label else cap
-        html_parts.append(f'  <figcaption>{caption_text}</figcaption>')
-    html_parts.append('</figure>')
-    lines.append("\n" + "\n".join(html_parts) + "\n")
-
-
-_IMG_QUALITY_ORDER = {".jpg": 0, ".jpeg": 0, ".png": 1, ".tif": 2, ".tiff": 2, ".svg": 3, ".gif": 4}
-
-
-def _resolve_fig_image(fig_el: ET.Element, image_urls: Dict[str, str]) -> Optional[str]:
-    """Находит URL изображения для элемента <fig>.
-
-    Ищет атрибут xlink:href у <graphic> внутри фигуры и ищет совпадение в image_urls.
-    Среди нескольких совпадений выбирает лучший формат: jpg > png > tif > svg > gif.
-    """
-    graphic = fig_el.find(".//graphic")
-    if graphic is None:
-        return None
-
-    href = graphic.get("{http://www.w3.org/1999/xlink}href") or graphic.get("href") or ""
-    if not href:
-        return None
-
-    # Базовое имя без расширения и пути
-    base = href.rsplit(".", 1)[0] if "." in href else href
-    basename = base.rsplit("/", 1)[-1]
-
-    # Собираем все совпадения с оценкой качества
-    candidates: List[tuple] = []  # (quality, url)
-    for key, url in image_urls.items():
-        key_base = key.rsplit(".", 1)[0] if "." in key else key
-        key_base_short = key_base.rsplit("/", 1)[-1]
-        if key == href or key_base == base or key_base_short == basename:
-            ext = ("." + key.rsplit(".", 1)[1].lower()) if "." in key else ""
-            quality = _IMG_QUALITY_ORDER.get(ext, 3)
-            candidates.append((quality, url))
-
-    if not candidates:
-        return None
-
-    # Возвращаем URL с наименьшим значением quality (лучший формат)
-    candidates.sort(key=lambda x: x[0])
-    return candidates[0][1]
-
-
-def _element_to_text_skip(el: ET.Element, skip_tags: set) -> str:
-    """Как _element_to_text, но пропускает дочерние элементы с тегами из skip_tags."""
-    parts: List[str] = []
-    if el.text:
-        parts.append(el.text)
-    for child in el:
-        if child.tag in skip_tags:
-            if child.tail:
-                parts.append(child.tail)
-            continue
-        if child.tag == "inline-formula":
-            tex = _extract_tex(child)
-            if tex:
-                parts.append(f"${tex}$")
-            else:
-                parts.append("".join(child.itertext()))
-        elif child.tag == "disp-formula":
-            tex = _extract_tex(child)
-            if tex:
-                parts.append(f"\n\n$$\n{tex}\n$$\n\n")
-            else:
-                parts.append("".join(child.itertext()))
-        else:
-            parts.append(_element_to_text_skip(child, skip_tags))
-        if child.tail:
-            parts.append(child.tail)
-    return "".join(parts)
-
-
-def _render_table_wrap(tw: ET.Element, lines: List[str]) -> None:
-    """Рендерит <table-wrap>: подпись + HTML-таблица."""
-    label_el = tw.find("label")
-    caption_el = tw.find(".//caption/p")
-    label = _element_to_text(label_el).strip() if label_el is not None else ""
-    cap = _element_to_text(caption_el).strip() if caption_el is not None else ""
-    full_cap = f"**{label}**" if label else ""
-    if cap:
-        full_cap = f"{full_cap} {cap}".strip()
-    if full_cap:
-        lines.append(f"\n{full_cap}\n")
-    table_el = tw.find(".//table")
-    if table_el is not None:
-        _render_table(table_el, lines)
-
-
-def _render_table(table_el: ET.Element, lines: List[str]) -> None:
-    """Конвертирует NLM <table> (thead/tbody/tr/th/td) в HTML-таблицу (pretty-print)."""
-    rows: List[str] = []
-    rows.append("<table>")
-
-    for thead in table_el.findall("thead"):
-        rows.append("  <thead>")
-        for tr in thead.findall("tr"):
-            rows.append("    <tr>")
-            for c in tr:
-                if c.tag in ("th", "td"):
-                    cell = _element_to_text(c).strip().replace("\n", " ")
-                    rows.append(f"      <th>{cell}</th>")
-            rows.append("    </tr>")
-        rows.append("  </thead>")
-
-    for tbody in table_el.findall("tbody"):
-        rows.append("  <tbody>")
-        for tr in tbody.findall("tr"):
-            rows.append("    <tr>")
-            for c in tr:
-                if c.tag in ("th", "td"):
-                    cell = _element_to_text(c).strip().replace("\n", " ")
-                    rows.append(f"      <td>{cell}</td>")
-            rows.append("    </tr>")
-        rows.append("  </tbody>")
-
-    rows.append("</table>")
-    lines.append("\n" + "\n".join(rows) + "\n")
-
-
-def _render_section(
-    sec: ET.Element,
-    lines: List[str],
-    level: int = 2,
-    image_urls: Optional[Dict[str, str]] = None,
-    figs_by_id: Optional[Dict[str, ET.Element]] = None,
-    rendered_figs: Optional[set] = None,
-):
-    """Рекурсивно рендерит раздел статьи в Markdown.
-
-    При наличии figs_by_id вставляет фигуру из <floats-group>
-    сразу после первого параграфа, где на неё ссылаются через <xref ref-type="fig">.
-    """
-    if image_urls is None:
-        image_urls = {}
-    if figs_by_id is None:
-        figs_by_id = {}
-    if rendered_figs is None:
-        rendered_figs = set()
-
-    title_el = sec.find("title")
-    if title_el is not None:
-        sec_title = "".join(title_el.itertext()).strip()
-        if sec_title:
-            lines.append(f"{'#' * level} {sec_title}\n")
-
-    for child in sec:
-        tag = child.tag
-        if tag == "title":
-            continue
-        elif tag == "p":
-            inner_tables = child.findall("table-wrap")
-            if inner_tables:
-                # Текст параграфа без содержимого table-wrap
-                text = _element_to_text_skip(child, skip_tags={"table-wrap"}).strip()
-                if text:
-                    lines.append(f"{text}\n")
-                for tw in inner_tables:
-                    _render_table_wrap(tw, lines)
-            else:
-                text = _element_to_text(child).strip()
-                if text:
-                    lines.append(f"{text}\n")
-            # После параграфа вставляем фигуры, на которые он ссылается (floating layout)
-            if figs_by_id:
-                for xref in child.findall('.//xref[@ref-type="fig"]'):
-                    rid = xref.get("rid", "")
-                    if rid and rid in figs_by_id and rid not in rendered_figs:
-                        rendered_figs.add(rid)
-                        _render_fig(figs_by_id[rid], lines, image_urls)
-        elif tag == "sec":
-            _render_section(child, lines, level + 1, image_urls=image_urls,
-                            figs_by_id=figs_by_id, rendered_figs=rendered_figs)
-        elif tag == "fig":
-            # Inline фигура (не floating layout) — рендерим на месте
-            fig_id = child.get("id", "")
-            if fig_id and rendered_figs is not None:
-                rendered_figs.add(fig_id)
-            _render_fig(child, lines, image_urls)
-        elif tag == "table-wrap":
-            _render_table_wrap(child, lines)
-        elif tag == "list":
-            for item in child.findall("list-item"):
-                item_text = _element_to_text(item).strip()
-                if item_text:
-                    lines.append(f"- {item_text}\n")
-
-    lines.append("")
 
 
 def _metadata_to_markdown(meta: Dict[str, Any]) -> str:
@@ -1006,7 +634,8 @@ class PubMedService:
                         # Строим image_urls через публичный PMC URL
                         # (работает для статей с открытыми изображениями)
                         image_urls = await self._build_pmc_image_urls_from_xml(pmc_xml, pmcid)
-                        markdown = _pmc_xml_to_markdown(pmc_xml, image_urls=image_urls)
+                        xml_result = await get_xml_to_md_grpc_client().convert_pmc_xml(pmc_xml, image_urls=image_urls)
+                        markdown = xml_result["markdown_content"] if xml_result["success"] else ""
                         if markdown:
                             logger.info(f"[pubmed] Сценарий B: получен полный текст через efetch ({len(markdown)} символов), images={len(image_urls)}")
                             result = await self._save_document(
@@ -1058,7 +687,8 @@ class PubMedService:
                 pmc_xml = await self._fetch_pmc_fulltext_xml(client, pmcid)
                 if pmc_xml:
                     image_urls = await self._build_pmc_image_urls_from_xml(pmc_xml, pmcid)
-                    markdown = _pmc_xml_to_markdown(pmc_xml, image_urls=image_urls)
+                    xml_result = await get_xml_to_md_grpc_client().convert_pmc_xml(pmc_xml, image_urls=image_urls)
+                    markdown = xml_result["markdown_content"] if xml_result["success"] else ""
                     if markdown:
                         return await self._save_document(
                             doc_id=doc_id, meta=meta, markdown=markdown,
@@ -1131,8 +761,9 @@ class PubMedService:
             else:
                 logger.warning(f"[pubmed] Не удалось загрузить изображение: {img_name}")
 
-        # Конвертируем PMC XML → Markdown (с подстановкой URL изображений)
-        markdown = _pmc_xml_to_markdown(xml_bytes, image_urls=image_urls)
+        # Конвертируем PMC XML → Markdown через xml_to_md микросервис
+        xml_result = await get_xml_to_md_grpc_client().convert_pmc_xml(xml_bytes, image_urls=image_urls)
+        markdown = xml_result["markdown_content"] if xml_result["success"] else ""
         if not markdown:
             return await self._ingest_metadata_only(doc_id, meta)
 

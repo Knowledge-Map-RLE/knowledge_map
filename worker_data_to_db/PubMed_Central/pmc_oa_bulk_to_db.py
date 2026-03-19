@@ -18,15 +18,15 @@ from lxml import etree as LET
 from typing import Dict, Tuple, List, Any
 from neo4j import GraphDatabase, exceptions as neo4j_exceptions
 from tqdm import tqdm
+import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from common import get_driver, load_checkpoint, append_checkpoint, setup_logging
+from xml_to_md_grpc_client import get_xml_to_md_client
+from s3_client import get_s3_client, S3_BUCKET_NAME
 
 # ========== КОНФИГУРАЦИЯ ==========
 DATA_DIR        = Path("D:/Data/PubMed_Central")
 LOG_FILE        = Path("./logs/pmc_oa_bulk_to_db.log")
 CHECKPOINT_FILE = Path("./logs/pmc_parse_checkpoint.txt")
-
-NEO4J_URI       = "bolt://127.0.0.1:7687"
-NEO4J_USER      = "neo4j"
-NEO4J_PASSWORD  = "password"
 
 # Оптимизированные настройки
 MAX_WORKERS       = 2        # Увеличено для параллелизма
@@ -56,27 +56,10 @@ XPATH_CACHE = {
 }
 
 # ========== ЛОГИРОВАНИЕ ==========
-LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)-8s %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_FILE, encoding="utf-8"),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(LOG_FILE)
 
 # ========== NEO4J ==========
-def get_driver():
-    return GraphDatabase.driver(
-        NEO4J_URI,
-        auth=(NEO4J_USER, NEO4J_PASSWORD),
-        max_connection_pool_size=POOL_SIZE,
-        connection_acquisition_timeout=30
-    )
-
-driver = get_driver()
+driver = get_driver(pool_size=POOL_SIZE)
 
 # ========== ОПТИМИЗИРОВАННЫЕ ФУНКЦИИ ==========
 
@@ -337,9 +320,20 @@ def parse_article_optimized(article, total_articles):
     authors = extract_authors_optimized(article)
     keywords = extract_keywords_optimized(article)
     
-    # Полный текст
-    body = embed_floats_optimized(article)
-    
+    # Конвертируем XML → Markdown через xml_to_md микросервис и сохраняем в S3
+    xml_bytes = LET.tostring(article, encoding='utf-8')
+    markdown = get_xml_to_md_client().convert_pmc_xml(xml_bytes)
+    body_s3_key = None
+    if markdown:
+        uid_for_path = primary_id
+        s3_key = f"documents/{uid_for_path}/{uid_for_path}.md"
+        if get_s3_client().upload_text(markdown, S3_BUCKET_NAME, s3_key):
+            body_s3_key = s3_key
+        else:
+            logger.warning(f"[{primary_id}] Не удалось загрузить Markdown в S3")
+    else:
+        logger.debug(f"[{primary_id}] xml_to_md вернул пустой результат (сервис недоступен или XML пуст)")
+
     # Данные статьи
     data = {
         'uid': primary_id,  # ВАЖНО: Используем вычисленный primary_id как uid
@@ -350,7 +344,7 @@ def parse_article_optimized(article, total_articles):
         'publication_time': publication_time,
         'journal': journal,
         'abstract': abstract,
-        'body': body,
+        'body': body_s3_key,  # S3-ключ к Markdown файлу, или None если не удалось
         'authors': authors,
         'keywords': keywords
     }
@@ -454,14 +448,7 @@ def parse_one_file_optimized(path: Path):
 
 # ========== ОСТАЛЬНЫЕ ФУНКЦИИ (без изменений) ==========
 
-def load_checkpoint() -> set[str]:
-    if not CHECKPOINT_FILE.exists():
-        return set()
-    return set(line.strip() for line in CHECKPOINT_FILE.read_text().splitlines() if line.strip())
-
-def append_checkpoint(fname: str):
-    with CHECKPOINT_FILE.open("a", encoding="utf-8") as f:
-        f.write(fname + "\n")
+# load_checkpoint и append_checkpoint импортированы из common.py
 
 def ensure_schema():
     with driver.session() as session:
@@ -564,7 +551,7 @@ def writer_loop(id: int):
             path_name, nodes, rels = item
             logger.info(f"Writer-{id} processing {path_name} with {len(nodes)} nodes, {len(rels)} relationships")
             if write_to_neo4j(path_name, nodes, rels):
-                append_checkpoint(path_name)
+                append_checkpoint(CHECKPOINT_FILE, path_name)
                 logger.info(f"[CHKPT] {path_name}")
                 # Обновляем прогресс-бар записи
                 if write_progress_bar:

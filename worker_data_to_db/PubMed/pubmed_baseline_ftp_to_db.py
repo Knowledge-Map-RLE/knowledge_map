@@ -1,5 +1,4 @@
 import gzip
-import logging
 import time
 import datetime
 import re
@@ -9,7 +8,9 @@ from threading import Thread
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from lxml import etree as LET  # type: ignore
 from typing import Dict, Tuple, List, Any
-from neo4j import GraphDatabase, exceptions as neo4j_exceptions  # type: ignore[attr-defined]
+from neo4j import exceptions as neo4j_exceptions  # type: ignore[attr-defined]
+import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from common import get_driver, load_checkpoint, append_checkpoint, setup_logging
 
 # ========== LOADER DISABLED ==========
 # This loader is DISABLED as per project requirements.
@@ -22,10 +23,6 @@ DATA_DIR        = Path(r"D:/Данные/PubMed")
 LOG_FILE        = Path("./logs/article_to_neo4j.log")
 CHECKPOINT_FILE = Path("./logs/parse_checkpoint.txt")
 
-NEO4J_URI       = "bolt://127.0.0.1:7687"
-NEO4J_USER      = "neo4j"
-NEO4J_PASSWORD  = "password"
-
 MAX_WORKERS       = 2        # потоки парсинга файлов
 WRITER_COUNT      = 3        # число потоков-писателей
 MAX_WRITE_RETRIES = 3
@@ -36,37 +33,10 @@ QUEUE_SIZE        = MAX_WORKERS * 2
 # ==================================
 
 # ========== ЛОГИРОВАНИЕ ==========
-LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)-8s %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_FILE, encoding="utf-8"),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(LOG_FILE)
 
 # ========== NEO4J ==========
-def get_driver():
-    return GraphDatabase.driver(
-        NEO4J_URI,
-        auth=(NEO4J_USER, NEO4J_PASSWORD),
-        max_connection_pool_size=POOL_SIZE,
-        connection_acquisition_timeout=30
-    )
-
-driver = get_driver()
-
-# ========== ЧЕКПОИНТЫ ==========
-def load_checkpoint() -> set[str]:
-    if not CHECKPOINT_FILE.exists():
-        return set()
-    return set(line.strip() for line in CHECKPOINT_FILE.read_text().splitlines() if line.strip())
-
-def append_checkpoint(fname: str):
-    with CHECKPOINT_FILE.open("a", encoding="utf-8") as f:
-        f.write(fname + "\n")
+driver = get_driver(pool_size=POOL_SIZE)
 
 # ========== СХЕМА ==========
 def check_existing_constraints():
@@ -322,7 +292,7 @@ def writer_loop(id: int):
             break
         path_name, nodes, rels = item
         if write_to_neo4j(path_name, nodes, rels):
-            append_checkpoint(path_name)
+            append_checkpoint(CHECKPOINT_FILE, path_name)
             logger.info(f"[CHKPT] {path_name}")
         write_queue.task_done()
 
