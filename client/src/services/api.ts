@@ -476,7 +476,8 @@ export async function createAnnotation(docId: string, request: CreateAnnotationR
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${await res.text()}`);
   }
-  return res.json();
+  const data = await res.json();
+  return data.annotation ?? data;
 }
 
 // Интерфейс для ответа с пагинацией аннотаций

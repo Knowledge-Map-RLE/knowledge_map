@@ -92,6 +92,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const savedAnnotatorScrollTop = useRef<number>(0);
   const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isImportingRef = useRef(false);
 
   // Custom Hooks
   const {
@@ -185,13 +186,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   // Sync visual annotations
   useEffect(() => {
-    setVisualAnnotations(prev => {
-      if (prev.length !== visibleAnnotations.length) return visibleAnnotations;
-      const prevIds = new Set(prev.map(a => a.uid));
-      const hasNew = visibleAnnotations.some(a => !prevIds.has(a.uid));
-      if (hasNew) return visibleAnnotations;
-      return prev;
-    });
+    setVisualAnnotations(visibleAnnotations);
   }, [visibleAnnotations]);
 
   // Restore scroll positions
@@ -643,20 +638,51 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   // Import CSV handler
   const handleImportCSV = useCallback(async (file: File) => {
+    if (isImportingRef.current) return;
+    isImportingRef.current = true;
     try {
-      const text = await file.text();
-      const { annotations: annData, relations: relData } = parseAnnotationsCSV(text);
+      const csvText = await file.text();
+      const { annotations: annData, relations: relData } = parseAnnotationsCSV(csvText);
+
+      // Вычислить смещение frontmatter (блок --- ... ---)
+      // Вычисляем точный offset: ищем текст аннотации в документе,
+      // используя CSV-offset как подсказку для поиска в окрестности.
+      // Это надёжнее фиксированного смещения frontmatter.
+      const resolveOffset = (annText: string, csvStart: number): { start: number; end: number } | null => {
+        if (!annText) return null;
+        // Сначала пробуем точное совпадение в окрестности ±500 от CSV-offset
+        const searchFrom = Math.max(0, csvStart - 500);
+        const searchTo = Math.min(localText.length, csvStart + annText.length + 500);
+        const idx = localText.indexOf(annText, searchFrom);
+        if (idx !== -1 && idx < searchTo) {
+          return { start: idx, end: idx + annText.length };
+        }
+        // Fallback: поиск по всему документу
+        const globalIdx = localText.indexOf(annText);
+        if (globalIdx !== -1) {
+          return { start: globalIdx, end: globalIdx + annText.length };
+        }
+        return null;
+      };
 
       // Строим карту старый uid → новый uid для корректного создания связей
       const uidMap = new Map<string, string>();
       let createdAnnotations = 0;
+      let skippedAnnotations = 0;
 
       for (const ann of annData) {
+        const annText = ann.text ?? '';
+        const resolved = resolveOffset(annText, ann.start_offset ?? 0);
+        if (!resolved) {
+          console.warn(`[import] Не найден текст аннотации в документе, пропускаем: "${annText.slice(0, 60)}"`);
+          skippedAnnotations++;
+          continue;
+        }
         const created = await createAnnotation(docId, {
-          text: ann.text ?? '',
+          text: annText,
           annotation_type: ann.annotation_type ?? '',
-          start_offset: ann.start_offset ?? 0,
-          end_offset: ann.end_offset ?? 0,
+          start_offset: resolved.start,
+          end_offset: resolved.end,
           color: ann.color || '#ffeb3b',
           confidence: ann.confidence,
         });
@@ -676,15 +702,17 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       }
 
       console.log(
-        `Импорт CSV завершен: создано аннотаций ${createdAnnotations}, связей ${createdRelations}`
+        `Импорт CSV завершен: создано аннотаций ${createdAnnotations}, пропущено ${skippedAnnotations}, связей ${createdRelations}`
       );
 
       await loadAnnotations();
       await loadRelations();
     } catch (error: any) {
       console.error('Не удалось импортировать аннотации:', error?.message || error);
+    } finally {
+      isImportingRef.current = false;
     }
-  }, [docId, loadAnnotations, loadRelations]);
+  }, [docId, localText, loadAnnotations, loadRelations]);
 
   // Filter handlers
   const handleResetFilters = useCallback(() => {

@@ -98,18 +98,25 @@ const buildAnnotatedHTML = (txt: string, anns: Annotation[], activeUids?: Set<st
     if (segAnns.length === 0) {
       html += chunk;
     } else {
-      // Активная (верхняя) аннотация — та чей uid в activeUids, иначе первая
-      const activeAnn = (activeUids && segAnns.find(a => activeUids.has(a.uid))) ?? segAnns[0];
+      // Сортируем: самые узкие (короткие) — выше (меньший textLength = выше в стеке)
+      const sortedSegAnns = [...segAnns].sort((a, b) =>
+        (a.end_offset - a.start_offset) - (b.end_offset - b.start_offset)
+      );
+      // Активная (верхняя) аннотация — та чей uid в activeUids, иначе самая узкая
+      const activeAnn = (activeUids && sortedSegAnns.find(a => activeUids.has(a.uid))) ?? sortedSegAnns[0];
       const r = parseInt(activeAnn.color.slice(1, 3), 16);
       const g = parseInt(activeAnn.color.slice(3, 5), 16);
       const b = parseInt(activeAnn.color.slice(5, 7), 16);
-      const title = segAnns.map(a => `${a.annotation_type}: "${a.text}"`).join('\n');
-      const allUids = segAnns.map(a => a.uid).join(',');
+      const title = sortedSegAnns.map(a => `${a.annotation_type}: "${a.text}"`).join('\n');
+      // uid-ы в порядке от узкой к широкой — для циклического переключения по клику
+      const allUids = sortedSegAnns.map(a => a.uid).join(',');
       // Невидимые якоря для всех uid — чтобы RelationLine мог найти любую аннотацию в группе
-      const anchors = segAnns.slice(1).map(a =>
+      const anchors = sortedSegAnns.slice(1).map(a =>
         `<span data-annotation-id="${escapeAttr(a.uid)}" style="position:absolute;pointer-events:none;"></span>`
       ).join('');
-      html += `<span data-ann="${escapeAttr(activeAnn.uid)}" data-anns="${escapeAttr(allUids)}" data-annotation-id="${escapeAttr(activeAnn.uid)}" style="background-color:rgba(${r},${g},${b},0.25);border-radius:2px;cursor:pointer;position:relative;" title="${escapeAttr(title)}">${chunk}${anchors}</span>`;
+      const textLength = activeAnn.end_offset - activeAnn.start_offset;
+      const zIndex = Math.max(1, 10000 - textLength);
+      html += `<span data-ann="${escapeAttr(activeAnn.uid)}" data-anns="${escapeAttr(allUids)}" data-annotation-id="${escapeAttr(activeAnn.uid)}" style="background-color:rgba(${r},${g},${b},0.25);border-radius:2px;cursor:pointer;position:relative;z-index:${zIndex};" title="${escapeAttr(title)}">${chunk}${anchors}</span>`;
     }
   }
   return html;
@@ -456,7 +463,10 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
             if (segment.annotations.length === 0) {
               return <span key={segmentKey}>{segment.text}</span>;
             }
-            const ann = segment.annotations[0];
+            // Самая узкая аннотация — верхняя (наименьший textLength = наибольший z-index)
+            const ann = [...segment.annotations].sort((a, b) =>
+              (a.end_offset - a.start_offset) - (b.end_offset - b.start_offset)
+            )[0];
             const r = parseInt(ann.color.slice(1, 3), 16);
             const g = parseInt(ann.color.slice(3, 5), 16);
             const b = parseInt(ann.color.slice(5, 7), 16);
@@ -465,6 +475,8 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
             const title = segment.annotations
               .map(a => `${a.annotation_type} (${a.text})`)
               .join('\n');
+            const textLength = ann.end_offset - ann.start_offset;
+            const zIndex = Math.max(1, 10000 - textLength);
             return (
               <span
                 key={segmentKey}
@@ -475,6 +487,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
                   padding: '2px 0',
                   borderRadius: '2px',
                   position: 'relative',
+                  zIndex,
                   border: isHovered ? '1px solid #000' : '1px solid transparent',
                   outline: isRelationSource ? '2px solid #2196f3' : undefined,
                   boxShadow: segment.annotations.length > 1 ? '0 0 0 1px rgba(0,0,0,0.2)' : undefined,
