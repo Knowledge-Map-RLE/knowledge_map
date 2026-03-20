@@ -1,136 +1,151 @@
 # ANNOTATIONS
 uid,text,annotation_type,start_offset,end_offset,color,source,confidence
-g1,"In this minireview, we explore the complexity of PD and propose a systems-based approach, organizing the available information around cellular disease hallmarks.",Успешная цель,359,521,#4CAF50,file,0.88
-g2,"We encourage our peers to adopt this cell-based view with the aim of improving communication in interdisciplinary research endeavors targeting the molecular events, modulatory cell-to-cell signaling pathways and emerging clinical phenotypes related to PD.",Успешная цель,522,776,#4CAF50,file,0.80
-g3,"In this review, we discuss Parkinson's disease in the global sense of the term (PD), including IPD and genetically or environmentally induced forms of parkinsonism.",Успешная цель,810,975,#4CAF50,file,0.82
-g4,"we focus on the cellular hallmarks of PD, and discuss strategies for understanding the relationships between these cellular traits, molecular factors, and clinical traits.",Успешная цель,1598,1768,#4CAF50,file,0.85
-g5,"It is tempting to speculate that the search for the origin and effective treatment of this disease will continue to add complexity to the scientific literature.",Не успешная цель,1060,1222,#F44336,file,0.78
-g6,"we anticipate otherwise: the new generation of PD researchers will be practicing a dramatically different type of science than PD researchers from the old school.",Не успешная цель,1250,1415,#F44336,file,0.72
-g7,"The fundamental conceptual change required to progress efficiently from this point will be to develop PD research into a more exact science in terms of mathematical concepts.",Не успешная цель,1430,1601,#F44336,file,0.75
-g8,"The complex relationships between molecular, cellular and clinical traits will need to be explained in an intelligible way, in terms of a small number of underlying principles.",Не успешная цель,1602,1776,#F44336,file,0.74
-g9,"the chronology and mechanisms of cell type-specific and PD subtype-specific cellular dysfunction remain to be elucidated.",Не успешная цель,4580,4701,#F44336,file,0.90
-g10,"it is likely that the respective initial tipping point of disease progression is caused by a PD subtype-specific process.",Не успешная цель,4702,4822,#F44336,file,0.68
-g11,"it is also likely that multiple hits on different cellular targets may hasten the emergence of higher-scale organic dysfunction.",Не успешная цель,4823,4949,#F44336,file,0.65
-g12,"This hypothesis states that PD could have its origin in the bulbus olfactorius, in the motor nucleus of the vagal nerve, or at a strictly peripheral site.",Не успешная цель,5010,5167,#F44336,file,0.72
-g13,"it remains to be seen whether this ascending spread of the disease is related to a-synuclein or other factors.",Не успешная цель,5280,5390,#F44336,file,0.92
-g14,"it is not well understood why mitochondrial dysfunction takes such a center stage in PD.",Не успешная цель,6820,6908,#F44336,file,0.90
-g15,"It has been speculated that these physiological cellular characteristics could potentially explain the selective local degeneration of both DA and non-DA cells in PD.",Не успешная цель,7310,7476,#F44336,file,0.78
-g16,"It is likely that many of these processes are directly or indirectly involved in PD pathogenesis, even though it is not clear whether they are causative or consequential.",Не успешная цель,7810,7980,#F44336,file,0.75
-g17,"it is not clear whether they are causative or consequential.",Не успешная цель,7921,7980,#F44336,file,0.88
-g18,"Many efforts have been made to identify mitochondrial DNA mutations as a potential causal factor in PD.",Не успешная цель,8020,8123,#F44336,file,0.92
-g19,"Their precise mechanisms of action remain to be understood.",Не успешная цель,8980,9039,#F44336,file,0.93
-g20,"Potential chelation therapies are currently under development.",Не успешная цель,9180,9241,#F44336,file,0.70
-g21,"Neither the complex etiology of PD nor its relationship with neuroinflammation are yet fully understood.",Не успешная цель,9380,9484,#F44336,file,0.90
-g22,"we believe that important new developments will come from more holistic, systems-based approaches that aim to understand the transfer functions between molecular, cellular, intercellular and high-level pathogenic events.",Не успешная цель,10060,10275,#F44336,file,0.72
-g23,"The challenge is to understand the key factors in each case, and to bring this concept to the level of personalized medicine.",Не успешная цель,10276,10399,#F44336,file,0.80
-g24,"we believe that neuroinflammation is at least a modulator of disease progression, and that further basic research in this field is needed to form the basis for future developments that target inflammatory pathways for disease-modifying therapies.",Не успешная цель,9735,9976,#F44336,file,0.78
-g25,"increased efforts are required to coordinate and integrate interdisciplinary PD research.",Не успешная цель,10310,10396,#F44336,file,0.75
-g26,"The ultimate aim in systems PD biomedicine is to translate mechanistic insights into clinical applications, and to use these to improve patient quality of life.",Не успешная цель,10397,10558,#F44336,file,0.80
-g27,"One important challenge is the need to develop theoretical models that are able to accurately represent the pathogenesis of PD.",Не успешная цель,10559,10685,#F44336,file,0.82
-g28,"We believe that such models will help interdisciplinary cooperation by helping to structure both the interdisciplinary learning process and the formulation of testable key hypotheses.",Не успешная цель,10686,10866,#F44336,file,0.70
-g29,"Adequate multiple-scale models, aiming to bring PD research to a more integrated level, should therefore aim to understand the subsystem properties that connect the scales and to incorporate information about as many manageable factors as possible.",Не успешная цель,11050,11295,#F44336,file,0.76
-g30,"A major challenge in the experimental analysis of multifactorial diseases is the extensive phenotypic buffering driven by network robustness.",Не успешная цель,11500,11640,#F44336,file,0.72
-g31,"The main challenge will be to understand the transfer functions that connect the multiple scales involved in PD pathogenesis.",Не успешная цель,11700,11824,#F44336,file,0.85
-g32,"it will be crucial to develop noninvasive experimental approaches for time-resolved analyses in experimental models.",Не успешная цель,11950,12065,#F44336,file,0.80
-g33,"we believe that light microscopy applications in systems biology will be a major source of data in time-resolved multifactorial single-cell analysis.",Не успешная цель,12066,12215,#F44336,file,0.72
-g34,"More short-term goals include improved human cell culture models for genetic and pharmacological screening approaches, and the development of more efficient differentiation methods for patient-derived induced pluripotent stem cells, as well as improved animal models for translational research.",Не успешная цель,12580,12865,#F44336,file,0.77
-g35,"regenerative medicine aiming to restore dopamine levels in the striatum offers transient relief from at least some clinical symptoms.",Не успешная цель,12900,13032,#F44336,file,0.65
-g36,"we believe that systems approaches will allow for the development of increasingly sustainable and personalized disease-modifying therapies.",Не успешная цель,13033,13172,#F44336,file,0.73
-g37,"causative treatment approaches for PD have not yet become available, and both motor and nonmotor symptoms continue to interfere with patient quality of life.",Не успешная цель,13280,13438,#F44336,file,0.96
-g38,"it is crucial to define the signals exchanged between various cell types involved in the disease, and it is important to understand the effects of those signals on the integrated circuits of each of those cell types.",Не успешная цель,13560,13773,#F44336,file,0.78
-g39,"it will be crucial to reach a level of mathematical clarity with regard to pathogenesis mechanisms, integrating the conceptual structure of systems theory and the logical coherence of neuroscience.",Не успешная цель,13774,13968,#F44336,file,0.82
-s1,"We foresee that PD research will evolve to be an increasingly exact science, in which the growing myriad of measurable phenotypic traits will be understood as manifestations of a small set of key principles.",Фрагмент ведёт к успеху,13969,14174,#81C784,file,0.78
-s2,"Indeed, many cellular hallmarks have been found to occur in both PD and IPD.",Фрагмент ведёт к успеху,976,1051,#81C784,file,0.75
-s3,"PD research has evolved into a very mature research field, which has developed an arsenal of successfully applied symptomatic treatments.",Фрагмент ведёт к успеху,13200,13340,#81C784,file,0.78
-s4,"The tremendous complexity of the disease is increased by a nonlinear progression of the pathogenesis between molecular, cellular and organic systems.",Фрагмент ведёт к неуспеху,210,358,#EF9A9A,file,0.80
-s5,"The approaches that have driven the development of these treatments have been practice-oriented and often pragmatic.",Фрагмент ведёт к неуспеху,1416,1530,#EF9A9A,file,0.70
-s6,"incomplete penetrance, variable expression and phenocopies often pose problems in assessing whether PD is caused solely by genetic susceptibility or is modified by environmental factors.",Фрагмент ведёт к неуспеху,3940,4122,#EF9A9A,file,0.78
-s7,"Correlations between the represented cellular phenotypes and disease progression are well established. In contrast, the chronology and mechanisms of cell type-specific and PD subtype-specific cellular dysfunction remain to be elucidated.",Фрагмент ведёт к неуспеху,4510,4701,#EF9A9A,file,0.82
-s8,"Although PD pathogenesis has been associated with different cellular dysfunctions, it is likely that the respective initial tipping point of disease progression is caused by a PD subtype-specific process.",Фрагмент ведёт к неуспеху,4702,4900,#EF9A9A,file,0.68
-s9,"However, it remains to be seen whether this ascending spread of the disease is related to a-synuclein or other factors.",Фрагмент ведёт к неуспеху,5270,5390,#EF9A9A,file,0.88
-s10,"Despite all the progress made in understanding mitochondrial biology and its role in controlling apoptosis, it is not well understood why mitochondrial dysfunction takes such a center stage in PD.",Фрагмент ведёт к неуспеху,6820,7015,#EF9A9A,file,0.88
-s11,"DA neurons have extremely long projections from the SN into the striatum, are unmyelinated, and are characterized by a high degree of arborization and a high number of synapses.",Фрагмент ведёт к неуспеху,7050,7225,#EF9A9A,file,0.72
-s12,"Thus far, these efforts have not yielded clear answers, but it has been observed that neurons of patients with PD have an unusually high rate of mitochondrial DNA deletions.",Фрагмент ведёт к неуспеху,8124,8295,#EF9A9A,file,0.93
-s13,"One of the biggest challenges in the analysis of mitochondrial DNA mutations is heteroplasmy-the fact that each individual cell can contain hundreds of mitochondria, and not all of them will carry the same mutation.",Фрагмент ведёт к неуспеху,8296,8508,#EF9A9A,file,0.85
-s14,"Their precise mechanisms of action remain to be understood.",Фрагмент ведёт к неуспеху,8980,9039,#EF9A9A,file,0.93
-s15,"not only iron but also other redox metals, such as copper, and nonredox metals, such as zinc, have also been reported to be involved in oxidative stress in the context of age-related neurodegenerative diseases.",Фрагмент ведёт к неуспеху,9040,9242,#EF9A9A,file,0.71
-s16,"It remains unclear, however, whether neuroinflammation is purely a side effect of PD, or whether it plays a more causal role in the pathogenesis.",Фрагмент ведёт к неуспеху,9485,9630,#EF9A9A,file,0.85
-s17,"An oversimplified reductionist model that ignores these intercellular interactions could serve to complicate rather than facilitate the development of disease-modifying therapies.",Фрагмент ведёт к неуспеху,10100,10275,#EF9A9A,file,0.74
-s18,"the heterogeneous disease progression observed from patient to patient cannot be understood with oversimplified reductionist views.",Фрагмент ведёт к неуспеху,10305,10435,#EF9A9A,file,0.78
-s19,"neuroscience research based on molecular and cellular biology has added further layers of complexity to our understanding of PD. In turn, increased efforts are required to coordinate and integrate interdisciplinary PD research.",Фрагмент ведёт к неуспеху,10220,10396,#EF9A9A,file,0.75
-s20,"a multifactorial disease such as PD, whose progression is believed to be influenced by the collective action of several genes and environmental factors, cannot be adequately represented by a simple model.",Фрагмент ведёт к неуспеху,10867,11076,#EF9A9A,file,0.83
-s21,"The multifactorial nature renders making predictions related to onset and progression a very challenging task.",Фрагмент ведёт к неуспеху,11077,11183,#EF9A9A,file,0.82
-s22,"Preparing for an integrated systems-level understanding of PD is now within reach, but remains an extremely ambitious goal.",Фрагмент ведёт к неуспеху,12450,12572,#EF9A9A,file,0.90
-s23,"In ongoing projects, the integration of high-dimensional and nonlinear data is already creating an interesting challenge for data interpretation, and stresses the urgent need to extend the application of systems theory to PD research.",Фрагмент ведёт к неуспеху,12866,13098,#EF9A9A,file,0.76
-s24,"the current lack of PD subtype-specific therapies, however, makes the use of such genetic testing disputable.",Фрагмент ведёт к неуспеху,12320,12430,#EF9A9A,file,0.82
-s25,"Although regenerative medicine aiming to restore dopamine levels in the striatum offers transient relief from at least some clinical symptoms, we believe that systems approaches will allow for the development of increasingly sustainable and personalized disease-modifying therapies.",Фрагмент ведёт к неуспеху,12900,13172,#EF9A9A,file,0.72
-s26,"This fact highlights the complexity of this disease, and stresses the need for an intelligible integration of findings from 200 years of PD research.",Фрагмент ведёт к неуспеху,13439,13560,#EF9A9A,file,0.78
-s27,"Only a few research fields in translational medicine are more advanced than PD research and hence can serve as role models.",Фрагмент ведёт к неуспеху,13440,13560,#EF9A9A,file,0.68
-s28,"Treatment of PD is currently symptomatic, and essentially involves substituting dopamine, or suppressing pathological neuronal oscillations via deep brain stimulation.",Фрагмент ведёт к неуспеху,1053,1218,#EF9A9A,file,0.90
-s29,"The exact role of environmental factors in the pathogenesis of PD remains elusive.",Фрагмент ведёт к неуспеху,4320,4402,#EF9A9A,file,0.88
-s30,"Because of the multitude of relevant cellular phenotypes in PD, and the need to understand causality in cellular pathogenesis, we believe that light microscopy applications in systems biology will be a major source of data in time-resolved multifactorial single-cell analysis.",Фрагмент ведёт к неуспеху,11900,12100,#EF9A9A,file,0.70
+g1,"In this minireview, we explore the complexity of PD and propose a systems-based approach, organizing the available information around cellular disease hallmarks.",Успешная цель,469,630,#4CAF50,file,0.88
+g2,"We encourage our peers to adopt this cell-based view with the aim of improving communication in interdisciplinary research endeavors targeting the molecular events, modulatory cell-to-cell signaling pathways and emerging clinical phenotypes related to PD.",Успешная цель,631,886,#4CAF50,file,0.8
+g3,"It is tempting to speculate that the search for the origin and effective treatment of this disease will continue to add complexity to the scientific literature.",Не успешная цель,2451,2611,#F44336,file,0.72
+g4,"However, appreciating the progress in cancer research [6] [7], we anticipate otherwise: the new generation of PD researchers will be practicing a dramatically different type of science than PD researchers from the old school, which deserves full credit for developments such as dopamine substitution and deep brain stimulation.",Не успешная цель,2612,2939,#F44336,file,0.7
+g5,"The complex relationships between molecular, cellular and clinical traits will need to be explained in an intelligible way, in terms of a small number of underlying principles.",Не успешная цель,3232,3408,#F44336,file,0.85
+g6,"In this review, we focus on the cellular hallmarks of PD, and discuss strategies for understanding the relationships between these cellular traits, molecular factors, and clinical traits.",Успешная цель,3409,3596,#4CAF50,file,0.9
+g7,"However, many of those have been identified only on the basis of chromosomal linkage studies and causality, and confirmation is still pending.",Не успешная цель,5830,5972,#F44336,file,0.82
+g8,"Incomplete penetrance, variable expression and phenocopies often pose problems in assessing whether PD is caused solely by genetic susceptibility or is modified by environmental factors.",Не успешная цель,5973,6159,#F44336,file,0.78
+g9,"The exact role of environmental factors in the pathogenesis of PD remains elusive.",Не успешная цель,11792,11874,#F44336,file,0.88
+g10,"In contrast, the chronology and mechanisms of cell type-specific and PD subtype-specific cellular dysfunction remain to be elucidated.",Не успешная цель,12383,12517,#F44336,file,0.9
+g11,"Although PD pathogenesis has been associated with different cellular dysfunctions, it is likely that the respective initial tipping point of disease progression is caused by a PD subtypespecific process.",Не успешная цель,12518,12721,#F44336,file,0.68
+g12,"Finally, it is also likely that multiple hits on different cellular targets may hasten the emergence of higher-scale organic dysfunction.",Не успешная цель,12722,12859,#F44336,file,0.65
+g13,"This hypothesis states that PD could have its origin in the bulbus olfactorius, in the motor nucleus of the vagal nerve, or at a strictly peripheral site.",Не успешная цель,14887,15041,#F44336,file,0.72
+g14,"However, it remains to be seen whether this ascending spread of the disease is related to a-synuclein or other factors.",Не успешная цель,15367,15486,#F44336,file,0.9
+g15,"Despite all the progress made in understanding mitochondrial biology and its role in controlling apoptosis, it is not well understood why mitochondrial dysfunction takes such a center stage in PD [55] [56].",Не успешная цель,20258,20464,#F44336,file,0.9
+g16,"It has been speculated that these physiological cellular characteristics could potentially explain the selective local degeneration of both DA and non-DA cells in PD [60] [61].",Не успешная цель,21260,21436,#F44336,file,0.7
+g17,"It is likely that many of these processes are directly or indirectly involved in PD pathogenesis, even though it is not clear whether they are causative or consequential.",Не успешная цель,24254,24424,#F44336,file,0.72
+g18,"Thus far, these efforts have not yielded clear answers, but it has been observed that neurons of patients with PD have an unusually high rate of mitochondrial DNA deletions [74].",Не успешная цель,24912,25090,#F44336,file,0.92
+g19,"Their precise mechanisms of action remain to be understood.",Не успешная цель,27174,27233,#F44336,file,0.9
+g20,"Potential chelation therapies are currently under development [89].",Не успешная цель,27837,27904,#F44336,file,0.8
+g21,"It is likely that the high number and the widespread distribution of synapses, with the accompanying high local demands on energy and $Ca^{2+}$ buffering resources, correlate with decreased robustness of SN DA neurons against mitochondrial dysfunction and axonal transport defects [54].",Не успешная цель,28313,28599,#F44336,file,0.68
+g22,"Neither the complex etiology of PD nor its relationship with neuroinflammation are yet fully understood (Fig. 2).",Не успешная цель,29257,29370,#F44336,file,0.9
+g23,"It remains unclear, however, whether neuroinflammation is purely a side effect of PD, or whether it plays a more causal role in the pathogenesis.",Не успешная цель,31809,31954,#F44336,file,0.9
+g24,"Given this plethora of supporting evidence, we believe that neuroinflammation is at least a modulator of disease progression, and that further basic research in this field is needed to form the basis for future developments that target inflammatory pathways for disease-modifying therapies [109].",Не успешная цель,33890,34186,#F44336,file,0.78
+g25,"Looking forward, we believe that important new developments will come from more holistic, systems-based approaches that aim to understand the transfer functions between molecular, cellular, intercellular and high-level pathogenic events.",Не успешная цель,29940,30177,#F44336,file,0.72
+g26,"Finally, we stress that the heterogeneous disease progression observed from patient to patient cannot be understood with oversimplified reductionist views.",Не успешная цель,31013,31168,#F44336,file,0.85
+g27,"The challenge is to understand the key factors in each case, and to bring this concept to the level of personalized medicine.",Не успешная цель,31169,31294,#F44336,file,0.88
+g28,"In turn, increased efforts are required to coordinate and integrate interdisciplinary PD research.",Не успешная цель,34456,34554,#F44336,file,0.82
+g29,"The ultimate aim in systems PD biomedicine is to translate mechanistic insights into clinical applications, and to use these to improve patient quality of life [110].",Не успешная цель,34555,34721,#F44336,file,0.85
+g30,"One important challenge is the need to develop theoretical models that are able to accurately represent the pathogenesis of PD.",Не успешная цель,34722,34849,#F44336,file,0.88
+g31,"We believe that such models will help interdisciplinary cooperation by helping to structure both the interdisciplinary learning process and the formulation of testable key hypotheses.",Не успешная цель,34850,35033,#F44336,file,0.7
+g32,"However, a multifactorial disease such as PD, whose progression is believed to be influenced by the collective action of several genes and environmental factors, cannot be adequately represented by a simple model.",Не успешная цель,35034,35247,#F44336,file,0.85
+g33,"The multifactorial nature renders making predictions related to onset and progression a very challenging task.",Не успешная цель,35248,35358,#F44336,file,0.85
+g34,"Adequate multiple-scale models, aiming to bring PD research to a more integrated level, should therefore aim to understand the subsystem properties that connect the scales and to incorporate information about as many manageable factors as possible, including environmental factors, genetics, proteomics, metabolomics, cell biology, higher-level physiology, and patient quality of life.",Не успешная цель,35481,35866,#F44336,file,0.78
+g35,"The main challenge will be to understand the transfer functions that connect the multiple scales involved in PD pathogenesis.",Не успешная цель,37163,37288,#F44336,file,0.88
+g36,"We believe that our understanding of the signaling pathways connecting molecular events to clinical traits will have made significant progress in a decade from now.",Не успешная цель,37289,37453,#F44336,file,0.68
+g37,"In addition to an appropriate analytical framework, it will be crucial to develop noninvasive experimental approaches for time-resolved analyses in experimental models.",Не успешная цель,37454,37622,#F44336,file,0.85
+g38,"Because of the multitude of relevant cellular phenotypes in PD, and the need to understand causality in cellular pathogenesis, we believe that light microscopy applications in systems biology will be a major source of data in time-resolved multifactorial single-cell analysis [118].",Не успешная цель,37623,37905,#F44336,file,0.68
+g39,"We also think that the integration of information from different, coordinated experimental approaches, combined with appropriate modeling strategies, will greatly enhance our understanding of PD pathogenesis, as well as the predictive power for early PD diagnosis and personalized identification of underlying disease factors.",Не успешная цель,37906,38232,#F44336,file,0.68
+g40,"Currently, genetic testing of patients with PD is already possible, and is acting as a driving force for translational research; the current lack of PD subtypespecific therapies, however, makes the use of such genetic testing disputable [12] [119].",Не успешная цель,38233,38481,#F44336,file,0.8
+g41,"Preparing for an integrated systems-level understanding of PD is now within reach, but remains an extremely ambitious goal.",Не успешная цель,38482,38605,#F44336,file,0.88
+g42,"We believe that this major endeavor will pave the way for a new era of improved personalized medicine.",Не успешная цель,38606,38708,#F44336,file,0.65
+g43,"More short-term goals include improved human cell culture models for genetic and pharmacological screening approaches, and the development of more efficient differentiation methods for patient-derived induced pluripotent stem cells [120], as well as improved animal models for translational research [98].",Не успешная цель,38710,39015,#F44336,file,0.78
+g44,"In ongoing projects, the integration of high-dimensional and nonlinear data is already creating an interesting challenge for data interpretation, and stresses the urgent need to extend the application of systems theory to PD research.",Не успешная цель,39016,39250,#F44336,file,0.82
+g45,"Although regenerative medicine aiming to restore dopamine levels in the striatum offers transient relief from at least some clinical symptoms, we believe that systems approaches will allow for the development of increasingly sustainable and personalized disease-modifying therapies.",Не успешная цель,39251,39533,#F44336,file,0.72
+g46,"However, causative treatment approaches for PD have not yet become available, and both motor and nonmotor symptoms continue to interfere with patient quality of life.",Не успешная цель,39884,40050,#F44336,file,0.95
+g47,"This fact highlights the complexity of this disease, and stresses the need for an intelligible integration of findings from 200 years of PD research.",Не успешная цель,40051,40200,#F44336,file,0.82
+g48,"There are two main take-home messages [6] [7]: first, it is crucial to define the signals exchanged between various cell types involved in the disease, and it is important to understand the effects of those signals on the integrated circuits of each of those cell types.",Не успешная цель,40369,40639,#F44336,file,0.85
+g49,"Second, to develop accurate disease prognosis and treatment paradigms, it will be crucial to reach a level of mathematical clarity with regard to pathogenesis mechanisms, integrating the conceptual structure of systems theory and the logical coherence of neuroscience.",Не успешная цель,40640,40908,#F44336,file,0.85
+g50,"We foresee that PD research will evolve to be an increasingly exact science, in which the growing myriad of measurable phenotypic traits will be understood as manifestations of a small set of key principles.",Не успешная цель,40910,41117,#F44336,file,0.7
+s1,"Correlations between the represented cellular phenotypes and disease progression are well established.",Фрагмент ведёт к успеху,12280,12382,#81C784,file,0.8
+s2,"Since the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson's disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors.",Фрагмент ведёт к успеху,53,318,#81C784,file,0.8
+s3,"The tremendous complexity of the disease is increased by a nonlinear progression of the pathogenesis between molecular, cellular and organic systems.",Фрагмент ведёт к неуспеху,319,468,#EF9A9A,file,0.82
+s4,"The approaches that have driven the development of these treatments have been practice-oriented and often pragmatic.",Фрагмент ведёт к неуспеху,2940,3056,#EF9A9A,file,0.7
+s5,"The fundamental conceptual change required to progress efficiently from this point will be to develop PD research into a more exact science in terms of mathematical concepts.",Фрагмент ведёт к неуспеху,3057,3231,#EF9A9A,file,0.78
+s6,"In 5-10% of cases, PD presents as a Mendelian form with autosomal dominant or recessive inheritance.",Фрагмент ведёт к неуспеху,4110,4210,#EF9A9A,file,0.65
+s7,"PD has also been linked to living in a rural environment, gardening, farming, and occupational exposure to agricultural chemicals [25].",Фрагмент ведёт к неуспеху,11656,11791,#EF9A9A,file,0.7
+s8,"However, it is well established that both environmental and genetic factors correlate with cellular phenotypes that can be considered to be cellular hallmarks of PD (Fig. 1).",Фрагмент ведёт к неуспеху,11875,12049,#EF9A9A,file,0.72
+s9,"One idea is that the spread of PD pathogenesis may start in the gastrointestinal tract and propagate cell to cell, spreading from the enteric nervous system all the way up to the brainstem, midbrain, and other parts of the central nervous system (CNS), finally resulting in disease staging, as proposed by Braak et al. [30].",Фрагмент ведёт к неуспеху,15042,15366,#EF9A9A,file,0.75
+s10,"DA neurons have extremely long projections from the SN into the striatum, are unmyelinated, and are characterized by a high degree of arborization and a high number of synapses [57] [58].",Фрагмент ведёт к неуспеху,20604,20791,#EF9A9A,file,0.75
+s11,"Interestingly, the at-risk populations of neurons share a number of features with DA neurons, including highly branched axons, pacemaker activity, elevated oxidative stress, and $Ca^{2+}$ buffering stress.",Фрагмент ведёт к неуспеху,21054,21259,#EF9A9A,file,0.72
+s12,"In addition to their pivotal roles in energy metabolism and $Ca^{2+}$ homeostasis, mitochondria are important in many other processes, such as programmed cell death and inflammatory reactions [55].",Фрагмент ведёт к неуспеху,24056,24253,#EF9A9A,file,0.72
+s13,"One of the biggest challenges in the analysis of mitochondrial DNA mutations is heteroplasmy-the fact that each individual cell can contain hundreds of mitochondria, and not all of them will carry the same mutation.",Фрагмент ведёт к неуспеху,25402,25617,#EF9A9A,file,0.82
+s14,"Two genetic PD factors that are clearly correlated with iron accumulation are PLA2G6 and ATP13A2 [85] [86].",Фрагмент ведёт к неуспеху,27066,27173,#EF9A9A,file,0.7
+s15,"Inter- estingly, not only iron but also other redox metals, such as copper, and nonredox metals, such as zinc, have also been reported to be involved in oxidative stress in the context of age-related neurodegenerative diseases [88].",Фрагмент ведёт к неуспеху,27604,27836,#EF9A9A,file,0.68
+s16,"SN DA neurons have a very complex morphology, with ~ 150 000 presynaptic terminals per neuron in the striatum [90].",Фрагмент ведёт к неуспеху,28197,28312,#EF9A9A,file,0.7
+s17,"In the majority of experimental approaches, neuroinflammation is a secondary detrimental effect triggered by PD-related chemical or genetic stress factors [98].",Фрагмент ведёт к неуспеху,32225,32385,#EF9A9A,file,0.75
+s18,"The high number of microglia promoting neuroinflammation, opposing a low number of regulatory astrocytes, appears to provide a plausible explanation for the elevated risk of neuroinflammation in this brain region.",Фрагмент ведёт к неуспеху,32894,33107,#EF9A9A,file,0.72
+s19,"For example, microglia are able to detect misfolded a-synuclein and increase neurotoxicity through the production of ROS and proinflammatory cytokines [99] [100].",Фрагмент ведёт к неуспеху,32386,32548,#EF9A9A,file,0.7
+s20,"It is important to understand that the onset of motor symptoms does not correlate in a linear manner with the decrease in the number of DA neurons.",Фрагмент ведёт к неуспеху,30549,30696,#EF9A9A,file,0.78
+s21,"All subtypes of PD may share common cellular phenotypes.",Фрагмент ведёт к неуспеху,12223,12279,#EF9A9A,file,0.62
+s22,"The progression of the syndrome emerges from the flow of spatiotemporal information between molecular and organic scales.",Фрагмент ведёт к неуспеху,35359,35480,#EF9A9A,file,0.75
+s23,"However, neuroscience research based on molecular and cellular biology has added further layers of complexity to our understanding of PD.",Фрагмент ведёт к неуспеху,34318,34455,#EF9A9A,file,0.72
+s24,"Treatment of PD is currently symptomatic, and essentially involves substituting dopamine, or suppressing pathological neuronal oscillations via deep brain stimulation.",Фрагмент ведёт к неуспеху,2282,2449,#EF9A9A,file,0.91
+s25,"Two centuries after the first detailed clinical description of PD by James Parkinson, and more than a decade after the first identification of genetic factors in this disease, PD research has evolved into a very mature research field, which has developed an arsenal of successfully applied symptomatic treatments.",Фрагмент ведёт к неуспеху,39570,39883,#EF9A9A,file,0.78
+s26,"A major challenge in the experimental analysis of multifactorial diseases is the extensive phenotypic buffering driven by network robustness.",Фрагмент ведёт к неуспеху,36783,36924,#EF9A9A,file,0.75
+s27,"Wellstead et al. recently described a systems-control approach in which disturbances in energy metabolism act as a driving core module, and serve as an analytical and modeling framework with which to study the pathogenesis of PD [112] [113].",Фрагмент ведёт к неуспеху,36050,36291,#EF9A9A,file,0.7
+s28,"Graphical network modeling can provide an adequate view of a dynamic system such as PD, which is defined by the coordinated action of several factors and their local dynamics [111].",Фрагмент ведёт к неуспеху,35867,36048,#EF9A9A,file,0.65
+s29,"Detailed knowledge of both biology and systems theory are prerequisites for meaningfully furthering our understanding of PD.",Фрагмент ведёт к неуспеху,37038,37162,#EF9A9A,file,0.72
+s30,"Only a few research fields in translational medicine are more advanced than PD research and hence can serve as role models.",Фрагмент ведёт к неуспеху,40202,40325,#EF9A9A,file,0.68
+s31,"It is important to keep in mind that energy metabolism is highly integrated with complex cell-to-cell interactions.",Фрагмент ведёт к неуспеху,36292,36407,#EF9A9A,file,0.65
+s32,"This is reflected in the concept of the tripartite synapse, describing the importance of bidirectional communication between synapses formed by presynaptic and postsynaptic neurons and astrocytes [117].",Фрагмент ведёт к неуспеху,36579,36781,#EF9A9A,file,0.65
 
 # RELATIONS
 relation_uid,source_uid,target_uid,relation_type
 r1,s1,g1,ведёт к
-r2,s4,g1,ведёт к
-r3,s2,g3,ведёт к
-r4,s2,g4,ведёт к
-r5,s3,g2,ведёт к
-r6,s3,g4,ведёт к
-r7,s4,g5,ведёт к
-r8,s4,g7,ведёт к
-r9,s4,g8,ведёт к
-r10,s5,g6,ведёт к
-r11,s5,g7,ведёт к
-r12,s6,g7,ведёт к
-r13,s6,g8,ведёт к
-r14,s7,g9,ведёт к
-r15,s8,g10,ведёт к
-r16,s8,g11,ведёт к
-r17,s9,g12,ведёт к
-r18,s9,g13,ведёт к
-r19,s10,g14,ведёт к
-r20,s11,g15,ведёт к
-r21,s12,g18,ведёт к
-r22,s13,g18,ведёт к
-r23,s14,g19,ведёт к
-r24,s15,g20,ведёт к
-r25,s16,g21,ведёт к
-r26,s16,g24,ведёт к
-r27,s17,g22,ведёт к
-r28,s17,g23,ведёт к
-r29,s18,g23,ведёт к
-r30,s18,g25,ведёт к
-r31,s19,g25,ведёт к
-r32,s19,g29,ведёт к
-r33,s20,g27,ведёт к
-r34,s20,g29,ведёт к
-r35,s20,g31,ведёт к
-r36,s21,g27,ведёт к
-r37,s21,g30,ведёт к
-r38,s21,g31,ведёт к
-r39,s22,g26,ведёт к
-r40,s22,g27,ведёт к
-r41,s22,g28,ведёт к
-r42,s22,g31,ведёт к
-r43,s23,g32,ведёт к
-r44,s23,g33,ведёт к
-r45,s23,g34,ведёт к
-r46,s24,g34,ведёт к
-r47,s24,g36,ведёт к
-r48,s25,g35,ведёт к
-r49,s25,g36,ведёт к
-r50,s26,g37,ведёт к
-r51,s27,g38,ведёт к
-r52,s27,g39,ведёт к
-r53,s28,g37,ведёт к
-r54,s28,g26,ведёт к
-r55,s29,g25,ведёт к
-r56,s30,g33,ведёт к
-r57,s14,g14,ведёт к
-r58,s20,g8,ведёт к
-r59,s22,g36,ведёт к
-r60,s11,g14,ведёт к
-r61,s4,g22,ведёт к
-r62,s16,g21,ведёт к
+r2,s1,g6,ведёт к
+r3,s2,g1,ведёт к
+r4,s2,g2,ведёт к
+r5,s3,g5,ведёт к
+r6,s3,g32,ведёт к
+r7,s3,g33,ведёт к
+r8,s3,g35,ведёт к
+r9,s4,g3,ведёт к
+r10,s4,g4,ведёт к
+r11,s5,g4,ведёт к
+r12,s5,g5,ведёт к
+r13,s5,g49,ведёт к
+r14,s5,g50,ведёт к
+r15,s6,g7,ведёт к
+r16,s6,g8,ведёт к
+r17,s7,g9,ведёт к
+r18,s8,g9,ведёт к
+r19,s8,g10,ведёт к
+r20,s9,g13,ведёт к
+r21,s9,g14,ведёт к
+r22,s10,g15,ведёт к
+r23,s11,g15,ведёт к
+r24,s11,g16,ведёт к
+r25,s12,g17,ведёт к
+r26,s13,g18,ведёт к
+r27,s14,g19,ведёт к
+r28,s15,g20,ведёт к
+r29,s16,g21,ведёт к
+r30,s17,g22,ведёт к
+r31,s17,g23,ведёт к
+r32,s18,g22,ведёт к
+r33,s18,g23,ведёт к
+r34,s18,g24,ведёт к
+r35,s19,g24,ведёт к
+r36,s19,g25,ведёт к
+r37,s20,g26,ведёт к
+r38,s20,g27,ведёт к
+r39,s21,g11,ведёт к
+r40,s21,g12,ведёт к
+r41,s22,g34,ведёт к
+r42,s22,g35,ведёт к
+r43,s23,g28,ведёт к
+r44,s23,g43,ведёт к
+r45,s23,g44,ведёт к
+r46,s24,g40,ведёт к
+r47,s24,g45,ведёт к
+r48,s24,g46,ведёт к
+r49,s25,g46,ведёт к
+r50,s25,g47,ведёт к
+r51,s26,g37,ведёт к
+r52,s27,g30,ведёт к
+r53,s27,g31,ведёт к
+r54,s28,g31,ведёт к
+r55,s28,g36,ведёт к
+r56,s29,g38,ведёт к
+r57,s29,g39,ведёт к
+r58,s30,g48,ведёт к
+r59,s30,g49,ведёт к
+r60,s25,g29,ведёт к
+r61,s25,g41,ведёт к
+r62,s3,g42,ведёт к
+r63,s31,g25,ведёт к
+r64,s32,g25,ведёт к
