@@ -95,7 +95,8 @@
       "Read(//d/Knowledge_Map/$svc/src/**)",
       "Bash(poetry install:*)",
       "WebFetch(domain:opendataloader.org)",
-      "Bash(poetry add:*)"
+      "Bash(poetry add:*)",
+      "Bash(\"d:/Knowledge_Map/api/web/routers/data_extraction/documents.py\")"
     ],
     "deny": [],
     "ask": []

@@ -12,15 +12,10 @@ import styles from './EditorTabsWithValidation.module.css';
 
 export interface FilterProps {
   totalAnnotations: number;
-  loadedAnnotationsCount: number;
-  annotationsLimit: number;
   selectedCategories: string[];
   selectedSource: string | null;
-  isLoadingMore: boolean;
   onCategoriesChange: (categories: string[]) => void;
   onSourceChange: (source: string | null) => void;
-  onLimitChange: (limit: number) => void;
-  onLoadMore: () => void;
   onResetFilters: () => void;
   annotations: Annotation[];
   hiddenTypes: Set<string>;
@@ -57,6 +52,7 @@ interface EditorTabsWithValidationProps {
   onRelationDelete?: (sourceId: string, targetId: string) => void;
   onExportCSV?: () => void;
   onImportCSV?: (file: File) => void;
+  importProgress?: { current: number; total: number } | null;
   onSaveForTests?: () => void;
   onDownloadMarkdown?: () => void;
   onValidationChange?: (validation: ValidationResponse | null) => void;
@@ -68,6 +64,10 @@ interface EditorTabsWithValidationProps {
   onUndo?: () => void;
   onRedo?: () => void;
   forceTextVersion?: number;
+  onShiftLeft?: () => void;
+  onShiftRight?: () => void;
+  hasCursor?: boolean;
+  onCursorMove?: (pos: number) => void;
 }
 
 const EditorTabsWithValidation = React.forwardRef<
@@ -104,6 +104,7 @@ const EditorTabsWithValidation = React.forwardRef<
       onRelationDelete,
       onExportCSV,
       onImportCSV,
+      importProgress,
       onSaveForTests,
       onDownloadMarkdown,
       onValidationChange,
@@ -115,6 +116,10 @@ const EditorTabsWithValidation = React.forwardRef<
       onUndo,
       onRedo,
       forceTextVersion,
+      onShiftLeft,
+      onShiftRight,
+      hasCursor,
+      onCursorMove,
     },
     ref
   ) => {
@@ -321,11 +326,16 @@ const EditorTabsWithValidation = React.forwardRef<
             onRelationDelete={onRelationDelete}
             onExportCSV={onExportCSV}
             onImportCSV={onImportCSV}
+            importProgress={importProgress}
             onSaveForTests={onSaveForTests}
             onDownloadMarkdown={onDownloadMarkdown}
             onUndo={onUndo}
             onRedo={onRedo}
             forceTextVersion={forceTextVersion}
+            onShiftLeft={onShiftLeft}
+            onShiftRight={onShiftRight}
+            hasCursor={hasCursor}
+            onCursorMove={onCursorMove}
           />
         </div>
 

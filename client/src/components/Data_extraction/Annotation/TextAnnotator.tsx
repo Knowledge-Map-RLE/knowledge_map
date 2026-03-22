@@ -23,6 +23,7 @@ interface TextAnnotatorProps {
   onUndo?: () => void;
   onRedo?: () => void;
   forceTextVersion?: number;
+  onCursorMove?: (pos: number) => void;
 }
 
 // ── HTML-утилиты ──────────────────────────────────────────────────────────────
@@ -145,6 +146,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   onUndo,
   onRedo,
   forceTextVersion,
+  onCursorMove,
 }, forwardedRef) => {
   const [selection, setSelection] = useState<{ start: number; end: number } | null>(null);
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null);
@@ -170,6 +172,8 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   onUndoRef.current = onUndo;
   const onRedoRef = useRef(onRedo);
   onRedoRef.current = onRedo;
+  const onCursorMoveRef = useRef(onCursorMove);
+  onCursorMoveRef.current = onCursorMove;
 
   // Ref для таймера debounce
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -321,6 +325,27 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     };
     document.addEventListener('keydown', handleKeyDown, { capture: true });
     return () => document.removeEventListener('keydown', handleKeyDown, { capture: true });
+  }, [editable]);
+
+  // ── useEffect: отслеживание позиции курсора для сдвига аннотаций ─────────────
+
+  useEffect(() => {
+    if (!editable) return;
+    const reportCursor = () => {
+      if (!textRef.current || !onCursorMoveRef.current) return;
+      const active = document.activeElement;
+      if (active !== textRef.current && !textRef.current.contains(active)) return;
+      const pos = getCaretPosition(textRef.current);
+      onCursorMoveRef.current(pos);
+    };
+    const el = textRef.current;
+    if (!el) return;
+    el.addEventListener('mouseup', reportCursor);
+    el.addEventListener('keyup', reportCursor);
+    return () => {
+      el.removeEventListener('mouseup', reportCursor);
+      el.removeEventListener('keyup', reportCursor);
+    };
   }, [editable]);
 
   // ── useEffect: контекстное меню ────────────────────────────────────────────

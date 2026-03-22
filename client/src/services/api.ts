@@ -946,3 +946,49 @@ export async function saveDocumentForTests(
   }
   return res.json();
 }
+
+// ── Анализ лингвистических паттернов ──────────────────────────────────────
+
+export interface PatternRow {
+  pattern_str: string;
+  pattern_type: string;
+  frequency: number;
+}
+
+export interface AnnotationTypePatterns {
+  annotation_type: string;
+  patterns: PatternRow[];
+  total_annotations: number;
+}
+
+export interface AnalyzePatternsResponse {
+  success: boolean;
+  doc_id: string;
+  results: AnnotationTypePatterns[];
+  total_patterns_saved: number;
+  message: string;
+}
+
+export async function analyzeDocumentPatterns(
+  docId: string,
+  annotationTypes?: string[],
+  minFrequency: number = 1,
+): Promise<AnalyzePatternsResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/analyze-patterns`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      annotation_types: annotationTypes,
+      clear_existing: true,
+      min_frequency: minFrequency,
+    }),
+  });
+}
+
+export async function getDocumentPatterns(docId: string): Promise<AnalyzePatternsResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/patterns`);
+}
+
+export async function getDocumentSpecificPatterns(docId: string): Promise<AnalyzePatternsResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/patterns/specific`);
+}

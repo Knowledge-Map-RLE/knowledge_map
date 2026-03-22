@@ -4,7 +4,7 @@ import { importAnnotations as apiImportAnnotations, exportAnnotations as apiExpo
 import { AnnotationWorkspace } from './Annotation';
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 import Header from '../Header';
-import { PatternGenerator } from './Patterns';
+import { PatternGenerator, LinguisticPatternAnalysis } from './Patterns';
 import Document_downloader_ui from './Document_downloader_ui';
 import type { DocumentListHandle } from './Document_downloader_ui';
 
@@ -31,7 +31,7 @@ interface PDFDocument {
 }
 
 export default function Data_extraction() {
-    const [activeTab, setActiveTab] = useState<'pdf' | 'markdown' | 'annotator'>('pdf');
+    const [activeTab, setActiveTab] = useState<'pdf' | 'markdown' | 'annotator' | 'patterns'>('pdf');
     const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
     const [pdfUrl, setPdfUrl] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
@@ -189,6 +189,12 @@ export default function Data_extraction() {
                         >
                             Исходный PDF
                         </button>
+                        <button
+                            className={`${s.tabButton} ${activeTab === 'patterns' ? s.active : ''}`}
+                            onClick={() => setActiveTab('patterns')}
+                        >
+                            Паттерны
+                        </button>
                         {saveStatus !== 'idle' && (
                             <div className={`${s.saveIndicator} ${s[saveStatus]}`} style={{ marginLeft: 'auto' }}>
                                 {saveStatus === 'saving' && <><div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div><span>Сохранение...</span></>}
@@ -253,6 +259,19 @@ export default function Data_extraction() {
                                         documentTitle={selectedDocument.title || selectedDocument.original_filename}
                                         onUpdateDocumentStatus={updateDocumentStatus}
                                     />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                        Выберите файл
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Паттерны */}
+                        {activeTab === 'patterns' && (
+                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
+                                {selectedDocument && docId ? (
+                                    <LinguisticPatternAnalysis docId={docId} />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
                                         Выберите файл

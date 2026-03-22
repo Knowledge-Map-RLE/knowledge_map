@@ -4,15 +4,10 @@ import { ANNOTATION_CATEGORIES } from './annotationTypes';
 
 interface AnnotationFiltersProps {
   totalAnnotations: number;
-  loadedAnnotationsCount: number;
-  annotationsLimit: number;
   selectedCategories: string[];
   selectedSource: string | null;
-  isLoadingMore: boolean;
   onCategoriesChange: (categories: string[]) => void;
   onSourceChange: (source: string | null) => void;
-  onLimitChange: (limit: number) => void;
-  onLoadMore: () => void;
   onResetFilters: () => void;
   annotations: Annotation[];
   hiddenTypes: Set<string>;
@@ -22,15 +17,10 @@ interface AnnotationFiltersProps {
 
 const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
   totalAnnotations,
-  loadedAnnotationsCount,
-  annotationsLimit,
   selectedCategories,
   selectedSource,
-  isLoadingMore,
   onCategoriesChange,
   onSourceChange,
-  onLimitChange,
-  onLoadMore,
   onResetFilters,
   annotations,
   hiddenTypes,
@@ -67,11 +57,9 @@ const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
     }}>
       <div style={{ marginBottom: '10px' }}>
         <strong>Фильтры:</strong>
-        {totalAnnotations > annotationsLimit && (
-          <div style={{ fontSize: '12px', color: '#f44336', marginTop: '5px' }}>
-            ⚠️ Показано {loadedAnnotationsCount} из {totalAnnotations} аннотаций
-          </div>
-        )}
+        <span style={{ fontSize: '12px', color: '#888', marginLeft: '8px' }}>
+          {totalAnnotations} аннотаций
+        </span>
       </div>
 
       {/* Фильтр по типам из реальных аннотаций */}
@@ -178,50 +166,6 @@ const AnnotationFilters: React.FC<AnnotationFiltersProps> = ({
           ))}
         </div>
       </div>
-
-      {/* Лимит загрузки */}
-      <div style={{ marginBottom: '5px' }}>
-        <label style={{ fontSize: '13px', fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>
-          Лимит загрузки:
-        </label>
-        <select
-          value={annotationsLimit}
-          onChange={(e) => onLimitChange(Number(e.target.value))}
-          style={{ fontSize: '12px', padding: '5px', width: '100%' }}
-        >
-          <option value={100}>100</option>
-          <option value={500}>500</option>
-          <option value={1000}>1000</option>
-          <option value={2000}>2000</option>
-          <option value={5000}>5000</option>
-          <option value={10000}>10000</option>
-        </select>
-      </div>
-
-      {/* Кнопка "Загрузить еще" */}
-      {loadedAnnotationsCount < totalAnnotations && (
-        <button
-          onClick={onLoadMore}
-          disabled={isLoadingMore}
-          style={{
-            fontSize: '12px',
-            padding: '8px 10px',
-            width: '100%',
-            backgroundColor: isLoadingMore ? '#ccc' : '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: isLoadingMore ? 'not-allowed' : 'pointer',
-            marginBottom: '5px',
-            fontWeight: 'bold'
-          }}
-        >
-          {isLoadingMore
-            ? '⏳ Загрузка...'
-            : `📥 Загрузить еще (${loadedAnnotationsCount} из ${totalAnnotations})`
-          }
-        </button>
-      )}
 
       {/* Кнопка сброса фильтров */}
       {hasActiveFilters && (

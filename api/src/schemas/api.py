@@ -294,3 +294,37 @@ class ValidateMarkdownResponse(BaseModel):
     total_errors: int = Field(default=0, description="Общее количество ошибок")
     total_warnings: int = Field(default=0, description="Общее количество предупреждений")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Метаданные валидации")
+
+
+# Схемы для анализа лингвистических паттернов
+class AnalyzePatternsRequest(BaseModel):
+    """Запрос на анализ лингвистических паттернов в аннотациях документа"""
+    annotation_types: List[str] = Field(
+        default=["Успешная цель", "Не успешная цель", "Фрагмент ведёт к успеху", "Фрагмент ведёт к неуспеху"],
+        description="Типы аннотаций для анализа",
+    )
+    clear_existing: bool = Field(default=True, description="Удалить существующие паттерны перед анализом")
+    min_frequency: int = Field(default=1, ge=1, description="Минимальная частота для включения паттерна")
+
+
+class PatternRow(BaseModel):
+    """Строка таблицы паттернов"""
+    pattern_str: str
+    pattern_type: str
+    frequency: int
+
+
+class AnnotationTypePatterns(BaseModel):
+    """Паттерны для одного типа аннотации"""
+    annotation_type: str
+    patterns: List[PatternRow]
+    total_annotations: int
+
+
+class AnalyzePatternsResponse(BaseModel):
+    """Ответ с результатами анализа паттернов"""
+    success: bool
+    doc_id: str
+    results: List[AnnotationTypePatterns]
+    total_patterns_saved: int
+    message: str

@@ -31,11 +31,16 @@ interface EditorTabsProps {
   onRelationDelete?: (sourceId: string, targetId: string) => void;
   onExportCSV?: () => void;
   onImportCSV?: (file: File) => void;
+  importProgress?: { current: number; total: number } | null;
   onSaveForTests?: () => void;
   onDownloadMarkdown?: () => void;
   onUndo?: () => void;
   onRedo?: () => void;
   forceTextVersion?: number;
+  onShiftLeft?: () => void;
+  onShiftRight?: () => void;
+  hasCursor?: boolean;
+  onCursorMove?: (pos: number) => void;
 }
 
 const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
@@ -67,11 +72,16 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onRelationDelete,
   onExportCSV,
   onImportCSV,
+  importProgress,
   onSaveForTests,
   onDownloadMarkdown,
   onUndo,
   onRedo,
   forceTextVersion,
+  onShiftLeft,
+  onShiftRight,
+  hasCursor,
+  onCursorMove,
 }, ref) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -163,6 +173,56 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
           </button>
         )}
 
+        {/* Сдвиг аннотаций влево/вправо */}
+        {onShiftLeft && (
+          <button
+            className="shift-left-button"
+            onClick={onShiftLeft}
+            disabled={!hasCursor}
+            title={hasCursor ? 'Сдвинуть разметку влево от курсора' : 'Поставьте курсор в текст'}
+            style={{
+              backgroundColor: hasCursor ? '#5C6BC0' : '#e0e0e0',
+              color: hasCursor ? 'white' : '#999',
+              border: 'none',
+              padding: '10px 12px',
+              borderRadius: '4px',
+              cursor: hasCursor ? 'pointer' : 'not-allowed',
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            ← Влево
+          </button>
+        )}
+        {onShiftRight && (
+          <button
+            className="shift-right-button"
+            onClick={onShiftRight}
+            disabled={!hasCursor}
+            title={hasCursor ? 'Сдвинуть разметку вправо от курсора' : 'Поставьте курсор в текст'}
+            style={{
+              backgroundColor: hasCursor ? '#5C6BC0' : '#e0e0e0',
+              color: hasCursor ? 'white' : '#999',
+              border: 'none',
+              padding: '10px 12px',
+              borderRadius: '4px',
+              cursor: hasCursor ? 'pointer' : 'not-allowed',
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            Вправо →
+          </button>
+        )}
+
         {/* Импорт CSV */}
         {onImportCSV && (
           <>
@@ -176,15 +236,15 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
             <button
               className="import-csv-button"
               onClick={handleImportClick}
-              disabled={readOnly}
+              disabled={readOnly || !!importProgress}
               title="Импортировать аннотации из CSV"
               style={{
-                backgroundColor: readOnly ? '#e0e0e0' : '#FF9800',
-                color: readOnly ? '#999' : 'white',
+                backgroundColor: (readOnly || !!importProgress) ? '#e0e0e0' : '#FF9800',
+                color: (readOnly || !!importProgress) ? '#999' : 'white',
                 border: 'none',
                 padding: '10px 16px',
                 borderRadius: '4px',
-                cursor: readOnly ? 'not-allowed' : 'pointer',
+                cursor: (readOnly || !!importProgress) ? 'not-allowed' : 'pointer',
                 fontSize: '13px',
                 fontWeight: '500',
                 whiteSpace: 'nowrap',
@@ -193,7 +253,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
                 alignItems: 'center'
               }}
             >
-              Импорт CSV
+              {importProgress ? `Импорт ${importProgress.current}/${importProgress.total}` : 'Импорт CSV'}
             </button>
           </>
         )}
@@ -319,6 +379,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
           onUndo={onUndo}
           onRedo={onRedo}
           forceTextVersion={forceTextVersion}
+          onCursorMove={onCursorMove}
         />
       </div>
     </div>

@@ -1,0 +1,198 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.contentWrap {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.sidebar {
+    width: 200px;
+    min-width: 200px;
+    border-right: 1px solid #e5e7eb;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #fafafa;
+    overflow-y: auto;
+}
+
+.sidebarTitle {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.analyzeButton {
+    width: 100%;
+    padding: 8px 12px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.analyzeButton:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.analyzeButton:disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+}
+
+.content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.statusText {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.errorText {
+    font-size: 12px;
+    color: #dc2626;
+}
+
+/* Секция одного типа аннотации */
+.section {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sectionHeader {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    background: #f9fafb;
+}
+
+.sectionTitle {
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sectionColorDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.sectionMeta {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.sectionChevron {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* Таблица паттернов */
+.tableWrap {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.table th {
+    padding: 7px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.table td {
+    padding: 6px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: top;
+    color: #374151;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover td {
+    background: #f9fafb;
+}
+
+.patternCell {
+    font-family: monospace;
+    font-size: 11px;
+    color: #1e40af;
+    word-break: break-all;
+}
+
+.typeCell {
+    white-space: nowrap;
+    color: #6b7280;
+}
+
+.freqCell {
+    text-align: right;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #111827;
+}
+
+.divider {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 4px 4px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 4px;
+}
+
+.noPatterns {
+    padding: 12px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 12px;
+}

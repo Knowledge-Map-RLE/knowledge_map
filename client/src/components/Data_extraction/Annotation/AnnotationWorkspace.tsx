@@ -17,6 +17,7 @@ import {
   buildAnnotationsCSV,
   parseAnnotationsCSV,
   getDocumentAssets,
+  batchUpdateAnnotationOffsets,
 } from '../../../services/api';
 import type {
   Annotation,
@@ -59,7 +60,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   // Filter State
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
-  const [annotationsLimit, setAnnotationsLimit] = useState(1000);
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(new Set());
 
   // Selection State
@@ -94,15 +94,20 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isImportingRef = useRef(false);
 
+  // Cursor position for shift functionality
+  const [cursorPosition, setCursorPosition] = useState<number | null>(null);
+  const shiftDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shiftSaveRef = useRef<Annotation[]>([]);
+
+  // Import progress
+  const [importProgress, setImportProgress] = useState<{ current: number; total: number } | null>(null);
+
   // Custom Hooks
   const {
     annotations,
     totalAnnotations,
-    loadedAnnotationsCount,
     loading,
-    isLoadingMore,
     loadAnnotations,
-    loadMoreAnnotations,
     createNewAnnotation,
     removeAnnotation,
     editAnnotation,
@@ -110,7 +115,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     docId,
     selectedCategories,
     selectedSource,
-    annotationsLimit,
   });
 
   const {
@@ -644,50 +648,38 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       const csvText = await file.text();
       const { annotations: annData, relations: relData } = parseAnnotationsCSV(csvText);
 
-      // Вычислить смещение frontmatter (блок --- ... ---)
-      // Вычисляем точный offset: ищем текст аннотации в документе,
-      // используя CSV-offset как подсказку для поиска в окрестности.
-      // Это надёжнее фиксированного смещения frontmatter.
-      const resolveOffset = (annText: string, csvStart: number): { start: number; end: number } | null => {
-        if (!annText) return null;
-        // Сначала пробуем точное совпадение в окрестности ±500 от CSV-offset
-        const searchFrom = Math.max(0, csvStart - 500);
-        const searchTo = Math.min(localText.length, csvStart + annText.length + 500);
-        const idx = localText.indexOf(annText, searchFrom);
-        if (idx !== -1 && idx < searchTo) {
-          return { start: idx, end: idx + annText.length };
-        }
-        // Fallback: поиск по всему документу
-        const globalIdx = localText.indexOf(annText);
-        if (globalIdx !== -1) {
-          return { start: globalIdx, end: globalIdx + annText.length };
-        }
-        return null;
-      };
+      const total = annData.length;
+      setImportProgress({ current: 0, total });
 
       // Строим карту старый uid → новый uid для корректного создания связей
       const uidMap = new Map<string, string>();
       let createdAnnotations = 0;
       let skippedAnnotations = 0;
 
-      for (const ann of annData) {
+      for (let i = 0; i < annData.length; i++) {
+        const ann = annData[i];
         const annText = ann.text ?? '';
-        const resolved = resolveOffset(annText, ann.start_offset ?? 0);
-        if (!resolved) {
+
+        // Точное совпадение по тексту аннотации в документе (без fuzzy-окна)
+        const idx = annText ? localText.indexOf(annText) : -1;
+        if (idx === -1) {
           console.warn(`[import] Не найден текст аннотации в документе, пропускаем: "${annText.slice(0, 60)}"`);
           skippedAnnotations++;
+          setImportProgress({ current: i + 1, total });
           continue;
         }
+
         const created = await createAnnotation(docId, {
           text: annText,
           annotation_type: ann.annotation_type ?? '',
-          start_offset: resolved.start,
-          end_offset: resolved.end,
+          start_offset: idx,
+          end_offset: idx + annText.length,
           color: ann.color || '#ffeb3b',
           confidence: ann.confidence,
         });
         if (ann.uid) uidMap.set(ann.uid, created.uid);
         createdAnnotations++;
+        setImportProgress({ current: i + 1, total });
       }
 
       let createdRelations = 0;
@@ -711,8 +703,50 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       console.error('Не удалось импортировать аннотации:', error?.message || error);
     } finally {
       isImportingRef.current = false;
+      setImportProgress(null);
     }
   }, [docId, localText, loadAnnotations, loadRelations]);
+
+  // Cursor position handler (called from TextAnnotator on mouseup/keyup)
+  const handleCursorMove = useCallback((pos: number) => {
+    setCursorPosition(pos);
+  }, []);
+
+  // Shift annotations right/left of cursor position
+  const handleShift = useCallback((direction: 'left' | 'right') => {
+    if (cursorPosition === null) return;
+    const delta = direction === 'right' ? 1 : -1;
+
+    setVisualAnnotations(prev => {
+      const shifted = prev.map(ann =>
+        ann.start_offset >= cursorPosition
+          ? { ...ann, start_offset: Math.max(0, ann.start_offset + delta), end_offset: Math.max(1, ann.end_offset + delta) }
+          : ann
+      );
+      shiftSaveRef.current = shifted;
+      return shifted;
+    });
+
+    if (shiftDebounceRef.current) clearTimeout(shiftDebounceRef.current);
+    shiftDebounceRef.current = setTimeout(async () => {
+      const current = shiftSaveRef.current;
+      const original = annotationsRef.current;
+      const updates = current
+        .filter(ann => {
+          const orig = original.find(a => a.uid === ann.uid);
+          return orig && (orig.start_offset !== ann.start_offset || orig.end_offset !== ann.end_offset);
+        })
+        .map(ann => ({ annotation_id: ann.uid, start_offset: ann.start_offset, end_offset: ann.end_offset }));
+      if (updates.length > 0) {
+        try {
+          await batchUpdateAnnotationOffsets({ updates });
+          await loadAnnotations();
+        } catch (error) {
+          console.error('Ошибка при сохранении сдвига аннотаций:', error);
+        }
+      }
+    }, 1500);
+  }, [cursorPosition, loadAnnotations]);
 
   // Filter handlers
   const handleResetFilters = useCallback(() => {
@@ -792,6 +826,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onRelationDelete={handleRelationDelete}
               onExportCSV={handleExportCSV}
               onImportCSV={handleImportCSV}
+              importProgress={importProgress}
               onDownloadMarkdown={handleDownloadMarkdown}
               onSaveForTests={() => setShowSaveForTestsDialog(true)}
               onColorChange={setSelectedColor}
@@ -800,15 +835,10 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onLineHeightToggle={() => setLargeLineHeight(!largeLineHeight)}
               filterProps={{
                 totalAnnotations,
-                loadedAnnotationsCount,
-                annotationsLimit,
                 selectedCategories,
                 selectedSource,
-                isLoadingMore,
                 onCategoriesChange: setSelectedCategories,
                 onSourceChange: setSelectedSource,
-                onLimitChange: setAnnotationsLimit,
-                onLoadMore: loadMoreAnnotations,
                 onResetFilters: handleResetFilters,
                 annotations,
                 hiddenTypes,
@@ -818,6 +848,10 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
               onUndo={handleUndo}
               onRedo={handleRedo}
               forceTextVersion={undoRedoVersion}
+              onShiftLeft={() => handleShift('left')}
+              onShiftRight={() => handleShift('right')}
+              hasCursor={cursorPosition !== null}
+              onCursorMove={handleCursorMove}
             />
           </ErrorBoundary>
         </div>

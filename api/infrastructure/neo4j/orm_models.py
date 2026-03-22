@@ -168,6 +168,7 @@ class MarkdownAnnotation(StructuredNode):
     relations_from = RelationshipFrom(
         "MarkdownAnnotation", "RELATES_TO", model=AnnotationRelationRel
     )
+    linguistic_patterns = RelationshipFrom("LinguisticPattern", "FOUND_IN")
 
 
 class LabelStudioProject(StructuredNode):
@@ -181,3 +182,39 @@ class LabelStudioProject(StructuredNode):
 
     created_by = RelationshipFrom("User", "CREATED_PROJECT")
     documents = RelationshipTo("PDFDocument", "USES_PROJECT")
+
+
+class LinguisticPatternRel(StructuredRel):
+    """Связь DEP_RELATION между узлами LexicalForm (лингвистическая зависимость)."""
+    relation_type = StringProperty(required=True)
+    doc_id = StringProperty(index=True)
+    annotation_uid = StringProperty(index=True)
+
+
+class LexicalForm(StructuredNode):
+    """Словоформа с частью речи — узел лингвистического паттерна."""
+    uid = UniqueIdProperty(primary_key=True)
+    text = StringProperty(required=True)
+    lemma = StringProperty()
+    pos = StringProperty(index=True)       # VERB, NOUN, ADJ …
+    pos_fine = StringProperty()            # VBD, NN, JJ …
+    doc_id = StringProperty(index=True)
+    annotation_uid = StringProperty(index=True)
+
+    dep_relation_to = RelationshipTo(
+        "LexicalForm", "DEP_RELATION", model=LinguisticPatternRel
+    )
+    part_of = RelationshipTo("LinguisticPattern", "PART_OF")
+
+
+class LinguisticPattern(StructuredNode):
+    """Лингвистический паттерн, извлечённый из аннотации документа."""
+    uid = UniqueIdProperty(primary_key=True)
+    pattern_str = StringProperty(required=True, index=True)
+    pattern_type = StringProperty(required=True, index=True)
+    annotation_type = StringProperty(required=True, index=True)
+    frequency = IntegerProperty(default=1)
+    doc_id = StringProperty(index=True)
+
+    found_in = RelationshipTo("MarkdownAnnotation", "FOUND_IN")
+    lexical_forms = RelationshipFrom("LexicalForm", "PART_OF")

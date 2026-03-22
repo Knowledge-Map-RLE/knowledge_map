@@ -20,6 +20,10 @@ from src.schemas.api import (
     DocumentAssetsResponse,
     UpdateMarkdownRequest,
     UpdateMarkdownResponse,
+    AnalyzePatternsRequest,
+    AnalyzePatternsResponse,
+    AnnotationTypePatterns,
+    PatternRow,
 )
 from application.documents.upload_pdf import upload_pdf
 from application.documents.get_document_assets import get_document_assets
@@ -27,7 +31,12 @@ from application.documents.delete_document import delete_document
 from application.documents.list_documents import list_documents
 from application.documents.get_markdown import get_markdown
 from application.documents.update_markdown import update_markdown
-from web.dependencies import get_document_repository, get_s3
+from web.dependencies import (
+    get_document_repository,
+    get_s3,
+    get_annotation_repository,
+    get_linguistic_pattern_repository,
+)
 
 from utils.hash_utils import _compute_md5
 from infrastructure.config import settings
@@ -186,3 +195,148 @@ async def get_document_markdown(
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail=f"Markdown version '{version}' not found")
     return Response(content=content, media_type="text/markdown")
+
+
+@router.post("/documents/{doc_id}/analyze-patterns", response_model=AnalyzePatternsResponse)
+async def analyze_patterns_endpoint(
+    doc_id: str,
+    request_body: AnalyzePatternsRequest,
+    ann_repo=Depends(get_annotation_repository),
+    doc_repo=Depends(get_document_repository),
+    pattern_repo=Depends(get_linguistic_pattern_repository),
+):
+    """Анализирует лингвистические паттерны в аннотациях документа и сохраняет их в Neo4j."""
+    from application.patterns.analyze_document_patterns import analyze_document_patterns
+    from services.nlp_grpc_client import get_nlp_grpc_client
+
+    nlp_client = get_nlp_grpc_client()
+    results = await analyze_document_patterns(
+        annotation_repo=ann_repo,
+        document_repo=doc_repo,
+        pattern_repo=pattern_repo,
+        nlp_client=nlp_client,
+        doc_id=doc_id,
+        annotation_types=request_body.annotation_types,
+        clear_existing=request_body.clear_existing,
+        min_frequency=request_body.min_frequency,
+    )
+
+    # Конвертируем dataclasses в Pydantic-схемы
+    pydantic_results = [
+        AnnotationTypePatterns(
+            annotation_type=r.annotation_type,
+            patterns=[
+                PatternRow(
+                    pattern_str=p.pattern_str,
+                    pattern_type=p.pattern_type,
+                    frequency=p.frequency,
+                )
+                for p in r.patterns
+            ],
+            total_annotations=r.total_annotations,
+        )
+        for r in results
+    ]
+
+    total = sum(len(r.patterns) for r in pydantic_results)
+    return AnalyzePatternsResponse(
+        success=True,
+        doc_id=doc_id,
+        results=pydantic_results,
+        total_patterns_saved=total,
+        message=f"Проанализировано {total} паттернов",
+    )
+
+
+@router.get("/documents/{doc_id}/patterns/specific", response_model=AnalyzePatternsResponse)
+async def get_specific_patterns_endpoint(
+    doc_id: str,
+    pattern_repo=Depends(get_linguistic_pattern_repository),
+    doc_repo=Depends(get_document_repository),
+):
+    """Возвращает специфичные паттерны (set difference между парами типов аннотаций)."""
+    from fastapi import HTTPException
+    from application.patterns.get_specific_patterns import get_specific_patterns
+
+    doc = doc_repo.get_by_id(doc_id)
+    if doc is None:
+        raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
+
+    results = get_specific_patterns(pattern_repo=pattern_repo, doc_id=doc_id)
+
+    pydantic_results = [
+        AnnotationTypePatterns(
+            annotation_type=r.annotation_type,
+            patterns=[
+                PatternRow(
+                    pattern_str=p.pattern_str,
+                    pattern_type=p.pattern_type,
+                    frequency=p.frequency,
+                )
+                for p in r.patterns
+            ],
+            total_annotations=r.total_annotations,
+        )
+        for r in results
+    ]
+
+    total = sum(len(r.patterns) for r in pydantic_results)
+    return AnalyzePatternsResponse(
+        success=True,
+        doc_id=doc_id,
+        results=pydantic_results,
+        total_patterns_saved=total,
+        message=f"Специфичных паттернов: {total}",
+    )
+
+
+@router.get("/documents/{doc_id}/patterns", response_model=AnalyzePatternsResponse)
+async def get_patterns_endpoint(
+    doc_id: str,
+    pattern_repo=Depends(get_linguistic_pattern_repository),
+    doc_repo=Depends(get_document_repository),
+):
+    """Возвращает сохранённые лингвистические паттерны документа."""
+    from domain.exceptions import NotFoundError as DomainNotFoundError
+    from fastapi import HTTPException
+
+    doc = doc_repo.get_by_id(doc_id)
+    if doc is None:
+        raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
+
+    rows = pattern_repo.get_for_document(doc_id)
+
+    # Группируем по annotation_type
+    _GOAL_TYPES = [
+        "Успешная цель",
+        "Не успешная цель",
+        "Фрагмент ведёт к успеху",
+        "Фрагмент ведёт к неуспеху",
+    ]
+    groups: dict = {t: [] for t in _GOAL_TYPES}
+    for row in rows:
+        at = row.get("annotation_type", "")
+        if at in groups:
+            groups[at].append(PatternRow(
+                pattern_str=row["pattern_str"],
+                pattern_type=row["pattern_type"],
+                frequency=row["frequency"],
+            ))
+
+    pydantic_results = [
+        AnnotationTypePatterns(
+            annotation_type=at,
+            patterns=groups[at],
+            total_annotations=0,
+        )
+        for at in _GOAL_TYPES
+    ]
+
+    total = sum(len(r.patterns) for r in pydantic_results)
+    return AnalyzePatternsResponse(
+        success=True,
+        doc_id=doc_id,
+        results=pydantic_results,
+        total_patterns_saved=total,
+        message=f"Загружено {total} паттернов" if total > 0 else "Паттерны не найдены",
+    )
