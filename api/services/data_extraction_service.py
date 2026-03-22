@@ -95,8 +95,9 @@ class DataExtractionService:
             alt_text = match.group(1)
             image_path = match.group(2)
 
-            # Если путь уже абсолютный (начинается с http), не меняем
-            if image_path.startswith('http://') or image_path.startswith('https://'):
+            # Если путь уже абсолютный (http/https) или API-относительный (/api/...) — не меняем
+            if (image_path.startswith('http://') or image_path.startswith('https://')
+                    or image_path.startswith('/api/')):
                 return match.group(0)
 
             # Если путь относительный, добавляем префикс

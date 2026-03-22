@@ -342,7 +342,6 @@ class ConversionService:
             result_dir = await model.convert(
                 input_path=pdf_path,
                 output_dir=output_dir,
-                use_coordinate_extraction=False,  # Fallback mode - disable coordinate extraction
                 on_progress=lambda data: on_progress({
                     **(data if hasattr(data, 'get') else {'percent': getattr(data, 'percent', 0), 'message': getattr(data, 'message', 'Обработка')}),
                     "phase": "standard_conversion"

@@ -31,15 +31,15 @@ class ModelService:
     def _initialize_models(self) -> None:
         """Initialize available models"""
         try:
-            # Initialize Docling model (единственная модель)
+            # Initialize OpenDataLoader model (единственная модель)
             try:
-                from .models.docling_model import DoclingModel
-                docling_model = DoclingModel()
-                self._models["docling"] = docling_model
-                self._default_model_id = "docling"
-                logger.info("Docling model initialized as default")
+                from .models.opendataloader_model import OpenDataLoaderModel
+                odl_model = OpenDataLoaderModel()
+                self._models["opendataloader"] = odl_model
+                self._default_model_id = "opendataloader"
+                logger.info("OpenDataLoader model initialized as default")
             except ImportError as e:
-                logger.error(f"Docling model not available: {e}")
+                logger.error(f"OpenDataLoader model not available: {e}")
                 raise
 
             logger.info(f"Initialized {len(self._models)} models: {list(self._models.keys())}")

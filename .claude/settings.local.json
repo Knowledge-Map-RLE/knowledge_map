@@ -93,7 +93,9 @@
       "Read(//d/Knowledge_Map/**)",
       "Bash(for svc:*)",
       "Read(//d/Knowledge_Map/$svc/src/**)",
-      "Bash(poetry install:*)"
+      "Bash(poetry install:*)",
+      "WebFetch(domain:opendataloader.org)",
+      "Bash(poetry add:*)"
     ],
     "deny": [],
     "ask": []

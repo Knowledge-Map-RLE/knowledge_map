@@ -26,14 +26,7 @@ protobuf = "^4.25.1"
 # PDF processing
 pillow = "^10.1.0"
 pymupdf = "^1.23.0"
-docling = "^2.53.0"
-
-# ML dependencies (CPU optimized) - базовые версии
-torch = {version = "^2.0.0", extras = ["cpu"]}
-transformers = "^4.47.0"
-accelerate = "^1.0.0"
-safetensors = "^0.4.1"
-huggingface-hub = "^0.26.0"
+opendataloader-pdf = "*"
 
 # Utilities
 click = "^8.1.7"

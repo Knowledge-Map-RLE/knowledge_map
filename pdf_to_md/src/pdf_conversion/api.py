@@ -42,7 +42,7 @@ def get_conversion_service() -> ConversionService:
 @router.post("/convert", response_model=ConvertResponse)
 async def convert_pdf(
     file: UploadFile = File(...),
-    model_id: str = Form(default="docling"),
+    model_id: str = Form(default="opendataloader"),
     output_format: str = Form(default="markdown"),
     use_coordinate_extraction: bool = Form(True, description="Use coordinate-based image extraction"),
     conversion_service: ConversionService = Depends(get_conversion_service),

@@ -102,17 +102,30 @@ class S3Service:
             
             # Формируем ключ объекта
             object_key = f"{folder}/{filename}"
-            
+
             # Подготавливаем данные для загрузки
             upload_data = await self._prepare_image_data(image_data)
-            
+
+            # Определяем ContentType по расширению файла
+            ext = Path(filename).suffix.lower() if filename else ""
+            content_type_map = {
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+                ".png": "image/png",
+                ".gif": "image/gif",
+                ".bmp": "image/bmp",
+                ".webp": "image/webp",
+                ".tiff": "image/tiff",
+                ".tif": "image/tiff",
+            }
+            content_type = content_type_map.get(ext, "image/png")
+
             # Загружаем в S3
             self.s3_client.put_object(
                 Bucket=self.bucket_name,
                 Key=object_key,
                 Body=upload_data,
-                ContentType='image/png'
-                # Убираем ACL - будем использовать presigned URLs с максимальным временем жизни
+                ContentType=content_type,
             )
             
             # Формируем постоянную API ссылку для проксирования через FastAPI

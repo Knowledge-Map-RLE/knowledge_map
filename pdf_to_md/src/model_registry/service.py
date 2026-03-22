@@ -32,205 +32,58 @@ class ModelRegistryService:
     def _initialize_models(self) -> None:
         """Initialize available models"""
         try:
-            # Initialize only default model to reduce memory/time
-            # Initialize Docling model (default)
+            # Initialize OpenDataLoader model (default)
             try:
-                # Prefer Docling when available; fallback to PyMuPDF; finally a plain text stub
-                import importlib
-                docling_spec = importlib.util.find_spec("docling")
+                import opendataloader_pdf  # noqa: F401 — verify package present
 
-                class SimpleDoclingModel:
+                class SimpleOpenDataLoaderModel:
                     def __init__(self):
-                        self.name = "Docling Model"
-                        self.version = "1.0.0"
-                    
+                        self.name = "OpenDataLoader (Hybrid)"
+                        self.version = "2.0.2"
+
                     async def convert_pdf(self, pdf_path, output_format="markdown"):
-                        # Используем ТОЛЬКО Docling. Если не установлен — это ошибка конфигурации.
-                        if docling_spec is not None:
-                            # Configure HuggingFace cache and optional mirror before loading Docling
-                            import os
-                            from pathlib import Path as _Path
-                            cache_dir = os.getenv("HF_HUB_CACHE") or str((_Path("./model_cache").resolve()))
-                            os.makedirs(cache_dir, exist_ok=True)
-                            os.environ["HF_HUB_CACHE"] = cache_dir
-                            os.environ["HF_HOME"] = cache_dir
-                            os.environ["HF_HUB_OFFLINE"] = os.getenv("HF_HUB_OFFLINE", "1")
-                            os.environ["TRANSFORMERS_OFFLINE"] = os.getenv("TRANSFORMERS_OFFLINE", "1")
-                            os.environ["HF_DATASETS_OFFLINE"] = os.getenv("HF_DATASETS_OFFLINE", "1")
-                            # Speed and stability toggles
-                            # Disable hf_transfer fast-path to avoid extra dependency
-                            os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
-                            os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
-                            # Optional mirror endpoint (set DOC_LING_HF_ENDPOINT to override)
-                            hf_endpoint = os.getenv("DOC_LING_HF_ENDPOINT")
-                            if hf_endpoint:
-                                os.environ["HF_ENDPOINT"] = hf_endpoint
-                            logger.info(f"Configured HF cache: {cache_dir}; endpoint: {os.environ.get('HF_ENDPOINT', 'default')}; offline={os.environ.get('HF_HUB_OFFLINE')}")
-                            # Common Docling API patterns (support multiple versions)
-                            # a) Newer API
-                            try:
-                                from docling.document_converter import DocumentConverter  # type: ignore
-                            except Exception:
-                                DocumentConverter = None  # type: ignore
-                            if DocumentConverter is not None:
-                                converter = DocumentConverter()
-                                result = converter.convert(pdf_path)
-                                doc_obj = getattr(result, "document", None) or result
-                                # Try several markdown exporters
-                                for attr in [
-                                    "export_to_markdown",
-                                    "to_markdown",
-                                    "export_markdown",
-                                    "to_markdown_string",
-                                    "as_markdown",
-                                    "markdown",
-                                ]:
-                                    fn = getattr(doc_obj, attr, None)
-                                    if callable(fn):
-                                        md = fn()
-                                        if md:
-                                            return str(md)
-                                    # Some libs expose markdown as property
-                                    if fn is None:
-                                        val = getattr(doc_obj, attr, None)
-                                        if isinstance(val, str) and val.strip():
-                                            return val
-                                # Fallback: generic export method variants
-                                for attr in [
-                                    "export_to",
-                                    "export",
-                                    "save_as",
-                                ]:
-                                    fn = getattr(doc_obj, attr, None)
-                                    if callable(fn):
-                                        for fmt in ("markdown", "md"):
-                                            try:
-                                                md = fn(fmt)
-                                                if md:
-                                                    return str(md)
-                                            except Exception:
-                                                pass
-                                # Attempt page-wise aggregation if structure available
-                                parts = []
-                                for page_attr in ("pages", "document_pages", "doc_pages"):
-                                    pages = getattr(doc_obj, page_attr, None)
-                                    if pages:
-                                        for page in pages:
-                                            for p_attr in (
-                                                "to_markdown",
-                                                "export_to_markdown",
-                                                "to_markdown_string",
-                                            ):
-                                                pfn = getattr(page, p_attr, None)
-                                                if callable(pfn):
-                                                    try:
-                                                        txt = pfn()
-                                                        if isinstance(txt, str) and txt.strip():
-                                                            parts.append(txt.strip())
-                                                            break
-                                                    except Exception:
-                                                        pass
-                                            # Try blocks/text fallback
-                                            blocks = getattr(page, "blocks", None)
-                                            if blocks:
-                                                for b in blocks:
-                                                    text = getattr(b, "text", None)
-                                                    if isinstance(text, str) and text.strip():
-                                                        parts.append(text.strip())
-                                        if parts:
-                                            return "\n\n---\n\n".join(parts)
-                                # Если дошли сюда — Docling не вернул MD
-                                raise RuntimeError("Docling did not produce Markdown output")
-                            # b) Alternative API (pipeline based)
-                            try:
-                                from docling.pipeline import load_default_pipeline  # type: ignore
-                            except Exception:
-                                load_default_pipeline = None  # type: ignore
-                            if load_default_pipeline is not None:
-                                pipeline = load_default_pipeline()
-                                result = pipeline.run(pdf_path)
-                                doc_obj = getattr(result, "document", None) or result
-                                for attr in [
-                                    "export_to_markdown",
-                                    "to_markdown",
-                                    "export_markdown",
-                                    "to_markdown_string",
-                                    "as_markdown",
-                                    "markdown",
-                                ]:
-                                    fn = getattr(doc_obj, attr, None)
-                                    if callable(fn):
-                                        md = fn()
-                                        if md:
-                                            return str(md)
-                                    if fn is None:
-                                        val = getattr(doc_obj, attr, None)
-                                        if isinstance(val, str) and val.strip():
-                                            return val
-                                # Try export(fmt)
-                                for attr in ["export_to", "export", "save_as"]:
-                                    fn = getattr(doc_obj, attr, None)
-                                    if callable(fn):
-                                        for fmt in ("markdown", "md"):
-                                            try:
-                                                md = fn(fmt)
-                                                if md:
-                                                    return str(md)
-                                            except Exception:
-                                                pass
-                                # Page-wise aggregation
-                                parts = []
-                                for page_attr in ("pages", "document_pages", "doc_pages"):
-                                    pages = getattr(doc_obj, page_attr, None)
-                                    if pages:
-                                        for page in pages:
-                                            for p_attr in (
-                                                "to_markdown",
-                                                "export_to_markdown",
-                                                "to_markdown_string",
-                                            ):
-                                                pfn = getattr(page, p_attr, None)
-                                                if callable(pfn):
-                                                    try:
-                                                        txt = pfn()
-                                                        if isinstance(txt, str) and txt.strip():
-                                                            parts.append(txt.strip())
-                                                            break
-                                                    except Exception:
-                                                        pass
-                                            blocks = getattr(page, "blocks", None)
-                                            if blocks:
-                                                for b in blocks:
-                                                    text = getattr(b, "text", None)
-                                                    if isinstance(text, str) and text.strip():
-                                                        parts.append(text.strip())
-                                        if parts:
-                                            return "\n\n---\n\n".join(parts)
-                                raise RuntimeError("Docling pipeline did not produce Markdown output")
-                            # Если ни один из API не доступен — Docling установлен, но API не найден
-                            raise RuntimeError("Docling module present but API is unavailable")
-                        # Docling не установлен — явно сообщаем об ошибке
-                        raise RuntimeError("Docling is not installed in the runtime environment")
-                
-                docling_model = SimpleDoclingModel()
-                self._models["docling"] = docling_model
-                
+                        import asyncio
+                        import functools
+                        import tempfile
+                        from pathlib import Path as _Path
+                        import opendataloader_pdf as _odl
+
+                        output_dir = _Path(tempfile.mkdtemp(prefix="odl_out_"))
+                        loop = asyncio.get_event_loop()
+                        await loop.run_in_executor(
+                            None,
+                            functools.partial(
+                                _odl.convert,
+                                input_path=str(pdf_path),
+                                output_dir=str(output_dir),
+                                format="markdown",
+                                hybrid="docling-fast",
+                                hybrid_fallback=True,
+                            ),
+                        )
+                        stem = _Path(pdf_path).stem
+                        md_path = output_dir / f"{stem}.md"
+                        return md_path.read_text(encoding="utf-8") if md_path.exists() else ""
+
+                odl_model = SimpleOpenDataLoaderModel()
+                self._models["opendataloader"] = odl_model
+
                 model_info = ModelInfo(
-                    model_id="docling",
-                    name="Docling Model",
-                    model_type=ModelType.DOCLING,
+                    model_id="opendataloader",
+                    name="OpenDataLoader (Hybrid)",
+                    model_type=ModelType.OPENDATALOADER,
                     status=ModelStatus.AVAILABLE,
-                    version="1.0.0",
-                    description="Advanced document processing model",
+                    version="2.0.2",
+                    description="OpenDataLoader hybrid mode (docling-fast). Точность 0.90, таблицы 0.93.",
                     is_default=True,
                     is_enabled=True,
-                    config={"batch_size": 1, "max_pages": 100}
+                    config={"hybrid": "docling-fast", "hybrid_fallback": True},
                 )
-                self._model_info["docling"] = model_info
-                self._default_model_id = "docling"
-                logger.info("Docling model initialized as default")
+                self._model_info["opendataloader"] = model_info
+                self._default_model_id = "opendataloader"
+                logger.info("OpenDataLoader model initialized as default")
             except Exception as e:
-                logger.warning(f"Docling model not available: {e}")
+                logger.warning(f"OpenDataLoader model not available: {e}")
             
             if not self._models:
                 logger.error("No models available!")

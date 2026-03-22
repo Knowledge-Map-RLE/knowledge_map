@@ -13,6 +13,7 @@ class ModelStatus(str, Enum):
 
 class ModelType(str, Enum):
     DOCLING = "docling"
+    OPENDATALOADER = "opendataloader"
 
 class ModelInfo(BaseModel):
     model_id: str

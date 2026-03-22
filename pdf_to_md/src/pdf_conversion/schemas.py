@@ -5,7 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 class ConvertRequest(BaseModel):
-    model_id: str = Field(default="docling", description="Model to use for conversion")
+    model_id: str = Field(default="opendataloader", description="Model to use for conversion")
     output_format: str = Field(default="markdown", description="Output format")
     options: Optional[Dict[str, Any]] = Field(default=None, description="Conversion options")
 
