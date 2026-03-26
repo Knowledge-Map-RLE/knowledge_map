@@ -992,3 +992,62 @@ export async function getDocumentPatterns(docId: string): Promise<AnalyzePattern
 export async function getDocumentSpecificPatterns(docId: string): Promise<AnalyzePatternsResponse> {
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/patterns/specific`);
 }
+
+// ── Action extraction + human-in-the-loop ─────────────────────────────────────
+
+export interface ExtractActionsResponse {
+  success: boolean;
+  doc_id: string;
+  actions_count: number;
+  edges_count: number;
+  pending_count: number;
+  message: string;
+}
+
+export interface PendingEdge {
+  src_uid: string;
+  src_text: string;
+  src_phrase: string;
+  src_sentence: string;
+  src_class: string;
+  tgt_uid: string;
+  tgt_text: string;
+  tgt_phrase: string;
+  tgt_sentence: string;
+  tgt_class: string;
+  relation_subtype: string;
+  confidence: number;
+  evidence: string[];
+}
+
+export interface PendingEdgesResponse {
+  success: boolean;
+  doc_id: string;
+  edges: PendingEdge[];
+  total: number;
+}
+
+export interface ReviewEdgeRequest {
+  src_uid: string;
+  tgt_uid: string;
+  relation_subtype: string;
+  decision: 'confirmed' | 'rejected';
+}
+
+export async function extractDocumentActions(docId: string): Promise<ExtractActionsResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/extract-actions`, {
+    method: 'POST',
+  });
+}
+
+export async function getPendingEdges(docId: string): Promise<PendingEdgesResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/actions/pending`);
+}
+
+export async function reviewEdge(docId: string, req: ReviewEdgeRequest): Promise<{ success: boolean }> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/actions/review`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(req),
+  });
+}

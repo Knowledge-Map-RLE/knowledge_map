@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import s from './LinguisticPatternAnalysis.module.css';
-import { analyzeDocumentPatterns, getDocumentPatterns, getDocumentSpecificPatterns } from '../../../services/api';
-import type { AnnotationTypePatterns, PatternRow } from '../../../services/api';
+import {
+    analyzeDocumentPatterns, getDocumentPatterns, getDocumentSpecificPatterns,
+    extractDocumentActions, getPendingEdges, reviewEdge,
+} from '../../../services/api';
+import type { AnnotationTypePatterns, PatternRow, PendingEdge } from '../../../services/api';
 
 interface Props {
     docId: string;
@@ -94,17 +97,29 @@ const SPECIFIC_COLORS: Record<string, string> = {
 
 // ── LinguisticPatternAnalysis ─────────────────────────────────────────────
 
+const ACTION_CLASS_COLORS: Record<string, string> = {
+    action:    '#3b82f6',
+    result:    '#22c55e',
+    mechanism: '#f97316',
+};
+
 export default function LinguisticPatternAnalysis({ docId }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [results, setResults] = useState<AnnotationTypePatterns[] | null>(null);
     const [specificResults, setSpecificResults] = useState<AnnotationTypePatterns[] | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    const [isActionsLoading, setIsActionsLoading] = useState(false);
+    const [pendingEdges, setPendingEdges] = useState<PendingEdge[] | null>(null);
+    const [actionsError, setActionsError] = useState<string | null>(null);
+
     // Загружаем сохранённые паттерны при монтировании / смене документа
     useEffect(() => {
         setResults(null);
         setSpecificResults(null);
         setError(null);
+        setPendingEdges(null);
+        setActionsError(null);
         getDocumentPatterns(docId)
             .then(response => {
                 const hasPatterns = response.results.some(r => r.patterns.length > 0);
@@ -115,6 +130,11 @@ export default function LinguisticPatternAnalysis({ docId }: Props) {
             .then(response => {
                 const hasPatterns = response.results.some(r => r.patterns.length > 0);
                 if (hasPatterns) setSpecificResults(response.results);
+            })
+            .catch(() => {});
+        getPendingEdges(docId)
+            .then(response => {
+                if (response.edges.length > 0) setPendingEdges(response.edges);
             })
             .catch(() => {});
     }, [docId]);
@@ -134,6 +154,37 @@ export default function LinguisticPatternAnalysis({ docId }: Props) {
         }
     };
 
+    const handleExtractActions = async () => {
+        setIsActionsLoading(true);
+        setActionsError(null);
+        try {
+            await extractDocumentActions(docId);
+            const resp = await getPendingEdges(docId);
+            setPendingEdges(resp.edges);
+        } catch (e: any) {
+            setActionsError(e.message ?? 'Ошибка анализа действий');
+        } finally {
+            setIsActionsLoading(false);
+        }
+    };
+
+    const handleReview = async (edge: PendingEdge, decision: 'confirmed' | 'rejected') => {
+        // Optimistic update
+        setPendingEdges(prev => prev ? prev.filter(e => !(e.src_uid === edge.src_uid && e.tgt_uid === edge.tgt_uid && e.relation_subtype === edge.relation_subtype)) : prev);
+        try {
+            await reviewEdge(docId, {
+                src_uid: edge.src_uid,
+                tgt_uid: edge.tgt_uid,
+                relation_subtype: edge.relation_subtype,
+                decision,
+            });
+        } catch (e: any) {
+            // Rollback on error
+            setPendingEdges(prev => prev ? [edge, ...prev] : [edge]);
+            setActionsError(e.message ?? 'Ошибка при сохранении решения');
+        }
+    };
+
     // Индекс результатов по типу аннотации для быстрого доступа
     const resultByType = results
         ? Object.fromEntries(results.map(r => [r.annotation_type, r]))
@@ -147,7 +198,7 @@ export default function LinguisticPatternAnalysis({ docId }: Props) {
                 <button
                     className={s.analyzeButton}
                     onClick={handleAnalyze}
-                    disabled={isLoading}
+                    disabled={isLoading || isActionsLoading}
                 >
                     {isLoading ? 'Анализ...' : 'Анализ паттернов'}
                 </button>
@@ -159,12 +210,34 @@ export default function LinguisticPatternAnalysis({ docId }: Props) {
                 )}
                 {results && !isLoading && (
                     <span className={s.statusText}>
-                        Найдено паттернов: {results.reduce((s, r) => s + r.patterns.length, 0)}
+                        Найдено паттернов: {results.reduce((sum, r) => sum + r.patterns.length, 0)}
+                    </span>
+                )}
+
+                <button
+                    className={s.analyzeButton}
+                    onClick={handleExtractActions}
+                    disabled={isLoading || isActionsLoading}
+                    style={{ marginTop: 8 }}
+                >
+                    {isActionsLoading ? 'Извлечение...' : 'Анализ действий'}
+                </button>
+                {isActionsLoading && (
+                    <span className={s.statusText}>Извлечение действий и цепочек...</span>
+                )}
+                {actionsError && (
+                    <span className={s.errorText}>{actionsError}</span>
+                )}
+                {pendingEdges && !isActionsLoading && (
+                    <span className={s.statusText}>
+                        {pendingEdges.length > 0
+                            ? `${pendingEdges.length} связей на проверке`
+                            : 'Нет связей на проверке'}
                     </span>
                 )}
             </div>
 
-            {/* position:relative обёртка + absolute прокручиваемый контент */}
+            {/* Контент */}
             <div className={s.contentWrap}>
             <div className={s.content}>
                 {!results && !isLoading && (
@@ -197,6 +270,54 @@ export default function LinguisticPatternAnalysis({ docId }: Props) {
                                 patterns={group.patterns}
                                 totalAnnotations={group.total_annotations}
                             />
+                        ))}
+                    </>
+                )}
+
+                {pendingEdges && pendingEdges.length > 0 && (
+                    <>
+                        <div className={s.divider}>Действия и цепочки — на проверке</div>
+                        {pendingEdges.map((edge, i) => (
+                            <div key={`${edge.src_uid}-${edge.tgt_uid}-${edge.relation_subtype}-${i}`} className={s.edgeCard}>
+                                <div className={s.edgeRow}>
+                                    <span
+                                        className={s.edgeClassTag}
+                                        style={{ background: ACTION_CLASS_COLORS[edge.src_class] ?? '#6b7280' }}
+                                    >
+                                        {edge.src_class}
+                                    </span>
+                                    <span className={s.edgeText}>{edge.src_phrase || edge.src_text}</span>
+                                    <span className={s.edgeArrow}>── leads to ──›</span>
+                                    <span
+                                        className={s.edgeClassTag}
+                                        style={{ background: ACTION_CLASS_COLORS[edge.tgt_class] ?? '#6b7280' }}
+                                    >
+                                        {edge.tgt_class}
+                                    </span>
+                                    <span className={s.edgeText}>{edge.tgt_phrase || edge.tgt_text}</span>
+                                    <span className={s.edgeConf}>conf: {edge.confidence.toFixed(2)}</span>
+                                </div>
+                                {edge.src_sentence && (
+                                    <div className={s.edgeSentence}>«{edge.src_sentence}»</div>
+                                )}
+                                {edge.evidence.length > 0 && (
+                                    <div className={s.edgeEvidence}>маркеры: {edge.evidence.join(', ')}</div>
+                                )}
+                                <div className={s.edgeActions}>
+                                    <button
+                                        className={s.confirmButton}
+                                        onClick={() => handleReview(edge, 'confirmed')}
+                                    >
+                                        ✓ Подтвердить
+                                    </button>
+                                    <button
+                                        className={s.rejectButton}
+                                        onClick={() => handleReview(edge, 'rejected')}
+                                    >
+                                        ✗ Отклонить
+                                    </button>
+                                </div>
+                            </div>
                         ))}
                     </>
                 )}

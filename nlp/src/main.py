@@ -623,6 +623,76 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                 message=f"Ошибка валидации: {str(e)}"
             )
 
+    async def ExtractActions(self, request, context):
+        """Извлечение действий и причинно-следственных связей из текста"""
+        try:
+            logger.info(
+                "[ExtractActions] doc_id=%s text_len=%d",
+                request.doc_id or "<none>", len(request.text)
+            )
+
+            # Получаем spaCy процессор
+            spacy_processor = self.nlp_manager.processors.get('spacy')
+            if spacy_processor is None or spacy_processor.nlp is None:
+                context.set_code(grpc.StatusCode.UNAVAILABLE)
+                context.set_details("spaCy processor not available")
+                return nlp_pb2.ExtractActionsResponse(
+                    success=False,
+                    message="spaCy processor not available"
+                )
+
+            from action_extractor import ActionExtractor
+            extractor = ActionExtractor()
+            actions, deps = extractor.extract(request.text, spacy_processor.nlp)
+
+            proto_actions = [
+                nlp_pb2.ActionProto(
+                    action_id=a.action_id,
+                    verb_lemma=a.verb_lemma,
+                    verb_text=a.verb_text,
+                    object_text=a.object_text,
+                    full_phrase=a.full_phrase,
+                    sentence_text=a.sentence_text,
+                    sentence_idx=a.sentence_idx,
+                    char_start=a.char_start,
+                    char_end=a.char_end,
+                    modifiers=a.modifiers,
+                    action_score=a.action_score,
+                )
+                for a in actions
+            ]
+
+            proto_deps = [
+                nlp_pb2.DependencyProto(
+                    source_id=d.source_id,
+                    target_id=d.target_id,
+                    marker_text=d.marker_text,
+                    link_score=d.link_score,
+                )
+                for d in deps
+            ]
+
+            logger.info(
+                "[ExtractActions] done: %d actions, %d deps",
+                len(proto_actions), len(proto_deps)
+            )
+
+            return nlp_pb2.ExtractActionsResponse(
+                success=True,
+                actions=proto_actions,
+                dependencies=proto_deps,
+                message=f"Extracted {len(proto_actions)} actions, {len(proto_deps)} dependencies",
+            )
+
+        except Exception as e:
+            logger.error("[ExtractActions] error: %s", e, exc_info=True)
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(str(e))
+            return nlp_pb2.ExtractActionsResponse(
+                success=False,
+                message=f"Ошибка: {str(e)}"
+            )
+
     def _validation_error_to_proto(self, error) -> nlp_pb2.ValidationErrorMessage:
         """Конвертировать ValidationError в proto message"""
         severity_map = {

@@ -1,0 +1,77 @@
+"""
+Данные о номинализациях для биомедицинских текстов.
+Перенесено из notebooks/action_dependency_extraction/nominalization_data.py
+"""
+
+NOMINALIZATIONS = {
+    'mutation': ['mutation', 'mutations'],
+    'duplication': ['duplication', 'duplications'],
+    'deletion': ['deletion', 'deletions'],
+    'insertion': ['insertion', 'insertions'],
+    'substitution': ['substitution', 'substitutions'],
+    'expression': ['expression', 'overexpression'],
+    'regulation': ['regulation', 'deregulation'],
+    'activation': ['activation'],
+    'inhibition': ['inhibition'],
+    'suppression': ['suppression'],
+    'misfolding': ['misfolding'],
+    'aggregation': ['aggregation'],
+    'accumulation': ['accumulation'],
+    'formation': ['formation'],
+    'degradation': ['degradation'],
+    'degeneration': ['degeneration', 'neurodegeneration'],
+    'dysfunction': ['dysfunction'],
+    'damage': ['damage'],
+    'loss': ['loss'],
+    'death': ['death'],
+    'survival': ['survival'],
+    'clearance': ['clearance'],
+    'oxidation': ['oxidation'],
+    'reduction': ['reduction'],
+    'phosphorylation': ['phosphorylation'],
+    'ubiquitination': ['ubiquitination'],
+    'acetylation': ['acetylation'],
+    'methylation': ['methylation'],
+    'peroxidation': ['peroxidation'],
+    'transmission': ['transmission'],
+    'transport': ['transport'],
+    'trafficking': ['trafficking'],
+    'spread': ['spread', 'spreading'],
+    'propagation': ['propagation'],
+    'translocation': ['translocation'],
+    'exposure': ['exposure'],
+    'treatment': ['treatment'],
+    'administration': ['administration'],
+    'onset': ['onset'],
+    'progression': ['progression'],
+    'development': ['development'],
+    'deficiency': ['deficiency'],
+    'inflammation': ['inflammation', 'neuroinflammation'],
+    'response': ['response'],
+    'release': ['release'],
+    'uptake': ['uptake'],
+    'recycling': ['recycling'],
+    'reuptake': ['reuptake'],
+    'increase': ['increase'],
+    'decrease': ['decrease'],
+    'change': ['change', 'changes'],
+    'impairment': ['impairment'],
+    'disruption': ['disruption'],
+    'interference': ['interference'],
+    'toxicity': ['toxicity', 'neurotoxicity'],
+    'susceptibility': ['susceptibility'],
+    'vulnerability': ['vulnerability'],
+    'binding': ['binding'],
+    'interaction': ['interaction'],
+    'production': ['production'],
+    'synthesis': ['synthesis'],
+    'catalysis': ['catalysis'],
+    'reaction': ['reaction'],
+}
+
+NOMINALIZATION_SET: set = set()
+NOMINALIZATION_TO_BASE: dict = {}
+for _base, _variants in NOMINALIZATIONS.items():
+    for _variant in _variants:
+        NOMINALIZATION_SET.add(_variant)
+        NOMINALIZATION_TO_BASE[_variant] = _base

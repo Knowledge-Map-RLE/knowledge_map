@@ -28,6 +28,7 @@ from neomodel import (
     UniqueIdProperty,
     DateTimeProperty,
     FloatProperty,
+    ArrayProperty,
 )
 
 
@@ -218,3 +219,30 @@ class LinguisticPattern(StructuredNode):
 
     found_in = RelationshipTo("MarkdownAnnotation", "FOUND_IN")
     lexical_forms = RelationshipFrom("LexicalForm", "PART_OF")
+
+
+class LeadsToRel(StructuredRel):
+    """Отношение LEADS_TO между Action→Action или Action→MarkdownAnnotation."""
+    relation_subtype = StringProperty()   # CAUSES, ENABLES, PREVENTS, VIA_MECHANISM, PART_OF_GOAL, ...
+    confidence = FloatProperty(default=1.0)
+    evidence = ArrayProperty(StringProperty())
+    doc_id = StringProperty(index=True)
+    status = StringProperty(default="pending")  # pending | confirmed | rejected
+
+
+class Action(StructuredNode):
+    """Действие (глагол / номинализация / биомедицинская сущность), извлечённое из аннотации."""
+    uid = UniqueIdProperty(primary_key=True)
+    verb = StringProperty(required=True, index=True)
+    verb_text = StringProperty()
+    subject = StringProperty()
+    object_ = StringProperty(db_property="object")
+    sentence_text = StringProperty()
+    char_start = IntegerProperty()
+    char_end = IntegerProperty()
+    doc_id = StringProperty(index=True)
+    annotation_uid = StringProperty(index=True)
+    action_class = StringProperty(default="action")  # "action" | "result" | "mechanism"
+
+    leads_to_action = RelationshipTo("Action", "LEADS_TO", model=LeadsToRel)
+    leads_to_goal = RelationshipTo("MarkdownAnnotation", "LEADS_TO", model=LeadsToRel)

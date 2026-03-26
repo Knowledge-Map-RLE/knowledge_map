@@ -328,3 +328,42 @@ class AnalyzePatternsResponse(BaseModel):
     results: List[AnnotationTypePatterns]
     total_patterns_saved: int
     message: str
+
+
+class ExtractActionsResponse(BaseModel):
+    success: bool
+    doc_id: str
+    actions_count: int
+    edges_count: int
+    pending_count: int
+    message: str
+
+
+class PendingEdge(BaseModel):
+    src_uid: str
+    src_text: str
+    src_phrase: str
+    src_sentence: str
+    src_class: str
+    tgt_uid: str
+    tgt_text: str
+    tgt_phrase: str
+    tgt_sentence: str
+    tgt_class: str
+    relation_subtype: str
+    confidence: float
+    evidence: List[str]
+
+
+class PendingEdgesResponse(BaseModel):
+    success: bool
+    doc_id: str
+    edges: List[PendingEdge]
+    total: int
+
+
+class ReviewEdgeRequest(BaseModel):
+    src_uid: str
+    tgt_uid: str
+    relation_subtype: str
+    decision: str  # "confirmed" | "rejected"

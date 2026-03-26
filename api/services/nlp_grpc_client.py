@@ -287,6 +287,58 @@ class NLPGRPCClient:
             logger.error(f"[grpc_client] Ошибка в get_supported_types: {e}")
             raise
 
+    async def extract_actions(self, text: str, doc_id: str = "", timeout: int = 120) -> Dict[str, Any]:
+        """
+        Извлечение действий и причинно-следственных связей из текста через NLP сервис.
+
+        Returns dict с ключами:
+            success, actions (list[dict]), dependencies (list[dict]), message
+        """
+        try:
+            await self.connect()
+            logger.info("[grpc_client] ExtractActions: doc_id=%s text_len=%d", doc_id, len(text))
+            request = nlp_pb2.ExtractActionsRequest(text=text, doc_id=doc_id)
+            response = await self.stub.ExtractActions(request, timeout=timeout)
+            logger.info(
+                "[grpc_client] ExtractActions response: success=%s actions=%d deps=%d",
+                response.success, len(response.actions), len(response.dependencies)
+            )
+            return {
+                "success": response.success,
+                "actions": [self._proto_action_to_action_dict(a) for a in response.actions],
+                "dependencies": [self._proto_dep_to_dict(d) for d in response.dependencies],
+                "message": response.message,
+            }
+        except grpc.RpcError as e:
+            logger.error("[grpc_client] gRPC ошибка в extract_actions: %s: %s", e.code(), e.details())
+            raise
+        except Exception as e:
+            logger.error("[grpc_client] Ошибка в extract_actions: %s", e)
+            raise
+
+    def _proto_action_to_action_dict(self, action) -> Dict[str, Any]:
+        return {
+            "action_id": action.action_id,
+            "verb_lemma": action.verb_lemma,
+            "verb_text": action.verb_text,
+            "object_text": action.object_text,
+            "full_phrase": action.full_phrase,
+            "sentence_text": action.sentence_text,
+            "sentence_idx": action.sentence_idx,
+            "char_start": action.char_start,
+            "char_end": action.char_end,
+            "modifiers": list(action.modifiers),
+            "action_score": action.action_score,
+        }
+
+    def _proto_dep_to_dict(self, dep) -> Dict[str, Any]:
+        return {
+            "source_id": dep.source_id,
+            "target_id": dep.target_id,
+            "marker_text": dep.marker_text,
+            "link_score": dep.link_score,
+        }
+
     async def validate_markdown(self, markdown: str, strict_mode: bool = False, timeout: int = 30) -> Dict[str, Any]:
         """
         Валидация канонического формата markdown через gRPC.

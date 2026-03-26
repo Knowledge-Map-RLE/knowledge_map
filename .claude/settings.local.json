@@ -96,7 +96,10 @@
       "Bash(poetry install:*)",
       "WebFetch(domain:opendataloader.org)",
       "Bash(poetry add:*)",
-      "Bash(\"d:/Knowledge_Map/api/web/routers/data_extraction/documents.py\")"
+      "Bash(\"d:/Knowledge_Map/api/web/routers/data_extraction/documents.py\")",
+      "Bash(2)",
+      "Bash(find /d/Knowledge_Map -type f \\\\\\(-name *fine*tun* -o -name *training* -o -name *LoRA* -o -name *active*learn* -o -name *Qwen* \\\\\\))",
+      "Bash(find /d/Knowledge_Map -type f \\\\\\(-name *.tsx -o -name *.ts -o -name *.jsx -o -name *.js \\\\\\))"
     ],
     "deny": [],
     "ask": []

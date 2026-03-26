@@ -140,3 +140,35 @@ class LinguisticPatternRepositoryProtocol(Protocol):
     def delete_for_document(self, doc_id: str) -> int:
         """Удаляет все паттерны документа, возвращает количество."""
         ...
+
+
+class ActionRepositoryProtocol(Protocol):
+    """Операции с узлами Action и рёбрами LEADS_TO."""
+
+    def save_actions(self, actions: List[dict], doc_id: str) -> int:
+        """Сохраняет список action-словарей, возвращает количество."""
+        ...
+
+    def save_leads_to(self, action_edges: List[dict], goal_edges: List[dict], doc_id: str) -> int:
+        """Сохраняет рёбра Action→Action и Action→Goal, возвращает общее количество."""
+        ...
+
+    def get_for_document(self, doc_id: str) -> List[dict]:
+        """Возвращает все Action узлы документа."""
+        ...
+
+    def get_pending_for_document(self, doc_id: str) -> List[dict]:
+        """Возвращает все pending рёбра LEADS_TO документа (Action→Action)."""
+        ...
+
+    def get_neighbor_ids(self, uid: str) -> List[str]:
+        """Возвращает ID прямых исходящих соседей (для проверки ацикличности)."""
+        ...
+
+    def update_edge_status(self, src_uid: str, tgt_uid: str, relation_subtype: str, status: str) -> None:
+        """Обновляет статус ребра."""
+        ...
+
+    def delete_for_document(self, doc_id: str) -> int:
+        """Удаляет все Action узлы документа (DETACH DELETE), возвращает количество."""
+        ...

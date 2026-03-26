@@ -18,6 +18,7 @@ from adapters.repositories.document_repository import DocumentRepository
 from adapters.repositories.annotation_repository import AnnotationRepository
 from adapters.repositories.user_repository import UserRepository
 from adapters.repositories.linguistic_pattern_repository import LinguisticPatternRepository
+from adapters.repositories.action_repository import ActionRepository
 from infrastructure.s3.s3_storage import get_s3_client, AsyncS3Client
 from infrastructure.grpc_clients.auth_grpc_client import auth_client, AuthClient
 from infrastructure.config import settings
@@ -47,6 +48,10 @@ def get_user_repository() -> UserRepository:
 
 def get_linguistic_pattern_repository() -> LinguisticPatternRepository:
     return LinguisticPatternRepository()
+
+
+def get_action_repository() -> ActionRepository:
+    return ActionRepository()
 
 
 # ── Инфраструктурные сервисы ───────────────────────────────────────────────────

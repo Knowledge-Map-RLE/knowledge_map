@@ -18,6 +18,9 @@ service NLPService {
 
     // Валидация канонического формата markdown
     rpc ValidateMarkdown(ValidateMarkdownRequest) returns (ValidateMarkdownResponse);
+
+    // Извлечение действий и причинно-следственных цепочек из текста
+    rpc ExtractActions(ExtractActionsRequest) returns (ExtractActionsResponse);
 }
 
 // ============================================================================
@@ -284,9 +287,46 @@ message ValidateMarkdownResponse {
     repeated ValidationErrorMessage errors = 3;
     repeated ValidationErrorMessage warnings = 4;
     string message = 5;
-    
+
     int32 total_errors = 6;
     int32 total_warnings = 7;
-    
+
     map<string, string> metadata = 8;
+}
+
+// ============================================================================
+// Извлечение действий (ExtractActions)
+// ============================================================================
+
+message ExtractActionsRequest {
+    string text = 1;
+    string doc_id = 2;
+}
+
+message ActionProto {
+    string action_id = 1;
+    string verb_lemma = 2;
+    string verb_text = 3;
+    string object_text = 4;
+    string full_phrase = 5;
+    string sentence_text = 6;
+    int32 sentence_idx = 7;
+    int32 char_start = 8;
+    int32 char_end = 9;
+    repeated string modifiers = 10;
+    float action_score = 11;
+}
+
+message DependencyProto {
+    string source_id = 1;
+    string target_id = 2;
+    string marker_text = 3;
+    float link_score = 4;
+}
+
+message ExtractActionsResponse {
+    bool success = 1;
+    repeated ActionProto actions = 2;
+    repeated DependencyProto dependencies = 3;
+    string message = 4;
 }

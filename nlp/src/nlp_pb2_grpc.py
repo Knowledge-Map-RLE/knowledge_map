@@ -40,6 +40,11 @@ class NLPServiceStub(object):
                 request_serializer=nlp__pb2.ValidateMarkdownRequest.SerializeToString,
                 response_deserializer=nlp__pb2.ValidateMarkdownResponse.FromString,
                 )
+        self.ExtractActions = channel.unary_unary(
+                '/nlp.NLPService/ExtractActions',
+                request_serializer=nlp__pb2.ExtractActionsRequest.SerializeToString,
+                response_deserializer=nlp__pb2.ExtractActionsResponse.FromString,
+                )
 
 
 class NLPServiceServicer(object):
@@ -81,6 +86,13 @@ class NLPServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ExtractActions(self, request, context):
+        """Извлечение действий и причинно-следственных цепочек из текста
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_NLPServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -108,6 +120,11 @@ def add_NLPServiceServicer_to_server(servicer, server):
                     servicer.ValidateMarkdown,
                     request_deserializer=nlp__pb2.ValidateMarkdownRequest.FromString,
                     response_serializer=nlp__pb2.ValidateMarkdownResponse.SerializeToString,
+            ),
+            'ExtractActions': grpc.unary_unary_rpc_method_handler(
+                    servicer.ExtractActions,
+                    request_deserializer=nlp__pb2.ExtractActionsRequest.FromString,
+                    response_serializer=nlp__pb2.ExtractActionsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -202,5 +219,22 @@ class NLPService(object):
         return grpc.experimental.unary_unary(request, target, '/nlp.NLPService/ValidateMarkdown',
             nlp__pb2.ValidateMarkdownRequest.SerializeToString,
             nlp__pb2.ValidateMarkdownResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ExtractActions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/nlp.NLPService/ExtractActions',
+            nlp__pb2.ExtractActionsRequest.SerializeToString,
+            nlp__pb2.ExtractActionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

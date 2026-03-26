@@ -38,6 +38,7 @@ from web.routers.data_extraction import (
     ontology as ontology_router,
     patterns as patterns_router,
     action_chains as action_chains_router,
+    actions as actions_router,
     pubmed as pubmed_router,
     csv_export as csv_export_router,
     markdown_validation as markdown_validation_router,
@@ -116,6 +117,7 @@ app.include_router(nlp_router.router, prefix="/api/data_extraction")
 app.include_router(ontology_router.router, prefix="/api/data_extraction")
 app.include_router(patterns_router.router, prefix="/api/data_extraction")
 app.include_router(action_chains_router.router, prefix="/api/data_extraction")
+app.include_router(actions_router.router, prefix="/api/data_extraction")
 app.include_router(pubmed_router.router, prefix="/api/data_extraction")
 app.include_router(csv_export_router.router, prefix="/api/data_extraction")
 app.include_router(markdown_validation_router.router, prefix="/api/data_extraction")
