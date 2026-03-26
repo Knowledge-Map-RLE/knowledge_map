@@ -1051,3 +1051,33 @@ export async function reviewEdge(docId: string, req: ReviewEdgeRequest): Promise
     body: JSON.stringify(req),
   });
 }
+
+export interface ConfirmedActionNode {
+  uid: string;
+  verb: string;
+  verb_text: string;
+  object: string;
+  full_phrase: string;
+  sentence_text: string;
+  action_class: string;
+}
+
+export interface ConfirmedActionEdge {
+  src_uid: string;
+  tgt_uid: string;
+  relation_subtype: string;
+  confidence: number;
+}
+
+export interface ConfirmedActionGraphResponse {
+  success: boolean;
+  doc_id: string;
+  nodes: ConfirmedActionNode[];
+  edges: ConfirmedActionEdge[];
+  total_nodes: number;
+  total_edges: number;
+}
+
+export async function getConfirmedActionGraph(docId: string): Promise<ConfirmedActionGraphResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/actions/graph`);
+}

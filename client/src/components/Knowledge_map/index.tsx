@@ -27,7 +27,13 @@ import styles from './Knowledge_map.module.css';
 
 extend({ Container, Graphics, Text });
 
-export default function Knowledge_map() {
+interface Knowledge_mapProps {
+  externalBlocks?: BlockData[];
+  externalLinks?: LinkData[];
+  embedded?: boolean;
+}
+
+export default function Knowledge_map({ externalBlocks, externalLinks, embedded }: Knowledge_mapProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
   const { setViewportRef } = useViewport();
@@ -57,8 +63,12 @@ export default function Knowledge_map() {
     setBlocks, setLinks, setLevels, setSublevels
   } = useDataLoading();
 
-  // Автоматическая загрузка данных при изменении viewport
+  const actualBlocks = externalBlocks ?? blocks;
+  const actualLinks = externalLinks ?? links;
+
+  // Автоматическая загрузка данных при изменении viewport (только в режиме глобальной карты)
   useEffect(() => {
+    if (externalBlocks) return;
     const viewport = viewportRef.current;
     if (!viewport) return;
     
@@ -181,7 +191,7 @@ export default function Knowledge_map() {
     onMovePinnedBlock: handleMovePinnedBlock
   });
 
-  useEffect(() => { loadLayoutData(); }, [loadLayoutData]);
+  useEffect(() => { if (!externalBlocks) loadLayoutData(); }, [externalBlocks, loadLayoutData]);
   useEffect(() => {
     const timer = setTimeout(() => setPixiReady(true), 500);
     return () => clearTimeout(timer);
@@ -190,21 +200,21 @@ export default function Knowledge_map() {
 
   // Автоматическое центрирование при первой загрузке данных
   useEffect(() => {
-    if (blocks.length > 0 && !focusTargetId) {
+    if (actualBlocks.length > 0 && !focusTargetId) {
       // Находим центр всех блоков
-      const centerX = blocks.reduce((sum, block) => sum + (block.x || 0), 0) / blocks.length;
-      const centerY = blocks.reduce((sum, block) => sum + (block.y || 0), 0) / blocks.length;
+      const centerX = actualBlocks.reduce((sum, block) => sum + (block.x || 0), 0) / actualBlocks.length;
+      const centerY = actualBlocks.reduce((sum, block) => sum + (block.y || 0), 0) / actualBlocks.length;
 
       // Центрируем viewport на центр данных
       setTimeout(() => {
         viewportRef.current?.focusOn(centerX, centerY);
       }, 100);
     }
-  }, [blocks.length, focusTargetId]);
+  }, [actualBlocks.length, focusTargetId]);
 
   useEffect(() => {
-    if (focusTargetId && blocks.length > 0) {
-      const targetBlock = blocks.find(b => b.id === focusTargetId);
+    if (focusTargetId && actualBlocks.length > 0) {
+      const targetBlock = actualBlocks.find(b => b.id === focusTargetId);
       if (targetBlock && typeof targetBlock.x === 'number' && typeof targetBlock.y === 'number') {
         const targetX = targetBlock.x + BLOCK_WIDTH / 2;
         const targetY = targetBlock.y;
@@ -212,7 +222,7 @@ export default function Knowledge_map() {
         setFocusTargetId(null);
       }
     }
-  }, [blocks, focusTargetId]);
+  }, [actualBlocks, focusTargetId]);
 
   // Дополнительная защита от контекстного меню
   useEffect(() => {
@@ -329,7 +339,7 @@ export default function Knowledge_map() {
     };
   }, [screenSize?.width, screenSize?.height, currentScale]);
 
-  const blockMap = useMemo(() => new Map(blocks.map(b => [b.id, b])), [blocks]);
+  const blockMap = useMemo(() => new Map(actualBlocks.map(b => [b.id, b])), [actualBlocks]);
 
   const viewBoundsWithPad = useMemo(() => {
     if (!viewportBounds) return null;
@@ -342,17 +352,17 @@ export default function Knowledge_map() {
   }, [viewportBounds?.left, viewportBounds?.right, viewportBounds?.top, viewportBounds?.bottom, pad.x, pad.y]);
 
   const visibleBlocks = useMemo(() => {
-    if (!viewBoundsWithPad) return blocks;
+    if (!viewBoundsWithPad) return actualBlocks;
     const { left, right, top, bottom } = viewBoundsWithPad;
-    return blocks.filter(b => {
+    return actualBlocks.filter(b => {
       const x = (b.x ?? 0);
       const y = (b.y ?? 0);
       return x >= left && x <= right && y >= top && y <= bottom;
     });
-  }, [blocks, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
+  }, [actualBlocks, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
 
   const visibleLinks = useMemo(() => {
-    if (!viewBoundsWithPad) return links;
+    if (!viewBoundsWithPad) return actualLinks;
     const { left, right, top, bottom } = viewBoundsWithPad;
     const isInView = (b?: BlockData) => {
       if (!b) return false;
@@ -360,9 +370,9 @@ export default function Knowledge_map() {
       const y = (b.y ?? 0);
       return x >= left && x <= right && y >= top && y <= bottom;
     };
-    return links.filter(l => isInView(blockMap.get(l.source_id)) || isInView(blockMap.get(l.target_id)));
-  }, [links, blockMap, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
-  if (loadError) {
+    return actualLinks.filter(l => isInView(blockMap.get(l.source_id)) || isInView(blockMap.get(l.target_id)));
+  }, [actualLinks, blockMap, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
+  if (!externalBlocks && loadError) {
     return (
       <div className={styles.knowledge_map} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
         Ошибка загрузки: {loadError}
@@ -372,23 +382,23 @@ export default function Knowledge_map() {
 
 
   return (
-    <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
-      {(!pixiReady || isLoading) && (
+    <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1} style={embedded ? { position: 'relative', width: '100%', height: '100%' } : undefined}>
+      {(!pixiReady || (!externalBlocks && isLoading)) && (
         <div className={styles.экран_загрузки}>
           {isLoading ? 'Загрузка данных...' : 'Инициализация...'}
         </div>
       )}
-      <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
+      <Application width={embedded ? (containerRef.current?.clientWidth || window.innerWidth) : window.innerWidth} height={embedded ? (containerRef.current?.clientHeight || window.innerHeight) : window.innerHeight} backgroundColor={0xf5f5f5}>
         <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode} isBlockContextMenuActive={isBlockContextMenuActive} blockRightClickRef={blockRightClickRef} instantBlockClickRef={instantBlockClickRef}>
           {/* Рендерим все уровни */}
           {levels.map(level => (
             <Level
               key={level.id}
               levelData={level}
-              blocks={blocks}
+              blocks={actualBlocks}
             />
           ))}
-          
+
           {/* Рендерим все подуровни отдельно */}
           {sublevels.map(sublevel => (
             <Sublevel
@@ -447,8 +457,8 @@ export default function Knowledge_map() {
         <BlockContextMenu
           x={contextMenu.x}
           y={contextMenu.y}
-          isPinned={blocks.find(b => b.id === contextMenu.blockId)?.is_pinned || false}
-          currentPhysicalScale={blocks.find(b => b.id === contextMenu.blockId)?.physical_scale || 0}
+          isPinned={actualBlocks.find(b => b.id === contextMenu.blockId)?.is_pinned || false}
+          currentPhysicalScale={actualBlocks.find(b => b.id === contextMenu.blockId)?.physical_scale || 0}
           onPin={() => handlePinBlock(contextMenu.blockId)}
           onUnpin={() => handleUnpinBlock(contextMenu.blockId)}
           onPinWithScale={(physicalScale: number) => handlePinBlockWithScale(contextMenu.blockId, physicalScale)}

@@ -148,6 +148,32 @@ class ActionRepository:
             "status": status,
         })
 
+    def get_confirmed_graph(self, doc_id: str) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Возвращает все Action-узлы и подтверждённые LEADS_TO-рёбра для документа."""
+        nodes_result, _ = db.cypher_query(
+            "MATCH (a:Action {doc_id: $doc_id}) "
+            "RETURN a.uid, a.verb, a.verb_text, a.object, a.full_phrase, a.sentence_text, a.action_class",
+            {"doc_id": doc_id},
+        )
+        edges_result, _ = db.cypher_query(
+            "MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO {status: 'confirmed'}]->(t:Action {doc_id: $doc_id}) "
+            "RETURN s.uid, t.uid, r.relation_subtype, r.confidence",
+            {"doc_id": doc_id},
+        )
+        nodes = [
+            {
+                "uid": r[0], "verb": r[1] or "", "verb_text": r[2] or "",
+                "object": r[3] or "", "full_phrase": r[4] or "",
+                "sentence_text": r[5] or "", "action_class": r[6] or "action",
+            }
+            for r in nodes_result
+        ]
+        edges = [
+            {"src_uid": r[0], "tgt_uid": r[1], "relation_subtype": r[2] or "", "confidence": r[3] or 0.0}
+            for r in edges_result
+        ]
+        return nodes, edges
+
     def delete_for_document(self, doc_id: str) -> int:
         count_query = "MATCH (a:Action {doc_id: $doc_id}) RETURN count(a) AS cnt"
         results, _ = db.cypher_query(count_query, {"doc_id": doc_id})

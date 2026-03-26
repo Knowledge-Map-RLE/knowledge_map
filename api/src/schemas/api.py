@@ -367,3 +367,29 @@ class ReviewEdgeRequest(BaseModel):
     tgt_uid: str
     relation_subtype: str
     decision: str  # "confirmed" | "rejected"
+
+
+class ConfirmedActionNode(BaseModel):
+    uid: str
+    verb: str
+    verb_text: str
+    object: str = ""
+    full_phrase: str = ""
+    sentence_text: str = ""
+    action_class: str = "action"
+
+
+class ConfirmedActionEdge(BaseModel):
+    src_uid: str
+    tgt_uid: str
+    relation_subtype: str
+    confidence: float
+
+
+class ConfirmedActionGraphResponse(BaseModel):
+    success: bool
+    doc_id: str
+    nodes: List[ConfirmedActionNode]
+    edges: List[ConfirmedActionEdge]
+    total_nodes: int
+    total_edges: int

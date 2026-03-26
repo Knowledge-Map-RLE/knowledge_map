@@ -16,6 +16,9 @@ from src.schemas.api import (
     PendingEdge,
     PendingEdgesResponse,
     ReviewEdgeRequest,
+    ConfirmedActionNode,
+    ConfirmedActionEdge,
+    ConfirmedActionGraphResponse,
 )
 from application.actions.extract_document_actions import (
     extract_document_actions,
@@ -129,3 +132,21 @@ def delete_actions(
 ):
     count = action_repo.delete_for_document(doc_id)
     return {"success": True, "deleted": count}
+
+
+@router.get("/actions/graph", response_model=ConfirmedActionGraphResponse)
+def get_confirmed_graph(
+    doc_id: str,
+    action_repo=Depends(get_action_repository),
+):
+    nodes_data, edges_data = action_repo.get_confirmed_graph(doc_id)
+    nodes = [ConfirmedActionNode(**n) for n in nodes_data]
+    edges = [ConfirmedActionEdge(**e) for e in edges_data]
+    return ConfirmedActionGraphResponse(
+        success=True,
+        doc_id=doc_id,
+        nodes=nodes,
+        edges=edges,
+        total_nodes=len(nodes),
+        total_edges=len(edges),
+    )
