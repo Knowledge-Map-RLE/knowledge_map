@@ -174,6 +174,25 @@ class ActionRepository:
         ]
         return nodes, edges
 
+    def save_syntactic_deps(
+        self,
+        syntactic_edges: List[Dict[str, Any]],
+        doc_id: str,
+    ) -> int:
+        """Сохранить синтаксические зависимости как SYNTACTIC_DEP рёбра (не LEADS_TO)."""
+        if not syntactic_edges:
+            return 0
+        query = """
+        UNWIND $edges AS e
+        MATCH (s:Action {uid: e.src_uid}), (t:Action {uid: e.tgt_uid})
+        MERGE (s)-[r:SYNTACTIC_DEP {doc_id: e.doc_id, dep_label: e.dep_label}]->(t)
+        ON CREATE SET
+            r.confidence = e.confidence
+        """
+        db.cypher_query(query, {"edges": syntactic_edges})
+        logger.debug("Saved %d SYNTACTIC_DEP edges for doc %s", len(syntactic_edges), doc_id)
+        return len(syntactic_edges)
+
     def delete_for_document(self, doc_id: str) -> int:
         count_query = "MATCH (a:Action {doc_id: $doc_id}) RETURN count(a) AS cnt"
         results, _ = db.cypher_query(count_query, {"doc_id": doc_id})

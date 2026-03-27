@@ -343,7 +343,7 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
     async def AnalyzeText(self, request, context):
         """Многоуровневый лингвистический анализ"""
         try:
-            logger.info(f"AnalyzeText запрос: текст длиной {len(request.text)} символов")
+            logger.info(f"AnalyzeText запрос: doc_id={request.doc_id or '<none>'} текст длиной {len(request.text)} символов")
 
             # Проверяем максимальную длину
             if len(request.text) > self.config.max_text_length:
@@ -402,7 +402,7 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
             proto_doc = self._convert_document_to_proto(document)
 
             processing_time = time.time() - start_time
-            logger.info(f"AnalyzeText выполнен за {processing_time:.2f}с")
+            logger.info(f"AnalyzeText выполнен: doc_id={request.doc_id or '<none>'} за {processing_time:.2f}с")
 
             return nlp_pb2.AnalyzeTextResponse(
                 success=True,
@@ -668,6 +668,8 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                     target_id=d.target_id,
                     marker_text=d.marker_text,
                     link_score=d.link_score,
+                    relation_subtype=d.relation_subtype,
+                    evidence_type=d.evidence_type,
                 )
                 for d in deps
             ]

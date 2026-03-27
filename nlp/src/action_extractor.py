@@ -11,14 +11,20 @@ Action Score (AS) — объект ОБЯЗАТЕЛЕН:
 Threshold: AS >= 0.55  (с объектом минимум: 0+0.55+0.30 = 0.85 — всегда проходит если content_verb+объект)
 Без объекта: AS = 0.0 — никогда не проходит.
 
-Link Score (LS):
-  - Режим «сильная связность» (causal_density >= DENSE_THRESHOLD):
-      regex match против STRONG_MARKERS, threshold >= 0.70
-  - Режим «слабая связность» (causal_density < DENSE_THRESHOLD):
-      дополнительно: синтаксические связи (xcomp, advcl, ccomp) в одном предложении, LS=0.65
-      threshold снижен до 0.60
+Два типа зависимостей:
 
-Детекция слабой связности:
+1. LEADS_TO (evidence_type='marker') — только при наличии явного маркера:
+   - Pass 1: маркер внутри одного предложения (полный score)
+   - Pass 2: маркер между boundary-парой предложений N→N+1
+             (последнее действие N → первое действие N+1, штраф −0.10)
+   relation_subtype определяется типом маркера (causes/enables/prevents/via_mechanism/sequential)
+
+2. SYNTACTIC_DEP (evidence_type='syntactic') — синтаксические связи:
+   - xcomp, advcl, ccomp, conj в обоих режимах (dense и sparse)
+   - relation_subtype = метка зависимости spaCy (xcomp/advcl/ccomp/conj)
+   - Сохраняются в отдельный тип ребра Neo4j, НЕ как LEADS_TO
+
+Детекция режима:
     causal_density = (число сильных маркеров в тексте) / (число предложений)
     DENSE_THRESHOLD = 0.08  (менее 1 маркера на 12 предложений → слабая)
 """
@@ -29,7 +35,7 @@ import re
 from dataclasses import dataclass, field
 from typing import List
 
-from action_markers import STRONG_MARKERS
+from action_markers import STRONG_MARKERS, MARKER_SUBTYPE_MAP
 
 logger = logging.getLogger(__name__)
 
@@ -70,9 +76,10 @@ _WEAK_NP_PAT = re.compile(
     re.IGNORECASE,
 )
 
-# Pattern: full_phrase starts with capital after verb — likely section heading artifact
-# e.g. "governed The hallmarks of..."
-_HEADING_ARTIFACT_PAT = re.compile(r'^\w+\s+[A-Z][a-z]')
+# Pattern: object phrase starts with a common English article/determiner in Title Case
+# e.g. "governed The hallmarks of..." — section heading artifact
+# Specifically: verb + space + "The"/"A"/"An"/"This"/"That" + space + lowercase
+_HEADING_ARTIFACT_PAT = re.compile(r'^\w+\s+(?:The|A|An|This|That|These|Those)\s+[a-z]')
 
 STOP_VERBS = {
     'be', 'have', 'do', 'get', 'make', 'seem', 'appear', 'remain',
@@ -86,10 +93,15 @@ STOP_VERBS = {
     'affect',      # "affect populations" — too vague without specific object
     'connect',     # "connect the scales" — often subordinate clause head
     'create',      # "creating an interesting challenge" — meta-commentary
+    'form',        # "aggregates to form Lewy bodies" — resultative complement, not action
 }
 
-# Compiled marker patterns for speed
-_COMPILED_MARKERS = [(re.compile(pat, re.IGNORECASE), score) for pat, score in STRONG_MARKERS]
+# Compiled marker patterns: (compiled_pattern, score, pattern_str)
+# pattern_str used for MARKER_SUBTYPE_MAP lookup
+_COMPILED_MARKERS = [
+    (re.compile(pat, re.IGNORECASE), score, pat)
+    for pat, score in STRONG_MARKERS
+]
 
 # For density detection: compile all marker patterns into a single fast regex
 _ALL_MARKER_PAT = re.compile(
@@ -97,16 +109,34 @@ _ALL_MARKER_PAT = re.compile(
     re.IGNORECASE,
 )
 
+# Adversative connectors: when these appear in the gap, suppress LEADS_TO creation
+_ADVERSATIVE_PAT = re.compile(
+    r'\b(?:but|however|although|though|despite|whereas|yet|nevertheless|nonetheless|'
+    r'on\s+the\s+other\s+hand|in\s+contrast|conversely)\b',
+    re.IGNORECASE,
+)
+
+# Markdown heading lines: # Title, ## Section, ### Subsection
+# Used to blank out headings before NLP parsing so heading words aren't extracted as actions
+_MARKDOWN_HEADING_RE = re.compile(r'^#{1,6}\s+.+$', re.MULTILINE)
+
 # Causal density threshold: below → sparse/weakly-connected text
 DENSE_THRESHOLD = 0.08  # < 1 marker per 12 sentences
 
 # Link score thresholds by mode
 LINK_SCORE_THRESHOLD_DENSE = 0.70
 LINK_SCORE_THRESHOLD_SPARSE = 0.60
-SYNTACTIC_LINK_SCORE = 0.65   # score assigned to syntactic (xcomp/advcl/ccomp) links
 
-# Window (in characters) around an action's position to search for dependency markers
-_MARKER_WINDOW = 300   # slightly wider to catch cross-sentence markers
+# Penalty for cross-sentence (boundary-pair) marker links
+_CROSS_SENTENCE_PENALTY = 0.10
+
+# Syntactic dependency scores by dep label
+_SYNTACTIC_SCORES = {
+    'xcomp': 0.88,
+    'advcl': 0.85,
+    'ccomp': 0.80,
+    'conj':  0.72,
+}
 
 
 @dataclass
@@ -130,6 +160,9 @@ class ExtractedDependency:
     target_id: str
     marker_text: str
     link_score: float
+    relation_subtype: str = 'causes'   # causes|enables|prevents|via_mechanism|sequential|xcomp|advcl|ccomp|conj
+    evidence_type: str = 'marker'      # 'marker' | 'syntactic'
+    sentence_distance: int = 0         # для отладки
 
 
 def _get_object_np(token) -> str:
@@ -187,10 +220,50 @@ def _compute_causal_density(text: str) -> float:
     return density
 
 
+def _classify_subtype(pattern_str: str) -> str:
+    """Return relation_subtype for a matched marker pattern string."""
+    return MARKER_SUBTYPE_MAP.get(pattern_str, 'causes')
+
+
+def _search_markers_in_gap(gap_text: str, tgt_verb_text: str = '') -> tuple[float, str, str]:
+    """Search for the best causal marker in gap_text.
+
+    gap_text may include the target verb itself (to catch "which disrupts",
+    "thereby trigger" patterns). When a match equals the target verb text,
+    it is skipped — the target verb is not a connector.
+
+    Returns (best_score, best_marker_text, best_pattern_str).
+    Returns (0.0, '', '') if no marker found.
+    """
+    best_score = 0.0
+    best_marker = ''
+    best_pat_str = ''
+    tgt_lower = tgt_verb_text.lower().strip() if tgt_verb_text else ''
+    for pattern, score, pat_str in _COMPILED_MARKERS:
+        m = pattern.search(gap_text)
+        if not m:
+            continue
+        matched = m.group(0).strip()
+        # Skip if the matched text is just the target verb itself (not a connector)
+        if tgt_lower and matched.lower() == tgt_lower:
+            continue
+        if score > best_score:
+            best_score = score
+            best_marker = matched
+            best_pat_str = pat_str
+    return best_score, best_marker, best_pat_str
+
+
 class ActionExtractor:
     """Extracts actions and their dependencies from text using a spaCy model."""
 
     def extract(self, text: str, nlp) -> tuple[list[ExtractedAction], list[ExtractedDependency]]:
+        # Blank out markdown headings (## Title) to prevent heading words from being
+        # extracted as actions. Replace with spaces to preserve char offsets.
+        def _blank_heading(m: re.Match) -> str:
+            return ' ' * len(m.group(0))
+        text = _MARKDOWN_HEADING_RE.sub(_blank_heading, text)
+
         # Detect connectivity mode before parsing (cheap)
         causal_density = _compute_causal_density(text)
         is_sparse = causal_density < DENSE_THRESHOLD
@@ -259,7 +332,7 @@ class ActionExtractor:
                     action_score=score,
                 ))
 
-        deps = self._extract_dependencies(actions, text, doc, is_sparse, link_threshold)
+        deps = self._extract_dependencies(actions, text, doc, link_threshold)
         logger.info(
             "[action_extractor] text_len=%d actions=%d deps=%d",
             len(text), len(actions), len(deps),
@@ -271,76 +344,158 @@ class ActionExtractor:
         actions: list[ExtractedAction],
         text: str,
         doc,
-        is_sparse: bool,
         link_threshold: float,
     ) -> list[ExtractedDependency]:
         """Find dependencies between actions.
 
-        Dense mode: regex markers only (threshold 0.70).
-        Sparse mode: regex markers (threshold 0.60) + syntactic links within sentence.
+        Pass 1: LEADS_TO — маркер внутри одного предложения.
+        Pass 2: LEADS_TO — маркер между boundary-парой предложений N→N+1 (штраф −0.10).
+        Pass 3: SYNTACTIC_DEP — xcomp/advcl/ccomp/conj в обоих режимах.
+
+        LEADS_TO создаётся ТОЛЬКО при наличии маркера.
+        SYNTACTIC_DEP — отдельный тип, не конкурирует с LEADS_TO.
         """
         deps: list[ExtractedDependency] = []
         if len(actions) < 2:
             return deps
 
-        # Build lookup: sentence_idx → list of action indices
+        # Build lookup: sentence_idx → list of action indices (in order)
         sent_to_actions: dict[int, list[int]] = {}
         for i, a in enumerate(actions):
             sent_to_actions.setdefault(a.sentence_idx, []).append(i)
 
-        # ── 1. Marker-based dependencies (consecutive action pairs) ──────────
-        for i in range(len(actions) - 1):
-            src = actions[i]
-            tgt = actions[i + 1]
+        # Dedup set for LEADS_TO: avoid duplicate (src_id, tgt_id) — keep max score
+        leads_to_best: dict[tuple[str, str], ExtractedDependency] = {}
 
-            gap_start = max(0, src.char_end)
-            gap_end = min(len(text), tgt.char_start + _MARKER_WINDOW)
-            gap_text = text[gap_start:gap_end]
+        # ── Pass 1: LEADS_TO — marker within the same sentence ───────────────
+        # Only link ADJACENT actions within a sentence (ii → ii+1).
+        # Linking non-adjacent pairs (ii → ii+2+) would skip intermediate actions
+        # and create false positives when a marker spans the whole sentence.
+        for sent_idx, action_indices in sent_to_actions.items():
+            if len(action_indices) < 2:
+                continue
+            for ii in range(len(action_indices) - 1):
+                for jj in [ii + 1]:
+                    src = actions[action_indices[ii]]
+                    tgt = actions[action_indices[jj]]
 
-            best_score = 0.0
-            best_marker = ''
-            for pattern, score in _COMPILED_MARKERS:
-                m = pattern.search(gap_text)
-                if m and score > best_score:
-                    best_score = score
-                    best_marker = m.group(0)
+                    # Search from src.char_end to tgt.char_end (inclusive of target verb)
+                    # This allows markers like "which disrupts" or "thereby trigger" where
+                    # the target verb is part of the marker pattern.
+                    if src.char_end >= tgt.char_start:
+                        continue
+                    gap_text = text[src.char_end:tgt.char_end]
 
-            if best_score >= link_threshold:
-                deps.append(ExtractedDependency(
+                    # Skip adversative contexts
+                    if _ADVERSATIVE_PAT.search(gap_text):
+                        continue
+
+                    best_score, best_marker, best_pat_str = _search_markers_in_gap(gap_text, tgt.verb_text)
+                    if best_score >= link_threshold:
+                        key = (src.action_id, tgt.action_id)
+                        dep = ExtractedDependency(
+                            source_id=src.action_id,
+                            target_id=tgt.action_id,
+                            marker_text=best_marker,
+                            link_score=best_score,
+                            relation_subtype=_classify_subtype(best_pat_str),
+                            evidence_type='marker',
+                            sentence_distance=0,
+                        )
+                        if key not in leads_to_best or best_score > leads_to_best[key].link_score:
+                            leads_to_best[key] = dep
+
+        # ── Pass 2: LEADS_TO — marker between boundary pairs N→N+1 ───────────
+        # Key fix: iterate over sentence boundaries, not consecutive action pairs.
+        # Only link last action of sentence N with first action of sentence N+1.
+        max_sent_idx = max(sent_to_actions.keys()) if sent_to_actions else 0
+        for sent_n in range(max_sent_idx):
+            sent_n1 = sent_n + 1
+            if sent_n not in sent_to_actions or sent_n1 not in sent_to_actions:
+                continue
+
+            src = actions[sent_to_actions[sent_n][-1]]   # last action in sentence N
+            tgt = actions[sent_to_actions[sent_n1][0]]   # first action in sentence N+1
+
+            if src.char_end >= tgt.char_start:
+                continue
+            # For cross-sentence links, only look for markers in the text BETWEEN
+            # the end of sentence N and the end of the first action in sentence N+1.
+            # Specifically: search only in the second half of the gap (closer to sentence N+1)
+            # to avoid markers deep inside sentence N (e.g. "because" mid-sentence) being
+            # used to link to the next sentence's action.
+            gap_full = text[src.char_end:tgt.char_end]
+            gap_len = len(gap_full)
+            # Use only the latter half of the gap (from sentence boundary onward)
+            boundary_search_start = gap_len // 2
+            gap_text = gap_full[boundary_search_start:]
+
+            # Skip adversative contexts
+            if _ADVERSATIVE_PAT.search(gap_text):
+                continue
+
+            best_score, best_marker, best_pat_str = _search_markers_in_gap(gap_text, tgt.verb_text)
+            # Apply cross-sentence penalty
+            adjusted_score = best_score - _CROSS_SENTENCE_PENALTY
+            if adjusted_score >= link_threshold:
+                key = (src.action_id, tgt.action_id)
+                dep = ExtractedDependency(
                     source_id=src.action_id,
                     target_id=tgt.action_id,
                     marker_text=best_marker,
-                    link_score=best_score,
+                    link_score=adjusted_score,
+                    relation_subtype=_classify_subtype(best_pat_str),
+                    evidence_type='marker',
+                    sentence_distance=1,
+                )
+                if key not in leads_to_best or adjusted_score > leads_to_best[key].link_score:
+                    leads_to_best[key] = dep
+
+        deps.extend(leads_to_best.values())
+
+        # ── Pass 3: SYNTACTIC_DEP — syntactic links (both modes) ─────────────
+        # Build token→action_id map
+        tok_to_action: dict[int, str] = {}
+        for a in actions:
+            for tok in doc:
+                if tok.idx == a.char_start:
+                    tok_to_action[tok.i] = a.action_id
+                    break
+
+        syntactic_rels = set(_SYNTACTIC_SCORES.keys())
+        already_syntactic: set[tuple[str, str]] = set()
+
+        for tok in doc:
+            if tok.i not in tok_to_action:
+                continue
+            src_id = tok_to_action[tok.i]
+            for child in tok.children:
+                if child.dep_ not in syntactic_rels:
+                    continue
+                if child.i not in tok_to_action:
+                    continue
+                tgt_id = tok_to_action[child.i]
+                if src_id == tgt_id:
+                    continue
+                # For conj: use document order (earlier token = source)
+                if child.dep_ == 'conj' and child.i < tok.i:
+                    src_id, tgt_id = tgt_id, src_id
+                pair = (src_id, tgt_id)
+                if pair in already_syntactic:
+                    continue
+                already_syntactic.add(pair)
+                deps.append(ExtractedDependency(
+                    source_id=src_id,
+                    target_id=tgt_id,
+                    marker_text=f"[syntactic:{child.dep_}]",
+                    link_score=_SYNTACTIC_SCORES[child.dep_],
+                    relation_subtype=child.dep_,
+                    evidence_type='syntactic',
+                    sentence_distance=0,
                 ))
 
-        # ── 2. Syntactic dependencies within same sentence (sparse mode) ─────
-        if is_sparse:
-            # Build token→action_id map for fast lookup
-            tok_to_action: dict[int, str] = {}
-            for a in actions:
-                # Find the verb token by char position
-                for tok in doc:
-                    if tok.idx == a.char_start:
-                        tok_to_action[tok.i] = a.action_id
-                        break
-
-            syntactic_rels = {'xcomp', 'advcl', 'ccomp', 'conj'}
-            already_linked: set[tuple[str, str]] = {(d.source_id, d.target_id) for d in deps}
-
-            for tok in doc:
-                if tok.i not in tok_to_action:
-                    continue
-                src_id = tok_to_action[tok.i]
-                for child in tok.children:
-                    if child.dep_ in syntactic_rels and child.i in tok_to_action:
-                        tgt_id = tok_to_action[child.i]
-                        if src_id != tgt_id and (src_id, tgt_id) not in already_linked:
-                            already_linked.add((src_id, tgt_id))
-                            deps.append(ExtractedDependency(
-                                source_id=src_id,
-                                target_id=tgt_id,
-                                marker_text=f"[syntactic:{child.dep_}]",
-                                link_score=SYNTACTIC_LINK_SCORE,
-                            ))
-
+        logger.info(
+            "[action_extractor] leads_to=%d syntactic=%d",
+            len(leads_to_best), len(already_syntactic),
+        )
         return deps

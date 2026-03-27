@@ -25,6 +25,12 @@ class SpacyProcessor(BaseNLPProcessor):
     
     def _load_model(self):
         """Load spaCy model."""
+        # Try to use GPU if available
+        if spacy.prefer_gpu():
+            print("spaCy: GPU activated")
+        else:
+            print("spaCy: GPU not available, using CPU")
+
         try:
             # Try to load the configured model
             model_name = self.config.spacy_model

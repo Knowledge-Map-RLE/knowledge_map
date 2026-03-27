@@ -186,7 +186,8 @@ class NLPGRPCClient:
         levels: Optional[List[str]] = None,
         enable_voting: bool = True,
         min_agreement: int = 2,
-        timeout: int = 120
+        timeout: int = 120,
+        doc_id: str = "",
     ) -> Dict[str, Any]:
         """
         Многоуровневый лингвистический анализ
@@ -204,7 +205,7 @@ class NLPGRPCClient:
         try:
             await self.connect()
 
-            logger.info(f"[grpc_client] Отправляем запрос AnalyzeText: длина текста={len(text)}")
+            logger.info(f"[grpc_client] Отправляем запрос AnalyzeText: doc_id={doc_id or '<none>'} длина текста={len(text)}")
 
             # Конвертируем уровни в proto enum
             level_map = {
@@ -223,7 +224,8 @@ class NLPGRPCClient:
                 text=text,
                 levels=proto_levels,
                 enable_voting=enable_voting,
-                min_agreement=min_agreement
+                min_agreement=min_agreement,
+                doc_id=doc_id,
             )
 
             # Вызываем метод
@@ -337,6 +339,8 @@ class NLPGRPCClient:
             "target_id": dep.target_id,
             "marker_text": dep.marker_text,
             "link_score": dep.link_score,
+            "relation_subtype": dep.relation_subtype or "causes",
+            "evidence_type": dep.evidence_type or "marker",
         }
 
     async def validate_markdown(self, markdown: str, strict_mode: bool = False, timeout: int = 30) -> Dict[str, Any]:

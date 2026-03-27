@@ -87,6 +87,12 @@ def setup_spacy_models():
         model = config.spacy_model
         logger.info(f"Loading spaCy model: {model}")
 
+        # Activate GPU if available
+        if spacy.prefer_gpu():
+            logger.info("  GPU activated for spaCy")
+        else:
+            logger.info("  GPU not available for spaCy, using CPU")
+
         try:
             nlp = spacy.load(model)
             logger.info(f"  ✓ spaCy model '{model}' loaded")

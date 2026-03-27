@@ -218,6 +218,7 @@ message AnalyzeTextRequest {
     repeated LinguisticLevel levels = 2;  // Если пусто - все уровни
     bool enable_voting = 3;  // Использовать voting между процессорами
     int32 min_agreement = 4;  // Минимальное количество процессоров для согласия (default: 2)
+    string doc_id = 5;        // ID документа для логирования
 }
 
 message AnalyzeTextResponse {
@@ -322,6 +323,8 @@ message DependencyProto {
     string target_id = 2;
     string marker_text = 3;
     float link_score = 4;
+    string relation_subtype = 5;  // causes|enables|prevents|via_mechanism|sequential|xcomp|advcl|ccomp|conj
+    string evidence_type = 6;     // marker|syntactic
 }
 
 message ExtractActionsResponse {

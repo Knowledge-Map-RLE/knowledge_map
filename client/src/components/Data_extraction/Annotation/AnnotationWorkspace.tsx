@@ -32,6 +32,7 @@ interface AnnotationWorkspaceProps {
   onSave?: () => Promise<void>;
   documentTitle?: string | null;
   onUpdateDocumentStatus?: (docId: string, newStatus: string) => void;
+  onNlpProcessingChange?: (processing: boolean) => void;
 }
 
 const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
@@ -42,6 +43,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   onSave,
   documentTitle = null,
   onUpdateDocumentStatus,
+  onNlpProcessingChange,
 }) => {
   // UI State
   const [mainTab, setMainTab] = useState<'text' | 'annotator'>('text');
@@ -428,7 +430,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
     setIsAutoAnnotating(true);
     setAnalysisProgress(0);
-    
+    if (onNlpProcessingChange) onNlpProcessingChange(true);
+
     // Update document status to 'processing' when multi-level analysis starts
     if (onUpdateDocumentStatus) {
         onUpdateDocumentStatus(docId, 'processing');
@@ -471,6 +474,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         setAnalysisProgress(100);
         setIsAutoAnnotating(false);
         setAnalysisProgress(null);
+        if (onNlpProcessingChange) onNlpProcessingChange(false);
         if (onUpdateDocumentStatus) {
           onUpdateDocumentStatus(docId, 'ready_for_annotation');
         }
@@ -489,8 +493,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       clearInterval(progressInterval);
       setIsAutoAnnotating(false);
       setAnalysisProgress(null);
+      if (onNlpProcessingChange) onNlpProcessingChange(false);
     }
-  }, [isAutoAnnotating, docId, loadAnnotations, loadRelations]);
+  }, [isAutoAnnotating, docId, loadAnnotations, loadRelations, onNlpProcessingChange, onUpdateDocumentStatus]);
 
   // Save handler
   const handleSave = useCallback(async () => {

@@ -322,6 +322,8 @@ message DependencyProto {
     string target_id = 2;
     string marker_text = 3;
     float link_score = 4;
+    string relation_subtype = 5;  // causes|enables|prevents|via_mechanism|sequential|xcomp|advcl|ccomp|conj
+    string evidence_type = 6;     // marker|syntactic
 }
 
 message ExtractActionsResponse {

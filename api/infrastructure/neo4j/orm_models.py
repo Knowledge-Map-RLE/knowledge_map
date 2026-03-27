@@ -223,11 +223,20 @@ class LinguisticPattern(StructuredNode):
 
 class LeadsToRel(StructuredRel):
     """Отношение LEADS_TO между Action→Action или Action→MarkdownAnnotation."""
-    relation_subtype = StringProperty()   # CAUSES, ENABLES, PREVENTS, VIA_MECHANISM, PART_OF_GOAL, ...
+    relation_subtype = StringProperty()   # causes|enables|prevents|via_mechanism|sequential
     confidence = FloatProperty(default=1.0)
     evidence = ArrayProperty(StringProperty())
     doc_id = StringProperty(index=True)
     status = StringProperty(default="pending")  # pending | confirmed | rejected
+
+
+class SyntacticDepRel(StructuredRel):
+    """Синтаксическая зависимость между Action→Action (xcomp/advcl/ccomp/conj).
+    Отдельный тип ребра — не является причинно-следственной связью LEADS_TO.
+    """
+    dep_label = StringProperty()      # xcomp | advcl | ccomp | conj
+    confidence = FloatProperty(default=1.0)
+    doc_id = StringProperty(index=True)
 
 
 class Action(StructuredNode):
@@ -246,3 +255,4 @@ class Action(StructuredNode):
 
     leads_to_action = RelationshipTo("Action", "LEADS_TO", model=LeadsToRel)
     leads_to_goal = RelationshipTo("MarkdownAnnotation", "LEADS_TO", model=LeadsToRel)
+    syntactic_dep = RelationshipTo("Action", "SYNTACTIC_DEP", model=SyntacticDepRel)

@@ -236,7 +236,8 @@ class MultiLevelNLPService:
             levels=levels if levels else None,
             enable_voting=enable_voting,
             min_agreement=2,
-            timeout=120
+            timeout=120,
+            doc_id=doc_id or "",
         )
 
         if not grpc_result.get("success", False):

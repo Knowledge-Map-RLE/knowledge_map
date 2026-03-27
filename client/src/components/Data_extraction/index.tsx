@@ -44,6 +44,9 @@ export default function Data_extraction() {
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
     const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
+    // NLP processing state (shared across tabs so indicator is always visible)
+    const [isNlpProcessing, setIsNlpProcessing] = useState(false);
+
     const saveTimeoutRef = useRef<number | null>(null);
     const docListRef = useRef<DocumentListHandle>(null);
 
@@ -202,7 +205,13 @@ export default function Data_extraction() {
                         >
                             Карта статьи
                         </button>
-                        {saveStatus !== 'idle' && (
+                        {isNlpProcessing && (
+                            <div className={`${s.saveIndicator} ${s.saving}`} style={{ marginLeft: 'auto' }}>
+                                <div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div>
+                                <span>NLP анализ...</span>
+                            </div>
+                        )}
+                        {!isNlpProcessing && saveStatus !== 'idle' && (
                             <div className={`${s.saveIndicator} ${s[saveStatus]}`} style={{ marginLeft: 'auto' }}>
                                 {saveStatus === 'saving' && <><div className={s.loadingSpinner} style={{ width: '12px', height: '12px' }}></div><span>Сохранение...</span></>}
                                 {saveStatus === 'saved' && <><span>✓</span><span>Сохранено {lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString() : ''}</span></>}
@@ -265,6 +274,7 @@ export default function Data_extraction() {
                                         onSave={handleManualSave}
                                         documentTitle={selectedDocument.title || selectedDocument.original_filename}
                                         onUpdateDocumentStatus={updateDocumentStatus}
+                                        onNlpProcessingChange={setIsNlpProcessing}
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
