@@ -4,7 +4,7 @@ import { importAnnotations as apiImportAnnotations, exportAnnotations as apiExpo
 import { AnnotationWorkspace } from './Annotation';
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 import Header from '../Header';
-import { PatternGenerator, LinguisticPatternAnalysis } from './Patterns';
+import { LinguisticPatternAnalysis } from './Patterns';
 import { ArticleActionGraph } from './Patterns/ArticleActionGraph';
 import Document_downloader_ui from './Document_downloader_ui';
 import type { DocumentListHandle } from './Document_downloader_ui';

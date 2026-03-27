@@ -24,6 +24,9 @@ from src.schemas.api import (
     AnalyzePatternsResponse,
     AnnotationTypePatterns,
     PatternRow,
+    DataAvailabilityStatus,
+    SaveForTestsRequest,
+    SaveForTestsResponse,
 )
 from application.documents.upload_pdf import upload_pdf
 from application.documents.get_document_assets import get_document_assets
@@ -197,6 +200,9 @@ async def get_document_markdown(
     return Response(content=content, media_type="text/markdown")
 
 
+
+
+
 @router.post("/documents/{doc_id}/analyze-patterns", response_model=AnalyzePatternsResponse)
 async def analyze_patterns_endpoint(
     doc_id: str,
@@ -205,10 +211,8 @@ async def analyze_patterns_endpoint(
     doc_repo=Depends(get_document_repository),
     pattern_repo=Depends(get_linguistic_pattern_repository),
 ):
-    """Анализирует лингвистические паттерны в аннотациях документа и сохраняет их в Neo4j."""
     from application.patterns.analyze_document_patterns import analyze_document_patterns
     from services.nlp_grpc_client import get_nlp_grpc_client
-
     nlp_client = get_nlp_grpc_client()
     results = await analyze_document_patterns(
         annotation_repo=ann_repo,
@@ -220,32 +224,16 @@ async def analyze_patterns_endpoint(
         clear_existing=request_body.clear_existing,
         min_frequency=request_body.min_frequency,
     )
-
-    # Конвертируем dataclasses в Pydantic-схемы
     pydantic_results = [
         AnnotationTypePatterns(
             annotation_type=r.annotation_type,
-            patterns=[
-                PatternRow(
-                    pattern_str=p.pattern_str,
-                    pattern_type=p.pattern_type,
-                    frequency=p.frequency,
-                )
-                for p in r.patterns
-            ],
+            patterns=[PatternRow(pattern_str=p.pattern_str, pattern_type=p.pattern_type, frequency=p.frequency) for p in r.patterns],
             total_annotations=r.total_annotations,
         )
         for r in results
     ]
-
     total = sum(len(r.patterns) for r in pydantic_results)
-    return AnalyzePatternsResponse(
-        success=True,
-        doc_id=doc_id,
-        results=pydantic_results,
-        total_patterns_saved=total,
-        message=f"Проанализировано {total} паттернов",
-    )
+    return AnalyzePatternsResponse(success=True, doc_id=doc_id, results=pydantic_results, total_patterns_saved=total, message=f"Проанализировано {total} паттернов")
 
 
 @router.get("/documents/{doc_id}/patterns/specific", response_model=AnalyzePatternsResponse)
@@ -254,40 +242,22 @@ async def get_specific_patterns_endpoint(
     pattern_repo=Depends(get_linguistic_pattern_repository),
     doc_repo=Depends(get_document_repository),
 ):
-    """Возвращает специфичные паттерны (set difference между парами типов аннотаций)."""
     from fastapi import HTTPException
     from application.patterns.get_specific_patterns import get_specific_patterns
-
     doc = doc_repo.get_by_id(doc_id)
     if doc is None:
         raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
-
     results = get_specific_patterns(pattern_repo=pattern_repo, doc_id=doc_id)
-
     pydantic_results = [
         AnnotationTypePatterns(
             annotation_type=r.annotation_type,
-            patterns=[
-                PatternRow(
-                    pattern_str=p.pattern_str,
-                    pattern_type=p.pattern_type,
-                    frequency=p.frequency,
-                )
-                for p in r.patterns
-            ],
+            patterns=[PatternRow(pattern_str=p.pattern_str, pattern_type=p.pattern_type, frequency=p.frequency) for p in r.patterns],
             total_annotations=r.total_annotations,
         )
         for r in results
     ]
-
     total = sum(len(r.patterns) for r in pydantic_results)
-    return AnalyzePatternsResponse(
-        success=True,
-        doc_id=doc_id,
-        results=pydantic_results,
-        total_patterns_saved=total,
-        message=f"Специфичных паттернов: {total}",
-    )
+    return AnalyzePatternsResponse(success=True, doc_id=doc_id, results=pydantic_results, total_patterns_saved=total, message=f"Специфичных паттернов: {total}")
 
 
 @router.get("/documents/{doc_id}/patterns", response_model=AnalyzePatternsResponse)
@@ -296,47 +266,56 @@ async def get_patterns_endpoint(
     pattern_repo=Depends(get_linguistic_pattern_repository),
     doc_repo=Depends(get_document_repository),
 ):
-    """Возвращает сохранённые лингвистические паттерны документа."""
-    from domain.exceptions import NotFoundError as DomainNotFoundError
     from fastapi import HTTPException
-
     doc = doc_repo.get_by_id(doc_id)
     if doc is None:
         raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
-
     rows = pattern_repo.get_for_document(doc_id)
-
-    # Группируем по annotation_type
-    _GOAL_TYPES = [
-        "Успешная цель",
-        "Не успешная цель",
-        "Фрагмент ведёт к успеху",
-        "Фрагмент ведёт к неуспеху",
-    ]
+    _GOAL_TYPES = ["Успешная цель", "Не успешная цель", "Фрагмент ведёт к успеху", "Фрагмент ведёт к неуспеху"]
     groups: dict = {t: [] for t in _GOAL_TYPES}
     for row in rows:
         at = row.get("annotation_type", "")
         if at in groups:
-            groups[at].append(PatternRow(
-                pattern_str=row["pattern_str"],
-                pattern_type=row["pattern_type"],
-                frequency=row["frequency"],
-            ))
-
-    pydantic_results = [
-        AnnotationTypePatterns(
-            annotation_type=at,
-            patterns=groups[at],
-            total_annotations=0,
-        )
-        for at in _GOAL_TYPES
-    ]
-
+            groups[at].append(PatternRow(pattern_str=row["pattern_str"], pattern_type=row["pattern_type"], frequency=row["frequency"]))
+    pydantic_results = [AnnotationTypePatterns(annotation_type=at, patterns=groups[at], total_annotations=0) for at in _GOAL_TYPES]
     total = sum(len(r.patterns) for r in pydantic_results)
-    return AnalyzePatternsResponse(
-        success=True,
-        doc_id=doc_id,
-        results=pydantic_results,
-        total_patterns_saved=total,
-        message=f"Загружено {total} паттернов" if total > 0 else "Паттерны не найдены",
-    )
+    return AnalyzePatternsResponse(success=True, doc_id=doc_id, results=pydantic_results, total_patterns_saved=total, message=f"Загружено {total} паттернов" if total > 0 else "Паттерны не найдены")
+
+
+@router.get("/documents/{doc_id}/data-availability", response_model=DataAvailabilityStatus)
+async def check_document_data_availability(doc_id: str):
+    """Проверяет доступность данных документа для экспорта в тестовый датасет."""
+    from fastapi import HTTPException
+    from services.data_extraction_service import DataExtractionService
+    try:
+        svc = DataExtractionService()
+        result = await svc.check_data_availability(doc_id)
+        return DataAvailabilityStatus(**result)
+    except Exception as e:
+        logger.error(f"Ошибка проверки доступности данных: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/documents/{doc_id}/save-for-tests", response_model=SaveForTestsResponse)
+async def save_document_for_tests(doc_id: str, request: SaveForTestsRequest):
+    """Экспортирует документ с аннотациями, связями и графом действий в тестовый датасет."""
+    from fastapi import HTTPException
+    from services.data_extraction_service import DataExtractionService
+    try:
+        svc = DataExtractionService()
+        availability = await svc.check_data_availability(doc_id)
+        if not availability["is_ready"]:
+            missing = ", ".join(availability["missing_items"])
+            raise HTTPException(
+                status_code=400,
+                detail=f"Документ не готов к экспорту. Отсутствуют: {missing}."
+            )
+        result = await svc.save_for_tests(doc_id=doc_id, validate=request.run_validation)
+        if not result["success"]:
+            raise HTTPException(status_code=500, detail=result.get("message", "Ошибка экспорта"))
+        return SaveForTestsResponse(**result)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Ошибка сохранения для тестов: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))

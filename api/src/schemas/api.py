@@ -242,11 +242,12 @@ class DataAvailabilityStatus(BaseModel):
     pdf_exists: bool = Field(..., description="Наличие PDF файла")
     markdown_exists: bool = Field(..., description="Наличие Markdown файла")
     has_annotations: bool = Field(..., description="Наличие аннотаций")
-    has_relations: bool = Field(..., description="Наличие связей между аннотациями")
-    has_chains: bool = Field(..., description="Наличие цепочек действий")
-    has_patterns: bool = Field(..., description="Наличие паттернов")
+    has_annotation_relations: bool = Field(..., description="Наличие связей между аннотациями")
+    has_action_graph: bool = Field(..., description="Наличие графа действий (Action-узлы)")
     annotation_count: int = Field(default=0, description="Количество аннотаций")
-    relation_count: int = Field(default=0, description="Количество связей")
+    relation_count: int = Field(default=0, description="Количество связей между аннотациями")
+    action_node_count: int = Field(default=0, description="Количество Action-узлов")
+    action_edge_count: int = Field(default=0, description="Количество LEADS_TO рёбер")
     is_ready: bool = Field(..., description="Готовность к экспорту (PDF + MD + аннотации)")
     missing_items: List[str] = Field(default_factory=list, description="Список отсутствующих компонентов")
 
@@ -298,31 +299,26 @@ class ValidateMarkdownResponse(BaseModel):
 
 # Схемы для анализа лингвистических паттернов
 class AnalyzePatternsRequest(BaseModel):
-    """Запрос на анализ лингвистических паттернов в аннотациях документа"""
     annotation_types: List[str] = Field(
         default=["Успешная цель", "Не успешная цель", "Фрагмент ведёт к успеху", "Фрагмент ведёт к неуспеху"],
-        description="Типы аннотаций для анализа",
     )
-    clear_existing: bool = Field(default=True, description="Удалить существующие паттерны перед анализом")
-    min_frequency: int = Field(default=1, ge=1, description="Минимальная частота для включения паттерна")
+    clear_existing: bool = Field(default=True)
+    min_frequency: int = Field(default=1, ge=1)
 
 
 class PatternRow(BaseModel):
-    """Строка таблицы паттернов"""
     pattern_str: str
     pattern_type: str
     frequency: int
 
 
 class AnnotationTypePatterns(BaseModel):
-    """Паттерны для одного типа аннотации"""
     annotation_type: str
     patterns: List[PatternRow]
     total_annotations: int
 
 
 class AnalyzePatternsResponse(BaseModel):
-    """Ответ с результатами анализа паттернов"""
     success: bool
     doc_id: str
     results: List[AnnotationTypePatterns]

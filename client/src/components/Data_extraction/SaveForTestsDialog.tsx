@@ -93,17 +93,13 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
             <span className="status-icon">{availability.has_annotations ? '✓' : '✗'}</span>
             <span>Аннотации ({availability.annotation_count})</span>
           </div>
-          <div className={`status-item ${availability.has_relations ? 'ready' : 'optional'}`}>
-            <span className="status-icon">{availability.has_relations ? '✓' : '○'}</span>
-            <span>Связи ({availability.relation_count})</span>
+          <div className={`status-item ${availability.has_annotation_relations ? 'ready' : 'optional'}`}>
+            <span className="status-icon">{availability.has_annotation_relations ? '✓' : '○'}</span>
+            <span>Связи аннотаций ({availability.relation_count})</span>
           </div>
-          <div className={`status-item ${availability.has_chains ? 'ready' : 'missing'}`}>
-            <span className="status-icon">{availability.has_chains ? '✓' : '✗'}</span>
-            <span>Цепочки (обязательно)</span>
-          </div>
-          <div className={`status-item ${availability.has_patterns ? 'ready' : 'missing'}`}>
-            <span className="status-icon">{availability.has_patterns ? '✓' : '✗'}</span>
-            <span>Паттерны (обязательно)</span>
+          <div className={`status-item ${availability.has_action_graph ? 'ready' : 'optional'}`}>
+            <span className="status-icon">{availability.has_action_graph ? '✓' : '○'}</span>
+            <span>Граф действий ({availability.action_node_count} узлов, {availability.action_edge_count} рёбер)</span>
           </div>
         </div>
 
@@ -132,7 +128,7 @@ const SaveForTestsDialog: React.FC<SaveForTestsDialogProps> = ({
 
         <div className="mandatory-info">
           <p>
-            <strong>Обязательные компоненты:</strong> PDF файл, Markdown, аннотации, паттерны, цепочки действий
+            <strong>Обязательные компоненты:</strong> PDF файл, Markdown, аннотации
           </p>
           <p>
             <strong>Имя датасета:</strong> генерируется автоматически с timestamp и случайным хэшем

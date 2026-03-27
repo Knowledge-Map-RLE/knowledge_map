@@ -124,22 +124,18 @@ class UserRepositoryProtocol(Protocol):
 class LinguisticPatternRepositoryProtocol(Protocol):
     """Операции с лингвистическими паттернами."""
 
-    def save_patterns(self, patterns: List[dict], doc_id: str) -> int:
-        """Сохраняет паттерны, возвращает количество сохранённых."""
-        ...
+    def save_patterns(self, patterns: List[dict], doc_id: str) -> int: ...
 
     def get_for_document(
         self,
         doc_id: str,
         annotation_types: Optional[List[str]] = None,
         min_frequency: int = 1,
-    ) -> List[dict]:
-        """Возвращает паттерны документа с фильтрацией по типу аннотации."""
-        ...
+    ) -> List[dict]: ...
 
-    def delete_for_document(self, doc_id: str) -> int:
-        """Удаляет все паттерны документа, возвращает количество."""
-        ...
+    def delete_for_document(self, doc_id: str) -> int: ...
+
+
 
 
 class ActionRepositoryProtocol(Protocol):

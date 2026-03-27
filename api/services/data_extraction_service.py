@@ -827,32 +827,25 @@ class DataExtractionService:
         relation_count = results[0][0] if results else 0
         has_relations = relation_count > 0
 
-        # Проверка цепочек (action chains)
-        # Паттерны связаны с документом через аннотации (MarkdownAnnotation)
-        query_chains = """
-        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
-        MATCH (p1:Pattern {source_token_uid: a.uid})-[r:ACTION_SEQUENCE]->(p2:Pattern)
-        RETURN count(DISTINCT r) as count
+        # Проверка графа действий
+        query_action_nodes = """
+        MATCH (a:Action {doc_id: $doc_id})
+        RETURN count(a) as count
         """
-        results, _ = db.cypher_query(query_chains, {"doc_id": doc_id})
-        chain_count = results[0][0] if results else 0
-        has_chains = chain_count > 0
+        results, _ = db.cypher_query(query_action_nodes, {"doc_id": doc_id})
+        action_node_count = results[0][0] if results else 0
+        has_action_graph = action_node_count > 0
 
-        # Проверка паттернов
-        # Паттерны связаны с документом через аннотации (MarkdownAnnotation)
-        query_patterns = """
-        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
-        MATCH (p:Pattern {source_token_uid: a.uid})
-        RETURN count(DISTINCT p) as count
+        query_action_edges = """
+        MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO]->(t:Action {doc_id: $doc_id})
+        RETURN count(r) as count
         """
-        results, _ = db.cypher_query(query_patterns, {"doc_id": doc_id})
-        pattern_count = results[0][0] if results else 0
-        has_patterns = pattern_count > 0
+        results, _ = db.cypher_query(query_action_edges, {"doc_id": doc_id})
+        action_edge_count = results[0][0] if results else 0
 
-        # Определяем готовность к экспорту (все компоненты обязательны)
-        is_ready = pdf_exists and markdown_exists and has_annotations and has_patterns and has_chains
+        # Готовность к экспорту (PDF + MD + аннотации обязательны)
+        is_ready = pdf_exists and markdown_exists and has_annotations
 
-        # Список отсутствующих компонентов
         missing_items = []
         if not pdf_exists:
             missing_items.append("PDF файл")
@@ -860,20 +853,17 @@ class DataExtractionService:
             missing_items.append("Markdown файл")
         if not has_annotations:
             missing_items.append("Аннотации")
-        if not has_patterns:
-            missing_items.append("Паттерны")
-        if not has_chains:
-            missing_items.append("Цепочки действий")
 
         return {
             "pdf_exists": pdf_exists,
             "markdown_exists": markdown_exists,
             "has_annotations": has_annotations,
-            "has_relations": has_relations,
-            "has_chains": has_chains,
-            "has_patterns": has_patterns,
+            "has_annotation_relations": has_relations,
+            "has_action_graph": has_action_graph,
             "annotation_count": annotation_count,
             "relation_count": relation_count,
+            "action_node_count": action_node_count,
+            "action_edge_count": action_edge_count,
             "is_ready": is_ready,
             "missing_items": missing_items,
         }

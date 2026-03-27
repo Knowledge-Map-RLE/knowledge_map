@@ -896,11 +896,12 @@ export interface DataAvailabilityStatus {
   pdf_exists: boolean;
   markdown_exists: boolean;
   has_annotations: boolean;
-  has_relations: boolean;
-  has_chains: boolean;
-  has_patterns: boolean;
+  has_annotation_relations: boolean;
+  has_action_graph: boolean;
   annotation_count: number;
   relation_count: number;
+  action_node_count: number;
+  action_edge_count: number;
   is_ready: boolean;
   missing_items: string[];
 }
@@ -977,11 +978,7 @@ export async function analyzeDocumentPatterns(
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/analyze-patterns`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      annotation_types: annotationTypes,
-      clear_existing: true,
-      min_frequency: minFrequency,
-    }),
+    body: JSON.stringify({ annotation_types: annotationTypes, clear_existing: true, min_frequency: minFrequency }),
   });
 }
 

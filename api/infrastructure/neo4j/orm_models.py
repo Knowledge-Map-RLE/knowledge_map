@@ -197,8 +197,8 @@ class LexicalForm(StructuredNode):
     uid = UniqueIdProperty(primary_key=True)
     text = StringProperty(required=True)
     lemma = StringProperty()
-    pos = StringProperty(index=True)       # VERB, NOUN, ADJ …
-    pos_fine = StringProperty()            # VBD, NN, JJ …
+    pos = StringProperty(index=True)
+    pos_fine = StringProperty()
     doc_id = StringProperty(index=True)
     annotation_uid = StringProperty(index=True)
 

@@ -2,29 +2,28 @@
 """
 Dataset Export Tool
 
-Export document, annotations, relations, and chains from Neo4j to test dataset format.
+Export document, annotations, annotation relations, and action graph from Neo4j/S3
+to test dataset format (CSV).
 
 Usage:
-    poetry run python tools/dataset_builder/export_dataset.py --doc-id <doc_id> --output sample_001
-    poetry run python tools/dataset_builder/export_dataset.py --doc-id <doc_id> --output sample_001 --include-pdf
+    poetry run python tools/dataset_builder/export_dataset.py --doc-id <doc_id>
 """
 
 import asyncio
 import argparse
+import csv
 import json
 import logging
 import sys
-import yaml
 import secrets
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from services import settings, get_s3_client
-from services.yaml_export_service import YAMLExportService
 from src.models import PDFDocument, MarkdownAnnotation
 from neomodel import db
 
@@ -38,245 +37,227 @@ DATASETS_DIR = PROJECT_ROOT / "data" / "datasets"
 
 
 class DatasetExporter:
-    """Export data from Neo4j and S3 to dataset format"""
+    """Export data from Neo4j and S3 to CSV dataset format"""
 
     def __init__(self, doc_id: str):
         self.doc_id = doc_id
         self.s3_client = get_s3_client()
-        self.yaml_service = YAMLExportService()
 
-        # Генерируем уникальное имя: {md5_hash}_{YYYY}.{MM}.{DD}_{HH}.{mm}.{ss}_{random6}
         now = datetime.now()
         timestamp = now.strftime("%Y.%m.%d_%H.%M.%S")
-        random_hash = secrets.token_hex(3)  # 6 символов (3 байта в hex)
+        random_hash = secrets.token_hex(3)
 
         self.sample_id = f"{self.doc_id}_{timestamp}_{random_hash}"
         self.dataset_dir = DATASETS_DIR / self.sample_id
 
+    def _write_csv(self, path: Path, rows: List[Dict], fieldnames: List[str]) -> None:
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(rows)
+
     def create_directories(self):
-        """Create output directory if it doesn't exist"""
         self.dataset_dir.mkdir(parents=True, exist_ok=True)
         logger.info(f"Created directory {self.sample_id}")
 
     async def export_document(self) -> Dict[str, Any]:
-        """Export document metadata and markdown from Neo4j and S3"""
+        """Export document metadata and files from Neo4j and S3"""
         logger.info(f"Exporting document {self.doc_id}...")
 
-        # Get document from Neo4j
         document = PDFDocument.nodes.get_or_none(uid=self.doc_id)
         if not document:
             raise ValueError(f"Document {self.doc_id} not found in Neo4j")
 
-        # Export metadata
-        metadata = {
+        # metadata.csv — single row
+        metadata_row = {
             "doc_id": self.doc_id,
-            "title": document.title,
-            "authors": document.authors or [],
-            "abstract": document.abstract,
-            "original_filename": document.original_filename,
-            "upload_date": document.upload_date.isoformat() if document.upload_date else None,
+            "title": document.title or "",
+            "authors": json.dumps(document.authors or [], ensure_ascii=False),
+            "abstract": document.abstract or "",
+            "original_filename": document.original_filename or "",
+            "upload_date": document.upload_date.isoformat() if document.upload_date else "",
         }
+        self._write_csv(
+            self.dataset_dir / "metadata.csv",
+            [metadata_row],
+            ["doc_id", "title", "authors", "abstract", "original_filename", "upload_date"],
+        )
+        logger.info("Exported metadata.csv")
 
-        metadata_path = self.dataset_dir / "metadata.yaml"
-        self.yaml_service.export_to_yaml(metadata, metadata_path)
-        logger.info(f"Exported metadata to {metadata_path}")
-
-        # Export markdown from S3 (приоритет: user_md -> formatted_md -> raw_md)
+        # Markdown (priority: user_md -> formatted_md -> raw_md -> legacy)
         bucket = settings.S3_BUCKET_NAME
         markdown = None
 
-        # Проверяем user_md (отредактированный пользователем)
-        if document.user_md_s3_key:
-            if await self.s3_client.object_exists(bucket, document.user_md_s3_key):
-                markdown = await self.s3_client.download_text(bucket, document.user_md_s3_key)
-                logger.info(f"Using user-edited markdown from {document.user_md_s3_key}")
+        for key_attr, label in [
+            ("user_md_s3_key", "user-edited"),
+            ("formatted_md_s3_key", "AI-formatted"),
+            ("docling_raw_md_s3_key", "raw"),
+        ]:
+            key = getattr(document, key_attr, None)
+            if key and await self.s3_client.object_exists(bucket, key):
+                markdown = await self.s3_client.download_text(bucket, key)
+                logger.info(f"Using {label} markdown from {key}")
+                break
 
-        # Если нет user_md, проверяем formatted_md (AI-форматированный)
-        if not markdown and document.formatted_md_s3_key:
-            if await self.s3_client.object_exists(bucket, document.formatted_md_s3_key):
-                markdown = await self.s3_client.download_text(bucket, document.formatted_md_s3_key)
-                logger.info(f"Using AI-formatted markdown from {document.formatted_md_s3_key}")
-
-        # Если нет formatted_md, используем raw markdown
-        if not markdown and document.docling_raw_md_s3_key:
-            if await self.s3_client.object_exists(bucket, document.docling_raw_md_s3_key):
-                markdown = await self.s3_client.download_text(bucket, document.docling_raw_md_s3_key)
-                logger.info(f"Using raw markdown from {document.docling_raw_md_s3_key}")
-
-        # Fallback к старому формату
         if not markdown:
-            md_key = f"documents/{self.doc_id}/{self.doc_id}.md"
-            if await self.s3_client.object_exists(bucket, md_key):
-                markdown = await self.s3_client.download_text(bucket, md_key)
-                logger.info(f"Using legacy markdown from {md_key}")
+            legacy_key = f"documents/{self.doc_id}/{self.doc_id}.md"
+            if await self.s3_client.object_exists(bucket, legacy_key):
+                markdown = await self.s3_client.download_text(bucket, legacy_key)
+                logger.info(f"Using legacy markdown from {legacy_key}")
 
         if markdown:
-            md_path = self.dataset_dir / "document.md"
-            md_path.write_text(markdown, encoding="utf-8")
-            logger.info(f"Exported markdown to {md_path}")
+            (self.dataset_dir / "document.md").write_text(markdown, encoding="utf-8")
+            logger.info("Exported document.md")
         else:
             logger.warning(f"Markdown not found for document {self.doc_id}")
 
-        # Export PDF (обязательно)
+        # PDF (mandatory)
         pdf_key = f"documents/{self.doc_id}/{self.doc_id}.pdf"
         if await self.s3_client.object_exists(bucket, pdf_key):
             pdf_bytes = await self.s3_client.download_bytes(bucket, pdf_key)
-            pdf_path = self.dataset_dir / "document.pdf"
-            pdf_path.write_bytes(pdf_bytes)
-            logger.info(f"Exported PDF to {pdf_path} ({len(pdf_bytes)} bytes)")
+            (self.dataset_dir / "document.pdf").write_bytes(pdf_bytes)
+            logger.info(f"Exported document.pdf ({len(pdf_bytes)} bytes)")
         else:
-            raise ValueError(f"PDF file is mandatory but not found in S3: {pdf_key}")
+            raise ValueError(f"PDF not found in S3: {pdf_key}")
 
-        return metadata
+        return metadata_row
 
-    def export_annotations(self) -> List[Dict[str, Any]]:
-        """Export annotations from Neo4j"""
-        logger.info(f"Exporting annotations for document {self.doc_id}...")
+    def export_annotations(self) -> List[Dict]:
+        """Export annotations to annotations.csv"""
+        logger.info(f"Exporting annotations for {self.doc_id}...")
 
-        # Используем YAML сервис для получения аннотаций
-        data = self.yaml_service.export_annotations_to_yaml(self.doc_id)
-        annotations = data.get("annotations", [])
+        results, _ = db.cypher_query(
+            """
+            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            RETURN a.uid, a.text, a.annotation_type, a.start_offset, a.end_offset,
+                   a.color, a.source, a.confidence, a.processor_version, a.created_date, a.metadata
+            ORDER BY a.start_offset
+            """,
+            {"doc_id": self.doc_id},
+        )
 
-        # Save to file
-        linguistic_path = self.dataset_dir / "linguistic.yaml"
-        self.yaml_service.export_to_yaml({"annotations": annotations}, linguistic_path)
+        fieldnames = [
+            "uid", "text", "annotation_type", "start_offset", "end_offset",
+            "color", "source", "confidence", "processor_version", "created_date", "metadata",
+        ]
+        rows = []
+        for r in results:
+            meta = r[10]
+            rows.append({
+                "uid": r[0] or "",
+                "text": r[1] or "",
+                "annotation_type": r[2] or "",
+                "start_offset": r[3] if r[3] is not None else "",
+                "end_offset": r[4] if r[4] is not None else "",
+                "color": r[5] or "",
+                "source": r[6] or "",
+                "confidence": r[7] if r[7] is not None else "",
+                "processor_version": r[8] or "",
+                "created_date": str(r[9]) if r[9] else "",
+                "metadata": json.dumps(meta, ensure_ascii=False) if meta else "",
+            })
 
-        logger.info(f"Exported {len(annotations)} annotations to {linguistic_path}")
-        return annotations
+        self._write_csv(self.dataset_dir / "annotations.csv", rows, fieldnames)
+        logger.info(f"Exported {len(rows)} annotations to annotations.csv")
+        return rows
 
-    def export_relations(self) -> List[Dict[str, Any]]:
-        """Export relations between annotations from Neo4j"""
-        logger.info(f"Exporting relations for document {self.doc_id}...")
+    def export_annotation_relations(self) -> List[Dict]:
+        """Export annotation relations to annotation_relations.csv"""
+        logger.info(f"Exporting annotation relations for {self.doc_id}...")
 
-        # Используем YAML сервис для получения связей
-        relations = self.yaml_service.export_relations_to_dict(self.doc_id)
+        results, _ = db.cypher_query(
+            """
+            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(src:MarkdownAnnotation)
+            MATCH (src)-[r:RELATES_TO]->(tgt:MarkdownAnnotation)
+            RETURN r.uid, src.uid, tgt.uid, r.relation_type, r.created_date, r.metadata
+            """,
+            {"doc_id": self.doc_id},
+        )
 
-        # Save to file
-        if relations:
-            relations_path = self.dataset_dir / "relations.yaml"
-            self.yaml_service.export_to_yaml({"relations": relations}, relations_path)
-            logger.info(f"Exported {len(relations)} relations to {relations_path}")
+        fieldnames = ["relation_uid", "source_uid", "target_uid", "relation_type", "created_date", "metadata"]
+        rows = []
+        for r in results:
+            meta = r[5]
+            rows.append({
+                "relation_uid": r[0] or "",
+                "source_uid": r[1] or "",
+                "target_uid": r[2] or "",
+                "relation_type": r[3] or "",
+                "created_date": str(r[4]) if r[4] else "",
+                "metadata": json.dumps(meta, ensure_ascii=False) if meta else "",
+            })
+
+        if rows:
+            self._write_csv(self.dataset_dir / "annotation_relations.csv", rows, fieldnames)
+            logger.info(f"Exported {len(rows)} annotation relations to annotation_relations.csv")
         else:
-            logger.info("No relations found")
+            logger.info("No annotation relations found")
+        return rows
 
-        return relations
+    def export_action_graph(self) -> tuple[List[Dict], List[Dict]]:
+        """Export Action nodes and LEADS_TO edges to CSV"""
+        logger.info(f"Exporting action graph for {self.doc_id}...")
 
-    def export_patterns(self) -> List[Dict[str, Any]]:
-        """Export patterns from Neo4j (if they exist for this document)"""
-        logger.info(f"Exporting patterns for document {self.doc_id}...")
+        nodes_result, _ = db.cypher_query(
+            """
+            MATCH (a:Action {doc_id: $doc_id})
+            RETURN a.uid, a.verb, a.verb_text, a.object, a.full_phrase,
+                   a.sentence_text, a.action_class, a.char_start
+            ORDER BY a.char_start
+            """,
+            {"doc_id": self.doc_id},
+        )
 
-        # Паттерны связаны с документом через аннотации
-        query = """
-        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
-        MATCH (p:Pattern {source_token_uid: a.uid})
-        MATCH (p)-[:HAS_TEXT]->(t:PatternProperty {type: 'text'})
-        OPTIONAL MATCH (p)-[:HAS_POS]->(pos:PatternProperty {type: 'pos'})
-        OPTIONAL MATCH (p)-[:HAS_LEMMA]->(lemma:PatternProperty {type: 'lemma'})
-        OPTIONAL MATCH (p)-[:HAS_CONFIDENCE]->(conf:PatternProperty {type: 'confidence'})
-        RETURN DISTINCT p.pattern_id as pattern_id, t.value as text,
-               pos.value as pos, lemma.value as lemma,
-               conf.value as confidence,
-               p.source_token_uid as source_token_uid
-        ORDER BY p.pattern_id
-        """
+        edges_result, _ = db.cypher_query(
+            """
+            MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO]->(t:Action {doc_id: $doc_id})
+            RETURN s.uid, t.uid, r.relation_subtype, r.confidence, r.status
+            """,
+            {"doc_id": self.doc_id},
+        )
 
-        results, _ = db.cypher_query(query, {"doc_id": self.doc_id})
-
-        patterns = []
-        for row in results:
-            pattern_data = {
-                "pattern_id": row[0],
-                "text": row[1],
-                "source_token_uid": row[5],
+        node_rows = [
+            {
+                "uid": r[0] or "",
+                "verb": r[1] or "",
+                "verb_text": r[2] or "",
+                "object": r[3] or "",
+                "full_phrase": r[4] or "",
+                "sentence_text": r[5] or "",
+                "action_class": r[6] or "action",
+                "char_start": r[7] if r[7] is not None else "",
             }
-            # Добавляем опциональные поля
-            if row[2]:  # pos
-                pattern_data["pos"] = row[2]
-            if row[3]:  # lemma
-                pattern_data["lemma"] = row[3]
-            if row[4] is not None:  # confidence
-                pattern_data["confidence"] = float(row[4])
-
-            patterns.append(pattern_data)
-
-        # Save to file (обязательно)
-        if patterns:
-            patterns_path = self.dataset_dir / "patterns.yaml"
-            self.yaml_service.export_to_yaml({"patterns": patterns}, patterns_path)
-            logger.info(f"Exported {len(patterns)} patterns to {patterns_path}")
-        else:
-            raise ValueError("Patterns are mandatory but none were found for this document")
-
-        return patterns
-
-    def export_action_chains(self) -> List[Dict[str, Any]]:
-        """Export action chains from Neo4j patterns"""
-        logger.info(f"Exporting action chains for document {self.doc_id}...")
-
-        # Query for action sequences - паттерны связаны с документом через аннотации
-        query = """
-        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
-        MATCH (p1:Pattern {source_token_uid: a.uid})-[r:ACTION_SEQUENCE]->(p2:Pattern)
-        MATCH (p1)-[:HAS_TEXT]->(t1:PatternProperty {type: 'text'})
-        MATCH (p2)-[:HAS_TEXT]->(t2:PatternProperty {type: 'text'})
-        OPTIONAL MATCH (p1)<-[:LINGUISTIC_RELATION {relation_type: 'nsubj'}]-(s1:Pattern)-[:HAS_TEXT]->(st1:PatternProperty {type: 'text'})
-        OPTIONAL MATCH (p1)<-[ro1:LINGUISTIC_RELATION]-(o1:Pattern)-[:HAS_TEXT]->(ot1:PatternProperty {type: 'text'})
-        WHERE ro1.relation_type IN ['obj', 'dobj']
-        RETURN DISTINCT t1.value as verb1, t2.value as verb2,
-               st1.value as subject1, ot1.value as object1,
-               r.sequence_type as sequence_type, r.confidence as confidence,
-               r.evidence as evidence
-        """
-
-        results, _ = db.cypher_query(query, {"doc_id": self.doc_id})
-
-        # Build chains from sequences
-        chains = []
-        for row in results:
-            chain_data = {
-                "verbs": [row[0], row[1]],
-                "verb_data": [
-                    {
-                        "verb": row[0],
-                    }
-                ],
+            for r in nodes_result
+        ]
+        edge_rows = [
+            {
+                "src_uid": r[0] or "",
+                "tgt_uid": r[1] or "",
+                "relation_subtype": r[2] or "",
+                "confidence": r[3] if r[3] is not None else "",
+                "status": r[4] or "",
             }
-            # Добавляем опциональные поля
-            if row[2]:  # subject
-                chain_data["verb_data"][0]["subject"] = row[2]
-            if row[3]:  # object
-                chain_data["verb_data"][0]["object"] = row[3]
-            if row[4]:  # sequence_type
-                chain_data["sequence_type"] = row[4]
-            if row[5] is not None:  # confidence
-                chain_data["confidence"] = float(row[5])
-            if row[6]:  # evidence
-                chain_data["evidence"] = row[6]
+            for r in edges_result
+        ]
 
-            chains.append(chain_data)
-
-        # Save to file (обязательно)
-        if chains:
-            chains_path = self.dataset_dir / "chains.yaml"
-            self.yaml_service.export_to_yaml({"chains": chains}, chains_path)
-            logger.info(f"Exported {len(chains)} action chains to {chains_path}")
-        else:
-            raise ValueError("Action chains are mandatory but none were found for this document")
-
-        return chains
+        self._write_csv(
+            self.dataset_dir / "action_graph_nodes.csv",
+            node_rows,
+            ["uid", "verb", "verb_text", "object", "full_phrase", "sentence_text", "action_class", "char_start"],
+        )
+        self._write_csv(
+            self.dataset_dir / "action_graph_edges.csv",
+            edge_rows,
+            ["src_uid", "tgt_uid", "relation_subtype", "confidence", "status"],
+        )
+        logger.info(f"Exported {len(node_rows)} action nodes and {len(edge_rows)} edges")
+        return node_rows, edge_rows
 
     async def export_all(self) -> Dict[str, Any]:
-        """
-        Export complete dataset
-
-        All components are mandatory: PDF, markdown, annotations, relations, patterns, chains
-
-        Returns:
-            Dict with export results including success status, files, and counts
-        """
+        """Export complete dataset to CSV files"""
         logger.info(f"=== Exporting dataset for document {self.doc_id} to {self.sample_id} ===")
 
-        result = {
+        result: Dict[str, Any] = {
             "success": True,
             "sample_id": self.sample_id,
             "doc_id": self.doc_id,
@@ -284,56 +265,57 @@ class DatasetExporter:
             "errors": [],
             "counts": {
                 "annotations": 0,
-                "relations": 0,
-                "patterns": 0,
-                "chains": 0,
-            }
+                "annotation_relations": 0,
+                "action_nodes": 0,
+                "action_edges": 0,
+            },
         }
 
         try:
             self.create_directories()
 
-            # Export document
             await self.export_document()
             result["exported_files"].extend([
-                f"{self.sample_id}/metadata.yaml",
+                f"{self.sample_id}/metadata.csv",
                 f"{self.sample_id}/document.md",
                 f"{self.sample_id}/document.pdf",
             ])
 
-            # Export annotations and relations
             annotations = self.export_annotations()
             result["counts"]["annotations"] = len(annotations)
-            result["exported_files"].append(f"{self.sample_id}/linguistic.yaml")
+            result["exported_files"].append(f"{self.sample_id}/annotations.csv")
 
-            relations = self.export_relations()
-            result["counts"]["relations"] = len(relations)
+            relations = self.export_annotation_relations()
+            result["counts"]["annotation_relations"] = len(relations)
             if relations:
-                result["exported_files"].append(f"{self.sample_id}/relations.yaml")
+                result["exported_files"].append(f"{self.sample_id}/annotation_relations.csv")
 
-            # Export patterns (обязательно)
-            patterns = self.export_patterns()
-            result["counts"]["patterns"] = len(patterns)
-            result["exported_files"].append(f"{self.sample_id}/patterns.yaml")
+            node_rows, edge_rows = self.export_action_graph()
+            result["counts"]["action_nodes"] = len(node_rows)
+            result["counts"]["action_edges"] = len(edge_rows)
+            result["exported_files"].extend([
+                f"{self.sample_id}/action_graph_nodes.csv",
+                f"{self.sample_id}/action_graph_edges.csv",
+            ])
 
-            # Export chains (обязательно)
-            chains = self.export_action_chains()
-            result["counts"]["chains"] = len(chains)
-            result["exported_files"].append(f"{self.sample_id}/chains.yaml")
-
-            logger.info(f"=== Export complete ===")
-            logger.info(f"Summary: {json.dumps(result['counts'], indent=2)}")
-
-            # Save summary (YAML внутри папки)
-            summary_path = self.dataset_dir / "export_summary.yaml"
-            summary_data = {
+            # export_summary.csv
+            summary_row = {
                 "sample_id": self.sample_id,
                 "doc_id": self.doc_id,
                 "export_date": datetime.now().isoformat(),
-                "exported_files": result["exported_files"],
-                "counts": result["counts"],
+                "annotations": result["counts"]["annotations"],
+                "annotation_relations": result["counts"]["annotation_relations"],
+                "action_nodes": result["counts"]["action_nodes"],
+                "action_edges": result["counts"]["action_edges"],
             }
-            self.yaml_service.export_to_yaml(summary_data, summary_path)
+            self._write_csv(
+                self.dataset_dir / "export_summary.csv",
+                [summary_row],
+                ["sample_id", "doc_id", "export_date", "annotations", "annotation_relations", "action_nodes", "action_edges"],
+            )
+            result["exported_files"].append(f"{self.sample_id}/export_summary.csv")
+
+            logger.info(f"=== Export complete: {json.dumps(result['counts'])} ===")
 
         except Exception as e:
             logger.error(f"Export failed: {e}", exc_info=True)
@@ -344,39 +326,23 @@ class DatasetExporter:
 
 
 async def main():
-    """Main entry point"""
-    parser = argparse.ArgumentParser(description="Export dataset from Neo4j and S3")
+    parser = argparse.ArgumentParser(description="Export dataset from Neo4j and S3 to CSV")
     parser.add_argument("--doc-id", required=True, help="Document ID to export")
-    parser.add_argument("--output", required=True, help="Output sample name (e.g., sample_001)")
-    parser.add_argument("--include-pdf", action="store_true", help="Include PDF file in export")
-    parser.add_argument("--include-patterns", action="store_true", default=True, help="Include patterns in export")
-    parser.add_argument("--include-chains", action="store_true", default=True, help="Include action chains in export")
-
     args = parser.parse_args()
 
     try:
-        exporter = DatasetExporter(
-            doc_id=args.doc_id,
-            output_sample=args.output,
-            include_pdf=args.include_pdf
-        )
-        result = await exporter.export_all(
-            include_patterns=args.include_patterns,
-            include_chains=args.include_chains
-        )
-
+        exporter = DatasetExporter(doc_id=args.doc_id)
+        result = await exporter.export_all()
         if result["success"]:
-            logger.info("✓ Dataset export successful!")
+            logger.info("Dataset export successful!")
             return 0
         else:
-            logger.error(f"✗ Export failed: {result.get('errors')}")
+            logger.error(f"Export failed: {result.get('errors')}")
             return 1
-
     except Exception as e:
-        logger.error(f"✗ Export failed: {e}", exc_info=True)
+        logger.error(f"Export failed: {e}", exc_info=True)
         return 1
 
 
 if __name__ == "__main__":
-    exit_code = asyncio.run(main())
-    sys.exit(exit_code)
+    sys.exit(asyncio.run(main()))

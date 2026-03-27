@@ -4,7 +4,6 @@ import AnnotationPanel from './AnnotationPanel';
 import RelationsPanel from './RelationsPanel';
 import EditorTabsWithValidation from './EditorTabsWithValidation';
 import ErrorBoundary from '../../ErrorBoundary';
-import PatternVisualization from '../PatternVisualization/PatternVisualization';
 import SaveForTestsDialog from '../SaveForTestsDialog';
 import { useAnnotations } from './hooks/useAnnotations';
 import { useAnnotationOffsets } from './hooks/useAnnotationOffsets';
@@ -22,7 +21,6 @@ import {
 import type {
   Annotation,
   AnnotationRelation,
-  MultiLevelAnalysisResponse,
 } from '../../../services/api';
 import './AnnotationWorkspace.css';
 
@@ -54,7 +52,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [largeLineHeight, setLargeLineHeight] = useState(false);
   const [isAutoAnnotating, setIsAutoAnnotating] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState<number | null>(null);
-  const [graphData, setGraphData] = useState<MultiLevelAnalysisResponse['graph'] | null>(null);
   const [showSaveForTestsDialog, setShowSaveForTestsDialog] = useState(false);
 
   // Filter State
@@ -892,12 +889,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         </div>
         </div>
 
-        {/* Pattern Visualization (below main workspace) */}
-        {graphData && (
-          <ErrorBoundary>
-            <PatternVisualization graphData={graphData} />
-          </ErrorBoundary>
-        )}
 
         {/* Save For Tests Dialog */}
         {showSaveForTestsDialog && (
