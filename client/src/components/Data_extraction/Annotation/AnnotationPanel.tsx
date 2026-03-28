@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { Annotation } from '../../../services/api';
 import './AnnotationPanel.css';
 
@@ -12,6 +13,7 @@ interface AnnotationPanelProps {
 }
 
 interface AnnotationGroup {
+  key: string;
   text: string;
   start_offset: number;
   end_offset: number;
@@ -28,45 +30,60 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
 }) => {
   const [filterType, setFilterType] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
-  const selectedRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Скролл к выбранному элементу
-  useEffect(() => {
-    if (selectedAnnotation && selectedRef.current) {
-      selectedRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, [selectedAnnotation]);
-
-  // Фильтрация
-  const filteredAnnotations = annotations.filter((ann) => {
-    const matchesType = !filterType || ann.annotation_type === filterType;
-    const matchesSearch =
-      !searchText ||
-      ann.text.toLowerCase().includes(searchText.toLowerCase()) ||
-      ann.annotation_type.toLowerCase().includes(searchText.toLowerCase());
-    return matchesType && matchesSearch;
-  });
-
-  const uniqueTypes = Array.from(new Set(annotations.map((ann) => ann.annotation_type))).sort();
-
-  // Группировка по фрагментам
-  const fragmentGroups: Record<string, AnnotationGroup> = {};
-  filteredAnnotations.forEach((ann) => {
-    const key = `${ann.start_offset}-${ann.end_offset}`;
-    if (!fragmentGroups[key]) {
-      fragmentGroups[key] = {
-        text: ann.text,
-        start_offset: ann.start_offset,
-        end_offset: ann.end_offset,
-        annotations: [],
-      };
-    }
-    fragmentGroups[key].annotations.push(ann);
-  });
-
-  const groupedByFragment = Object.entries(fragmentGroups).sort((a, b) =>
-    a[1].start_offset - b[1].start_offset
+  const uniqueTypes = useMemo(
+    () => Array.from(new Set(annotations.map((ann) => ann.annotation_type))).sort(),
+    [annotations]
   );
+
+  // Фильтрация + группировка по фрагментам (мемоизировано)
+  const groupedByFragment = useMemo((): AnnotationGroup[] => {
+    const filtered = annotations.filter((ann) => {
+      const matchesType = !filterType || ann.annotation_type === filterType;
+      const matchesSearch =
+        !searchText ||
+        ann.text.toLowerCase().includes(searchText.toLowerCase()) ||
+        ann.annotation_type.toLowerCase().includes(searchText.toLowerCase());
+      return matchesType && matchesSearch;
+    });
+
+    const fragmentMap = new Map<string, AnnotationGroup>();
+    for (const ann of filtered) {
+      const key = `${ann.start_offset}-${ann.end_offset}`;
+      if (!fragmentMap.has(key)) {
+        fragmentMap.set(key, {
+          key,
+          text: ann.text,
+          start_offset: ann.start_offset,
+          end_offset: ann.end_offset,
+          annotations: [],
+        });
+      }
+      fragmentMap.get(key)!.annotations.push(ann);
+    }
+
+    return Array.from(fragmentMap.values()).sort((a, b) => a.start_offset - b.start_offset);
+  }, [annotations, filterType, searchText]);
+
+  // Виртуализация списка групп
+  const rowVirtualizer = useVirtualizer({
+    count: groupedByFragment.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 80, // Приблизительная высота группы в пикселях
+    overscan: 5,            // Рендерим 5 строк за пределами viewport для плавного скролла
+  });
+
+  // Скролл к выбранной аннотации
+  useEffect(() => {
+    if (!selectedAnnotation) return;
+    const idx = groupedByFragment.findIndex(g =>
+      g.annotations.some(a => a.uid === selectedAnnotation.uid)
+    );
+    if (idx !== -1) {
+      rowVirtualizer.scrollToIndex(idx, { align: 'nearest', behavior: 'smooth' });
+    }
+  }, [selectedAnnotation]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="annotation-panel">
@@ -92,71 +109,93 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
         </select>
       </div>
 
-      <div className="annotations-list">
+      <div className="annotations-list" ref={scrollRef}>
         {groupedByFragment.length === 0 ? (
           <div className="empty-state">
             <p>Нет аннотаций</p>
             <small>Выделите текст и выберите тип аннотации</small>
           </div>
         ) : (
-          groupedByFragment.map(([fragmentKey, group]) => {
-            const isSelected = group.annotations.some(
-              (ann) => ann.uid === selectedAnnotation?.uid
-            );
-            return (
-              <div
-                key={fragmentKey}
-                ref={isSelected ? selectedRef : null}
-                className={`fragment-group ${isSelected ? 'selected' : ''}`}
-                style={{ position: 'relative' }}
-              >
-                <button
-                  className="delete-fragment-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (window.confirm(`Удалить весь фрагмент с ${group.annotations.length} типами?`)) {
-                      group.annotations.forEach((ann) => onAnnotationDelete(ann.uid));
-                    }
+          // Виртуальный контейнер — только видимые строки в DOM
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+              const group = groupedByFragment[virtualItem.index];
+              const isSelected = group.annotations.some(
+                (ann) => ann.uid === selectedAnnotation?.uid
+              );
+
+              return (
+                <div
+                  key={group.key}
+                  data-index={virtualItem.index}
+                  ref={rowVirtualizer.measureElement}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${virtualItem.start}px)`,
                   }}
-                  title="Удалить весь фрагмент"
                 >
-                  ×
-                </button>
-                <div className="fragment-header">
-                  <div style={{ cursor: 'pointer' }} onClick={() => onAnnotationSelect(group.annotations)}>
-                    <div className="fragment-text">"{group.text}"</div>
-                    <div className="fragment-meta">
-                      [{group.start_offset} - {group.end_offset}]
+                  <div
+                    className={`fragment-group ${isSelected ? 'selected' : ''}`}
+                    style={{ position: 'relative' }}
+                  >
+                    <button
+                      className="delete-fragment-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Удалить весь фрагмент с ${group.annotations.length} типами?`)) {
+                          group.annotations.forEach((ann) => onAnnotationDelete(ann.uid));
+                        }
+                      }}
+                      title="Удалить весь фрагмент"
+                    >
+                      ×
+                    </button>
+                    <div className="fragment-header">
+                      <div style={{ cursor: 'pointer' }} onClick={() => onAnnotationSelect(group.annotations)}>
+                        <div className="fragment-text">"{group.text}"</div>
+                        <div className="fragment-meta">
+                          [{group.start_offset} - {group.end_offset}]
+                        </div>
+                      </div>
+                    </div>
+                    <div className="fragment-types">
+                      {group.annotations.map((ann) => (
+                        <div
+                          key={ann.uid}
+                          className="type-badge"
+                          style={{ backgroundColor: ann.color }}
+                          title={ann.annotation_type}
+                        >
+                          {ann.annotation_type}
+                          <button
+                            className="type-remove-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (window.confirm(`Удалить тип "${ann.annotation_type}"?`)) {
+                                onAnnotationDelete(ann.uid);
+                              }
+                            }}
+                            title="Удалить этот тип"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
-                <div className="fragment-types">
-                  {group.annotations.map((ann) => (
-                    <div
-                      key={ann.uid}
-                      className="type-badge"
-                      style={{ backgroundColor: ann.color }}
-                      title={ann.annotation_type}
-                    >
-                      {ann.annotation_type}
-                      <button
-                        className="type-remove-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (window.confirm(`Удалить тип "${ann.annotation_type}"?`)) {
-                            onAnnotationDelete(ann.uid);
-                          }
-                        }}
-                        title="Удалить этот тип"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         )}
       </div>
     </div>

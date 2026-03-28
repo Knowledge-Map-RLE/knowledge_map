@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/commands": "^6.10.3",
+    "@codemirror/history": "^0.19.2",
+    "@codemirror/state": "^6.6.0",
+    "@codemirror/view": "^6.40.0",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.2.0",
     "@pixi/react": "8.0.2",
     "@tailwindcss/vite": "^4.1.16",
+    "@tanstack/react-virtual": "^3.13.23",
     "gsap": "^3.13.0",
     "jszip": "^3.10.1",
     "katex": "^0.16.38",

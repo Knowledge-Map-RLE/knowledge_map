@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback, forwardRef, memo } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback, forwardRef, memo } from 'react';
+import { Transaction } from '@codemirror/state';
 import { Annotation, AnnotationRelation } from '../../../services/api';
+import { useCM6Editor } from './cm6/useCM6Editor';
 import './TextAnnotator.css';
 
 interface TextAnnotatorProps {
@@ -48,29 +50,36 @@ const getCaretPosition = (el: HTMLElement): number => {
 const setCaretPosition = (el: HTMLElement, pos: number) => {
   const sel = window.getSelection();
   if (!sel) return;
+  // TreeWalker итеративен — нет рекурсии, быстрее на глубоких деревьях span
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
   let currentPos = 0;
-  let done = false;
-  const walk = (node: Node) => {
-    if (done) return;
-    if (node.nodeType === Node.TEXT_NODE) {
-      const len = node.textContent?.length || 0;
-      if (currentPos + len >= pos) {
-        const range = document.createRange();
-        range.setStart(node, pos - currentPos);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        done = true;
-      }
-      currentPos += len;
-    } else {
-      node.childNodes.forEach(walk);
+  let node: Text | null;
+  while ((node = walker.nextNode() as Text | null)) {
+    const len = node.length;
+    if (currentPos + len >= pos) {
+      const range = document.createRange();
+      range.setStart(node, pos - currentPos);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      return;
     }
-  };
-  walk(el);
+    currentPos += len;
+  }
+  // pos за концом текста — ставим курсор в конец последнего текстового узла
+  if (node) {
+    const range = document.createRange();
+    range.setStart(node, (node as Text).length);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
 };
 
 // ── Построитель HTML с аннотациями ────────────────────────────────────────────
+// Алгоритм sweep line: O((A+S) log A) вместо O(A*S)
+// Events: открытие/закрытие аннотации; при проходе по сегментам
+// поддерживается Set активных аннотаций — нет вложенного filter.
 
 const buildAnnotatedHTML = (txt: string, anns: Annotation[], activeUids?: Set<string>): string => {
   if (!txt) return '';
@@ -83,36 +92,59 @@ const buildAnnotatedHTML = (txt: string, anns: Annotation[], activeUids?: Set<st
   );
   if (validAnns.length === 0) return escapeHtml(txt);
 
+  // Строим список событий: каждая аннотация даёт 'open' и 'close' событие
+  // Сортировка: по позиции; при равных позициях close раньше open (чтобы не было пустых сегментов)
+  type Event = { pos: number; type: 0 | 1; ann: Annotation }; // type: 0=close, 1=open
+  const events: Event[] = [];
+  for (const a of validAnns) {
+    events.push({ pos: a.start_offset, type: 1, ann: a });
+    events.push({ pos: a.end_offset,   type: 0, ann: a });
+  }
+  events.sort((a, b) => a.pos !== b.pos ? a.pos - b.pos : a.type - b.type);
+
+  // Собираем уникальные границы (включая 0 и txt.length)
   const boundaries = new Set<number>([0, txt.length]);
-  validAnns.forEach(a => {
-    boundaries.add(a.start_offset);
-    boundaries.add(a.end_offset);
-  });
+  for (const ev of events) boundaries.add(ev.pos);
   const sorted = Array.from(boundaries).sort((a, b) => a - b);
+
+  // Sweep: проходим по сегментам, обновляя Set активных аннотаций на каждой границе
+  const activeSet = new Set<Annotation>();
+  let eventIdx = 0;
 
   let html = '';
   for (let i = 0; i < sorted.length - 1; i++) {
-    const start = sorted[i];
-    const end = sorted[i + 1];
-    const chunk = escapeHtml(txt.substring(start, end));
-    const segAnns = validAnns.filter(a => a.start_offset <= start && a.end_offset >= end);
-    if (segAnns.length === 0) {
+    const segStart = sorted[i];
+    const segEnd   = sorted[i + 1];
+
+    // Применяем все события на позиции segStart
+    while (eventIdx < events.length && events[eventIdx].pos <= segStart) {
+      const ev = events[eventIdx++];
+      if (ev.type === 1) {
+        activeSet.add(ev.ann);
+      } else {
+        activeSet.delete(ev.ann);
+      }
+    }
+
+    const chunk = escapeHtml(txt.substring(segStart, segEnd));
+
+    if (activeSet.size === 0) {
       html += chunk;
     } else {
-      // Сортируем: самые узкие (короткие) — выше (меньший textLength = выше в стеке)
-      const sortedSegAnns = [...segAnns].sort((a, b) =>
+      // Сортируем: самые узкие (короткие) — выше в стеке
+      const segAnns = Array.from(activeSet).sort((a, b) =>
         (a.end_offset - a.start_offset) - (b.end_offset - b.start_offset)
       );
       // Активная (верхняя) аннотация — та чей uid в activeUids, иначе самая узкая
-      const activeAnn = (activeUids && sortedSegAnns.find(a => activeUids.has(a.uid))) ?? sortedSegAnns[0];
+      const activeAnn = (activeUids && segAnns.find(a => activeUids.has(a.uid))) ?? segAnns[0];
       const r = parseInt(activeAnn.color.slice(1, 3), 16);
       const g = parseInt(activeAnn.color.slice(3, 5), 16);
       const b = parseInt(activeAnn.color.slice(5, 7), 16);
-      const title = sortedSegAnns.map(a => `${a.annotation_type}: "${a.text}"`).join('\n');
+      const title = segAnns.map(a => `${a.annotation_type}: "${a.text}"`).join('\n');
       // uid-ы в порядке от узкой к широкой — для циклического переключения по клику
-      const allUids = sortedSegAnns.map(a => a.uid).join(',');
+      const allUids = segAnns.map(a => a.uid).join(',');
       // Невидимые якоря для всех uid — чтобы RelationLine мог найти любую аннотацию в группе
-      const anchors = sortedSegAnns.slice(1).map(a =>
+      const anchors = segAnns.slice(1).map(a =>
         `<span data-annotation-id="${escapeAttr(a.uid)}" style="position:absolute;pointer-events:none;"></span>`
       ).join('');
       const textLength = activeAnn.end_offset - activeAnn.start_offset;
@@ -155,8 +187,23 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   // Активные uid для групп с наложением — ключ: "start-end", значение: uid верхней аннотации
   const [activeLayerUids, setActiveLayerUids] = useState<Record<string, string>>({});
 
-  const containerRef = (forwardedRef as React.RefObject<HTMLDivElement>) || useRef<HTMLDivElement>(null);
+  const internalContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = (forwardedRef as React.RefObject<HTMLDivElement>) || internalContainerRef;
   const textRef = useRef<HTMLDivElement>(null);
+
+  // ── CM6 container ref (editable mode) ─────────────────────────────────────
+  const cm6ContainerRef = useRef<HTMLDivElement>(null);
+
+  // ── CM6 хук — монтируется только когда editable=true ─────────────────────
+  const { viewRef, setAnnotations: setCM6Annotations, doUndo, doRedo } = useCM6Editor({
+    containerRef: cm6ContainerRef,
+    initialText: text,
+    editable,
+    onTextChange,
+    onTextSelect,
+    onCursorMove,
+    largeLineHeight,
+  });
 
   // Локальный текст хранится в ref — без setState, чтобы не вызывать ре-рендер при вводе
   const localTextRef = useRef<string>(text);
@@ -175,18 +222,17 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   const onCursorMoveRef = useRef(onCursorMove);
   onCursorMoveRef.current = onCursorMove;
 
-  // Ref для таймера debounce
+  // Ref для таймера debounce (legacy path — не используется в CM6 mode)
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ── applyAnnotatedHTML ──────────────────────────────────────────────────────
-
+  // ── applyAnnotatedHTML (legacy: только для read-only режима) ───────────────
+  // В editable-режиме теперь используем CM6 — этот метод больше не нужен
   const applyAnnotatedHTML = useCallback((html: string) => {
     if (!textRef.current) return;
     const hasFocus = document.activeElement === textRef.current;
     const pos = hasFocus ? getCaretPosition(textRef.current) : null;
     textRef.current.innerHTML = html;
     if (hasFocus) {
-      // innerHTML сбрасывает фокус — возвращаем его обратно
       textRef.current.focus();
       if (pos !== null) {
         setCaretPosition(textRef.current, pos);
@@ -194,8 +240,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     }
   }, []);
 
-  // ── scheduleAnnotationRefresh (debounce 800ms) ──────────────────────────────
-
+  // scheduleAnnotationRefresh (legacy — не используется в CM6 mode)
   const scheduleAnnotationRefresh = useCallback(() => {
     if (debounceTimerRef.current !== null) {
       clearTimeout(debounceTimerRef.current);
@@ -206,49 +251,117 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
     }, 800);
   }, [applyAnnotatedHTML]);
 
-  // ── useEffect: монтирование — рендерим начальный HTML ──────────────────────
+  // ── CM6: синхронизация аннотаций в StateField ──────────────────────────────
 
   useEffect(() => {
-    if (editable && textRef.current) {
-      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
+    if (editable) {
+      setCM6Annotations(annotations);
     }
-    // Только при монтировании
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editable]);
+  }, [annotations, editable, setCM6Annotations]);
 
-  // ── useEffect: смена annotations снаружи — немедленно перерисовываем ───────
+  // ── CM6: синхронизация текста снаружи (undo/redo из AnnotationWorkspace) ───
 
   useEffect(() => {
-    if (editable && textRef.current) {
-      applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [annotations]); // annotations в deps — чтобы эффект срабатывал при их смене
-
-  // ── useEffect: смена text снаружи (не в фокусе) ────────────────────────────
-
-  useEffect(() => {
-    const hasFocus = textRef.current && document.activeElement === textRef.current;
-    if (!hasFocus) {
-      localTextRef.current = text;
-      if (editable && textRef.current) {
-        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text]);
-
-  // ── useEffect: forceTextVersion (undo/redo) — немедленно, без debounce ─────
-
-  useEffect(() => {
-    if (forceTextVersion !== undefined && forceTextVersion > 0) {
-      localTextRef.current = text;
-      if (textRef.current) {
-        applyAnnotatedHTML(buildAnnotatedHTML(text, annotationsRef.current, new Set(Object.values(activeLayerUidsRef.current))));
-      }
+    if (!editable || !viewRef.current) return;
+    const currentText = viewRef.current.state.doc.toString();
+    if (currentText !== text) {
+      viewRef.current.dispatch({
+        changes: { from: 0, to: currentText.length, insert: text },
+        annotations: Transaction.addToHistory.of(false),
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forceTextVersion]);
+
+  // ── CM6: перехват Ctrl+Z / Ctrl+Y — делегируем CM6 history ────────────────
+
+  useEffect(() => {
+    if (!editable) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!cm6ContainerRef.current?.contains(document.activeElement)) return;
+      if (e.ctrlKey && e.code === 'KeyZ' && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        // CM6 history через onUndo проп — делегируем AnnotationWorkspace
+        // который теперь вызывает doUndo внутри useCM6Editor
+        onUndoRef.current?.();
+      } else if ((e.ctrlKey && e.code === 'KeyZ' && e.shiftKey) || (e.ctrlKey && e.code === 'KeyY')) {
+        e.preventDefault();
+        e.stopPropagation();
+        onRedoRef.current?.();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown, { capture: true });
+    return () => document.removeEventListener('keydown', handleKeyDown, { capture: true });
+  }, [editable]);
+
+  // ── CM6: обработка кликов на аннотации (через data-annotation-id) ──────────
+
+  useEffect(() => {
+    if (!editable || !cm6ContainerRef.current) return;
+    const container = cm6ContainerRef.current;
+
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // CM6 рендерит span с data-annotation-id через Decoration.mark attributes
+      const span = (target.dataset.ann ? target : target.closest('[data-ann]')) as HTMLElement | null;
+      if (!span) return;
+
+      const allUids = span.dataset.anns?.split(',').filter(Boolean) ?? (span.dataset.ann ? [span.dataset.ann] : []);
+      const allAnns = allUids.map(uid => annotationsRef.current.find(a => a.uid === uid)).filter(Boolean) as Annotation[];
+      if (allAnns.length === 0) return;
+
+      if (relationMode) {
+        const primaryAnn = allAnns[0];
+        if (!relationSourceId) {
+          setRelationSourceId(primaryAnn.uid);
+        } else if (relationSourceId !== primaryAnn.uid) {
+          if (onRelationCreate) onRelationCreate(relationSourceId, primaryAnn.uid);
+          setRelationSourceId(null);
+        }
+        return;
+      }
+
+      if (allAnns.length > 1) {
+        const segKey = `${allAnns[0].start_offset}-${allAnns[0].end_offset}`;
+        const currentUid = activeLayerUidsRef.current[segKey] ?? allUids[0];
+        const currentIdx = allUids.indexOf(currentUid);
+        const nextUid = allUids[(currentIdx + 1) % allUids.length];
+        const nextAnn = allAnns.find(a => a.uid === nextUid)!;
+        setActiveLayerUids(prev => ({ ...prev, [segKey]: nextUid }));
+        onAnnotationClick(nextAnn);
+      } else {
+        onAnnotationClick(allAnns[0]);
+      }
+    };
+
+    container.addEventListener('click', handleClick);
+    return () => container.removeEventListener('click', handleClick);
+  }, [editable, relationMode, relationSourceId, onAnnotationClick, onRelationCreate]);
+
+  // ── CM6: отслеживание курсора для сдвига аннотаций ────────────────────────
+  // (уже реализовано внутри useCM6Editor через ViewPlugin → onCursorMove)
+
+  // ── Устаревшие эффекты (не нужны в CM6 mode) ──────────────────────────────
+  // Оставляем для совместимости с read-only ветвью (editable=false)
+
+  useEffect(() => {
+    if (!editable && textRef.current) {
+      // read-only: монтирование не требует апдейта, segments рендерятся через React
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editable]);
+
+  useEffect(() => {
+    // read-only: обновление происходит через React props → segments memo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [annotations]);
+
+  useEffect(() => {
+    // read-only: text изменился снаружи — segments пересчитаются через memo
+    localTextRef.current = text;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
 
   // ── Обработка выделения текста ─────────────────────────────────────────────
 
@@ -404,148 +517,107 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
       style={{ position: 'relative' }}
     >
       <div style={{ position: 'relative' }}>
-        <div
-          ref={textRef}
-          className="annotated-text"
-          contentEditable={editable}
-          suppressContentEditableWarning
-          onInput={(e) => {
-            if (editable && onTextChange) {
-              const newText = e.currentTarget.textContent || '';
-              localTextRef.current = newText;
-              onTextChange(newText);
-              scheduleAnnotationRefresh();
-            }
-          }}
-          onClick={(e) => {
-            if (!editable) return;
-            const target = e.target as HTMLElement;
-            const span = (target.dataset.ann ? target : target.closest('[data-ann]')) as HTMLElement | null;
-            if (!span) return;
-            const allUids = span.dataset.anns?.split(',').filter(Boolean) ?? [span.dataset.ann!];
-            const allAnns = allUids.map(uid => annotationsRef.current.find(a => a.uid === uid)).filter(Boolean) as Annotation[];
-            if (allAnns.length === 0) return;
-
-            if (relationMode) {
-              const primaryAnn = allAnns[0];
-              if (!relationSourceId) {
-                setRelationSourceId(primaryAnn.uid);
-              } else if (relationSourceId !== primaryAnn.uid) {
-                if (onRelationCreate) onRelationCreate(relationSourceId, primaryAnn.uid);
-                setRelationSourceId(null);
+        {/* ── Editable режим: CodeMirror 6 ─────────────────────────────────── */}
+        {editable && (
+          <div
+            ref={cm6ContainerRef}
+            className="annotated-text cm6-editor-container"
+            style={{
+              userSelect: relationMode ? 'none' : 'text',
+              outline: '1px solid #ccc',
+              backgroundColor: '#fafafa',
+            }}
+            onMouseMove={(e) => {
+              const target = e.target as HTMLElement;
+              const annEl = (target.dataset.ann ? target : target.closest('[data-ann]')) as HTMLElement | null;
+              if (annEl?.dataset.ann) {
+                const ann = annotations.find(a => a.uid === annEl.dataset.ann);
+                if (ann && hoveredAnnotation?.uid !== ann.uid) handleAnnotationHover(ann);
+              } else if (hoveredAnnotation !== null) {
+                handleAnnotationHover(null);
               }
-              return;
-            }
+            }}
+            onMouseLeave={() => { if (hoveredAnnotation !== null) handleAnnotationHover(null); }}
+          />
+        )}
 
-            if (allAnns.length > 1) {
-              // Циклически переключаем верхний слой
-              const segKey = `${allAnns[0].start_offset}-${allAnns[0].end_offset}`;
-              const currentUid = activeLayerUids[segKey] ?? allUids[0];
-              const currentIdx = allUids.indexOf(currentUid);
-              const nextUid = allUids[(currentIdx + 1) % allUids.length];
-              const nextAnn = allAnns.find(a => a.uid === nextUid)!;
-              setActiveLayerUids(prev => ({ ...prev, [segKey]: nextUid }));
-              // Перерисовываем с новым активным слоем
-              const newActiveUids = new Set(Object.values({ ...activeLayerUids, [segKey]: nextUid }));
-              applyAnnotatedHTML(buildAnnotatedHTML(localTextRef.current, annotationsRef.current, newActiveUids));
-              onAnnotationClick(nextAnn);
-            } else {
-              onAnnotationClick(allAnns[0]);
-            }
-          }}
-          onMouseMove={(e) => {
-            if (!editable) return;
-            const target = e.target as HTMLElement;
-            const annId = target.dataset.ann;
-            if (annId) {
-              const ann = annotations.find(a => a.uid === annId);
-              if (ann && hoveredAnnotation?.uid !== ann.uid) {
-                handleAnnotationHover(ann);
+        {/* ── Read-only режим: React segments ──────────────────────────────── */}
+        {!editable && (
+          <div
+            ref={textRef}
+            className="annotated-text"
+            style={{
+              whiteSpace: 'pre-wrap',
+              lineHeight: largeLineHeight ? '50px' : '1.8',
+              fontSize: '14px',
+              fontFamily: 'monospace',
+              padding: '10px',
+              userSelect: 'text',
+            }}
+          >
+            {segments.map((segment) => {
+              const segmentKey = `seg-${segment.start}-${segment.end}`;
+              if (segment.annotations.length === 0) {
+                return <span key={segmentKey}>{segment.text}</span>;
               }
-            } else if (hoveredAnnotation !== null) {
-              handleAnnotationHover(null);
-            }
-          }}
-          onMouseLeave={() => {
-            if (editable && hoveredAnnotation !== null) {
-              handleAnnotationHover(null);
-            }
-          }}
-          style={{
-            whiteSpace: 'pre-wrap',
-            lineHeight: largeLineHeight ? '50px' : '1.8',
-            fontSize: '14px',
-            fontFamily: 'monospace',
-            padding: '10px',
-            userSelect: relationMode ? 'none' : 'text',
-            willChange: 'contents',
-            outline: editable ? '1px solid #ccc' : 'none',
-            backgroundColor: editable ? '#fafafa' : 'transparent',
-          }}
-        >
-          {!editable && segments.map((segment) => {
-            const segmentKey = `seg-${segment.start}-${segment.end}`;
-            if (segment.annotations.length === 0) {
-              return <span key={segmentKey}>{segment.text}</span>;
-            }
-            // Самая узкая аннотация — верхняя (наименьший textLength = наибольший z-index)
-            const ann = [...segment.annotations].sort((a, b) =>
-              (a.end_offset - a.start_offset) - (b.end_offset - b.start_offset)
-            )[0];
-            const r = parseInt(ann.color.slice(1, 3), 16);
-            const g = parseInt(ann.color.slice(3, 5), 16);
-            const b = parseInt(ann.color.slice(5, 7), 16);
-            const isHovered = hoveredAnnotation?.uid === ann.uid;
-            const isRelationSource = relationSourceId === ann.uid;
-            const title = segment.annotations
-              .map(a => `${a.annotation_type} (${a.text})`)
-              .join('\n');
-            const textLength = ann.end_offset - ann.start_offset;
-            const zIndex = Math.max(1, 10000 - textLength);
-            return (
-              <span
-                key={segmentKey}
-                data-annotation-id={ann.uid}
-                style={{
-                  backgroundColor: `rgba(${r},${g},${b},0.2)`,
-                  cursor: relationMode ? 'crosshair' : 'pointer',
-                  padding: '2px 0',
-                  borderRadius: '2px',
-                  position: 'relative',
-                  zIndex,
-                  border: isHovered ? '1px solid #000' : '1px solid transparent',
-                  outline: isRelationSource ? '2px solid #2196f3' : undefined,
-                  boxShadow: segment.annotations.length > 1 ? '0 0 0 1px rgba(0,0,0,0.2)' : undefined,
-                }}
-                title={title}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (relationMode) {
-                    if (!relationSourceId) {
-                      setRelationSourceId(ann.uid);
-                    } else if (relationSourceId !== ann.uid) {
-                      if (onRelationCreate) onRelationCreate(relationSourceId, ann.uid);
-                      setRelationSourceId(null);
+              const ann = [...segment.annotations].sort((a, b) =>
+                (a.end_offset - a.start_offset) - (b.end_offset - b.start_offset)
+              )[0];
+              const r = parseInt(ann.color.slice(1, 3), 16);
+              const g = parseInt(ann.color.slice(3, 5), 16);
+              const b = parseInt(ann.color.slice(5, 7), 16);
+              const isHovered = hoveredAnnotation?.uid === ann.uid;
+              const isRelationSource = relationSourceId === ann.uid;
+              const title = segment.annotations
+                .map(a => `${a.annotation_type} (${a.text})`)
+                .join('\n');
+              const textLength = ann.end_offset - ann.start_offset;
+              const zIndex = Math.max(1, 10000 - textLength);
+              return (
+                <span
+                  key={segmentKey}
+                  data-annotation-id={ann.uid}
+                  style={{
+                    backgroundColor: `rgba(${r},${g},${b},0.2)`,
+                    cursor: relationMode ? 'crosshair' : 'pointer',
+                    padding: '2px 0',
+                    borderRadius: '2px',
+                    position: 'relative',
+                    zIndex,
+                    border: isHovered ? '1px solid #000' : '1px solid transparent',
+                    outline: isRelationSource ? '2px solid #2196f3' : undefined,
+                    boxShadow: segment.annotations.length > 1 ? '0 0 0 1px rgba(0,0,0,0.2)' : undefined,
+                  }}
+                  title={title}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (relationMode) {
+                      if (!relationSourceId) {
+                        setRelationSourceId(ann.uid);
+                      } else if (relationSourceId !== ann.uid) {
+                        if (onRelationCreate) onRelationCreate(relationSourceId, ann.uid);
+                        setRelationSourceId(null);
+                      }
+                    } else {
+                      onAnnotationClick(ann);
                     }
-                  } else {
-                    onAnnotationClick(ann);
-                  }
-                }}
-                onMouseEnter={() => handleAnnotationHover(ann)}
-                onMouseLeave={() => handleAnnotationHover(null)}
-              >
-                {segment.text}
-              </span>
-            );
-          })}
-        </div>
+                  }}
+                  onMouseEnter={() => handleAnnotationHover(ann)}
+                  onMouseLeave={() => handleAnnotationHover(null)}
+                >
+                  {segment.text}
+                </span>
+              );
+            })}
+          </div>
+        )}
 
         {showRelations && (
           <RelationsOverlay
             annotation={hoveredAnnotation}
             relations={relations}
             annotations={annotations}
-            containerRef={textRef}
+            containerRef={editable ? cm6ContainerRef : textRef}
             selectedRelation={selectedRelation}
             onRelationClick={onRelationClick}
             onRelationContextMenu={(relation, x, y) => setContextMenu({ relation, x, y })}
@@ -612,50 +684,26 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
 
 TextAnnotator.displayName = 'TextAnnotator';
 
+// ── Тип для кешированных позиций линий связей ─────────────────────────────────
+
+interface LineCoords {
+  x1: number; y1: number;
+  x2: number; y2: number;
+}
+
 // ── RelationLine ──────────────────────────────────────────────────────────────
+// Принимает уже вычисленные координаты — getBoundingClientRect батчится снаружи
 
 const RelationLine: React.FC<{
   relation: AnnotationRelation;
+  coords: LineCoords;
   isHighlighted: boolean;
   isSelected: boolean;
-  containerRef: React.RefObject<HTMLDivElement>;
-  annotationsVersion: number;
   onRelationClick?: (relation: AnnotationRelation) => void;
   onRelationContextMenu?: (relation: AnnotationRelation, x: number, y: number) => void;
-}> = ({ relation, isHighlighted, isSelected, containerRef, annotationsVersion, onRelationClick, onRelationContextMenu }) => {
-  const [, forceUpdate] = useState({});
-
-  useEffect(() => {
-    const timer = setTimeout(() => forceUpdate({}), 10);
-    return () => clearTimeout(timer);
-  }, [annotationsVersion]);
-
-  const sourceElement = containerRef.current?.querySelector(
-    `[data-annotation-id="${relation.source_uid}"]`
-  ) as HTMLElement | null;
-
-  const targetElement = containerRef.current?.querySelector(
-    `[data-annotation-id="${relation.target_uid}"]`
-  ) as HTMLElement | null;
-
-  if (!sourceElement || !targetElement || !containerRef.current) return null;
-
-  const sourceRect = sourceElement.getBoundingClientRect();
-  const targetRect = targetElement.getBoundingClientRect();
-  const containerRect = containerRef.current.getBoundingClientRect();
-
-  const x1 = sourceRect.left + sourceRect.width / 2 - containerRect.left;
-  const y1 = sourceRect.top + sourceRect.height / 2 - containerRect.top;
-  const x2 = targetRect.left + targetRect.width / 2 - containerRect.left;
-  const y2 = targetRect.top + targetRect.height / 2 - containerRect.top;
-
-  if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2)) return null;
-
+}> = ({ relation, coords, isHighlighted, isSelected, onRelationClick, onRelationContextMenu }) => {
+  const { x1, y1, x2, y2 } = coords;
   const upOffset = 20;
-  const point2_x = x1;
-  const point2_y = y1 - upOffset;
-  const point3_x = x2;
-  const point3_y = y2 - upOffset;
 
   let strokeColor = '#2196f3';
   let strokeWidth = 2;
@@ -682,7 +730,7 @@ const RelationLine: React.FC<{
       style={{ cursor: 'pointer' }}
     >
       <path
-        d={`M ${x1} ${y1} L ${point2_x} ${point2_y} L ${point3_x} ${point3_y} L ${x2} ${y2}`}
+        d={`M ${x1} ${y1} L ${x1} ${y1 - upOffset} L ${x2} ${y2 - upOffset} L ${x2} ${y2}`}
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         fill="none"
@@ -692,7 +740,7 @@ const RelationLine: React.FC<{
       />
       <text
         x={(x1 + x2) / 2}
-        y={point2_y - 5}
+        y={Math.min(y1, y2) - upOffset - 5}
         fill={strokeColor}
         fontSize="11px"
         fontWeight="bold"
@@ -709,6 +757,7 @@ const RelationLine: React.FC<{
 RelationLine.displayName = 'RelationLine';
 
 // ── RelationsOverlay ──────────────────────────────────────────────────────────
+// Все getBoundingClientRect вызываются в одном useLayoutEffect — один батч reflow
 
 const RelationsOverlay: React.FC<{
   annotation: Annotation | null;
@@ -719,7 +768,6 @@ const RelationsOverlay: React.FC<{
   onRelationClick?: (relation: AnnotationRelation) => void;
   onRelationContextMenu?: (relation: AnnotationRelation, x: number, y: number) => void;
 }> = memo(({ annotation, relations, annotations, containerRef, selectedRelation, onRelationClick, onRelationContextMenu }) => {
-  const annotationsVersion = annotations.length;
   const MAX_RELATIONS = 1000;
 
   const relevantRelations = useMemo(() => {
@@ -741,6 +789,43 @@ const RelationsOverlay: React.FC<{
     return filtered;
   }, [annotation, relations, annotations]);
 
+  // Кешируем координаты всех линий — один батч getBoundingClientRect в useLayoutEffect
+  const [coordsCache, setCoordsCache] = useState<Map<string, LineCoords>>(new Map());
+
+  useLayoutEffect(() => {
+    if (relevantRelations.length === 0 || !containerRef.current) return;
+
+    // Один проход: читаем все rects без промежуточных записей в DOM (нет layout thrashing)
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const newCache = new Map<string, LineCoords>();
+
+    for (const rel of relevantRelations) {
+      const srcEl = containerRef.current.querySelector(
+        `[data-annotation-id="${rel.source_uid}"]`
+      ) as HTMLElement | null;
+      const tgtEl = containerRef.current.querySelector(
+        `[data-annotation-id="${rel.target_uid}"]`
+      ) as HTMLElement | null;
+
+      if (!srcEl || !tgtEl) continue;
+
+      const srcRect = srcEl.getBoundingClientRect();
+      const tgtRect = tgtEl.getBoundingClientRect();
+
+      const x1 = srcRect.left + srcRect.width / 2 - containerRect.left;
+      const y1 = srcRect.top + srcRect.height / 2 - containerRect.top;
+      const x2 = tgtRect.left + tgtRect.width / 2 - containerRect.left;
+      const y2 = tgtRect.top + tgtRect.height / 2 - containerRect.top;
+
+      if (!isNaN(x1) && !isNaN(y1) && !isNaN(x2) && !isNaN(y2)) {
+        newCache.set(`${rel.source_uid}-${rel.target_uid}`, { x1, y1, x2, y2 });
+      }
+    }
+
+    setCoordsCache(newCache);
+  // Пересчитываем при изменении связей, аннотаций (размеры spans) или скролла
+  }, [relevantRelations, annotations, containerRef]);
+
   if (relevantRelations.length === 0) return null;
 
   return (
@@ -758,6 +843,9 @@ const RelationsOverlay: React.FC<{
       }}
     >
       {relevantRelations.map((relation) => {
+        const coords = coordsCache.get(`${relation.source_uid}-${relation.target_uid}`);
+        if (!coords) return null;
+
         const isHighlighted = !!annotation && (
           relation.source_uid === annotation.uid || relation.target_uid === annotation.uid
         );
@@ -768,10 +856,9 @@ const RelationsOverlay: React.FC<{
           <RelationLine
             key={`${relation.source_uid}-${relation.target_uid}`}
             relation={relation}
+            coords={coords}
             isHighlighted={isHighlighted}
             isSelected={isSelected}
-            containerRef={containerRef}
-            annotationsVersion={annotationsVersion}
             onRelationClick={onRelationClick}
             onRelationContextMenu={onRelationContextMenu}
           />

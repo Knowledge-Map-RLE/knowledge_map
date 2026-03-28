@@ -49,6 +49,8 @@ export default function Data_extraction() {
 
     const saveTimeoutRef = useRef<number | null>(null);
     const docListRef = useRef<DocumentListHandle>(null);
+    // Токен актуального запроса — при смене документа старые запросы игнорируются
+    const selectTokenRef = useRef<number>(0);
 
     const selectDocument = async (document: PDFDocument | null) => {
         if (!document) {
@@ -58,25 +60,31 @@ export default function Data_extraction() {
             setPdfUrl('');
             return;
         }
+
+        // Инкрементируем токен — все предыдущие async-ветки увидят устаревший токен
+        const token = ++selectTokenRef.current;
+
+        // Сразу сбрасываем markdown чтобы старый текст не мелькал
         setSelectedDocument(document);
         setDocId(document.uid);
-        // Не загружаем assets для временных документов (пока идёт загрузка)
+        setSourceMarkdown('');
+
         if (document.uid.startsWith('upload_') || document.processing_status === 'uploading') {
-            setSourceMarkdown('');
             setPdfUrl('');
             return;
         }
-        // Загружаем markdown из S3
+
         try {
             const assets = await getDocumentAssets(document.uid);
+            // Если пока ждали ответа — пользователь переключился на другой документ
+            if (token !== selectTokenRef.current) return;
+
             if (assets?.markdown) {
                 setSourceMarkdown(assets.markdown);
                 console.log('Markdown загружен:', assets.markdown.length, 'символов');
             } else {
                 console.log('Markdown не найден для документа:', document.uid);
-                setSourceMarkdown('');
             }
-            // Пытаемся извлечь PDF URL из ассетов
             const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
             const candidate = (assets as any)?.pdf_url || (assets as any)?.files?.pdf_url || (assets as any)?.files?.pdf;
             if (candidate) {
@@ -87,8 +95,8 @@ export default function Data_extraction() {
                 setPdfUrl('');
             }
         } catch (err) {
+            if (token !== selectTokenRef.current) return;
             console.error('Ошибка загрузки документа:', err);
-            setSourceMarkdown('');
             setPdfUrl('');
         }
     };
@@ -267,6 +275,7 @@ export default function Data_extraction() {
                             <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                                 {selectedDocument && docId && !['uploading', 'pdf_to_markdown'].includes(selectedDocument.processing_status) ? (
                                     <AnnotationWorkspace
+                                        key={docId}
                                         docId={docId}
                                         text={sourceMarkdown}
                                         readOnly={false}

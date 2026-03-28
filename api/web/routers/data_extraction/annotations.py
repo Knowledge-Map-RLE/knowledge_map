@@ -75,18 +75,24 @@ async def get_annotations_route(
     doc_id: str,
     skip: int = Query(0, ge=0),
     limit: Optional[int] = Query(None, ge=1),
-    annotation_types: Optional[List[str]] = Query(None),
+    annotation_types: Optional[str] = Query(None),
     source: Optional[str] = Query(None),
     ann_repo=Depends(get_annotation_repository),
     doc_repo=Depends(get_document_repository),
 ):
+    # Клиент передаёт annotation_types как одну строку через запятую: "Type1,Type2"
+    types_list: Optional[List[str]] = (
+        [t.strip() for t in annotation_types.split(",") if t.strip()]
+        if annotation_types
+        else None
+    )
     anns, total = get_annotations(
         annotation_repo=ann_repo,
         document_repo=doc_repo,
         doc_id=doc_id,
         skip=skip,
         limit=limit,
-        annotation_types=annotation_types,
+        annotation_types=types_list,
         source=source,
     )
     return {

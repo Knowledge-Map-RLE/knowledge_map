@@ -76,6 +76,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const [localText, setLocalText] = useState(text);
   const [visualAnnotations, setVisualAnnotations] = useState<Annotation[]>([]);
   const previousTextRef = useRef(text);
+  // localTextRef — горячий путь при печати: не вызывает ре-рендер
+  const localTextRef = useRef(text);
   const visualAnnotationsRef = useRef<Annotation[]>([]);
   visualAnnotationsRef.current = visualAnnotations;
 
@@ -162,6 +164,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   // Sync with external text
   useEffect(() => {
     setLocalText(text);
+    localTextRef.current = text;
     previousTextRef.current = text;
     setSavedText(text);
   }, [text, setSavedText]);
@@ -207,6 +210,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   }, [visualAnnotations]);
 
   // Text change handler
+  // Намеренно НЕ вызываем setLocalText — только обновляем ref.
+  // setLocalText вызывается с debounce через scheduleLocalTextSync ниже,
+  // чтобы не вызывать ре-рендер всего дерева при каждом нажатии клавиши.
+  const scheduleLocalTextSyncRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleTextChange = useCallback((newText: string) => {
     const oldText = previousTextRef.current;
 
@@ -218,7 +226,14 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       redoStackRef.current = [];
     }
 
-    setLocalText(newText);
+    // Обновляем ref немедленно — без ре-рендера
+    localTextRef.current = newText;
+
+    // Синхронизируем React state с debounce 300ms для валидации и textarea
+    if (scheduleLocalTextSyncRef.current) clearTimeout(scheduleLocalTextSyncRef.current);
+    scheduleLocalTextSyncRef.current = setTimeout(() => {
+      setLocalText(localTextRef.current);
+    }, 300);
 
     if (onTextChange) {
       onTextChange(newText);
@@ -239,6 +254,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     const prev = undoStackRef.current.pop()!;
     redoStackRef.current.push(current);
     previousTextRef.current = prev;
+    localTextRef.current = prev;
     setLocalText(prev);
     setUndoRedoVersion(v => v + 1);
     if (visualAnnotationsRef.current.length > 0) {
@@ -255,6 +271,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     const next = redoStackRef.current.pop()!;
     undoStackRef.current.push(current);
     previousTextRef.current = next;
+    localTextRef.current = next;
     setLocalText(next);
     setUndoRedoVersion(v => v + 1);
     if (visualAnnotationsRef.current.length > 0) {
@@ -503,7 +520,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       savedTextareaScrollTop.current = textareaRef.current?.scrollTop || 0;
       savedAnnotatorScrollTop.current = textAnnotatorRef.current?.scrollTop || 0;
 
-      await saveAnnotationOffsets(localText, annotations, loadAnnotations);
+      await saveAnnotationOffsets(localTextRef.current, annotations, loadAnnotations);
 
       if (onSave) {
         await onSave();
@@ -527,7 +544,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     } catch (error) {
       console.error('Ошибка сохранения:', error);
     }
-  }, [localText, annotations, saveAnnotationOffsets, loadAnnotations, onSave]);
+  }, [annotations, saveAnnotationOffsets, loadAnnotations, onSave]);
 
   // Delete all annotations handler
   const handleDeleteAllAnnotations = useCallback(async () => {
@@ -663,7 +680,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         const annText = ann.text ?? '';
 
         // Точное совпадение по тексту аннотации в документе (без fuzzy-окна)
-        const idx = annText ? localText.indexOf(annText) : -1;
+        const idx = annText ? localTextRef.current.indexOf(annText) : -1;
         if (idx === -1) {
           console.warn(`[import] Не найден текст аннотации в документе, пропускаем: "${annText.slice(0, 60)}"`);
           skippedAnnotations++;
@@ -707,7 +724,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       isImportingRef.current = false;
       setImportProgress(null);
     }
-  }, [docId, localText, loadAnnotations, loadRelations]);
+  }, [docId, loadAnnotations, loadRelations]);
 
   // Cursor position handler (called from TextAnnotator on mouseup/keyup)
   const handleCursorMove = useCallback((pos: number) => {

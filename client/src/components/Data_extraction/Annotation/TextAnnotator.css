@@ -15,3 +15,25 @@
 }
 
 /* Убраны transition и transform для улучшения производительности */
+
+/* ── CodeMirror 6 контейнер ─────────────────────────────────────────────── */
+.cm6-editor-container {
+  min-height: 100%;
+}
+
+/* CM6 занимает всю высоту контейнера */
+.cm6-editor-container .cm-editor {
+  height: 100%;
+  min-height: 300px;
+}
+
+/* Убираем стандартный border CM6 — стиль управляется через inline outline */
+.cm6-editor-container .cm-editor.cm-focused {
+  outline: none;
+}
+
+/* Аннотационные span-декорации (Decoration.mark) в CM6 */
+.cm6-editor-container .cm-content [data-annotation-id] {
+  border-radius: 2px;
+  cursor: pointer;
+}

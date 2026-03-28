@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   Annotation,
   createAnnotation,
@@ -20,8 +20,20 @@ export const useAnnotations = ({
   selectedSource,
 }: UseAnnotationsOptions) => {
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [annotationsByUid, setAnnotationsByUid] = useState<Map<string, Annotation>>(new Map());
   const [totalAnnotations, setTotalAnnotations] = useState(0);
   const [loading, setLoading] = useState(false);
+  // Токен для отмены устаревших запросов
+  const loadTokenRef = useRef(0);
+
+  // Вспомогательная функция: синхронно обновляет и массив и Map
+  const setAnnotationsBoth = useCallback((updater: Annotation[] | ((prev: Annotation[]) => Annotation[])) => {
+    setAnnotations(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      setAnnotationsByUid(new Map(next.map(a => [a.uid, a])));
+      return next;
+    });
+  }, []);
 
   const getTypesFilter = useCallback(() => {
     if (selectedCategories.length === 0) return null;
@@ -37,6 +49,7 @@ export const useAnnotations = ({
   }, [selectedCategories]);
 
   const loadAnnotations = useCallback(async () => {
+    const token = ++loadTokenRef.current;
     try {
       setLoading(true);
       const typesFilter = getTypesFilter();
@@ -49,18 +62,22 @@ export const useAnnotations = ({
         selectedSource
       );
 
-      setAnnotations(response.annotations);
+      // Игнорируем ответ если успели запустить новый запрос
+      if (token !== loadTokenRef.current) return;
+
+      setAnnotationsBoth(response.annotations);
       setTotalAnnotations(response.total);
     } catch (error: any) {
+      if (token !== loadTokenRef.current) return;
       if (!error?.message?.includes('404')) {
         console.error('Ошибка загрузки аннотаций:', error);
       }
-      setAnnotations([]);
+      setAnnotationsBoth([]);
       setTotalAnnotations(0);
     } finally {
-      setLoading(false);
+      if (token === loadTokenRef.current) setLoading(false);
     }
-  }, [docId, selectedCategories, selectedSource, getTypesFilter]);
+  }, [docId, selectedCategories, selectedSource, getTypesFilter, setAnnotationsBoth]);
 
   const createNewAnnotation = useCallback(async (
     start: number,
@@ -75,19 +92,19 @@ export const useAnnotations = ({
       end_offset: end,
       color: getDefaultColor(type),
     });
-    setAnnotations(prev => [...prev, newAnnotation]);
+    setAnnotationsBoth(prev => [...prev, newAnnotation]);
     return newAnnotation;
-  }, [docId]);
+  }, [docId, setAnnotationsBoth]);
 
   const removeAnnotation = useCallback(async (annotationId: string) => {
-    setAnnotations(prev => prev.filter(a => a.uid !== annotationId));
+    setAnnotationsBoth(prev => prev.filter(a => a.uid !== annotationId));
     try {
       await deleteAnnotation(annotationId);
     } catch (error) {
       await loadAnnotations(); // откат при ошибке
       throw error;
     }
-  }, [loadAnnotations]);
+  }, [loadAnnotations, setAnnotationsBoth]);
 
   const editAnnotation = useCallback(async (annotationId: string, annotationType: string) => {
     await updateAnnotation(annotationId, { annotation_type: annotationType });
@@ -96,7 +113,8 @@ export const useAnnotations = ({
 
   return {
     annotations,
-    setAnnotations,
+    annotationsByUid,
+    setAnnotations: setAnnotationsBoth,
     totalAnnotations,
     loading,
     loadAnnotations,
