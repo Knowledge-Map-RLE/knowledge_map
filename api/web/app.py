@@ -29,7 +29,7 @@ from web.exception_handlers import register_exception_handlers
 
 # Новые роутеры (чистая архитектура)
 from web.routers import blocks, links, auth
-from web.routers.data_extraction import annotations, relations, documents as doc_router
+from web.routers.data_extraction import annotations, annotations_ws, relations, documents as doc_router
 
 # Роутеры из web/routers/ (новое расположение, TRANSITIONAL — скопированы из src/routers/)
 from web.routers import pdf, layout, s3, ai_models, image_proxy
@@ -99,6 +99,7 @@ app.include_router(blocks.router)
 app.include_router(links.router)
 app.include_router(auth.router)
 app.include_router(annotations.router, prefix="/api/data_extraction")
+app.include_router(annotations_ws.router, prefix="/api/data_extraction")
 app.include_router(relations.router, prefix="/api/data_extraction")
 app.include_router(doc_router.router, prefix="/api/data_extraction")
 

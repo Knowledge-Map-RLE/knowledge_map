@@ -66,6 +66,17 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
     return Array.from(fragmentMap.values()).sort((a, b) => a.start_offset - b.start_offset);
   }, [annotations, filterType, searchText]);
 
+  // O(1) lookup uid → group index для скролла к выбранной аннотации
+  const uidToGroupIndex = useMemo(() => {
+    const map = new Map<string, number>();
+    for (let i = 0; i < groupedByFragment.length; i++) {
+      for (const ann of groupedByFragment[i].annotations) {
+        map.set(ann.uid, i);
+      }
+    }
+    return map;
+  }, [groupedByFragment]);
+
   // Виртуализация списка групп
   const rowVirtualizer = useVirtualizer({
     count: groupedByFragment.length,
@@ -74,13 +85,11 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
     overscan: 5,            // Рендерим 5 строк за пределами viewport для плавного скролла
   });
 
-  // Скролл к выбранной аннотации
+  // Скролл к выбранной аннотации — O(1) вместо O(n²)
   useEffect(() => {
     if (!selectedAnnotation) return;
-    const idx = groupedByFragment.findIndex(g =>
-      g.annotations.some(a => a.uid === selectedAnnotation.uid)
-    );
-    if (idx !== -1) {
+    const idx = uidToGroupIndex.get(selectedAnnotation.uid);
+    if (idx !== undefined) {
       rowVirtualizer.scrollToIndex(idx, { align: 'nearest', behavior: 'smooth' });
     }
   }, [selectedAnnotation]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -126,9 +135,8 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
           >
             {rowVirtualizer.getVirtualItems().map((virtualItem) => {
               const group = groupedByFragment[virtualItem.index];
-              const isSelected = group.annotations.some(
-                (ann) => ann.uid === selectedAnnotation?.uid
-              );
+              const isSelected = selectedAnnotation != null &&
+                uidToGroupIndex.get(selectedAnnotation.uid) === virtualItem.index;
 
               return (
                 <div

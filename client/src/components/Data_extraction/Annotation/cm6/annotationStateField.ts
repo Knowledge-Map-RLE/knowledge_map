@@ -42,7 +42,9 @@ export const annotationField = StateField.define<AnnotationWithPos[]>({
     // При явном обновлении через setAnnotationsEffect — заменяем весь массив
     for (const effect of tr.effects) {
       if (effect.is(setAnnotationsEffect)) {
-        return [...effect.value].sort((a, b) => a.start - b.start);
+        // Сервер возвращает аннотации отсортированными по start_offset (ORDER BY в Cypher).
+        // Копируем массив без сортировки: O(n) вместо O(n log n).
+        return effect.value.slice();
       }
     }
 

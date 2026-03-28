@@ -5,7 +5,7 @@ import RelationsPanel from './RelationsPanel';
 import EditorTabsWithValidation from './EditorTabsWithValidation';
 import ErrorBoundary from '../../ErrorBoundary';
 import SaveForTestsDialog from '../SaveForTestsDialog';
-import { useAnnotations } from './hooks/useAnnotations';
+import { useAnnotationsWS } from './hooks/useAnnotationsWS';
 import { useAnnotationOffsets } from './hooks/useAnnotationOffsets';
 import { useRelations } from './hooks/useRelations';
 import {
@@ -74,12 +74,13 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   // Text State
   const [localText, setLocalText] = useState(text);
-  const [visualAnnotations, setVisualAnnotations] = useState<Annotation[]>([]);
+  // shiftedAnnotations: null = не активен (отображаем visibleAnnotations), иначе — preview сдвига
+  const [shiftedAnnotations, setShiftedAnnotations] = useState<Annotation[] | null>(null);
   const previousTextRef = useRef(text);
   // localTextRef — горячий путь при печати: не вызывает ре-рендер
   const localTextRef = useRef(text);
+  // visualAnnotationsRef — горячий путь в колбэках: всегда актуален, не вызывает ре-рендер
   const visualAnnotationsRef = useRef<Annotation[]>([]);
-  visualAnnotationsRef.current = visualAnnotations;
 
   // Undo/Redo стек для текста
   const undoStackRef = useRef<string[]>([]);
@@ -112,7 +113,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     createNewAnnotation,
     removeAnnotation,
     editAnnotation,
-  } = useAnnotations({
+  } = useAnnotationsWS({
     docId,
     selectedCategories,
     selectedSource,
@@ -148,6 +149,12 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     [annotations, hiddenTypes]
   );
 
+  // visualAnnotations: shiftedAnnotations при активном preview сдвига, иначе visibleAnnotations.
+  // Вычисляется в рендере — без useEffect, без лишнего ре-рендера при загрузке аннотаций.
+  const visualAnnotations = shiftedAnnotations ?? visibleAnnotations;
+  // Синхронизируем ref без ре-рендера — используется в горячих колбэках
+  visualAnnotationsRef.current = visualAnnotations;
+
   const handleTypeVisibilityToggle = useCallback((type: string, visible: boolean) => {
     setHiddenTypes(prev => {
       const next = new Set(prev);
@@ -180,6 +187,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     setPendingTextSelection(null);
     setSelectedTypes([]);
     resetUnsavedOffsets();
+    setShiftedAnnotations(null);
   }, [docId, resetUnsavedOffsets]);
 
   // Cleanup polling on unmount
@@ -189,11 +197,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
     };
   }, []);
-
-  // Sync visual annotations
-  useEffect(() => {
-    setVisualAnnotations(visibleAnnotations);
-  }, [visibleAnnotations]);
 
   // Restore scroll positions
   useEffect(() => {
@@ -207,7 +210,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         }
       });
     }
-  }, [visualAnnotations]);
+  }, [visibleAnnotations]);
 
   // Text change handler
   // Намеренно НЕ вызываем setLocalText — только обновляем ref.
@@ -239,14 +242,14 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       onTextChange(newText);
     }
 
-    if (oldText !== newText && visualAnnotations.length > 0) {
-      const updatedVisualAnnotations = calculateVisualOffsets(oldText, newText, visualAnnotations);
-      setVisualAnnotations(updatedVisualAnnotations);
+    if (oldText !== newText && visualAnnotationsRef.current.length > 0) {
+      const updatedVisualAnnotations = calculateVisualOffsets(oldText, newText, visualAnnotationsRef.current);
+      setShiftedAnnotations(updatedVisualAnnotations);
       setHasUnsavedOffsets(true);
     }
 
     previousTextRef.current = newText;
-  }, [visualAnnotations, calculateVisualOffsets, setHasUnsavedOffsets, onTextChange]);
+  }, [calculateVisualOffsets, setHasUnsavedOffsets, onTextChange]);
 
   const handleUndo = useCallback(() => {
     if (undoStackRef.current.length === 0) return;
@@ -259,7 +262,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     setUndoRedoVersion(v => v + 1);
     if (visualAnnotationsRef.current.length > 0) {
       const updated = calculateVisualOffsets(current, prev, visualAnnotationsRef.current);
-      setVisualAnnotations(updated);
+      setShiftedAnnotations(updated);
       setHasUnsavedOffsets(true);
     }
     if (onTextChange) onTextChange(prev);
@@ -276,7 +279,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     setUndoRedoVersion(v => v + 1);
     if (visualAnnotationsRef.current.length > 0) {
       const updated = calculateVisualOffsets(current, next, visualAnnotationsRef.current);
-      setVisualAnnotations(updated);
+      setShiftedAnnotations(updated);
       setHasUnsavedOffsets(true);
     }
     if (onTextChange) onTextChange(next);
@@ -736,8 +739,9 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     if (cursorPosition === null) return;
     const delta = direction === 'right' ? 1 : -1;
 
-    setVisualAnnotations(prev => {
-      const shifted = prev.map(ann =>
+    setShiftedAnnotations(prev => {
+      const base = prev ?? visibleAnnotations;
+      const shifted = base.map(ann =>
         ann.start_offset >= cursorPosition
           ? { ...ann, start_offset: Math.max(0, ann.start_offset + delta), end_offset: Math.max(1, ann.end_offset + delta) }
           : ann
@@ -764,8 +768,10 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
           console.error('Ошибка при сохранении сдвига аннотаций:', error);
         }
       }
+      // Сбрасываем preview — теперь отображаем свежие данные из loadAnnotations
+      setShiftedAnnotations(null);
     }, 1500);
-  }, [cursorPosition, loadAnnotations]);
+  }, [cursorPosition, loadAnnotations, visibleAnnotations]);
 
   // Filter handlers
   const handleResetFilters = useCallback(() => {

@@ -228,21 +228,39 @@ class AnnotationRepository:
 
     def batch_update_offsets(self, updates: List[dict]) -> Tuple[int, List[str]]:
         """
-        Массово обновляет start_offset / end_offset.
+        Массово обновляет start_offset / end_offset одним UNWIND-запросом к Neo4j.
         updates: [{"annotation_id": str, "start_offset": int, "end_offset": int}, ...]
         """
-        updated = 0
-        errors = []
-        for upd in updates:
-            ann_id = upd.get("annotation_id", "")
-            try:
-                orm_ann = OrmAnnotation.nodes.get(uid=ann_id)
-                orm_ann.start_offset = upd["start_offset"]
-                orm_ann.end_offset = upd["end_offset"]
-                orm_ann.save()
-                updated += 1
-            except DoesNotExist:
-                errors.append(f"Аннотация {ann_id} не найдена")
-            except Exception as e:
-                errors.append(f"Ошибка обновления {ann_id}: {e}")
-        return updated, errors
+        if not updates:
+            return 0, []
+
+        params = [
+            {
+                "annotation_id": upd.get("annotation_id", ""),
+                "start_offset": upd["start_offset"],
+                "end_offset": upd["end_offset"],
+            }
+            for upd in updates
+        ]
+
+        try:
+            result, _ = db.cypher_query(
+                """
+                UNWIND $updates AS u
+                MATCH (ann:MarkdownAnnotation {uid: u.annotation_id})
+                SET ann.start_offset = u.start_offset, ann.end_offset = u.end_offset
+                RETURN count(ann) AS updated
+                """,
+                {"updates": params},
+            )
+            updated = result[0][0] if result else 0
+            errors = []
+            # Если часть аннотаций не найдена — сообщаем об этом
+            if updated < len(updates):
+                errors.append(
+                    f"Обновлено {updated} из {len(updates)}: часть аннотаций не найдена"
+                )
+            return updated, errors
+        except Exception as e:
+            logger.error(f"batch_update_offsets error: {e}")
+            return 0, [f"Ошибка массового обновления: {e}"]
