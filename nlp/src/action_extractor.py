@@ -51,6 +51,20 @@ _ARTIFACT_PATTERNS = re.compile(
     re.IGNORECASE,
 )
 
+# Action phrases that are meta-commentary or evolutionary metaphors, not biomedical mechanisms
+_META_PHRASE_PATTERNS = re.compile(
+    r'\bDarwinian[- ]type\b|'
+    r'\bapples and oranges\b|'
+    r'\bno selective advantage\b|'
+    r'\bSee text\b|'
+    r'^undergo\b|'           # "undergo selection" — passive metaphor, not mechanism
+    r'\ba (?:new|novel|better|deeper|greater|more\s+\w+) \w+\b|'  # "a new era", "a better approach"
+    r'\bthe (?:urgent|critical|key|main|primary|central) \w+\b|'  # "the urgent need", "the key challenge"
+    r'\b(?:rich and complex|growing body of|body of knowledge)\b|'  # meta-narrative phrases
+    r'\b(?:PD research|cancer research|aging research)\b',          # research domain, not mechanism
+    re.IGNORECASE,
+)
+
 # Minimum meaningful object length (chars, excluding spaces)
 _MIN_OBJECT_CHARS = 4
 
@@ -94,6 +108,31 @@ STOP_VERBS = {
     'connect',     # "connect the scales" — often subordinate clause head
     'create',      # "creating an interesting challenge" — meta-commentary
     'form',        # "aggregates to form Lewy bodies" — resultative complement, not action
+    # Meta-commentary: writing/thinking about science, never biological mechanisms
+    'model',       # "modeled environmental causes" — computational/conceptual
+    'adopt',       # "adopt this cell-based view" — meta
+    'develop',     # "develop PD research" — organizational meta
+    'investigate', # "investigating the enzyme" — research meta
+    'monitor',     # "monitor the local environment" — surveillance, not mechanism
+    'understand',  # "understand the key factors" — cognitive meta
+    'hasten',      # "hasten the emergence" — vague temporal metaphor
+    'coordinate',  # "coordinate interdisciplinary research" — organizational
+    'lead',        # "led Braak and others" — narrative subject
+    'bring',       # "bring PD research" — meta-narrative
+    'pave',        # "pave the way" — metaphor, never mechanism
+    'highlight',   # "highlight the importance" — meta
+    'emphasize',   # "emphasize the role" — meta
+    'demonstrate', # "demonstrate the mechanism" — meta (showing, not doing)
+    'reveal',      # "reveal the pathway" — meta
+    'support',     # "support the hypothesis" — meta
+    'challenge',   # "challenge the dogma" — meta
+    'encourage',   # "encourage our peers" — social/meta
+    'oppose',      # "opposing a low number" — organizational
+    'exert',       # "exert feedback control" — vague, never molecular
+    'play',        # "play a supportive role" — vague placeholder
+    'gain',        # "gain access to the brain" — vague spatial
+    'exhibit',     # "exhibit hallmarks" — descriptive
+    'reflect',     # "reflect the importance" — meta
 }
 
 # Compiled marker patterns: (compiled_pattern, score, pattern_str)
@@ -152,6 +191,7 @@ class ExtractedAction:
     char_end: int
     modifiers: List[str] = field(default_factory=list)
     action_score: float = 0.0
+    subject_text: str = ""
 
 
 @dataclass
@@ -175,6 +215,22 @@ def _get_object_np(token) -> str:
     # Primary: direct object
     for child in token.children:
         if child.dep_ in ('obj', 'dobj', 'nsubj:pass'):
+            # Find the cut point: first relcl/acl/appos child of the head noun
+            # to avoid capturing relative clauses ("mTOR, which extends...")
+            cut_i = None
+            for grandchild in child.children:
+                if grandchild.dep_ in ('relcl', 'acl', 'acl:relcl', 'appos'):
+                    cut_i = grandchild.left_edge.i
+                    break
+            if cut_i is not None:
+                # Return only tokens before the relative clause
+                span_tokens = [t for t in child.subtree if t.i < cut_i]
+                # Strip trailing punctuation/comma
+                while span_tokens and span_tokens[-1].is_punct:
+                    span_tokens.pop()
+                if span_tokens:
+                    return child.doc[span_tokens[0].i: span_tokens[-1].i + 1].text
+                return child.text
             subtree = list(child.subtree)
             if len(subtree) > 12:
                 # Return just the head + immediate determiners/adjectives
@@ -189,6 +245,32 @@ def _get_object_np(token) -> str:
             if len(subtree) > 8:
                 return child.text
             return child.doc[subtree[0].i: subtree[-1].i + 1].text
+
+    return ''
+
+
+def _get_subject_np(token) -> str:
+    """Return the subject NP text for a verb token, or empty string.
+
+    Looks for nsubj (active) and nsubjpass/nsubj:pass (passive) dependencies.
+    Falls back to the subject of a parent verb if the token is a subordinate clause head.
+    Subtree capped at 8 tokens.
+    """
+    # Direct subject
+    for child in token.children:
+        if child.dep_ in ('nsubj', 'nsubj:pass', 'nsubjpass'):
+            subtree = list(child.subtree)
+            if len(subtree) > 8:
+                det = next((c.text for c in child.children if c.dep_ in ('det', 'amod')), '')
+                return f"{det} {child.text}".strip() if det else child.text
+            return child.doc[subtree[0].i: subtree[-1].i + 1].text
+
+    # Fallback: inherit subject from parent verb (for subordinate clause heads)
+    head = token.head
+    if head != token and head.pos_ in ('VERB', 'AUX'):
+        for child in head.children:
+            if child.dep_ in ('nsubj', 'nsubj:pass', 'nsubjpass'):
+                return child.text
 
     return ''
 
@@ -292,6 +374,7 @@ class ActionExtractor:
                     if child.dep_ in ('amod', 'advmod', 'neg')
                 ]
 
+                subject_text = _get_subject_np(token)
                 full_phrase = f"{token.text} {obj_text}".strip()
 
                 # Filter: object too short to be meaningful
@@ -318,6 +401,10 @@ class ActionExtractor:
                 if _ARTIFACT_PATTERNS.search(full_phrase):
                     continue
 
+                # Filter meta-phrases: evolutionary metaphors, editorial commentary
+                if _META_PHRASE_PATTERNS.search(full_phrase):
+                    continue
+
                 actions.append(ExtractedAction(
                     action_id=f"A{len(actions)}",
                     verb_lemma=token.lemma_,
@@ -330,6 +417,7 @@ class ActionExtractor:
                     char_end=token.idx + len(token.text),
                     modifiers=modifiers,
                     action_score=score,
+                    subject_text=subject_text,
                 ))
 
         deps = self._extract_dependencies(actions, text, doc, link_threshold)
@@ -494,8 +582,260 @@ class ActionExtractor:
                     sentence_distance=0,
                 ))
 
+        # ── Pass 4: SHARED_ENTITY — object of A matches subject of B ────────
+        # "Rapamycin inhibits mTOR" + "mTOR extends lifespan" → inhibits→extends
+        # Filters:
+        #   1. Subject must not be a pronoun (I/we/it/that/this/which/they)
+        #   2. Shared entity must be short (≤4 tokens) — long NPs are too vague
+        #   3. Shared entity must not contain prepositions (of/with/in/by/from/to)
+        #      which indicate complex phrases rather than concrete entities
+        #   4. Shared entity must not be an abstract concept word
+        existing_leads_to_pairs = {(d.source_id, d.target_id) for d in leads_to_best.values()}
+
+        _DET_RE = re.compile(r'^\s*(?:the|a|an|this|that|these|those)\s+', re.IGNORECASE)
+        _PRONOUN_SUBJECTS = {'i', 'we', 'it', 'that', 'this', 'which', 'they', 'he', 'she', 'who'}
+        _ENTITY_PREP = re.compile(r'\b(?:of|with|in|by|from|to|for|between|among|through)\b', re.IGNORECASE)
+        _ABSTRACT_WORDS = {
+            'hallmark', 'hallmarks', 'principle', 'principles', 'outcome', 'outcomes',
+            'advantage', 'disadvantage', 'concept', 'notion', 'idea', 'theory',
+            'approach', 'aspect', 'feature', 'property', 'characteristic',
+            'selection', 'process', 'mechanism', 'function', 'role', 'type',
+            'example', 'evidence', 'result', 'finding', 'observation',
+            # Too generic to be meaningful shared entities
+            'aging', 'cancer', 'life', 'text', 'people', 'cells', 'disease',
+            'growth', 'death', 'time', 'level', 'rate', 'way', 'form', 'state',
+            'information', 'brain', 'body', 'system', 'systems', 'model',
+            'models', 'data', 'context', 'scale', 'area', 'region', 'network',
+        }
+
+        def _normalize(text: str) -> str:
+            return _DET_RE.sub('', text).strip().lower()
+
+        def _is_good_entity(text: str) -> bool:
+            """Return True if the shared entity is a concrete biomedical entity."""
+            norm = _normalize(text)
+            # Too short
+            if len(norm) < 3:
+                return False
+            tokens = norm.split()
+            # Too long (vague complex NP)
+            if len(tokens) > 4:
+                return False
+            # Contains prepositions (complex NP)
+            if _ENTITY_PREP.search(norm):
+                return False
+            # Abstract concept words
+            if any(t in _ABSTRACT_WORDS for t in tokens):
+                return False
+            return True
+
+        already_shared: set[tuple[str, str]] = set()
+        # Dedup by phrase pair to avoid duplicate edges when same text has multiple uids
+        already_shared_phrases: set[tuple[str, str]] = set()
+        for i, src_action in enumerate(actions):
+            if not src_action.object_text:
+                continue
+            if not _is_good_entity(src_action.object_text):
+                continue
+            src_obj_norm = _normalize(src_action.object_text)
+            for j, tgt_action in enumerate(actions):
+                if i == j:
+                    continue
+                # No self-loops by phrase
+                if src_action.full_phrase.lower() == tgt_action.full_phrase.lower():
+                    continue
+                if not tgt_action.subject_text:
+                    continue
+                # Filter pronoun subjects
+                tgt_subj_norm = _normalize(tgt_action.subject_text)
+                if tgt_subj_norm in _PRONOUN_SUBJECTS:
+                    continue
+                # Match: object of src == subject of tgt (exact or containment)
+                if src_obj_norm != tgt_subj_norm and src_obj_norm not in tgt_subj_norm and tgt_subj_norm not in src_obj_norm:
+                    continue
+                pair = (src_action.action_id, tgt_action.action_id)
+                phrase_pair = (src_action.full_phrase.lower(), tgt_action.full_phrase.lower())
+                if pair in existing_leads_to_pairs or pair in already_shared:
+                    continue
+                if phrase_pair in already_shared_phrases:
+                    continue
+                already_shared.add(pair)
+                already_shared_phrases.add(phrase_pair)
+                deps.append(ExtractedDependency(
+                    source_id=src_action.action_id,
+                    target_id=tgt_action.action_id,
+                    marker_text=f"[shared:{src_action.object_text}]",
+                    link_score=0.75,
+                    relation_subtype='enables',
+                    evidence_type='shared_entity',
+                    sentence_distance=abs(src_action.sentence_idx - tgt_action.sentence_idx),
+                ))
+
+        # ── Pass 5: KEYWORD_OVERLAP — shared keywords between obj of A and subj of B ──
+        # Catches cases where exact match fails but entities are semantically related:
+        # obj="normal mTOR signaling" + subj="mTOR" → match via keyword "mTOR"
+        # obj="organ damage and functional decline" + subj="Hyperfunction" → no match (different)
+        # Only content words (len>3, not stopwords) are used for matching.
+        _STOP_WORDS = {
+            'this', 'that', 'these', 'those', 'with', 'from', 'also', 'such',
+            'both', 'each', 'more', 'most', 'some', 'same', 'only', 'very',
+            'been', 'have', 'were', 'their', 'them', 'they', 'will', 'would',
+            'could', 'should', 'other', 'than', 'then', 'when', 'where',
+            'normal', 'initial', 'direct', 'common', 'high', 'low', 'new',
+            # Too generic biomedical terms — match everything
+            'signaling', 'pathways', 'pathway', 'signals', 'activity',
+            'expression', 'levels', 'response', 'effects', 'impact',
+            'its', 'and', 'the', 'for', 'not', 'but', 'are', 'was',
+        } | _ABSTRACT_WORDS
+
+        def _content_words(text: str) -> set:
+            """Extract meaningful content words from text (min 4 chars)."""
+            words = re.findall(r'\b[a-zA-Z][a-zA-Z0-9\-]{3,}\b', text.lower())
+            return {w for w in words if w not in _STOP_WORDS}
+
+        already_keyword: set[tuple[str, str]] = set()
+        all_shared_pairs = already_shared_phrases.copy()
+
+        for i, src_action in enumerate(actions):
+            if not src_action.object_text:
+                continue
+            src_obj_words = _content_words(src_action.object_text)
+            if not src_obj_words:
+                continue
+            for j, tgt_action in enumerate(actions):
+                if i == j:
+                    continue
+                if src_action.full_phrase.lower() == tgt_action.full_phrase.lower():
+                    continue
+                if not tgt_action.subject_text:
+                    continue
+                tgt_subj_norm = _normalize(tgt_action.subject_text)
+                if tgt_subj_norm in _PRONOUN_SUBJECTS:
+                    continue
+                tgt_subj_words = _content_words(tgt_action.subject_text)
+                if not tgt_subj_words:
+                    continue
+                # Require at least one shared content word
+                shared_words = src_obj_words & tgt_subj_words
+                if not shared_words:
+                    continue
+                pair = (src_action.action_id, tgt_action.action_id)
+                phrase_pair = (src_action.full_phrase.lower(), tgt_action.full_phrase.lower())
+                if pair in existing_leads_to_pairs or pair in already_shared or pair in already_keyword:
+                    continue
+                if phrase_pair in all_shared_pairs:
+                    continue
+                already_keyword.add(pair)
+                all_shared_pairs.add(phrase_pair)
+                deps.append(ExtractedDependency(
+                    source_id=src_action.action_id,
+                    target_id=tgt_action.action_id,
+                    marker_text=f"[keyword:{','.join(sorted(shared_words))}]",
+                    link_score=0.65,  # Lower confidence than exact shared_entity
+                    relation_subtype='enables',
+                    evidence_type='keyword_overlap',
+                    sentence_distance=abs(src_action.sentence_idx - tgt_action.sentence_idx),
+                ))
+
+        # ── Pass 6: SHARED_SUBJECT — same subject does A then B ─────────────
+        # "Rapamycin inhibits mTOR" + "Rapamycin prevents cancer" → same agent
+        # Only for concrete named subjects (not pronouns, not vague nouns).
+        # Uses keyword overlap on subject text, same filters as Pass 5.
+        # Lower confidence (0.55) since same-subject doesn't imply causation.
+        already_subject: set[tuple[str, str]] = set()
+
+        for i, src_action in enumerate(actions):
+            if not src_action.subject_text:
+                continue
+            src_subj_norm = _normalize(src_action.subject_text)
+            if src_subj_norm in _PRONOUN_SUBJECTS:
+                continue
+            # Require concrete subject — must pass _is_good_entity filter
+            if not _is_good_entity(src_action.subject_text):
+                continue
+            src_subj_words = _content_words(src_action.subject_text)
+            if not src_subj_words:
+                continue
+            for j, tgt_action in enumerate(actions):
+                if i >= j:  # only forward pairs to avoid bidirectional duplicates
+                    continue
+                if src_action.full_phrase.lower() == tgt_action.full_phrase.lower():
+                    continue
+                if not tgt_action.subject_text:
+                    continue
+                tgt_subj_norm = _normalize(tgt_action.subject_text)
+                if tgt_subj_norm in _PRONOUN_SUBJECTS:
+                    continue
+                if not _is_good_entity(tgt_action.subject_text):
+                    continue
+                tgt_subj_words = _content_words(tgt_action.subject_text)
+                shared_subj_words = src_subj_words & tgt_subj_words
+                if not shared_subj_words:
+                    continue
+                pair = (src_action.action_id, tgt_action.action_id)
+                phrase_pair = (src_action.full_phrase.lower(), tgt_action.full_phrase.lower())
+                if pair in existing_leads_to_pairs or pair in already_shared or pair in already_keyword or pair in already_subject:
+                    continue
+                if phrase_pair in all_shared_pairs:
+                    continue
+                already_subject.add(pair)
+                all_shared_pairs.add(phrase_pair)
+                deps.append(ExtractedDependency(
+                    source_id=src_action.action_id,
+                    target_id=tgt_action.action_id,
+                    marker_text=f"[subject:{','.join(sorted(shared_subj_words))}]",
+                    link_score=0.55,
+                    relation_subtype='enables',
+                    evidence_type='shared_subject',
+                    sentence_distance=abs(src_action.sentence_idx - tgt_action.sentence_idx),
+                ))
+
+        # ── Pass 7: OBJ→OBJ keyword overlap — объект A содержит те же ключевые слова что и объект B ──
+        # Покрывает случаи когда оба действия не имеют субъекта (gerund, passive)
+        # но оба упоминают одну и ту же биологическую сущность в объекте.
+        # Направление: action ближе к началу → action позже в тексте (по char_start).
+        # Confidence 0.58 (ниже keyword_overlap 0.65 — слабее семантически).
+        already_obj_obj: set[tuple[str, str]] = set()
+
+        for i, src_action in enumerate(actions):
+            if not src_action.object_text:
+                continue
+            src_obj_words = _content_words(src_action.object_text)
+            if not src_obj_words:
+                continue
+            for j, tgt_action in enumerate(actions):
+                if j <= i:  # только вперёд
+                    continue
+                if src_action.full_phrase.lower() == tgt_action.full_phrase.lower():
+                    continue
+                if not tgt_action.object_text:
+                    continue
+                tgt_obj_words = _content_words(tgt_action.object_text)
+                if not tgt_obj_words:
+                    continue
+                shared_words = src_obj_words & tgt_obj_words
+                if not shared_words:
+                    continue
+                pair = (src_action.action_id, tgt_action.action_id)
+                phrase_pair = (src_action.full_phrase.lower(), tgt_action.full_phrase.lower())
+                if pair in existing_leads_to_pairs or pair in already_shared or pair in already_keyword or pair in already_subject or pair in already_obj_obj:
+                    continue
+                if phrase_pair in all_shared_pairs:
+                    continue
+                already_obj_obj.add(pair)
+                all_shared_pairs.add(phrase_pair)
+                deps.append(ExtractedDependency(
+                    source_id=src_action.action_id,
+                    target_id=tgt_action.action_id,
+                    marker_text=f"[obj_obj:{','.join(sorted(shared_words))}]",
+                    link_score=0.58,
+                    relation_subtype='enables',
+                    evidence_type='obj_obj_overlap',
+                    sentence_distance=abs(src_action.sentence_idx - tgt_action.sentence_idx),
+                ))
+
         logger.info(
-            "[action_extractor] leads_to=%d syntactic=%d",
-            len(leads_to_best), len(already_syntactic),
+            "[action_extractor] leads_to=%d syntactic=%d shared_entity=%d keyword=%d shared_subject=%d obj_obj=%d",
+            len(leads_to_best), len(already_syntactic), len(already_shared), len(already_keyword), len(already_subject), len(already_obj_obj),
         )
         return deps

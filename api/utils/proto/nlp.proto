@@ -316,6 +316,7 @@ message ActionProto {
     int32 char_end = 9;
     repeated string modifiers = 10;
     float action_score = 11;
+    string subject_text = 12;
 }
 
 message DependencyProto {

@@ -28,23 +28,25 @@ class ActionRepository:
 
         query = """
         UNWIND $rows AS row
-        MERGE (a:Action {uid: row.uid})
+        MERGE (a:Action {doc_id: row.doc_id, full_phrase: row.full_phrase})
         ON CREATE SET
+            a.uid             = row.uid,
             a.verb            = row.verb,
             a.verb_text       = row.verb_text,
-            a.full_phrase     = row.full_phrase,
             a.subject         = row.subject,
             a.object          = row.object,
             a.sentence_text   = row.sentence_text,
             a.char_start      = row.char_start,
             a.char_end        = row.char_end,
-            a.doc_id          = row.doc_id,
             a.annotation_uid  = row.annotation_uid,
             a.action_class    = row.action_class
+        RETURN row.uid AS requested_uid, a.uid AS actual_uid
         """
-        db.cypher_query(query, {"rows": actions})
-        logger.debug("Saved %d actions for doc %s", len(actions), doc_id)
-        return len(actions)
+        results, _ = db.cypher_query(query, {"rows": actions})
+        # Return mapping: requested_uid -> actual_uid (for dedup remapping in use case)
+        uid_remap = {r[0]: r[1] for r in results}
+        logger.debug("Saved %d actions for doc %s (%d deduplicated)", len(actions), doc_id, len(actions) - len(set(uid_remap.values())))
+        return uid_remap
 
     def save_leads_to(
         self,

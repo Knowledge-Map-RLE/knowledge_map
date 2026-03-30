@@ -169,7 +169,7 @@ async def extract_document_actions(
             'verb': a["verb_lemma"],
             'verb_text': a["verb_text"],
             'full_phrase': a["full_phrase"],
-            'subject': None,
+            'subject': a.get("subject_text") or None,
             'object': a["object_text"] or None,
             'sentence_text': a["sentence_text"],
             'char_start': char_start,
@@ -199,7 +199,7 @@ async def extract_document_actions(
                 'doc_id': doc_id,
             })
         else:
-            # Marker-based → LEADS_TO with proper subtype
+            # Marker-based and shared_entity → LEADS_TO with proper subtype
             all_action_edges.append({
                 'src_uid': src_uid,
                 'tgt_uid': tgt_uid,
@@ -215,8 +215,18 @@ async def extract_document_actions(
         len(all_action_rows), len(all_action_edges), len(all_syntactic_edges)
     )
 
-    # 5. Сохраняем узлы
-    actions_count = action_repo.save_actions(all_action_rows, doc_id)
+    # 5. Сохраняем узлы, получаем uid_remap для дедупликации
+    uid_remap = action_repo.save_actions(all_action_rows, doc_id)
+    actions_count = len(set(uid_remap.values())) if isinstance(uid_remap, dict) else uid_remap
+
+    # Remap edge uids to actual (deduplicated) uids
+    if isinstance(uid_remap, dict):
+        for edge in all_action_edges:
+            edge['src_uid'] = uid_remap.get(edge['src_uid'], edge['src_uid'])
+            edge['tgt_uid'] = uid_remap.get(edge['tgt_uid'], edge['tgt_uid'])
+        for edge in all_syntactic_edges:
+            edge['src_uid'] = uid_remap.get(edge['src_uid'], edge['src_uid'])
+            edge['tgt_uid'] = uid_remap.get(edge['tgt_uid'], edge['tgt_uid'])
 
     # 6. Фильтруем LEADS_TO рёбра по DAG-правилу
     in_memory_neighbors: dict[str, List[str]] = {}

@@ -331,6 +331,7 @@ class NLPGRPCClient:
             "char_end": action.char_end,
             "modifiers": list(action.modifiers),
             "action_score": action.action_score,
+            "subject_text": action.subject_text,
         }
 
     def _proto_dep_to_dict(self, dep) -> Dict[str, Any]:

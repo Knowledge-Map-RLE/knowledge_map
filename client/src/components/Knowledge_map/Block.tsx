@@ -1,4 +1,4 @@
-import { Graphics, Container, Point } from 'pixi.js';
+import { Graphics, Container, Point, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { AddBlockArrow } from './AddBlockArrow';
@@ -8,7 +8,7 @@ import { EditMode } from './types';
 import { gsap } from 'gsap';
 
 // Для соответствия остальным компонентам регистрируем только Graphics
-extend({ Graphics });
+extend({ Graphics, Text });
 
 const BLOCK_PADDING = 4;
 
@@ -76,13 +76,6 @@ export const Block = memo(function Block({
     g.stroke({ width: borderWidth, color: borderColor });
   }, [isSelected, is_pinned]);
 
-  const drawText = (g: Graphics) => {
-    g.clear();
-    g.beginFill(0xffffff);
-    g.drawRoundedRect(-60, 40, 120, 30, 8);
-    g.endFill();
-  };
-
   return (
          <container 
        ref={containerRef}
@@ -119,7 +112,21 @@ export const Block = memo(function Block({
      >
                <pixiGraphics draw={draw} />
       {/* @ts-ignore PixiText props typing */}
-      <pixiText text={title} />
+      <pixiText
+        text={title}
+        x={0}
+        y={0}
+        // @ts-ignore anchor type
+        anchor={0.5}
+        style={{
+          fontSize: 13,
+          fill: 0x1f2937,
+          align: 'center',
+          wordWrap: true,
+          wordWrapWidth: BLOCK_WIDTH - BLOCK_PADDING * 4,
+          fontFamily: 'Arial',
+        }}
+      />
         
      </container>
   );

@@ -658,6 +658,7 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                     char_end=a.char_end,
                     modifiers=a.modifiers,
                     action_score=a.action_score,
+                    subject_text=a.subject_text,
                 )
                 for a in actions
             ]
