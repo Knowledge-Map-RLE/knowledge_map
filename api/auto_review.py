@@ -311,7 +311,7 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
     return False, f"no clear positive signal: {src_verb}({'bio' if src_bio else 'meta'}), {tgt_verb}({'bio' if tgt_bio else 'meta'})"
 
 
-def run(doc_id: str, dry_run: bool = False):
+def run(doc_id: str, dry_run: bool = False) -> dict:
     results, _ = db.cypher_query('''
         MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO {status: "pending"}]->(t:Action)
         RETURN s.uid, t.uid, s.full_phrase, t.full_phrase,
@@ -364,6 +364,8 @@ def run(doc_id: str, dry_run: bool = False):
     print("\n=== REJECTED ===")
     for _, _, rel, src, tgt, reason in rejected:
         print(f"  [{rel}] {src} --> {tgt}  ({reason})")
+
+    return {"confirmed": len(confirmed), "rejected": len(rejected)}
 
 
 if __name__ == '__main__':

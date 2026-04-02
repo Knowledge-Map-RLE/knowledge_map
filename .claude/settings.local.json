@@ -99,7 +99,14 @@
       "Bash(\"d:/Knowledge_Map/api/web/routers/data_extraction/documents.py\")",
       "Bash(2)",
       "Bash(find /d/Knowledge_Map -type f \\\\\\(-name *fine*tun* -o -name *training* -o -name *LoRA* -o -name *active*learn* -o -name *Qwen* \\\\\\))",
-      "Bash(find /d/Knowledge_Map -type f \\\\\\(-name *.tsx -o -name *.ts -o -name *.jsx -o -name *.js \\\\\\))"
+      "Bash(find /d/Knowledge_Map -type f \\\\\\(-name *.tsx -o -name *.ts -o -name *.jsx -o -name *.js \\\\\\))",
+      "WebFetch(domain:openai.com)",
+      "WebFetch(domain:ai.google.dev)",
+      "WebFetch(domain:mistral.ai)",
+      "WebFetch(domain:docs.mistral.ai)",
+      "WebFetch(domain:platform.openai.com)",
+      "WebFetch(domain:pricepertoken.com)",
+      "WebFetch(domain:groq.com)"
     ],
     "deny": [],
     "ask": []

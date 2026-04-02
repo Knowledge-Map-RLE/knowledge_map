@@ -6,6 +6,7 @@ import {
     type PubMedSearchResult
 } from '../../services/api';
 import DocumentContextMenu from './DocumentContextMenu';
+import WorkerStatusIndicator from './WorkerStatusIndicator';
 
 interface PDFDocument {
     uid: string;
@@ -122,7 +123,11 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
     };
 
     useImperativeHandle(ref, () => ({ reloadDocuments: () => loadDocuments().then(() => {}) }));
-    useEffect(() => { loadDocuments(); }, []);
+    useEffect(() => {
+        loadDocuments();
+        const id = setInterval(() => { loadDocuments(); }, 15000);
+        return () => clearInterval(id);
+    }, []);
 
     // Надёжная проверка "уже загружено" по pubmed_id/pmc_id из Neo4j
     const isAlreadyLoaded = (r: PubMedSearchResult): boolean => {
@@ -260,7 +265,8 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
             return (doc.title || '').toLowerCase().includes(q)
                 || (doc.original_filename || '').toLowerCase().includes(q);
         })
-        : documents;
+        : documents.slice(0, 100);
+    const hasMoreDocuments = localQuery.length < 3 && documents.length > 100;
 
     // --- PDF upload ---
     const handleFileUpload = async (file: File) => {
@@ -483,6 +489,11 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                         );
                     })}
                 </div>
+                {hasMoreDocuments && (
+                    <p className={s.docListHint}>
+                        Показано 100 из {documents.length}. Введите запрос для поиска.
+                    </p>
+                )}
             </div>
 
             {/* Нижний блок: поиск PubMed + PMC */}
@@ -531,6 +542,9 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                     </div>
                 </div>
             </div>
+
+            {/* Блок статуса воркера пакетной загрузки */}
+            <WorkerStatusIndicator />
 
             {contextMenu && (
                 <DocumentContextMenu

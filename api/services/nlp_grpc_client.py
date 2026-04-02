@@ -5,6 +5,7 @@ gRPC клиент для взаимодействия с NLP сервисом
 import asyncio
 import logging
 import sys
+import threading
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 
@@ -17,6 +18,12 @@ from utils.generated import nlp_pb2, nlp_pb2_grpc
 logger = logging.getLogger(__name__)
 
 logger.info("[grpc_client] Модуль nlp_grpc_client импортирован")
+
+# Глобальный семафор: не более 4 одновременных gRPC вызовов к NLP серверу.
+# Используем threading.Semaphore (не asyncio.Semaphore), потому что фоновые
+# аннотации запускаются в отдельных event loop-ах и не могут использовать
+# asyncio-примитивы из основного loop-а.
+_NLP_GRPC_SEMAPHORE = threading.Semaphore(3)
 
 
 class NLPGRPCClient:
@@ -48,11 +55,21 @@ class NLPGRPCClient:
     async def connect(self):
         """Подключение к gRPC серверу"""
         try:
+            current_loop = asyncio.get_event_loop()
+            if self._connected and getattr(self, '_loop', None) is not current_loop:
+                # Channel was created in a different event loop — must recreate
+                logger.info("[grpc_client] Event loop changed, recreating gRPC channel")
+                try:
+                    await self.channel.close()
+                except Exception:
+                    pass
+                self._connected = False
             if not self._connected:
                 logger.info(f"[grpc_client] Пытаемся подключиться к {self.host}:{self.port}")
                 self.channel = aio.insecure_channel(f"{self.host}:{self.port}")
                 self.stub = nlp_pb2_grpc.NLPServiceStub(self.channel)
                 self._connected = True
+                self._loop = current_loop
                 logger.info(f"[grpc_client] Подключен к {self.host}:{self.port}")
         except Exception as e:
             logger.error(f"[grpc_client] Ошибка подключения к {self.host}:{self.port}: {e}")
@@ -73,42 +90,44 @@ class NLPGRPCClient:
         timeout: int = 60
     ) -> Dict[str, Any]:
         """
-        Обработка текста с аннотациями и отношениями
+        Обработка текста с аннотациями и отношениями.
 
-        Args:
-            text: Текст для обработки
-            processor_names: Список имён процессоров (если пусто - все)
-            merge_results: Объединить результаты разных процессоров
-            timeout: Таймаут в секундах
-
-        Returns:
-            Результат обработки
+        Uses a sync gRPC channel in a thread pool to avoid asyncio event-loop
+        conflicts caused by background annotation tasks running in new event loops.
         """
-        try:
-            await self.connect()
+        import grpc as _sync_grpc
 
+        def _call_sync():
+            channel = _sync_grpc.insecure_channel(f"{self.host}:{self.port}")
+            try:
+                stub = nlp_pb2_grpc.NLPServiceStub(channel)
+                request = nlp_pb2.ProcessTextRequest(
+                    text=text,
+                    processor_names=processor_names or [],
+                    merge_results=merge_results
+                )
+                response = stub.ProcessText(request, timeout=timeout)
+                return response
+            finally:
+                channel.close()
+
+        try:
             logger.info(f"[grpc_client] Отправляем запрос ProcessText: длина текста={len(text)}")
 
-            # Создаем запрос
-            request = nlp_pb2.ProcessTextRequest(
-                text=text,
-                processor_names=processor_names or [],
-                merge_results=merge_results
-            )
+            def _throttled_call():
+                with _NLP_GRPC_SEMAPHORE:
+                    return _call_sync()
 
-            # Вызываем метод
-            response = await self.stub.ProcessText(request, timeout=timeout)
-
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(None, _throttled_call)
             logger.info(f"[grpc_client] Получен ответ ProcessText: success={response.success}")
 
-            # Конвертируем proto в dict
             result = {
                 "success": response.success,
                 "results": [self._proto_result_to_dict(r) for r in response.results],
                 "merged_result": self._proto_result_to_dict(response.merged_result) if response.HasField("merged_result") else None,
                 "message": response.message
             }
-
             return result
 
         except grpc.RpcError as e:
@@ -128,50 +147,43 @@ class NLPGRPCClient:
         merge_results: bool = False,
         timeout: int = 60
     ) -> Dict[str, Any]:
-        """
-        Обработка выделенного фрагмента текста
+        """Обработка выделенного фрагмента текста через синхронный gRPC в executor."""
+        import grpc as _sync_grpc
 
-        Args:
-            text: Полный текст
-            selection: Выделенный текст
-            start_offset: Начальное смещение
-            end_offset: Конечное смещение
-            processor_names: Список имён процессоров
-            merge_results: Объединить результаты
-            timeout: Таймаут в секундах
+        def _call_sync():
+            channel = _sync_grpc.insecure_channel(f"{self.host}:{self.port}")
+            try:
+                stub = nlp_pb2_grpc.NLPServiceStub(channel)
+                request = nlp_pb2.ProcessSelectionRequest(
+                    text=text,
+                    selection=selection,
+                    start_offset=start_offset,
+                    end_offset=end_offset,
+                    processor_names=processor_names or [],
+                    merge_results=merge_results
+                )
+                response = stub.ProcessSelection(request, timeout=timeout)
+                return response
+            finally:
+                channel.close()
 
-        Returns:
-            Результат обработки
-        """
         try:
-            await self.connect()
-
             logger.info(f"[grpc_client] Отправляем запрос ProcessSelection: selection='{selection}'")
 
-            # Создаем запрос
-            request = nlp_pb2.ProcessSelectionRequest(
-                text=text,
-                selection=selection,
-                start_offset=start_offset,
-                end_offset=end_offset,
-                processor_names=processor_names or [],
-                merge_results=merge_results
-            )
+            def _throttled_call():
+                with _NLP_GRPC_SEMAPHORE:
+                    return _call_sync()
 
-            # Вызываем метод
-            response = await self.stub.ProcessSelection(request, timeout=timeout)
-
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(None, _throttled_call)
             logger.info(f"[grpc_client] Получен ответ ProcessSelection: success={response.success}")
 
-            # Конвертируем proto в dict
-            result = {
+            return {
                 "success": response.success,
                 "results": [self._proto_result_to_dict(r) for r in response.results],
                 "merged_result": self._proto_result_to_dict(response.merged_result) if response.HasField("merged_result") else None,
                 "message": response.message
             }
-
-            return result
 
         except grpc.RpcError as e:
             logger.error(f"[grpc_client] gRPC ошибка в process_selection: {e.code()}: {e.details()}")
@@ -289,18 +301,37 @@ class NLPGRPCClient:
             logger.error(f"[grpc_client] Ошибка в get_supported_types: {e}")
             raise
 
-    async def extract_actions(self, text: str, doc_id: str = "", timeout: int = 120) -> Dict[str, Any]:
+    async def extract_actions(self, text: str, doc_id: str = "", timeout: int = 300) -> Dict[str, Any]:
         """
         Извлечение действий и причинно-следственных связей из текста через NLP сервис.
+
+        Uses a sync gRPC channel in a thread pool to avoid asyncio event-loop
+        conflicts caused by Starlette's BaseHTTPMiddleware task-group context.
 
         Returns dict с ключами:
             success, actions (list[dict]), dependencies (list[dict]), message
         """
+        import grpc as _sync_grpc
+
+        def _call_sync():
+            channel = _sync_grpc.insecure_channel(f"{self.host}:{self.port}")
+            try:
+                stub = nlp_pb2_grpc.NLPServiceStub(channel)
+                request = nlp_pb2.ExtractActionsRequest(text=text, doc_id=doc_id)
+                response = stub.ExtractActions(request, timeout=timeout)
+                return response
+            finally:
+                channel.close()
+
         try:
-            await self.connect()
             logger.info("[grpc_client] ExtractActions: doc_id=%s text_len=%d", doc_id, len(text))
-            request = nlp_pb2.ExtractActionsRequest(text=text, doc_id=doc_id)
-            response = await self.stub.ExtractActions(request, timeout=timeout)
+
+            def _throttled_call():
+                with _NLP_GRPC_SEMAPHORE:
+                    return _call_sync()
+
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(None, _throttled_call)
             logger.info(
                 "[grpc_client] ExtractActions response: success=%s actions=%d deps=%d",
                 response.success, len(response.actions), len(response.dependencies)

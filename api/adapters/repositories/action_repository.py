@@ -136,6 +136,16 @@ class ActionRepository:
         results, _ = db.cypher_query(query, {"uid": uid})
         return [row[0] for row in results]
 
+    def get_all_edges_for_document(self, doc_id: str) -> List[tuple[str, str]]:
+        """Возвращает все LEADS_TO рёбра документа как список (src_uid, tgt_uid).
+        Используется для in-memory DAG-проверки без повторных Neo4j-запросов."""
+        query = """
+        MATCH (s:Action {doc_id: $doc_id})-[:LEADS_TO]->(t:Action {doc_id: $doc_id})
+        RETURN s.uid AS src, t.uid AS tgt
+        """
+        results, _ = db.cypher_query(query, {"doc_id": doc_id})
+        return [(row[0], row[1]) for row in results]
+
     def update_edge_status(
         self, src_uid: str, tgt_uid: str, relation_subtype: str, status: str
     ) -> None:

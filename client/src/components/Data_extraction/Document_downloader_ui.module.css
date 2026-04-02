@@ -191,3 +191,71 @@
     80% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+/* ── Worker Status Indicator ────────────────────────────────────────────── */
+
+.docListHint {
+    @apply text-xs text-gray-400 text-center py-1;
+}
+
+.workerBlock {
+    flex-shrink: 0;
+    padding: 8px 0 6px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.workerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.workerTitle {
+    @apply text-xs font-semibold text-gray-600;
+}
+
+.workerTitleBtn {
+    @apply text-xs font-semibold text-gray-600 hover:text-blue-600 cursor-pointer bg-transparent border-none p-0;
+}
+
+.workerPercent {
+    @apply text-xs font-bold text-blue-600;
+}
+
+.workerStatusBadge {
+    @apply text-xs text-gray-400;
+}
+
+.workerProgressBar {
+    width: 100%;
+    height: 5px;
+    background: #e5e7eb;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.workerProgressFill {
+    height: 100%;
+    background: #2563eb;
+    border-radius: 9999px;
+    transition: width 0.5s ease;
+}
+
+.workerCounts {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.countDone { color: #16a34a; }
+.countInProgress { color: #d97706; }
+.countFailed { color: #dc2626; }
+.countPending { color: #9ca3af; }
+
+.workerHint {
+    @apply text-xs text-gray-400 mb-1;
+}
+

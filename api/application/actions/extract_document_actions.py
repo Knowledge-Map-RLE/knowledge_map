@@ -8,6 +8,7 @@ Forbidden imports: fastapi, neomodel, grpc, aioboto3, adapters, infrastructure, 
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
 import uuid
@@ -141,16 +142,62 @@ async def extract_document_actions(
     if clear_existing:
         action_repo.delete_for_document(doc_id)
 
-    # 4. Один вызов NLP-сервиса на весь документ
-    try:
-        result = await nlp_client.extract_actions(nlp_text, doc_id=doc_id)
-    except Exception as e:
-        logger.error("[actions] NLP service error for doc %s: %s", doc_id, e)
-        raise
+    # 4. NLP — для больших текстов разбиваем на чанки по секциям (## Heading)
+    CHUNK_LIMIT = 30_000  # символов; spaCy заметно замедляется выше этого порога
 
-    nlp_actions = result.get("actions", [])
-    nlp_deps = result.get("dependencies", [])
-    logger.info("[actions] doc=%s: NLP returned %d actions, %d deps", doc_id, len(nlp_actions), len(nlp_deps))
+    chunks: List[Tuple[int, str]] = []  # (char_offset, chunk_text)
+    if len(nlp_text) <= CHUNK_LIMIT:
+        chunks = [(0, nlp_text)]
+    else:
+        # Разбиваем по заголовкам секций (## ...), сохраняя char offset
+        section_starts = [0] + [m.start() for m in re.finditer(r'\n##+ ', nlp_text)]
+        current_start = 0
+        current_text = ""
+        for i, sec_start in enumerate(section_starts):
+            sec_end = section_starts[i + 1] if i + 1 < len(section_starts) else len(nlp_text)
+            section = nlp_text[sec_start:sec_end]
+            if len(current_text) + len(section) > CHUNK_LIMIT and current_text:
+                chunks.append((current_start, current_text))
+                current_start = sec_start
+                current_text = section
+            else:
+                current_text += section
+        if current_text:
+            chunks.append((current_start, current_text))
+        logger.info("[actions] doc=%s: split into %d chunks (text_len=%d)", doc_id, len(chunks), len(nlp_text))
+
+    async def _extract_chunk(offset: int, chunk: str) -> Tuple[List[dict], List[dict]]:
+        try:
+            res = await nlp_client.extract_actions(chunk, doc_id=doc_id)
+        except Exception as e:
+            logger.error("[actions] NLP chunk error doc=%s offset=%d: %s", doc_id, offset, e)
+            return [], []
+        actions_raw = res.get("actions", [])
+        deps_raw = res.get("dependencies", [])
+        # Shift char positions by chunk offset
+        for a in actions_raw:
+            a["char_start"] += offset
+            a["char_end"] += offset
+            a["action_id"] = f"{offset}_{a['action_id']}"  # make globally unique
+        for d in deps_raw:
+            d["source_id"] = f"{offset}_{d['source_id']}"
+            d["target_id"] = f"{offset}_{d['target_id']}"
+        return actions_raw, deps_raw
+
+    # Чанки обрабатываем последовательно, чтобы не перегружать NLP сервер
+    # (параллельный gather при 11 чанках + фоновые аннотации → CANCELLED)
+    chunk_results = []
+    for off, ch in chunks:
+        chunk_results.append(await _extract_chunk(off, ch))
+
+    nlp_actions: List[dict] = []
+    nlp_deps: List[dict] = []
+    for acts, deps in chunk_results:
+        nlp_actions.extend(acts)
+        nlp_deps.extend(deps)
+
+    logger.info("[actions] doc=%s: NLP returned %d actions, %d deps (from %d chunks)",
+                doc_id, len(nlp_actions), len(nlp_deps), len(chunks))
 
     all_action_rows: List[dict] = []
     all_action_edges: List[dict] = []
@@ -229,24 +276,34 @@ async def extract_document_actions(
             edge['tgt_uid'] = uid_remap.get(edge['tgt_uid'], edge['tgt_uid'])
 
     # 6. Фильтруем LEADS_TO рёбра по DAG-правилу
+    # Загружаем все существующие рёбра документа один раз — O(1) Neo4j запрос
+    # вместо O(E×V) запросов при BFS через get_neighbor_ids
+    try:
+        existing_edges = action_repo.get_all_edges_for_document(doc_id)
+    except Exception:
+        existing_edges = []
+    persisted_neighbors: dict[str, List[str]] = {}
+    for src, tgt in existing_edges:
+        persisted_neighbors.setdefault(src, []).append(tgt)
+
     in_memory_neighbors: dict[str, List[str]] = {}
 
     def get_neighbors(uid: str) -> List[str]:
-        try:
-            persisted = action_repo.get_neighbor_ids(uid)
-        except Exception:
-            persisted = []
-        return persisted + in_memory_neighbors.get(uid, [])
+        return list(persisted_neighbors.get(uid, [])) + in_memory_neighbors.get(uid, [])
 
     dag_filtered_edges: List[dict] = []
+    cycle_skipped = 0
     for edge in all_action_edges:
         src = edge['src_uid']
         tgt = edge['tgt_uid']
         if would_create_cycle(src, tgt, get_neighbors):
-            logger.warning("Skipping edge %s→%s: would create cycle", src, tgt)
+            cycle_skipped += 1
             continue
         dag_filtered_edges.append(edge)
         in_memory_neighbors.setdefault(src, []).append(tgt)
+
+    if cycle_skipped:
+        logger.info("[actions] doc=%s: skipped %d cycle-forming edges", doc_id, cycle_skipped)
 
     edges_count = action_repo.save_leads_to(dag_filtered_edges, [], doc_id)
     pending_count = len(dag_filtered_edges)
