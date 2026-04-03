@@ -28,6 +28,8 @@ nlp/.env
 worker_distributed_layering_rust/tests/artifacts/
 
 target/
+
+eval/reports/
 nul
 *.bkp
 

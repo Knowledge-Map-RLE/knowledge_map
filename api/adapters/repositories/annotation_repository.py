@@ -80,31 +80,37 @@ class AnnotationRepository:
         annotation_types: Optional[List[str]] = None,
         source: Optional[str] = None,
     ) -> Tuple[List[MarkdownAnnotation], int]:
-        # Строим динамический WHERE
-        conditions = ["(doc)-[:HAS_MARKDOWN_ANNOTATION]->(ann)"]
         params: dict = {"doc_id": doc_id}
 
+        # Дополнительные фильтры
+        extra_where = ""
         if annotation_types:
-            conditions.append("ann.annotation_type IN $types")
+            extra_where += " AND ann.annotation_type IN $types"
             params["types"] = annotation_types
         if source:
-            conditions.append("ann.source = $source")
+            extra_where += " AND ann.source = $source"
             params["source"] = source
 
-        where_clause = "WHERE " + " AND ".join(conditions)
-
+        # Запрос total (без SKIP/LIMIT)
         count_query = f"""
-        MATCH (doc:PDFDocument {{uid: $doc_id}}), (ann:MarkdownAnnotation)
-        {where_clause}
-        RETURN count(ann) as total
+        MATCH (doc:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
+        WHERE 1=1{extra_where}
+        RETURN count(ann)
         """
         count_result, _ = db.cypher_query(count_query, params)
-        total = count_result[0][0] if count_result else 0
+        total: int = count_result[0][0] if count_result else 0
 
+        if total == 0:
+            return [], 0
+
+        # Запрос данных — свойства напрямую, без inflate()
         fetch_query = f"""
-        MATCH (doc:PDFDocument {{uid: $doc_id}}), (ann:MarkdownAnnotation)
-        {where_clause}
-        RETURN ann
+        MATCH (doc:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
+        WHERE 1=1{extra_where}
+        RETURN ann.uid, ann.text, ann.annotation_type,
+               ann.start_offset, ann.end_offset, ann.color,
+               ann.metadata, ann.confidence, ann.created_date,
+               ann.source, ann.processor_version
         ORDER BY ann.start_offset
         SKIP $skip
         {f"LIMIT $limit" if limit is not None else ""}
@@ -116,10 +122,20 @@ class AnnotationRepository:
         result, _ = db.cypher_query(fetch_query, fetch_params)
         annotations = []
         for row in result:
-            node = row[0]
             try:
-                orm_ann = OrmAnnotation.inflate(node)
-                annotations.append(_orm_to_domain(orm_ann))
+                annotations.append(MarkdownAnnotation(
+                    uid=row[0],
+                    text=row[1],
+                    annotation_type=row[2],
+                    start_offset=row[3],
+                    end_offset=row[4],
+                    color=row[5] or "#ffeb3b",
+                    metadata=row[6],
+                    confidence=row[7],
+                    created_date=row[8],
+                    source=row[9] or "user",
+                    processor_version=row[10],
+                ))
             except Exception as e:
                 logger.warning(f"Не удалось разобрать аннотацию: {e}")
         return annotations, total

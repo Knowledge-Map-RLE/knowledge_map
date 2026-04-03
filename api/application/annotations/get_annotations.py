@@ -11,7 +11,6 @@ from __future__ import annotations
 from typing import Optional, List, Tuple
 
 from domain.models.annotation import MarkdownAnnotation
-from domain.exceptions import NotFoundError
 from application.ports.repositories import AnnotationRepositoryProtocol, DocumentRepositoryProtocol
 
 
@@ -24,15 +23,7 @@ def get_annotations(
     annotation_types: Optional[List[str]] = None,
     source: Optional[str] = None,
 ) -> Tuple[List[MarkdownAnnotation], int]:
-    """
-    Возвращает (список аннотаций, total_count).
-
-    Raises:
-        NotFoundError: документ не найден
-    """
-    if document_repo.get_by_id(doc_id) is None:
-        raise NotFoundError("PDFDocument", doc_id)
-
+    """Возвращает (список аннотаций, total_count)."""
     return annotation_repo.get_by_document(
         doc_id=doc_id,
         skip=skip,

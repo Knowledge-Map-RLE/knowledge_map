@@ -3,6 +3,7 @@ import json
 import logging
 import asyncio
 from datetime import datetime
+from typing import Dict, Any
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 
 from src.schemas.api import NLPAnalyzeRequest
@@ -16,6 +17,10 @@ router = APIRouter(tags=["nlp"])
 annotation_service = AnnotationService()
 nlp_service = NLPService()
 multilevel_nlp_service = MultiLevelNLPService()
+
+# In-memory статус фоновых NLP задач: doc_id -> {status, error}
+# Статусы: "running" | "done" | "error"
+_nlp_task_status: Dict[str, Dict[str, Any]] = {}
 
 
 @router.post("/nlp/analyze")
@@ -290,9 +295,20 @@ async def _run_multilevel_analysis(
                 )
 
         logger.info(f"Background NLP: created {len(annotations_data)} annotations and {len(relations_data)} relations for {doc_id}")
+        _nlp_task_status[doc_id] = {"status": "done", "error": None}
 
     except Exception as e:
         logger.error(f"Background NLP error for {doc_id}: {e}", exc_info=True)
+        _nlp_task_status[doc_id] = {"status": "error", "error": str(e)}
+
+
+@router.get("/documents/{doc_id}/nlp-status")
+async def get_nlp_task_status(doc_id: str):
+    """Статус фоновой NLP задачи для документа."""
+    info = _nlp_task_status.get(doc_id)
+    if not info:
+        return {"status": "idle", "doc_id": doc_id}
+    return {"doc_id": doc_id, **info}
 
 
 @router.post("/documents/{doc_id}/analyze-multilevel")
@@ -306,15 +322,27 @@ async def analyze_document_multilevel(
 ):
     """
     Multi-level NLP analysis with voting and confidence scores.
-    Запускается в фоне — сразу возвращает статус, не блокирует API.
+    Сначала проверяет доступность NLP сервиса, затем запускает фоновую задачу.
     """
     try:
         from src.models import PDFDocument
+        from services.nlp_grpc_client import get_nlp_grpc_client
 
         document = PDFDocument.nodes.get_or_none(uid=doc_id)
         if not document:
             raise HTTPException(status_code=404, detail="Document not found")
 
+        # Проверяем доступность NLP gRPC до запуска фоновой задачи
+        grpc_client = get_nlp_grpc_client()
+        try:
+            await grpc_client.connect()
+        except Exception as e:
+            raise HTTPException(
+                status_code=503,
+                detail=f"NLP сервис недоступен: {e}. Запустите nlp/start.ps1"
+            )
+
+        _nlp_task_status[doc_id] = {"status": "running", "error": None}
         background_tasks.add_task(
             _run_multilevel_analysis,
             doc_id=doc_id,

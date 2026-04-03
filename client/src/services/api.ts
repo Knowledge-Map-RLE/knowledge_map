@@ -744,6 +744,14 @@ export async function autoAnnotateMultilevel(
   return res.json();
 }
 
+// Статус фоновой NLP задачи
+export async function getNlpTaskStatus(docId: string): Promise<{ status: string; error?: string | null }> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const res = await fetch(`${base}/api/data_extraction/documents/${docId}/nlp-status`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
 // Интерфейс для ответа импорта CSV
 export interface ImportCSVResponse {
   success: boolean;

@@ -32,7 +32,7 @@ from web.routers import blocks, links, auth
 from web.routers.data_extraction import annotations, annotations_ws, relations, documents as doc_router
 
 # Роутеры из web/routers/ (новое расположение, TRANSITIONAL — скопированы из src/routers/)
-from web.routers import pdf, layout, s3, ai_models, image_proxy
+from web.routers import pdf, layout, s3, ai_models, image_proxy, worker_status
 from web.routers.data_extraction import (
     nlp as nlp_router,
     ontology as ontology_router,
@@ -118,6 +118,7 @@ app.include_router(actions_router.router, prefix="/api/data_extraction")
 app.include_router(pubmed_router.router, prefix="/api/data_extraction")
 app.include_router(markdown_validation_router.router, prefix="/api/data_extraction")
 app.include_router(auto_review_router.router, prefix="/api/data_extraction")
+app.include_router(worker_status.router, prefix="/api")
 
 # GraphQL
 if _graphql_available:

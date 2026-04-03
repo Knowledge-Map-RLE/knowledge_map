@@ -1,7 +1,7 @@
 /**
  * Обертка для EditorTabs с поддержкой валидации markdown и справкой
  */
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import EditorTabs from './EditorTabs';
 import ValidationErrorAlert, { ValidationResponse } from '../../MarkdownEditor/ValidationErrorAlert';
 import MarkdownValidationRules from '../../MarkdownEditor/MarkdownValidationRules';
@@ -126,34 +126,40 @@ const EditorTabsWithValidation = React.forwardRef<
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [showValidationRules, setShowValidationRules] = useState(false);
     const [showValidationAlert, setShowValidationAlert] = useState(true);
-    const [lastValidatedText, setLastValidatedText] = useState<string | null>(null);
     const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
     const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Флаг: пользователь сам вводил текст через onTextChange
+    const userEditedRef = useRef(false);
 
     const { validation, isValidating, validateMarkdown, clearValidation } =
       useMarkdownValidation({
         apiUrl: '/api/data_extraction/markdown/validate',
       });
 
-    // Автоматическая валидация при изменении текста (с debounce)
+    // Обёртка над onTextChange: ставим флаг при реальном вводе пользователя
+    const handleTextChange = useCallback((text: string) => {
+      userEditedRef.current = true;
+      onTextChange(text);
+    }, [onTextChange]);
+
+    // Автоматическая валидация с debounce — только после реального ввода
     useEffect(() => {
+      if (!userEditedRef.current) return;
+
       if (validationTimeoutRef.current) {
         clearTimeout(validationTimeoutRef.current);
       }
 
-      if (localText && localText !== lastValidatedText) {
-        validationTimeoutRef.current = setTimeout(() => {
-          validateMarkdown(localText, false);
-          setLastValidatedText(localText);
-        }, 1500); // Delay 1.5s после последнего изменения
-      }
+      validationTimeoutRef.current = setTimeout(() => {
+        validateMarkdown(localText, false);
+      }, 1500);
 
       return () => {
         if (validationTimeoutRef.current) {
           clearTimeout(validationTimeoutRef.current);
         }
       };
-    }, [localText, validateMarkdown, lastValidatedText]);
+    }, [localText, validateMarkdown]);
 
     // Уведомляем родительский компонент об изменении валидации
     useEffect(() => {
@@ -259,6 +265,25 @@ const EditorTabsWithValidation = React.forwardRef<
             </div>
           )}
 
+          {/* Inline-индикатор валидации в панели */}
+          {isValidating && (
+            <span className={styles.validationBadge} title="Проверка markdown...">
+              <span className={styles.spinner}>⟳</span>
+            </span>
+          )}
+          {!isValidating && validation && validation.is_valid && (
+            <span className={styles.validationBadgeOk} title="Markdown валидный">✓</span>
+          )}
+          {!isValidating && validation && !validation.is_valid && (
+            <button
+              className={styles.validationBadgeError}
+              title={`Ошибки markdown: ${validation.errors?.length ?? 0}`}
+              onClick={() => setShowValidationAlert((v) => !v)}
+            >
+              ✗ {validation.errors?.length ?? 0}
+            </button>
+          )}
+
           <button
             className={styles.helpButton}
             onClick={() => setShowValidationRules(true)}
@@ -272,28 +297,12 @@ const EditorTabsWithValidation = React.forwardRef<
 
         {/* Editor and validation wrapper */}
         <div className={styles.editorWrapper}>
-          {/* Validation Alert */}
+          {/* Validation Alert — разворачивается по клику на индикатор ✗ */}
           {showValidationAlert && validation && !validation.is_valid && (
             <ValidationErrorAlert
               validation={validation}
               onDismiss={() => setShowValidationAlert(false)}
             />
-          )}
-
-          {/* Loading state during validation */}
-          {isValidating && (
-            <div className={styles.validatingIndicator}>
-              <span className={styles.spinner}>⟳</span>
-              <span>Проверка markdown...</span>
-            </div>
-          )}
-
-          {/* Valid indicator */}
-          {validation && validation.is_valid && (
-            <div className={styles.validIndicator}>
-              <span className={styles.validIcon}>✓</span>
-              <span>Markdown валидный</span>
-            </div>
           )}
 
           {/* Main Editor Tabs Component */}
@@ -309,7 +318,7 @@ const EditorTabsWithValidation = React.forwardRef<
             largeLineHeight={largeLineHeight}
             readOnly={readOnly}
             onTabChange={onTabChange}
-            onTextChange={onTextChange}
+            onTextChange={handleTextChange}
             onTextSelect={onTextSelect}
             onAnnotationClick={onAnnotationClick}
             onRelationCreate={onRelationCreate}

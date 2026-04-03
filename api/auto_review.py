@@ -86,6 +86,18 @@ META_VERBS = {
     # abstract systems
     "monitor", "control", "manage", "coordinate",
     "encourage",   # "encourage peers" — social
+    # replication/repetition verbs (methodology)
+    "replicate", "reproduce", "repeat", "validate", "verify",
+    "confirm_meta", "duplicate",
+    # collection/data verbs
+    "collect", "gather", "record", "document", "capture", "store",
+    "retrieve", "extract_meta", "obtain", "acquire_meta",
+    # comparison/assessment verbs
+    "compare", "contrast", "rank", "rate", "score_verb",
+    "benchmark", "calibrate",
+    # reporting/publication
+    "publish", "present_meta", "submit", "write", "read",
+    "cite", "reference",
 }
 
 # Shared-entity markers that are too abstract to be meaningful
@@ -113,13 +125,343 @@ ABSTRACT_ENTITY_TOKENS = {
     'view', 'approach', 'concept', 'idea', 'theory', 'framework',
     'evidence', 'finding', 'findings', 'observation', 'observations',
     'control', 'feedback', 'loop', 'cycle', 'cascade', 'interaction',
-    'environment', 'environment', 'condition', 'conditions',
+    'environment', 'condition', 'conditions',
     'symptom', 'symptoms', 'sign', 'signs',
     'patient', 'patients', 'subject', 'subjects',
+    # clinical/epidemiological abstracts (from quality review)
+    'care', 'health', 'risk', 'rate', 'score', 'test', 'study', 'trial',
+    'group', 'groups', 'sample', 'cohort', 'population', 'populations',
+    'treatment', 'treatments', 'intervention', 'interventions',
+    'outcome', 'outcomes', 'measure', 'measures', 'assessment',
+    'quality', 'performance', 'improvement', 'management',
+    'skill', 'skills', 'training', 'program', 'protocol',
+    'need', 'needs', 'barrier', 'barriers', 'strategy', 'strategies',
+    # generic nouns (from obj_obj failures)
+    'impact', 'influence', 'association', 'correlation', 'relationship',
+    'analysis', 'review', 'report', 'survey', 'questionnaire',
+    'participant', 'participants', 'adult', 'adults', 'person', 'persons',
+    'age', 'sex', 'gender', 'year', 'years', 'month', 'months',
+    'number', 'proportion', 'percentage', 'prevalence', 'incidence',
+    'index', 'score', 'ratio', 'value', 'values', 'range',
+    # structural/methodological from obj_obj noise
+    'term', 'terms', 'word', 'words', 'item', 'items',
+    'table', 'figure', 'chart', 'method', 'methods',
+    # clinical-generic adjective-derived nouns (from quality review: obj_obj failures)
+    'functional', 'cognitive', 'biological', 'molecular', 'cellular',
+    'clinical', 'physical', 'mental', 'social', 'emotional', 'behavioral',
+    'metabolic', 'structural', 'immune', 'genetic', 'epigenetic',
+    'surgical', 'medical', 'therapeutic', 'diagnostic', 'preventive',
+    'postoperative', 'preoperative', 'perioperative',
+    # clinical actors/entities too generic
+    'caregiver', 'caregivers', 'nurse', 'nurses', 'physician', 'physicians',
+    'provider', 'providers', 'clinician', 'clinicians', 'worker', 'workers',
+    'community', 'communities', 'unit', 'units', 'team', 'teams',
+    'hospital', 'hospitals', 'clinic', 'clinics', 'facility', 'facilities',
+    # supplements/vitamins used as generic tokens
+    'vitamin', 'vitamins', 'supplement', 'supplements', 'nutrient', 'nutrients',
+    # generic descriptors
+    'inappropriate', 'appropriate', 'unnecessary', 'unnecessary',
+    'effective', 'ineffective', 'significant', 'relevant', 'important',
+    'specific', 'general', 'common', 'typical', 'normal', 'abnormal',
+    # misc from observed failures
+    'learning', 'mobility', 'stability', 'complexity', 'diversity',
+    'integrity', 'sensitivity', 'specificity', 'accuracy', 'efficiency',
+    'homeostasis', 'balance', 'regulation', 'expression', 'formation',
+    # social/demographic tokens — too generic for edge evidence
+    'older', 'elderly', 'among', 'within', 'across', 'between',
+    'hospitalized', 'frail', 'disabled', 'independent', 'independent',
+    'living', 'daily', 'activity', 'activities',
+    # connections/relationships — abstract
+    'connections', 'connection', 'relationship', 'relationships',
+    'interaction', 'interactions', 'association', 'associations',
+    # stress/wellbeing — clinical generic
+    'stress', 'wellbeing', 'anxiety', 'depression', 'distress',
+    'burden', 'strain', 'demand', 'demands',
+    # identification/analysis methodology
+    'demand', 'supply', 'cost', 'costs', 'access', 'service', 'services',
+    # generic verbs-turned-nouns that appear as obj_obj
+    'work', 'works',
+    # bio/health terms too generic for meaningful obj_obj evidence
+    'sleep', 'bone', 'frailty', 'lifespan', 'longevity', 'aging', 'ageing',
+    'fitness', 'strength', 'muscle', 'brain', 'heart', 'lung', 'liver',
+    'blood', 'plasma', 'serum', 'urine', 'tissue', 'tissues',
+    # measurement-domain abstract nouns (from frailty/diagnostic articles)
+    'diagnosis', 'detection', 'screening', 'monitoring', 'prevention',
+    'identification', 'stratification', 'evaluation', 'assessment',
+    # other common single-token obj_obj that proved too generic
+    'validation', 'investigation', 'estimation', 'prediction', 'discrimination',
+    'engagement', 'inclusion', 'welfare', 'natural', 'space', 'spaces',
+    'human', 'animals', 'mice', 'mouse', 'rats', 'model',
+    # carbon/ecology domain generics
+    'carbon', 'emissions', 'volatile', 'yield', 'yields',
+    # tautological obj_obj for dental/material articles
+    'wrinkles', 'roughness', 'viscosity', 'composite',
+    # social/geriatric abstracts causing tautological obj_obj
+    'loss', 'impairment', 'impairments', 'independence', 'autonomy',
+    'prevalence', 'incidence', 'burden', 'hearing', 'vision',
+    # clinical trajectory abstracts
+    'progression', 'onset', 'trajectory', 'trajectories', 'duration',
+    # research/methodology abstracts
+    'research', 'analysis', 'analyses', 'comparison', 'comparisons',
+    'inference', 'interpretability', 'accuracy', 'reliability', 'validity',
+    # demand/supply
+    'demand', 'supply', 'cost', 'costs', 'capacity', 'capabilities',
+    # generic social outcomes
+    'equity', 'inequality', 'access', 'quality',
+    # body/organ/physical generic (from obj_obj failures)
+    'renal', 'surface', 'surfaces', 'exercise', 'material', 'materials',
+    'transfer', 'transfers', 'water', 'dietary', 'diet', 'diets',
+    'healthy', 'wound', 'wounds', 'healing', 'calling', 'load', 'sway',
+    'upright', 'polymer', 'polymers', 'charging', 'grid', 'grids',
+    'recovery', 'rehabilitation',
+    # social/behavioral abstract
+    'technology', 'technologies', 'support', 'supports',
+    'episode', 'episodes', 'substance', 'substances', 'comfort',
+    'use', 'usage', 'technique', 'techniques',
+    # efficacy/performance (research outcome, not mechanistic)
+    'efficacy', 'performance', 'outcomes', 'benefit', 'benefits',
+    # clinical measurement generics
+    'readmission', 'readmissions', 'hospitalization', 'hospitalizations',
+    'mortality', 'morbidity', 'survival', 'recurrence',
+    # physical fitness / cardiorespiratory measures
+    'endurance', 'tolerance', 'capacity', 'reserve', 'output',
+    'filling', 'pressure', 'pressures', 'volume', 'volumes',
+    # social behavior
+    'behavior', 'behaviors', 'behaviour', 'behaviours', 'attitude', 'attitudes',
+    'adherence', 'compliance', 'engagement',
+    # structural/research design
+    'pathway', 'pathways', 'process', 'processes', 'mechanism', 'mechanisms',
+    'pattern', 'patterns', 'marker', 'markers', 'indicator', 'indicators',
+    # abstract direction/trajectory nouns
+    'rise', 'decrease', 'increase', 'reduction', 'elevation', 'improvement',
+    'deterioration', 'worsening',
+    # domain-specific generics seen in failures
+    'ageing', 'aging', 'lifespan', 'longevity', 'frailty',
+    'function', 'functions', 'dysfunction', 'dysfunctions',
+    # neural/neuro generics (too vague for obj_obj)
+    'neural', 'neuronal', 'neuroscience', 'neurogenesis', 'neurodegeneration',
+    'neurological', 'neuroinflammation',
+    # bio-process generics (too broad — not specific enough without qualifier)
+    'proliferation', 'differentiation', 'migration', 'invasion',
+    'adaptation', 'adaptations',
+    'lymphatic', 'lymph', 'lymphocyte', 'lymphocytes',
+    'viability',
+    # genomics/bioinformatics methodology tokens
+    'events', 'variant', 'variants', 'regions', 'segment', 'segments',
+    'reads', 'coverage', 'sequencing', 'alignment', 'mapping',
+    'callers', 'haplotype', 'haplotypes',
+    # materials science / engineering
+    'thermal', 'wear', 'crack', 'cracks', 'grain', 'grains',
+    'roughening', 'roughness', 'composite', 'torque', 'ripple',
+    'stiffness',
+    # social/behavioral generics
+    'family', 'families', 'meaning', 'purpose', 'coherence',
+    'questions', 'answers', 'knowledge', 'understanding',
+    'offspring', 'children', 'parents',
+    'eating', 'nutrition', 'nutritional', 'dietary',
+    # clinical method generics
+    'fixation', 'implant', 'implants',
+    'driving', 'cessation',
+    # infection/immunity generics too vague
+    'infection', 'infections', 'immunity', 'immunological',
+    # sweat/exercise physiology generics
+    'sweat', 'sodium', 'electrolyte', 'electrolytes',
+    # breast/cancer generics (without specific molecular context)
+    'breast', 'cancer', 'tumor', 'tumour', 'cancers',
+    # healthcare/administrative
+    'climate', 'decarbonisation', 'emergency',
+    # data/statistics generics
+    'statistics', 'estimates', 'models', 'model',
+    # temporal/duration descriptors (not bio-specific)
+    'long-term', 'short-term', 'chronic', 'acute',
+    # generic modifiers used as keywords
+    'environmental', 'different', 'specific', 'optimal',
+    # dental/polymer chemistry
+    'polymerization', 'resin', 'crystallinity', 'hardness',
+    'viscosity', 'monomer', 'monomers',
+    # engineering/physics generics
+    'temperature', 'electron', 'electrons', 'current', 'voltage',
+    'flow', 'flux', 'pressure_phys', 'resistance',
+    'mechanical', 'structural', 'elastic',
+    # photocatalysis/chemistry
+    'photocatalyst', 'photocatalytic', 'pollutant', 'pollutants',
+    'catalytic', 'catalyst', 'catalysts', 'substrate', 'substrates',
+    # battery/thermal engineering
+    'thermal', 'battery', 'lithium', 'discharge', 'charge',
+    'crystalline', 'composite',
+    # material surface science
+    'surface', 'interface', 'interfaces', 'coating', 'coatings',
+    # agricultural/food/animal science (non-core bio)
+    'insp6', 'phytase', 'phytate', 'hens',
+    'bovine', 'cows', 'poultry',
+    'omega-3', 'pufa',
+    'fermentation', 'extract', 'extracts',
+    # activation (too generic when used as sole keyword)
+    'activation',
+    # clinical outcomes that are too generic for keyword evidence
+    'prognosis', 'outcomes', 'mortality', 'morbidity',
+    'carcinogenesis', 'carcinoma',
+    # coordination/structure generic
+    'coordination', 'configuration', 'architecture',
+    # postharvest/plant physiology generics
+    'postharvest', 'vase', 'flower', 'flowers',
+    # genotyping/mouse model methodology (used as identification, not mechanism)
+    'allele', 'alleles', 'band', 'bands', 'primer', 'primers',
+    'amplicon', 'amplicons', 'genotype', 'genotypes', 'founder',
+    'transgenic', 'heterozygous', 'homozygous',
+    # vascular/cardiovascular generics (too broad without molecular specificity)
+    'vascular', 'cardiovascular', 'arterial', 'venous', 'aortic',
+    # anatomy/organ region generics
+    'forelimb', 'hindlimb', 'limb', 'limbs', 'spine', 'spinal',
+    'intraocular', 'ocular', 'retinal', 'corneal',
+    # disease outcome generics
+    'stroke', 'atrophy', 'fibrosis', 'necrosis', 'infarction',
+    'embolism', 'thrombosis', 'hemorrhage',
+    # cognitive/neuropsych generics
+    'memory', 'cognition', 'attention', 'executive',
+    'oscillations', 'spindle', 'spindles',
+    # body composition generics
+    'lean', 'adipose', 'adiposity',
+    # electrochemistry/physics (battery domain)
+    'impedance', 'electrochemical', 'electrolyte', 'kinetics',
+    'electrode', 'electrodes', 'anodic', 'cathodic',
+    # mast/immune tissue types (too generic)
+    'mast', 'granulocyte', 'granulocytes', 'basophil', 'basophils',
+    # ACE/social trauma (non-bio evidence)
+    'trauma', 'traumatic', 'adverse', 'resilience',
+    'unrest', 'violence', 'displacement',
+    # generic bio-process terms (already in set but ensure coverage)
+    'permeability', 'motility', 'contractility',
+    # surgical procedure generics
+    'arthroplasty', 'osteotomy', 'reconstruction', 'prosthesis',
+    'meniscal', 'rotator', 'cuff', 'ligament', 'tendon',
 }
 
 
 import re as _re
+
+# Tokens that strongly indicate a biomedical context.
+# Used to filter out marker-based edges from non-bio domains (materials, engineering, social science).
+BIO_DOMAIN_TOKENS = {
+    # molecular biology
+    'mrna', 'rrna', 'cdna', 'sirna', 'mirna', 'lncrna', 'dna', 'rna',
+    'protein', 'proteins', 'peptide', 'peptides', 'enzyme', 'enzymes',
+    'receptor', 'receptors', 'ligand', 'ligands',
+    'kinase', 'kinases', 'phosphatase', 'phosphatases',
+    'transcription', 'translation', 'promoter', 'promoters',
+    'chromosome', 'chromosomes', 'genome', 'genomics',
+    'mutation', 'mutations', 'polymorphism', 'snp', 'snps',
+    'exon', 'intron', 'allele', 'alleles',
+    # cell biology
+    'cell', 'cells', 'neuron', 'neurons', 'mitochondria', 'mitochondrial',
+    'nucleus', 'cytoplasm', 'membrane', 'membranes',
+    'apoptosis', 'autophagy', 'mitophagy', 'senescence',
+    'proliferation', 'differentiation', 'migration',
+    'stem', 'progenitor', 'fibroblast', 'macrophage', 'macrophages',
+    'lymphocyte', 'lymphocytes', 'neutrophil', 'neutrophils',
+    'platelet', 'platelets', 'erythrocyte', 'erythrocytes',
+    # signaling molecules
+    'cytokine', 'cytokines', 'chemokine', 'chemokines',
+    'interleukin', 'interferon', 'tumor',
+    'tnf', 'nfkb', 'mapk', 'pi3k', 'akt', 'mtor', 'stat',
+    'wnt', 'notch', 'hedgehog', 'tgf',
+    'ros', 'oxidative', 'antioxidant',
+    'atp', 'nadh', 'nadph',
+    # specific molecules (partial list — high specificity)
+    'glucose', 'insulin', 'glucagon', 'cortisol',
+    'dopamine', 'serotonin', 'norepinephrine', 'acetylcholine',
+    'amyloid', 'tau', 'synuclein', 'huntingtin',
+    'collagen', 'fibrin', 'actin', 'tubulin',
+    # disease biomarkers
+    'inflammatory', 'inflammation', 'neuroinflammation',
+    'ischemia', 'hypoxia', 'angiogenesis',
+    'cholesterol', 'lipid', 'lipids', 'triglyceride', 'triglycerides',
+    'hormone', 'hormones', 'estrogen', 'testosterone', 'progesterone',
+    # pathology
+    'apoptotic', 'necrotic', 'fibrotic',
+    'pathogen', 'pathogens', 'bacteria', 'viral', 'virus',
+    'antibody', 'antibodies', 'antigen', 'antigens', 'vaccine', 'vaccines',
+    # pharmacology
+    'drug', 'drugs', 'pharmacological', 'therapeutic',
+    'inhibitor', 'inhibitors', 'agonist', 'antagonist',
+    # common expression patterns
+    'expression', 'upregulating', 'downregulating', 'overexpressing',
+    'knockdown', 'knockout', 'silencing', 'overexpression',
+    # hematopoiesis specific
+    'proplatelet', 'megakaryocyte', 'megakaryocytes', 'hematopoiesis',
+    'hematopoietic', 'erythropoiesis', 'thrombopoiesis',
+    # vascular/production
+    'angiogenesis', 'vasculogenesis',
+    # reproductive / developmental
+    'placenta', 'placental', 'fetal', 'embryo', 'embryonic',
+    'ovarian', 'uterine', 'endometrial', 'follicular',
+    'oocyte', 'sperm', 'spermatogenesis',
+    # immune / efferocytosis
+    'efferocytosis', 'phagocytosis', 'opsonization',
+    'complement', 'innate', 'adaptive',
+    # musculoskeletal
+    'muscle', 'muscles', 'myosin', 'sarcomere', 'sarcopenia',
+    'bone', 'bones', 'osteoblast', 'osteoclast', 'chondrocyte',
+    'glenohumeral', 'deltoid', 'tendon', 'ligament',
+    'cartilage', 'synovial',
+    # neuropeptides / receptors
+    'mertk', 'tyro3', 'neuropeptide', 'neurotransmitter',
+    # renin-angiotensin system
+    'angiotensin', 'renin', 'aldosterone', 'bradykinin',
+    'at1r', 'at2r', 'ace2',
+    # general tissue/organ
+    'liver', 'kidney', 'lungs', 'heart', 'brain', 'spleen',
+    'colon', 'intestine', 'gut', 'pancreas', 'thyroid',
+    'adipose', 'endothelial', 'epithelial',
+}
+
+# Non-bio domain tokens — presence in BOTH phrases suggests non-bio article
+NON_BIO_DOMAIN_TOKENS = {
+    # materials science / metallurgy
+    'alloy', 'alloys', 'grain', 'grains', 'precipitate', 'precipitates',
+    'dislocation', 'dislocations', 'fracture', 'fractures',
+    'hardness', 'tensile', 'ductile', 'microstructure',
+    'welding', 'annealing', 'quenching', 'tempering',
+    # construction / civil engineering
+    'asphalt', 'pavement', 'concrete', 'aggregate', 'bitumen',
+    'foaming', 'polymer_asphalt',
+    # electrochemistry / battery
+    'electrode', 'electrolyte', 'impedance', 'capacitance',
+    'lithium_battery', 'discharge_cycle', 'anode', 'cathode',
+    # wood / acoustic
+    'acoustic_wood', 'densification', 'lignin_wood', 'cellulose_wood',
+    # social science / education
+    'bibliometric', 'bibliometrics', 'academic', 'curriculum',
+    'pedagogy', 'assessment_edu',
+}
+
+
+def _has_bio_domain_token(phrase: str) -> bool:
+    """Return True if phrase contains at least one token from BIO_DOMAIN_TOKENS,
+    or matches a known bio-domain prefix pattern."""
+    if not phrase:
+        return False
+    for w in phrase.lower().split():
+        w = w.strip(".,;:()[]\"'`")
+        # strip possessive
+        if w.endswith("'s"):
+            w = w[:-2]
+        if w in BIO_DOMAIN_TOKENS:
+            return True
+        # prefix match for bio terms
+        if len(w) >= 5:
+            BIO_PREFIXES = (
+                'phospho', 'glyco', 'neuro', 'immuno', 'cardio',
+                'hepato', 'nephro', 'pulmo', 'osteo', 'hemato',
+                'carcino', 'apopto', 'autoph', 'cytoki', 'interleu',
+                'myocard', 'angiog', 'lympho', 'fibro', 'adipo',
+                'erythro', 'leuko', 'thromb', 'coagul', 'platele',
+                'synapt', 'axon', 'dendri', 'myelon', 'glial',
+            )
+            if any(w.startswith(p) for p in BIO_PREFIXES):
+                return True
+    return False
+
 
 def _normalize_verb(word: str) -> str:
     """Rough lemmatization: strip common suffixes to reach base form."""
@@ -202,22 +544,115 @@ def shared_entity_is_abstract(evidence: list) -> bool:
 
 
 def keyword_is_abstract(evidence: list) -> bool:
-    """Check if keyword/obj_obj overlap evidence is too abstract."""
+    """Check if keyword/obj_obj overlap evidence is too abstract.
+
+    Rejects if there is NO concrete (non-abstract, ≥4-char) token in the overlap.
+    This is stricter than the old 'all abstract' rule and catches single-word
+    matches like [obj_obj:care], [keyword:health] etc.
+    """
     for ev in (evidence or []):
         for prefix in ('[keyword:', '[obj_obj:'):
             if ev.startswith(prefix):
                 kws = ev[len(prefix):].rstrip(']').strip().lower()
-                # reject if ALL shared keywords are abstract
-                kw_list = [k.strip() for k in kws.split(',')]
-                if all(k in ABSTRACT_ENTITY_TOKENS for k in kw_list if k):
+                kw_list = [k.strip() for k in kws.split(',') if k.strip()]
+                if not kw_list:
+                    return True
+                # Reject unless at least one token is concrete:
+                # - not in ABSTRACT_ENTITY_TOKENS
+                # - length >= 4 (filters out 'or', 'its', etc.)
+                # - not a pure number
+                has_concrete = any(
+                    k not in ABSTRACT_ENTITY_TOKENS
+                    and len(k) >= 4
+                    and not k.isdigit()
+                    for k in kw_list
+                )
+                if not has_concrete:
                     return True
     return False
+
+
+def _phrase_tokens(phrase: str) -> set:
+    """Return lowercase stemmed word tokens, stripping punctuation.
+    Strips -ing/-ed/-s to catch near-duplicate phrasal variants.
+    """
+    if not phrase:
+        return set()
+    tokens = set()
+    for w in phrase.split():
+        w = w.lower().strip('.,;:()[]')
+        if len(w) <= 2:
+            continue
+        # light stemming: strip -ing, -ed, -s to reduce inflectional variants
+        if w.endswith('ing') and len(w) > 5:
+            w = w[:-3]
+        elif w.endswith('ed') and len(w) > 4:
+            w = w[:-2]
+        elif w.endswith('s') and not w.endswith('ss') and len(w) > 4:
+            w = w[:-1]
+        tokens.add(w)
+    return tokens
+
+
+def _is_tautological(src_phrase: str, tgt_phrase: str) -> bool:
+    """Reject if src and tgt are near-duplicate phrases.
+
+    Uses Jaccard >= 0.60 for general case, and a stricter absolute-overlap
+    check for short phrases: if both phrases are ≤8 tokens and share ≥3
+    content words, treat as tautological (catches near-synonymous rewrites).
+    """
+    src_tok = _phrase_tokens(src_phrase)
+    tgt_tok = _phrase_tokens(tgt_phrase)
+    if not src_tok or not tgt_tok:
+        return False
+    intersection = len(src_tok & tgt_tok)
+    union = len(src_tok | tgt_tok)
+    if (intersection / union) >= 0.60:
+        return True
+    # Short-phrase absolute overlap: ≤8 tokens each, share ≥3 content words
+    if len(src_tok) <= 8 and len(tgt_tok) <= 8 and intersection >= 3:
+        return True
+    return False
+
+
+_HTML_RE = _re.compile(r'<[a-zA-Z/]|</|<table|<tr\b|<td\b|<th\b|<img\b|<figure|<figcaption')
+_CYRILLIC_RE = _re.compile(r'[А-Яа-яЁё]')
+
+
+def _has_html_artifact(phrase: str) -> bool:
+    """Reject if phrase contains HTML tags (markdown artifact)."""
+    if not phrase:
+        return False
+    return bool(_HTML_RE.search(phrase))
+
+
+def _has_cyrillic(phrase: str) -> bool:
+    """Reject if phrase contains Cyrillic characters (metadata leak)."""
+    if not phrase:
+        return False
+    return bool(_CYRILLIC_RE.search(phrase))
 
 
 def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
                    confidence: float, evidence: list) -> tuple[bool, str]:
     src_verb = extract_verb(src_phrase)
     tgt_verb = extract_verb(tgt_phrase)
+
+    # Reject HTML artifacts (markdown parsing noise)
+    if _has_html_artifact(src_phrase) or _has_html_artifact(tgt_phrase):
+        return False, "html artifact in phrase"
+
+    # Reject Cyrillic text (metadata/author-name leak into full_phrase)
+    if _has_cyrillic(src_phrase) or _has_cyrillic(tgt_phrase):
+        return False, "cyrillic text in phrase (metadata leak)"
+
+    # Reject if neither phrase contains a bio-domain token (non-biomedical article)
+    if not _has_bio_domain_token(src_phrase) and not _has_bio_domain_token(tgt_phrase):
+        return False, "no bio domain token in either phrase (non-bio article)"
+
+    # Reject tautological edges (src ≈ tgt paraphrase)
+    if _is_tautological(src_phrase, tgt_phrase):
+        return False, "tautological src≈tgt phrases"
 
     # Reject if either verb is meta-commentary
     if is_meta_verb(src_verb):
@@ -232,6 +667,14 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
     # Reject if keyword overlap is abstract
     if keyword_is_abstract(evidence):
         return False, f"abstract keyword: {evidence}"
+
+    # Reject if [subject:] evidence contains only abstract tokens
+    for ev in (evidence or []):
+        if ev.startswith('[subject:'):
+            subj = ev[9:].rstrip(']').strip().lower()
+            tokens = [t.strip() for t in subj.split(',') if t.strip()]
+            if tokens and all(t in ABSTRACT_ENTITY_TOKENS or len(t) <= 3 for t in tokens):
+                return False, f"abstract subject evidence: {ev}"
 
     # Reject if low confidence and neither verb is bio
     if confidence < 0.6 and not is_bio_verb(src_verb) and not is_bio_verb(tgt_verb):
@@ -270,10 +713,15 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
                 return False, f"same generic verb without marker: {src_verb}"
 
     # Confirm marker-based edges with at least one bio verb
+    # AND at least one phrase must contain a bio-domain token (prevents non-bio domain leakage)
     has_marker = any(ev and not ev.startswith('[') for ev in (evidence or []))
     if has_marker:
         if src_bio or tgt_bio:
-            return True, "marker + bio verb"
+            src_bio_domain = _has_bio_domain_token(src_phrase)
+            tgt_bio_domain = _has_bio_domain_token(tgt_phrase)
+            if src_bio_domain or tgt_bio_domain:
+                return True, "marker + bio verb + bio domain token"
+            return False, "marker + bio verb but no bio domain token (non-bio article)"
         return False, f"marker but non-bio verbs: {src_verb}, {tgt_verb}"
 
     # Shared-entity edges: require both bio verbs
@@ -290,19 +738,21 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
             return True, "keyword + both bio verbs"
         return False, f"keyword but non-bio: {src_verb}, {tgt_verb}"
 
-    # Obj→obj overlap: require both bio verbs (weaker signal, same rule)
+    # Obj→obj overlap: require both bio verbs AND confidence >= 0.65
+    # (weakest structural evidence — high false positive rate at 0.58)
     has_obj_obj = any('[obj_obj:' in str(ev) for ev in (evidence or []))
     if has_obj_obj:
-        if src_bio and tgt_bio:
-            return True, "obj_obj + both bio verbs"
-        return False, f"obj_obj but non-bio: {src_verb}, {tgt_verb}"
+        if src_bio and tgt_bio and confidence >= 0.65:
+            return True, "obj_obj + both bio verbs + conf>=0.65"
+        return False, f"obj_obj but non-bio or low-conf: {src_verb}, {tgt_verb}, conf={confidence}"
 
-    # Shared subject: require both bio verbs
+    # Shared subject: require both bio verbs AND confidence >= 0.65
+    # (weakest evidence type — many false positives at low confidence)
     has_subject = any('[subject:' in str(ev) for ev in (evidence or []))
     if has_subject:
-        if src_bio and tgt_bio:
+        if src_bio and tgt_bio and confidence >= 0.65:
             return True, "shared subject + both bio verbs"
-        return False, f"shared subject but non-bio: {src_verb}, {tgt_verb}"
+        return False, f"shared subject but non-bio or low-conf: {src_verb}, {tgt_verb}"
 
     # Default: confirm if both bio verbs (any confidence)
     if src_bio and tgt_bio:
@@ -311,7 +761,7 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
     return False, f"no clear positive signal: {src_verb}({'bio' if src_bio else 'meta'}), {tgt_verb}({'bio' if tgt_bio else 'meta'})"
 
 
-def run(doc_id: str, dry_run: bool = False) -> dict:
+def run(doc_id: str, dry_run: bool = False, quiet: bool = False) -> dict:
     results, _ = db.cypher_query('''
         MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO {status: "pending"}]->(t:Action)
         RETURN s.uid, t.uid, s.full_phrase, t.full_phrase,
@@ -336,34 +786,41 @@ def run(doc_id: str, dry_run: bool = False) -> dict:
         else:
             rejected.append((src_uid, tgt_uid, relation, src_short, tgt_short, reason))
 
-    print(f"\n{'DRY RUN — ' if dry_run else ''}Results for doc {doc_id}:")
-    print(f"  Confirmed: {len(confirmed)}")
-    print(f"  Rejected:  {len(rejected)}")
     total = len(confirmed) + len(rejected)
     prec = len(confirmed) / total * 100 if total else 0
-    print(f"  Precision: {prec:.0f}%\n")
+
+    if not quiet:
+        print(f"\n{'DRY RUN — ' if dry_run else ''}Results for doc {doc_id}:")
+        print(f"  Confirmed: {len(confirmed)}")
+        print(f"  Rejected:  {len(rejected)}")
+        print(f"  Precision: {prec:.0f}%\n")
 
     if not dry_run:
-        for src_uid, tgt_uid, relation, *_ in confirmed:
+        if confirmed:
             db.cypher_query('''
-                MATCH (s:Action {uid: $src})-[r:LEADS_TO {relation_subtype: $rel}]->(t:Action {uid: $tgt})
+                UNWIND $pairs AS p
+                MATCH (s:Action {uid: p.src})-[r:LEADS_TO {relation_subtype: p.rel}]->(t:Action {uid: p.tgt})
                 SET r.status = "confirmed"
-            ''', {'src': src_uid, 'tgt': tgt_uid, 'rel': relation})
+            ''', {'pairs': [{'src': su, 'tgt': tu, 'rel': rel} for su, tu, rel, *_ in confirmed]})
 
-        for src_uid, tgt_uid, relation, *_ in rejected:
+        if rejected:
             db.cypher_query('''
-                MATCH (s:Action {uid: $src})-[r:LEADS_TO {relation_subtype: $rel}]->(t:Action {uid: $tgt})
+                UNWIND $pairs AS p
+                MATCH (s:Action {uid: p.src})-[r:LEADS_TO {relation_subtype: p.rel}]->(t:Action {uid: p.tgt})
                 SET r.status = "rejected"
-            ''', {'src': src_uid, 'tgt': tgt_uid, 'rel': relation})
-        print("  Status updated in Neo4j.")
+            ''', {'pairs': [{'src': su, 'tgt': tu, 'rel': rel} for su, tu, rel, *_ in rejected]})
 
-    print("\n=== CONFIRMED ===")
-    for _, _, rel, src, tgt, reason in confirmed:
-        print(f"  [{rel}] {src} --> {tgt}  ({reason})")
+        if not quiet:
+            print("  Status updated in Neo4j.")
 
-    print("\n=== REJECTED ===")
-    for _, _, rel, src, tgt, reason in rejected:
-        print(f"  [{rel}] {src} --> {tgt}  ({reason})")
+    if not quiet:
+        print("\n=== CONFIRMED ===")
+        for _, _, rel, src, tgt, reason in confirmed:
+            print(f"  [{rel}] {src} --> {tgt}  ({reason})")
+
+        print("\n=== REJECTED ===")
+        for _, _, rel, src, tgt, reason in rejected:
+            print(f"  [{rel}] {src} --> {tgt}  ({reason})")
 
     return {"confirmed": len(confirmed), "rejected": len(rejected)}
 

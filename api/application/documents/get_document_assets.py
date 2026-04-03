@@ -35,22 +35,25 @@ async def get_document_assets(
     if doc is None:
         raise NotFoundError("PDFDocument", doc_id)
 
+    import asyncio
+
     bucket = doc.s3_bucket
     prefix = f"documents/{doc_id}/"
 
-    # Получаем активный markdown
     active_key = doc.get_active_markdown_key()
-    # Fallback к стандартному пути если ни один S3-ключ не сохранён в Neo4j
     if not active_key:
         active_key = f"{prefix}{doc_id}.md"
-    markdown = None
-    if active_key:
-        markdown = await storage.download_text(bucket, active_key)
-        if markdown:
-            markdown = _convert_image_paths(markdown, doc_id)
 
-    # Список изображений
-    objects = await storage.list_objects(bucket, prefix=f"{prefix}images/")
+    # Параллельно: markdown + список изображений в images/
+    markdown_task = storage.download_text(bucket, active_key) if active_key else asyncio.sleep(0, result=None)
+    images_task = storage.list_objects(bucket, prefix=f"{prefix}images/")
+
+    markdown_raw, objects = await asyncio.gather(markdown_task, images_task)
+
+    markdown = None
+    if markdown_raw:
+        markdown = _convert_image_paths(markdown_raw, doc_id)
+
     if not objects:
         # fallback — изображения прямо в prefix без подпапки images/
         objects = await storage.list_objects(bucket, prefix=prefix)

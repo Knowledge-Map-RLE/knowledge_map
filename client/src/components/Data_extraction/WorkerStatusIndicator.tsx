@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import s from './Document_downloader_ui.module.css';
 import WorkerDetailsModal from './WorkerDetailsModal';
 
-const WORKER_STATUS_URL = 'http://localhost:8004';
+const WORKER_STATUS_URL = '/api/worker';
 const POLL_INTERVAL_MS = 3000;
 
 interface WorkerStatus {

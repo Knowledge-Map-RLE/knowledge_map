@@ -1,0 +1,28 @@
+DONE articles total: 1161
+  with actions:  575 (49.5%)
+  zero actions:  586 (50.5%)
+
+processing_status of zero-action done docs:
+
+S3 keys for zero-action docs (total=586):
+  user_md:     0
+  formatted:   0
+  docling_raw: 586
+  s3_key:      586
+
+Sample zero-action docs:
+  PMC13028036: ps=annotated key=Y:documents/3ad450322f457836095f6f6e64a9a5
+    title=Impact of Combined Interventions and Early Home Care Activation on 30-
+  PMC13027790: ps=annotated key=Y:documents/6b52eb9e30d085beaaf1e73cf9326f
+    title=Establishing Age- and Sex-Specific Reference Intervals for Thyroid Fun
+  PMC13029327: ps=annotated key=Y:documents/ba50bdbd1f0c5ff9d97320b5f5fad0
+    title=Pleiotropic Bioactivity of Caterpillar Fungus, Orange Cordyceps, and C
+  PMC13029078: ps=annotated key=Y:documents/4c7468a38b3b22752c616084598f00
+    title=Evidence-Based Nutraceuticals in Human Health and Longevity Medicine
+  PMC13025002: ps=annotated key=Y:documents/67b5788aec0ac2f70ce056ce1f7bd2
+    title=Correction: Nazarloo et al. Oxytocin, Vasopressin and Stress: A Hormet
+
+done articles with no PDFDocument: 0
+
+Among docs with actions (aggregate sample):
+  confirmed=52663 rejected=206183 pending=0 total=258856 n_docs=575

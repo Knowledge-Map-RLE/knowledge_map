@@ -66,7 +66,12 @@ class NLPGRPCClient:
                 self._connected = False
             if not self._connected:
                 logger.info(f"[grpc_client] Пытаемся подключиться к {self.host}:{self.port}")
-                self.channel = aio.insecure_channel(f"{self.host}:{self.port}")
+                # 256MB лимит — NLP ответ для больших текстов (~65K симв.) может быть 50-100MB
+                _GRPC_OPTIONS = [
+                    ("grpc.max_send_message_length", 256 * 1024 * 1024),
+                    ("grpc.max_receive_message_length", 256 * 1024 * 1024),
+                ]
+                self.channel = aio.insecure_channel(f"{self.host}:{self.port}", options=_GRPC_OPTIONS)
                 self.stub = nlp_pb2_grpc.NLPServiceStub(self.channel)
                 self._connected = True
                 self._loop = current_loop
@@ -198,7 +203,7 @@ class NLPGRPCClient:
         levels: Optional[List[str]] = None,
         enable_voting: bool = True,
         min_agreement: int = 2,
-        timeout: int = 120,
+        timeout: int = 600,
         doc_id: str = "",
     ) -> Dict[str, Any]:
         """

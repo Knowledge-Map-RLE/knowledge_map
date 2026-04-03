@@ -94,7 +94,8 @@ async def delete_document_route(
 @router.get("/documents")
 async def list_documents_route(doc_repo=Depends(get_document_repository)):
     """Список документов из Neo4j."""
-    docs = list_documents(repo=doc_repo)
+    import asyncio
+    docs = await asyncio.to_thread(list_documents, repo=doc_repo)
     return {
         "success": True,
         "documents": [

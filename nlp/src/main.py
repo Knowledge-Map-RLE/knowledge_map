@@ -319,31 +319,128 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                 message=f"Ошибка: {str(e)}"
             )
 
+    # Паттерны для HTML-блоков, которые нужно фильтровать
+    _TABLE_RE = re.compile(r'<table\b[^>]*>.*?</table>', re.DOTALL | re.IGNORECASE)
+    _CAPTION_RE = re.compile(r'<caption\b[^>]*>(.*?)</caption>', re.DOTALL | re.IGNORECASE)
+    _FIGURE_RE = re.compile(r'<figure\b[^>]*>.*?</figure>', re.DOTALL | re.IGNORECASE)
+    _FIGCAPTION_RE = re.compile(r'<figcaption\b[^>]*>(.*?)</figcaption>', re.DOTALL | re.IGNORECASE)
+    _IMG_RE = re.compile(r'<img\b[^>]*/>', re.IGNORECASE)
+
     @staticmethod
-    def _filter_text_for_analysis(text: str):
-        """
-        Убирает YAML front-matter и секцию References из текста перед анализом.
-        Возвращает (filtered_text, char_offset) где char_offset — смещение начала
-        отфильтрованного текста в оригинальном (для корректных offsets в аннотациях).
-        """
-        offset = 0
-        # Убрать YAML front-matter (---...---)
-        frontmatter_match = re.match(r'^---\r?\n.*?\r?\n---\r?\n', text, re.DOTALL)
-        if frontmatter_match:
-            offset = frontmatter_match.end()
-            text = text[offset:]
+    def _remap_offset(pos: int, offset_map: list) -> int:
+        """Преобразует позицию в отфильтрованном тексте в позицию в оригинале."""
+        if pos < len(offset_map):
+            return offset_map[pos]
+        if offset_map:
+            return offset_map[-1] + (pos - len(offset_map) + 1)
+        return pos
 
-        # Убрать секцию References (## References и всё после)
-        ref_match = re.search(r'\n##\s+References\b', text, re.IGNORECASE)
+    @classmethod
+    def _filter_text_for_analysis(cls, text: str) -> tuple:
+        """
+        Фильтрует Markdown-текст перед анализом spaCy:
+        - Удаляет YAML front-matter (---...---)
+        - Удаляет HTML-таблицы (сохраняет текст <caption>)
+        - Удаляет HTML-изображения <figure>/<img> (сохраняет текст <figcaption>)
+        - Удаляет секцию References и всё после неё
+
+        Возвращает (filtered_text, offset_map) где offset_map[i] — позиция
+        символа i отфильтрованного текста в оригинальном тексте.
+        """
+        orig = text
+        result_chars: list = []
+        offset_map: list = []
+
+        def append_span(start: int, end: int) -> None:
+            for i in range(start, end):
+                result_chars.append(orig[i])
+                offset_map.append(i)
+
+        def append_replacement(replacement: str, orig_pos: int) -> None:
+            for ch in replacement:
+                result_chars.append(ch)
+                offset_map.append(orig_pos)
+
+        # Собираем диапазоны для удаления/замены.
+        # Каждый элемент: (start, end, keep_spans)
+        # keep_spans — список (orig_start, orig_end) реальных подстрок оригинала,
+        # которые нужно оставить вместо вырезанного блока (с правильным offset_map).
+        removals: list = []
+
+        # 1. YAML front-matter в начале файла
+        fm_match = re.match(r'^---\r?\n.*?\r?\n---\r?\n', orig, re.DOTALL)
+        if fm_match:
+            removals.append((fm_match.start(), fm_match.end(), []))
+
+        # 2. HTML-таблицы → оставляем текст <caption> с реальными позициями
+        for m in cls._TABLE_RE.finditer(orig):
+            keep = []
+            cap = cls._CAPTION_RE.search(m.group(0))
+            if cap:
+                # cap.start(1)/end(1) — позиция группы захвата внутри m.group(0)
+                abs_start = m.start() + cap.start(1)
+                abs_end = m.start() + cap.end(1)
+                # strip() — убираем пробелы по краям, находя реальные границы
+                inner = orig[abs_start:abs_end]
+                stripped_inner = inner.strip()
+                if stripped_inner:
+                    lstrip = len(inner) - len(inner.lstrip())
+                    keep.append((abs_start + lstrip, abs_start + lstrip + len(stripped_inner)))
+            removals.append((m.start(), m.end(), keep))
+
+        # 3. HTML-фигуры → оставляем текст <figcaption> с реальными позициями
+        for m in cls._FIGURE_RE.finditer(orig):
+            keep = []
+            fcap = cls._FIGCAPTION_RE.search(m.group(0))
+            if fcap:
+                abs_start = m.start() + fcap.start(1)
+                abs_end = m.start() + fcap.end(1)
+                inner = orig[abs_start:abs_end]
+                stripped_inner = inner.strip()
+                if stripped_inner:
+                    lstrip = len(inner) - len(inner.lstrip())
+                    keep.append((abs_start + lstrip, abs_start + lstrip + len(stripped_inner)))
+            removals.append((m.start(), m.end(), keep))
+
+        # 4. Одиночные <img /> без <figure>
+        for m in cls._IMG_RE.finditer(orig):
+            removals.append((m.start(), m.end(), []))
+
+        # 5. Секция References — удаляем всё от начала заголовка до конца
+        ref_match = re.search(r'\n#{1,6}\s+References\b', orig, re.IGNORECASE)
         if ref_match:
-            text = text[:ref_match.start()]
+            removals.append((ref_match.start(), len(orig), []))
 
-        return text, offset
+        # Сортируем и разрешаем перекрытия (побеждает первый/больший диапазон)
+        removals.sort(key=lambda x: x[0])
+        merged: list = []
+        for start, end, keep_spans in removals:
+            if merged and start < merged[-1][1]:
+                prev_start, prev_end, prev_keep = merged[-1]
+                merged[-1] = (prev_start, max(prev_end, end), prev_keep)
+            else:
+                merged.append((start, end, keep_spans))
+
+        # Строим отфильтрованный текст с картой смещений
+        cursor = 0
+        for start, end, keep_spans in merged:
+            if cursor < start:
+                append_span(cursor, start)
+            for ks, ke in keep_spans:
+                append_span(ks, ke)
+                # разделитель после caption/figcaption
+                append_replacement('\n', ke - 1)
+            cursor = end
+        if cursor < len(orig):
+            append_span(cursor, len(orig))
+
+        filtered_text = ''.join(result_chars)
+        return filtered_text, offset_map
 
     async def AnalyzeText(self, request, context):
         """Многоуровневый лингвистический анализ"""
         try:
-            logger.info(f"AnalyzeText запрос: doc_id={request.doc_id or '<none>'} текст длиной {len(request.text)} символов")
+            logger.info(f"AnalyzeText запрос: текст длиной {len(request.text)} символов")
 
             # Проверяем максимальную длину
             if len(request.text) > self.config.max_text_length:
@@ -352,10 +449,10 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                     message=f"Текст слишком длинный (максимум {self.config.max_text_length} символов)"
                 )
 
-            # Фильтруем front-matter и References, запоминаем смещение
-            analyze_text, char_offset = self._filter_text_for_analysis(request.text)
-            if char_offset > 0 or len(analyze_text) < len(request.text):
-                logger.info(f"Текст после фильтрации: {len(request.text)} -> {len(analyze_text)} символов (offset={char_offset})")
+            # Фильтруем front-matter, HTML-блоки и References, строим карту смещений
+            analyze_text, offset_map = self._filter_text_for_analysis(request.text)
+            if len(analyze_text) < len(request.text):
+                logger.info(f"Текст после фильтрации: {len(request.text)} -> {len(analyze_text)} символов")
 
             # Конвертируем уровни из proto
             levels_map = {
@@ -379,30 +476,30 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                 min_agreement=min_agreement
             )
 
-            # Корректируем offsets: прибавляем char_offset ко всем позициям
-            if char_offset > 0:
+            # Корректируем offsets через карту смещений
+            if offset_map:
                 for sent in document.sentences:
-                    sent.start_char += char_offset
-                    sent.end_char += char_offset
+                    sent.start_char = self._remap_offset(sent.start_char, offset_map)
+                    sent.end_char = self._remap_offset(sent.end_char, offset_map)
                     for token in sent.tokens:
-                        token.start_char += char_offset
-                        token.end_char += char_offset
+                        token.start_char = self._remap_offset(token.start_char, offset_map)
+                        token.end_char = self._remap_offset(token.end_char, offset_map)
                     for entity in sent.entities:
                         if entity.start_char is not None:
-                            entity.start_char += char_offset
+                            entity.start_char = self._remap_offset(entity.start_char, offset_map)
                         if entity.end_char is not None:
-                            entity.end_char += char_offset
+                            entity.end_char = self._remap_offset(entity.end_char, offset_map)
                 for entity in document.entities:
                     if entity.start_char is not None:
-                        entity.start_char += char_offset
+                        entity.start_char = self._remap_offset(entity.start_char, offset_map)
                     if entity.end_char is not None:
-                        entity.end_char += char_offset
+                        entity.end_char = self._remap_offset(entity.end_char, offset_map)
 
             # Конвертируем UnifiedDocument в proto
             proto_doc = self._convert_document_to_proto(document)
 
             processing_time = time.time() - start_time
-            logger.info(f"AnalyzeText выполнен: doc_id={request.doc_id or '<none>'} за {processing_time:.2f}с")
+            logger.info(f"AnalyzeText выполнен за {processing_time:.2f}с")
 
             return nlp_pb2.AnalyzeTextResponse(
                 success=True,
@@ -736,7 +833,12 @@ async def serve():
             return
 
     # Создаём сервер
-    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=config.max_workers))
+    # 256MB лимит — ответ с NLP-документом для текста ~65K символов может быть 50-100MB
+    _GRPC_OPTIONS = [
+        ("grpc.max_send_message_length", 256 * 1024 * 1024),
+        ("grpc.max_receive_message_length", 256 * 1024 * 1024),
+    ]
+    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=config.max_workers), options=_GRPC_OPTIONS)
     nlp_pb2_grpc.add_NLPServiceServicer_to_server(NLPServicer(), server)
 
     server.add_insecure_port(f'{config.host}:{config.port}')

@@ -10,6 +10,7 @@ import { useAnnotationOffsets } from './hooks/useAnnotationOffsets';
 import { useRelations } from './hooks/useRelations';
 import {
   autoAnnotateMultilevel,
+  getNlpTaskStatus,
   deleteAllAnnotations,
   createAnnotation,
   createAnnotationRelation,
@@ -94,6 +95,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   const savedAnnotatorScrollTop = useRef<number>(0);
   const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isImportingRef = useRef(false);
 
   // Cursor position for shift functionality
@@ -176,7 +178,10 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     setSavedText(text);
   }, [text, setSavedText]);
 
-  // Load data on mount and filter changes
+  // Загрузка аннотаций: при смене документа и при смене фильтров.
+  // loadAnnotations пересоздаётся при смене docId или фильтров — этого достаточно.
+  // Важно: этот эффект идёт ПОСЛЕ useEffect([docId]) в useAnnotationsWS,
+  // поэтому destroyedRef уже сброшен в false к моменту вызова.
   useEffect(() => {
     loadAnnotations();
     loadRelations();
@@ -457,14 +462,15 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         onUpdateDocumentStatus(docId, 'processing');
     }
 
-    // Simulate progress updates
+    // Имитация прогресса до получения реального статуса
     const progressInterval = setInterval(() => {
       setAnalysisProgress(prev => {
         if (prev === null) return 0;
-        const next = prev + Math.floor(Math.random() * 5) + 1;
-        return next > 95 ? 95 : next; // Cap at 95% until actual completion
+        const next = prev + Math.floor(Math.random() * 3) + 1;
+        return next > 90 ? 90 : next;
       });
-    }, 500);
+    }, 1000);
+    progressIntervalRef.current = progressInterval;
 
     try {
       await autoAnnotateMultilevel(
@@ -475,42 +481,60 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         0.8    // min_confidence
       );
 
-      console.log('Multi-level анализ запущен в фоне. Аннотации появятся через несколько минут.');
-
       // Очищаем предыдущий polling если был
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
       if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
 
-      // Ждём завершения анализа, периодически обновляя аннотации
-      pollIntervalRef.current = setInterval(async () => {
-        await loadAnnotations();
-        await loadRelations();
-      }, 10000);
+      // Поллим только лёгкий статус-эндпоинт — без перезагрузки аннотаций
+      // Аннотации загружаем один раз по завершении задачи
+      const startedAt = Date.now();
+      const MAX_WAIT_MS = 600_000; // 10 минут
 
-      // Остановить polling через 5 минут
-      pollTimeoutRef.current = setTimeout(() => {
-        if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-        pollIntervalRef.current = null;
-        setAnalysisProgress(100);
-        setIsAutoAnnotating(false);
-        setAnalysisProgress(null);
-        if (onNlpProcessingChange) onNlpProcessingChange(false);
-        if (onUpdateDocumentStatus) {
-          onUpdateDocumentStatus(docId, 'ready_for_annotation');
+      pollIntervalRef.current = setInterval(async () => {
+        try {
+          const { status, error } = await getNlpTaskStatus(docId);
+
+          const stopPolling = () => {
+            if (pollIntervalRef.current) { clearInterval(pollIntervalRef.current); pollIntervalRef.current = null; }
+            if (progressIntervalRef.current) { clearInterval(progressIntervalRef.current); progressIntervalRef.current = null; }
+          };
+
+          if (status === 'done') {
+            stopPolling();
+            setAnalysisProgress(100);
+            await loadAnnotations();
+            await loadRelations();
+            setIsAutoAnnotating(false);
+            setAnalysisProgress(null);
+            if (onNlpProcessingChange) onNlpProcessingChange(false);
+            if (onUpdateDocumentStatus) onUpdateDocumentStatus(docId, 'annotated');
+            return;
+          }
+
+          if (status === 'error') {
+            stopPolling();
+            console.error('NLP анализ завершился с ошибкой:', error);
+            setIsAutoAnnotating(false);
+            setAnalysisProgress(null);
+            if (onNlpProcessingChange) onNlpProcessingChange(false);
+            return;
+          }
+
+          // Таймаут ожидания
+          if (Date.now() - startedAt > MAX_WAIT_MS) {
+            stopPolling();
+            setIsAutoAnnotating(false);
+            setAnalysisProgress(null);
+            if (onNlpProcessingChange) onNlpProcessingChange(false);
+          }
+        } catch {
+          // сетевая ошибка при поллинге — продолжаем
         }
-      }, 300000);
+      }, 3000);
 
     } catch (error: any) {
-      console.error(
-        'Не удалось запустить multi-level анализ:',
-        error?.message || error,
-        '\n\nПроверьте, что:\n' +
-        '• Документ сохранен в базе данных\n' +
-        '• Markdown файл доступен\n' +
-        '• NLP модели установлены (spaCy, NLTK)\n' +
-        '• Сервер NLP запущен и доступен'
-      );
-      clearInterval(progressInterval);
+      console.error('Не удалось запустить multi-level анализ:', error?.message || error);
+      if (progressIntervalRef.current) { clearInterval(progressIntervalRef.current); progressIntervalRef.current = null; }
       setIsAutoAnnotating(false);
       setAnalysisProgress(null);
       if (onNlpProcessingChange) onNlpProcessingChange(false);

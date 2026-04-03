@@ -1,0 +1,5 @@
+Action indexes:
+
+Testing small batch update...
+Got 500 sample edges
+Updated 100 edges in 10.41s

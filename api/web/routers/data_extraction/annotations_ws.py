@@ -8,6 +8,7 @@ Responsibility: WebSocket endpoint для Markdown-аннотаций.
 Allowed imports: fastapi, application.annotations.*, web.dependencies
 Forbidden imports: neomodel (напрямую), infrastructure
 """
+import asyncio
 import logging
 from typing import List, Optional
 
@@ -63,9 +64,10 @@ async def _handle_load(
         else None
     )
 
-    anns, total = get_annotations(
+    anns, total = await asyncio.to_thread(
+        get_annotations,
         annotation_repo=ann_repo,
-        document_repo=doc_repo,
+        document_repo=None,
         doc_id=doc_id,
         skip=0,
         limit=None,
@@ -73,8 +75,12 @@ async def _handle_load(
         source=source,
     )
 
+    if not anns:
+        await ws.send_json({"event": "annotations_done", "total": 0})
+        return
+
     chunk_size = 500
-    chunks = [anns[i:i + chunk_size] for i in range(0, len(anns), chunk_size)] if anns else [[]]
+    chunks = [anns[i:i + chunk_size] for i in range(0, len(anns), chunk_size)]
     total_chunks = len(chunks)
 
     for idx, chunk in enumerate(chunks):

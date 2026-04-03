@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
-const WORKER_STATUS_URL = 'http://localhost:8004';
+const WORKER_STATUS_URL = '/api/worker';
 
 interface ArticleProgress {
     pmcid: string;

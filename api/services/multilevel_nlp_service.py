@@ -236,7 +236,7 @@ class MultiLevelNLPService:
             levels=levels if levels else None,
             enable_voting=enable_voting,
             min_agreement=2,
-            timeout=120,
+            timeout=600,
             doc_id=doc_id or "",
         )
 
