@@ -8,18 +8,6 @@ max_connections = 1000
 request_timeout = 300  # секунды
 stream_buffer_size = 1024
 
-[neo4j]
-uri = "bolt://localhost:7687"
-user = "neo4j" 
-password = "password"
-database = "neo4j"
-pool_size = 100
-connection_timeout = 60   # секунды (уменьшен для тестирования)
-transaction_timeout = 600  # секунды (10 минут, уменьшен для тестирования)
-batch_size = 10000
-save_batch_size = 500   # размер батча для сохранения результатов (уменьшен для стабильности)
-save_parallelism = 2    # число параллельных транзакций сохранения (уменьшено для стабильности)
-
 [algorithms]
 block_width = 200.0
 block_height = 80.0

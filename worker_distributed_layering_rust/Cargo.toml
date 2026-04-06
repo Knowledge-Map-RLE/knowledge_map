@@ -30,10 +30,6 @@ hashbrown = "0.14"
 smallvec = "1.11"
 ahash = "0.8"
 
-# Neo4j integration
-reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
-neo4rs = "0.7"
-
 # Configuration and serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

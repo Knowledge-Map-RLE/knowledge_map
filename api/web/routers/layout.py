@@ -128,6 +128,18 @@ async def get_articles_layout_page(
     return await layout_service.get_articles_layout_page(offset, limit, center_x, center_y)
 
 
+@router.get("/knowledge_map_page")
+async def get_knowledge_map_layout_page(
+    offset: int = 0,
+    limit: int = 500,
+    center_x: float = 0.0,
+    center_y: float = 0.0,
+) -> Dict[str, Any]:
+    """Возвращает агрегированный граф знаний из Action-нод.
+    Одинаковые действия из разных статей объединены по norm_key (лингвистическая структура)."""
+    return await layout_service.get_knowledge_map_page(offset, limit, center_x, center_y)
+
+
 @router.get("/neo4j")
 async def get_layout_from_neo4j(user_id: str = None) -> Dict[str, Any]:
     """Получает укладку из Neo4j для блоков Block"""

@@ -72,42 +72,146 @@ pub fn place_vertices_in_layer(
     positions
 }
 
-/// Place all vertices based on their layer assignments
-///
-/// Takes a HashMap of layer assignments and produces a Vec of VertexPosition
+/// Place all vertices based on their layer assignments (no crossing reduction).
 pub fn place_all_vertices(
     layer_map: &HashMap<String, i32>,
     config: &PlacementConfig,
 ) -> Vec<VertexPosition> {
+    place_all_vertices_impl(layer_map, config, false, &HashMap::new(), &HashMap::new())
+}
+
+/// Place all vertices with Sugiyama barycenter crossing reduction.
+///
+/// Applies multiple sweeps of the barycenter heuristic to reduce edge crossings.
+/// Edges are provided as adjacency maps: outgoing[src] = [dst] and incoming[dst] = [src].
+pub fn place_all_vertices_with_crossing_reduction(
+    layer_map: &HashMap<String, i32>,
+    config: &PlacementConfig,
+    outgoing: &HashMap<String, Vec<String>>,
+    incoming: &HashMap<String, Vec<String>>,
+) -> Vec<VertexPosition> {
+    place_all_vertices_impl(layer_map, config, true, outgoing, incoming)
+}
+
+fn place_all_vertices_impl(
+    layer_map: &HashMap<String, i32>,
+    config: &PlacementConfig,
+    reduce_crossings: bool,
+    outgoing: &HashMap<String, Vec<String>>,
+    incoming: &HashMap<String, Vec<String>>,
+) -> Vec<VertexPosition> {
     // Group vertices by layer
     let mut layer_assignments: HashMap<i32, Vec<String>> = HashMap::new();
-
     for (vertex_id, &layer) in layer_map {
-        layer_assignments
-            .entry(layer)
-            .or_insert_with(Vec::new)
-            .push(vertex_id.clone());
+        layer_assignments.entry(layer).or_default().push(vertex_id.clone());
     }
 
-    // Sort layers for consistent ordering
-    let mut sorted_layers: Vec<_> = layer_assignments.into_iter().collect();
-    sorted_layers.sort_by_key(|(layer, _)| *layer);
+    let mut sorted_layers: Vec<i32> = layer_assignments.keys().copied().collect();
+    sorted_layers.sort();
 
-    // Place vertices in each layer
+    // Initial ordering within each layer (deterministic)
+    let mut layer_order: HashMap<i32, Vec<String>> = layer_assignments
+        .iter()
+        .map(|(&l, verts)| {
+            let mut v = verts.clone();
+            v.sort(); // deterministic start
+            (l, v)
+        })
+        .collect();
+
+    if reduce_crossings {
+        // Barycenter heuristic — 4 forward + 4 backward sweeps
+        const SWEEPS: usize = 4;
+
+        for _pass in 0..SWEEPS {
+            // Forward sweep: fix layer L, reorder layer L+1 by barycenter of L neighbors
+            for &layer in &sorted_layers {
+                let next = layer + 1;
+                if !layer_order.contains_key(&next) { continue; }
+
+                // Position index in current layer
+                let pos_map: HashMap<String, f32> = layer_order[&layer]
+                    .iter()
+                    .enumerate()
+                    .map(|(i, v)| (v.clone(), i as f32))
+                    .collect();
+
+                let next_verts = layer_order.get_mut(&next).unwrap();
+                next_verts.sort_by(|a, b| {
+                    let bc_a = barycenter(a, incoming, &pos_map);
+                    let bc_b = barycenter(b, incoming, &pos_map);
+                    bc_a.partial_cmp(&bc_b).unwrap_or(std::cmp::Ordering::Equal)
+                });
+            }
+
+            // Backward sweep: fix layer L+1, reorder layer L by barycenter of L+1 neighbors
+            for &layer in sorted_layers.iter().rev() {
+                let next = layer + 1;
+                if !layer_order.contains_key(&next) { continue; }
+
+                let pos_map: HashMap<String, f32> = layer_order[&next]
+                    .iter()
+                    .enumerate()
+                    .map(|(i, v)| (v.clone(), i as f32))
+                    .collect();
+
+                let cur_verts = layer_order.get_mut(&layer).unwrap();
+                cur_verts.sort_by(|a, b| {
+                    let bc_a = barycenter(a, outgoing, &pos_map);
+                    let bc_b = barycenter(b, outgoing, &pos_map);
+                    bc_a.partial_cmp(&bc_b).unwrap_or(std::cmp::Ordering::Equal)
+                });
+            }
+        }
+
+        tracing::info!(
+            "Crossing reduction: {} sweeps applied across {} layers",
+            SWEEPS * 2,
+            sorted_layers.len()
+        );
+    }
+
+    // Assign coordinates
     let mut all_positions = Vec::new();
-
-    for (layer, vertex_ids) in sorted_layers {
-        let positions = place_vertices_in_layer(layer, &vertex_ids, config);
-        all_positions.extend(positions);
+    for layer in &sorted_layers {
+        let verts = &layer_order[layer];
+        let x = *layer as f32 * (config.block_width + config.horizontal_gap);
+        for (level, vertex_id) in verts.iter().enumerate() {
+            let y = level as f32 * (config.block_height + config.vertical_gap);
+            all_positions.push(VertexPosition {
+                vertex_id: vertex_id.clone(),
+                x,
+                y,
+                layer: *layer,
+                level: level as i32,
+            });
+        }
     }
 
     tracing::info!(
-        "Placed {} vertices across {} layers",
+        "Placed {} vertices across {} layers (crossing_reduction={})",
         all_positions.len(),
-        layer_map.values().max().unwrap_or(&0) + 1
+        sorted_layers.len(),
+        reduce_crossings
     );
 
     all_positions
+}
+
+/// Compute barycenter of a vertex relative to neighbors in the previous/next layer.
+/// Returns the mean position of neighbors, or f32::MAX if no neighbors (placed last).
+fn barycenter(
+    vertex: &str,
+    neighbor_map: &HashMap<String, Vec<String>>,
+    pos_map: &HashMap<String, f32>,
+) -> f32 {
+    let Some(neighbors) = neighbor_map.get(vertex) else {
+        return f32::MAX;
+    };
+    let (sum, count) = neighbors.iter().fold((0.0f32, 0usize), |(s, c), nb| {
+        if let Some(&p) = pos_map.get(nb) { (s + p, c + 1) } else { (s, c) }
+    });
+    if count == 0 { f32::MAX } else { sum / count as f32 }
 }
 
 /// Track occupied positions to avoid overlaps

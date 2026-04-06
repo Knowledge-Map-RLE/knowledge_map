@@ -168,3 +168,11 @@ class ActionRepositoryProtocol(Protocol):
     def delete_for_document(self, doc_id: str) -> int:
         """Удаляет все Action узлы документа (DETACH DELETE), возвращает количество."""
         ...
+
+    def backfill_norm_keys(self) -> int:
+        """Проставляет norm_key для Action-нод без него. Возвращает количество обновлённых."""
+        ...
+
+    def get_aggregated_graph(self) -> Tuple[List[dict], List[dict]]:
+        """Возвращает агрегированный граф: (ноды-представители по norm_key, рёбра между ними)."""
+        ...

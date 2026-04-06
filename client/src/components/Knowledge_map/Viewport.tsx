@@ -27,6 +27,7 @@ export interface ViewportRef {
   on?: (event: 'moved' | 'zoomed', handler: () => void) => void;
   off?: (event: 'moved' | 'zoomed', handler: () => void) => void;
   setScale?: (scale: number) => void;
+  getScale?: () => number;
 }
 
 // TODO: исправить центрирование
@@ -410,6 +411,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     off: (event: 'moved' | 'zoomed', handler: () => void) => {
       listenersRef.current[event].delete(handler);
     },
+    getScale: () => containerRef.current?.scale.x ?? 1,
   }));
 
   // Обновляем центр при изменении размеров экрана

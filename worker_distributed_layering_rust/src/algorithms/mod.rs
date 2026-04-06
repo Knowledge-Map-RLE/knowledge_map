@@ -168,60 +168,19 @@ impl HighPerformanceLayoutEngine {
     
     /// Валидация и фильтрация входных данных
     fn validate_edges(&self, edges: &[GraphEdge]) -> Result<()> {
-        use tracing::info;
         if edges.is_empty() {
             return Err(anyhow::anyhow!("Граф не может быть пустым"));
         }
-        
-        // Анализ данных для диагностики
-        let empty_source = edges.iter().filter(|e| e.source_id.trim().is_empty()).count();
-        let empty_target = edges.iter().filter(|e| e.target_id.trim().is_empty()).count();
-        let self_loops = edges.iter().filter(|e| e.source_id == e.target_id && !e.source_id.trim().is_empty()).count();
-        
-        info!("🔍 Диагностика данных:");
-        info!("   - Связей с пустым source_id: {}", empty_source);
-        info!("   - Связей с пустым target_id: {}", empty_target);
-        info!("   - Self-loops: {}", self_loops);
-        
-        // Показать первые несколько примеров данных
-        info!("📝 Первые 5 связей:");
-        for (i, edge) in edges.iter().take(5).enumerate() {
-            info!("   {}. '{}' -> '{}' (вес: {})", i+1, edge.source_id, edge.target_id, edge.weight);
-        }
-        
-        // Подсчёт валидных связей (исключаем пустые и self-loops)
-        let valid_edges: Vec<_> = edges.iter()
+
+        let valid = edges.iter()
             .filter(|e| !e.source_id.trim().is_empty() && !e.target_id.trim().is_empty())
             .filter(|e| e.source_id != e.target_id)
-            .collect();
-            
-        if valid_edges.is_empty() {
+            .count();
+
+        if valid == 0 {
             return Err(anyhow::anyhow!("Нет валидных связей после фильтрации"));
         }
-        
-        // Проверка на дубликаты среди валидных связей
-        let mut edge_set = std::collections::HashSet::new();
-        let mut duplicate_count = 0;
-        for edge in &valid_edges {
-            let edge_key = (&edge.source_id, &edge.target_id);
-            if !edge_set.insert(edge_key) {
-                duplicate_count += 1;
-            }
-        }
-        
-        info!("📊 Статистика валидации связей:");
-        info!("   - Всего связей: {}", edges.len());
-        info!("   - Валидных связей: {}", valid_edges.len());
-        info!("   - Уникальных связей: {}", edge_set.len());
-        
-        if valid_edges.len() < edges.len() {
-            info!("⚠️ Отфильтровано {} невалидных связей", edges.len() - valid_edges.len());
-        }
-        
-        if duplicate_count > 0 {
-            info!("⚠️ Найдено {} дублирующих связей", duplicate_count);
-        }
-        
+
         Ok(())
     }
     
@@ -280,7 +239,6 @@ impl HighPerformanceLayoutEngine {
             added_count += 1;
         }
 
-        info!("🏗️ Добавлено {} уникальных связей в граф (SOURCE->TARGET, cited->citing)", added_count);
 
         builder.build()
     }
@@ -298,41 +256,28 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
         
         let start_time = Instant::now();
         
-        info!("=== ШАГ 0: ИНИЦИАЛИЗАЦИЯ УКЛАДКИ ===");
-        info!("📊 Входные данные: {} связей", edges.len());
-        
+        info!("Layout: {} edges", edges.len());
+
         // 1. Валидация входных данных
-        info!("🔍 Валидация входных данных...");
         self.validate_edges(&edges)?;
-        info!("✅ Валидация успешна");
-        
+
         // 2. Построение графа
-        info!("=== ШАГ 1: ПОСТРОЕНИЕ ГРАФА ===");
-        info!("🏗️ Построение внутреннего представления графа...");
         let graph = self.build_graph(&edges)?;
-        info!("✅ Граф построен: {} вершин, {} связей", graph.vertex_count(), graph.edge_count());
-        
-        // 3. Топологическая сортировка с параллелизмом
-        info!("=== ШАГ 2: ТОПОЛОГИЧЕСКАЯ СОРТИРОВКА ===");
-        info!("🔄 Выполнение параллельной топологической сортировки...");
+        info!("Graph: {} vertices, {} edges", graph.vertex_count(), graph.edge_count());
+
+        // 3. Топологическая сортировка
         let topo_start = Instant::now();
         let topo_order = self.topo_sorter.compute_parallel(&graph).await?;
         let topo_time = topo_start.elapsed().as_millis() as u64;
-        info!("✅ Топологическая сортировка завершена за {} мс", topo_time);
-        info!("📊 Упорядочено {} вершин", topo_order.order.len());
-        
-        // 4. Поиск longest path с SIMD оптимизацией
-        info!("=== ШАГ 3: ПОИСК САМОГО ДЛИННОГО ПУТИ ===");
-        info!("🛤️ Поиск самого длинного пути с SIMD оптимизацией...");
+        info!("Topo sort: {} vertices in {} ms", topo_order.order.len(), topo_time);
+
+        // 4. Поиск longest path
         let lp_start = Instant::now();
         let longest_path = self.longest_path_finder.find_simd(&graph, &topo_order.order).await?;
         let lp_time = lp_start.elapsed().as_millis() as u64;
-        info!("✅ Самый длинный путь найден за {} мс", lp_time);
-        info!("📏 Длина самого длинного пути: {} вершин", longest_path.len());
-        
-        // 5. Размещение вершин с оптимизацией пространства
-        info!("=== ШАГ 4: РАЗМЕЩЕНИЕ ВЕРШИН ===");
-        info!("📍 Размещение вершин с оптимизацией пространства...");
+        info!("Longest path: {} vertices in {} ms", longest_path.len(), lp_time);
+
+        // 5. Размещение вершин
         let placement_start = Instant::now();
         let (positions, edge_paths) = self.vertex_placer.place_vertices(
             &graph,
@@ -340,8 +285,7 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
             &topo_order.order,
         ).await?;
         let placement_time = placement_start.elapsed().as_millis() as u64;
-        info!("✅ Размещение вершин завершено за {} мс", placement_time);
-        info!("📌 Размещено {} вершин", positions.len());
+        info!("Placement: {} vertices in {} ms", positions.len(), placement_time);
         
         let total_time = start_time.elapsed().as_millis() as u64;
 
@@ -357,8 +301,6 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
             Some(serde_json::to_string(&map)?)
         };
         
-        info!("=== ШАГ 5: ФИНАЛИЗАЦИЯ ===");
-        info!("📊 Создание статистики и метаданных...");
         
         // Создание статистики
         let statistics = LayoutStatistics {
@@ -413,12 +355,11 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
             metadata,
         };
         
-        info!("=== УКЛАДКА УСПЕШНО ЗАВЕРШЕНА ===");
-        info!("⏱️ Общее время: {} мс", total_time);
-        info!("📈 Обработано вершин: {}", graph.vertex_count());
-        info!("🔗 Обработано связей: {}", edges.len());
-        info!("⚡ Скорость: {:.1} вершин/сек", (graph.vertex_count() as f32 / total_time as f32 * 1000.0));
-        info!("=== ВСЕ ЭТАПЫ ЗАВЕРШЕНЫ ===");
+        info!(
+            "Layout done: {} vertices, {} edges in {} ms ({:.0} v/s)",
+            graph.vertex_count(), edges.len(), total_time,
+            graph.vertex_count() as f32 / total_time as f32 * 1000.0
+        );
         
         Ok(result)
         })

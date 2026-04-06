@@ -252,6 +252,7 @@ class Action(StructuredNode):
     doc_id = StringProperty(index=True)
     annotation_uid = StringProperty(index=True)
     action_class = StringProperty(default="action")  # "action" | "result" | "mechanism"
+    norm_key = StringProperty(index=True)  # sha256[:16] нормализованного (verb|sorted_subject|sorted_object)
 
     leads_to_action = RelationshipTo("Action", "LEADS_TO", model=LeadsToRel)
     leads_to_goal = RelationshipTo("MarkdownAnnotation", "LEADS_TO", model=LeadsToRel)

@@ -18,7 +18,7 @@ mod global_layer_state;
 
 // Re-export public types
 pub use stats::PlacementStats;
-pub use placement::{VertexPosition, PlacementConfig, OccupiedPositions, place_all_vertices};
+pub use placement::{VertexPosition, PlacementConfig, OccupiedPositions, place_all_vertices, place_all_vertices_with_crossing_reduction};
 pub use optimization::{OptimizationOptions, count_edge_crossings};
 pub use edge_routing::{EdgeRoutingOptions, calculate_edge_length, get_edge_statistics};
 pub use global_layer_state::{GlobalLayerState, LayerStatistics};
@@ -103,17 +103,21 @@ impl OptimalVertexPlacer {
         // Log layer statistics
         layer_assignment::log_layer_statistics(&layer_map);
 
-        // Step 2: Place vertices at (x, y) coordinates based on their layers
-        tracing::info!("Step 2/5: Placing vertices at coordinates...");
-        let mut positions = placement::place_all_vertices(&layer_map, &self.config);
-
-        // Step 3: Optional optimization
-        if self.opt_options.compact_layout {
-            tracing::info!("Step 3/5: Optimizing layout...");
-            optimization::optimize_placement(&mut positions, graph, &self.opt_options).await?;
+        // Step 2: Place vertices at (x, y) coordinates based on their layers.
+        // If compact_layout is enabled, apply barycenter crossing reduction first.
+        let mut positions = if self.opt_options.compact_layout {
+            tracing::info!("Step 2/5: Placing vertices with crossing reduction (barycenter)...");
+            let (outgoing, incoming) = build_adjacency(graph);
+            placement::place_all_vertices_with_crossing_reduction(
+                &layer_map, &self.config, &outgoing, &incoming,
+            )
         } else {
-            tracing::info!("Step 3/5: Skipping optimization (disabled)");
-        }
+            tracing::info!("Step 2/5: Placing vertices (no crossing reduction)...");
+            placement::place_all_vertices(&layer_map, &self.config)
+        };
+
+        // Step 3: No additional optimization step needed (crossing reduction is in step 2)
+        let _ = &self.opt_options; // suppress unused warning
 
         // Step 4: Compute edge paths (polylines)
         tracing::info!("Step 4/5: Computing edge paths...");
@@ -211,6 +215,23 @@ impl OptimalVertexPlacer {
     pub fn get_edge_options_mut(&mut self) -> &mut EdgeRoutingOptions {
         &mut self.edge_options
     }
+}
+
+/// Build outgoing and incoming adjacency maps from a Graph.
+fn build_adjacency(graph: &Graph) -> (HashMap<String, Vec<String>>, HashMap<String, Vec<String>>) {
+    let mut outgoing: HashMap<String, Vec<String>> = HashMap::new();
+    let mut incoming: HashMap<String, Vec<String>> = HashMap::new();
+
+    for vertex in graph.vertices() {
+        if let Some(neighbors) = graph.get_outgoing_edges(vertex) {
+            for target in neighbors {
+                outgoing.entry(vertex.to_string()).or_default().push(target.to_string());
+                incoming.entry(target.to_string()).or_default().push(vertex.to_string());
+            }
+        }
+    }
+
+    (outgoing, incoming)
 }
 
 impl Default for OptimalVertexPlacer {

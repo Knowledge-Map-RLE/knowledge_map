@@ -308,6 +308,63 @@ class StateStore:
             )
             return [dict(r) async for r in result]
 
+    async def reset_all_to_pending(self) -> dict:
+        """
+        Сбрасывает ВСЕ статьи (включая done/failed) обратно в pending
+        и удаляет их Action-ноды из Neo4j.
+        Используется для полного перезапуска создания карт знаний.
+        """
+        async with self._driver.session() as session:
+            # Собрать doc_id обработанных статей
+            result = await session.run(
+                """
+                MATCH (p:WorkerArticleProgress {run_id: $run_id})
+                WHERE p.state IN ['done', 'failed']
+                RETURN p.pmcid AS pmcid, p.doc_id AS doc_id
+                """,
+                run_id=self._run_id,
+            )
+            records = [dict(r) async for r in result]
+
+            # Сбросить состояния
+            reset_result = await session.run(
+                """
+                MATCH (p:WorkerArticleProgress {run_id: $run_id})
+                WHERE p.state IN ['done', 'failed']
+                SET p.state = 'pending',
+                    p.retry_count = 0,
+                    p.error_msg = null,
+                    p.done_at = null,
+                    p.updated_at = $now
+                RETURN count(p) AS cnt
+                """,
+                run_id=self._run_id, now=_now_iso(),
+            )
+            rec = await reset_result.single()
+            reset_count = rec["cnt"] if rec else 0
+
+            doc_ids = [r["doc_id"] for r in records if r.get("doc_id")]
+
+            # Удалить Action-ноды для этих документов
+            deleted_count = 0
+            if doc_ids:
+                del_result = await session.run(
+                    """
+                    UNWIND $doc_ids AS did
+                    MATCH (a:Action {doc_id: did})
+                    DETACH DELETE a
+                    """,
+                    doc_ids=doc_ids,
+                )
+                summary = await del_result.consume()
+                deleted_count = summary.counters.nodes_deleted
+
+        self.log(
+            f"Reset {reset_count} articles to pending, "
+            f"deleted {deleted_count} Action nodes from {len(doc_ids)} documents"
+        )
+        return {"reset_count": reset_count, "deleted_actions": deleted_count, "doc_ids": doc_ids}
+
     async def mark_run_done(self) -> None:
         async with self._driver.session() as session:
             await session.run(

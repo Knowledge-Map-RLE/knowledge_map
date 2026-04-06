@@ -209,13 +209,21 @@ impl ParallelTopoSort {
             batch_stats.record_batch(batch_time);
         }
         
-        // Проверка на циклы
+        // Граф может содержать циклы — добавляем оставшиеся вершины в конец
+        // (они попадут на последний слой, что визуально приемлемо)
         if result.len() != graph.vertex_count() {
-            return Err(anyhow::anyhow!(
-                "Граф содержит циклы! Обработано {} из {} вершин",
-                result.len(),
-                graph.vertex_count()
-            ));
+            use tracing::warn;
+            let processed: std::collections::HashSet<_> = result.iter().cloned().collect();
+            let remaining_count = graph.vertex_count() - result.len();
+            warn!(
+                "⚠️ Граф содержит циклы: {} вершин не попали в топосортировку, добавляем в конец",
+                remaining_count
+            );
+            for vertex_id in graph.vertices() {
+                if !processed.contains(vertex_id) {
+                    result.push(vertex_id.clone());
+                }
+            }
         }
         
         Ok((result, level_count, batch_stats))

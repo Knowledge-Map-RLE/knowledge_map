@@ -1086,3 +1086,43 @@ export interface ConfirmedActionGraphResponse {
 export async function getConfirmedActionGraph(docId: string): Promise<ConfirmedActionGraphResponse> {
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/actions/graph`);
 }
+
+export interface KnowledgeMapPageResponse {
+  success: boolean;
+  blocks: Array<{
+    id: string;
+    content: string;
+    verb: string;
+    verb_text: string;
+    subject: string;
+    object: string;
+    action_class: string;
+    norm_key: string;
+    doc_count: number;
+    doc_ids: string[];
+    x: number;
+    y: number;
+  }>;
+  links: Array<{
+    id: string;
+    source_id: string;
+    target_id: string;
+    count: number;
+    confidence: number;
+    relation_subtype: string;
+  }>;
+  page: { offset: number; limit: number; returned: number; total: number };
+}
+
+export async function getKnowledgeMapPage(
+  offset = 0,
+  limit = 200,
+  centerX = 0,
+  centerY = 0,
+): Promise<KnowledgeMapPageResponse> {
+  return fetchJson(`/layout/knowledge_map_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
+}
+
+export async function backfillNormKeys(): Promise<{ updated: number }> {
+  return fetchJson('/api/data_extraction/shared-actions/backfill', { method: 'POST' });
+}

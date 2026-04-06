@@ -13,19 +13,16 @@ use anyhow::Result;
 pub struct Config {
     /// Конфигурация сервера
     pub server: ServerConfig,
-    
-    /// Конфигурация Neo4j
-    pub neo4j: Neo4jConfig,
-    
+
     /// Конфигурация алгоритмов
     pub algorithms: AlgorithmConfig,
-    
+
     /// Конфигурация производительности
     pub performance: PerformanceConfig,
-    
+
     /// Конфигурация памяти
     pub memory: MemoryConfig,
-    
+
     /// Конфигурация метрик
     pub metrics: MetricsConfig,
 }
@@ -50,40 +47,6 @@ pub struct ServerConfig {
     
     /// Размер буфера для streaming
     pub stream_buffer_size: usize,
-}
-
-/// Конфигурация Neo4j
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Neo4jConfig {
-    /// URI подключения
-    pub uri: String,
-    
-    /// Имя пользователя
-    pub user: String,
-    
-    /// Пароль
-    pub password: String,
-    
-    /// База данных
-    pub database: String,
-    
-    /// Размер пула соединений
-    pub pool_size: usize,
-    
-    /// Таймаут подключения (секунды)
-    pub connection_timeout: u64,
-    
-    /// Таймаут транзакции (секунды)
-    pub transaction_timeout: u64,
-    
-    /// Размер батча для запросов
-    pub batch_size: usize,
-    
-    /// Размер батча для сохранения результатов
-    pub save_batch_size: usize,
-
-    /// Количество параллельных транзакций сохранения
-    pub save_parallelism: usize,
 }
 
 /// Конфигурация алгоритмов укладки
@@ -243,18 +206,6 @@ impl Config {
                 max_connections: 1000,
                 request_timeout: 300,
                 stream_buffer_size: 1024,
-            },
-            neo4j: Neo4jConfig {
-                uri: "bolt://localhost:7687".to_string(),
-                user: "neo4j".to_string(),
-                password: "password".to_string(),
-                database: "neo4j".to_string(),
-                pool_size: 50,
-                connection_timeout: 30,
-                transaction_timeout: 300,
-                batch_size: 5000,
-                save_batch_size: 1000,
-                save_parallelism: 4,
             },
             algorithms: AlgorithmConfig {
                 block_width: 200.0,

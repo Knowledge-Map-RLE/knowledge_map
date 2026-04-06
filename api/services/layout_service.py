@@ -510,6 +510,181 @@ class LayoutService:
             logger.error(f"Error in paged articles layout: {e}", exc_info=True)
             raise HTTPException(status_code=500, detail=str(e))
 
+    async def get_knowledge_map_page(
+        self,
+        offset: int = 0,
+        limit: int = 200,
+        center_x: float = 0.0,
+        center_y: float = 0.0,
+    ) -> Dict[str, Any]:
+        """Возвращает агрегированный граф знаний из Action-нод с иерархической укладкой.
+
+        Координаты (x, y) вычисляются Rust-воркером GraphLayoutService (порт 50051)
+        по алгоритму Сугиямы на основе рёбер LEADS_TO.
+        Контракт универсальный: передаём любые рёбра, получаем координаты.
+        """
+        from infrastructure.graph_layout_client import get_graph_layout_client
+
+        try:
+            # Шаг 1: Считаем общее число нод с рёбрами
+            total_query = """
+            MATCH (a1:Action)-[:LEADS_TO {status: 'confirmed'}]->(a2:Action)
+            WHERE a1.norm_key IS NOT NULL AND a2.norm_key IS NOT NULL
+              AND a1.norm_key <> a2.norm_key
+            WITH collect(DISTINCT a1.norm_key) + collect(DISTINCT a2.norm_key) AS all_keys
+            UNWIND all_keys AS k
+            RETURN count(DISTINCT k) AS total
+            """
+            total_res, _ = db.cypher_query(total_query)
+            total = int(total_res[0][0]) if total_res and total_res[0][0] else 0
+
+            if total == 0:
+                return {
+                    "success": True,
+                    "blocks": [],
+                    "links": [],
+                    "page": {"offset": offset, "limit": limit, "returned": 0, "total": 0},
+                }
+
+            # Шаг 2: Рёбра агрегированного графа (по norm_key)
+            edges_query = """
+            MATCH (a1:Action)-[r:LEADS_TO {status: 'confirmed'}]->(a2:Action)
+            WHERE a1.norm_key IS NOT NULL AND a2.norm_key IS NOT NULL
+              AND a1.norm_key <> a2.norm_key
+            WITH a1.norm_key AS src_key, a2.norm_key AS tgt_key,
+                 count(r) AS edge_count, avg(r.confidence) AS avg_conf,
+                 collect(DISTINCT r.relation_subtype)[0] AS relation_subtype
+            RETURN src_key, tgt_key, edge_count, avg_conf, relation_subtype
+            """
+            edges_result, _ = db.cypher_query(edges_query)
+
+            connected_keys: set[str] = set()
+            raw_edges = []
+            for row in edges_result:
+                connected_keys.add(row[0])
+                connected_keys.add(row[1])
+                raw_edges.append({
+                    "src_key": row[0],
+                    "tgt_key": row[1],
+                    "count": row[2] or 1,
+                    "confidence": row[3] or 0.0,
+                    "relation_subtype": row[4] or "",
+                })
+
+            # Шаг 3a: Маппинг norm_key → uid для всех connected_keys
+            mapping_result, _ = db.cypher_query(
+                """
+                MATCH (a:Action) WHERE a.norm_key IN $keys
+                WITH a.norm_key AS nk, collect(a) AS grp
+                RETURN nk, grp[0].uid AS uid
+                """,
+                {"keys": list(connected_keys)},
+            )
+            key_to_uid: dict[str, str] = {row[0]: row[1] for row in mapping_result}
+
+            # Шаг 3b: Ноды текущей страницы (пагинация на уровне Neo4j)
+            nodes_query = """
+            MATCH (a:Action)
+            WHERE a.norm_key IN $keys
+            WITH a.norm_key AS nk, collect(a) AS grp
+            WITH grp[0] AS rep, size(grp) AS doc_count,
+                 [g IN grp | g.doc_id] AS doc_ids
+            RETURN rep.uid AS uid,
+                   rep.verb AS verb,
+                   rep.verb_text AS verb_text,
+                   rep.subject AS subject,
+                   rep.object AS object,
+                   rep.action_class AS action_class,
+                   rep.norm_key AS norm_key,
+                   doc_count,
+                   doc_ids
+            ORDER BY doc_count DESC
+            """
+            nodes_result, _ = db.cypher_query(
+                nodes_query,
+                {"keys": list(connected_keys)},
+            )
+
+            if not nodes_result:
+                return {
+                    "success": True,
+                    "blocks": [],
+                    "links": [],
+                    "page": {"offset": 0, "limit": len(connected_keys), "returned": 0, "total": total},
+                }
+
+            # Шаг 4: Рёбра для страницы (хотя бы один конец — нода страницы)
+            page_ids_by_uid: dict[str, tuple] = {}
+            for row in nodes_result:
+                uid = row[0]
+                page_ids_by_uid[uid] = row
+
+            page_ids = set(page_ids_by_uid.keys())
+
+            links = []
+            for e in raw_edges:
+                src_uid = key_to_uid.get(e["src_key"])
+                tgt_uid = key_to_uid.get(e["tgt_key"])
+                if src_uid and tgt_uid and (src_uid in page_ids or tgt_uid in page_ids):
+                    links.append({
+                        "id": f"{src_uid}->{tgt_uid}",
+                        "source_id": src_uid,
+                        "target_id": tgt_uid,
+                        "count": e["count"],
+                        "confidence": e["confidence"],
+                        "relation_subtype": e["relation_subtype"],
+                    })
+
+            # Шаг 5: Укладка через Rust-воркер GraphLayoutService
+            # Передаём только рёбра — воркер возвращает (x, y) для каждой вершины
+            rust_edges = [
+                {"source_id": lnk["source_id"], "target_id": lnk["target_id"]}
+                for lnk in links
+            ]
+            layout_client = get_graph_layout_client()
+            positions: dict[str, tuple[float, float]] = await layout_client.compute_layout(
+                rust_edges,
+                reduce_crossings=True,
+            )
+
+            # Шаг 6: Собираем итоговые блоки с координатами из Rust
+            page_nodes = []
+            for row in nodes_result:
+                uid, verb, verb_text, subject, obj, action_class, norm_key, doc_count, doc_ids = row
+                x, y = positions.get(uid, (0.0, 0.0))
+                page_nodes.append({
+                    "id": uid,
+                    "content": f"{verb} {obj}".strip() if obj else (verb or ""),
+                    "verb": verb or "",
+                    "verb_text": verb_text or "",
+                    "subject": subject or "",
+                    "object": obj or "",
+                    "action_class": action_class or "action",
+                    "norm_key": norm_key,
+                    "doc_count": doc_count or 1,
+                    "doc_ids": list(doc_ids) if doc_ids else [],
+                    "x": x,
+                    "y": y,
+                    "layer": 0,
+                    "level": 0,
+                    "metadata": {},
+                })
+
+            logger.info(
+                f"knowledge_map_page: nodes={len(page_nodes)} links={len(links)} "
+                f"total={total} rust_positions={len(positions)}"
+            )
+
+            return {
+                "success": True,
+                "blocks": page_nodes,
+                "links": links,
+                "page": {"offset": 0, "limit": len(page_nodes), "returned": len(page_nodes), "total": total},
+            }
+        except Exception as e:
+            logger.error(f"Error in knowledge map page: {e}", exc_info=True)
+            raise HTTPException(status_code=500, detail=str(e))
+
     async def get_layout_from_neo4j(self, user_id: Optional[str] = None) -> Dict[str, Any]:
         """Получает укладку из Neo4j для блоков Block"""
         try:

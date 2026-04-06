@@ -40,6 +40,7 @@ from web.routers.data_extraction import (
     pubmed as pubmed_router,
     markdown_validation as markdown_validation_router,
     auto_review_router,
+    shared_actions as shared_actions_router,
 )
 # Статик роутер — оставляем из src (TRANSITIONAL)
 from src.routers import static
@@ -118,6 +119,7 @@ app.include_router(actions_router.router, prefix="/api/data_extraction")
 app.include_router(pubmed_router.router, prefix="/api/data_extraction")
 app.include_router(markdown_validation_router.router, prefix="/api/data_extraction")
 app.include_router(auto_review_router.router, prefix="/api/data_extraction")
+app.include_router(shared_actions_router.router, prefix="/api/data_extraction")
 app.include_router(worker_status.router, prefix="/api")
 
 # GraphQL

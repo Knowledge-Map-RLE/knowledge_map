@@ -13,6 +13,8 @@ from typing import Any, Dict, List
 
 from neomodel import db
 
+from application.action_chains.aggregate_shared_actions import compute_norm_key
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,6 +27,14 @@ class ActionRepository:
     def save_actions(self, actions: List[Dict[str, Any]], doc_id: str) -> int:
         if not actions:
             return 0
+
+        # Проставляем norm_key для каждого действия перед сохранением
+        for action in actions:
+            action["norm_key"] = compute_norm_key(
+                action.get("verb") or "",
+                action.get("subject"),
+                action.get("object"),
+            )
 
         query = """
         UNWIND $rows AS row
@@ -39,7 +49,10 @@ class ActionRepository:
             a.char_start      = row.char_start,
             a.char_end        = row.char_end,
             a.annotation_uid  = row.annotation_uid,
-            a.action_class    = row.action_class
+            a.action_class    = row.action_class,
+            a.norm_key        = row.norm_key
+        ON MATCH SET
+            a.norm_key        = row.norm_key
         RETURN row.uid AS requested_uid, a.uid AS actual_uid
         """
         results, _ = db.cypher_query(query, {"rows": actions})
@@ -47,6 +60,102 @@ class ActionRepository:
         uid_remap = {r[0]: r[1] for r in results}
         logger.debug("Saved %d actions for doc %s (%d deduplicated)", len(actions), doc_id, len(actions) - len(set(uid_remap.values())))
         return uid_remap
+
+    def backfill_norm_keys(self) -> int:
+        """Проставляет norm_key для Action-нод, у которых его ещё нет.
+        Используется один раз для миграции существующих данных."""
+        # Загружаем все ноды без norm_key
+        results, _ = db.cypher_query(
+            "MATCH (a:Action) WHERE a.norm_key IS NULL "
+            "RETURN a.uid AS uid, a.verb AS verb, a.subject AS subject, a.object AS object",
+        )
+        if not results:
+            return 0
+
+        rows = [
+            {
+                "uid": r[0],
+                "norm_key": compute_norm_key(r[1] or "", r[2], r[3]),
+            }
+            for r in results
+        ]
+        db.cypher_query(
+            "UNWIND $rows AS row MATCH (a:Action {uid: row.uid}) SET a.norm_key = row.norm_key",
+            {"rows": rows},
+        )
+        logger.info("Backfilled norm_key for %d Action nodes", len(rows))
+        return len(rows)
+
+    def get_aggregated_graph(self) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Возвращает агрегированный граф: одна нода на norm_key (doc_count = кол-во статей)
+        и рёбра LEADS_TO между представителями разных групп."""
+        # Один представитель на norm_key + doc_count
+        nodes_result, _ = db.cypher_query(
+            """
+            MATCH (a:Action)
+            WHERE a.norm_key IS NOT NULL
+            WITH a.norm_key AS nk, collect(a) AS group
+            WITH group[0] AS rep, size(group) AS doc_count,
+                 [g IN group | g.doc_id] AS doc_ids
+            RETURN rep.uid AS uid,
+                   rep.verb AS verb,
+                   rep.verb_text AS verb_text,
+                   rep.subject AS subject,
+                   rep.object AS object,
+                   rep.action_class AS action_class,
+                   rep.norm_key AS norm_key,
+                   doc_count,
+                   doc_ids
+            """
+        )
+        if not nodes_result:
+            return [], []
+
+        nodes = [
+            {
+                "uid": r[0],
+                "verb": r[1] or "",
+                "verb_text": r[2] or "",
+                "subject": r[3] or "",
+                "object": r[4] or "",
+                "action_class": r[5] or "action",
+                "norm_key": r[6],
+                "doc_count": r[7] or 1,
+                "doc_ids": list(r[8]) if r[8] else [],
+            }
+            for r in nodes_result
+        ]
+
+        # Маппинг norm_key → uid представителя
+        key_to_uid = {n["norm_key"]: n["uid"] for n in nodes}
+
+        # Рёбра между представителями разных групп
+        edges_result, _ = db.cypher_query(
+            """
+            MATCH (a1:Action)-[r:LEADS_TO {status: 'confirmed'}]->(a2:Action)
+            WHERE a1.norm_key IS NOT NULL AND a2.norm_key IS NOT NULL
+              AND a1.norm_key <> a2.norm_key
+            WITH a1.norm_key AS src_key, a2.norm_key AS tgt_key,
+                 count(r) AS edge_count, avg(r.confidence) AS avg_conf,
+                 collect(DISTINCT r.relation_subtype)[0] AS relation_subtype
+            RETURN src_key, tgt_key, edge_count, avg_conf, relation_subtype
+            """
+        )
+
+        edges = []
+        for r in edges_result:
+            src_uid = key_to_uid.get(r[0])
+            tgt_uid = key_to_uid.get(r[1])
+            if src_uid and tgt_uid:
+                edges.append({
+                    "src_uid": src_uid,
+                    "tgt_uid": tgt_uid,
+                    "count": r[2] or 1,
+                    "confidence": r[3] or 0.0,
+                    "relation_subtype": r[4] or "",
+                })
+
+        return nodes, edges
 
     def save_leads_to(
         self,

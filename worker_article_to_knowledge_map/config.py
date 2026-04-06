@@ -8,7 +8,7 @@ class Config:
     # Search parameters
     query: str = field(default_factory=lambda: os.getenv("WORKER_QUERY", "aging"))
     target_count: int = field(default_factory=lambda: int(os.getenv("WORKER_TARGET_COUNT", "1000")))
-    batch_size: int = field(default_factory=lambda: int(os.getenv("WORKER_BATCH_SIZE", "3")))
+    batch_size: int = field(default_factory=lambda: int(os.getenv("WORKER_BATCH_SIZE", "1")))
 
     # API
     api_base_url: str = field(

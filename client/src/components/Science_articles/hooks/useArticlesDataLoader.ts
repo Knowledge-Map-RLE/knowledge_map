@@ -1,8 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import useArticlesData from './useArticlesData';
 import { edgesByViewport } from '../../../services/api';
 
 export function useArticlesDataLoader(viewportRef?: any) {
+  // Флаг: сервер вернул пустой ответ при первом запросе — данных нет, останавливаем опрос
+  const dataExhaustedRef = useRef(false);
+
   const {
     blocks,
     blockMap,  // ОПТИМИЗАЦИЯ: Добавлен Map для передачи в компоненты
@@ -71,6 +74,7 @@ export function useArticlesDataLoader(viewportRef?: any) {
   }, [viewportRef]);
 
   const loadNextPage = useCallback(async (centerX?: number, centerY?: number) => {
+    if (dataExhaustedRef.current) return;
     if (isLoading) {
       console.log(`[ArticlesPage] Skipping loadNextPage - already loading`);
       return;
@@ -124,13 +128,17 @@ export function useArticlesDataLoader(viewportRef?: any) {
         
         console.log(`[ArticlesPage] Состояние обновлено, processedBlocks: ${processedBlocks.length}, processedLinks: ${processedLinks.length}`);
         
-        // Убираем экран загрузки при первой загрузке
-        if (isBootLoading && processedBlocks.length > 0) {
+        // Убираем экран загрузки при первой загрузке (даже если блоков нет)
+        if (isBootLoading) {
           console.log(`[ArticlesPage] Убираем экран загрузки, processedBlocks: ${processedBlocks.length}`);
           setIsBootLoading(false);
-          
-          // Центрируем viewport на координатах (0,0) при первой загрузке
-          centerViewportOnOrigin(processedBlocks);
+          if (processedBlocks.length > 0) {
+            centerViewportOnOrigin(processedBlocks);
+          } else {
+            // Первый запрос вернул 0 — данных нет, останавливаем опрос viewport
+            dataExhaustedRef.current = true;
+            console.log('[ArticlesPage] No articles in DB, stopping viewport polling');
+          }
         }
         
         // Переходим к следующей странице для обоих сценариев (и центр, и обычная страница)

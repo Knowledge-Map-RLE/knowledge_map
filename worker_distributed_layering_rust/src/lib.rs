@@ -18,7 +18,6 @@
 pub mod algorithms;
 pub mod config;
 pub mod data_structures;
-pub mod db_optimizer;
 pub mod memory;
 pub mod metrics;
 pub mod neo4j;
@@ -29,7 +28,6 @@ pub mod test_layout;
 pub use algorithms::{HighPerformanceLayoutEngine, LayoutAlgorithm, LayoutResult};
 pub use config::Config;
 pub use data_structures::{Graph, GraphBuilder};
-pub use db_optimizer::DatabaseOptimizer;
 pub use server::GraphLayoutServer;
 
 // Подключаем сгенерированные protobuf типы

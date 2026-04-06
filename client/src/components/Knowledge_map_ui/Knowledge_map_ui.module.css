@@ -5,7 +5,7 @@
     padding: 10px;
     display: grid;
     grid-template-columns: 200px 1fr 200px;
-    grid-template-rows: 40px 1fr 100px;
+    grid-template-rows: 60px 1fr 100px;
     gap: 8px;
     grid-template-areas:
         'header header header'
@@ -24,6 +24,7 @@
 .header {
     grid-area: header;
     gap: 8px;
+    border-radius: 0 !important;
 }
 
 .left {

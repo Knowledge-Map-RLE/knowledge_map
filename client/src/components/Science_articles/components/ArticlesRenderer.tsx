@@ -1,5 +1,5 @@
 import { Application } from '@pixi/react';
-import { useMemo } from 'react';  // ОПТИМИЗАЦИЯ: Для Set мемоизации
+import { useMemo, type ReactNode } from 'react';
 import { Viewport } from '../../Knowledge_map/Viewport';
 import { Link } from '../../Knowledge_map/Link';
 import { Level } from '../../Knowledge_map/Level';
@@ -33,6 +33,10 @@ interface ArticlesRendererProps {
   onArrowHover: (blockId: string, arrowPosition: 'left' | 'right' | null) => void;
   onBlockRightClick: (blockId: string, event: any) => void;
   onSublevelClick: (sublevelId: number, x: number, y: number) => void;
+  /** Дополнительный контент внутри Viewport (например, KnowledgeMapRenderer) */
+  children?: ReactNode;
+  /** Цвет фона Pixi-холста */
+  backgroundColor?: number;
 }
 
 export function ArticlesRenderer({
@@ -57,19 +61,21 @@ export function ArticlesRenderer({
   onArrowClick,
   onArrowHover,
   onBlockRightClick,
-  onSublevelClick
+  onSublevelClick,
+  children,
+  backgroundColor = 0xf5f5f5,
 }: ArticlesRendererProps) {
   // ОПТИМИЗАЦИЯ: Создаём Set для O(1) проверки selection вместо O(n) Array.includes()
   const selectedBlocksSet = useMemo(() => new Set(selectedBlocks), [selectedBlocks]);
   const selectedLinksSet = useMemo(() => new Set(selectedLinks), [selectedLinks]);
 
   return (
-    <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
-      <Viewport 
-        ref={viewportRef} 
-        onCanvasClick={onCanvasClick} 
-        isBlockContextMenuActive={isBlockContextMenuActive} 
-        blockRightClickRef={blockRightClickRef} 
+    <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={backgroundColor}>
+      <Viewport
+        ref={viewportRef}
+        onCanvasClick={onCanvasClick}
+        isBlockContextMenuActive={isBlockContextMenuActive}
+        blockRightClickRef={blockRightClickRef}
         instantBlockClickRef={instantBlockClickRef}
       >
         {/* Рендерим все уровни */}
@@ -80,7 +86,7 @@ export function ArticlesRenderer({
             blocks={blocks}
           />
         ))}
-        
+
         {/* Рендерим все подуровни отдельно */}
         {sublevels.map(sublevel => (
           <Sublevel
@@ -126,6 +132,9 @@ export function ArticlesRenderer({
             instantBlockClickRef={instantBlockClickRef}
           />
         ))}
+
+        {/* Слот для дополнительного контента (например, карта знаний) */}
+        {children}
       </Viewport>
     </Application>
   );
