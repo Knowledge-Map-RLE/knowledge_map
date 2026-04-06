@@ -33,6 +33,10 @@ const ARROW_PX = 10;
 // Line width in screen pixels
 const LINE_PX = 2;
 
+// Resolution multiplier for text textures — higher = sharper at zoom, more GPU memory.
+// 4× covers up to 4× zoom before blurring; matches typical max useful zoom level.
+const TEXT_RESOLUTION = 4;
+
 function makeTextStyle(wordWrapWidth: number): TextStyle {
   return new TextStyle({
     fontSize: 11,
@@ -44,6 +48,36 @@ function makeTextStyle(wordWrapWidth: number): TextStyle {
     lineHeight: 14,
     trim: true,
   });
+}
+
+// ── Viewport culling ──────────────────────────────────────────────────────────
+// Returns the set of node IDs that are within the viewport + 1-screen prefetch margin.
+// O(N) per call — at N=15,000 this is <1ms (simple arithmetic comparisons).
+function computeVisibleSet(nodes: ActionNodeData[], vp: ViewportRef): Set<string> {
+  const bounds = vp.getWorldBounds?.();
+  if (!bounds) return new Set(nodes.map(n => n.id)); // fallback: show all
+
+  const screenSize = vp.getScreenSize?.();
+  // getScale() is a getter that reads containerRef.current.scale.x — always fresh
+  const scale = vp.getScale?.() ?? 1;
+  const marginX = (screenSize?.width  ?? 800) / scale;  // 1 screen width in world units
+  const marginY = (screenSize?.height ?? 600) / scale;  // 1 screen height in world units
+
+  const cl = bounds.left   - marginX;
+  const ct = bounds.top    - marginY;
+  const cr = bounds.right  + marginX;
+  const cb = bounds.bottom + marginY;
+
+  const vis = new Set<string>();
+  for (const n of nodes) {
+    if (
+      n.x + NODE_W / 2 >= cl &&
+      n.x - NODE_W / 2 <= cr &&
+      n.y + NODE_H / 2 >= ct &&
+      n.y - NODE_H / 2 <= cb
+    ) vis.add(n.id);
+  }
+  return vis;
 }
 
 export function KnowledgeMapRenderer({
@@ -71,6 +105,15 @@ export function KnowledgeMapRenderer({
   useEffect(() => {
     nodeMapRef.current = new Map(nodes.map(n => [n.id, n]));
   }, [nodes]);
+
+  // Viewport culling refs — updated on every redraw
+  const visibleNodeIdsRef = useRef<Set<string>>(new Set());
+  const lastVisibleSizeRef = useRef(0);
+
+  // Text label cache — keyed by nodeId, avoids recreating Text objects on every pan
+  const labelCacheRef = useRef<Map<string, Text>>(new Map());
+  // Track LOD to flush cache on LOD change
+  const lastLodRef = useRef<'full' | 'nodes' | 'dots'>('full');
 
   // ── Init Pixi layers ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -107,10 +150,12 @@ export function KnowledgeMapRenderer({
       nodesGfxRef.current  = null;
       labelsRef.current    = null;
       hitRef.current       = null;
+      labelCacheRef.current.clear();
     };
   }, [viewportRef]);
 
   // ── Draw edges + arrows ───────────────────────────────────────────────────
+  // O(E) iterations, O(V/N * E) actual draw calls (culled by visible set)
   const drawEdges = useCallback((scale: number) => {
     const gLines  = edgesGfxRef.current;
     const gArrows = arrowsGfxRef.current;
@@ -121,17 +166,20 @@ export function KnowledgeMapRenderer({
 
     if (scale < LOD_NODES) return;
 
-    const nm        = nodeMapRef.current;
-    const alpha     = scale < LOD_FULL ? 0.35 : 0.6;
+    const nm  = nodeMapRef.current;
+    const vis = visibleNodeIdsRef.current;
     // World-space line width: LINE_PX screen pixels / scale
     const lw        = LINE_PX / scale;
     // World-space arrow size: ARROW_PX screen pixels / scale
     const arrowSize = ARROW_PX / scale;
 
-    gLines.setStrokeStyle({ width: lw, color: 0x8a2be2, alpha, cap: 'round' });
+    gLines.setStrokeStyle({ width: lw, color: 0x8a2be2, alpha: 1.0, cap: 'round' });
     gLines.beginPath();
 
     for (const e of edgesRef.current) {
+      // Cull edges where neither endpoint is in the visible+margin area — O(1) per edge
+      if (!vis.has(e.source_id) && !vis.has(e.target_id)) continue;
+
       const src = nm.get(e.source_id);
       const tgt = nm.get(e.target_id);
       if (!src || !tgt) continue;
@@ -166,13 +214,14 @@ export function KnowledgeMapRenderer({
         lineEndX + perpX, lineEndY + perpY,           // base left
         lineEndX - perpX, lineEndY - perpY,           // base right
       ]);
-      gArrows.fill({ color: 0x8a2be2, alpha });
+      gArrows.fill({ color: 0x8a2be2, alpha: 1.0 });
     }
 
     gLines.stroke();
   }, []);
 
   // ── Draw nodes ────────────────────────────────────────────────────────────
+  // O(V) draw calls where V = visible nodes in viewport + 1-screen margin
   const drawNodes = useCallback((scale: number, selected: string | null) => {
     const nodesGfx = nodesGfxRef.current;
     const labels   = labelsRef.current;
@@ -180,24 +229,28 @@ export function KnowledgeMapRenderer({
     if (!nodesGfx || !labels || !hit) return;
 
     const ns  = nodesRef.current;
+    const vis = visibleNodeIdsRef.current;
     const lod = scale >= LOD_FULL ? 'full' : scale >= LOD_NODES ? 'nodes' : 'dots';
+
+    // O(V): only process nodes within viewport + prefetch margin
+    const visibleNodes = ns.filter(n => vis.has(n.id));
 
     nodesGfx.clear();
 
     if (lod === 'dots') {
       const r = Math.max(2, 3 / scale);
-      for (const n of ns) {
+      for (const n of visibleNodes) {
         const color = ACTION_COLORS[n.action_class] ?? ACTION_COLORS.action;
         nodesGfx.circle(n.x, n.y, r);
-        nodesGfx.fill({ color, alpha: 0.9 });
+        nodesGfx.fill({ color, alpha: 1.0 });
       }
     } else {
-      for (const n of ns) {
+      for (const n of visibleNodes) {
         const color = ACTION_COLORS[n.action_class] ?? ACTION_COLORS.action;
         const isSel = n.id === selected;
 
         nodesGfx.roundRect(n.x - NODE_W / 2, n.y - NODE_H / 2, NODE_W, NODE_H, RADIUS);
-        nodesGfx.fill({ color, alpha: isSel ? 1.0 : 0.85 });
+        nodesGfx.fill({ color, alpha: 1.0 });
 
         if (isSel) {
           nodesGfx.roundRect(n.x - NODE_W / 2, n.y - NODE_H / 2, NODE_W, NODE_H, RADIUS);
@@ -207,39 +260,68 @@ export function KnowledgeMapRenderer({
     }
 
     // ── Text labels (full LOD only) ───────────────────────────────────────
-    const old = labels.removeChildren();
-    for (const c of old) c.destroy();
+    // Cache Text objects by nodeId — O(V_new) creates, O(V_old - V_new) destroys per pan.
+    // On LOD change flush entire cache.
+    const lodChanged = lod !== lastLodRef.current;
+    lastLodRef.current = lod;
 
-    if (lod === 'full') {
+    if (lod !== 'full') {
+      // Clear labels container and destroy all cached texts
+      if (lodChanged) {
+        labels.removeChildren();
+        for (const t of labelCacheRef.current.values()) t.destroy();
+        labelCacheRef.current.clear();
+      }
+    } else {
+      if (lodChanged) {
+        // Flush cache on transition into full LOD
+        labels.removeChildren();
+        for (const t of labelCacheRef.current.values()) t.destroy();
+        labelCacheRef.current.clear();
+      }
+
       const wrapWidth = NODE_W - PADDING * 2;
-      const style = makeTextStyle(wrapWidth);
-      const maxH  = NODE_H - PADDING * 2;
+      const style     = makeTextStyle(wrapWidth);
+      const maxH      = NODE_H - PADDING * 2;
+      const cache     = labelCacheRef.current;
+      const visSet    = new Set(visibleNodes.map(n => n.id));
 
-      for (const n of ns) {
+      // Destroy labels that scrolled out of view
+      for (const [id, t] of cache) {
+        if (!visSet.has(id)) {
+          t.destroy();
+          cache.delete(id);
+          labels.removeChild(t);
+        }
+      }
+
+      // Create labels for newly visible nodes
+      for (const n of visibleNodes) {
+        if (cache.has(n.id)) continue;
+
         const raw = n.verb_text
           ? `${n.verb_text}${n.object ? ' ' + n.object : ''}`
           : n.content;
 
-        const t = new Text({ text: raw, style });
+        const t = new Text({ text: raw, style, resolution: TEXT_RESOLUTION });
 
-        // Scale down if text overflows node height
-        if (t.height > maxH) {
-          t.scale.set(maxH / t.height);
-        }
+        if (t.height > maxH) t.scale.set(maxH / t.height);
 
         t.anchor.set(0.5, 0.5);
         t.x = n.x;
         t.y = n.y;
         labels.addChild(t);
+        cache.set(n.id, t);
       }
     }
 
-    // ── Hit zones (rebuild only on node set change) ───────────────────────
-    if (lastNodeCountRef.current !== ns.length) {
+    // ── Hit zones — rebuild when node count OR visible set size changes ────
+    const visChanged = vis.size !== lastVisibleSizeRef.current;
+    if (lastNodeCountRef.current !== ns.length || visChanged) {
       const oldHit = hit.removeChildren();
       for (const c of oldHit) c.destroy();
 
-      for (const n of ns) {
+      for (const n of visibleNodes) {
         const z = new Graphics();
         z.rect(-NODE_W / 2, -NODE_H / 2, NODE_W, NODE_H);
         z.fill({ color: 0x000000, alpha: 0.001 });
@@ -252,21 +334,29 @@ export function KnowledgeMapRenderer({
         hit.addChild(z);
       }
       lastNodeCountRef.current = ns.length;
+      lastVisibleSizeRef.current = vis.size;
     }
   }, [onNodeClick]);
 
   // ── Master redraw ─────────────────────────────────────────────────────────
   const redraw = useCallback((scale: number, selected: string | null) => {
+    // Update visible set — O(N) pass, then all drawing is O(V)
+    const vp = viewportRef.current;
+    if (vp) {
+      visibleNodeIdsRef.current = computeVisibleSet(nodesRef.current, vp);
+    }
+
     drawEdges(scale);
     drawNodes(scale, selected);
     lastScaleRef.current    = scale;
     lastSelectedRef.current = selected;
-  }, [drawEdges, drawNodes]);
+  }, [drawEdges, drawNodes, viewportRef]);
 
   // ── Redraw on data change ─────────────────────────────────────────────────
   useEffect(() => {
     if (!edgesGfxRef.current) return;
-    const scale = viewportRef.current?.getScale?.() ?? 1;
+    const vp = viewportRef.current;
+    const scale = vp?.getScale?.() ?? vp?.scale ?? 1;
     redraw(scale, selectedNodeId);
   }, [nodes, edges, selectedNodeId, redraw, viewportRef]);
 
@@ -275,21 +365,12 @@ export function KnowledgeMapRenderer({
     const vp = viewportRef.current;
     if (!vp?.on) return;
 
+    // Always do a full redraw on move/zoom — culling makes drawNodes O(V) so it's cheap.
+    // The old "same LOD → edges only" optimization is no longer needed.
     const onMoved = () => {
+      // getScale() reads containerRef.current.scale.x — always fresh, unlike vp.scale (snapshot)
       const scale = vp.getScale?.() ?? 1;
-      const prev  = lastScaleRef.current;
-
-      const lodOf = (s: number) => s >= LOD_FULL ? 2 : s >= LOD_NODES ? 1 : 0;
-      const sameLod      = lodOf(prev) === lodOf(scale);
-      const sameSelected = lastSelectedRef.current === selectedNodeId;
-
-      if (!sameLod || !sameSelected) {
-        redraw(scale, selectedNodeId);
-      } else {
-        // Same LOD bucket — redraw edges only to update line width with zoom
-        drawEdges(scale);
-        lastScaleRef.current = scale;
-      }
+      redraw(scale, selectedNodeId);
     };
 
     vp.on('moved', onMoved);
@@ -298,7 +379,7 @@ export function KnowledgeMapRenderer({
       vp.off?.('moved', onMoved);
       vp.off?.('zoomed', onMoved);
     };
-  }, [viewportRef, selectedNodeId, redraw, drawEdges]);
+  }, [viewportRef, selectedNodeId, redraw]);
 
   return null;
 }

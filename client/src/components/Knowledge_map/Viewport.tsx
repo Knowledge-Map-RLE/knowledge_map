@@ -356,8 +356,8 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
 
       tweensRef.current.push(positionTween);
     },
-    scale: containerRef.current?.scale.x || 1,
-    position: containerRef.current?.position || { x: 0, y: 0 },
+    get scale() { return containerRef.current?.scale.x ?? 1; },
+    get position() { return containerRef.current?.position ?? { x: 0, y: 0 }; },
     containerRef: containerRef.current,
     setBlockRightClickTime: (time: number) => {
       lastBlockRightClickTime.current = time;
