@@ -148,6 +148,19 @@ class StateStore:
                 pmcids=pmcids, run_id=self._run_id, now=_now_iso(),
             )
 
+    async def get_state(self, pmcid: str) -> str:
+        """Return current state of the article in the pipeline."""
+        async with self._driver.session() as session:
+            result = await session.run(
+                """
+                MATCH (p:WorkerArticleProgress {pmcid: $pmcid, run_id: $run_id})
+                RETURN p.state AS state
+                """,
+                pmcid=pmcid, run_id=self._run_id,
+            )
+            rec = await result.single()
+            return rec["state"] if rec else "pending"
+
     async def get_doc_id(self, pmcid: str) -> Optional[str]:
         """Return stored doc_id for a pmcid, or None if not yet set."""
         async with self._driver.session() as session:

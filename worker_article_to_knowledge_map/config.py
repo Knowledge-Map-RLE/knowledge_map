@@ -8,13 +8,13 @@ class Config:
     # Search parameters
     query: str = field(default_factory=lambda: os.getenv("WORKER_QUERY", "aging"))
     target_count: int = field(default_factory=lambda: int(os.getenv("WORKER_TARGET_COUNT", "1000")))
-    batch_size: int = field(default_factory=lambda: int(os.getenv("WORKER_BATCH_SIZE", "1")))
+    batch_size: int = field(default_factory=lambda: int(os.getenv("WORKER_BATCH_SIZE", "5")))
 
     # API
     api_base_url: str = field(
         default_factory=lambda: os.getenv("WORKER_API_URL", "http://localhost:8000/api/data_extraction")
     )
-    api_timeout: float = field(default_factory=lambda: float(os.getenv("WORKER_API_TIMEOUT", "300")))
+    api_timeout: float = field(default_factory=lambda: float(os.getenv("WORKER_API_TIMEOUT", "120")))
 
     # Status API
     status_port: int = field(default_factory=lambda: int(os.getenv("WORKER_STATUS_PORT", "8004")))
@@ -27,7 +27,7 @@ class Config:
 
     # Timing
     annotate_wait_sec: float = field(default_factory=lambda: float(os.getenv("WORKER_ANNOTATE_WAIT", "300")))
-    poll_interval_sec: float = field(default_factory=lambda: float(os.getenv("WORKER_POLL_INTERVAL", "5")))
+    poll_interval_sec: float = field(default_factory=lambda: float(os.getenv("WORKER_POLL_INTERVAL", "3")))
     poll_timeout_sec: float = field(default_factory=lambda: float(os.getenv("WORKER_POLL_TIMEOUT", "300")))
 
     # Retry

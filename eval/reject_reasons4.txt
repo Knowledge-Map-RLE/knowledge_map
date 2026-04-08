@@ -1,0 +1,21 @@
+Top rejection reasons in bio-docs:
+     520  meta src verb: evaluate
+     278  meta tgt verb: evaluate
+     156  tautological src≈tgt phrases
+     143  meta tgt verb: consider
+     142  meta src verb: examine
+      84  abstract keyword: ['[obj_obj:performance]']
+      84  meta src verb: consider
+      74  abstract keyword: ['[keyword:materials]']
+      67  meta src verb: study
+      61  meta tgt verb: assess
+      59  meta src verb: assess
+      59  abstract keyword: ['[obj_obj:resistance]']
+      59  abstract keyword: ['[obj_obj:stiffness]']
+      50  abstract keyword: ['[obj_obj:surface]']
+      44  meta src verb: incorporate
+      42  abstract subject evidence: [subject:extracts]
+      38  meta tgt verb: incorporate
+      36  meta src verb: obtain
+      35  meta src verb: illustrate
+      34  meta src verb: apply

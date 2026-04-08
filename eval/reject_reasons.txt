@@ -1,0 +1,20 @@
+  4779  no bio domain token in either phrase (non-bio article)
+     9  meta tgt verb: examine
+     7  meta tgt verb: capture
+     5  abstract keyword: ['[obj_obj:long-term]']
+     4  meta tgt verb: confirm
+     4  tautological src≈tgt phrases
+     4  meta src verb: capture
+     4  meta src verb: evaluate
+     3  abstract keyword: ['[obj_obj:cell]']
+     3  html artifact in phrase
+     3  meta src verb: explore
+     3  meta tgt verb: explain
+     3  abstract shared entity: ['[shared:microglial activation]']
+     3  meta src verb: examine
+     3  meta src verb: measure
+     3  obj_obj but non-bio or low-conf: sustain, drive, conf=0.5799999833106995
+     2  abstract keyword: ['[keyword:cell]']
+     2  meta tgt verb: classify
+     2  meta src verb: confirm
+     2  abstract keyword: ['[obj_obj:gene]']

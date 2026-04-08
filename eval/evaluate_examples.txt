@@ -1,0 +1,41 @@
+=== evaluate edges ===
+  'evaluates subjects’ standing balance' -> 'navigate the displayed route'
+    ev: ['[shared:subjects’ standing balance]']
+  'evaluates subjects’ standing balance' -> 'align a directional indicator'
+    ev: ['[shared:subjects’ standing balance]']
+  'evaluates subjects’ standing balance' -> 'accepting reduced stability boundaries'
+    ev: ['[shared:subjects’ standing balance]']
+  'evaluates subjects’ standing balance' -> 'utilized LOS expansion strategies'
+    ev: ['[shared:subjects’ standing balance]']
+  'evaluates subjects’ standing balance' -> 'minimized postural oscillations'
+    ev: ['[shared:subjects’ standing balance]']
+  'evaluates subjects’ standing balance' -> 'maintain postural equilibrium'
+    ev: ['[shared:subjects’ standing balance]']
+  'evaluates subjects’ standing balance' -> 'marked their perceived sensation'
+    ev: ['[shared:subjects’ standing balance]']
+  'evaluates subjects’ standing balance' -> 'modulate their COP'
+    ev: ['[shared:subjects’ standing balance]']
+  'utilizes a genetic algorithm' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:a genetic algorithm]']
+  'extracting spatial features' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:spatial features]']
+  'enhances the overall training efficiency' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:the overall training efficiency]']
+  'enable efficient conversion' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:efficient conversion]']
+  'improving energy conversion efficiency' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:energy conversion efficiency]']
+  'enhance electrical and thermal performance' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:electrical and thermal performance]']
+  'raises the junction temperature' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:the junction temperature]']
+  'accelerating material degradation' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:material degradation]']
+  'damage the gate oxide layer' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:the gate oxide layer]']
+  'cause localized breakdown' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:localized breakdown]']
+  'increase power dissipation' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:power dissipation]']
+  'reduces operation and maintenance costs' -> 'evaluate the performance of the CNN-BiLSTM prediction model in this paper'
+    ev: ['[shared:operation and maintenance costs]']

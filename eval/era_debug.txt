@@ -1,0 +1,11 @@
+  increase->activate | ROS->ros | 03c3d57d2f945f92
+  produce->produce | ROS->ros | 1787fe24029ab9b9
+  generate->produce | ROS->ros | 1787fe24029ab9b9
+  increase->activate | reactive oxygen species->ros | 03c3d57d2f945f92
+  produce->produce | reactive oxygen species->ros | 1787fe24029ab9b9
+
+  arrest->inhibit | cell cycle->cell cycle | ce74b5d04c4f3b64
+  inhibit->inhibit | cell cycle->cell cycle | ce74b5d04c4f3b64
+  block->inhibit | cell cycle->cell cycle | ce74b5d04c4f3b64
+  induce->activate | cell cycle arrest->cell cycle | 6550dac39e8bd5c4
+  prevent->inhibit | cell cycle progression->cell cycle | ce74b5d04c4f3b64

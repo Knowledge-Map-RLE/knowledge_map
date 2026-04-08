@@ -1,0 +1,3 @@
+Status distribution: {'rejected': 9938, 'confirmed': 62}
+Has literal marker: {False: 9953, True: 47}
+Evidence types: {'[obj_obj:]': 5144, '[keyword:]': 2130, '[shared:]': 1790, '[subject:]': 889, 'literal_marker': 47}

@@ -47,7 +47,9 @@ _ARTIFACT_PATTERNS = re.compile(
     r'See\s+the\s+Terms|'               # copyright notice
     r'http[s]?://|'                      # URLs
     r'\w+-\s*$'                          # hyphenated word at end (line-break artifact)
-    r')',
+    r')|'
+    r'\bsee (?:Table|Figure|Supplementary|Fig\.?|S\d)\b|'  # cross-references: "see Table 1"
+    r'\bsee (?:the\s+)?(?:methods?|materials?|section)\b',  # "see the methods"
     re.IGNORECASE,
 )
 
@@ -61,7 +63,40 @@ _META_PHRASE_PATTERNS = re.compile(
     r'\ba (?:new|novel|better|deeper|greater|more\s+\w+) \w+\b|'  # "a new era", "a better approach"
     r'\bthe (?:urgent|critical|key|main|primary|central) \w+\b|'  # "the urgent need", "the key challenge"
     r'\b(?:rich and complex|growing body of|body of knowledge)\b|'  # meta-narrative phrases
-    r'\b(?:PD research|cancer research|aging research)\b',          # research domain, not mechanism
+    r'\b(?:PD research|cancer research|aging research)\b|'          # research domain, not mechanism
+    # Editorial / methods boilerplate
+    r'\bno conflicts? of interest\b|'          # "declare no conflicts of interest"
+    r'\bconflicts? of interest\b|'             # shorter variant
+    r'\bfurther (?:investigation|research|studies?|work|analysis)\b|'  # "warrant further investigation"
+    r'\bstatistical significance\b|'            # "reach statistical significance"
+    r'\binclusion criteri\b|'                   # "meet the inclusion criteria"
+    r'\bexclusion criteri\b|'
+    r'\bselection bias\b|'                      # "introduce selection bias"
+    r'\bshed (?:light|new light)\b|'            # "shed light on" — meta-narrative
+    r'\bhold (?:great\s+)?promise\b|'           # "holds promise"
+    r'\boffer(?:s|ed|ing)?\s+(?:valuable\s+)?insights?\b|'  # "offers valuable insights"
+    r'\blimit(?:s|ed|ing)?\s+(?:our\s+)?(?:ability|generalizability|sample size)\b|'
+    r'\bpatient outcomes?\b|'                   # "improve patient outcomes" — clinical endpoint, not mechanism
+    r'\bquality of life\b|'                     # "improve quality of life" — endpoint
+    r'\bwash(?:ed)?\s+(?:three|two|four|\d+)\s+times?\b|'  # "washed three times" — methods
+    r'\bcollect(?:ed|ing)?\s+(?:data|samples?|blood|tissue)\b|'  # "collected data" — methods
+    r'\bensure(?:d|s)?\s+consistency\b|'        # "ensure consistency" — methods
+    r'\baddress(?:ed|es|ing)?\s+this\b|'        # "address this" — referential, no content
+    r'\bachieve(?:d|s|ing)?\s+this\b|'          # "achieve this" — referential
+    r'\benable(?:d|s|ing)?\s+(?:us|them|researchers?)\b',  # "enables them" — referential
+    re.IGNORECASE,
+)
+
+# Object phrases that represent vague epistemic/methodological goals, not biological entities
+# These are action objects that look meaningful but carry no mechanistic content
+_EPISTEMIC_OBJECT_PAT = re.compile(
+    r'^(?:'
+    r'(?:this|these|those|it|them|us)$|'        # pure pronouns as objects
+    r'(?:a|the)?\s*(?:clear|better|deeper|greater|more\s+\w+)\s+understanding\b|'
+    r'(?:a|the)?\s*(?:new|comprehensive|systematic)\s+(?:framework|approach|perspective)\b|'
+    r'(?:a|an|the)?\s*(?:broad|wide|key|crucial|major|significant)\s+(?:challenge|gap|question|issue|problem)\b|'
+    r'(?:a|an|the)?\s*(?:important|significant|critical)\s+(?:implication|consideration|limitation)\b'
+    r')',
     re.IGNORECASE,
 )
 
@@ -133,6 +168,25 @@ STOP_VERBS = {
     'gain',        # "gain access to the brain" — vague spatial
     'exhibit',     # "exhibit hallmarks" — descriptive
     'reflect',     # "reflect the importance" — meta
+    # Methods / statistics boilerplate
+    'declare',     # "declare no conflicts of interest" — editorial
+    'warrant',     # "warrant further investigation" — editorial conclusion
+    'address',     # "address this" — referential/meta
+    'achieve',     # "achieve this" — referential
+    'examine',     # "examine associations" — statistical methods
+    'compare',     # "compare them" — statistical methods
+    'collect',     # "collect data" — methods, not mechanism
+    'ensure',      # "ensure consistency" — methods
+    'identify',    # "identify factors" — methods/results framing
+    'test',        # "test this" — methods
+    'wash',        # "washed three times" — laboratory procedure boilerplate
+    'meet',        # "meet inclusion criteria" — clinical methods
+    'see',         # "see Table/Figure" — cross-reference
+    'hold',        # "hold promise" — evaluative meta
+    'shed',        # "shed light" — narrative metaphor
+    'offer',       # "offer insights" — evaluative meta
+    'limit',       # "limit our ability" — limitations section boilerplate
+    'reach',       # "reach statistical significance" — statistical framing
 }
 
 # Compiled marker patterns: (compiled_pattern, score, pattern_str)
@@ -205,8 +259,10 @@ class ExtractedDependency:
     sentence_distance: int = 0         # для отладки
 
 
-def _get_object_np(token) -> str:
-    """Return the object NP text for a verb token, or empty string.
+def _get_object_np(token) -> tuple[str, int]:
+    """Return (object NP text, last token index in doc) for a verb token.
+
+    Returns ('', -1) if no object found.
 
     Tries direct object dependencies first, then falls back to
     xcomp/ccomp for verbs like 'cause', 'lead', 'result'.
@@ -229,24 +285,28 @@ def _get_object_np(token) -> str:
                 while span_tokens and span_tokens[-1].is_punct:
                     span_tokens.pop()
                 if span_tokens:
-                    return child.doc[span_tokens[0].i: span_tokens[-1].i + 1].text
-                return child.text
+                    last_i = span_tokens[-1].i
+                    return child.doc[span_tokens[0].i: last_i + 1].text, last_i
+                return child.text, child.i
             subtree = list(child.subtree)
             if len(subtree) > 12:
                 # Return just the head + immediate determiners/adjectives
                 det = next((c.text for c in child.children if c.dep_ in ('det', 'amod')), '')
-                return f"{det} {child.text}".strip() if det else child.text
-            return child.doc[subtree[0].i: subtree[-1].i + 1].text
+                text = f"{det} {child.text}".strip() if det else child.text
+                return text, child.i
+            last_i = subtree[-1].i
+            return child.doc[subtree[0].i: last_i + 1].text, last_i
 
     # Secondary: oblique argument (obl) — common in passive constructions
     for child in token.children:
         if child.dep_ == 'obl':
             subtree = list(child.subtree)
             if len(subtree) > 8:
-                return child.text
-            return child.doc[subtree[0].i: subtree[-1].i + 1].text
+                return child.text, child.i
+            last_i = subtree[-1].i
+            return child.doc[subtree[0].i: last_i + 1].text, last_i
 
-    return ''
+    return '', -1
 
 
 def _get_subject_np(token) -> str:
@@ -282,11 +342,14 @@ def _action_score(token, obj_text: str) -> float:
     has_content_verb = 1.0 if (token.pos_ == 'VERB' and token.lemma_.lower() not in STOP_VERBS) else 0.0
     not_aux = 1.0 if token.pos_ != 'AUX' else 0.0
     has_modifier = 0.0
+    has_particle = 0.0
     for child in token.children:
         if child.dep_ in ('amod', 'advmod'):
             has_modifier = 1.0
-            break
-    return 0.55 * has_content_verb + 0.30 * not_aux + 0.15 * has_modifier
+        if child.dep_ == 'prt':
+            # Phrasal verb particle (e.g. "slow down", "switch off") — confirms action intent
+            has_particle = 1.0
+    return 0.55 * has_content_verb + 0.28 * not_aux + 0.12 * has_modifier + 0.05 * has_particle
 
 
 def _compute_causal_density(text: str) -> float:
@@ -364,7 +427,7 @@ class ActionExtractor:
                     continue
                 if token.lemma_.lower() in STOP_VERBS:
                     continue
-                obj_text = _get_object_np(token)
+                obj_text, obj_end_i = _get_object_np(token)
                 score = _action_score(token, obj_text)
                 if score < 0.55:
                     continue
@@ -375,7 +438,12 @@ class ActionExtractor:
                 ]
 
                 subject_text = _get_subject_np(token)
-                full_phrase = f"{token.text} {obj_text}".strip()
+                # Build full_phrase as actual doc span from verb token to end of object,
+                # so phrasal verb particles (e.g. "down" in "slow down aging") are included.
+                if obj_end_i >= 0:
+                    full_phrase = token.doc[token.i: obj_end_i + 1].text
+                else:
+                    full_phrase = token.text
 
                 # Filter: object too short to be meaningful
                 if len(obj_text.replace(' ', '')) < _MIN_OBJECT_CHARS:
@@ -397,11 +465,15 @@ class ActionExtractor:
                 if _VAGUE_OBJECT_PAT.match(obj_text):
                     continue
 
-                # Filter artifacts: DOI, copyright, hyphenation
+                # Filter: epistemic/methodological object (no mechanistic content)
+                if _EPISTEMIC_OBJECT_PAT.match(obj_text):
+                    continue
+
+                # Filter artifacts: DOI, copyright, table cross-references, hyphenation
                 if _ARTIFACT_PATTERNS.search(full_phrase):
                     continue
 
-                # Filter meta-phrases: evolutionary metaphors, editorial commentary
+                # Filter meta-phrases: editorial boilerplate, evolutionary metaphors
                 if _META_PHRASE_PATTERNS.search(full_phrase):
                     continue
 
@@ -414,7 +486,7 @@ class ActionExtractor:
                     sentence_text=sent.text,
                     sentence_idx=sent_idx,
                     char_start=token.idx,
-                    char_end=token.idx + len(token.text),
+                    char_end=(token.doc[obj_end_i].idx + len(token.doc[obj_end_i].text)) if obj_end_i >= 0 else (token.idx + len(token.text)),
                     modifiers=modifiers,
                     action_score=score,
                     subject_text=subject_text,

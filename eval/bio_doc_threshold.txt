@@ -1,0 +1,46 @@
+Total docs: 1101
+  >= 5%: 917 docs (83.3%)
+  >= 10%: 778 docs (70.7%)
+  >= 15%: 671 docs (60.9%)
+  >= 20%: 563 docs (51.1%)
+  >= 25%: 471 docs (42.8%)
+  >= 30%: 394 docs (35.8%)
+  >= 40%: 243 docs (22.1%)
+  >= 50%: 109 docs (9.9%)
+
+=== Примеры non-bio docs (bio_rate < 10%) ===
+
+doc=72b08c354c90412e7af1c0eb1f8a294e bio_rate=3.9% total_phrases=412
+  'explain human choices and response times'
+  'separate the speed–accuracy trade-off'
+  'instantiate cognitive process theories'
+  'mapping EAM parameters'
+  'instantiates a theory of prospective memory'
+
+doc=7fa590676bfee17ac27fa6ff3db4dc23 bio_rate=7.4% total_phrases=408
+  'requires methods'
+  'handle uncertain conditions'
+  'offer interpretability'
+  'capture gradual drift, soft limits, and asynchronous sensor signals'
+  'preserving traceability and deterministic evidence propagation'
+
+doc=cb5182e4dc9d8213158c514bcf9d0ca1 bio_rate=9.2% total_phrases=392
+  'examines the impact and underlying mechanisms of population aging on urban income disparities'
+  'reduces the labor income share'
+  'increases social security expenditure'
+  'expanding the intra-urban income gap'
+  'enlarges the inter-urban income gap'
+
+doc=3882c4091ab3c1e6bd22ec43141de937 bio_rate=4.1% total_phrases=366
+  'explores environmental injustice'
+  'reproducing environmental quality'
+  'offer both a theoretical framework'
+  'centres the socioecological reproduction of racial capitalism'
+  'sustains racial capitalism'
+
+doc=a845b0bc70690a35ed07007fa5f033fc bio_rate=1.9% total_phrases=363
+  'driving the need for'
+  'imparts enhanced catalytic activity'
+  'summarizes recent advances in transition'
+  'covering methodologies'
+  'bridging physical adsorption'

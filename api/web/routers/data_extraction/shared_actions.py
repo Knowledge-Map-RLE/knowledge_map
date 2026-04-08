@@ -19,11 +19,17 @@ router = APIRouter(prefix="/shared-actions", tags=["shared-actions"])
 
 @router.post("/backfill")
 def backfill_norm_keys(
+    force: bool = False,
     action_repo=Depends(get_action_repository),
 ):
-    """Проставляет norm_key для Action-нод, у которых его ещё нет.
-    Запускается один раз для миграции существующих данных."""
-    updated = action_repo.backfill_norm_keys()
+    """Проставляет norm_key для Action-нод.
+
+    - `force=false` (по умолчанию): только ноды с NULL norm_key (первичная миграция).
+    - `force=true`: перевычисляет norm_key для ВСЕХ нод. Запускать после обновления
+      словарей синонимов в compute_norm_key, чтобы синонимизация применилась к
+      существующим данным в Neo4j.
+    """
+    updated = action_repo.backfill_norm_keys(force=force)
     return {"updated": updated}
 
 

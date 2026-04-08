@@ -1,0 +1,72 @@
+REJECT [0.75] 'identified DMPs' -> 'establish a multiple Cox proportional hazards regression model'
+  reason: meta tgt verb: establish
+REJECT [0.78] 'splitting examples' -> 'underestimating a potential performance on larger data'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'reduced the reported validation performance' -> 'approaching a performance similar to that in the unperturbed case'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'see “Cell mixture”' -> 'bear TCR αβ'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'see Figure' -> 'excite autofluorescence from NADH and FAD'
+  reason: abstract shared entity: ['[shared:Figure]']
+REJECT [0.75] 'improve classification performance' -> 'approaching a performance similar to that in the unperturbed case'
+  reason: meta tgt verb: approach
+REJECT [0.85] 'obtain high‐quality data labels' -> 'bypass manual annotations'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'achieved good performance' -> 'approaching a performance similar to that in the unperturbed case'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'regulates gene expression' -> 'influence both T cell function and cancer development'
+  reason: abstract shared entity: ['[shared:gene expression]']
+REJECT [0.75] 'activates key genes' -> 'establish a multivariate Cox proportional hazards regression model'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'activates key genes' -> 'Utilizing miRNA target gene data from the miRCarta database'
+  reason: meta tgt verb: utilize
+REJECT [0.75] 're-wire signal transduction pathways' -> 'inhibiting longevity mechanisms'
+  reason: abstract shared entity: ['[shared:signal transduction pathways]']
+REJECT [0.75] 're-wire signal transduction pathways' -> 'promote growth and proliferation as well as self-sufficiency in mitogen signaling'
+  reason: abstract shared entity: ['[shared:signal transduction pathways]']
+REJECT [0.80] 'attract normal cells of different tissues' -> 'sustain angiogenesis'
+  reason: marker but non-bio verbs: attract, sustain
+REJECT [0.75] 'brings mutations' -> 're-wire signal transduction pathways'
+  reason: shared entity but non-bio: bring, re-wire
+REJECT [0.75] 'brings mutations' -> 'enables metastasis and other higher-level hallmarks'
+  reason: shared entity but non-bio: bring, enable
+REJECT [0.75] 'harboring oncogenic mutations' -> 're-wire signal transduction pathways'
+  reason: shared entity but non-bio: harbore, re-wire
+REJECT [0.75] 'cause mitochondrial dysfunction' -> 'requires synaptic activity'
+  reason: abstract shared entity: ['[shared:mitochondrial dysfunction]']
+REJECT [0.75] 'protects neurons' -> 'share a number of features'
+  reason: abstract shared entity: ['[shared:neurons]']
+REJECT [0.75] 'protects neurons' -> 'acquire Lewy body-like inclusions'
+  reason: abstract shared entity: ['[shared:neurons]']
+REJECT [0.75] 'binds iron' -> 'producing hydroxyl radicals'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'requires tight control' -> 'influence emerging clinical symptoms'
+  reason: abstract shared entity: ['[shared:tight control]']
+REJECT [0.75] 'inhibit microglial activation' -> 'release anti-inflammatory cytokines and growth factors'
+  reason: abstract shared entity: ['[shared:microglial activation]']
+REJECT [0.75] 'inhibit microglial activation' -> 'recruit systemic immune cells and toxic factors'
+  reason: abstract shared entity: ['[shared:microglial activation]']
+REJECT [0.75] 'inhibit microglial activation' -> 'release proinflammatory cytokines'
+  reason: abstract shared entity: ['[shared:microglial activation]']
+REJECT [0.75] 'conducted interviews' -> 'ensure consistency between data collectors'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'recording participants’ responses' -> 'ensure confidentiality'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'minimized clinically significant interactions' -> 'increase toxicity'
+  reason: abstract shared entity: ['[shared:clinically significant interactions]']
+REJECT [0.75] 'minimized clinically significant interactions' -> 'ensure accuracy'
+  reason: no bio domain token in either phrase (non-bio article)
+REJECT [0.75] 'identifying negative associations' -> 'incorporating patient-reported assessments'
+  reason: no bio domain token in either phrase (non-bio article)
+
+=== Top reasons for high-conf rejections ===
+    11  no bio domain token in either phrase (non-bio article)
+     3  abstract shared entity: ['[shared:microglial activation]']
+     2  abstract shared entity: ['[shared:signal transduction pathways]']
+     2  abstract shared entity: ['[shared:neurons]']
+     1  meta tgt verb: establish
+     1  abstract shared entity: ['[shared:Figure]']
+     1  meta tgt verb: approach
+     1  abstract shared entity: ['[shared:gene expression]']
+     1  meta tgt verb: utilize
+     1  marker but non-bio verbs: attract, sustain

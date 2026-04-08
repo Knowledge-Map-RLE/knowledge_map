@@ -1,0 +1,21 @@
+Analyzed 5000 rejected edges (conf>=0.65)
+  3982  no bio domain token in either phrase (non-bio article)
+   122  html artifact in phrase
+   100  meta tgt verb: limit
+    32  meta src verb: integrate
+    32  meta src verb: limit
+    25  meta src verb: incorporate
+    22  meta src verb: explore
+    20  meta tgt verb: consider
+    17  meta src verb: measure
+    17  meta src verb: compare
+    14  meta src verb: evaluate
+    14  meta src verb: validate
+    14  meta src verb: obtain
+    13  abstract shared entity: ['[shared:neuronal dysfunction]']
+    13  abstract shared entity: ['[shared:T3 activity]']
+    12  meta tgt verb: evaluate
+    11  meta src verb: utilize
+    11  tautological src≈tgt phrases
+    10  meta src verb: apply
+    10  meta src verb: extend

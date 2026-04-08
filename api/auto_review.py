@@ -60,6 +60,13 @@ BIO_VERBS = {
     "substitute", "replace", "supplement",
     # cellular acquisition
     "acquire",
+    # cell biology: attraction, sustainment, rewiring
+    "attract", "sustain", "rewire", "re-wire",
+    "harbor", "harbore", "enable", "undergo", "exhibit",
+    "participate", "interact", "associate", "coordinate",
+    "integrate", "converge", "diverge", "amplify", "attenuate",
+    "elongate", "shorten", "extend", "expand", "contract",
+    "swell", "shrink", "lyse", "permeabilize",
 }
 
 META_VERBS = {
@@ -413,6 +420,34 @@ BIO_DOMAIN_TOKENS = {
     'liver', 'kidney', 'lungs', 'heart', 'brain', 'spleen',
     'colon', 'intestine', 'gut', 'pancreas', 'thyroid',
     'adipose', 'endothelial', 'epithelial',
+    # aging / longevity specific
+    'aging', 'ageing', 'longevity', 'lifespan', 'healthspan', 'senescent',
+    'telomere', 'telomeres', 'telomerase', 'epigenetic', 'epigenetics',
+    'methylation', 'acetylation', 'histone', 'chromatin',
+    'proteostasis', 'proteome', 'proteasome', 'ubiquitin',
+    'nad', 'sirtuin', 'sirtuins', 'ampk', 'igf', 'rapamycin',
+    'sasp', 'senolytic', 'senolytics', 'inflammaging',
+    # bioinformatics / computational biology (common in biomedical corpus)
+    'methylation', 'dmp', 'dmps', 'cpg', 'methylome',
+    'rna-seq', 'rnaseq', 'scrnaseq', 'scrna', 'sequencing',
+    'gwas', 'snp', 'snps', 'variant', 'variants', 'loci', 'locus',
+    'transcriptome', 'proteome', 'metabolome', 'microbiome',
+    'pathway', 'pathways', 'network', 'networks',
+    'biomarker', 'biomarkers', 'signature', 'signatures',
+    'classifier', 'classification', 'clustering', 'imputation',
+    'survival', 'prognosis', 'prognostic', 'clinical',
+    'patient', 'patients', 'cohort', 'cohorts', 'sample', 'samples',
+    'diagnosis', 'diagnostic', 'treatment', 'therapy', 'therapeutic',
+    'cancer', 'tumor', 'tumour', 'carcinoma', 'metastasis',
+    'disease', 'syndrome', 'disorder', 'condition',
+    'trial', 'dose', 'dosage', 'toxicity',
+    # cell line / model organism
+    'mouse', 'mice', 'rat', 'zebrafish', 'drosophila', 'yeast',
+    'worm', 'caenorhabditis', 'c. elegans',
+    'hela', 'hek', 'jurkat', 'mcf', 'huvec', 'ipsc',
+    # imaging / measurement
+    'mrna', 'western', 'elisa', 'pcr', 'flow', 'facs', 'immunofluorescence',
+    'immunohistochemistry', 'microscopy', 'imaging', 'staining',
 }
 
 # Non-bio domain tokens — presence in BOTH phrases suggests non-bio article
@@ -526,19 +561,27 @@ def is_meta_verb(verb: str) -> bool:
 
 
 def shared_entity_is_abstract(evidence: list) -> bool:
-    """Check if shared entity in evidence is too abstract."""
+    """Check if shared entity in evidence is too abstract.
+
+    An entity is abstract if ALL of its meaningful tokens are in ABSTRACT_ENTITY_TOKENS.
+    Multi-word entities like "microglial activation" or "signal transduction pathways"
+    contain specific tokens (microglial, transduction) and are NOT abstract.
+    Single-word entities like "neurons", "cells", "pathway" ARE abstract.
+    """
     for ev in (evidence or []):
         if ev.startswith('[shared:'):
             entity = ev[8:].rstrip(']').strip().lower()
-            # Check if entity is or contains abstract tokens
-            tokens = entity.split()
-            for t in tokens:
-                t_clean = t.strip('.,;:')
-                if t_clean in ABSTRACT_ENTITY_TOKENS:
-                    return True
-            # Short entities (1-2 words) that are pronouns or articles only
+            # Pronouns/articles — always abstract
             if entity in {'it', 'its', 'this', 'these', 'those', 'that', 'they', 'them',
                           'the', 'a', 'an', 'their', 'our', 'its'}:
+                return True
+            tokens = [t.strip('.,;:') for t in entity.split() if len(t.strip('.,;:')) >= 3]
+            if not tokens:
+                return True
+            # Concrete if ANY token is NOT in ABSTRACT_ENTITY_TOKENS
+            # (i.e. entity is abstract only if ALL tokens are abstract)
+            has_concrete = any(t not in ABSTRACT_ENTITY_TOKENS for t in tokens)
+            if not has_concrete:
                 return True
     return False
 
@@ -634,7 +677,16 @@ def _has_cyrillic(phrase: str) -> bool:
 
 
 def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
-                   confidence: float, evidence: list) -> tuple[bool, str]:
+                   confidence: float, evidence: list,
+                   doc_is_bio: bool = False) -> tuple[bool, str]:
+    """Classify a LEADS_TO edge as confirmed or rejected.
+
+    doc_is_bio: if True, the document-level bio-domain check is already
+    satisfied (≥30% of the doc's action phrases contain a bio-domain token).
+    In that case, per-phrase bio-domain check is skipped so that
+    specialised phrases ("DMPs", "DML", "CpG sites") are not rejected
+    just because they lack a classic bio-domain word.
+    """
     src_verb = extract_verb(src_phrase)
     tgt_verb = extract_verb(tgt_phrase)
 
@@ -646,18 +698,19 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
     if _has_cyrillic(src_phrase) or _has_cyrillic(tgt_phrase):
         return False, "cyrillic text in phrase (metadata leak)"
 
-    # Reject if neither phrase contains a bio-domain token (non-biomedical article)
-    if not _has_bio_domain_token(src_phrase) and not _has_bio_domain_token(tgt_phrase):
+    # Reject if neither phrase contains a bio-domain token AND document is not bio
+    if not doc_is_bio and not _has_bio_domain_token(src_phrase) and not _has_bio_domain_token(tgt_phrase):
         return False, "no bio domain token in either phrase (non-bio article)"
 
     # Reject tautological edges (src ≈ tgt paraphrase)
     if _is_tautological(src_phrase, tgt_phrase):
         return False, "tautological src≈tgt phrases"
 
-    # Reject if either verb is meta-commentary
-    if is_meta_verb(src_verb):
+    # Reject if either verb is meta-commentary.
+    # Exception: bio verb takes priority — "integrate signaling pathways" is bio, not meta.
+    if is_meta_verb(src_verb) and not is_bio_verb(src_verb):
         return False, f"meta src verb: {src_verb}"
-    if is_meta_verb(tgt_verb):
+    if is_meta_verb(tgt_verb) and not is_bio_verb(tgt_verb):
         return False, f"meta tgt verb: {tgt_verb}"
 
     # Reject if shared entity is abstract
@@ -724,34 +777,44 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
             return False, "marker + bio verb but no bio domain token (non-bio article)"
         return False, f"marker but non-bio verbs: {src_verb}, {tgt_verb}"
 
-    # Shared-entity edges: require both bio verbs
+    src_bio_domain = _has_bio_domain_token(src_phrase)
+    tgt_bio_domain = _has_bio_domain_token(tgt_phrase)
+    has_bio_domain = src_bio_domain or tgt_bio_domain
+
+    # Shared-entity edges: require both bio verbs OR one bio verb + bio domain token
     has_shared = any('[shared:' in str(ev) for ev in (evidence or []))
     if has_shared:
         if src_bio and tgt_bio:
             return True, "shared entity + both bio verbs"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.65:
+            return True, "shared entity + one bio verb + bio domain + conf>=0.65"
         return False, f"shared entity but non-bio: {src_verb}, {tgt_verb}"
 
-    # Keyword overlap: require both bio verbs
+    # Keyword overlap: require both bio verbs OR one bio verb + bio domain token
     has_keyword = any('[keyword:' in str(ev) for ev in (evidence or []))
     if has_keyword:
         if src_bio and tgt_bio:
             return True, "keyword + both bio verbs"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.65:
+            return True, "keyword + one bio verb + bio domain + conf>=0.65"
         return False, f"keyword but non-bio: {src_verb}, {tgt_verb}"
 
-    # Obj→obj overlap: require both bio verbs AND confidence >= 0.65
-    # (weakest structural evidence — high false positive rate at 0.58)
+    # Obj→obj overlap: require both bio verbs + conf>=0.65, OR one bio verb + bio domain + high conf
     has_obj_obj = any('[obj_obj:' in str(ev) for ev in (evidence or []))
     if has_obj_obj:
         if src_bio and tgt_bio and confidence >= 0.65:
             return True, "obj_obj + both bio verbs + conf>=0.65"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.75:
+            return True, "obj_obj + one bio verb + bio domain + conf>=0.75"
         return False, f"obj_obj but non-bio or low-conf: {src_verb}, {tgt_verb}, conf={confidence}"
 
-    # Shared subject: require both bio verbs AND confidence >= 0.65
-    # (weakest evidence type — many false positives at low confidence)
+    # Shared subject: require both bio verbs + conf>=0.65, OR one bio verb + bio domain + high conf
     has_subject = any('[subject:' in str(ev) for ev in (evidence or []))
     if has_subject:
         if src_bio and tgt_bio and confidence >= 0.65:
             return True, "shared subject + both bio verbs"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.75:
+            return True, "shared subject + one bio verb + bio domain + conf>=0.75"
         return False, f"shared subject but non-bio or low-conf: {src_verb}, {tgt_verb}"
 
     # Default: confirm if both bio verbs (any confidence)
@@ -761,7 +824,24 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
     return False, f"no clear positive signal: {src_verb}({'bio' if src_bio else 'meta'}), {tgt_verb}({'bio' if tgt_bio else 'meta'})"
 
 
+def _is_bio_doc(doc_id: str, threshold: float = 0.10) -> bool:
+    """Return True if >=threshold fraction of the doc's action phrases contain a bio-domain token."""
+    rows, _ = db.cypher_query(
+        'MATCH (a:Action {doc_id: $doc_id}) WHERE a.full_phrase IS NOT NULL '
+        'RETURN a.full_phrase LIMIT 200',
+        {'doc_id': doc_id},
+    )
+    if not rows:
+        return False
+    bio = sum(1 for r in rows if r[0] and _has_bio_domain_token(r[0]))
+    return (bio / len(rows)) >= threshold
+
+
 def run(doc_id: str, dry_run: bool = False, quiet: bool = False) -> dict:
+    # Pre-compute doc-level bio status so per-phrase check can be skipped
+    # for specialised biomedical phrases that lack classic bio-domain words.
+    doc_is_bio = _is_bio_doc(doc_id)
+
     results, _ = db.cypher_query('''
         MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO {status: "pending"}]->(t:Action)
         RETURN s.uid, t.uid, s.full_phrase, t.full_phrase,
@@ -776,7 +856,8 @@ def run(doc_id: str, dry_run: bool = False, quiet: bool = False) -> dict:
         confidence = confidence or 0.0
         evidence = list(evidence) if evidence else []
 
-        ok, reason = should_confirm(src_phrase, tgt_phrase, relation, confidence, evidence)
+        ok, reason = should_confirm(src_phrase, tgt_phrase, relation, confidence, evidence,
+                                    doc_is_bio=doc_is_bio)
 
         src_short = (src_phrase or '')[:45]
         tgt_short = (tgt_phrase or '')[:45]

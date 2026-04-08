@@ -106,7 +106,8 @@
       "WebFetch(domain:docs.mistral.ai)",
       "WebFetch(domain:platform.openai.com)",
       "WebFetch(domain:pricepertoken.com)",
-      "WebFetch(domain:groq.com)"
+      "WebFetch(domain:groq.com)",
+      "Bash(\"d:/Knowledge_Map/api/.venv/Scripts/python.exe\" \"d:/Knowledge_Map/eval/metrics_loop.py\" --once)"
     ],
     "deny": [],
     "ask": []

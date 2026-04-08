@@ -18,6 +18,8 @@ from state_store import StateStore
 
 logger = logging.getLogger(__name__)
 
+_LOG_EVERY = 10  # Log progress every N completed articles (avoids O(N²) get_summary calls)
+
 
 async def run_worker(config: Config, store: StateStore) -> None:
     limiter = NCBIRateLimiter(has_api_key=bool(config.ncbi_api_key))
@@ -47,24 +49,38 @@ async def run_worker(config: Config, store: StateStore) -> None:
     store.log(f"Processing {len(pending)} articles (batch_size={config.batch_size})...")
 
     semaphore = asyncio.Semaphore(config.batch_size)
+    counter_lock = asyncio.Lock()
     processed = 0
     total = len(pending)
+
+    # httpx connection pool sized to batch_size:
+    #   batch_size × 4 — запас под polling (каждая статья делает несколько параллельных GET)
+    #   keepalive_expiry=60s — переиспользуем TCP-соединения между poll-ами
+    limits = httpx.Limits(
+        max_connections=config.batch_size * 4,
+        max_keepalive_connections=config.batch_size,
+        keepalive_expiry=60.0,
+    )
 
     async def process_with_sem(pmcid: str, client: httpx.AsyncClient) -> None:
         nonlocal processed
         async with semaphore:
-            store.log(f"[{pmcid}] Starting ({processed + 1}/{total})...")
             await process_article(pmcid, config, store, client)
-            processed += 1
-            summary = await store.get_summary()
-            store.log(
-                f"Progress: {summary['done']} done, {summary['in_progress']} active, "
-                f"{summary['failed']} failed, {summary['pending']} pending — {summary['percent']}%"
-            )
+            async with counter_lock:
+                processed += 1
+                if processed % _LOG_EVERY == 0 or processed == total:
+                    summary = await store.get_summary()
+                    store.log(
+                        f"Progress {processed}/{total}: "
+                        f"{summary['done']} done, {summary['in_progress']} active, "
+                        f"{summary['failed']} failed — {summary['percent']}%"
+                    )
 
-    async with httpx.AsyncClient() as api_client:
-        tasks = [process_with_sem(pmcid, api_client) for pmcid in pending]
-        await asyncio.gather(*tasks, return_exceptions=True)
+    async with httpx.AsyncClient(limits=limits) as api_client:
+        # TaskGroup (Python 3.11+): структурированный параллелизм, нет утечек задач
+        async with asyncio.TaskGroup() as tg:
+            for pmcid in pending:
+                tg.create_task(process_with_sem(pmcid, api_client))
 
     summary = await store.get_summary()
     store.log(

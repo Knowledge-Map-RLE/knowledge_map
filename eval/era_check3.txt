@@ -1,0 +1,8 @@
+MERGED mTOR inhibits autophagy
+MERGED p53 induces apoptosis
+MERGED ROS
+MERGED cell cycle
+MERGED sirtuin
+MERGED lifespan
+MERGED NF-kB inflammation
+MERGED AMPK autophagy

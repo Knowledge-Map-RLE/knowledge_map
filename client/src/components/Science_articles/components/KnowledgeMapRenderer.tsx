@@ -33,6 +33,10 @@ const ARROW_PX = 10;
 // Line width in screen pixels
 const LINE_PX = 2;
 
+// Badge and edge label sizes in screen pixels
+const BADGE_R_PX   = 9;   // radius of doc_count badge circle
+const EDGE_LABEL_W = 20;  // half-width of edge count label background
+
 // Resolution multiplier for text textures — higher = sharper at zoom, more GPU memory.
 // 4× covers up to 4× zoom before blurring; matches typical max useful zoom level.
 const TEXT_RESOLUTION = 4;
@@ -87,11 +91,14 @@ export function KnowledgeMapRenderer({
   onNodeClick,
   viewportRef,
 }: KnowledgeMapRendererProps) {
-  const edgesGfxRef  = useRef<Graphics | null>(null);
-  const arrowsGfxRef = useRef<Graphics | null>(null);
-  const nodesGfxRef  = useRef<Graphics | null>(null);
-  const labelsRef    = useRef<Container | null>(null);
-  const hitRef       = useRef<Container | null>(null);
+  const edgesGfxRef     = useRef<Graphics | null>(null);
+  const arrowsGfxRef    = useRef<Graphics | null>(null);
+  const nodesGfxRef     = useRef<Graphics | null>(null);
+  const labelsRef       = useRef<Container | null>(null);
+  const hitRef          = useRef<Container | null>(null);
+  const badgesGfxRef    = useRef<Graphics | null>(null);  // doc_count circles on nodes
+  const badgeLabelsRef  = useRef<Container | null>(null); // doc_count text on nodes
+  const edgeLabelsRef   = useRef<Container | null>(null); // edge count labels
 
   const nodesRef         = useRef(nodes);
   const edgesRef         = useRef(edges);
@@ -115,29 +122,42 @@ export function KnowledgeMapRenderer({
   // Track LOD to flush cache on LOD change
   const lastLodRef = useRef<'full' | 'nodes' | 'dots'>('full');
 
+  // Badge and edge label caches — keyed by node/edge id
+  const badgeLabelCacheRef = useRef<Map<string, Text>>(new Map());
+  const edgeLabelCacheRef  = useRef<Map<string, Text>>(new Map());
+
   // ── Init Pixi layers ──────────────────────────────────────────────────────
   useEffect(() => {
     const vp = viewportRef.current;
     const container = vp?.containerRef;
     if (!container) return;
 
-    const edgesGfx  = new Graphics();
-    const arrowsGfx = new Graphics();
-    const nodesGfx  = new Graphics();
-    const labels    = new Container();
-    const hit       = new Container();
+    const edgesGfx    = new Graphics();
+    const arrowsGfx   = new Graphics();
+    const nodesGfx    = new Graphics();
+    const labels      = new Container();
+    const hit         = new Container();
+    const badgesGfx   = new Graphics();
+    const badgeLabels = new Container();
+    const edgeLabels  = new Container();
 
     container.addChild(edgesGfx);
     container.addChild(arrowsGfx);
     container.addChild(nodesGfx);
     container.addChild(labels);
+    container.addChild(badgesGfx);
+    container.addChild(badgeLabels);
+    container.addChild(edgeLabels);
     container.addChild(hit);
 
-    edgesGfxRef.current  = edgesGfx;
-    arrowsGfxRef.current = arrowsGfx;
-    nodesGfxRef.current  = nodesGfx;
-    labelsRef.current    = labels;
-    hitRef.current       = hit;
+    edgesGfxRef.current    = edgesGfx;
+    arrowsGfxRef.current   = arrowsGfx;
+    nodesGfxRef.current    = nodesGfx;
+    labelsRef.current      = labels;
+    hitRef.current         = hit;
+    badgesGfxRef.current   = badgesGfx;
+    badgeLabelsRef.current = badgeLabels;
+    edgeLabelsRef.current  = edgeLabels;
 
     return () => {
       edgesGfx.destroy();
@@ -145,12 +165,20 @@ export function KnowledgeMapRenderer({
       nodesGfx.destroy();
       labels.destroy({ children: true });
       hit.destroy({ children: true });
-      edgesGfxRef.current  = null;
-      arrowsGfxRef.current = null;
-      nodesGfxRef.current  = null;
-      labelsRef.current    = null;
-      hitRef.current       = null;
+      badgesGfx.destroy();
+      badgeLabels.destroy({ children: true });
+      edgeLabels.destroy({ children: true });
+      edgesGfxRef.current    = null;
+      arrowsGfxRef.current   = null;
+      nodesGfxRef.current    = null;
+      labelsRef.current      = null;
+      hitRef.current         = null;
+      badgesGfxRef.current   = null;
+      badgeLabelsRef.current = null;
+      edgeLabelsRef.current  = null;
       labelCacheRef.current.clear();
+      badgeLabelCacheRef.current.clear();
+      edgeLabelCacheRef.current.clear();
     };
   }, [viewportRef]);
 
@@ -218,6 +246,136 @@ export function KnowledgeMapRenderer({
     }
 
     gLines.stroke();
+  }, []);
+
+  // ── Draw edge count labels (centre of each visible edge) ─────────────────
+  // Shows edge.count when > 1. Cleared and rebuilt on each redraw.
+  const drawEdgeLabels = useCallback((scale: number) => {
+    const container = edgeLabelsRef.current;
+    if (!container) return;
+
+    if (scale < LOD_FULL) {
+      // Hide edge labels when zoomed out — too small to read
+      container.removeChildren().forEach((c: any) => c.destroy());
+      edgeLabelCacheRef.current.clear();
+      return;
+    }
+
+    const nm  = nodeMapRef.current;
+    const vis = visibleNodeIdsRef.current;
+    const edges = edgesRef.current;
+
+    const style = new TextStyle({ fontSize: 9, fill: 0x555555, fontWeight: 'bold' });
+
+    // Determine which edges are currently needed
+    const neededKeys = new Set<string>();
+    for (const e of edges) {
+      if (e.count <= 1) continue;
+      if (!vis.has(e.source_id) && !vis.has(e.target_id)) continue;
+      neededKeys.add(e.id);
+    }
+
+    // Remove labels that are no longer needed
+    const cache = edgeLabelCacheRef.current;
+    for (const [id, t] of cache) {
+      if (!neededKeys.has(id)) {
+        t.destroy();
+        cache.delete(id);
+        container.removeChild(t);
+      }
+    }
+
+    // Add or update labels for visible edges
+    for (const e of edges) {
+      if (e.count <= 1) continue;
+      if (!vis.has(e.source_id) && !vis.has(e.target_id)) continue;
+
+      const src = nm.get(e.source_id);
+      const tgt = nm.get(e.target_id);
+      if (!src || !tgt) continue;
+
+      const mx = (src.x + NODE_W / 2 + tgt.x - NODE_W / 2) / 2;
+      const my = (src.y + tgt.y) / 2;
+
+      let t = cache.get(e.id);
+      if (!t) {
+        t = new Text({ text: String(e.count), style, resolution: TEXT_RESOLUTION });
+        t.anchor.set(0.5, 0.5);
+        container.addChild(t);
+        cache.set(e.id, t);
+      }
+      t.scale.set(1 / scale);  // keep label size constant in screen pixels
+      t.x = mx;
+      t.y = my;
+    }
+  }, []);
+
+  // ── Draw doc_count badges on nodes ────────────────────────────────────────
+  // Badge: white circle in top-right corner with doc_count number (only when > 1).
+  const drawBadges = useCallback((scale: number) => {
+    const gfx       = badgesGfxRef.current;
+    const container = badgeLabelsRef.current;
+    if (!gfx || !container) return;
+
+    gfx.clear();
+
+    if (scale < LOD_NODES) {
+      container.removeChildren().forEach((c: any) => c.destroy());
+      badgeLabelCacheRef.current.clear();
+      return;
+    }
+
+    const ns  = nodesRef.current;
+    const vis = visibleNodeIdsRef.current;
+
+    const r = BADGE_R_PX / scale;
+    // Fixed style — scale is handled by world-space r and position
+    const style = new TextStyle({ fontSize: 9, fill: 0x333333, fontWeight: 'bold' });
+
+    const neededIds = new Set<string>();
+    for (const n of ns) {
+      if (n.doc_count <= 1) continue;
+      if (!vis.has(n.id)) continue;
+      neededIds.add(n.id);
+    }
+
+    // Remove stale badge labels
+    const cache = badgeLabelCacheRef.current;
+    for (const [id, t] of cache) {
+      if (!neededIds.has(id)) {
+        t.destroy();
+        cache.delete(id);
+        container.removeChild(t);
+      }
+    }
+
+    for (const n of ns) {
+      if (n.doc_count <= 1) continue;
+      if (!vis.has(n.id)) continue;
+
+      const bx = n.x + NODE_W / 2 - r;
+      const by = n.y - NODE_H / 2 + r;
+
+      // White circle background
+      gfx.circle(bx, by, r);
+      gfx.fill({ color: 0xffffff, alpha: 0.92 });
+      gfx.circle(bx, by, r);
+      gfx.stroke({ width: 0.8 / scale, color: 0xaaaaaa });
+
+      // Number label (cached per node id)
+      let t = cache.get(n.id);
+      if (!t) {
+        t = new Text({ text: String(n.doc_count), style, resolution: TEXT_RESOLUTION });
+        t.anchor.set(0.5, 0.5);
+        t.scale.set(1 / scale);  // keep label size constant in screen pixels
+        container.addChild(t);
+        cache.set(n.id, t);
+      } else {
+        t.scale.set(1 / scale);
+      }
+      t.x = bx;
+      t.y = by;
+    }
   }, []);
 
   // ── Draw nodes ────────────────────────────────────────────────────────────
@@ -347,10 +505,12 @@ export function KnowledgeMapRenderer({
     }
 
     drawEdges(scale);
+    drawEdgeLabels(scale);
     drawNodes(scale, selected);
+    drawBadges(scale);
     lastScaleRef.current    = scale;
     lastSelectedRef.current = selected;
-  }, [drawEdges, drawNodes, viewportRef]);
+  }, [drawEdges, drawEdgeLabels, drawNodes, drawBadges, viewportRef]);
 
   // ── Redraw on data change ─────────────────────────────────────────────────
   useEffect(() => {

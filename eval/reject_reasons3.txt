@@ -1,0 +1,33 @@
+All rejected (conf>=0.65):
+    1802  no bio domain token in either phrase (non-bio article)
+     122  html artifact in phrase
+     112  meta tgt verb: limit
+     112  meta src verb: evaluate
+     105  meta tgt verb: consider
+     102  meta tgt verb: evaluate
+      74  meta src verb: integrate
+      67  meta src verb: incorporate
+      56  meta src verb: limit
+      56  meta tgt verb: illustrate
+      50  marker + bio verb but no bio domain token (non-bio article)
+      41  meta tgt verb: apply
+      40  meta src verb: compare
+      38  meta src verb: obtain
+      37  meta src verb: explore
+
+From bio-docs only:
+     112  meta src verb: evaluate
+     110  meta tgt verb: limit
+      99  meta tgt verb: evaluate
+      88  meta tgt verb: consider
+      71  meta src verb: integrate
+      65  meta src verb: incorporate
+      60  html artifact in phrase
+      56  meta tgt verb: illustrate
+      55  meta src verb: limit
+      50  marker + bio verb but no bio domain token (non-bio article)
+      41  meta tgt verb: apply
+      39  meta src verb: compare
+      37  meta src verb: explore
+      36  meta src verb: obtain
+      31  meta src verb: apply

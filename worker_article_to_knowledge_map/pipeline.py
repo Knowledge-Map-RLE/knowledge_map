@@ -8,6 +8,7 @@ Each article goes through:
 """
 import asyncio
 import logging
+import random
 import time
 from urllib.parse import unquote
 
@@ -89,17 +90,12 @@ async def _run_pipeline(
             await _poll_until_markdown_ready(pmcid, doc_id, config, store, client)
 
     # ── Step 3: ANNOTATING ───────────────────────────────────────────────────
-    # Сначала проверяем текущий статус — может быть уже annotated от прошлого запуска
-    try:
-        status_resp = await client.get(
-            f"{base}/documents/{doc_id}/progress", timeout=10.0
-        )
-        current_status = status_resp.json().get("processing_status", "") if status_resp.status_code == 200 else ""
-    except Exception:
-        current_status = ""
-
-    if current_status == "annotated":
-        store.log(f"[{pmcid}] Already annotated, skipping annotation")
+    # Проверяем состояние из StateStore — не делаем лишний HTTP GET /progress.
+    # При первом прогоне статья никогда не бывает annotated.
+    # При resume — состояние уже сохранено в Neo4j.
+    current_state = await store.get_state(pmcid)
+    if current_state in ("done", "reviewing", "extracting"):
+        store.log(f"[{pmcid}] Already annotated (state={current_state}), skipping annotation")
     else:
         store.log(f"[{pmcid}] Starting auto-annotation...")
         await store.set_state(pmcid, "annotating", doc_id=doc_id)
@@ -143,7 +139,7 @@ async def _run_pipeline(
 
     # ── DONE ─────────────────────────────────────────────────────────────────
     await store.set_state(pmcid, "done", doc_id=doc_id)
-    store.log(f"[{pmcid}] DONE ✓")
+    store.log(f"[{pmcid}] DONE")
 
 
 async def _poll_until_markdown_ready(
@@ -153,9 +149,19 @@ async def _poll_until_markdown_ready(
     store: StateStore,
     client: httpx.AsyncClient,
 ) -> None:
+    """Poll /progress until markdown conversion completes.
+
+    Uses adaptive exponential backoff with full jitter to avoid thundering herd
+    when multiple articles poll simultaneously:
+      interval grows: poll_interval → poll_interval×1.5 → ... → 20s
+      actual sleep = random(0, interval)  ← full jitter
+    """
     deadline = time.monotonic() + config.poll_timeout_sec
+    interval = config.poll_interval_sec
+    max_interval = 20.0
 
     while time.monotonic() < deadline:
+        await asyncio.sleep(interval * random.random())
         try:
             resp = await client.get(
                 f"{config.api_base_url}/documents/{doc_id}/progress",
@@ -173,7 +179,7 @@ async def _poll_until_markdown_ready(
         except Exception as e:
             store.log(f"[{pmcid}] Poll error: {unquote(str(e))}")
 
-        await asyncio.sleep(config.poll_interval_sec)
+        interval = min(interval * 1.5, max_interval)
 
     raise TimeoutError(
         f"Markdown not ready after {config.poll_timeout_sec}s for doc {doc_id}"
@@ -187,11 +193,18 @@ async def _poll_until_annotated(
     store: StateStore,
     client: httpx.AsyncClient,
 ) -> None:
-    """Poll /progress until processing_status == 'annotated' (or timeout)."""
+    """Poll /progress until processing_status == 'annotated' (or timeout).
+
+    Adaptive exponential backoff with full jitter:
+      interval grows: poll_interval → poll_interval×1.5 → ... → 20s
+      actual sleep = random(0, interval)
+    """
     deadline = time.monotonic() + config.annotate_wait_sec
+    interval = config.poll_interval_sec
+    max_interval = 20.0
 
     while time.monotonic() < deadline:
-        await asyncio.sleep(config.poll_interval_sec)
+        await asyncio.sleep(interval * random.random())
         try:
             resp = await client.get(
                 f"{config.api_base_url}/documents/{doc_id}/progress",
@@ -206,6 +219,8 @@ async def _poll_until_annotated(
                     return
         except Exception as e:
             store.log(f"[{pmcid}] Annotation poll error: {type(e).__name__}: {unquote(repr(e))}")
+
+        interval = min(interval * 1.5, max_interval)
 
     # Timeout — proceed anyway, annotations may be partially done
     store.log(f"[{pmcid}] Annotation poll timeout ({config.annotate_wait_sec:.0f}s), proceeding")

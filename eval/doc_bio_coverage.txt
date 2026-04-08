@@ -1,0 +1,36 @@
+Docs with many rejections: 20
+
+doc=cc3c3b7d12647859e7a25f63226edf71 bio_phrases=13/20
+  'regulate cellular proliferation, differentiation, and survival under normal physiological conditions'
+  'promotes tumorigenesis'
+  'inducing DNA damage, genomic instability, and aberrant activation'
+  'overwhelm antioxidant defenses'
+  'triggering stress-induced mechanisms'
+
+doc=c4b014357adf62b2ea261fece26ad458 bio_phrases=0/20
+  'offering the advantages of transparency, biocompatibility, and structural tunability'
+  'address the global donor tissue shortage'
+  'establishes a comprehensive framework for material design'
+  'delineating critical requirements'
+  'elucidate the structure–property relationships essential for recapitulating native corneal physiology'
+
+doc=287824b14e0477022e676b5e48b72456 bio_phrases=2/20
+  'enable chemical modifications and diverse\nstructural fabrications'
+  'expanding applications in drug delivery,\nwound healing, and tissue engineering'
+  'examines strategic advancements in\nCS-based medical materials over the past five years'
+  'enables facile chemical modification and'
+  'restrict its transition toward clinical implementation'
+
+doc=637829189244f43092df5652fd780342 bio_phrases=10/20
+  'holds considerable potential'
+  'correcting multi-system imbalances'
+  'synthesizes current evidence'
+  'underlying regulation'
+  'modulates the NEI network'
+
+doc=2ad419afd265b30c26c511199b0a36d8 bio_phrases=15/20
+  'reverse disease progression'
+  'summarizes the multifaceted roles of histone methylation in HF'
+  'target histone methylation enzymes'
+  'increasing cardiovascular risk factors'
+  'transfer a methyl group'

@@ -1,0 +1,13 @@
+=== SUBTYPE x STATUS ===
+    578467  enables               rejected
+     27507  enables               confirmed
+      1546  causes                rejected
+      1170  causes                confirmed
+       971  sequential            rejected
+       295  sequential            confirmed
+       105  prevents              confirmed
+        66  prevents              rejected
+        30  via_mechanism         rejected
+        20  via_mechanism         confirmed
+
+Rejected conf distribution: high(>=0.75)=122109 mid(0.65-0.75)=353 low(<0.65)=458618 total=581080

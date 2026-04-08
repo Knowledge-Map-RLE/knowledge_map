@@ -61,14 +61,24 @@ class ActionRepository:
         logger.debug("Saved %d actions for doc %s (%d deduplicated)", len(actions), doc_id, len(actions) - len(set(uid_remap.values())))
         return uid_remap
 
-    def backfill_norm_keys(self) -> int:
-        """Проставляет norm_key для Action-нод, у которых его ещё нет.
-        Используется один раз для миграции существующих данных."""
-        # Загружаем все ноды без norm_key
-        results, _ = db.cypher_query(
-            "MATCH (a:Action) WHERE a.norm_key IS NULL "
-            "RETURN a.uid AS uid, a.verb AS verb, a.subject AS subject, a.object AS object",
-        )
+    def backfill_norm_keys(self, force: bool = False) -> int:
+        """Проставляет norm_key для Action-нод.
+
+        Args:
+            force: Если True — перевычисляет norm_key для ВСЕХ нод (нужно после
+                   обновления словарей синонимов в compute_norm_key).
+                   Если False — только для нод с norm_key IS NULL (первичная миграция).
+        """
+        if force:
+            results, _ = db.cypher_query(
+                "MATCH (a:Action) "
+                "RETURN a.uid AS uid, a.verb AS verb, a.subject AS subject, a.object AS object",
+            )
+        else:
+            results, _ = db.cypher_query(
+                "MATCH (a:Action) WHERE a.norm_key IS NULL "
+                "RETURN a.uid AS uid, a.verb AS verb, a.subject AS subject, a.object AS object",
+            )
         if not results:
             return 0
 
@@ -79,11 +89,15 @@ class ActionRepository:
             }
             for r in results
         ]
-        db.cypher_query(
-            "UNWIND $rows AS row MATCH (a:Action {uid: row.uid}) SET a.norm_key = row.norm_key",
-            {"rows": rows},
-        )
-        logger.info("Backfilled norm_key for %d Action nodes", len(rows))
+        # Батчами по 5000, чтобы не перегружать память Neo4j
+        batch_size = 5000
+        for i in range(0, len(rows), batch_size):
+            db.cypher_query(
+                "UNWIND $rows AS row MATCH (a:Action {uid: row.uid}) SET a.norm_key = row.norm_key",
+                {"rows": rows[i : i + batch_size]},
+            )
+        mode = "force-all" if force else "null-only"
+        logger.info("Backfilled norm_key (%s) for %d Action nodes", mode, len(rows))
         return len(rows)
 
     def get_aggregated_graph(self) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:

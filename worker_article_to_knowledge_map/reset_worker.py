@@ -45,7 +45,7 @@ async def main(dry_run: bool, run_id: str | None) -> None:
         print(f"  Failed:          {failed}")
         print(f"  In progress:     {summary.get('in_progress', 0)}")
         print(f"  Pending:         {summary.get('pending', 0)}")
-        print(f"\nБудет сброшено: {done + failed} статей (done + failed) → pending")
+        print(f"\nБудет сброшено: {done + failed} статей (done + failed) -> pending")
 
         if dry_run:
             print("\n[DRY RUN] Изменения не применены. Запустите без --dry-run для выполнения.")

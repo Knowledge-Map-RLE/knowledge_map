@@ -1,0 +1,5 @@
+  activate->activate | sirtuin->sirtuin | 852f35f57acf61ac
+  increase->activate | sirtuin activity->sirtuin activity | c63f6116c2127e3c
+  activate->activate | SIRT1->sirtuin | 852f35f57acf61ac
+  upregulate->activate | SIRT1->sirtuin | 852f35f57acf61ac
+  activate->activate | sirtuins->sirtuins | 8618590a7326667c
