@@ -265,9 +265,16 @@ def _canon_entity(text: str) -> str:
     return t
 
 
-def compute_norm_key(verb: str, subject: str | None, obj: str | None) -> str:
+def compute_norm_key(verb: str, subject: str | None, obj: str | None,
+                     verb_span: dict | None = None,
+                     subject_span: dict | None = None,
+                     object_span: dict | None = None) -> str:
     """
     Вычисляет детерминированный ключ нормализации для Action-ноды.
+
+    Поддерживает два режима:
+    1. Legacy: строковые verb/subject/obj (для обратной совместимости)
+    2. Новый: span-словари с полной лингвистической структурой
 
     Шаги:
     1. Глагол → каноническая форма (VERB_SYNONYMS)
@@ -283,6 +290,21 @@ def compute_norm_key(verb: str, subject: str | None, obj: str | None) -> str:
         canonical = _canon_entity(t)
         return " ".join(sorted(canonical.lower().strip().split()))
 
-    canon_verb = _canon_verb(verb)
-    key = f"{canon_verb}|{norm(subject)}|{norm(obj)}"
+    # Если есть span-данные — используем их для более точной нормализации
+    if verb_span:
+        canon_verb = _canon_verb(verb_span.get("lemma_form", verb))
+    else:
+        canon_verb = _canon_verb(verb)
+
+    if subject_span:
+        subj_text = subject_span.get("lemma_form", subject or "")
+    else:
+        subj_text = subject or ""
+
+    if object_span:
+        obj_text = object_span.get("lemma_form", obj or "")
+    else:
+        obj_text = obj or ""
+
+    key = f"{canon_verb}|{norm(subj_text)}|{norm(obj_text)}"
     return hashlib.sha256(key.encode("utf-8")).hexdigest()[:16]

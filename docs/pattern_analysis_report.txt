@@ -1,0 +1,636 @@
+====================================================================================================
+ОТЧЁТ: АНАЛИЗ ЛИНГВИСТИЧЕСКИХ ПАТТЕРНОВ В NEO4J
+====================================================================================================
+Дата анализа: 2026-04-09T21:45:32.240269
+База данных: bolt://127.0.0.1:7687
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+ОБЩАЯ СТАТИСТИКА ГРАФА
+────────────────────────────────────────────────────────────────────────────────────────────────────
+  Action: 18,429 узлов
+  LexicalUnit: 119,978 узлов
+  LinguisticPattern: 6,054 узлов
+  LexicalForm: 846 узлов
+  PDFDocument: 2,066 узлов
+  MarkdownAnnotation: 3,257,401 узлов
+  Block: 0 узлов
+  User: 0 узлов
+  LEADS_TO: 83,912 рёбер
+  DEPENDS_ON: 82,932 рёбер
+  PART_OF: 124,304 рёбер
+  SYNTACTIC_DEP: 3,224 рёбер
+  FOUND_IN: 0 рёбер
+  RELATES_TO: 15,163 рёбер
+  LINK_TO: 0 рёбер
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: single_lexical
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [pos_distribution] (18 элементов)
+  Топ-10 по частоте:                      
+      1. [ 29955] pos=NOUN
+      2. [ 16551] pos=PUNCT
+      3. [ 13131] pos=VERB
+      4. [ 10787] pos=ADP
+      5. [ 10484] pos=ADJ
+      6. [  8834] pos=PROPN
+      7. [  6554] pos=DET
+      8. [  4238] pos=CCONJ
+      9. [  3005] pos=X
+     10. [  2971] pos=ADV
+
+  [dep_distribution] (45 элементов)
+  Топ-10 по частоте:                      
+      1. [ 18251] dep=punct
+      2. [ 10875] dep=amod
+      3. [ 10637] dep=prep
+      4. [  9936] dep=pobj
+      5. [  9007] dep=compound
+      6. [  7993] dep=dobj
+      7. [  6559] dep=det
+      8. [  5590] dep=conj
+      9. [  4663] dep=nsubj
+     10. [  4224] dep=cc
+
+  [top_lemmas] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [  1192] lemma=>, pos=X
+      2. [   859] lemma=<, pos=X
+      3. [   590] lemma=
+      , pos=SPACE
+      4. [   401] lemma=cell, pos=NOUN
+      5. [   397] lemma=study, pos=NOUN
+      6. [   364] lemma=al, pos=PROPN
+      7. [   338] lemma=et, pos=PROPN
+      8. [   289] lemma=td, pos=X
+      9. [   288] lemma=care, pos=NOUN
+     10. [   273] lemma=datum, pos=NOUN
+
+  [pos_dep_cross] (100 элементов)
+  Топ-10 по частоте:                      
+      1. [ 16408] pos=PUNCT, dep=punct
+      2. [ 10203] pos=ADP, dep=prep
+      3. [  9170] pos=ADJ, dep=amod
+      4. [  8298] pos=NOUN, dep=pobj
+      5. [  7020] pos=NOUN, dep=dobj
+      6. [  6529] pos=DET, dep=det
+      7. [  6066] pos=NOUN, dep=compound
+      8. [  4172] pos=CCONJ, dep=cc
+      9. [  2907] pos=VERB, dep=ROOT
+     10. [  2881] pos=ADV, dep=advmod
+
+  [top_verbs] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [   196] verb=use, tense=VBG
+      2. [   134] verb=base, tense=VBN
+      3. [   108] verb=include, tense=VBG
+      4. [    87] verb=promote, tense=VBG
+      5. [    87] verb=signal, tense=VBG
+      6. [    86] verb=tr, tense=VBD
+      7. [    77] verb=use, tense=VBN
+      8. [    72] verb=assess, tense=VB
+      9. [    71] verb=promote, tense=VB
+     10. [    70] verb=relate, tense=VBN
+
+  [top_nouns] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [   401] noun=cell
+      2. [   397] noun=study
+      3. [   288] noun=care
+      4. [   273] noun=datum
+      5. [   269] noun=model
+      6. [   188] noun=level
+      7. [   187] noun=health
+      8. [   186] noun=intervention
+      9. [   178] noun=adult
+     10. [   171] noun=analysis
+
+  [top_adjectives] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [   229] adj=-
+      2. [   214] adj=such
+      3. [   200] adj=old
+      4. [   160] adj=high
+      5. [   127] adj=specific
+      6. [   124] adj=social
+      7. [   120] adj=other
+      8. [   109] adj=clinical
+      9. [    93] adj=cognitive
+     10. [    91] adj=long
+
+  [stop_word_ratio] (2 элементов)
+  Топ-10 по частоте:                      
+      1. [ 87022] is_stop=False
+      2. [ 32956] is_stop=True
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: bigram_syntactic
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [dobj_patterns] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [    26] verb=detect, object=shift, doc_count=1
+      2. [    24] verb=facilitate, object=access, doc_count=1
+      3. [    16] verb=enhance, object=retention, doc_count=1
+      4. [    15] verb=promote, object=retention, doc_count=1
+      5. [    15] verb=promote, object=access, doc_count=1
+      6. [    14] verb=provide, object=service, doc_count=2
+      7. [    14] verb=use, object=datum, doc_count=3
+      8. [    12] verb=maintain, object=performance, doc_count=1
+      9. [    11] verb=complete, object=replication, doc_count=1
+     10. [    11] verb=detect, object=drift, doc_count=1
+
+  [compound_patterns] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [    64] modifier=al, head=et, doc_count=6
+      2. [    59] modifier=fork, head=replication, doc_count=1
+      3. [    42] modifier=type, head=cell, doc_count=1
+      4. [    40] modifier=in-2, head=GRK5, doc_count=1
+      5. [    37] modifier=size, head=body, doc_count=1
+      6. [    32] modifier=worker, head=care, doc_count=1
+      7. [    29] modifier=degradation, head=performance, doc_count=1
+      8. [    28] modifier=system, head=AI, doc_count=1
+      9. [    28] modifier=care, head=term, doc_count=1
+     10. [    28] modifier=shape, head=body, doc_count=1
+
+  [advmod_patterns] (1 элементов)
+  Топ-10 по частоте:                      
+      1. [     2] adverb=have, verb=unassiste, doc_count=1
+
+  [prep_patterns] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [    62] head=access, preposition=to
+      2. [    47] head=base, preposition=on
+      3. [    47] head=change, preposition=in
+      4. [    43] head=number, preposition=of
+      5. [    37] head=importance, preposition=of
+      6. [    35] head=focus, preposition=on
+      7. [    30] head=effect, preposition=of
+      8. [    28] head=associate, preposition=with
+      9. [    27] head=compare, preposition=to
+     10. [    27] head=increase, preposition=in
+
+  [all_dep_types] (44 элементов)
+  Топ-10 по частоте:                      
+      1. [ 13442] dep_type=punct, doc_count=20
+      2. [  7570] dep_type=amod, doc_count=20
+      3. [  7353] dep_type=prep, doc_count=20
+      4. [  6923] dep_type=pobj, doc_count=20
+      5. [  6336] dep_type=compound, doc_count=19
+      6. [  5608] dep_type=dobj, doc_count=20
+      7. [  4385] dep_type=det, doc_count=20
+      8. [  4093] dep_type=conj, doc_count=19
+      9. [  3187] dep_type=nsubj, doc_count=20
+     10. [  3068] dep_type=cc, doc_count=19
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: trigram_syntactic
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: dependency_chains
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [verb_dependency_chains] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [   638] verb=use, depth=2
+      2. [   499] verb=use, depth=3
+      3. [   385] verb=assess, depth=2
+      4. [   321] verb=assess, depth=3
+      5. [   315] verb=assess, depth=4
+      6. [   298] verb=expand, depth=4
+      7. [   263] verb=use, depth=4
+      8. [   262] verb=use, depth=1
+      9. [   260] verb=include, depth=2
+     10. [   255] verb=provide, depth=2
+
+  [verb_max_dependency_depth] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] verb=use, max_depth=5, total_dependents=1871
+      2. [      ] verb=assess, max_depth=5, total_dependents=1495
+      3. [      ] verb=provide, max_depth=5, total_dependents=965
+      4. [      ] verb=include, max_depth=5, total_dependents=908
+      5. [      ] verb=show, max_depth=5, total_dependents=809
+      6. [      ] verb=expand, max_depth=5, total_dependents=795
+      7. [      ] verb=reduce, max_depth=5, total_dependents=787
+      8. [      ] verb=identify, max_depth=5, total_dependents=766
+      9. [      ] verb=suggest, max_depth=5, total_dependents=714
+     10. [      ] verb=require, max_depth=5, total_dependents=682
+
+  [noun_modifier_chains] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [   136] noun=study, depth=1
+      2. [    66] noun=study, depth=2
+      3. [    60] noun=finding, depth=1
+      4. [    55] noun=participant, depth=1
+      5. [    54] noun=model, depth=1
+      6. [    52] noun=cell, depth=3
+      7. [    52] noun=datum, depth=3
+      8. [    52] noun=analysis, depth=1
+      9. [    52] noun=method, depth=1
+     10. [    47] noun=model, depth=3
+
+  [chain_length_distribution] (5 элементов)
+  Топ-10 по частоте:                      
+      1. [ 82932] chain_length=1
+      2. [ 68447] chain_length=2
+      3. [ 52104] chain_length=3
+      4. [ 37286] chain_length=4
+      5. [ 24989] chain_length=5
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: action_level
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [leads_to_pairs] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [ 58931] source=None, target=None, relation_type=enables, status=rejected, doc_count=104
+      2. [ 10094] source=None, target=None, relation_type=enables, status=confirmed, doc_count=79
+      3. [  2094] source=None, target=None, relation_type=enables, status=pending, doc_count=2
+      4. [   163] source=None, target=None, relation_type=causes, status=confirmed, doc_count=47
+      5. [   138] source=None, target=None, relation_type=causes, status=rejected, doc_count=61
+      6. [    41] source=None, target=None, relation_type=sequential, status=rejected, doc_count=28
+      7. [    22] source=None, target=None, relation_type=sequential, status=confirmed, doc_count=15
+      8. [    22] source=None, target=None, relation_type=prevents, status=confirmed, doc_count=14
+      9. [    14] source=None, target=None, relation_type=prevents, status=rejected, doc_count=6
+     10. [    10] source=None, target=None, relation_type=causes, status=pending, doc_count=2
+
+  [relation_subtype_distribution] (14 элементов)
+  Топ-10 по частоте:                      
+      1. [ 70231] subtype=enables, status=rejected
+      2. [ 11090] subtype=enables, status=confirmed
+      3. [  2094] subtype=enables, status=pending
+      4. [   189] subtype=causes, status=confirmed
+      5. [   167] subtype=causes, status=rejected
+      6. [    46] subtype=sequential, status=rejected
+      7. [    27] subtype=sequential, status=confirmed
+      8. [    25] subtype=prevents, status=confirmed
+      9. [    16] subtype=prevents, status=rejected
+     10. [    10] subtype=causes, status=pending
+
+  [action_class_distribution] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [   590] class=result, verb=reduce
+      2. [   580] class=result, verb=promote
+      3. [   491] class=result, verb=enhance
+      4. [   399] class=result, verb=increase
+      5. [   345] class=result, verb=improve
+      6. [   321] class=mechanism, verb=regulate
+      7. [   301] class=action, verb=assess
+      8. [   297] class=result, verb=inhibit
+      9. [   287] class=result, verb=induce
+     10. [   258] class=action, verb=maintain
+
+  [high_out_degree_actions] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] action=None, verb=promote, out_degree=1742
+      2. [      ] action=None, verb=enhance, out_degree=1723
+      3. [      ] action=None, verb=reduce, out_degree=1564
+      4. [      ] action=None, verb=increase, out_degree=1266
+      5. [      ] action=None, verb=regulate, out_degree=1235
+      6. [      ] action=None, verb=inhibit, out_degree=1107
+      7. [      ] action=None, verb=induce, out_degree=979
+      8. [      ] action=None, verb=suppress, out_degree=977
+      9. [      ] action=None, verb=target, out_degree=917
+     10. [      ] action=None, verb=modulate, out_degree=880
+
+  [high_in_degree_actions] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] action=None, verb=promote, in_degree=2162
+      2. [      ] action=None, verb=enhance, in_degree=1802
+      3. [      ] action=None, verb=reduce, in_degree=1752
+      4. [      ] action=None, verb=regulate, in_degree=1456
+      5. [      ] action=None, verb=inhibit, in_degree=1392
+      6. [      ] action=None, verb=increase, in_degree=1282
+      7. [      ] action=None, verb=induce, in_degree=1174
+      8. [      ] action=None, verb=improve, in_degree=1120
+      9. [      ] action=None, verb=suppress, in_degree=1074
+     10. [      ] action=None, verb=influence, in_degree=1071
+
+  [edge_status_distribution] (3 элементов)
+  Топ-10 по частоте:                      
+      1. [ 70466] status=rejected
+      2. [ 11334] status=confirmed
+      3. [  2112] status=pending
+
+  [top_action_verbs] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [   590] verb=reduce, doc_count=106
+      2. [   580] verb=promote, doc_count=82
+      3. [   491] verb=enhance, doc_count=93
+      4. [   399] verb=increase, doc_count=98
+      5. [   345] verb=improve, doc_count=90
+      6. [   321] verb=regulate, doc_count=55
+      7. [   301] verb=assess, doc_count=91
+      8. [   297] verb=inhibit, doc_count=52
+      9. [   287] verb=induce, doc_count=64
+     10. [   258] verb=maintain, doc_count=81
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: leads_to_chains
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [chain_length_distribution] (4 элементов)
+  Топ-10 по частоте:                      
+      1. [ 13400] steps=2
+      2. [ 15157] steps=3
+      3. [ 13223] steps=4
+      4. [ 10184] steps=5
+
+  [longest_chains] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] start=we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity', '1Relating white matter structural features to haemodynamic and electromagnetic functional white matter structural features', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      2. [      ] start=predicting functional connectivity (FC) from structural connectivity functional connectivity, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['predicting functional connectivity (FC) from structural connectivity functional connectivity', 'FC)8 (FC)8 typically quantifies the cross-correlation of blood-oxygen-level-dependent (BOLD) functional MRI (fMRI) time series9, and structural connectivity (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14. the cross', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      3. [      ] start=integrating a multi-feature white matter SC network a multi-feature white matter SC network, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['integrating a multi-feature white matter SC network a multi-feature white matter SC network', 'we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      4. [      ] start=we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity', 'predicting functional connectivity (FC) from structural connectivity functional connectivity', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      5. [      ] start=we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity', 'predicting functional connectivity (FC) from structural connectivity functional connectivity', 'FC)8 (FC)8 typically quantifies the cross-correlation of blood-oxygen-level-dependent (BOLD) functional MRI (fMRI) time series9, and structural connectivity (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14. the cross', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'combining diffusion-weighted MRI with streamline tractography12–14 diffusion-weighted MRI', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      6. [      ] start=we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity', 'FC)8 (FC)8 typically quantifies the cross-correlation of blood-oxygen-level-dependent (BOLD) functional MRI (fMRI) time series9, and structural connectivity (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14. the cross', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      7. [      ] start=1Relating white matter structural features to haemodynamic and electromagnetic functional white matter structural features, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['1Relating white matter structural features to haemodynamic and electromagnetic functional white matter structural features', '2Relating', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      8. [      ] start=we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity', '2Relating', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+      9. [      ] start=integrating a multi-feature white matter SC network a multi-feature white matter SC network, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['integrating a multi-feature white matter SC network a multi-feature white matter SC network', 'we to quantify three major features of white matter connectivity at the network edge level three major features of white matter connectivity', '1Relating white matter structural features to haemodynamic and electromagnetic functional white matter structural features', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'combining diffusion-weighted MRI with streamline tractography12–14 diffusion-weighted MRI', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+     10. [      ] start=which which constrain and shape the landscape of dynamic functional interactions7, end=14 men, 16 women; 29 ± 6 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks, steps=5, chain=['which which constrain and shape the landscape of dynamic functional interactions7', 'predicting functional connectivity (FC) from structural connectivity functional connectivity', 'SC)10,11 (SC)10,11 reconstructs the interconnecting white matter pathways by combining diffusion-weighted MRI with streamline tractography12–14 the interconnecting white matter pathways', 'integrating white matter tract features, including myelin, into a network model of FC white matter tract features, including myelin,', 'shared', '14 men, 16 women; 29\u2009±\u20096 years of age) to estimate the SC and in-sample FC networks the SC and in-sample FC networks']
+
+  [diverging_patterns] (15 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] start_action=None, verb=enhance, reach=3759
+      2. [      ] start_action=None, verb=reduce, reach=3400
+      3. [      ] start_action=None, verb=promote, reach=3380
+      4. [      ] start_action=None, verb=increase, reach=2914
+      5. [      ] start_action=None, verb=regulate, reach=2604
+      6. [      ] start_action=None, verb=inhibit, reach=2529
+      7. [      ] start_action=None, verb=induce, reach=2292
+      8. [      ] start_action=None, verb=target, reach=2268
+      9. [      ] start_action=None, verb=influence, reach=2037
+     10. [      ] start_action=None, verb=suppress, reach=2030
+
+  [converging_2to1] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [870304] target=None, source1=None, source2=None
+      2. [    22] target=None, source1=None, source2=VR control treatment 
+
+VR‐CRT vs. VR control treatment increased
+      3. [     9] target=None, source1=None, source2=Participants Participants underwent a strategic memory encoding fMRI task and neuropsychological assessment outside the scanner before and after four weeks of bi‐weekly VR‐CRT vs. VR control treatment and an additional neuropsychological assessment three months after treatment completion. a strategic memory encoding fMRI
+      4. [     6] target=hampers patients' clinical and functional outcomes, source1=None, source2=None
+      5. [     6] target=VR control treatment 
+
+VR‐CRT vs. VR control treatment increased, source1=None, source2=None
+      6. [     4] target= enables models to adapt to new data while retaining prior knowledge, offering dynamic updates suited to evolving healthcare environments (e.g., disease patterns, practices, and demographics). models, source1=The approach to detect label shifts label shifts, source2=the data the data follows one distribution when it actually follows another one distribution
+      7. [     4] target=enabling more accurate performance monitoring more accurate performance monitoring, source1=The approach to detect label shifts label shifts, source2=the data the data follows one distribution when it actually follows another one distribution
+      8. [     4] target=to detect drift in breast cancer mammography data by analyzing both reconstruction error and latent space changes drift, source1=The approach to detect label shifts label shifts, source2=the data the data follows one distribution when it actually follows another one distribution
+      9. [     4] target=The study   to detect data shift in medical imaging datasets (e.g., histopathology data shift in medical imaging datasets (e.g., histopathology, source1=The approach to detect label shifts label shifts, source2=the data the data follows one distribution when it actually follows another one distribution
+     10. [     4] target=
+
+The study   
+
+The study  uses maximum softmax probability to flag prediction errors and distribution shifts. maximum softmax probability to flag prediction errors and distribution shifts, source1=The approach to detect label shifts label shifts, source2=the data the data follows one distribution when it actually follows another one distribution
+
+  [converging_3to1] (15 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] target=None, sources_count=19742
+      2. [      ] target=
+
+The study   
+
+The study  uses maximum softmax probability to flag prediction errors and distribution shifts. maximum softmax probability to flag prediction errors and distribution shifts, sources_count=350
+      3. [      ] target=preserving, sources_count=350
+      4. [      ] target=to detect model drift in medical triage systems model drift, sources_count=343
+      5. [      ] target=Chi   outperforming standard retraining on four cancer datasets by maintaining both calibration and discrimination over time standard retraining on four cancer datasets, sources_count=340
+      6. [      ] target=to mitigate acquisition shifts acquisition shifts, sources_count=339
+      7. [      ] target=to improve LLM performance on tasks such as biomedical question answering LLM performance on tasks such as biomedical question answering, sources_count=334
+      8. [      ] target=to detect drift in breast cancer mammography data by analyzing both reconstruction error and latent space changes drift, sources_count=334
+      9. [      ] target=The study   to detect data shift in medical imaging datasets (e.g., histopathology data shift in medical imaging datasets (e.g., histopathology, sources_count=334
+     10. [      ] target= enables models to adapt to new data while retaining prior knowledge, offering dynamic updates suited to evolving healthcare environments (e.g., disease patterns, practices, and demographics). models, sources_count=333
+
+  [key_verb_chains] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] start_verb=reduce, steps=4, end_action=This further illuminate its coupling with FC its coupling with FC, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'which increased the number of data points in each model the number of data points', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'Such data allow stronger inferences about individual variability in structure–function coupling, and facilitate testing whether the group-level principles identified here also hold at the level of single participants stronger inferences about individual variability in structure–function coupling, and facilitate testing', 'This further illuminate its coupling with FC its coupling with FC']
+      2. [      ] start_verb=reduce, steps=4, end_action=white matter myelin In other words, white matter myelin may confer functional flexibility or resilience79,80, whether it be to normal or pathological variability in white matter structural properties. functional flexibility or resilience79,80, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'We We detail the complex interplay between white matter structure and neural synchrony and describe how it evolves across the neurophysiological rhythms of the brain. the complex interplay between white matter structure and neural synchrony', 'how white matter myelin shapes the relationship between structural and functional human brain networks the relationship between structural and functional human brain networks', 'white matter myelin In other words, white matter myelin may confer functional flexibility or resilience79,80, whether it be to normal or pathological variability in white matter structural properties. functional flexibility or resilience79,80']
+      3. [      ] start_verb=reduce, steps=4, end_action=Such data allow stronger inferences about individual variability in structure–function coupling, and facilitate testing whether the group-level principles identified here also hold at the level of single participants stronger inferences about individual variability in structure–function coupling, and facilitate testing, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'which increased the number of data points in each model the number of data points', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'the pairwise network-level of analysis \n\nIn sum, the pairwise network-level of analysis yielded a nuanced perspective of regional structure–function coupling while maximizing model robustness and efficiency, and our multi-feature account of white matter structure facilitated deeper interpretation of the relationship between brain structure and function. a nuanced perspective of regional structure–function coupling', 'Such data allow stronger inferences about individual variability in structure–function coupling, and facilitate testing whether the group-level principles identified here also hold at the level of single participants stronger inferences about individual variability in structure–function coupling, and facilitate testing']
+      4. [      ] start_verb=reduce, steps=4, end_action=We We detail the complex interplay between white matter structure and neural synchrony and describe how it evolves across the neurophysiological rhythms of the brain. the complex interplay between white matter structure and neural synchrony, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'which increased the number of data points in each model the number of data points', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'the pairwise network-level of analysis \n\nIn sum, the pairwise network-level of analysis yielded a nuanced perspective of regional structure–function coupling while maximizing model robustness and efficiency, and our multi-feature account of white matter structure facilitated deeper interpretation of the relationship between brain structure and function. a nuanced perspective of regional structure–function coupling', 'We We detail the complex interplay between white matter structure and neural synchrony and describe how it evolves across the neurophysiological rhythms of the brain. the complex interplay between white matter structure and neural synchrony']
+      5. [      ] start_verb=reduce, steps=4, end_action=shared, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'We We detail the complex interplay between white matter structure and neural synchrony and describe how it evolves across the neurophysiological rhythms of the brain. the complex interplay between white matter structure and neural synchrony', 'white matter myelin In other words, white matter myelin may confer functional flexibility or resilience79,80, whether it be to normal or pathological variability in white matter structural properties. functional flexibility or resilience79,80', 'shared']
+      6. [      ] start_verb=reduce, steps=4, end_action=acquiring myelin-sensitive structural measures and electrophysiological activity within the same individuals myelin-sensitive structural measures and electrophysiological activity within the same individuals, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'We We detail the complex interplay between white matter structure and neural synchrony and describe how it evolves across the neurophysiological rhythms of the brain. the complex interplay between white matter structure and neural synchrony', 'how white matter myelin shapes the relationship between structural and functional human brain networks the relationship between structural and functional human brain networks', 'acquiring myelin-sensitive structural measures and electrophysiological activity within the same individuals myelin-sensitive structural measures and electrophysiological activity within the same individuals']
+      7. [      ] start_verb=reduce, steps=4, end_action=how white matter myelin shapes the relationship between structural and functional human brain networks the relationship between structural and functional human brain networks, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'which increased the number of data points in each model the number of data points', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'We We detail the complex interplay between white matter structure and neural synchrony and describe how it evolves across the neurophysiological rhythms of the brain. the complex interplay between white matter structure and neural synchrony', 'how white matter myelin shapes the relationship between structural and functional human brain networks the relationship between structural and functional human brain networks']
+      8. [      ] start_verb=reduce, steps=4, end_action=our multi-feature account of white matter structure our multi-feature account of white matter structure facilitated deeper interpretation of the relationship between brain structure and function deeper interpretation of the relationship between brain structure and function, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'which increased the number of data points in each model the number of data points', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'the pairwise network-level of analysis \n\nIn sum, the pairwise network-level of analysis yielded a nuanced perspective of regional structure–function coupling while maximizing model robustness and efficiency, and our multi-feature account of white matter structure facilitated deeper interpretation of the relationship between brain structure and function. a nuanced perspective of regional structure–function coupling', 'our multi-feature account of white matter structure our multi-feature account of white matter structure facilitated deeper interpretation of the relationship between brain structure and function deeper interpretation of the relationship between brain structure and function']
+      9. [      ] start_verb=increase, steps=4, end_action=acquiring myelin-sensitive structural measures and electrophysiological activity within the same individuals myelin-sensitive structural measures and electrophysiological activity within the same individuals, chain=['increasing', 'We We detail the complex interplay between white matter structure and neural synchrony and describe how it evolves across the neurophysiological rhythms of the brain. the complex interplay between white matter structure and neural synchrony', 'how white matter myelin shapes the relationship between structural and functional human brain networks the relationship between structural and functional human brain networks', 'that that jointly acquire structural, fMRI, structural, fMRI,', 'acquiring myelin-sensitive structural measures and electrophysiological activity within the same individuals myelin-sensitive structural measures and electrophysiological activity within the same individuals']
+     10. [      ] start_verb=reduce, steps=4, end_action=This further illuminate its coupling with FC its coupling with FC, chain=['which which reduced the number of models by an order of magnitude and increased the number of data points in each model the number of models', 'which increased the number of data points in each model the number of data points', 'the number of streamlines output from streamline tractography to quantify SC in structure–function models SC', 'the pairwise network-level of analysis \n\nIn sum, the pairwise network-level of analysis yielded a nuanced perspective of regional structure–function coupling while maximizing model robustness and efficiency, and our multi-feature account of white matter structure facilitated deeper interpretation of the relationship between brain structure and function. a nuanced perspective of regional structure–function coupling', 'This further illuminate its coupling with FC its coupling with FC']
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: cross_document
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [cross_doc_verb_obj] (50 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] verb=play, obj=role, docs=5, total=10
+      2. [      ] verb=assess, obj=effect, docs=5, total=9
+      3. [      ] verb=improve, obj=outcome, docs=4, total=10
+      4. [      ] verb=provide, obj=support, docs=4, total=7
+      5. [      ] verb=offer, obj=insight, docs=4, total=5
+      6. [      ] verb=have, obj=effect, docs=4, total=4
+      7. [      ] verb=use, obj=datum, docs=3, total=14
+      8. [      ] verb=highlight, obj=importance, docs=3, total=11
+      9. [      ] verb=integrate, obj=dataset, docs=3, total=11
+     10. [      ] verb=assess, obj=impact, docs=3, total=10
+
+  [cross_doc_verbs] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] verb=use, doc_count=28, total_occurrences=323
+      2. [      ] verb=suggest, doc_count=26, total_occurrences=87
+      3. [      ] verb=base, doc_count=25, total_occurrences=134
+      4. [      ] verb=show, doc_count=25, total_occurrences=104
+      5. [      ] verb=provide, doc_count=24, total_occurrences=140
+      6. [      ] verb=reduce, doc_count=24, total_occurrences=175
+      7. [      ] verb=include, doc_count=24, total_occurrences=183
+      8. [      ] verb=assess, doc_count=23, total_occurrences=129
+      9. [      ] verb=increase, doc_count=23, total_occurrences=164
+     10. [      ] verb=evaluate, doc_count=21, total_occurrences=102
+
+  [cross_doc_compound] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [      ] modifier=value, head=p, docs=5, total=10
+      2. [      ] modifier=model, head=regression, docs=5, total=8
+      3. [      ] modifier=analysis, head=level, docs=4, total=9
+      4. [      ] modifier=size, head=sample, docs=4, total=8
+      5. [      ] modifier=expression, head=gene, docs=3, total=18
+      6. [      ] modifier=analysis, head=sensitivity, docs=3, total=12
+      7. [      ] modifier=base, head=evidence, docs=3, total=9
+      8. [      ] modifier=group, head=control, docs=3, total=7
+      9. [      ] modifier=analysis, head=regression, docs=3, total=3
+     10. [      ] modifier=point, head=time, docs=3, total=3
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: mixed_level
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [action_lexical_overlap] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [   289] verb=use, class=action, doc_count=28
+      2. [   147] verb=include, class=action, doc_count=22
+      3. [   142] verb=promote, class=result, doc_count=11
+      4. [   123] verb=assess, class=action, doc_count=23
+      5. [   122] verb=reduce, class=result, doc_count=22
+      6. [   116] verb=provide, class=action, doc_count=24
+      7. [   114] verb=identify, class=action, doc_count=17
+      8. [   113] verb=base, class=action, doc_count=23
+      9. [   101] verb=maintain, class=action, doc_count=15
+     10. [    98] verb=evaluate, class=action, doc_count=21
+
+  [leads_to_verb_pairs] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [   341] source_verb=use, target_verb=use, doc_count=16
+      2. [   322] source_verb=promote, target_verb=promote, doc_count=8
+      3. [   292] source_verb=detect, target_verb=detect, doc_count=3
+      4. [   220] source_verb=detect, target_verb=use, doc_count=2
+      5. [   199] source_verb=use, target_verb=detect, doc_count=3
+      6. [   154] source_verb=provide, target_verb=provide, doc_count=7
+      7. [   135] source_verb=tr, target_verb=tr, doc_count=3
+      8. [   124] source_verb=promote, target_verb=facilitate, doc_count=5
+      9. [   124] source_verb=regulate, target_verb=promote, doc_count=2
+     10. [   124] source_verb=facilitate, target_verb=facilitate, doc_count=7
+
+  [noun_in_source_leads_to_result] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [    61] noun_in_source=care, result_action=>
+    <tr>
+      <td>Markle-Reid et al. (2013)</td>
+      <td>Canada</td>
+      <td>Evaluate the effectiveness of nurse-led home visitation program</td>
+       the effectiveness of nurse-led home visitation program</td>
+      
+      2. [    60] noun_in_source=care, result_action=Reduced
+      3. [    60] noun_in_source=shift, result_action=
+
+The study   
+
+The study  uses maximum softmax probability to flag prediction errors and distribution shifts. maximum softmax probability to flag prediction errors and distribution shifts
+      4. [    57] noun_in_source=shift, result_action=to mitigate acquisition shifts acquisition shifts
+      5. [    56] noun_in_source=care, result_action=
+    </tr>
+  </tbody>
+</table>
+
+
+                                               
+
+Participants valued managers who engaged and demonstrated a personal connection with residents. managers
+      6. [    55] noun_in_source=model, result_action=Chi   outperforming standard retraining on four cancer datasets by maintaining both calibration and discrimination over time standard retraining on four cancer datasets
+      7. [    55] noun_in_source=model, result_action=preserving
+      8. [    54] noun_in_source=model, result_action=
+
+The study   
+
+The study  uses maximum softmax probability to flag prediction errors and distribution shifts. maximum softmax probability to flag prediction errors and distribution shifts
+      9. [    53] noun_in_source=shift, result_action=to detect model drift in medical triage systems model drift
+     10. [    53] noun_in_source=model, result_action=to mitigate acquisition shifts acquisition shifts
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: syntactic_dep
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [syntactic_dep_distribution] (4 элементов)
+  Топ-10 по частоте:                      
+      1. [  1507] dep_type=advcl, doc_count=121
+      2. [  1500] dep_type=conj, doc_count=120
+      3. [   181] dep_type=xcomp, doc_count=72
+      4. [    36] dep_type=ccomp, doc_count=25
+
+  [syntactic_dep_pairs] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [  1295] source=None, target=None, dep_type=conj
+      2. [  1266] source=None, target=None, dep_type=advcl
+      3. [   147] source=None, target=None, dep_type=xcomp
+      4. [    34] source=None, target=None, dep_type=ccomp
+      5. [     2] source=7.8% Of the voxel-wise velocities, 7.8% exceeded 50 cm/s, 2.3% exceeded 80 cm/s, and 0.6% exceeded 120 cm/s. 50 cm/s, target=7.8% Of the voxel-wise velocities, 7.8% exceeded 50 cm/s, 2.3% exceeded 80 cm/s, and 0.6% exceeded 120 cm/s. 50 cm/s, dep_type=conj
+      6. [     2] source=abuse that abuse predicts physical activity, stress management, and spiritual growth (β = −.21, −.23, −.20) physical activity, stress management, and spiritual growth (β = −.21, −.23, −.20), target=abuse that abuse predicts physical activity, stress management, and spiritual growth (β = −.21, −.23, −.20) physical activity, stress management, and spiritual growth (β = −.21, −.23, −.20), dep_type=conj
+      7. [     2] source=
+
+The specific goals of the OAA nutrition program reduce hunger and food insecurity, 2) promote socialization, 3) promote health and well-being, and delay adverse health conditions hunger and food insecurity, target=promote socialization, 3) socialization, dep_type=conj
+      8. [     2] source=to attenuate the degradation of many tumor suppressor substrates (Table 2) the degradation of many tumor suppressor substrates (Table 2), target=Preclinical evidence inhibit cell proliferation in vivo, and inhibit tumor growth in vivo cell proliferation in vivo, dep_type=conj
+      9. [     1] source=shared, target=predicting alpha and gamma across network pairs alpha and gamma, dep_type=advcl
+     10. [     1] source=Such data Such data would enable subject-level analyses of myelin-sensitive communication, allow stronger inferences about individual variability in structure–function coupling, and facilitate testing whether the group-level principles identified here also hold at the level of single participants. subject-level analyses of myelin-sensitive communication, target=Such data would, dep_type=conj
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+КАТЕГОРИЯ: linguistic_pattern_entity
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [pattern_type_distribution] (20 элементов)
+  Топ-10 по частоте:                      
+      1. [  1246] type=head_dep_chain, annotation=Не успешная цель
+      2. [  1241] type=token_dep_pair, annotation=Не успешная цель
+      3. [   777] type=head_dep_chain, annotation=Фрагмент ведёт к неуспеху
+      4. [   776] type=token_dep_pair, annotation=Фрагмент ведёт к неуспеху
+      5. [   620] type=dep_trigram, annotation=Не успешная цель
+      6. [   386] type=dep_trigram, annotation=Фрагмент ведёт к неуспеху
+      7. [   246] type=dep_bigram, annotation=Не успешная цель
+      8. [   198] type=dep_bigram, annotation=Фрагмент ведёт к неуспеху
+      9. [    86] type=token_dep_pair, annotation=Успешная цель
+     10. [    86] type=head_dep_chain, annotation=Успешная цель
+
+  [top_frequency_patterns] (30 элементов)
+  Топ-10 по частоте:                      
+      1. [     1] pattern=nmod→punct, freq=70, type=dep_bigram
+      2. [     1] pattern=amod→nmod, freq=55, type=dep_bigram
+      3. [     1] pattern=det→amod, freq=44, type=dep_bigram
+      4. [     1] pattern=nmod→punct, freq=43, type=dep_bigram
+      5. [     1] pattern=case→amod, freq=43, type=dep_bigram
+      6. [     1] pattern=case→nmod, freq=42, type=dep_bigram
+      7. [     2] pattern=nmod→case, freq=40, type=dep_bigram
+      8. [     1] pattern=case→det, freq=40, type=dep_bigram
+      9. [     1] pattern=case→det, freq=39, type=dep_bigram
+     10. [     1] pattern=amod→nmod, freq=36, type=dep_bigram
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+УСТОЙЧИВОСТЬ ПАТТЕРНОВ
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  [verb_obj_stability]
+  Паттерн                                               Score   Docs  Total
+  provide → support                                    0.5714      4      7
+  assess → effect                                      0.5556      5      9
+  play → role                                          0.5000      5     10
+  perform → analysis                                   0.5000      3      6
+  increase → risk                                      0.4286      3      7
+  improve → outcome                                    0.4000      4     10
+  enable → analysis                                    0.3750      3      8
+  conduct → analysis                                   0.3750      3      8
+  highlight → need                                     0.3333      3      9
+  highlight → role                                     0.3333      2      6
+  assess → impact                                      0.3000      3     10
+  use → model                                          0.3000      3     10
+  train → classifier                                   0.2857      2      7
+  use → test                                           0.2857      2      7
+  highlight → importance                               0.2727      3     11
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+ТОП-20 САМЫХ УСТОЙЧИВЫХ ПАТТЕРНОВ (общий рейтинг)
+────────────────────────────────────────────────────────────────────────────────────────────────────
+    1. 0.5714 |   4 docs |     7 total | provide → support
+    2. 0.5556 |   5 docs |     9 total | assess → effect
+    3. 0.5000 |   5 docs |    10 total | play → role
+    4. 0.5000 |   3 docs |     6 total | perform → analysis
+    5. 0.4286 |   3 docs |     7 total | increase → risk
+    6. 0.4000 |   4 docs |    10 total | improve → outcome
+    7. 0.3750 |   3 docs |     8 total | enable → analysis
+    8. 0.3750 |   3 docs |     8 total | conduct → analysis
+    9. 0.3333 |   3 docs |     9 total | highlight → need
+   10. 0.3333 |   2 docs |     6 total | highlight → role
+   11. 0.3000 |   3 docs |    10 total | assess → impact
+   12. 0.3000 |   3 docs |    10 total | use → model
+   13. 0.2857 |   2 docs |     7 total | train → classifier
+   14. 0.2857 |   2 docs |     7 total | use → test
+   15. 0.2727 |   3 docs |    11 total | highlight → importance
+   16. 0.2727 |   3 docs |    11 total | integrate → dataset
+   17. 0.2500 |   2 docs |     8 total | evaluate → effectiveness
+   18. 0.2143 |   3 docs |    14 total | use → datum
+   19. 0.2000 |   2 docs |    10 total | improve → health
+   20. 0.1429 |   2 docs |    14 total | provide → service
+
+====================================================================================================
+ИТОГО
+====================================================================================================
+Всего паттернов найдено: 1160
+  Actions: 18,429
+  LexicalUnit: 119,978
+  LEADS_TO: 83,912
+  DEPENDS_ON: 82,932
+Категорий паттернов: 10

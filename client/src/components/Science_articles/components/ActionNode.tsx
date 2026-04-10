@@ -25,9 +25,10 @@ export function ActionNode({ node, isSelected = false, onClick }: ActionNodeProp
   const fillColor = ACTION_COLORS[node.action_class] ?? ACTION_COLORS.action;
   const borderWidth = Math.min(1 + node.doc_count, 5);  // толще = популярнее
 
-  const label = node.verb_text
-    ? `${node.verb_text}${node.object ? ' ' + node.object : ''}`
-    : node.content;
+  // Приоритет: label_text → content → legacy verb_text + object
+  const label = node.label_text
+    || node.content
+    || (node.verb_text ? `${node.verb_text}${node.object ? ' ' + node.object : ''}` : '');
 
   const truncated = label.length > 24 ? label.slice(0, 22) + '…' : label;
 

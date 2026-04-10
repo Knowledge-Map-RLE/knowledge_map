@@ -3,6 +3,7 @@ import { useState, useCallback, useMemo, useRef } from 'react';
 export interface ActionNode {
   id: string;
   content: string;
+  label_text: string;
   verb: string;
   verb_text: string;
   subject: string;
@@ -11,6 +12,8 @@ export interface ActionNode {
   norm_key: string;
   doc_count: number;
   doc_ids: string[];
+  tokens_json: string;
+  spans_json: string;
   x: number;
   y: number;
 }
@@ -80,7 +83,8 @@ export function useKnowledgeMapLoader(viewportRef?: any) {
       if (data?.success) {
         const serverNodes: ActionNode[] = (data.blocks || []).map((b: any) => ({
           id: b.id,
-          content: b.content || b.verb || b.id,
+          content: b.content || b.label_text || b.verb || b.id,
+          label_text: b.label_text || b.content || '',
           verb: b.verb || '',
           verb_text: b.verb_text || '',
           subject: b.subject || '',
@@ -89,6 +93,8 @@ export function useKnowledgeMapLoader(viewportRef?: any) {
           norm_key: b.norm_key || '',
           doc_count: b.doc_count || 1,
           doc_ids: b.doc_ids || [],
+          tokens_json: b.tokens_json || '',
+          spans_json: b.spans_json || '',
           x: typeof b.x === 'number' ? b.x : 0,
           y: typeof b.y === 'number' ? b.y : 0,
         }));

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(poetry *)",
+      "Bash(python *)",
+      "Bash(bun *)",
+      "Bash(select-object *)",
+      "Bash(powershell *)",
+      "Bash(d:\\knowledge_map\\nlp\\.venv\\scripts\\python.exe *)",
+      "Bash(select-string *)",
+      "Bash(cmd *)"
+    ]
+  },
+  "$version": 3
+}

@@ -596,6 +596,12 @@ class LayoutService:
                    rep.object AS object,
                    rep.action_class AS action_class,
                    rep.norm_key AS norm_key,
+                   rep.label_text AS label_text,
+                   rep.tokens_json AS tokens_json,
+                   rep.spans_json AS spans_json,
+                   rep.verb_span_idx AS verb_span_idx,
+                   rep.subject_span_idx AS subject_span_idx,
+                   rep.object_span_idx AS object_span_idx,
                    doc_count,
                    doc_ids
             ORDER BY doc_count DESC
@@ -650,17 +656,29 @@ class LayoutService:
             # Шаг 6: Собираем итоговые блоки с координатами из Rust
             page_nodes = []
             for row in nodes_result:
-                uid, verb, verb_text, subject, obj, action_class, norm_key, doc_count, doc_ids = row
+                (uid, verb, verb_text, subject, obj, action_class, norm_key,
+                 label_text, tokens_json, spans_json,
+                 verb_span_idx, subject_span_idx, object_span_idx,
+                 doc_count, doc_ids) = row
                 x, y = positions.get(uid, (0.0, 0.0))
+
+                # Рендерим label: приоритет — label_text, fallback — legacy
+                content = label_text or ""
+                if not content:
+                    content = f"{verb} {obj}".strip() if obj else (verb or "")
+
                 page_nodes.append({
                     "id": uid,
-                    "content": f"{verb} {obj}".strip() if obj else (verb or ""),
+                    "content": content,
                     "verb": verb or "",
                     "verb_text": verb_text or "",
                     "subject": subject or "",
                     "object": obj or "",
                     "action_class": action_class or "action",
                     "norm_key": norm_key,
+                    "label_text": content,
+                    "tokens_json": tokens_json or "",
+                    "spans_json": spans_json or "",
                     "doc_count": doc_count or 1,
                     "doc_ids": list(doc_ids) if doc_ids else [],
                     "x": x,

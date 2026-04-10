@@ -240,20 +240,78 @@ class SyntacticDepRel(StructuredRel):
 
 
 class Action(StructuredNode):
-    """Действие (глагол / номинализация / биомедицинская сущность), извлечённое из аннотации."""
+    """Действие (глаголь / номинализация / биомедицинская сущность), извлечённое из аннотации.
+
+    Хранит полную лингвистическую структуру (токены, спаны) в JSON-полях.
+    Поля verb, label_text — кэши для быстрого доступа и индексации.
+    Старые поля (verb_text, subject, object_) оставлены для обратной совместимости
+    на период миграции — будут удалены после запуска migrate_action_linguistics.py.
+    """
     uid = UniqueIdProperty(primary_key=True)
-    verb = StringProperty(required=True, index=True)
-    verb_text = StringProperty()
-    subject = StringProperty()
-    object_ = StringProperty(db_property="object")
+
+    # Кэш для быстрого доступа / индексации
+    verb = StringProperty(required=True, index=True)       # лемма глагола (из verb_span)
+    label_text = StringProperty(index=True)                 # "Rapamycin inhibits mTOR"
+
+    # Полная лингвистическая структура — JSON-сериализация
+    tokens_json = StringProperty()                          # LinguisticToken[]
+    spans_json = StringProperty()                           # DependencySpan[]
+
+    # Кэш рендеринга (из JSON, но быстрый доступ без десериализации)
+    verb_text = StringProperty()                            # оригинальная форма глагола
+    subject = StringProperty()                              # текст подлежащего
+    object_ = StringProperty(db_property="object")          # текст дополнения
+
+    # Метаданные
     sentence_text = StringProperty()
     char_start = IntegerProperty()
     char_end = IntegerProperty()
     doc_id = StringProperty(index=True)
     annotation_uid = StringProperty(index=True)
-    action_class = StringProperty(default="action")  # "action" | "result" | "mechanism"
-    norm_key = StringProperty(index=True)  # sha256[:16] нормализованного (verb|sorted_subject|sorted_object)
+    action_class = StringProperty(default="action")         # "action" | "result" | "mechanism"
+    norm_key = StringProperty(index=True)                   # sha256[:16] нормализованного
+
+    # Индексы ключевых спанов в spans_json
+    verb_span_idx = IntegerProperty(default=-1)
+    subject_span_idx = IntegerProperty(default=-1)
+    object_span_idx = IntegerProperty(default=-1)
 
     leads_to_action = RelationshipTo("Action", "LEADS_TO", model=LeadsToRel)
     leads_to_goal = RelationshipTo("MarkdownAnnotation", "LEADS_TO", model=LeadsToRel)
     syntactic_dep = RelationshipTo("Action", "SYNTACTIC_DEP", model=SyntacticDepRel)
+    lexical_units = RelationshipFrom("LexicalUnit", "PART_OF")
+
+
+class PartOfRel(StructuredRel):
+    """Связь LexicalUnit → Action (токен является частью действия)."""
+    doc_id = StringProperty(index=True)
+    token_index = IntegerProperty()  # id токена в предложении
+
+
+class DependsOnRel(StructuredRel):
+    """Синтаксическая зависимость LexicalUnit → LexicalUnit."""
+    dep_label = StringProperty(required=True, index=True)  # nsubj, dobj, amod, ...
+    doc_id = StringProperty(index=True)
+
+
+class LexicalUnit(StructuredNode):
+    """
+    Лексическая единица — отдельный токен (слово) с лингвистическими атрибутами.
+
+    Узел в графе для полнотекстового лингвистического поиска.
+    Связывается с Action через PART_OF, между собой — через DEPENDS_ON.
+    """
+    uid = UniqueIdProperty(primary_key=True)
+    text = StringProperty(required=True)
+    lemma = StringProperty(required=True, index=True)
+    pos = StringProperty(required=True, index=True)
+    pos_fine = StringProperty()
+    dep = StringProperty(index=True)
+    is_stop = BooleanProperty(default=False)
+    is_punct = BooleanProperty(default=False)
+    doc_id = StringProperty(index=True)
+
+    # Связи
+    part_of_action = RelationshipTo("Action", "PART_OF", model=PartOfRel)
+    depends_on = RelationshipTo("LexicalUnit", "DEPENDS_ON", model=DependsOnRel)
+    depended_by = RelationshipFrom("LexicalUnit", "DEPENDS_ON", model=DependsOnRel)

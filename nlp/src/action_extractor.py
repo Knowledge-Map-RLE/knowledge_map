@@ -247,6 +247,13 @@ class ExtractedAction:
     action_score: float = 0.0
     subject_text: str = ""
 
+    # Лингвистические сущности (заполняется при создании)
+    tokens: List[dict] = field(default_factory=list)       # все токены предложения
+    spans: List[dict] = field(default_factory=list)        # DependencySpan[]
+    verb_span_idx: int = -1
+    subject_span_idx: int = -1
+    object_span_idx: int = -1
+
 
 @dataclass
 class ExtractedDependency:
@@ -259,10 +266,24 @@ class ExtractedDependency:
     sentence_distance: int = 0         # для отладки
 
 
-def _get_object_np(token) -> tuple[str, int]:
-    """Return (object NP text, last token index in doc) for a verb token.
+def _build_span(token, span_type: str) -> dict:
+    """Строит DependencySpan из токена и его subtree."""
+    subtree = list(token.subtree)
+    token_ids = [t.i for t in subtree]
+    text = token.doc[subtree[0].i: subtree[-1].i + 1].text
+    return {
+        "span_type": span_type,
+        "token_ids": token_ids,
+        "head_token_id": token.i,
+        "text": text,
+        "lemma_form": token.lemma_.lower(),
+    }
 
-    Returns ('', -1) if no object found.
+
+def _get_object_np(token) -> tuple[str, int, dict | None]:
+    """Return (object NP text, last token index in doc, object_span_dict).
+
+    Returns ('', -1, None) if no object found.
 
     Tries direct object dependencies first, then falls back to
     xcomp/ccomp for verbs like 'cause', 'lead', 'result'.
@@ -286,31 +307,54 @@ def _get_object_np(token) -> tuple[str, int]:
                     span_tokens.pop()
                 if span_tokens:
                     last_i = span_tokens[-1].i
-                    return child.doc[span_tokens[0].i: last_i + 1].text, last_i
-                return child.text, child.i
+                    text = child.doc[span_tokens[0].i: last_i + 1].text
+                    span_dict = {
+                        "span_type": "OBJECT",
+                        "token_ids": [t.i for t in span_tokens],
+                        "head_token_id": child.i,
+                        "text": text,
+                        "lemma_form": child.lemma_.lower(),
+                    }
+                    return text, last_i, span_dict
+                return child.text, child.i, _build_span(child, "OBJECT")
             subtree = list(child.subtree)
             if len(subtree) > 12:
                 # Return just the head + immediate determiners/adjectives
                 det = next((c.text for c in child.children if c.dep_ in ('det', 'amod')), '')
                 text = f"{det} {child.text}".strip() if det else child.text
-                return text, child.i
+                return text, child.i, _build_span(child, "OBJECT")
             last_i = subtree[-1].i
-            return child.doc[subtree[0].i: last_i + 1].text, last_i
+            text = child.doc[subtree[0].i: last_i + 1].text
+            span_dict = {
+                "span_type": "OBJECT",
+                "token_ids": [t.i for t in subtree],
+                "head_token_id": child.i,
+                "text": text,
+                "lemma_form": child.lemma_.lower(),
+            }
+            return text, last_i, span_dict
 
     # Secondary: oblique argument (obl) — common in passive constructions
     for child in token.children:
         if child.dep_ == 'obl':
             subtree = list(child.subtree)
             if len(subtree) > 8:
-                return child.text, child.i
+                return child.text, child.i, _build_span(child, "OBJECT")
             last_i = subtree[-1].i
-            return child.doc[subtree[0].i: last_i + 1].text, last_i
+            text = child.doc[subtree[0].i: last_i + 1].text
+            return text, last_i, {
+                "span_type": "OBJECT",
+                "token_ids": [t.i for t in subtree],
+                "head_token_id": child.i,
+                "text": text,
+                "lemma_form": child.lemma_.lower(),
+            }
 
-    return '', -1
+    return '', -1, None
 
 
-def _get_subject_np(token) -> str:
-    """Return the subject NP text for a verb token, or empty string.
+def _get_subject_np(token) -> tuple[str, dict | None]:
+    """Return (subject NP text, subject_span_dict) for a verb token.
 
     Looks for nsubj (active) and nsubjpass/nsubj:pass (passive) dependencies.
     Falls back to the subject of a parent verb if the token is a subordinate clause head.
@@ -322,17 +366,25 @@ def _get_subject_np(token) -> str:
             subtree = list(child.subtree)
             if len(subtree) > 8:
                 det = next((c.text for c in child.children if c.dep_ in ('det', 'amod')), '')
-                return f"{det} {child.text}".strip() if det else child.text
-            return child.doc[subtree[0].i: subtree[-1].i + 1].text
+                text = f"{det} {child.text}".strip() if det else child.text
+                return text, _build_span(child, "SUBJECT")
+            text = child.doc[subtree[0].i: subtree[-1].i + 1].text
+            return text, {
+                "span_type": "SUBJECT",
+                "token_ids": [t.i for t in subtree],
+                "head_token_id": child.i,
+                "text": text,
+                "lemma_form": child.lemma_.lower(),
+            }
 
     # Fallback: inherit subject from parent verb (for subordinate clause heads)
     head = token.head
     if head != token and head.pos_ in ('VERB', 'AUX'):
         for child in head.children:
             if child.dep_ in ('nsubj', 'nsubj:pass', 'nsubjpass'):
-                return child.text
+                return child.text, _build_span(child, "SUBJECT")
 
-    return ''
+    return '', None
 
 
 def _action_score(token, obj_text: str) -> float:
@@ -422,12 +474,28 @@ class ActionExtractor:
         actions: list[ExtractedAction] = []
 
         for sent_idx, sent in enumerate(doc.sents):
+            # Собираем все токены предложения один раз
+            sent_tokens = [
+                {
+                    "id": t.i,
+                    "text": t.text,
+                    "lemma": t.lemma_,
+                    "pos": t.pos_,
+                    "pos_fine": t.tag_,
+                    "dep": t.dep_,
+                    "head_id": t.head.i,
+                    "is_stop": t.is_stop,
+                    "is_punct": t.is_punct,
+                }
+                for t in sent
+            ]
+
             for token in sent:
                 if token.pos_ not in ('VERB', 'AUX'):
                     continue
                 if token.lemma_.lower() in STOP_VERBS:
                     continue
-                obj_text, obj_end_i = _get_object_np(token)
+                obj_text, obj_end_i, obj_span = _get_object_np(token)
                 score = _action_score(token, obj_text)
                 if score < 0.55:
                     continue
@@ -437,7 +505,11 @@ class ActionExtractor:
                     if child.dep_ in ('amod', 'advmod', 'neg')
                 ]
 
-                subject_text = _get_subject_np(token)
+                subject_text, subject_span = _get_subject_np(token)
+
+                # Строим verb_span
+                verb_span = _build_span(token, "VERB")
+
                 # Build full_phrase as actual doc span from verb token to end of object,
                 # so phrasal verb particles (e.g. "down" in "slow down aging") are included.
                 if obj_end_i >= 0:
@@ -477,6 +549,28 @@ class ActionExtractor:
                 if _META_PHRASE_PATTERNS.search(full_phrase):
                     continue
 
+                # Собираем spans: verb + modifiers + subject + object
+                spans: list[dict] = [verb_span]
+                verb_span_idx = 0
+
+                # Modifier spans
+                modifier_spans = []
+                for child in token.children:
+                    if child.dep_ in ('amod', 'advmod', 'neg', 'prt'):
+                        mod_span = _build_span(child, "MODIFIER")
+                        modifier_spans.append(mod_span)
+                        spans.append(mod_span)
+
+                subject_span_idx = -1
+                if subject_span:
+                    subject_span_idx = len(spans)
+                    spans.append(subject_span)
+
+                object_span_idx = -1
+                if obj_span:
+                    object_span_idx = len(spans)
+                    spans.append(obj_span)
+
                 actions.append(ExtractedAction(
                     action_id=f"A{len(actions)}",
                     verb_lemma=token.lemma_,
@@ -490,6 +584,12 @@ class ActionExtractor:
                     modifiers=modifiers,
                     action_score=score,
                     subject_text=subject_text,
+                    # Лингвистические сущности
+                    tokens=sent_tokens,
+                    spans=spans,
+                    verb_span_idx=verb_span_idx,
+                    subject_span_idx=subject_span_idx,
+                    object_span_idx=object_span_idx,
                 ))
 
         deps = self._extract_dependencies(actions, text, doc, link_threshold)

@@ -224,6 +224,12 @@ async def extract_document_actions(
             'doc_id': doc_id,
             'annotation_uid': None,
             'action_class': action_class,
+            # Лингвистические сущности
+            'tokens': a.get("tokens") or [],
+            'spans': a.get("spans") or [],
+            'verb_span_idx': a.get("verb_span_idx", -1),
+            'subject_span_idx': a.get("subject_span_idx", -1),
+            'object_span_idx': a.get("object_span_idx", -1),
         })
 
     # Build action→action edges, separating marker-based (LEADS_TO) from syntactic (SYNTACTIC_DEP)
