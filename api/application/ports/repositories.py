@@ -136,6 +136,25 @@ class LinguisticPatternRepositoryProtocol(Protocol):
     def delete_for_document(self, doc_id: str) -> int: ...
 
 
+class PatternGraphRepositoryProtocol(Protocol):
+    """Операции для получения графа Action + LexicalUnit с рёбрами LEADS_TO, DEPENDS_ON, PART_OF."""
+
+    def get_document_linguistic_graph(self, doc_id: str) -> Tuple[List[dict], List[dict]]:
+        """Возвращает (nodes, edges) лингвистического графа одного документа.
+
+        Nodes: Action и LexicalUnit с их атрибутами.
+        Edges: LEADS_TO (Action→Action), DEPENDS_ON (LexicalUnit→LexicalUnit), PART_OF (LexicalUnit→Action).
+        """
+        ...
+
+    def get_global_linguistic_graph(self) -> Tuple[List[dict], List[dict]]:
+        """Возвращает (nodes, edges) объединённого лингвистического графа всех документов.
+
+        Те же типы узлов и рёбер, но без фильтрации по doc_id.
+        """
+        ...
+
+
 
 
 class ActionRepositoryProtocol(Protocol):
@@ -175,4 +194,31 @@ class ActionRepositoryProtocol(Protocol):
 
     def get_aggregated_graph(self) -> Tuple[List[dict], List[dict]]:
         """Возвращает агрегированный граф: (ноды-представители по norm_key, рёбра между ними)."""
+        ...
+
+    def search_lexical_units(
+        self,
+        lemma: Optional[str] = None,
+        pos: Optional[str] = None,
+        dep: Optional[str] = None,
+        doc_id: Optional[str] = None,
+        limit: int = 100,
+    ) -> List[dict]:
+        """Поиск LexicalUnit по атрибутам."""
+        ...
+
+    def find_dependency_patterns(self, doc_id: Optional[str] = None) -> List[dict]:
+        """Находит частотные пары head→dependent через DEPENDS_ON."""
+        ...
+
+    def find_shared_patterns(self, min_docs: int = 2) -> List[dict]:
+        """Находит паттерны, повторяющиеся в разных документах."""
+        ...
+
+    def compare_actions(self, uid1: str, uid2: str) -> dict:
+        """Сравнивает лингвистическую структуру двух Actions."""
+        ...
+
+    def get_lexical_graph_stats(self) -> dict:
+        """Возвращает статистику лингвистического графа."""
         ...

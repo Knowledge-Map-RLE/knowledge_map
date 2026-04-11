@@ -1,10 +1,14 @@
-import { useRef, useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
+import { useRef, useState, useEffect, useCallback, forwardRef, useImperativeHandle, createContext, useContext } from 'react';
 import { Container, Graphics, Point, FederatedPointerEvent } from 'pixi.js';
 import { extend, useApplication, useTick } from '@pixi/react';
 import type { ReactNode } from 'react';
 import { gsap } from 'gsap';
 
 extend({ Container, Graphics, Point });
+
+// Контекст для передачи ссылки на контейнер потомкам
+export const ViewportContainerContext = createContext<React.RefObject<Container | null>>({ current: null });
+export const useViewportContainer = () => useContext(ViewportContainerContext);
 
 interface ViewportProps {
   children: ReactNode;
@@ -38,7 +42,8 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   const listenersRef = useRef<Record<'moved' | 'zoomed', Set<() => void>>>({ moved: new Set(), zoomed: new Set() });
   const { app } = useApplication();
   const lastBlockRightClickTime = useRef<number>(0);
-  
+  const isDraggingRef = useRef<boolean>(false);
+
   const [isDragging, setIsDragging] = useState(false);
   const dragWorld = useRef<Point | null>(null);
   const [centerX, setCenterX] = useState(400);
@@ -51,129 +56,25 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     });
   }, []);
 
-  // DOM перетаскивание как запасной вариант
+  // Зум через DOM события (wheel) — перетаскивание через Pixi (graphics onPointerDown)
   useEffect(() => {
     if (!app) return;
-    
+
     const timer = setTimeout(() => {
       if (!app || !app.renderer || !app.renderer.view) {
         return;
       }
-      
+
       const canvas = app.canvas as HTMLCanvasElement;
       if (!canvas) {
         return;
       }
-      
-      // Глобальный блокировщик в capture фазе - срабатывает ДО ВСЕХ остальных обработчиков
-      // Убираем capture blocker - он создавал конфликты
 
-      const onPointerDown = (e: PointerEvent) => {
-        if (e.button !== 2) return;
-        
-        const now = Date.now();
-        console.log('DOM pointer down', e.button, 'contextMenuActive:', isBlockContextMenuActive, 'blockFlag:', blockRightClickRef?.current, 'instantFlag:', instantBlockClickRef?.current, 'time since last block click:', now - lastBlockRightClickTime.current);
-        
-        // ПЕРВАЯ ПРОВЕРКА: instant флаг - если блок уже отметился, то не запускаем перетаскивание
-        if (instantBlockClickRef && instantBlockClickRef.current) {
-          console.log('DOM: Blocking drag due to INSTANT block click flag');
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
-        
-        // Если активно контекстное меню блока, не запускаем перетаскивание
-        if (isBlockContextMenuActive || (blockRightClickRef && blockRightClickRef.current)) {
-          console.log('DOM: Blocking drag due to active context menu');
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
-        
-        // Проверяем время последнего правого клика по блоку - уменьшаем до 100ms для более точности
-        if (now - lastBlockRightClickTime.current < 100) {
-          console.log('DOM: Blocking drag due to recent block click');
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
-        
-        e.preventDefault();
-        
-        const rect = canvas.getBoundingClientRect();
-        const sx = e.clientX - rect.left;
-        const sy = e.clientY - rect.top;
-        const cnt = containerRef.current;
-        if (!cnt) return;
-        
-        const worldPoint = cnt.toLocal({ x: sx, y: sy });
-        dragWorld.current = new Point(worldPoint.x, worldPoint.y);
-        setIsDragging(true);
-        console.log('DOM: Started dragging');
-      };
-
-      const onPointerMove = (e: PointerEvent) => {
-        if (!dragWorld.current || !containerRef.current) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const sx = e.clientX - rect.left;
-        const sy = e.clientY - rect.top;
-        const cnt = containerRef.current;
-
-        const screenPos = cnt.toGlobal(dragWorld.current);
-        cnt.position.x += sx - screenPos.x;
-        cnt.position.y += sy - screenPos.y;
-        emit('moved');
-      };
-
-      const onPointerUp = (e: PointerEvent) => {
-        if (e.button !== 2) return;
-        if (dragWorld.current) {
-          setIsDragging(false);
-          dragWorld.current = null;
-          console.log('DOM: Stopped dragging');
-          emit('moved');
-        }
-      };
-      
-      const onContextMenu = (e: Event) => e.preventDefault();
-
-      // Добавляем обработчики (проверка контекстного меню внутри onPointerDown)
-      canvas.addEventListener('pointerdown', onPointerDown);
-      canvas.addEventListener('pointermove', onPointerMove);
-      canvas.addEventListener('pointerup', onPointerUp);
-      canvas.addEventListener('contextmenu', onContextMenu);
-      
-      return () => {
-        canvas.removeEventListener('pointerdown', onPointerDown);
-        canvas.removeEventListener('pointermove', onPointerMove);
-        canvas.removeEventListener('pointerup', onPointerUp);
-        canvas.removeEventListener('contextmenu', onContextMenu);
-      };
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, [app, isBlockContextMenuActive, blockRightClickRef, instantBlockClickRef, emit]);
-  
-  // Зум через DOM события
-  useEffect(() => {
-    if (!app) return;
-    
-    const timer = setTimeout(() => {
-      if (!app || !app.renderer || !app.renderer.view) {
-        return;
-      }
-      
-      const canvas = app.canvas as HTMLCanvasElement;
-      if (!canvas) {
-        return;
-      }
-      
       const onWheel = (e: WheelEvent) => {
         e.preventDefault();
         const cnt = containerRef.current;
         if (!cnt) return;
-        
+
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left;
         const my = e.clientY - rect.top;
@@ -182,43 +83,105 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         const newScale = oldScale * factor;
         const world = cnt.toLocal({ x: mx, y: my });
         const worldPoint = new Point(world.x, world.y);
-        
+
         cnt.scale.set(newScale);
         cnt.position.x -= worldPoint.x * (newScale - oldScale);
         cnt.position.y -= worldPoint.y * (newScale - oldScale);
         emit('zoomed');
         emit('moved');
       };
-      
+
+      const onContextMenu = (e: Event) => e.preventDefault();
+
       canvas.addEventListener('wheel', onWheel, { passive: false });
+      canvas.addEventListener('contextmenu', onContextMenu);
+      
+      // --- DEBUG: слушаем pointerdown на canvas напрямую ---
+      const debugCanvasPointerDown = (e: PointerEvent) => {
+        console.log('[DEBUG] Canvas pointerdown:', e.button, 'at', e.clientX, e.clientY);
+      };
+      const debugCanvasPointerMove = (e: PointerEvent) => {
+        if (isDraggingRef.current && dragWorld.current) {
+          console.log('[DEBUG] Canvas pointermove drag at', e.clientX, e.clientY);
+          const cnt = containerRef.current;
+          if (!cnt) return;
+          const rect = canvas.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          const my = e.clientY - rect.top;
+          const worldX = dragWorld.current.x;
+          const worldY = dragWorld.current.y;
+          cnt.position.x = mx - worldX * cnt.scale.x;
+          cnt.position.y = my - worldY * cnt.scale.y;
+          emit('moved');
+        }
+      };
+      const debugCanvasPointerDownDrag = (e: PointerEvent) => {
+        console.log('[DEBUG] pointerdown drag handler:', e.button, 'isDragging:', isDraggingRef.current);
+        if (e.button === 2) {
+          e.preventDefault();
+          const cnt = containerRef.current;
+          if (!cnt) { console.log('[DEBUG] NO containerRef'); return; }
+          const rect = canvas.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          const my = e.clientY - rect.top;
+          const world = cnt.toLocal({ x: mx, y: my } as any);
+          dragWorld.current = new Point(world.x, world.y);
+          isDraggingRef.current = true;
+          setIsDragging(true);
+          console.log('[DEBUG] Started dragging at', world.x, world.y, 'scale:', cnt.scale.x, 'pos:', cnt.position.x, cnt.position.y);
+        }
+      };
+      const debugCanvasPointerUp = (e: PointerEvent) => {
+        if (e.button === 2 && isDraggingRef.current) {
+          isDraggingRef.current = false;
+          setIsDragging(false);
+          dragWorld.current = null;
+          console.log('[DEBUG] Stopped dragging');
+          emit('moved');
+        }
+      };
+      
+      canvas.addEventListener('pointerdown', debugCanvasPointerDown);
+      canvas.addEventListener('pointerdown', debugCanvasPointerDownDrag);
+      canvas.addEventListener('pointermove', debugCanvasPointerMove);
+      canvas.addEventListener('pointerup', debugCanvasPointerUp);
+      
       return () => {
         canvas.removeEventListener('wheel', onWheel);
+        canvas.removeEventListener('contextmenu', onContextMenu);
+        canvas.removeEventListener('pointerdown', debugCanvasPointerDown);
+        canvas.removeEventListener('pointerdown', debugCanvasPointerDownDrag);
+        canvas.removeEventListener('pointermove', debugCanvasPointerMove);
+        canvas.removeEventListener('pointerup', debugCanvasPointerUp);
       };
     }, 500);
 
     return () => clearTimeout(timer);
   }, [app, emit]);
 
-  // Динамическая сетка через useTick
+  // Динамическая сетка через useTick + обновление курсора
   useTick(() => {
     if (!app) return;
-    
+
     let screen;
     try {
       screen = app.screen;
     } catch {
       return;
     }
-    
+
     if (!screen) return;
-    
+
     const gfx = gridRef.current;
     const cnt = containerRef.current;
     if (!gfx || !cnt) return;
-    
+
     const { width, height } = screen;
     const scale = cnt.scale.x;
     const pos = cnt.position;
+
+    // Обновляем курсор
+    gfx.cursor = isDraggingRef.current ? 'grabbing' : 'grab';
 
     gfx.clear();
     
@@ -278,48 +241,52 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
 
   // Обработчики перетаскивания через PIXI
   const handleBackgroundPointerDown = useCallback((event: any) => {
-    console.log('Background pointer down:', event.button, event);
-    
+    console.log('Background pointer down:', event.button);
+
     if (event.button === 2) { // Правая кнопка мыши
       event.preventDefault();
-      
+
       // Если активно контекстное меню блока, не запускаем перетаскивание
       if (isBlockContextMenuActive || (blockRightClickRef && blockRightClickRef.current)) {
         console.log('Blocking drag due to context menu');
         return;
       }
-      
+
       const cnt = containerRef.current;
       if (!cnt) return;
-      
+
       const worldPoint = cnt.toLocal(event.global);
       dragWorld.current = new Point(worldPoint.x, worldPoint.y);
+      isDraggingRef.current = true;
       setIsDragging(true);
       console.log('Started dragging');
     } else if (event.button === 0) {
       // Левая кнопка для обычного клика
-      if (onCanvasClick && !isDragging) {
+      if (onCanvasClick && !isDraggingRef.current) {
         handleCanvasClick(event);
       }
     }
-  }, [onCanvasClick, isDragging, isBlockContextMenuActive, blockRightClickRef, handleCanvasClick]);
+  }, [onCanvasClick, isBlockContextMenuActive, blockRightClickRef, handleCanvasClick]);
 
   const handleBackgroundPointerMove = useCallback((event: any) => {
-    if (!dragWorld.current || !containerRef.current || !isDragging) return;
-    
+    if (!dragWorld.current || !containerRef.current || !isDraggingRef.current) return;
+
     const cnt = containerRef.current;
     const screenPos = cnt.toGlobal(dragWorld.current);
     cnt.position.x += event.global.x - screenPos.x;
     cnt.position.y += event.global.y - screenPos.y;
-  }, [isDragging]);
+    emit('moved');
+  }, [emit]);
 
   const handleBackgroundPointerUp = useCallback((event: any) => {
-    if (event.button === 2 && isDragging) {
+    if (event.button === 2 && isDraggingRef.current) {
+      isDraggingRef.current = false;
       setIsDragging(false);
       dragWorld.current = null;
       console.log('Stopped dragging');
+      emit('moved');
     }
-  }, [isDragging]);
+  }, [emit]);
 
   // useImperativeHandle для focusOn
   useImperativeHandle(ref, () => ({
@@ -432,12 +399,16 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   }, [app]);
 
   return (
-    <>
-      <graphics 
+    <ViewportContainerContext.Provider value={containerRef}>
+      <graphics
         ref={gridRef}
-        interactive={!!onCanvasClick}
-        onPointerDown={onCanvasClick ? handleCanvasClick : undefined}
-        draw={() => {}} 
+        eventMode="static"
+        cursor="grab"
+        onPointerDown={handleBackgroundPointerDown}
+        onPointerMove={handleBackgroundPointerMove}
+        onPointerUp={handleBackgroundPointerUp}
+        onPointerUpOutside={handleBackgroundPointerUp}
+        draw={() => {}}
       />
       <container
         ref={containerRef}
@@ -447,6 +418,6 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       >
         {children}
       </container>
-    </>
+    </ViewportContainerContext.Provider>
   );
 }); 

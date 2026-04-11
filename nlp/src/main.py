@@ -742,8 +742,35 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
             extractor = ActionExtractor()
             actions, deps = extractor.extract(request.text, spacy_processor.nlp)
 
-            proto_actions = [
-                nlp_pb2.ActionProto(
+            proto_actions = []
+            for a in actions:
+                # Сериализуем DependencySpan
+                proto_spans = []
+                for sp in a.spans:
+                    proto_spans.append(nlp_pb2.DependencySpanProto(
+                        span_type=sp.get("span_type", ""),
+                        token_ids=sp.get("token_ids", []),
+                        head_token_id=sp.get("head_token_id", 0),
+                        text=sp.get("text", ""),
+                        lemma_form=sp.get("lemma_form", ""),
+                    ))
+
+                # Сериализуем UnifiedToken
+                proto_tokens = []
+                for tk in a.tokens:
+                    proto_tokens.append(nlp_pb2.UnifiedToken(
+                        idx=tk.get("idx", 0),
+                        text=tk.get("text", ""),
+                        start_char=tk.get("start_char", 0),
+                        end_char=tk.get("end_char", 0),
+                        lemma=tk.get("lemma", ""),
+                        pos=tk.get("pos", ""),
+                        pos_fine=tk.get("pos_fine", ""),
+                        is_stop=tk.get("is_stop", False),
+                        is_punct=tk.get("is_punct", False),
+                    ))
+
+                proto_actions.append(nlp_pb2.ActionProto(
                     action_id=a.action_id,
                     verb_lemma=a.verb_lemma,
                     verb_text=a.verb_text,
@@ -756,9 +783,12 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                     modifiers=a.modifiers,
                     action_score=a.action_score,
                     subject_text=a.subject_text,
-                )
-                for a in actions
-            ]
+                    spans=proto_spans,
+                    tokens=proto_tokens,
+                    verb_span_idx=a.verb_span_idx,
+                    subject_span_idx=a.subject_span_idx,
+                    object_span_idx=a.object_span_idx,
+                ))
 
             proto_deps = [
                 nlp_pb2.DependencyProto(

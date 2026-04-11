@@ -178,14 +178,14 @@ message UnifiedDocument {
 
 message ProcessTextRequest {
     string text = 1;
-    repeated string processor_names = 2;  // Если пусто - использовать все
-    bool merge_results = 3;  // Объединить результаты разных процессоров
+    repeated string processor_names = 2; // Если пусто - использовать все
+    bool merge_results = 3; // Объединить результаты разных процессоров
 }
 
 message ProcessTextResponse {
     bool success = 1;
     repeated ProcessingResult results = 2;
-    ProcessingResult merged_result = 3;  // Заполняется если merge_results=true
+    ProcessingResult merged_result = 3; // Заполняется если merge_results=true
     string message = 4;
 }
 
@@ -215,9 +215,9 @@ message ProcessSelectionResponse {
 
 message AnalyzeTextRequest {
     string text = 1;
-    repeated LinguisticLevel levels = 2;  // Если пусто - все уровни
-    bool enable_voting = 3;  // Использовать voting между процессорами
-    int32 min_agreement = 4;  // Минимальное количество процессоров для согласия (default: 2)
+    repeated LinguisticLevel levels = 2; // Если пусто - все уровни
+    bool enable_voting = 3; // Использовать voting между процессорами
+    int32 min_agreement = 4; // Минимальное количество процессоров для согласия (default: 2)
 }
 
 message AnalyzeTextResponse {
@@ -303,6 +303,14 @@ message ExtractActionsRequest {
     string doc_id = 2;
 }
 
+message DependencySpanProto {
+    string span_type = 1; // SUBJECT | VERB | OBJECT | MODIFIER
+    repeated int32 token_ids = 2; // индексы токенов в предложении
+    int32 head_token_id = 3; // индекс head-токена
+    string text = 4; // поверхностная форма
+    string lemma_form = 5; // лемма head-токена
+}
+
 message ActionProto {
     string action_id = 1;
     string verb_lemma = 2;
@@ -316,6 +324,13 @@ message ActionProto {
     repeated string modifiers = 10;
     float action_score = 11;
     string subject_text = 12;
+
+    // Лингвистические сущности для рендеринга label_text
+    repeated DependencySpanProto spans = 13;
+    repeated UnifiedToken tokens = 14;
+    int32 verb_span_idx = 15;
+    int32 subject_span_idx = 16;
+    int32 object_span_idx = 17;
 }
 
 message DependencyProto {
@@ -323,8 +338,8 @@ message DependencyProto {
     string target_id = 2;
     string marker_text = 3;
     float link_score = 4;
-    string relation_subtype = 5;  // causes|enables|prevents|via_mechanism|sequential|xcomp|advcl|ccomp|conj
-    string evidence_type = 6;     // marker|syntactic
+    string relation_subtype = 5; // causes|enables|prevents|via_mechanism|sequential|xcomp|advcl|ccomp|conj
+    string evidence_type = 6; // marker|syntactic
 }
 
 message ExtractActionsResponse {

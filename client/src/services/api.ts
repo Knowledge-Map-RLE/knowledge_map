@@ -1087,6 +1087,79 @@ export async function getConfirmedActionGraph(docId: string): Promise<ConfirmedA
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/actions/graph`);
 }
 
+// ---------------------------------------------------------------------------
+// Linguistic graph (Action + LexicalUnit + 3 edge types)
+// ---------------------------------------------------------------------------
+
+export interface LinguisticGraphNode {
+  uid: string;
+  _type: 'Action' | 'LexicalUnit';
+  // Action fields
+  verb?: string;
+  verb_text?: string;
+  subject?: string;
+  object?: string;
+  full_phrase?: string;
+  label_text?: string;
+  sentence_text?: string;
+  doc_id?: string;
+  action_class?: string;
+  norm_key?: string;
+  // LexicalUnit fields
+  text?: string;
+  lemma?: string;
+  pos?: string;
+  pos_fine?: string;
+  dep?: string;
+  is_stop?: boolean;
+  is_punct?: boolean;
+  // Layout coordinates (computed server-side)
+  layout_x?: number | null;
+  layout_y?: number | null;
+}
+
+export interface LinguisticGraphEdge {
+  src_uid: string;
+  tgt_uid: string;
+  edge_type: 'LEADS_TO' | 'DEPENDS_ON' | 'PART_OF';
+  // LEADS_TO
+  relation_subtype?: string;
+  confidence?: number;
+  status?: string;
+  // DEPENDS_ON
+  dep_label?: string;
+  // PART_OF
+  token_index?: number;
+  // Aggregation
+  edge_count?: number;
+}
+
+export interface LinguisticGraphResponse {
+  doc_id?: string;
+  nodes: LinguisticGraphNode[];
+  edges: LinguisticGraphEdge[];
+}
+
+export async function getDocumentLinguisticGraph(docId: string): Promise<LinguisticGraphResponse> {
+  return fetchJson(`/api/patterns/linguistic-graph/${encodeURIComponent(docId)}`);
+}
+
+export async function getGlobalLinguisticGraph(options?: {
+  lexicalLimit?: number;
+  actionLimit?: number;
+  edgeLimit?: number;
+  autoLayout?: boolean;
+}): Promise<LinguisticGraphResponse> {
+  const params = new URLSearchParams();
+  if (options?.lexicalLimit) params.set('lexical_limit', String(options.lexicalLimit));
+  if (options?.actionLimit) params.set('action_limit', String(options.actionLimit));
+  if (options?.edgeLimit) params.set('edge_limit', String(options.edgeLimit));
+  if (options?.autoLayout !== undefined) params.set('auto_layout', String(options.autoLayout));
+  
+  const query = params.toString();
+  return fetchJson(`/api/patterns/global-linguistic-graph${query ? `?${query}` : ''}`);
+}
+
 export interface KnowledgeMapPageResponse {
   success: boolean;
   blocks: Array<{

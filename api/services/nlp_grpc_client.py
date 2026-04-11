@@ -368,6 +368,34 @@ class NLPGRPCClient:
             "modifiers": list(action.modifiers),
             "action_score": action.action_score,
             "subject_text": action.subject_text,
+            # Лингвистические сущности для рендеринга label_text
+            "spans": [
+                {
+                    "span_type": sp.span_type,
+                    "token_ids": list(sp.token_ids),
+                    "head_token_id": sp.head_token_id,
+                    "text": sp.text,
+                    "lemma_form": sp.lemma_form,
+                }
+                for sp in action.spans
+            ],
+            "tokens": [
+                {
+                    "idx": tk.idx,
+                    "text": tk.text,
+                    "start_char": tk.start_char,
+                    "end_char": tk.end_char,
+                    "lemma": tk.lemma,
+                    "pos": tk.pos,
+                    "pos_fine": tk.pos_fine,
+                    "is_stop": tk.is_stop,
+                    "is_punct": tk.is_punct,
+                }
+                for tk in action.tokens
+            ],
+            "verb_span_idx": action.verb_span_idx,
+            "subject_span_idx": action.subject_span_idx,
+            "object_span_idx": action.object_span_idx,
         }
 
     def _proto_dep_to_dict(self, dep) -> Dict[str, Any]:

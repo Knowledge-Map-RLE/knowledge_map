@@ -8,7 +8,26 @@
       "Bash(powershell *)",
       "Bash(d:\\knowledge_map\\nlp\\.venv\\scripts\\python.exe *)",
       "Bash(select-string *)",
-      "Bash(cmd *)"
+      "Bash(cmd *)",
+      "Bash(dir *)",
+      "Bash(d:\\knowledge_map\\.venv\\scripts\\python.exe *)",
+      "Bash(docker ps *)",
+      "Bash(copy *)",
+      "Bash(d:\\knowledge_map\\api\\.venv\\scripts\\python.exe *)",
+      "Bash(d:)",
+      "Bash(set-location *)",
+      "Bash(taskkill *)",
+      "Bash(bunx *)",
+      "Bash(get-content *)",
+      "Bash(start-sleep *)",
+      "Bash(timeout *)",
+      "Bash(type *)",
+      "Bash(cd *)",
+      "Bash(curl *)",
+      "Bash(npx *)",
+      "Bash(findstr *)",
+      "Bash(where-object *)",
+      "Bash(d:\\knowledge_map\\client\\node_modules\\.bin\\tsc.cmd *)"
     ]
   },
   "$version": 3

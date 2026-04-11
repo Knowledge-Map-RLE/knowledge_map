@@ -67,6 +67,22 @@ BIO_VERBS = {
     "integrate", "converge", "diverge", "amplify", "attenuate",
     "elongate", "shorten", "extend", "expand", "contract",
     "swell", "shrink", "lyse", "permeabilize",
+    # ДОБАВЛЕНО: ключевые bio-глаголы для РПЖ
+    "phosphorylate", "dephosphorylate", "ubiquitinate", "deubiquitinate",
+    "sumoylate", "desumoylate",
+    "transcribe", "translate", "splice",
+    "secrete", "internalize", "endocytose", "exocytose",
+    "upregulate", "downregulate",
+    "senesce", "quiesce", "rejuvenate",
+    "repair", "regenerate",
+    "metabolize", "catabolize", "anabolize",
+    "phagocytose", "engulf",
+    "cross", "penetrate", "diffuse",
+    "confer", "govern", "determine", "dictate",
+    "buffer", "scavenge", "chelate",
+    "replenish", "deplete",
+    "resensitize", "desensitize",
+    "abrogate",
 }
 
 META_VERBS = {
@@ -77,15 +93,14 @@ META_VERBS = {
     "examine", "investigate", "analyze", "study", "test", "measure",
     "evaluate", "assess", "compare", "consider", "highlight", "emphasize",
     "focus", "aim", "attempt", "try", "seek", "explore", "address",
-    "approach", "develop", "build", "create", "design", "implement",
-    "establish", "introduce", "define", "characterize", "classify",
-    "categorize", "organize", "structure", "organize", "integrate",
-    "incorporate", "include", "involve", "comprise", "consist", "contain",
-    "represent", "reflect", "illustrate", "exemplify", "highlight",
-    "demonstrate", "validate", "confirm", "verify", "support", "challenge",
+    "approach", "define", "characterize", "classify",
+    "categorize", "organize", "structure",
+    "incorporate",
+    "represent", "reflect", "illustrate", "exemplify",
+    "validate", "confirm", "verify", "support", "challenge",
     # movement/abstract
     "bring", "take", "give", "get", "go", "come", "make", "use",
-    "adopt", "apply", "employ", "utilize", "leverage",
+    "adopt", "apply", "employ",
     "extend", "expand", "broaden", "narrow", "limit",
     "understand", "explain", "clarify", "elucidate", "reveal",
     "uncover", "discover", "identify_meta",
@@ -124,10 +139,7 @@ ABSTRACT_ENTITY_TOKENS = {
     # 'release' removed — "neurotransmitter release" is concrete
     # 'response' removed — "microglial response" is concrete
     # abstract concepts added in last session
-    'information', 'brain', 'body', 'system', 'systems', 'model', 'models',
-    'data', 'context', 'scale', 'area', 'region', 'network', 'networks',
-    'hallmark', 'hallmarks', 'principle', 'principles', 'aging', 'cancer',
-    'life', 'text', 'people', 'growth', 'death',
+    'information', 'text', 'people',
     # additional common abstracts
     'view', 'approach', 'concept', 'idea', 'theory', 'framework',
     'evidence', 'finding', 'findings', 'observation', 'observations',
@@ -135,11 +147,10 @@ ABSTRACT_ENTITY_TOKENS = {
     'environment', 'condition', 'conditions',
     'symptom', 'symptoms', 'sign', 'signs',
     'patient', 'patients', 'subject', 'subjects',
-    # clinical/epidemiological abstracts (from quality review)
-    'care', 'health', 'risk', 'rate', 'score', 'test', 'study', 'trial',
+    # clinical/epidemiological abstracts
+    'risk', 'rate', 'study', 'trial',
     'group', 'groups', 'sample', 'cohort', 'population', 'populations',
-    'treatment', 'treatments', 'intervention', 'interventions',
-    'outcome', 'outcomes', 'measure', 'measures', 'assessment',
+    'measure', 'measures', 'assessment',
     'quality', 'performance', 'improvement', 'management',
     'skill', 'skills', 'training', 'program', 'protocol',
     'need', 'needs', 'barrier', 'barriers', 'strategy', 'strategies',
@@ -164,7 +175,7 @@ ABSTRACT_ENTITY_TOKENS = {
     'provider', 'providers', 'clinician', 'clinicians', 'worker', 'workers',
     'community', 'communities', 'unit', 'units', 'team', 'teams',
     'hospital', 'hospitals', 'clinic', 'clinics', 'facility', 'facilities',
-    # supplements/vitamins used as generic tokens
+    # supplements/vitamins
     'vitamin', 'vitamins', 'supplement', 'supplements', 'nutrient', 'nutrients',
     # generic descriptors
     'inappropriate', 'appropriate', 'unnecessary', 'unnecessary',
@@ -216,11 +227,11 @@ ABSTRACT_ENTITY_TOKENS = {
     # generic social outcomes
     'equity', 'inequality', 'access', 'quality',
     # body/organ/physical generic (from obj_obj failures)
-    'renal', 'surface', 'surfaces', 'exercise', 'material', 'materials',
-    'transfer', 'transfers', 'water', 'dietary', 'diet', 'diets',
-    'healthy', 'wound', 'wounds', 'healing', 'calling', 'load', 'sway',
+    'renal', 'surface', 'surfaces', 'material', 'materials',
+    'transfer', 'transfers', 'water', 'dietary', 'calling', 'load', 'sway',
     'upright', 'polymer', 'polymers', 'charging', 'grid', 'grids',
     'recovery', 'rehabilitation',
+    # healing/wound/exercise/diet — конкретные bio-термины, убраны
     # social/behavioral abstract
     'technology', 'technologies', 'support', 'supports',
     'episode', 'episodes', 'substance', 'substances', 'comfort',
@@ -243,8 +254,9 @@ ABSTRACT_ENTITY_TOKENS = {
     'rise', 'decrease', 'increase', 'reduction', 'elevation', 'improvement',
     'deterioration', 'worsening',
     # domain-specific generics seen in failures
-    'ageing', 'aging', 'lifespan', 'longevity', 'frailty',
+    'frailty',
     'function', 'functions', 'dysfunction', 'dysfunctions',
+    # aging/longevity — КЛЮЧЕВЫЕ для РПЖ, убраны из abstract
     # neural/neuro generics (too vague for obj_obj)
     'neural', 'neuronal', 'neuroscience', 'neurogenesis', 'neurodegeneration',
     'neurological', 'neuroinflammation',
@@ -786,8 +798,8 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
     if has_shared:
         if src_bio and tgt_bio:
             return True, "shared entity + both bio verbs"
-        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.65:
-            return True, "shared entity + one bio verb + bio domain + conf>=0.65"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.55:
+            return True, "shared entity + one bio verb + bio domain + conf>=0.55"
         return False, f"shared entity but non-bio: {src_verb}, {tgt_verb}"
 
     # Keyword overlap: require both bio verbs OR one bio verb + bio domain token
@@ -795,26 +807,26 @@ def should_confirm(src_phrase: str, tgt_phrase: str, relation: str,
     if has_keyword:
         if src_bio and tgt_bio:
             return True, "keyword + both bio verbs"
-        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.65:
-            return True, "keyword + one bio verb + bio domain + conf>=0.65"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.55:
+            return True, "keyword + one bio verb + bio domain + conf>=0.55"
         return False, f"keyword but non-bio: {src_verb}, {tgt_verb}"
 
-    # Obj→obj overlap: require both bio verbs + conf>=0.65, OR one bio verb + bio domain + high conf
+    # Obj→obj overlap: require both bio verbs + conf>=0.55, OR one bio verb + bio domain + conf>=0.65
     has_obj_obj = any('[obj_obj:' in str(ev) for ev in (evidence or []))
     if has_obj_obj:
-        if src_bio and tgt_bio and confidence >= 0.65:
-            return True, "obj_obj + both bio verbs + conf>=0.65"
-        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.75:
-            return True, "obj_obj + one bio verb + bio domain + conf>=0.75"
+        if src_bio and tgt_bio and confidence >= 0.55:
+            return True, "obj_obj + both bio verbs + conf>=0.55"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.65:
+            return True, "obj_obj + one bio verb + bio domain + conf>=0.65"
         return False, f"obj_obj but non-bio or low-conf: {src_verb}, {tgt_verb}, conf={confidence}"
 
-    # Shared subject: require both bio verbs + conf>=0.65, OR one bio verb + bio domain + high conf
+    # Shared subject: require both bio verbs + conf>=0.55, OR one bio verb + bio domain + conf>=0.65
     has_subject = any('[subject:' in str(ev) for ev in (evidence or []))
     if has_subject:
-        if src_bio and tgt_bio and confidence >= 0.65:
+        if src_bio and tgt_bio and confidence >= 0.55:
             return True, "shared subject + both bio verbs"
-        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.75:
-            return True, "shared subject + one bio verb + bio domain + conf>=0.75"
+        if (src_bio or tgt_bio) and has_bio_domain and confidence >= 0.65:
+            return True, "shared subject + one bio verb + bio domain + conf>=0.65"
         return False, f"shared subject but non-bio or low-conf: {src_verb}, {tgt_verb}"
 
     # Default: confirm if both bio verbs (any confidence)

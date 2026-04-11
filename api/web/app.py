@@ -122,6 +122,14 @@ app.include_router(auto_review_router.router, prefix="/api/data_extraction")
 app.include_router(shared_actions_router.router, prefix="/api/data_extraction")
 app.include_router(worker_status.router, prefix="/api")
 
+# Лингвистические паттерны
+from web.routers import linguistic as linguistic_router
+app.include_router(linguistic_router.router)
+
+# Лингвистический граф (Action + LexicalUnit)
+from web.routers import pattern_graph as pattern_graph_router
+app.include_router(pattern_graph_router.router)
+
 # GraphQL
 if _graphql_available:
     app.include_router(graphql_app, prefix="/graphql")

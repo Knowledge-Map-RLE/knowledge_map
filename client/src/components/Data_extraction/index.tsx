@@ -6,6 +6,7 @@ import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 import Header from '../Header';
 import { LinguisticPatternAnalysis } from './Patterns';
 import { ArticleActionGraph } from './Patterns/ArticleActionGraph';
+import { ArticleLinguisticGraph } from './Patterns/ArticleLinguisticGraph';
 import Document_downloader_ui from './Document_downloader_ui';
 import type { DocumentListHandle } from './Document_downloader_ui';
 
@@ -32,7 +33,7 @@ interface PDFDocument {
 }
 
 export default function Data_extraction() {
-    const [activeTab, setActiveTab] = useState<'pdf' | 'markdown' | 'annotator' | 'patterns' | 'graph'>('pdf');
+    const [activeTab, setActiveTab] = useState<'pdf' | 'markdown' | 'annotator' | 'patterns' | 'linguistic-graph' | 'graph'>('pdf');
     const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
     const [pdfUrl, setPdfUrl] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
@@ -208,6 +209,12 @@ export default function Data_extraction() {
                             Паттерны
                         </button>
                         <button
+                            className={`${s.tabButton} ${activeTab === 'linguistic-graph' ? s.active : ''}`}
+                            onClick={() => setActiveTab('linguistic-graph')}
+                        >
+                            Лингвистический граф
+                        </button>
+                        <button
                             className={`${s.tabButton} ${activeTab === 'graph' ? s.active : ''}`}
                             onClick={() => setActiveTab('graph')}
                         >
@@ -298,6 +305,19 @@ export default function Data_extraction() {
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
                                 {selectedDocument && docId ? (
                                     <LinguisticPatternAnalysis docId={docId} />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                        Выберите файл
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Лингвистический граф */}
+                        {activeTab === 'linguistic-graph' && (
+                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
+                                {selectedDocument && docId ? (
+                                    <ArticleLinguisticGraph docId={docId} />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
                                         Выберите файл
