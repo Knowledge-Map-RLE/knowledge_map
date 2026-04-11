@@ -5,6 +5,7 @@ import { AnnotationWorkspace } from './Annotation';
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 import Header from '../Header';
 import { LinguisticPatternAnalysis } from './Patterns';
+import GoalPatternAnalysis from './Patterns/GoalPatternAnalysis';
 import { ArticleActionGraph } from './Patterns/ArticleActionGraph';
 import { ArticleLinguisticGraph } from './Patterns/ArticleLinguisticGraph';
 import Document_downloader_ui from './Document_downloader_ui';
@@ -33,7 +34,7 @@ interface PDFDocument {
 }
 
 export default function Data_extraction() {
-    const [activeTab, setActiveTab] = useState<'pdf' | 'markdown' | 'annotator' | 'patterns' | 'linguistic-graph' | 'graph'>('pdf');
+    const [activeTab, setActiveTab] = useState<'pdf' | 'markdown' | 'annotator' | 'goals' | 'patterns' | 'linguistic-graph' | 'graph'>('pdf');
     const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
     const [pdfUrl, setPdfUrl] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
@@ -203,6 +204,12 @@ export default function Data_extraction() {
                             Исходный PDF
                         </button>
                         <button
+                            className={`${s.tabButton} ${activeTab === 'goals' ? s.active : ''}`}
+                            onClick={() => setActiveTab('goals')}
+                        >
+                            Анализ целей
+                        </button>
+                        <button
                             className={`${s.tabButton} ${activeTab === 'patterns' ? s.active : ''}`}
                             onClick={() => setActiveTab('patterns')}
                         >
@@ -292,6 +299,19 @@ export default function Data_extraction() {
                                         onUpdateDocumentStatus={updateDocumentStatus}
                                         onNlpProcessingChange={setIsNlpProcessing}
                                     />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                        Выберите файл
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Анализ целей */}
+                        {activeTab === 'goals' && (
+                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
+                                {selectedDocument && docId ? (
+                                    <GoalPatternAnalysis docId={docId} />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
                                         Выберите файл

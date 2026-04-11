@@ -141,7 +141,7 @@ export function ArticleLinguisticGraph({ docId }: { docId: string }) {
     if (nodes.length === 0) {
         return (
             <div className={styles.empty}>
-                <p>Граф пуст. Запустите анализ паттернов во вкладке «Паттерны» для построения графа.</p>
+                <p>Граф пуст. Запустите «Анализ действий» во вкладке «Паттерны» для извлечения Action и LexicalUnit узлов из текста статьи.</p>
             </div>
         );
     }

@@ -7,9 +7,10 @@ Allowed imports: fastapi, application.actions.*, web.dependencies, src.schemas.a
 Forbidden imports: neomodel (напрямую), infrastructure (напрямую)
 """
 import logging
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, Query, HTTPException
+from pydantic import BaseModel
 
 from src.schemas.api import (
     ExtractActionsResponse,
@@ -149,4 +150,58 @@ def get_confirmed_graph(
         edges=edges,
         total_nodes=len(nodes),
         total_edges=len(edges),
+    )
+
+
+# ─── Auto-review ─────────────────────────────────────────────────────────────
+
+class AutoReviewEdgeDetail(BaseModel):
+    src_uid: str
+    tgt_uid: str
+    src_phrase: str
+    tgt_phrase: str
+    relation_subtype: str
+    confidence: float
+    reason: str
+
+
+class AutoReviewResponse(BaseModel):
+    success: bool
+    doc_id: str
+    confirmed: int
+    rejected: int
+    total: int
+    confirmed_edges: List[AutoReviewEdgeDetail] = []
+    rejected_edges: List[AutoReviewEdgeDetail] = []
+    message: str
+
+
+@router.post("/actions/auto-review", response_model=AutoReviewResponse)
+async def auto_review_endpoint(
+    doc_id: str,
+    dry_run: bool = Query(default=False),
+    action_repo=Depends(get_action_repository),
+):
+    """Автоматическое ревью pending LEADS_TO рёбер."""
+    from application.actions.auto_review import auto_review_pending_edges
+
+    try:
+        result = await auto_review_pending_edges(
+            doc_id=doc_id,
+            action_repo=action_repo,
+            dry_run=dry_run,
+        )
+    except Exception as e:
+        logger.exception("Error in auto-review for doc %s", doc_id)
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return AutoReviewResponse(
+        success=True,
+        doc_id=doc_id,
+        confirmed=result.confirmed,
+        rejected=result.rejected,
+        total=result.total,
+        confirmed_edges=[AutoReviewEdgeDetail(**e) for e in result.confirmed_edges],
+        rejected_edges=[AutoReviewEdgeDetail(**e) for e in result.rejected_edges],
+        message=f"Auto-review: {result.confirmed} confirmed, {result.rejected} rejected",
     )

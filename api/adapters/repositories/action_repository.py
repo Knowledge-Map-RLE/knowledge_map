@@ -131,34 +131,38 @@ class ActionRepository:
             if not tokens:
                 continue
 
-            # Маппинг token.id → LexicalUnit uid
+            # Маппинг token.idx → LexicalUnit uid
             token_id_to_lu_uid: dict[int, str] = {}
 
             for token in tokens:
-                lu_uid = f"lu_{doc_id}_{action_uid}_{token['id']}"
-                token_id_to_lu_uid[token["id"]] = lu_uid
+                token_idx = token.get('idx', token.get('id'))
+                if token_idx is None:
+                    continue
+                lu_uid = f"lu_{doc_id}_{action_uid}_{token_idx}"
+                token_id_to_lu_uid[token_idx] = lu_uid
 
                 all_lu_rows.append({
                     "uid": lu_uid,
                     "text": token["text"],
-                    "lemma": token["lemma"],
-                    "pos": token["pos"],
+                    "lemma": token.get("lemma", ""),
+                    "pos": token.get("pos", ""),
                     "pos_fine": token.get("pos_fine", ""),
                     "dep": token.get("dep", ""),
                     "is_stop": token.get("is_stop", False),
                     "is_punct": token.get("is_punct", False),
                     "doc_id": doc_id,
                     "action_uid": action_uid,
-                    "token_index": token["id"],
+                    "token_index": token_idx,
                 })
 
-            # Рёбра DEPENDS_ON: head_id → token.id
+            # Рёбра DEPENDS_ON: head_idx → token.idx
             for token in tokens:
-                head_id = token.get("head_id", -1)
-                if head_id < 0:
+                token_idx = token.get('idx', token.get('id'))
+                head_idx = token.get("head_idx", token.get("head_id", -1))
+                if token_idx is None or head_idx < 0:
                     continue
                 src_uid = token_id_to_lu_uid.get(head_id)
-                tgt_uid = token_id_to_lu_uid.get(token["id"])
+                tgt_uid = token_id_to_lu_uid.get(token_idx)
                 if src_uid and tgt_uid and src_uid != tgt_uid:
                     all_dep_rows.append({
                         "src_uid": src_uid,

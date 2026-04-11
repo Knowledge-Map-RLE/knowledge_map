@@ -27,7 +27,8 @@
       "Bash(npx *)",
       "Bash(findstr *)",
       "Bash(where-object *)",
-      "Bash(d:\\knowledge_map\\client\\node_modules\\.bin\\tsc.cmd *)"
+      "Bash(d:\\knowledge_map\\client\\node_modules\\.bin\\tsc.cmd *)",
+      "Bash(netstat *)"
     ]
   },
   "$version": 3

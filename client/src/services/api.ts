@@ -13,6 +13,17 @@ const withBase = (path: string) => {
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(withBase(path), init);
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => '');
+    let detail = `HTTP ${response.status} ${response.statusText}`;
+    try {
+      const errorJson = JSON.parse(errorBody);
+      detail = errorJson.detail || errorJson.message || detail;
+    } catch {
+      if (errorBody) detail = errorBody.slice(0, 500);
+    }
+    throw new Error(detail);
+  }
   const cloned = response.clone();
   try {
     return await response.json() as T;
@@ -998,6 +1009,29 @@ export async function getDocumentSpecificPatterns(docId: string): Promise<Analyz
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/patterns/specific`);
 }
 
+// ── Goal analysis (цели: Успешная/Не успешная цель, Фрагмент ведёт к успеху/неуспеху) ──
+
+export async function analyzeDocumentGoals(
+  docId: string,
+  minFrequency: number = 1,
+): Promise<AnalyzePatternsResponse> {
+  const GOAL_TYPES = [
+    'Успешная цель',
+    'Не успешная цель',
+    'Фрагмент ведёт к успеху',
+    'Фрагмент ведёт к неуспеху',
+  ];
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/analyze-goals`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ annotation_types: GOAL_TYPES, clear_existing: true, min_frequency: minFrequency }),
+  });
+}
+
+export async function getDocumentGoals(docId: string): Promise<AnalyzePatternsResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/goals`);
+}
+
 // ── Action extraction + human-in-the-loop ─────────────────────────────────────
 
 export interface ExtractActionsResponse {
@@ -1054,6 +1088,35 @@ export async function reviewEdge(docId: string, req: ReviewEdgeRequest): Promise
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),
+  });
+}
+
+// ── Auto-review ─────────────────────────────────────────────────────────────────
+
+export interface AutoReviewEdgeDetail {
+  src_uid: string;
+  tgt_uid: string;
+  src_phrase: string;
+  tgt_phrase: string;
+  relation_subtype: string;
+  confidence: number;
+  reason: string;
+}
+
+export interface AutoReviewResponse {
+  success: boolean;
+  doc_id: string;
+  confirmed: number;
+  rejected: number;
+  total: number;
+  confirmed_edges: AutoReviewEdgeDetail[];
+  rejected_edges: AutoReviewEdgeDetail[];
+  message: string;
+}
+
+export async function autoReview(docId: string, dryRun: boolean = false): Promise<AutoReviewResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/actions/auto-review?dry_run=${dryRun}`, {
+    method: 'POST',
   });
 }
 

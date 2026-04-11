@@ -98,11 +98,10 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       
       // --- DEBUG: слушаем pointerdown на canvas напрямую ---
       const debugCanvasPointerDown = (e: PointerEvent) => {
-        console.log('[DEBUG] Canvas pointerdown:', e.button, 'at', e.clientX, e.clientY);
+        // debug removed
       };
       const debugCanvasPointerMove = (e: PointerEvent) => {
         if (isDraggingRef.current && dragWorld.current) {
-          console.log('[DEBUG] Canvas pointermove drag at', e.clientX, e.clientY);
           const cnt = containerRef.current;
           if (!cnt) return;
           const rect = canvas.getBoundingClientRect();
@@ -116,11 +115,10 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         }
       };
       const debugCanvasPointerDownDrag = (e: PointerEvent) => {
-        console.log('[DEBUG] pointerdown drag handler:', e.button, 'isDragging:', isDraggingRef.current);
         if (e.button === 2) {
           e.preventDefault();
           const cnt = containerRef.current;
-          if (!cnt) { console.log('[DEBUG] NO containerRef'); return; }
+          if (!cnt) return;
           const rect = canvas.getBoundingClientRect();
           const mx = e.clientX - rect.left;
           const my = e.clientY - rect.top;
@@ -128,7 +126,6 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
           dragWorld.current = new Point(world.x, world.y);
           isDraggingRef.current = true;
           setIsDragging(true);
-          console.log('[DEBUG] Started dragging at', world.x, world.y, 'scale:', cnt.scale.x, 'pos:', cnt.position.x, cnt.position.y);
         }
       };
       const debugCanvasPointerUp = (e: PointerEvent) => {
@@ -136,7 +133,6 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
           isDraggingRef.current = false;
           setIsDragging(false);
           dragWorld.current = null;
-          console.log('[DEBUG] Stopped dragging');
           emit('moved');
         }
       };
@@ -241,14 +237,11 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
 
   // Обработчики перетаскивания через PIXI
   const handleBackgroundPointerDown = useCallback((event: any) => {
-    console.log('Background pointer down:', event.button);
-
     if (event.button === 2) { // Правая кнопка мыши
       event.preventDefault();
 
       // Если активно контекстное меню блока, не запускаем перетаскивание
       if (isBlockContextMenuActive || (blockRightClickRef && blockRightClickRef.current)) {
-        console.log('Blocking drag due to context menu');
         return;
       }
 
@@ -259,7 +252,6 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       dragWorld.current = new Point(worldPoint.x, worldPoint.y);
       isDraggingRef.current = true;
       setIsDragging(true);
-      console.log('Started dragging');
     } else if (event.button === 0) {
       // Левая кнопка для обычного клика
       if (onCanvasClick && !isDraggingRef.current) {
@@ -283,7 +275,6 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
       isDraggingRef.current = false;
       setIsDragging(false);
       dragWorld.current = null;
-      console.log('Stopped dragging');
       emit('moved');
     }
   }, [emit]);
