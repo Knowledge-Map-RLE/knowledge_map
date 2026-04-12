@@ -1218,9 +1218,23 @@ export async function getGlobalLinguisticGraph(options?: {
   if (options?.actionLimit) params.set('action_limit', String(options.actionLimit));
   if (options?.edgeLimit) params.set('edge_limit', String(options.edgeLimit));
   if (options?.autoLayout !== undefined) params.set('auto_layout', String(options.autoLayout));
-  
+
   const query = params.toString();
   return fetchJson(`/api/patterns/global-linguistic-graph${query ? `?${query}` : ''}`);
+}
+
+export interface DependencyNgramResponse {
+  success: boolean;
+  max_depth: number;
+  limit_per_n: number;
+  unigrams: Array<{ pos: string; dep: string; lemma: string; node_type?: string; cnt: number }>;
+  n_grams: Record<string, Array<{ chain: string[][]; cnt: number }>>;
+  long_chains?: Array<{ texts: string[]; rel_types: string[]; depth: number; cnt: number }>;
+  cross_doc: Array<{ lemmas: string[]; deps: string[]; depth: number; cnt: number }>;
+}
+
+export async function getDependencyNgrams(maxDepth = 5, limitPerN = 50): Promise<DependencyNgramResponse> {
+  return fetchJson(`/api/data_extraction/nlp/dependency-ngrams?max_depth=${maxDepth}&limit_per_n=${limitPerN}`);
 }
 
 export interface KnowledgeMapPageResponse {

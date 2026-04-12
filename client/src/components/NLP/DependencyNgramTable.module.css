@@ -1,0 +1,240 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.controlGroup {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.controlGroup label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+.numberInput {
+    width: 70px;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.numberInput:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.analyzeButton {
+    padding: 8px 24px;
+    background: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.analyzeButton:hover:not(:disabled) {
+    background: #1976D2;
+}
+
+.analyzeButton:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+}
+
+/* Loading */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #2196F3;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading .hint {
+    font-size: 12px;
+    color: #999;
+    margin-top: 8px;
+}
+
+/* Error */
+.error {
+    padding: 16px;
+    margin: 16px;
+    background: #ffebee;
+    border: 1px solid #ef9a9a;
+    border-radius: 6px;
+    color: #c62828;
+}
+
+/* Results */
+.results {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Section tabs */
+.sectionTabs {
+    display: flex;
+    gap: 2px;
+    padding: 8px 16px 0;
+    overflow-x: auto;
+    flex-shrink: 0;
+}
+
+.sectionTab {
+    padding: 6px 14px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background: #f5f5f5;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.sectionTab:hover {
+    background: #e8e8e8;
+}
+
+.sectionTab.active {
+    background: #fff;
+    color: #2196F3;
+    font-weight: 600;
+}
+
+/* Table */
+.tableWrapper {
+    flex: 1;
+    overflow: auto;
+    padding: 0 16px 16px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table th {
+    background: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #444;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.table td {
+    padding: 6px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+}
+
+.table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.table .count {
+    font-weight: 600;
+    color: #2196F3;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.table .chainCell {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    max-width: 600px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #333;
+}
+
+.posTag {
+    display: inline-block;
+    padding: 2px 6px;
+    background: #e3f2fd;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1565C0;
+}
+
+.type_lexicalunit {
+    background: #e8f5e9;
+    color: #2E7D32;
+}
+
+.type_action {
+    background: #fff3e0;
+    color: #E65100;
+}
+
+.type_article {
+    background: #f3e5f5;
+    color: #7B1FA2;
+}
+
+/* Empty state */
+.empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+}

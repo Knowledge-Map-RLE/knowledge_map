@@ -1,39 +1,60 @@
-@import "tailwindcss";
-
+/* NLP page layout */
 .nlp {
-    @apply w-full h-full absolute flex flex-col top-20 left-56 right-96 bottom-20 bg-gray-100;
+    position: absolute;
+    top: 5rem;
+    left: 14rem;
+    right: 24rem;
+    bottom: 5rem;
+    background: #f5f5f5;
 }
 
-.nlp > div {
-    @apply w-full h-full;
+/* Tab bar */
+.tabBar {
+    display: flex;
+    gap: 0;
+    padding: 0 16px;
+    background: #fff;
+    border-bottom: 2px solid #e0e0e0;
+    height: 44px;
+    align-items: flex-end;
+    z-index: 10;
+    position: relative;
 }
 
-.nlp_text {
-    @apply p-4 overflow-y-auto bg-white border-r border-gray-300 shadow-sm;
+.tabButton {
+    padding: 8px 20px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    background: transparent;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.15s ease;
+    position: relative;
+    bottom: -2px;
 }
 
-.nlp_text::-webkit-scrollbar {
-    width: 8px;
+.tabButton:hover {
+    background: #f0f0f0;
+    color: #333;
 }
 
-.nlp_text::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+.tabButton.active {
+    background: #fff;
+    border-color: #e0e0e0;
+    border-bottom-color: #fff;
+    color: #2196F3;
+    font-weight: 600;
 }
 
-.nlp_text::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-}
-
-.nlp_text::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-.nlp_graph {
-    @apply p-4 bg-blue-50 border-r border-gray-300;
-}
-
-.nlp_knowledge_map {
-    @apply p-4 bg-green-50;
+/* Content area — absolute, fills remaining space below tab bar */
+.content {
+    position: absolute;
+    top: 44px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
 }

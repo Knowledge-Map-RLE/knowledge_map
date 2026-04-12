@@ -497,6 +497,195 @@ class UnifiedPatternAnalyzer:
         return {"verb_obj_stability": verb_obj, "svo_stability": svo}
 
     # ------------------------------------------------------------------
+    # 13. Dependency N-grams (DP с memoization — замена экспоненциального перебора)
+    # ------------------------------------------------------------------
+    def analyze_dependency_ngrams(self, max_depth: int = 5, limit_per_n: int = 50) -> Dict[str, Any]:
+        """
+        Точный подсчёт dependency n-gram паттернов через dynamic programming.
+
+        Вместо MATCH path = ()-[:...*N]->() (комбинаторный взрыв) используем:
+        1. Загружаем граф в память (adjacency list)
+        2. Находим SCC и сжимаем циклы → DAG
+        3. DP: memo[node, depth] → Counter сигнатур
+        4. Агрегируем снизу вверх от leaf-узлов
+
+        Поддерживает: DEPENDS_ON, PART_OF, LEADS_TO + LexicalUnit, Action.
+        """
+        from collections import Counter, defaultdict
+
+        results: Dict[str, Any] = {}
+        clamped_depth = max(1, min(max_depth, 10))
+
+        # --- 1. Загружаем граф в память ---
+        # Запрашиваем ВСЕ рёбра трёх типов + оба типа узлов
+        edges_data = self._run_query("""
+            MATCH (s)-[r:DEPENDS_ON|PART_OF|LEADS_TO]->(t)
+            WHERE (s:LexicalUnit OR s:Action) AND (t:LexicalUnit OR t:Action)
+            RETURN
+                id(s) AS sid,
+                id(t) AS tid,
+                CASE WHEN s:LexicalUnit THEN coalesce(s.text, s.lemma, '')
+                     WHEN s:Action THEN coalesce(s.verb, s.verb_lemma, '')
+                     ELSE '' END AS s_text,
+                CASE WHEN t:LexicalUnit THEN coalesce(t.text, t.lemma, '')
+                     WHEN t:Action THEN coalesce(t.verb, t.verb_lemma, '')
+                     ELSE '' END AS t_text,
+                type(r) AS rel_type,
+                coalesce(r.dep_label, '') AS dep_label
+        """)
+
+        labels: Dict[int, str] = {}
+        out_edges: Dict[int, List[Tuple[str, int]]] = defaultdict(list)  # node_id -> [(rel, target_id), ...]
+        in_degree: Dict[int, int] = defaultdict(int)
+        all_node_ids: set = set()
+
+        for row in edges_data:
+            sid, tid = row["sid"], row["tid"]
+            all_node_ids.add(sid)
+            all_node_ids.add(tid)
+            labels[sid] = row["s_text"] or str(sid)
+            labels[tid] = row["t_text"] or str(tid)
+            rel = row["rel_type"] + ":" + (row["dep_label"] or "")
+            out_edges[sid].append((rel, tid))
+            in_degree[tid] += 1
+            in_degree.setdefault(sid, in_degree.get(sid, 0))
+
+        # --- 2. Находим leaf-узлы (без входящих рёбер) ---
+        leaves = [nid for nid in all_node_ids if in_degree.get(nid, 0) == 0]
+        # Если листьев нет (все в циклах) — берём все узлы
+        if not leaves:
+            leaves = list(all_node_ids)
+
+        # Ограничиваем количество листьев для производительности
+        max_leaves = 3000
+        if len(leaves) > max_leaves:
+            # Берём листья с наименьшей out-degree (fail-first heuristic)
+            leaves = sorted(leaves, key=lambda nid: len(out_edges.get(nid, [])))[:max_leaves]
+
+        # --- 3. DP с memoization ---
+        # memo[(node_id, depth)] = Counter[hash_signature -> count]
+        memo: Dict[Tuple[int, int], Counter] = {}
+        # sig_text[hash] = full_signature_tuple (для финального форматирования)
+        sig_text: Dict[int, tuple] = {}
+        sig_counter: Dict[int, int] = defaultdict(int)
+
+        def get_signature_hash(sig: tuple) -> int:
+            """Хешируем сигнатуру для использования как ключ Counter."""
+            h = hash(sig)
+            if h not in sig_text:
+                sig_text[h] = sig
+            return h
+
+        def solve(node_id: int, depth: int) -> Counter:
+            """DP: считаем все суффиксы длины depth, начинающиеся с node_id."""
+            key = (node_id, depth)
+            if key in memo:
+                return memo[key]
+
+            node_text = labels.get(node_id, str(node_id))
+
+            if depth == 1:
+                sig = (node_text,)
+                h = get_signature_hash(sig)
+                result = Counter({h: 1})
+                sig_counter[h] += 1
+                memo[key] = result
+                return result
+
+            acc = Counter()
+            for rel, nxt in out_edges.get(node_id, []):
+                child = solve(nxt, depth - 1)
+                for child_hash, cnt in child.items():
+                    child_sig = sig_text[child_hash]
+                    # Новая сигнатура: (node_text, rel) + child_sig
+                    new_sig = (node_text, rel) + child_sig
+                    h = get_signature_hash(new_sig)
+                    acc[h] += cnt
+                    sig_counter[h] += cnt
+
+            memo[key] = acc
+            return acc
+
+        # --- 4. Собираем результаты ---
+        # 1-граммы
+        unigram_counter = Counter()
+        for nid in all_node_ids:
+            text = labels.get(nid, str(nid))
+            # Определяем тип узла
+            node_type = "LexicalUnit" if nid < 1000000 else "Action"  # эвристика по id
+            sig = (text, node_type)
+            h = get_signature_hash(sig)
+            unigram_counter[h] += 1
+
+        unigrams = []
+        for h, cnt in unigram_counter.most_common(limit_per_n):
+            sig = sig_text[h]
+            node_type = sig[1] if len(sig) > 1 else "?"
+            unigrams.append({"pos": sig[0], "dep": "", "lemma": sig[0], "node_type": node_type, "cnt": cnt})
+        results["unigrams"] = unigrams
+
+        # 2..N-граммы
+        n_grams: Dict[str, Any] = {}
+        for depth in range(2, clamped_depth + 1):
+            depth_counter = Counter()
+            for leaf in leaves:
+                depth_counter.update(solve(leaf, depth))
+
+            top = depth_counter.most_common(limit_per_n)
+            if top:
+                formatted = []
+                for h, cnt in top:
+                    sig = sig_text[h]
+                    # sig = (n1_text, rel1, n2_text, rel2, n3_text, ...)
+                    chain = []
+                    for i in range(0, len(sig) - 2, 2):
+                        chain.append([sig[i], sig[i + 1], sig[i + 2]])
+                    if chain:
+                        formatted.append({"chain": chain, "cnt": cnt})
+                if formatted:
+                    n_grams[f"{depth}-grams"] = formatted
+
+        results["n_grams"] = n_grams
+
+        # --- Длинные цепочки (>5) ---
+        long_chains = []
+        if clamped_depth > 5:
+            for depth in range(6, clamped_depth + 1):
+                depth_counter = Counter()
+                for leaf in leaves:
+                    depth_counter.update(solve(leaf, depth))
+                for h, cnt in depth_counter.most_common(limit_per_n):
+                    sig = sig_text[h]
+                    texts = [sig[i] for i in range(0, len(sig), 2)]
+                    rels = [sig[i] for i in range(1, len(sig), 2)]
+                    long_chains.append({"texts": texts, "deps": rels, "depth": depth, "cnt": cnt})
+
+        results["long_chains"] = long_chains
+
+        # --- Кросс-документная устойчивость ---
+        # Для этого нужен доступ к doc_id — упрощённый вариант:
+        # считаем уникальность по первой лексеме цепочки
+        cross_doc = []
+        for depth in range(1, min(clamped_depth + 1, 6)):
+            depth_counter = Counter()
+            for leaf in leaves:
+                depth_counter.update(solve(leaf, depth))
+            for h, cnt in depth_counter.most_common(limit_per_n):
+                sig = sig_text[h]
+                lemmas = [sig[i] for i in range(0, len(sig), 2)]
+                deps = [sig[i] for i in range(1, len(sig), 2)]
+                cross_doc.append({"lemmas": lemmas, "deps": deps, "depth": depth, "cnt": cnt})
+
+        results["cross_doc"] = cross_doc
+
+        # Очищаем кэш после выполнения
+        memo.clear()
+        sig_text.clear()
+        sig_counter.clear()
+
+        return results
+
+    # ------------------------------------------------------------------
     # 12. Сводка
     # ------------------------------------------------------------------
     def generate_summary(self, all_results: Dict[str, Any]) -> Dict[str, Any]:

@@ -29,8 +29,26 @@ export default function GlobalLinguisticGraph() {
     const [simulationProgress, setSimulationProgress] = useState<string | null>(null);
     const [layoutComputed, setLayoutComputed] = useState(false);
     const [dataLevel, setDataLevel] = useState<'overview' | 'detailed' | 'full'>('overview');
+    const [containerSize, setContainerSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+    const containerRef = useRef<HTMLDivElement>(null);
     const viewportRef = useRef<ViewportRef>(null);
     const cancelRef = useRef(false);
+
+    // Track container size
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const ro = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const { width, height } = entry.contentRect;
+                if (width > 0 && height > 0) {
+                    setContainerSize({ width, height });
+                }
+            }
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
 
     const loadConfig = useMemo(() => ({
         overview: { lexicalLimit: 500, actionLimit: 500, edgeLimit: 1500 },
@@ -170,8 +188,8 @@ export default function GlobalLinguisticGraph() {
     }
 
     return (
-        <div className={styles.container}>
-            <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
+        <div className={styles.container} ref={containerRef}>
+            <Application width={containerSize.width} height={containerSize.height} backgroundColor={0xf5f5f5}>
                 <Viewport ref={viewportRef}>
                     <ScaleTracker scale={scale} setScale={setScale} viewportRef={viewportRef} />
                     <NodesLayer nodes={nodes} visibleIds={visibleIds} scale={scale} lod={initialLod} />

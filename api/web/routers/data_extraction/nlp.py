@@ -2,9 +2,11 @@
 import json
 import logging
 import asyncio
+import os
 from datetime import datetime
 from typing import Dict, Any
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from neo4j import GraphDatabase
 
 from src.schemas.api import NLPAnalyzeRequest
 from services.annotation_service import AnnotationService
@@ -391,3 +393,55 @@ async def get_multilevel_analyzer_info():
             "status": "error",
             "message": f"Error connecting to NLP service: {str(e)}"
         }
+
+
+@router.get("/nlp/dependency-ngrams")
+async def get_dependency_ngrams(
+    max_depth: int = 5,
+    limit_per_n: int = 50,
+):
+    """
+    Поиск dependency n-gram паттернов в Neo4j.
+
+    Аналог логики из блокнота pattern_recognition.rus.ipynb:
+    для каждого токена поднимаемся по дереву зависимостей к корню,
+    собираем цепочки и считаем частоту.
+
+    Оптимизировано для памяти: стартуем от leaf-узлов (без входящих рёбер),
+    максимум 2000 стартовых узлов, только связи DEPENDS_ON.
+
+    Args:
+        max_depth: максимальная глубина подъёма (1..10, по умолчанию 5)
+        limit_per_n: лимит топ паттернов для каждой длины цепочки (по умолчанию 50)
+
+    Returns:
+        {"unigrams": [...], "n_grams": {"2-grams": [...], ...}, "cross_doc": [...]}
+    """
+    try:
+        uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        user = os.getenv("NEO4J_USER", "neo4j")
+        password = os.getenv("NEO4J_PASSWORD", "password")
+
+        driver = GraphDatabase.driver(uri, auth=(user, password))
+        analyzer = __import__(
+            "application.patterns.unified_pattern_analyzer",
+            fromlist=["UnifiedPatternAnalyzer"],
+        ).UnifiedPatternAnalyzer(driver)
+
+        result = analyzer.analyze_dependency_ngrams(
+            max_depth=max_depth,
+            limit_per_n=limit_per_n,
+        )
+        driver.close()
+
+        return {
+            "success": True,
+            "max_depth": max_depth,
+            "limit_per_n": limit_per_n,
+            **result,
+        }
+    except ImportError:
+        raise HTTPException(status_code=500, detail="UnifiedPatternAnalyzer не найден")
+    except Exception as e:
+        logger.error(f"Ошибка dependency n-gram анализа: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Ошибка анализа: {str(e)}")
