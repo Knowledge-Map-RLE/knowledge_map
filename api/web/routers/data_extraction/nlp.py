@@ -445,3 +445,70 @@ async def get_dependency_ngrams(
     except Exception as e:
         logger.error(f"Ошибка dependency n-gram анализа: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Ошибка анализа: {str(e)}")
+
+
+@router.get("/nlp/pattern-context")
+async def get_pattern_context(
+    node_ids: str = Query(..., description="JSON-массив node_id цепочки, например [123,456,789]"),
+):
+    """
+    Для заданной цепочки node_id возвращает sentence_text каждого узла.
+    
+    Action: берём a.sentence_text напрямую.
+    LexicalUnit: идём через PART_OF → Action.
+    """
+    try:
+        node_id_list = json.loads(node_ids)
+        if not isinstance(node_id_list, list):
+            raise ValueError("node_ids должен быть JSON-массивом")
+    except (json.JSONDecodeError, ValueError) as e:
+        raise HTTPException(status_code=400, detail=f"Некорректный node_ids: {e}")
+
+    try:
+        uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        user = os.getenv("NEO4J_USER", "neo4j")
+        password = os.getenv("NEO4J_PASSWORD", "password")
+
+        driver = GraphDatabase.driver(uri, auth=(user, password))
+        sentences = [""] * len(node_id_list)
+
+        with driver.session() as session:
+            # Batched запрос: один раз для всех Action, один раз для всех LexicalUnit
+            # Action напрямую
+            result = session.run(
+                "UNWIND $nids AS nid "
+                "MATCH (a:Action) WHERE id(a) = toInteger(nid) "
+                "RETURN id(a) AS nid, a.sentence_text AS sentence_text",
+                {"nids": node_id_list},
+            )
+            for record in result:
+                idx = node_id_list.index(record["nid"])
+                sentences[idx] = record.get("sentence_text") or ""
+
+            # LexicalUnit через PART_OF → Action (только для тех где ещё нет sentence)
+            missing = [nid for i, nid in enumerate(node_id_list) if not sentences[i]]
+            if missing:
+                result = session.run(
+                    "UNWIND $nids AS nid "
+                    "MATCH (lu:LexicalUnit)-[:PART_OF]->(a:Action) "
+                    "WHERE id(lu) = toInteger(nid) "
+                    "RETURN id(lu) AS nid, a.sentence_text AS sentence_text",
+                    {"nids": missing},
+                )
+                for record in result:
+                    nid = record["nid"]
+                    idx = node_id_list.index(nid)
+                    sentences[idx] = record.get("sentence_text") or ""
+
+        driver.close()
+
+        return {
+            "success": True,
+            "node_ids": node_id_list,
+            "sentences": sentences,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Ошибка получения контекста паттерна: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Ошибка: {str(e)}")

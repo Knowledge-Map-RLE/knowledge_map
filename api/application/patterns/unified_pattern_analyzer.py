@@ -497,19 +497,20 @@ class UnifiedPatternAnalyzer:
         return {"verb_obj_stability": verb_obj, "svo_stability": svo}
 
     # ------------------------------------------------------------------
-    # 13. Dependency N-grams (DP с memoization — замена экспоненциального перебора)
+    # 13. Dependency N-grams (DP с memoization + exemplars)
     # ------------------------------------------------------------------
-    def analyze_dependency_ngrams(self, max_depth: int = 5, limit_per_n: int = 50) -> Dict[str, Any]:
+    def analyze_dependency_ngrams(self, max_depth: int = 5, limit_per_n: int = 50, max_exemplars: int = 100) -> Dict[str, Any]:
         """
         Точный подсчёт dependency n-gram паттернов через dynamic programming.
 
         Вместо MATCH path = ()-[:...*N]->() (комбинаторный взрыв) используем:
         1. Загружаем граф в память (adjacency list)
-        2. Находим SCC и сжимаем циклы → DAG
-        3. DP: memo[node, depth] → Counter сигнатур
-        4. Агрегируем снизу вверх от leaf-узлов
+        2. DP: memo[node, depth] → Counter сигнатур + exemplars (цепочки node_id)
+        3. Агрегируем снизу вверх от leaf-узлов
 
         Поддерживает: DEPENDS_ON, PART_OF, LEADS_TO + LexicalUnit, Action.
+
+        :param max_exemplars: макс. число уникальных цепочек node_id на сигнатуру (по умолчанию 100)
         """
         from collections import Counter, defaultdict
 
@@ -517,7 +518,6 @@ class UnifiedPatternAnalyzer:
         clamped_depth = max(1, min(max_depth, 10))
 
         # --- 1. Загружаем граф в память ---
-        # Запрашиваем ВСЕ рёбра трёх типов + оба типа узлов
         edges_data = self._run_query("""
             MATCH (s)-[r:DEPENDS_ON|PART_OF|LEADS_TO]->(t)
             WHERE (s:LexicalUnit OR s:Action) AND (t:LexicalUnit OR t:Action)
@@ -535,9 +535,10 @@ class UnifiedPatternAnalyzer:
         """)
 
         labels: Dict[int, str] = {}
-        out_edges: Dict[int, List[Tuple[str, int]]] = defaultdict(list)  # node_id -> [(rel, target_id), ...]
+        out_edges: Dict[int, List[Tuple[str, int]]] = defaultdict(list)
         in_degree: Dict[int, int] = defaultdict(int)
         all_node_ids: set = set()
+        node_types: Dict[int, str] = {}
 
         for row in edges_data:
             sid, tid = row["sid"], row["tid"]
@@ -549,35 +550,32 @@ class UnifiedPatternAnalyzer:
             out_edges[sid].append((rel, tid))
             in_degree[tid] += 1
             in_degree.setdefault(sid, in_degree.get(sid, 0))
+            if sid not in node_types:
+                node_types[sid] = "Action" if sid < 1000000 else "LexicalUnit"
+            if tid not in node_types:
+                node_types[tid] = "Action" if tid < 1000000 else "LexicalUnit"
 
-        # --- 2. Находим leaf-узлы (без входящих рёбер) ---
+        # --- 2. Находим leaf-узлы ---
         leaves = [nid for nid in all_node_ids if in_degree.get(nid, 0) == 0]
-        # Если листьев нет (все в циклах) — берём все узлы
         if not leaves:
             leaves = list(all_node_ids)
-
-        # Ограничиваем количество листьев для производительности
         max_leaves = 3000
         if len(leaves) > max_leaves:
-            # Берём листья с наименьшей out-degree (fail-first heuristic)
             leaves = sorted(leaves, key=lambda nid: len(out_edges.get(nid, [])))[:max_leaves]
 
-        # --- 3. DP с memoization ---
-        # memo[(node_id, depth)] = Counter[hash_signature -> count]
+        # --- 3. DP с memoization + exemplars ---
         memo: Dict[Tuple[int, int], Counter] = {}
-        # sig_text[hash] = full_signature_tuple (для финального форматирования)
+        exemplars: Dict[int, List[List[int]]] = defaultdict(list)
+        exemplars_set: Dict[int, set] = defaultdict(set)
         sig_text: Dict[int, tuple] = {}
-        sig_counter: Dict[int, int] = defaultdict(int)
 
         def get_signature_hash(sig: tuple) -> int:
-            """Хешируем сигнатуру для использования как ключ Counter."""
             h = hash(sig)
             if h not in sig_text:
                 sig_text[h] = sig
             return h
 
         def solve(node_id: int, depth: int) -> Counter:
-            """DP: считаем все суффиксы длины depth, начинающиеся с node_id."""
             key = (node_id, depth)
             if key in memo:
                 return memo[key]
@@ -588,7 +586,11 @@ class UnifiedPatternAnalyzer:
                 sig = (node_text,)
                 h = get_signature_hash(sig)
                 result = Counter({h: 1})
-                sig_counter[h] += 1
+                if len(exemplars_set[h]) < max_exemplars:
+                    chain_key = (node_id,)
+                    if chain_key not in exemplars_set[h]:
+                        exemplars_set[h].add(chain_key)
+                        exemplars[h].append([node_id])
                 memo[key] = result
                 return result
 
@@ -597,11 +599,20 @@ class UnifiedPatternAnalyzer:
                 child = solve(nxt, depth - 1)
                 for child_hash, cnt in child.items():
                     child_sig = sig_text[child_hash]
-                    # Новая сигнатура: (node_text, rel) + child_sig
                     new_sig = (node_text, rel) + child_sig
                     h = get_signature_hash(new_sig)
                     acc[h] += cnt
-                    sig_counter[h] += cnt
+                    if len(exemplars_set[h]) < max_exemplars:
+                        for child_chain in exemplars.get(child_hash, []):
+                            new_chain = [node_id] + child_chain
+                            chain_key = tuple(new_chain)
+                            if chain_key not in exemplars_set[h]:
+                                exemplars_set[h].add(chain_key)
+                                exemplars[h].append(new_chain)
+                                if len(exemplars_set[h]) >= max_exemplars:
+                                    break
+                    if len(exemplars_set[h]) >= max_exemplars:
+                        break
 
             memo[key] = acc
             return acc
@@ -609,39 +620,66 @@ class UnifiedPatternAnalyzer:
         # --- 4. Собираем результаты ---
         # 1-граммы
         unigram_counter = Counter()
+        unigram_exemplars: Dict[int, List[List[int]]] = defaultdict(list)
+        unigram_exemplars_set: Dict[int, set] = defaultdict(set)
+
         for nid in all_node_ids:
             text = labels.get(nid, str(nid))
-            # Определяем тип узла
-            node_type = "LexicalUnit" if nid < 1000000 else "Action"  # эвристика по id
-            sig = (text, node_type)
+            ntype = node_types.get(nid, "?")
+            sig = (text, ntype)
             h = get_signature_hash(sig)
             unigram_counter[h] += 1
+            if len(unigram_exemplars_set[h]) < max_exemplars:
+                if nid not in unigram_exemplars_set[h]:
+                    unigram_exemplars_set[h].add(nid)
+                    unigram_exemplars[h].append([nid])
 
         unigrams = []
         for h, cnt in unigram_counter.most_common(limit_per_n):
             sig = sig_text[h]
-            node_type = sig[1] if len(sig) > 1 else "?"
-            unigrams.append({"pos": sig[0], "dep": "", "lemma": sig[0], "node_type": node_type, "cnt": cnt})
+            ntype = sig[1] if len(sig) > 1 else "?"
+            unigrams.append({
+                "pos": sig[0], "dep": "", "lemma": sig[0],
+                "node_type": ntype, "cnt": cnt,
+                "sig_hash": str(h),
+                "exemplars": unigram_exemplars.get(h, [])[:max_exemplars],
+            })
         results["unigrams"] = unigrams
 
         # 2..N-граммы
         n_grams: Dict[str, Any] = {}
         for depth in range(2, clamped_depth + 1):
             depth_counter = Counter()
+            depth_exemplars: Dict[int, List[List[int]]] = defaultdict(list)
+            depth_exemplars_set: Dict[int, set] = defaultdict(set)
+
             for leaf in leaves:
-                depth_counter.update(solve(leaf, depth))
+                leaf_counter = solve(leaf, depth)
+                depth_counter.update(leaf_counter)
+                for h in leaf_counter:
+                    if len(depth_exemplars_set[h]) < max_exemplars:
+                        for chain in exemplars.get(h, []):
+                            chain_key = tuple(chain)
+                            if chain_key not in depth_exemplars_set[h]:
+                                depth_exemplars_set[h].add(chain_key)
+                                depth_exemplars[h].append(chain)
+                                if len(depth_exemplars_set[h]) >= max_exemplars:
+                                    break
 
             top = depth_counter.most_common(limit_per_n)
             if top:
                 formatted = []
                 for h, cnt in top:
                     sig = sig_text[h]
-                    # sig = (n1_text, rel1, n2_text, rel2, n3_text, ...)
                     chain = []
                     for i in range(0, len(sig) - 2, 2):
                         chain.append([sig[i], sig[i + 1], sig[i + 2]])
                     if chain:
-                        formatted.append({"chain": chain, "cnt": cnt})
+                        formatted.append({
+                            "chain": chain, "cnt": cnt,
+                            "sig_hash": str(h),
+                            "exemplars": depth_exemplars.get(h, [])[:max_exemplars],
+                        })
                 if formatted:
                     n_grams[f"{depth}-grams"] = formatted
 
@@ -652,19 +690,32 @@ class UnifiedPatternAnalyzer:
         if clamped_depth > 5:
             for depth in range(6, clamped_depth + 1):
                 depth_counter = Counter()
+                depth_exemplars: Dict[int, List[List[int]]] = defaultdict(list)
+                depth_exemplars_set: Dict[int, set] = defaultdict(set)
                 for leaf in leaves:
-                    depth_counter.update(solve(leaf, depth))
+                    leaf_counter = solve(leaf, depth)
+                    depth_counter.update(leaf_counter)
+                    for h in leaf_counter:
+                        if len(depth_exemplars_set[h]) < max_exemplars:
+                            for chain in exemplars.get(h, []):
+                                chain_key = tuple(chain)
+                                if chain_key not in depth_exemplars_set[h]:
+                                    depth_exemplars_set[h].add(chain_key)
+                                    depth_exemplars[h].append(chain)
+
                 for h, cnt in depth_counter.most_common(limit_per_n):
                     sig = sig_text[h]
                     texts = [sig[i] for i in range(0, len(sig), 2)]
                     rels = [sig[i] for i in range(1, len(sig), 2)]
-                    long_chains.append({"texts": texts, "deps": rels, "depth": depth, "cnt": cnt})
+                    long_chains.append({
+                        "texts": texts, "deps": rels, "depth": depth, "cnt": cnt,
+                        "sig_hash": str(h),
+                        "exemplars": depth_exemplars.get(h, [])[:max_exemplars],
+                    })
 
         results["long_chains"] = long_chains
 
         # --- Кросс-документная устойчивость ---
-        # Для этого нужен доступ к doc_id — упрощённый вариант:
-        # считаем уникальность по первой лексеме цепочки
         cross_doc = []
         for depth in range(1, min(clamped_depth + 1, 6)):
             depth_counter = Counter()
@@ -678,10 +729,11 @@ class UnifiedPatternAnalyzer:
 
         results["cross_doc"] = cross_doc
 
-        # Очищаем кэш после выполнения
+        # Очищаем кэш
         memo.clear()
         sig_text.clear()
-        sig_counter.clear()
+        exemplars.clear()
+        exemplars_set.clear()
 
         return results
 

@@ -17,6 +17,7 @@
     background: #f9f9f9;
     border-bottom: 1px solid #e0e0e0;
     flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
 .controlGroup {
@@ -65,6 +66,34 @@
 .analyzeButton:disabled {
     background: #bbb;
     cursor: not-allowed;
+}
+
+/* Mode toggle */
+.modeToggle {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.modeBtn {
+    padding: 6px 14px;
+    border: none;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.15s ease;
+}
+
+.modeBtn:hover {
+    background: #e8e8e8;
+}
+
+.modeBtn.active {
+    background: #2196F3;
+    color: #fff;
 }
 
 /* Loading */
@@ -237,4 +266,92 @@
     text-align: center;
     color: #999;
     font-size: 14px;
+}
+
+/* Accordion for context mode */
+.accordion {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    margin: 4px 0;
+    background: #fafafa;
+}
+
+.accordionSummary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2196F3;
+    list-style: none;
+    user-select: none;
+}
+
+.accordionSummary::-webkit-details-marker {
+    display: none;
+}
+
+.accordionSummary:hover {
+    background: #f0f0f0;
+}
+
+.accordionIcon {
+    font-size: 10px;
+    transition: transform 0.15s ease;
+    color: #999;
+}
+
+.accordion[open] .accordionIcon {
+    transform: rotate(90deg);
+}
+
+.accordionContent {
+    padding: 8px 12px 12px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Instance row */
+.instanceRow {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: flex-start;
+}
+
+.instanceRow:last-child {
+    border-bottom: none;
+}
+
+.chainNumber {
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+    min-width: 28px;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.sentenceChain {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.sentence {
+    padding: 6px 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #333;
+    border-left: 3px solid #2196F3;
+}
+
+.noSentence {
+    color: #bbb;
+    font-style: italic;
 }

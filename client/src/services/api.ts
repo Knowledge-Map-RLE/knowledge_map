@@ -1237,6 +1237,16 @@ export async function getDependencyNgrams(maxDepth = 5, limitPerN = 50): Promise
   return fetchJson(`/api/data_extraction/nlp/dependency-ngrams?max_depth=${maxDepth}&limit_per_n=${limitPerN}`);
 }
 
+export interface PatternContextResponse {
+  success: boolean;
+  node_ids: number[];
+  sentences: string[];
+}
+
+export async function getPatternContext(nodeIds: number[]): Promise<PatternContextResponse> {
+  return fetchJson(`/api/data_extraction/nlp/pattern-context?node_ids=${encodeURIComponent(JSON.stringify(nodeIds))}`);
+}
+
 export interface KnowledgeMapPageResponse {
   success: boolean;
   blocks: Array<{

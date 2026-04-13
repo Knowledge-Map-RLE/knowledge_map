@@ -1,11 +1,13 @@
 /**
  * DependencyNgramTable — таблица dependency n-gram паттернов из Neo4j.
- * Отображает цепочки зависимостей (1-грамма..N-грамма) с частотой и кросс-документностью.
+ * Два режима: «Цепочки» (абстрактные токены) и «Контекст» (цепочки предложений).
  */
-import { useState } from 'react';
-import { getDependencyNgrams } from '../../services/api';
-import type { DependencyNgramResponse } from '../../services/api';
+import { useState, useCallback } from 'react';
+import { getDependencyNgrams, getPatternContext } from '../../services/api';
+import type { DependencyNgramResponse, PatternContextResponse } from '../../services/api';
 import s from './DependencyNgramTable.module.css';
+
+type ViewMode = 'chains' | 'context';
 
 export default function DependencyNgramTable() {
     const [data, setData] = useState<DependencyNgramResponse | null>(null);
@@ -14,14 +16,18 @@ export default function DependencyNgramTable() {
     const [maxDepth, setMaxDepth] = useState(5);
     const [limitPerN, setLimitPerN] = useState(50);
     const [activeSection, setActiveSection] = useState<string>('unigrams');
+    const [viewMode, setViewMode] = useState<ViewMode>('chains');
+
+    // Контекст: key = sig_hash, value = {loading, instances: {node_ids, sentences}[]}
+    const [contextCache, setContextCache] = useState<Record<string, { loading: boolean; instances: PatternContextResponse[] }>>({});
 
     const runAnalysis = async () => {
         setLoading(true);
         setError(null);
+        setContextCache({});
         try {
             const result = await getDependencyNgrams(maxDepth, limitPerN);
             setData(result);
-            // Автоматически переключаемся на первую доступную секцию
             if (result.unigrams.length === 0) {
                 const firstNgram = Object.keys(result.n_grams)[0];
                 if (firstNgram) setActiveSection(firstNgram);
@@ -36,11 +42,26 @@ export default function DependencyNgramTable() {
         }
     };
 
+    const loadContext = useCallback(async (sigHash: string, exemplars: number[][]) => {
+        if (contextCache[sigHash]) return;
+        setContextCache(prev => ({ ...prev, [sigHash]: { loading: true, instances: [] } }));
+
+        const instances: PatternContextResponse[] = [];
+        for (const chain of exemplars) {
+            try {
+                const ctx = await getPatternContext(chain);
+                instances.push(ctx);
+            } catch {
+                // Пропускаем ошибки отдельных цепочек
+            }
+        }
+
+        setContextCache(prev => ({ ...prev, [sigHash]: { loading: false, instances } }));
+    }, [contextCache]);
+
     const formatChain = (chain: string[][]) => {
-        // Формат: "token1 (dep1) → token2 (dep2) → token3"
         if (!chain || chain.length === 0) return '—';
-        const parts = chain.map(([tok, dep, _head]) => `${tok} (${dep})`);
-        // Добавляем последний head
+        const parts = chain.map(([tok, dep]) => `${tok} (${dep})`);
         const lastHead = chain[chain.length - 1]?.[2];
         if (lastHead) parts.push(lastHead);
         return parts.join(' → ');
@@ -63,6 +84,47 @@ export default function DependencyNgramTable() {
             return true;
         }
     ) : [];
+
+    // Render context accordion for a single pattern
+    const renderContextAccordion = (sigHash: string, exemplars: number[][], cnt: number) => {
+        const cache = contextCache[sigHash];
+        const hasExemplars = exemplars && exemplars.length > 0;
+
+        return (
+            <details className={s.accordion} onToggle={(e) => {
+                const details = e.currentTarget;
+                if (details.open && !cache && hasExemplars) {
+                    loadContext(sigHash, exemplars);
+                }
+            }}>
+                <summary className={s.accordionSummary}>
+                    <span className={s.accordionIcon}>▶</span>
+                    <span>{cnt} instances</span>
+                </summary>
+                <div className={s.accordionContent}>
+                    {!hasExemplars && <p className={s.empty}>Нет доступных экземпляров для этого паттерна.</p>}
+                    {cache?.loading && (
+                        <div className={s.loading}>
+                            <div className={s.spinner}></div>
+                            <p>Загрузка контекста...</p>
+                        </div>
+                    )}
+                    {cache && !cache.loading && cache.instances.map((inst, i) => (
+                        <div key={i} className={s.instanceRow}>
+                            <span className={s.chainNumber}>#{i + 1}</span>
+                            <div className={s.sentenceChain}>
+                                {inst.sentences.map((sent, j) => (
+                                    <div key={j} className={s.sentence}>
+                                        {sent || <em className={s.noSentence}>нет предложения</em>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </details>
+        );
+    };
 
     return (
         <div className={s.container}>
@@ -88,9 +150,23 @@ export default function DependencyNgramTable() {
                         min={10}
                         max={1000}
                         value={limitPerN}
-                        onChange={(e) => setLimitPerN(Math.max(10, Math.min(1000, parseInt(e.target.value) || 100)))}
+                        onChange={(e) => setLimitPerN(Math.max(10, Math.min(1000, parseInt(e.target.value) || 50)))}
                         className={s.numberInput}
                     />
+                </div>
+                <div className={s.modeToggle}>
+                    <button
+                        className={`${s.modeBtn} ${viewMode === 'chains' ? s.active : ''}`}
+                        onClick={() => setViewMode('chains')}
+                    >
+                        Цепочки
+                    </button>
+                    <button
+                        className={`${s.modeBtn} ${viewMode === 'context' ? s.active : ''}`}
+                        onClick={() => setViewMode('context')}
+                    >
+                        Контекст
+                    </button>
                 </div>
                 <button
                     onClick={runAnalysis}
@@ -140,7 +216,6 @@ export default function DependencyNgramTable() {
                                     <tr>
                                         <th>Тип</th>
                                         <th>POS</th>
-                                        <th>Dependency</th>
                                         <th>Lemma</th>
                                         <th>Частота</th>
                                     </tr>
@@ -150,7 +225,6 @@ export default function DependencyNgramTable() {
                                         <tr key={i}>
                                             <td><span className={`${s.posTag} ${s[`type_${row.node_type?.toLowerCase()}`] || ''}`}>{row.node_type || '—'}</span></td>
                                             <td><span className={s.posTag}>{row.pos || '—'}</span></td>
-                                            <td>{row.dep || '—'}</td>
                                             <td>{row.lemma || '—'}</td>
                                             <td className={s.count}>{row.cnt}</td>
                                         </tr>
@@ -163,17 +237,28 @@ export default function DependencyNgramTable() {
                             <table className={s.table}>
                                 <thead>
                                     <tr>
-                                        <th style={{ width: '70%' }}>Паттерн (цепочка)</th>
+                                        <th style={{ width: viewMode === 'context' ? '50%' : '70%' }}>Паттерн (цепочка)</th>
                                         <th>Частота</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {data.n_grams[activeSection].map((row, i) => (
                                         <tr key={i}>
-                                            <td className={s.chainCell} title={formatChain(row.chain)}>
-                                                {formatChain(row.chain)}
-                                            </td>
-                                            <td className={s.count}>{row.cnt}</td>
+                                            {viewMode === 'context' ? (
+                                                <>
+                                                    <td>{formatChain(row.chain)}</td>
+                                                    <td className={s.count}>
+                                                        {renderContextAccordion(row.sig_hash, row.exemplars || [], row.cnt)}
+                                                    </td>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <td className={s.chainCell} title={formatChain(row.chain)}>
+                                                        {formatChain(row.chain)}
+                                                    </td>
+                                                    <td className={s.count}>{row.cnt}</td>
+                                                </>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -184,7 +269,7 @@ export default function DependencyNgramTable() {
                             <table className={s.table}>
                                 <thead>
                                     <tr>
-                                        <th style={{ width: '70%' }}>Паттерн</th>
+                                        <th style={{ width: viewMode === 'context' ? '50%' : '70%' }}>Паттерн</th>
                                         <th>Глубина</th>
                                         <th>Частота</th>
                                     </tr>
@@ -192,11 +277,23 @@ export default function DependencyNgramTable() {
                                 <tbody>
                                     {data.long_chains.map((row, i) => (
                                         <tr key={i}>
-                                            <td className={s.chainCell} title={formatLongChain(row.texts, row.rel_types)}>
-                                                {formatLongChain(row.texts, row.rel_types)}
-                                            </td>
-                                            <td>{row.depth}</td>
-                                            <td className={s.count}>{row.cnt}</td>
+                                            {viewMode === 'context' ? (
+                                                <>
+                                                    <td>{formatLongChain(row.texts, row.deps)}</td>
+                                                    <td>{row.depth}</td>
+                                                    <td className={s.count}>
+                                                        {renderContextAccordion(row.sig_hash, row.exemplars || [], row.cnt)}
+                                                    </td>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <td className={s.chainCell} title={formatLongChain(row.texts, row.deps)}>
+                                                        {formatLongChain(row.texts, row.deps)}
+                                                    </td>
+                                                    <td>{row.depth}</td>
+                                                    <td className={s.count}>{row.cnt}</td>
+                                                </>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
