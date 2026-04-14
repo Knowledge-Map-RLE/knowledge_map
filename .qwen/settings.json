@@ -28,7 +28,9 @@
       "Bash(findstr *)",
       "Bash(where-object *)",
       "Bash(d:\\knowledge_map\\client\\node_modules\\.bin\\tsc.cmd *)",
-      "Bash(netstat *)"
+      "Bash(netstat *)",
+      "Bash(docker exec *)",
+      "Bash(d:\\knowledge_map\\client\\node_modules\\.bin\\tsc *)"
     ]
   },
   "$version": 3

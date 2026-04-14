@@ -8,18 +8,7 @@ export default function Knowledge_map_ui() {
 
     return <div className={s.interface}>
         <Header showSearch={true} className={s.header} />
-        <div className={`${s.left} ${s.panel}`}>
-            {!isScientificArticles && <>
-                <h2 className={s.menu_title}>Меню</h2>
-                <nav className={s.main_menu}>
-                    <Link to="/">Карта знаний</Link>
-                    <Link to="/introduction">Введение</Link>
-                    <Link to="/science_articles" title='Подпроект'>Карта научных статей</Link>
-                    <Link to="/data_extraction" title="Исходник → Markdown и данные">Извлечение данных</Link>
-                    <Link to="/nlp">Лингвистика</Link>
-                </nav>
-            </>}
-        </div>
+        <div className={`${s.left} ${s.panel}`}> </div>
         <div className={`${s.center} ${s.panel}`}> </div>
         <div className={`${s.right} ${s.panel}`}>
             <h2>Вклад пользователя в РПЖ</h2>

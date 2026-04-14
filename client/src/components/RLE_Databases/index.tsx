@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import Header from '../Header';
 import s from './RLE_Databases.module.css';
-import Site_map from '../Site_map';
 
 export default function RLE_Databases() {
   return <div className={s.container}>
@@ -14,8 +13,5 @@ export default function RLE_Databases() {
         <a href=''>Сылка</a>
       </div>
     </main>
-    <footer className={s.footer}>
-      <Site_map/>
-    </footer>
   </div>
 }

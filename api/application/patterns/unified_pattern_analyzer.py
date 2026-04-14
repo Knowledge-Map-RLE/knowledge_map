@@ -889,3 +889,75 @@ class UnifiedPatternAnalyzer:
 
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
+
+    # ------------------------------------------------------------------
+    # extract_patterns — делегирует PatternExtractor
+    # ------------------------------------------------------------------
+
+    def extract_patterns(
+        self,
+        max_nodes: int = 100,
+        max_depth: int = 5,
+        limit_per_n: int = 50,
+        min_frequency: int = 1,
+        doc_id: Optional[str] = None,
+        mode: str = "all",
+    ) -> Dict[str, Any]:
+        """
+        Извлекает паттерны как графы Action + LexicalUnit.
+
+        Делегирует PatternExtractor, который включает функциональность,
+        аналогичную analyze_dependency_ngrams.
+
+        :param max_nodes: макс. узлов в паттерне (до 200)
+        :param max_depth: глубина dependency n-grams (1-10)
+        :param limit_per_n: лимит паттернов на длину
+        :param min_frequency: мин. частота
+        :param doc_id: фильтр по документу (None = все)
+        :param mode: "all", "dependency", "action", "mixed"
+        :return: Dict с patterns[], total_patterns, max_nodes_seen
+        """
+        from application.patterns.pattern_extractor import PatternExtractor
+
+        extractor = PatternExtractor(self.driver)
+
+        if mode == "dependency":
+            result = extractor.extract_dependency_ngrams(
+                max_depth=max_depth,
+                limit_per_n=limit_per_n,
+                doc_id=doc_id,
+            )
+        elif mode == "action":
+            result = extractor.extract_action_patterns(
+                max_nodes=max_nodes,
+                min_frequency=min_frequency,
+                doc_id=doc_id,
+            )
+        elif mode == "mixed":
+            result = extractor.extract_mixed_patterns(
+                max_nodes=max_nodes,
+                min_frequency=min_frequency,
+                doc_id=doc_id,
+            )
+        else:  # all
+            result = extractor.extract_all(
+                max_nodes=max_nodes,
+                max_depth=max_depth,
+                limit_per_n=limit_per_n,
+                min_frequency=min_frequency,
+                doc_id=doc_id,
+            )
+
+        logger.info(
+            f"Извлечено {result.total_patterns} паттернов, "
+            f"max_nodes={result.max_nodes_seen}, mode={mode}"
+        )
+
+        return {
+            "success": True,
+            "total_patterns": result.total_patterns,
+            "max_nodes_seen": result.max_nodes_seen,
+            "extraction_mode": result.extraction_mode,
+            "doc_ids": result.doc_ids,
+            "patterns": [p.to_dict() for p in result.patterns],
+        }

@@ -1,5 +1,4 @@
 import Header from '../Header';
-import Site_map from '../Site_map';
 import s from './Landing.module.css';
 
 export default function Landing() {
@@ -447,10 +446,6 @@ export default function Landing() {
         </section>
 
       </main>
-
-      <footer className={s.footer}>
-        <Site_map />
-      </footer>
     </div>
   );
 }

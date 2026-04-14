@@ -122,6 +122,10 @@ app.include_router(auto_review_router.router, prefix="/api/data_extraction")
 app.include_router(shared_actions_router.router, prefix="/api/data_extraction")
 app.include_router(worker_status.router, prefix="/api")
 
+# Паттерны (Action + LexicalUnit графы)
+from web.routers.data_extraction import patterns as patterns_router
+app.include_router(patterns_router.router, prefix="/api/data_extraction")
+
 # Лингвистические паттерны
 from web.routers import linguistic as linguistic_router
 app.include_router(linguistic_router.router)

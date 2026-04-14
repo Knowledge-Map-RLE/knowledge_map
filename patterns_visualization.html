@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта Паттернов — Knowledge Map</title>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0e17;
+            color: #c9d1d9;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 2.5rem 1rem 1rem;
+            background: linear-gradient(180deg, #0d1321 0%, #0a0e17 100%);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e6edf3;
+            letter-spacing: -0.5px;
+        }
+
+        header h1 span {
+            color: #58a6ff;
+        }
+
+        header p {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            color: #8b949e;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Definition box */
+        .definition {
+            max-width: 900px;
+            margin: 1.5rem auto;
+            padding: 1.25rem 1.5rem;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-left: 4px solid #58a6ff;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .definition h3 {
+            color: #58a6ff;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .definition p {
+            color: #8b949e;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .definition code {
+            background: #0d1117;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #ffa657;
+        }
+
+        /* Graph containers */
+        .graphs-section {
+            max-width: 1400px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .graphs-section h2 {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #e6edf3;
+            margin-bottom: 1rem;
+        }
+
+        .graphs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 1rem;
+        }
+
+        .graph-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .graph-card-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #21262d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .graph-card-header h3 {
+            font-size: 0.95rem;
+            color: #e6edf3;
+        }
+
+        .graph-card-header .badge {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .badge-frequency {
+            background: #21262d;
+            color: #ffa657;
+        }
+
+        .graph-card-body {
+            height: 350px;
+            position: relative;
+        }
+
+        .graph-card-body svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .graph-card-footer {
+            padding: 0.6rem 1rem;
+            border-top: 1px solid #21262d;
+            font-size: 0.8rem;
+            color: #8b949e;
+            line-height: 1.5;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.82rem;
+            color: #c9d1d9;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            max-width: 280px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .tooltip strong {
+            color: #58a6ff;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-line {
+            width: 24px;
+            height: 3px;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+
+        .legend-line.dashed {
+            background: repeating-linear-gradient(90deg, #ffa657 0, #ffa657 5px, transparent 5px, transparent 8px);
+        }
+
+        /* Explanation */
+        .explanation {
+            max-width: 1100px;
+            margin: 2rem auto 3rem;
+            padding: 0 1.5rem;
+        }
+
+        .explanation h2 {
+            font-size: 1.5rem;
+            color: #e6edf3;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .explanation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .explanation-card {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .explanation-card:hover {
+            border-color: #30363d;
+        }
+
+        .explanation-card h3 {
+            font-size: 1rem;
+            color: #58a6ff;
+            margin-bottom: 0.6rem;
+        }
+
+        .explanation-card p {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: #8b949e;
+        }
+
+        .explanation-card p strong {
+            color: #c9d1d9;
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 1.5rem;
+            color: #484f58;
+            font-size: 0.8rem;
+            border-top: 1px solid #21262d;
+        }
+
+        @media (max-width: 700px) {
+            .graphs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><span>Knowledge Map</span> — Паттерны как Графы</h1>
+    <p>Визуализация нового определения паттерна: не линейная цепочка, а произвольный подграф из Action и LexicalUnit, связанных LEADS_TO, DEPENDS_ON и PART_OF.</p>
+</header>
+
+<div class="definition">
+    <h3>Что такое паттерн в системе</h3>
+    <p>
+        <strong>Паттерн</strong> — это отдельная модель в БД с собственным ID, представляющая
+        <strong>граф произвольной топологии</strong> (от 1 до ~100 вершин). В него входят:
+        <br><br>
+        Узлы <code>Action</code> — действия (глаголы с зависимыми словами: подлежащее, дополнение, модификаторы).<br>
+        Узлы <code>LexicalUnit</code> — отдельные токены (существительные, прилагательные, наречия).<br>
+        Рёбра <code>LEADS_TO</code> — причинно-следственные связи между Actions.<br>
+        Рёбра <code>DEPENDS_ON</code> — синтаксические зависимости между LexicalUnit.<br>
+        Рёбра <code>PART_OF</code> — принадлежность LexicalUnit к Action.<br>
+        <br>
+        Паттерн масштабируется от юниграммы до 100+ вершин, распространяясь внутри предложений, между предложениями и между документами. Цепочки действий — частный случай паттерна (подграф из одних Action + LEADS_TO).
+    </p>
+</div>
+
+<div class="graphs-section">
+    <h2>5 реальных примеров из Neo4j</h2>
+    <div class="graphs-grid" id="graphs-grid"></div>
+</div>
+
+<div class="legend" id="legend"></div>
+
+<section class="explanation">
+    <h2>Почему это считается паттерном?</h2>
+    <div class="explanation-grid" id="explanation-cards"></div>
+</section>
+
+<div class="footer-note">
+    Данные получены напрямую из Neo4j · Knowledge Map Project · 2026
+</div>
+
+<script>
+// ============================================================
+// DATA: 5 реальных паттернов как графов из Neo4j
+// ============================================================
+
+// --- Паттерн 1: Action-цепочка promote → promote (LEADS_TO) ---
+// promote (420) → promote, subtype=enables
+const pattern1 = {
+    name: 'Action-цепочка: promote → promote',
+    badge: 'LEADS_TO · 420 раз',
+    description: 'promote → promote (enables). Одно действие стимулирует другое — классический причинно-следственный паттерн.',
+    nodes: [
+        { id: 'act1', label: 'promote', type: 'Action', cls: 'action' },
+        { id: 'act2', label: 'promote', type: 'Action', cls: 'action' },
+    ],
+    edges: [
+        { source: 'act1', target: 'act2', type: 'LEADS_TO', label: 'enables' },
+    ],
+    frequency: 420
+};
+
+// --- Паттерн 2: Action-цепочка enhance → promote ---
+// enhance (260) → promote, subtype=enables
+const pattern2 = {
+    name: 'Action-цепочка: enhance → promote',
+    badge: 'LEADS_TO · 260 раз',
+    description: 'enhance → promote (enables). Усиление одного процесса создаёт условия для стимуляции другого.',
+    nodes: [
+        { id: 'act1', label: 'enhance', type: 'Action', cls: 'action' },
+        { id: 'act2', label: 'promote', type: 'Action', cls: 'action' },
+    ],
+    edges: [
+        { source: 'act1', target: 'act2', type: 'LEADS_TO', label: 'enables' },
+    ],
+    frequency: 260
+};
+
+// --- Паттерн 3: Смешанный паттерн — Action + LexicalUnit ---
+// promote (Action) с LU: stress(NOUN,dobj) → oxidative(ADJ), long(ADJ) → term(NOUN)
+const pattern3 = {
+    name: 'Смешанный: promote + LexicalUnit',
+    badge: 'PART_OF + DEPENDS_ON',
+    description: 'Действие «promote» включает существительное «stress» (dobj), которое связано с «oxidative» (amod). Отдельно «long» → «term» (compound).',
+    nodes: [
+        { id: 'act',    label: 'promote',       type: 'Action',     cls: 'action' },
+        { id: 'lu1',    label: 'stress',        type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'dobj' },
+        { id: 'lu2',    label: 'oxidative',     type: 'LexicalUnit', cls: 'adj', pos: 'ADJ', role: 'amod' },
+        { id: 'lu3',    label: 'long',          type: 'LexicalUnit', cls: 'adj', pos: 'ADJ', role: 'compound' },
+        { id: 'lu4',    label: 'term',          type: 'LexicalUnit', cls: 'noun', pos: 'NOUN' },
+    ],
+    edges: [
+        { source: 'lu1', target: 'act',  type: 'PART_OF', label: '' },
+        { source: 'lu2', target: 'lu1',  type: 'DEPENDS_ON', label: 'amod (9)' },
+        { source: 'lu3', target: 'lu4',  type: 'DEPENDS_ON', label: 'compound (8)' },
+    ],
+    frequency: 9
+};
+
+// --- Паттерн 4: Расширенный Action + LU граф ---
+// detect (Action) ← PART_OF ← cell(NOUN) ← DEPENDS_ON ← cancer(NOUN, compound)
+// detect (Action) → LEADS_TO → detect (Action)
+const pattern4 = {
+    name: 'Расширенный: detect + LEADS_TO + LU',
+    badge: 'LEADS_TO + PART_OF + DEPENDS_ON',
+    description: 'Два Action «detect» связаны LEADS_TO. Каждый содержит LexicalUnit: cell (dobj) ← cancer (compound). Полная структура: verb + object + modifier.',
+    nodes: [
+        { id: 'act1',   label: 'detect',     type: 'Action',     cls: 'action' },
+        { id: 'act2',   label: 'detect',     type: 'Action',     cls: 'action' },
+        { id: 'lu1',    label: 'cell',       type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'dobj' },
+        { id: 'lu2',    label: 'cancer',     type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'compound' },
+        { id: 'lu3',    label: 'cell',       type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'dobj' },
+        { id: 'lu4',    label: 'cancer',     type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'compound' },
+    ],
+    edges: [
+        { source: 'act1', target: 'act2',  type: 'LEADS_TO', label: 'enables' },
+        { source: 'lu1', target: 'act1',   type: 'PART_OF', label: '' },
+        { source: 'lu2', target: 'lu1',    type: 'DEPENDS_ON', label: 'compound' },
+        { source: 'lu3', target: 'act2',   type: 'PART_OF', label: '' },
+        { source: 'lu4', target: 'lu3',    type: 'DEPENDS_ON', label: 'compound' },
+    ],
+    frequency: 240
+};
+
+// --- Паттерн 5: Кросс-документный promote через LexicalUnit ---
+// promote (Action) с LU: stress(NOUN) ← oxidative(ADJ), proliferation(NOUN) ← cell(NOUN)
+// promote → LEADS_TO → enhance
+const pattern5 = {
+    name: 'Кросс-документный: promote → enhance',
+    badge: 'mixed · 225 раз',
+    description: 'Действие «promote» содержит существительные stress (dobj), proliferation (dobj) с compound-модификаторами cell. LEADS_TO → enhance.',
+    nodes: [
+        { id: 'act1',   label: 'promote',     type: 'Action',     cls: 'action' },
+        { id: 'act2',   label: 'enhance',     type: 'Action',     cls: 'action' },
+        { id: 'lu1',    label: 'stress',      type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'dobj' },
+        { id: 'lu2',    label: 'oxidative',   type: 'LexicalUnit', cls: 'adj', pos: 'ADJ', role: 'amod' },
+        { id: 'lu3',    label: 'proliferation', type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'dobj' },
+        { id: 'lu4',    label: 'cell',        type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'compound' },
+        { id: 'lu5',    label: 'cancer',      type: 'LexicalUnit', cls: 'noun', pos: 'NOUN', role: 'compound' },
+    ],
+    edges: [
+        { source: 'act1', target: 'act2',  type: 'LEADS_TO', label: 'enables (225)' },
+        { source: 'lu1', target: 'act1',   type: 'PART_OF', label: '' },
+        { source: 'lu2', target: 'lu1',    type: 'DEPENDS_ON', label: 'amod (9)' },
+        { source: 'lu3', target: 'act1',   type: 'PART_OF', label: '' },
+        { source: 'lu4', target: 'lu3',    type: 'DEPENDS_ON', label: 'compound (8)' },
+        { source: 'lu5', target: 'lu4',    type: 'DEPENDS_ON', label: 'compound (7)' },
+    ],
+    frequency: 225
+};
+
+const allPatterns = [pattern1, pattern2, pattern3, pattern4, pattern5];
+
+// ============================================================
+// Node / Edge colors
+// ============================================================
+
+const NODE_COLORS = {
+    action:    '#58a6ff',
+    noun:      '#7ee787',
+    adj:       '#d2a8ff',
+    adv:       '#ffa657',
+    other:     '#8b949e',
+};
+
+const EDGE_COLORS = {
+    'LEADS_TO':     '#f97583',
+    'DEPENDS_ON':   '#79c0ff',
+    'PART_OF':      '#ffa657',
+};
+
+// ============================================================
+// Render each pattern graph
+// ============================================================
+
+const grid = document.getElementById('graphs-grid');
+
+allPatterns.forEach((pattern, idx) => {
+    const card = document.createElement('div');
+    card.className = 'graph-card';
+
+    card.innerHTML = `
+        <div class="graph-card-header">
+            <h3>${pattern.name}</h3>
+            <span class="badge badge-frequency">${pattern.badge}</span>
+        </div>
+        <div class="graph-card-body" id="graph-${idx}">
+            <div class="tooltip" id="tooltip-${idx}"></div>
+        </div>
+        <div class="graph-card-footer">${pattern.description}</div>
+    `;
+    grid.appendChild(card);
+
+    const container = document.getElementById(`graph-${idx}`);
+    const tooltip = document.getElementById(`tooltip-${idx}`);
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    const svg = d3.select(container)
+        .append('svg')
+        .attr('viewBox', [0, 0, width, height]);
+
+    // Arrow marker
+    svg.append('defs').selectAll('marker')
+        .data(['end'])
+        .join('marker')
+        .attr('id', `arrow-${idx}`)
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 20)
+        .attr('refY', 0)
+        .attr('markerWidth', 5)
+        .attr('markerHeight', 5)
+        .attr('orient', 'auto')
+        .append('path')
+        .attr('fill', '#30363d')
+        .attr('d', 'M0,-5L10,0L0,5');
+
+    // Zoom
+    const g = svg.append('g');
+    const zoom = d3.zoom().scaleExtent([0.5, 3]).on('zoom', e => g.attr('transform', e.transform));
+    svg.call(zoom);
+
+    // Nodes
+    const nodes = pattern.nodes.map(n => ({
+        ...n,
+        color: NODE_COLORS[n.cls] || NODE_COLORS.other,
+    }));
+
+    const links = pattern.edges.map(e => ({
+        ...e,
+        color: EDGE_COLORS[e.type] || '#888',
+    }));
+
+    // Links
+    const link = g.selectAll('line')
+        .data(links)
+        .join('line')
+        .attr('stroke', d => d.color)
+        .attr('stroke-opacity', 0.7)
+        .attr('stroke-width', d => d.type === 'LEADS_TO' ? 2.5 : 1.5)
+        .attr('stroke-dasharray', d => d.type === 'PART_OF' ? '6,4' : 'none')
+        .attr('marker-end', d => d.type === 'DEPENDS_ON' || d.type === 'LEADS_TO' ? `url(#arrow-${idx})` : null);
+
+    // Link labels
+    const linkLabel = g.selectAll('.link-label')
+        .data(links.filter(d => d.label))
+        .join('text')
+        .attr('class', 'link-label')
+        .text(d => d.label)
+        .attr('font-size', 8)
+        .attr('fill', '#484f58')
+        .attr('text-anchor', 'middle')
+        .attr('dy', -5);
+
+    // Nodes
+    const node = g.selectAll('.node')
+        .data(nodes)
+        .join('g')
+        .attr('class', 'node')
+        .call(d3.drag()
+            .on('start', dragStarted)
+            .on('drag', dragged)
+            .on('end', dragEnded));
+
+    node.append('circle')
+        .attr('r', d => d.type === 'Action' ? 22 : 14)
+        .attr('fill', d => d.color)
+        .attr('stroke', '#0a0e17')
+        .attr('stroke-width', 2);
+
+    node.append('text')
+        .text(d => d.label)
+        .attr('font-size', d => d.type === 'Action' ? 10 : 8)
+        .attr('fill', '#fff')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '0.35em')
+        .attr('pointer-events', 'none');
+
+    // Node type label below
+    node.append('text')
+        .text(d => d.type === 'Action' ? `(${d.cls})` : d.pos || '')
+        .attr('font-size', 7)
+        .attr('fill', d => d.color)
+        .attr('text-anchor', 'middle')
+        .attr('dy', d => d.type === 'Action' ? 34 : 24)
+        .attr('pointer-events', 'none');
+
+    // Tooltip
+    node.on('mouseover', function(event, d) {
+        d3.select(this).select('circle')
+            .transition().duration(150)
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 2.5);
+        tooltip.innerHTML = `<strong>${d.label}</strong><br>${d.type} · ${d.cls || ''}` +
+            (d.role ? `<br>Роль: ${d.role}` : '');
+        tooltip.style.opacity = 1;
+    })
+    .on('mouseout', function() {
+        d3.select(this).select('circle')
+            .transition().duration(150)
+            .attr('stroke', '#0a0e17')
+            .attr('stroke-width', 2);
+        tooltip.style.opacity = 0;
+    })
+    .on('mousemove', function(event) {
+        tooltip.style.left = (event.offsetX + 15) + 'px';
+        tooltip.style.top = (event.offsetY - 10) + 'px';
+    });
+
+    // Simulation
+    const simulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(links).id(d => d.id).distance(80).strength(0.5))
+        .force('charge', d3.forceManyBody().strength(-250))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius(25));
+
+    simulation.on('tick', () => {
+        link
+            .attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y);
+
+        linkLabel
+            .attr('x', d => (d.source.x + d.target.x) / 2)
+            .attr('y', d => (d.source.y + d.target.y) / 2);
+
+        node.attr('transform', d => `translate(${d.x},${d.y})`);
+    });
+
+    function dragStarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x; d.fy = d.y;
+    }
+    function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+    function dragEnded(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null; d.fy = null;
+    }
+});
+
+// ============================================================
+// Legend
+// ============================================================
+
+const legendData = [
+    { type: 'dot', color: '#58a6ff', label: 'Action (глагол)' },
+    { type: 'dot', color: '#7ee787', label: 'LexicalUnit (NOUN)' },
+    { type: 'dot', color: '#d2a8ff', label: 'LexicalUnit (ADJ)' },
+    { type: 'line', color: '#f97583', label: 'LEADS_TO (Action→Action)' },
+    { type: 'line', color: '#79c0ff', label: 'DEPENDS_ON (LU→LU)' },
+    { type: 'dashed', color: '#ffa657', label: 'PART_OF (LU→Action)' },
+];
+
+const legend = d3.select('#legend');
+legendData.forEach(item => {
+    const div = legend.append('div').attr('class', 'legend-item');
+    if (item.type === 'dot') {
+        div.append('div').attr('class', 'legend-dot').style('background', item.color);
+    } else {
+        const line = div.append('div').attr('class', `legend-line${item.type === 'dashed' ? ' dashed' : ''}`)
+            .style('background', item.color);
+    }
+    div.append('span').text(item.label);
+});
+
+// ============================================================
+// Explanation Cards
+// ============================================================
+
+const explanations = [
+    {
+        title: 'Паттерн — это граф, а не цепочка',
+        text: `Раньше паттерн воспринимался как линейная последовательность токенов или действий. Теперь это <strong>произвольный подграф</strong>: Action-узлы (глаголы с зависимыми словами) связаны с LexicalUnit (существительные, прилагательные, наречия) через рёбра трёх типов. Граф может ветвиться, сходиться, содержать циклы — его топология определяется реальной лингвистической структурой текста.`
+    },
+    {
+        title: 'Action — глагол + контекст',
+        text: `<strong>Action</strong> — это не просто глагол. Это глагол вместе со всеми связанными словами: подлежащим, дополнением, модификаторами. Например, Action «promote» включает NOUN «stress» (dobj) и ADJ «oxidative» (amod к stress). Все эти слова — отдельные LexicalUnit, связанные с Action через <code>PART_OF</code>. Именно это позволяет паттерну масштабироваться.`
+    },
+    {
+        title: 'Три типа рёбер формируют структуру',
+        text: `<code>LEADS_TO</code> — причинно-следственная связь между Actions («promote» ведёт к «enhance»).<br>
+        <code>DEPENDS_ON</code> — синтаксическая зависимость между LexicalUnit («cell» ← compound ← «cancer»).<br>
+        <code>PART_OF</code> — принадлежность слова к действию («stress» является частью действия «promote»).<br><br>
+        Вместе эти три типа рёбер создают <strong>единую графовую структуру</strong>, из которой можно восстановить исходный текст.`
+    },
+    {
+        title: 'Масштаб: от юниграммы до 100+ вершин',
+        text: `Паттерн начинается с одного узла (юниграмма: один Action или один LexicalUnit) и может расти до <strong>100+ вершин</strong>, распространяясь:
+        <br>• <strong>Внутри предложения</strong> — через DEPENDS_ON между словами
+        <br>• <strong>Между предложениями</strong> — через LEADS_TO между Actions
+        <br>• <strong>Между документами</strong> — когда одна и та же структура повторяется в разных источниках
+        <br>Частотность паттерна = сколько раз изоморфный подграф найден в корпусе.`
+    },
+    {
+        title: 'Цепочки действий — частный случай паттерна',
+        text: `Классическая цепочка действий (detect → detect → detect через LEADS_TO) — это паттерн, в котором <strong>все узлы — Actions</strong>, а все рёбра — LEADS_TO. Это подмножество общего определения. Паттерн же шире: он может включать и Action-цепочки, и LexicalUnit-зависимости, и их комбинации одновременно.`
+    },
+    {
+        title: 'Из паттерна восстанавливается текст',
+        text: `Поскольку паттерн хранит полную лингвистическую структуру (все токены, их POS-теги, типы зависимостей, роли), из него можно <strong>восстановить исходный текст</strong> по правилам английского языка: SVO-порядок, прилагательные перед существительными, compound-слияния. Паттерн — это не просто частотная статистика, а самодостаточная лингвистическая структура.`
+    },
+];
+
+const cardsContainer = document.getElementById('explanation-cards');
+explanations.forEach(exp => {
+    const card = document.createElement('div');
+    card.className = 'explanation-card';
+    card.innerHTML = `<h3>${exp.title}</h3><p>${exp.text}</p>`;
+    cardsContainer.appendChild(card);
+});
+</script>
+
+</body>
+</html>

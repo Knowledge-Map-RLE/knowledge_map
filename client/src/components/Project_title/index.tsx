@@ -20,7 +20,7 @@ const links = [
   { to: '/introduction', label: 'Введение' },
   { to: '/science_articles', label: 'Карта научных статей' },
   { to: '/data_extraction', label: 'Извлечение данных' },
-  { to: '/nlp', label: 'Лингвистика' },
+  { to: '/pattern_analysis', label: 'Анализ паттернов' },
 ]
 
 export default function Project_title({ className = '' }: { className: string }) {

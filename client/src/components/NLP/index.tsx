@@ -1,9 +1,9 @@
 /**
- * NLP страница — объединённый лингвистический граф всех статей + dependency n-gram паттерны.
+ * NLP страница — объединённый лингвистический граф всех статей + паттерны как графы.
  */
 import { useState } from 'react'
 import GlobalLinguisticGraph from './GlobalLinguisticGraph'
-import DependencyNgramTable from './DependencyNgramTable'
+import PatternGraphView from './PatternGraphView'
 import s from './NLP.module.css'
 
 type NlpTab = 'graph' | 'patterns'
@@ -30,7 +30,7 @@ export default function NLP() {
 
             <div className={s.content}>
                 {activeTab === 'graph' && <GlobalLinguisticGraph />}
-                {activeTab === 'patterns' && <DependencyNgramTable />}
+                {activeTab === 'patterns' && <PatternGraphView />}
             </div>
         </main>
     )

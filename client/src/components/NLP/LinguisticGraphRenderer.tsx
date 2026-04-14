@@ -21,9 +21,9 @@ export const ACTION_COLORS: Record<string, number> = {
     action: 0x2196F3,
 };
 
-export const ACTION_W = 7;
-export const ACTION_H = 2.5;
-export const LU_RADIUS = 1.25;
+export const ACTION_W = 525;   // 7 * 75
+export const ACTION_H = 187.5; // 2.5 * 75
+export const LU_RADIUS = 93.75; // 1.25 * 75
 
 export const LOD_FULL = 0.35;
 export const LOD_NODES = 0.12;
@@ -294,7 +294,7 @@ export function NodesLayer({ nodes, visibleIds, scale, lod }: {
         }
 
         // Чёткий текст: рендер в крупном размере, scale down
-        const desiredWorldFontSize = 0.75;
+        const desiredWorldFontSize = 56.25;  // 0.75 * 75
         const renderFontSize = 12;
         const textScale = desiredWorldFontSize / renderFontSize;
         const labelMaxChars = 8;

@@ -315,3 +315,75 @@ class LexicalUnit(StructuredNode):
     part_of_action = RelationshipTo("Action", "PART_OF", model=PartOfRel)
     depends_on = RelationshipTo("LexicalUnit", "DEPENDS_ON", model=DependsOnRel)
     depended_by = RelationshipFrom("LexicalUnit", "DEPENDS_ON", model=DependsOnRel)
+
+
+# =============================================================================
+# Pattern — паттерн как граф Action + LexicalUnit
+# =============================================================================
+
+
+class PatternContainsNodeRel(StructuredRel):
+    """
+    Связь Pattern → Action / Pattern → LexicalUnit.
+
+    Хранит семантическую роль узла внутри паттерна и порядок.
+    """
+    role = StringProperty(required=True)          # verb, subject, object, modifier, compound, connector
+    node_type = StringProperty(required=True)     # Action, LexicalUnit
+    original_index = IntegerProperty(default=0)   # порядок в каноническом графе
+    doc_id = StringProperty(index=True)
+
+
+class PatternContainsEdgeRel(StructuredRel):
+    """
+    Мета-связь, описывающая ребро внутри паттерна.
+
+    Pattern-узел хранит рёбра как свойства связей к самому себе (self-loops)
+    или через отдельный узел PatternEdge. Для простоты используем JSON-свойство
+    на Pattern, а этот Rel — для связей Pattern → Pattern (перекрытие).
+    """
+    edge_type = StringProperty(required=True)     # LEADS_TO, DEPENDS_ON, PART_OF
+    relation_subtype = StringProperty()           # enables, nsubj, dobj, ...
+    source_node_id = StringProperty()             # uid исходного узла паттерна
+    target_node_id = StringProperty()             # uid целевого узла паттерна
+
+
+class Pattern(StructuredNode):
+    """
+    Паттерн — отдельная модель в БД с собственным UID.
+
+    Паттерн — это граф из Action и LexicalUnit, связанных рёбрами
+    LEADS_TO, DEPENDS_ON, PART_OF. Масштаб: от 1 узла до ~100.
+
+    Хранит:
+      - Каноническую структуру (узлы + рёбра) через связи CONTAINS_NODE
+      - Статистику (frequency, stability, doc_count)
+      - pattern_hash для дедупликации
+      - edges_json — JSON-массив рёбер паттерна (source_id, target_id, edge_type, relation_subtype)
+    """
+    uid = UniqueIdProperty(primary_key=True)
+    name = StringProperty(default="")
+    description = StringProperty(default="")
+    pattern_hash = StringProperty(index=True)     # SHA256[:16] канонической структуры
+    frequency = IntegerProperty(default=1)         # общее число вхождений
+    stability = FloatProperty(default=0.0)         # docs_with_pattern / total_occurrences
+    doc_count = IntegerProperty(default=0)         # число уникальных документов
+    node_count = IntegerProperty(default=0)        # число узлов в каноническом графе
+    edge_count = IntegerProperty(default=0)        # число рёбер в каноническом графе
+    size_category = StringProperty()               # unigram, small, medium, large, xlarge
+    created_date = DateTimeProperty(default=datetime.utcnow)
+
+    # Рёбра паттерна хранятся как JSON (для компактности)
+    edges_json = StringProperty()                  # JSON-массив {source_id, target_id, edge_type, relation_subtype}
+
+    # Связи к реальным узлам Action и LexicalUnit
+    contains_actions = RelationshipTo(
+        "Action", "CONTAINS_NODE", model=PatternContainsNodeRel
+    )
+    contains_lexical = RelationshipTo(
+        "LexicalUnit", "CONTAINS_NODE", model=PatternContainsNodeRel
+    )
+
+    # Конкретные вхождения паттерна (Pattern → Pattern через FOUND_AS)
+    # Каждое вхождение — отдельный Pattern с is_instance=True
+    found_as = RelationshipTo("Pattern", "FOUND_AS")

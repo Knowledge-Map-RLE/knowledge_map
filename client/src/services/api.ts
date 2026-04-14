@@ -1286,3 +1286,174 @@ export async function getKnowledgeMapPage(
 export async function backfillNormKeys(): Promise<{ updated: number }> {
   return fetchJson('/api/data_extraction/shared-actions/backfill', { method: 'POST' });
 }
+
+// =============================================================================
+// Pattern API
+// =============================================================================
+
+export interface PatternNodeData {
+  node_id: string;
+  node_type: 'Action' | 'LexicalUnit';
+  role: string;
+  text: string;
+  lemma: string;
+  pos: string;
+  action_class: string;
+  doc_id: string;
+}
+
+export interface PatternEdgeData {
+  source_id: string;
+  target_id: string;
+  edge_type: 'LEADS_TO' | 'DEPENDS_ON' | 'PART_OF';
+  relation_subtype: string;
+  confidence: number;
+}
+
+export interface PatternData {
+  uid: string;
+  name: string;
+  description: string;
+  pattern_hash: string;
+  frequency: number;
+  stability: number;
+  doc_count: number;
+  node_count: number;
+  edge_count: number;
+  size_category: string;
+  canon_nodes: PatternNodeData[];
+  canon_edges: PatternEdgeData[];
+}
+
+export interface ExtractPatternsResponse {
+  success: boolean;
+  total_patterns: number;
+  max_nodes_seen: number;
+  extraction_mode: string;
+  doc_ids: string[];
+  patterns: PatternData[];
+  // Fields from extract-status polling:
+  status: 'idle' | 'running' | 'done' | 'error';
+  progress: number;
+  message: string;
+  error: string | null;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+export interface PatternGraphNode {
+  uid: string;
+  _type: 'Action' | 'LexicalUnit';
+  verb?: string;
+  text?: string;
+  lemma?: string;
+  pos?: string;
+  action_class?: string;
+  role?: string;
+  doc_id?: string;
+  layout_x: number | null;
+  layout_y: number | null;
+}
+
+export interface PatternGraphEdge {
+  src_uid: string;
+  tgt_uid: string;
+  edge_type: string;
+  relation_subtype: string;
+  confidence: number;
+}
+
+export interface PatternGraphData {
+  uid: string;
+  name: string;
+  frequency: number;
+  stability: number;
+  doc_count: number;
+  size_category: string;
+  rendered_text: string;
+  nodes: PatternGraphNode[];
+  edges: PatternGraphEdge[];
+}
+
+export interface SavePatternsResponse {
+  success: boolean;
+  saved_count: number;
+  message: string;
+}
+
+export interface PatternCreateStatus {
+  status: 'idle' | 'running' | 'done' | 'error';
+  progress: number;
+  message: string;
+  total_patterns: number;
+  saved_patterns: number;
+  error: string | null;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+export async function getExtractedPatterns(options?: {
+  maxNodes?: number;
+  maxDepth?: number;
+  limitPerN?: number;
+  minFrequency?: number;
+  mode?: 'all' | 'dependency' | 'action' | 'mixed';
+}): Promise<ExtractPatternsResponse> {
+  const params = new URLSearchParams();
+  if (options?.maxNodes !== undefined) params.set('max_nodes', String(options.maxNodes));
+  if (options?.maxDepth !== undefined) params.set('max_depth', String(options.maxDepth));
+  if (options?.limitPerN !== undefined) params.set('limit_per_n', String(options.limitPerN));
+  if (options?.minFrequency !== undefined) params.set('min_frequency', String(options.minFrequency));
+  if (options?.mode) params.set('mode', options.mode);
+
+  const query = params.toString();
+  return fetchJson(`/api/data_extraction/patterns/extract${query ? `?${query}` : ''}`, { method: 'POST' });
+}
+
+export async function getExtractStatus(): Promise<ExtractPatternsResponse> {
+  return fetchJson('/api/data_extraction/patterns/extract-status');
+}
+
+export async function getPatternGraph(patternUid: string): Promise<PatternGraphData> {
+  return fetchJson(`/api/data_extraction/patterns/${encodeURIComponent(patternUid)}/graph`);
+}
+
+export async function getPatternText(patternUid: string): Promise<{
+  success: boolean;
+  pattern_uid: string;
+  rendered_text: string;
+  node_count: number;
+  edge_count: number;
+}> {
+  return fetchJson(`/api/data_extraction/patterns/${encodeURIComponent(patternUid)}/text`);
+}
+
+export async function savePatternsToDb(patterns: PatternData[]): Promise<SavePatternsResponse> {
+  return fetchJson('/api/data_extraction/patterns/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(patterns),
+  });
+}
+
+export async function createPatternsInDb(options?: {
+  maxNodes?: number;
+  maxDepth?: number;
+  limitPerN?: number;
+  minFrequency?: number;
+  mode?: string;
+}): Promise<{ success: boolean; message: string; status_url: string }> {
+  const params = new URLSearchParams();
+  if (options?.maxNodes !== undefined) params.set('max_nodes', String(options.maxNodes));
+  if (options?.maxDepth !== undefined) params.set('max_depth', String(options.maxDepth));
+  if (options?.limitPerN !== undefined) params.set('limit_per_n', String(options.limitPerN));
+  if (options?.minFrequency !== undefined) params.set('min_frequency', String(options.minFrequency));
+  if (options?.mode) params.set('mode', options.mode);
+  params.set('save_to_db', 'true');
+
+  return fetchJson(`/api/data_extraction/patterns/create?${params.toString()}`, { method: 'POST' });
+}
+
+export async function getPatternCreateStatus(): Promise<PatternCreateStatus> {
+  return fetchJson('/api/data_extraction/patterns/create-status');
+}

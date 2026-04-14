@@ -22,7 +22,7 @@ function App() {
           <Route path="/introduction" element={<><Introduction/></>} />
           <Route path="/data_extraction" element={<Data_extraction />} />
           <Route path="/science_articles" element={<><Science_articles /><Knowledge_map_ui /></>} />
-          <Route path="/nlp" element={<><NLP /><Knowledge_map_ui /></>} />
+          <Route path="/pattern_analysis" element={<><NLP /><Knowledge_map_ui /></>} />
         </Routes>
       </Router>
     </ViewportProvider>

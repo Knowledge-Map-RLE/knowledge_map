@@ -6,6 +6,15 @@ from domain.models.action import (
     LexicalUnit,
     DependencyLink,
 )
+from domain.models.pattern import (
+    Pattern,
+    PatternNode,
+    PatternEdge,
+    PatternInstance,
+    PatternNodeType,
+    PatternEdgeType,
+    NodeRole,
+)
 
 __all__ = [
     "LinguisticToken",
@@ -13,4 +22,11 @@ __all__ = [
     "Action",
     "LexicalUnit",
     "DependencyLink",
+    "Pattern",
+    "PatternNode",
+    "PatternEdge",
+    "PatternInstance",
+    "PatternNodeType",
+    "PatternEdgeType",
+    "NodeRole",
 ]

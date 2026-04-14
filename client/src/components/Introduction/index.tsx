@@ -1,5 +1,4 @@
 import Header from '../Header';
-import Site_map from '../Site_map';
 import s from './Introduction.module.css';
 
 export default function Introduction() {
@@ -13,8 +12,5 @@ export default function Introduction() {
       <div>Путь от идей проекта к цели РПЖ</div>
       <div>Получаем данные — Подпроект "База данных по базам данных"</div>
     </main>
-    <footer className={s.footer}>
-      <Site_map/>
-    </footer>
   </div>
 }
