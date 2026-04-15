@@ -163,6 +163,8 @@ export const cssHighlightPlugin = ViewPlugin.fromClass(
         update.state.field(annotationField) !== update.startState.field(annotationField);
 
       if (update.docChanged || annotationsChanged || update.viewportChanged) {
+        this.clearKeys();
+        this.usedKeys = updateHighlights(update.view);
         this.scheduleMeasure(update.view);
       }
     }

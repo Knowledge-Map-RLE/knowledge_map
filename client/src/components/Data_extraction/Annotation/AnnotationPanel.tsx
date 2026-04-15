@@ -10,6 +10,7 @@ interface AnnotationPanelProps {
   onAnnotationEdit: (annotation: Annotation) => void;
   selectedAnnotation: Annotation | null;
   onTypeToggleForFragment?: (fragmentKey: string, type: string) => void;
+  cursorPosition?: number | null;
 }
 
 interface AnnotationGroup {
@@ -27,6 +28,7 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
   onAnnotationEdit,
   selectedAnnotation,
   onTypeToggleForFragment,
+  cursorPosition,
 }) => {
   const [filterType, setFilterType] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
@@ -77,15 +79,33 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
     return map;
   }, [groupedByFragment]);
 
+  // O(log n) lookup offset → group index через бинарный поиск
+  const findGroupByOffset = useMemo((): ((offset: number) => number | null) => {
+    if (groupedByFragment.length === 0) return () => null;
+    const groups = groupedByFragment;
+    return (offset: number) => {
+      let lo = 0, hi = groups.length - 1;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        const g = groups[mid];
+        if (offset >= g.start_offset && offset < g.end_offset) return mid;
+        if (offset < g.start_offset) hi = mid - 1;
+        else lo = mid + 1;
+      }
+      // Ближайшая группа перед курсором
+      return hi >= 0 ? hi : 0;
+    };
+  }, [groupedByFragment]);
+
   // Виртуализация списка групп
   const rowVirtualizer = useVirtualizer({
     count: groupedByFragment.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 80, // Приблизительная высота группы в пикселях
-    overscan: 5,            // Рендерим 5 строк за пределами viewport для плавного скролла
+    estimateSize: () => 80,
+    overscan: 5,
   });
 
-  // Скролл к выбранной аннотации — O(1) вместо O(n²)
+  // Скролл к выбранной аннотации
   useEffect(() => {
     if (!selectedAnnotation) return;
     const idx = uidToGroupIndex.get(selectedAnnotation.uid);
@@ -93,6 +113,35 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
       rowVirtualizer.scrollToIndex(idx, { align: 'nearest', behavior: 'smooth' });
     }
   }, [selectedAnnotation]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Авто-скролл к группе аннотации под курсором (с debounce 300мс)
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cursorPositionRef = useRef<number | null>(null);
+  const findGroupByOffsetRef = useRef(findGroupByOffset);
+  const groupedLengthRef = useRef(groupedByFragment.length);
+
+  cursorPositionRef.current = cursorPosition;
+  findGroupByOffsetRef.current = findGroupByOffset;
+  groupedLengthRef.current = groupedByFragment.length;
+
+  useEffect(() => {
+    if (cursorPosition == null) return;
+
+    // Debounce: ждём 300мс без изменений курсора перед скроллом
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = setTimeout(() => {
+      const pos = cursorPositionRef.current;
+      if (pos == null) return;
+      const idx = findGroupByOffsetRef.current(pos);
+      if (idx !== null && idx < groupedLengthRef.current) {
+        rowVirtualizer.scrollToIndex(idx, { align: 'center', behavior: 'smooth' });
+      }
+    }, 300);
+
+    return () => {
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, [cursorPosition]);
 
   return (
     <div className="annotation-panel">

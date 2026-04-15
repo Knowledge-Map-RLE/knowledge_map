@@ -43,8 +43,10 @@ export const annotationField = StateField.define<AnnotationWithPos[]>({
     for (const effect of tr.effects) {
       if (effect.is(setAnnotationsEffect)) {
         // Сервер возвращает аннотации отсортированными по start_offset (ORDER BY в Cypher).
-        // Копируем массив без сортировки: O(n) вместо O(n log n).
-        return effect.value.slice();
+        // Но при добавлении одной аннотации через addAnnotation она попадает в конец массива.
+        // Сортируем чтобы queryAnnotationsInRange (бинарный поиск) работал корректно.
+        const sorted = effect.value.slice().sort((a, b) => a.start - b.start || a.end - b.end);
+        return sorted;
       }
     }
 

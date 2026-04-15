@@ -121,13 +121,16 @@ export const useAnnotationsWS = ({
   // Закрываем WS при размонтировании или смене docId
   useEffect(() => {
     destroyedRef.current = false;
+
     return () => {
       destroyedRef.current = true;
-      if (wsRef.current) {
-        wsRef.current.onmessage = null;
-        wsRef.current.onclose = null;
-        wsRef.current.onerror = null;
-        wsRef.current.close();
+      const wsToClose = wsRef.current;
+      if (wsToClose) {
+        // Убираем все обработчики чтобы cleanup не вызывал ошибок
+        wsToClose.onmessage = null;
+        wsToClose.onerror = null;
+        wsToClose.onclose = null;
+        wsToClose.onopen = null;
         wsRef.current = null;
       }
       // Reject все pending-запросы
@@ -136,6 +139,24 @@ export const useAnnotationsWS = ({
       }
       pendingRef.current.clear();
       chunksRef.current = [];
+
+      // Закрываем соединение в следующем тике, но только если это всё ещё наше соединение
+      // (React Strict Mode может вызвать cleanup и сразу новый mount)
+      if (wsToClose) {
+        requestAnimationFrame(() => {
+          if (wsRef.current !== wsToClose) {
+            // Уже создано новое соединение — не трогаем его
+            return;
+          }
+          try {
+            if (wsToClose.readyState === WebSocket.CONNECTING || wsToClose.readyState === WebSocket.OPEN) {
+              wsToClose.close();
+            }
+          } catch {
+            // WebSocket уже закрылся
+          }
+        });
+      }
     };
   }, [docId]);
 
@@ -225,9 +246,7 @@ export const useAnnotationsWS = ({
       (err as any).code = msg.code;
       pendingRef.current.get(request_id)?.reject(err);
       pendingRef.current.delete(request_id);
-      if (!request_id) {
-        console.error('WS annotation error:', msg);
-      }
+      // Не логируем ошибки без request_id — это нормальная ситуация при закрытии
       return;
     }
   }, [setAnnotationsAll, addAnnotation, replaceAnnotation, dropAnnotation]);
@@ -272,9 +291,9 @@ export const useAnnotationsWS = ({
     };
 
     ws.onerror = () => {
-      if (destroyedRef.current) return; // намеренное закрытие — не логируем
+      // destroyedRef проверяется в cleanup — если размонтирован, не логируем
+      if (destroyedRef.current) return;
       if (token === loadTokenRef.current) {
-        console.error('WS annotations connection error');
         setLoading(false);
         chunksRef.current = [];
       }
@@ -333,6 +352,7 @@ export const useAnnotationsWS = ({
     end: number,
     text: string,
     type: string,
+    color?: string,
   ): Promise<Annotation> => {
     return sendRequest<Annotation>({
       action: 'create',
@@ -341,7 +361,7 @@ export const useAnnotationsWS = ({
       annotation_type: type,
       start_offset: start,
       end_offset: end,
-      color: getDefaultColor(type),
+      color: color || getDefaultColor(type),
     });
   }, [docId, sendRequest]);
 

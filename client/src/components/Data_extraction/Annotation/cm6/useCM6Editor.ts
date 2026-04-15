@@ -180,15 +180,27 @@ export function useCM6Editor({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   useEffect(() => {}, [largeLineHeight]);
 
-  const setAnnotations = useCallback((annotations: Annotation[]) => {
+  const setAnnotations = useCallback((annotations: Annotation[], scrollToNew?: number) => {
     if (!viewRef.current) {
       // View ещё не создан — сохраняем в очереди
       pendingAnnotationsRef.current = annotations;
       return;
     }
+    const newAnnotations = annotations.map(toAnnotationWithPos);
     viewRef.current.dispatch({
-      effects: setAnnotationsEffect.of(annotations.map(toAnnotationWithPos)),
+      effects: setAnnotationsEffect.of(newAnnotations),
     });
+    // Авто-скролл к новой аннотации если указан offset
+    if (scrollToNew !== undefined) {
+      requestAnimationFrame(() => {
+        if (viewRef.current) {
+          viewRef.current.dispatch({
+            selection: { anchor: scrollToNew },
+            scrollIntoView: true,
+          });
+        }
+      });
+    }
   }, []);
 
   const doUndo = useCallback(() => {}, []);

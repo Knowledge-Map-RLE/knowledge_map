@@ -68,6 +68,12 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     end: number;
     text: string;
   } | null>(null);
+  // Ref-зеркало для горячего пути — не теряется при React Strict Mode re-renders
+  const pendingTextSelectionRef = useRef<{
+    start: number;
+    end: number;
+    text: string;
+  } | null>(null);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation | null>(null);
   const [selectedAnnotationGroup, setSelectedAnnotationGroup] = useState<Annotation[]>([]);
@@ -190,6 +196,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   // Reset state on document change
   useEffect(() => {
     setPendingTextSelection(null);
+    pendingTextSelectionRef.current = null;
     setSelectedTypes([]);
     resetUnsavedOffsets();
     setShiftedAnnotations(null);
@@ -293,14 +300,20 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   // Text selection handler
   const handleTextSelect = useCallback((start: number, end: number, selectedText: string) => {
     if (readOnly) return;
-    setPendingTextSelection({ start, end, text: selectedText });
+    // Если выделение пустое (клинули вне текста) — не трогаем pending selection
+    if (!selectedText || selectedText.trim().length === 0) return;
+    const selection = { start, end, text: selectedText };
+    setPendingTextSelection(selection);
+    pendingTextSelectionRef.current = selection;
     setSelectedTypes([]);
   }, [readOnly]);
 
   // Type toggle handler
   const handleTypeToggle = useCallback(async (type: string) => {
-    if (pendingTextSelection) {
-      const { start, end, text: selectionText } = pendingTextSelection;
+    // Приоритет 1: есть pending text selection из редактора (state или ref)
+    const selection = pendingTextSelection ?? pendingTextSelectionRef.current;
+    if (selection && selection.text) {
+      const { start, end, text: selectionText } = selection;
       const existingAnnotation = annotations.find(
         (ann) =>
           ann.start_offset === start &&
@@ -313,15 +326,19 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         setSelectedTypes((prev) => prev.filter((t) => t !== type));
       } else {
         try {
-          await createNewAnnotation(start, end, selectionText, type);
-          setSelectedTypes((prev) => [...prev, type]);
+          await createNewAnnotation(start, end, selectionText, type, selectedColor);
+          setSelectedTypes((prev) => prev.includes(type) ? prev : [...prev, type]);
         } catch (error: any) {
           handleAnnotationError(error);
         }
       }
+      // Сбрасываем pending selection после создания/удаления
+      setPendingTextSelection(null);
+      pendingTextSelectionRef.current = null;
       return;
     }
 
+    // Приоритет 2: есть выбранная группа аннотаций
     if (selectedAnnotationGroup.length > 0) {
       const fragment = selectedAnnotationGroup[0];
       const existingTypes = selectedAnnotationGroup.map((ann) => ann.annotation_type);
@@ -337,7 +354,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
             fragment.start_offset,
             fragment.end_offset,
             fragment.text,
-            type
+            type,
+            selectedColor,
           );
           await loadAnnotations();
           setSelectedAnnotationGroup([...selectedAnnotationGroup, newAnnotation]);
@@ -345,8 +363,12 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
           handleAnnotationError(error);
         }
       }
+      return;
     }
-  }, [pendingTextSelection, selectedAnnotationGroup, annotations, createNewAnnotation, removeAnnotation, loadAnnotations]);
+
+    // Нет валидного выделения — сообщаем пользователю
+    console.warn('handleTypeToggle: нет выделения текста или выбранной аннотации');
+  }, [pendingTextSelection, selectedAnnotationGroup, annotations, createNewAnnotation, removeAnnotation, loadAnnotations, selectedColor]);
 
   // Annotation selection handler
   const handleAnnotationSelect = useCallback((annotation: Annotation | Annotation[]) => {
@@ -354,6 +376,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       setSelectedAnnotationGroup(annotation);
       setSelectedAnnotation(annotation[0] || null);
       setPendingTextSelection(null);
+      pendingTextSelectionRef.current = null;
       setSelectedTypes(annotation.map((ann) => ann.annotation_type));
     } else {
       const group = annotations.filter(
@@ -362,6 +385,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       setSelectedAnnotationGroup(group);
       setSelectedAnnotation(annotation);
       setPendingTextSelection(null);
+      pendingTextSelectionRef.current = null;
       setSelectedTypes(group.map((ann) => ann.annotation_type));
     }
   }, [annotations]);
@@ -920,6 +944,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
                 onAnnotationDelete={handleAnnotationDelete}
                 onAnnotationEdit={handleAnnotationEdit}
                 selectedAnnotation={selectedAnnotation}
+                cursorPosition={cursorPosition}
               />
             </ErrorBoundary>
           </div>

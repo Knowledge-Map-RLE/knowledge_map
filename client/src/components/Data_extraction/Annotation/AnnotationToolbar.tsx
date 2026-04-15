@@ -52,13 +52,13 @@ const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
             <div key={category} className="annotation-category">
               <div className="category-label">{category}</div>
               <div className="category-types">
-                {filteredTypes.map((type) => {
+                {filteredTypes.map((type, idx) => {
                   const isSelected = hasPendingSelection
                     ? selectedTypes.includes(type)
                     : selectedType === type;
                   return (
                     <button
-                      key={type}
+                      key={`${category}-${type}-${idx}`}
                       className={`type-button ${isSelected ? 'selected' : ''}`}
                       onClick={() => handleTypeClick(type)}
                       style={{
@@ -83,9 +83,10 @@ const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
           <h4>Выбрано</h4>
           <div className="selected-type-info">
             {hasPendingSelection ? (
-              selectedTypes.map((type) => (
+              // Убираем дубликаты из selectedTypes перед рендером
+              [...new Set(selectedTypes)].map((type, idx) => (
                 <div
-                  key={type}
+                  key={`selected-${type}-${idx}`}
                   className="selected-type-badge"
                   style={{ backgroundColor: getDefaultColor(type) }}
                 >
