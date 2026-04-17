@@ -1,0 +1,24 @@
+export interface ProjectTitleLink {
+    to: string;
+    label: string;
+}
+
+export const SLOGANS = [
+    'В БЕКОНЕЧНОСТЬ И ЕЩЁ ДАЛЬШЕ!',
+    'ЗНАНИЯ — ЖИЗНЬ!',
+    '∞ не lim',
+] as const;
+
+export const LINKS: readonly ProjectTitleLink[] = [
+    { to: '/', label: 'Главная — Лендинг' },
+    { to: '/km', label: 'Карта знаний' },
+    { to: '/introduction', label: 'Введение' },
+    { to: '/rle_databases', label: 'Базы данных РПЖ' },
+    { to: '/science_articles', label: 'Карта научных статей' },
+    { to: '/data_extraction', label: 'Извлечение данных' },
+    { to: '/pattern_analysis', label: 'Анализ паттернов' },
+] as const;
+
+export interface ProjectTitleProps {
+    className?: string;
+}

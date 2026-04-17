@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+.user {
+    display: flex;
+    border-left: 1px solid #ccc;
+    padding: 10px;
+    height: 100%;
+    justify-items: center;
+    gap: 10px;
+}
+
+.user > button {
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    @apply bg-blue-500
+}
+
+.user > button:hover {
+    background-color: lightblue;
+    @apply bg-blue-600
+}
+
+.avatar {
+    @apply bg-blue-200 h-[50px] w-[50px] rounded-full;
+}
+
+.name, .info {
+    @apply px-[10px];
+}
+
+.user_info {
+    @apply flex flex-col;
+    font-size: 12px;
+}
+
+.logout_button {
+    @apply ml-2 px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 transition-colors;
+}
+
+.loading {
+    @apply text-gray-500 text-sm;
+}
+
+.auth_button {
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    @apply bg-blue-500
+}
+
+.auth_button:hover {
+    @apply bg-blue-600
+}

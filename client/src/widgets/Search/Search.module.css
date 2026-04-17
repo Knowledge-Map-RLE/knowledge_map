@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+.search_panel {
+    display: flex;
+    flex: 1;
+}
+
+.logo {
+    background-image: url('logo.svg');
+    width: 40px;
+    height: 40px;
+    @apply bg-cover bg-center;
+}
+
+.search {
+    width: 100%;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-left: 0;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.search:focus {
+    outline: none;
+}

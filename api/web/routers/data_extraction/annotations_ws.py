@@ -250,6 +250,9 @@ async def annotations_ws(
     """
     await websocket.accept()
     logger.info(f"WS annotations connected: doc_id={doc_id}")
+    
+    # Отправляем connected event сразу после подключения
+    await websocket.send_json({"event": "connected", "doc_id": doc_id})
     try:
         while True:
             data = await websocket.receive_json()

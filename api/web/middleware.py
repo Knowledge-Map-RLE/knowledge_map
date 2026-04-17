@@ -42,9 +42,22 @@ async def log_requests(request: Request, call_next: Callable) -> Response:
 
 
 async def add_cors_headers(request: Request, call_next: Callable) -> Response:
+    origin = request.headers.get("origin")
+    if origin in ORIGINS:
+        if request.method == "OPTIONS":
+            return Response(
+                status_code=200,
+                headers={
+                    "Access-Control-Allow-Origin": origin,
+                    "Access-Control-Allow-Credentials": "true",
+                    "Access-Control-Allow-Methods": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Expose-Headers": "*",
+                },
+            )
     response = await call_next(request)
-    if request.headers.get("origin") in ORIGINS:
-        response.headers["Access-Control-Allow-Origin"] = request.headers["origin"]
+    if origin in ORIGINS:
+        response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "*"
         response.headers["Access-Control-Allow-Headers"] = "*"

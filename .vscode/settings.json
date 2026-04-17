@@ -1,6 +1,6 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "dvc.dvcPath": "c:\\Program Files (x86)\\DVC (Data Version Control)\\dvc.exe",
-    "python-envs.defaultEnvManager": "ms-python.python:system",
-    "python-envs.defaultPackageManager": "ms-python.python:pip"
+    "python-envs.defaultEnvManager": "ms-python.python:poetry",
+    "python-envs.defaultPackageManager": "ms-python.python:poetry"
 }

@@ -12,8 +12,11 @@ export default defineConfig({
     host: true,
     port: 5555,
     proxy: {
-      '/api': 'http://localhost:8000'
-    }
+      '/api': {
+        target: 'http://localhost:8000',
+        ws: true,
+      },
+    },
   },
   worker: {
     format: 'es',

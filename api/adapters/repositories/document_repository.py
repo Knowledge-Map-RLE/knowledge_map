@@ -121,4 +121,8 @@ class DocumentRepository:
         orm_doc.delete()
 
     def list_all(self) -> List[PDFDocument]:
-        return [_orm_to_domain(d) for d in OrmDocument.nodes.all()]
+        try:
+            return [_orm_to_domain(d) for d in OrmDocument.nodes.all()]
+        except Exception as e:
+            logger.error(f"list_all failed: {e}")
+            return []

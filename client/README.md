@@ -4,6 +4,10 @@
 
 `bun dev`
 
+## Архитектура
+
+- Feature-Sliced Design (FSD)
+
 ## Напоминание
 
 ❗❗
