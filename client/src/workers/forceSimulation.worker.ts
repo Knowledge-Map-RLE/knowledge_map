@@ -5,8 +5,8 @@
  * Vite worker: импортируется через `?worker`
  */
 
-import { runForceSimulation } from '../hooks/useForceSimulation';
-import type { SimulationNode, SimulationEdge } from '../hooks/useForceSimulation';
+import { runForceSimulation } from '../shared/hooks/useForceSimulation';
+import type { SimulationNode, SimulationEdge } from '../shared/hooks/useForceSimulation';
 
 self.onmessage = (e: MessageEvent) => {
     const { nodes, edges, config } = e.data;

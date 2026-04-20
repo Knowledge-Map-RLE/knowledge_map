@@ -233,9 +233,17 @@ export function NodesLayer({ nodes, visibleIds, scale, lod }: {
         nodesGfxRef.current = nodesGfx;
         labelsRef.current = labels;
         return () => {
-            nodesGfx.destroy();
-            labels.destroy({ children: true });
-            labelCacheRef.current.clear();
+            try {
+                nodesGfx.destroy();
+                labels.destroy({ children: true, baseTexture: true });
+            } catch {
+                // Ignore cleanup errors
+            }
+            try {
+                labelCacheRef.current?.clear();
+            } catch {
+                // Ignore cache clear errors
+            }
         };
     }, [containerRef]);
 

@@ -108,18 +108,46 @@ async def extract_document_actions(
     Извлекает действия из полного текста документа через NLP-сервис и строит граф LEADS_TO.
     Обрабатывает весь markdown документа одним вызовом NLP-сервиса.
     """
+    logger.info("[actions] doc=%s: starting", doc_id)
+    
     # 1. Проверяем документ
     doc = document_repo.get_by_id(doc_id)
     if doc is None:
-        raise NotFoundError(f"Document {doc_id} not found")
+        logger.warning("[actions] doc=%s: document not found in repo", doc_id)
+        raise NotFoundError("Document", doc_id)
+    
+    logger.info("[actions] doc=%s: found in repo, s3_bucket=%s", doc_id, doc.s3_bucket)
 
     # 2. Загружаем полный markdown текст
     key = doc.get_active_markdown_key()
+    bucket = doc.s3_bucket
+
     if not key:
-        raise NotFoundError(f"Document {doc_id} has no markdown key")
-    full_text = await storage.download_text(doc.s3_bucket, key)
+        logger.info("[actions] doc=%s: no active markdown key, trying fallback keys", doc_id)
+        potential_keys = [
+            f"documents/{doc_id}.md",
+            f"pubmed/{doc_id}/{doc_id}.md",
+            f"pubmed/{doc_id}/docling_raw.md",
+            f"documents/{doc_id}/{doc_id}.md",
+            f"markdown/{doc_id}_docling_raw.md",
+            f"markdown/{doc_id}_formatted.md",
+        ]
+        for pk in potential_keys:
+            exists = await storage.object_exists(bucket, pk)
+            logger.info("[actions] doc=%s: checking key %s: exists=%s", doc_id, pk, exists)
+            if exists:
+                key = pk
+                break
+
+    if not key:
+        logger.warning("[actions] doc=%s: no markdown key found", doc_id)
+        raise NotFoundError("Document", doc_id)
+    
+    logger.info("[actions] doc=%s: found markdown key: %s", doc_id, key)
+    full_text = await storage.download_text(bucket, key)
     if not full_text:
-        raise NotFoundError(f"Document {doc_id} markdown is empty")
+        logger.warning("[actions] doc=%s: markdown is empty", doc_id)
+        raise NotFoundError("Document", doc_id)
 
     # Фильтруем frontmatter и References (так же как NLP-сервис)
     frontmatter = re.match(r'^---\r?\n.*?\r?\n---\r?\n', full_text, re.DOTALL)
@@ -313,6 +341,11 @@ async def extract_document_actions(
 
     edges_count = action_repo.save_leads_to(dag_filtered_edges, [], doc_id)
     pending_count = len(dag_filtered_edges)
+    
+    logger.info(
+        "[actions] doc=%s: saved actions_count=%d, edges_count=%d, pending_count=%d",
+        doc_id, actions_count, edges_count, pending_count
+    )
 
     # 7. Сохраняем синтаксические зависимости (без DAG-проверки)
     if all_syntactic_edges:

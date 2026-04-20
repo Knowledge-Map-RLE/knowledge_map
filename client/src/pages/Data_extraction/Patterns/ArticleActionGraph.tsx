@@ -56,7 +56,7 @@ export function ArticleActionGraph({ docId }: Props) {
 
     return (
         <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
-            <Knowledge_map externalBlocks={blocks} externalLinks={links ?? []} embedded />
+            <Knowledge_mapUI externalBlocks={blocks} externalLinks={links ?? []} embedded />
         </div>
     );
 }

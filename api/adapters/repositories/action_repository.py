@@ -416,6 +416,25 @@ class ActionRepository:
         )) for row in results]
 
     def get_pending_for_document(self, doc_id: str) -> List[Dict[str, Any]]:
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        all_actions_query = """
+        MATCH (a:Action {doc_id: $doc_id})
+        RETURN count(a) as action_count
+        """
+        all_result, _ = db.cypher_query(all_actions_query, {"doc_id": doc_id})
+        action_count = all_result[0][0] if all_result else 0
+        logger.info("[action_repo] doc=%s: total actions in DB: %d", doc_id, action_count)
+        
+        all_leads_to_query = """
+        MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO]->(t:Action)
+        RETURN count(r) as leads_to_count
+        """
+        leads_result, _ = db.cypher_query(all_leads_to_query, {"doc_id": doc_id})
+        leads_to_count = leads_result[0][0] if leads_result else 0
+        logger.info("[action_repo] doc=%s: total LEADS_TO edges in DB: %d", doc_id, leads_to_count)
+        
         query = """
         MATCH (s:Action {doc_id: $doc_id})-[r:LEADS_TO {status: 'pending'}]->(t:Action)
         RETURN
@@ -438,6 +457,7 @@ class ActionRepository:
         cols = ["src_uid", "src_text", "src_phrase", "src_sentence", "src_class",
                 "tgt_uid", "tgt_text", "tgt_phrase", "tgt_sentence", "tgt_class",
                 "relation_subtype", "confidence", "evidence"]
+        logger.info("[action_repo] doc=%s: pending edges returned: %d", doc_id, len(results))
         return [dict(zip(cols, row)) for row in results]
 
     def get_neighbor_ids(self, uid: str) -> List[str]:

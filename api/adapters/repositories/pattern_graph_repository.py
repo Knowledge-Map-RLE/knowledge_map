@@ -89,7 +89,7 @@ RETURN lu.uid AS src_uid, a.uid AS tgt_uid,
             all_edges.append(dict(zip(cols, row)))
 
         logger.info(
-            f"[PatternGraphRepository] doc={doc_id[:8]} "
+            f"[PatternGraphRepository] doc={doc_id} "
             f"nodes={len(all_nodes)} edges={len(all_edges)}"
         )
         return all_nodes, all_edges
