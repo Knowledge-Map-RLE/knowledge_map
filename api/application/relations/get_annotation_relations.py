@@ -21,5 +21,5 @@ def get_annotation_relations(
     doc_id: str,
 ) -> List[AnnotationRelation]:
     if document_repo.get_by_id(doc_id) is None:
-        raise NotFoundError("PDFDocument", doc_id)
+        raise NotFoundError("Document", doc_id)
     return annotation_repo.get_relations_for_document(doc_id)

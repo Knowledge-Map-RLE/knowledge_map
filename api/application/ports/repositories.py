@@ -19,7 +19,7 @@ from __future__ import annotations
 from typing import Protocol, Optional, List, Tuple
 
 from domain.models.block import Block, LinkRecord
-from domain.models.document import PDFDocument
+from domain.models.document import Document
 from domain.models.annotation import MarkdownAnnotation, AnnotationRelation
 from domain.models.user import User
 
@@ -53,17 +53,17 @@ class LinkRepositoryProtocol(Protocol):
 
 
 class DocumentRepositoryProtocol(Protocol):
-    """Операции с PDF-документами."""
+    """Операции с документами."""
 
-    def get_by_id(self, uid: str) -> Optional[PDFDocument]: ...
+    def get_by_id(self, uid: str) -> Optional[Document]: ...
 
-    def get_by_md5(self, md5_hash: str) -> Optional[PDFDocument]: ...
+    def get_by_md5(self, md5_hash: str) -> Optional[Document]: ...
 
-    def save(self, doc: PDFDocument) -> PDFDocument: ...
+    def save(self, doc: Document) -> Document: ...
 
     def delete(self, uid: str) -> None: ...
 
-    def list_all(self) -> List[PDFDocument]: ...
+    def list_all(self) -> List[Document]: ...
 
 
 class AnnotationRepositoryProtocol(Protocol):

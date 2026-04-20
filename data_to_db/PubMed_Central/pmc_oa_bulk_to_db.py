@@ -263,6 +263,134 @@ def extract_bibliographic_links_optimized(root, primary_id):
 
     return links
 
+def parse_article_optimized(article, total_articles):
+    """Оптимизированный парсинг статьи O(log R)"""
+    
+    pmid = None
+    pmcid = None
+    doi = None
+    
+    pmid_el = article.find('.//article-id[@pub-id-type="pmid"]')
+    if pmid_el is not None and pmid_el.text:
+        pmid = pmid_el.text.strip()
+    
+    pmcid_el = article.find('.//article-id[@pub-id-type="pmc"]')
+    if pmcid_el is not None and pmcid_el.text:
+        pmcid = pmcid_el.text.strip()
+    
+    if not pmid and not pmcid:
+        primary_id = f"temp_id_{total_articles}"
+        pmid = primary_id
+    else:
+        primary_id = pmcid or pmid
+    
+    doi_el = article.find('.//article-id[@pub-id-type="doi"]')
+    if doi_el is not None and doi_el.text:
+        doi = doi_el.text.strip()
+    
+    title = ''
+    title_el = article.find('.//article-title')
+    if title_el is not None:
+        title = ''.join(title_el.itertext()).strip()
+    
+    journal = ''
+    journal_el = article.find('.//journal-title')
+    if journal_el is not None:
+        journal = journal_el.text.strip()
+    
+    year_elem = article.find('.//pub-date/year')
+    publication_time = year_elem.text.strip() if year_elem is not None and year_elem.text else None
+    
+    abstract = ''
+    abstract_el = article.find('.//abstract')
+    if abstract_el is not None:
+        abstract = ''.join(abstract_el.itertext()).strip()
+    
+    authors = []
+    for author in article.findall('.//contrib[@contrib-type="author"]')[:20]:
+        surname = author.find('.//surname')
+        if surname is not None:
+            given = author.find('.//given-names')
+            name = surname.text or ''
+            if given is not None and given.text:
+                name = given.text + ' ' + name
+            authors.append(name.strip())
+    
+    keywords = []
+    for kw in article.findall('.//kwd')[:15]:
+        if kw.text:
+            keywords.append(kw.text.strip())
+    else:
+        primary_id = pmcid or pmid
+    
+    doi_el = article.find('.//article-id[@pub-id-type="doi"]')
+    doi = doi_el.text.strip() if doi_el is not None and doi_el.text else None
+    
+    title_el = article.find('.//article-title')
+    title = ''.join(title_el.itertext()).strip() if title_el is not None else ''
+    
+    journal_el = article.find('.//journal-title')
+    journal = journal_el.text.strip() if journal_el is not None else ''
+    
+    year_elem = article.find('.//pub-date/year')
+    publication_time = year_elem.text.strip() if year_elem is not None and year_elem.text else None
+    
+    abstract_el = article.find('.//abstract')
+    abstract = ''.join(abstract_el.itertext()).strip() if abstract_el is not None else ''
+    
+    authors = []
+    for author in article.findall('.//contrib[@contrib-type="author"]')[:20]:
+        surname = author.find('.//surname')
+        given_names = author.find('.//given-names')
+        if surname is not None:
+            name = (surname.text or '').strip()
+            if given_names is not None:
+                name = (given_names.text or '') + ' ' + name
+            authors.append(name.strip())
+    
+    keywords = []
+    for kw in article.findall('.//kwd')[:15]:
+        if kw.text:
+            keywords.append(kw.text.strip())
+    
+    body_s3_key = None
+    try:
+        # Конвертируем полный article XML в Markdown
+        from xml_to_md_grpc_client import get_xml_to_md_client
+        xml_client = get_xml_to_md_client()
+        if xml_client:
+            article_xml = LET.tostring(article, encoding='unicode')
+            xml_bytes = article_xml.encode('utf-8')
+            result = xml_client.convert_pmc_xml(xml_bytes)
+            if result and result.get('success'):
+                markdown_content = result.get('markdown_content', '')
+                if markdown_content:
+                    from s3_client import get_s3_client
+                    s3 = get_s3_client()
+                    if s3.save_markdown(primary_id, markdown_content):
+                        body_s3_key = f"documents/{primary_id}/{primary_id}.md"
+    except Exception as e:
+        logger.debug(f"[{primary_id}] Error converting body: {e}")
+    
+    data = {
+        'uid': primary_id,
+        'pmid': pmid,
+        'pmcid': pmcid,
+        'doi': doi,
+        'title': title,
+        'publication_time': publication_time,
+        'journal': journal,
+        'abstract': abstract,
+        'body': body_s3_key,
+        'authors': authors,
+        'keywords': keywords
+    }
+    
+    cited_list = extract_bibliographic_links_optimized(article, primary_id)
+    
+    return data, cited_list, primary_id
+
+
 def embed_floats_optimized(root):
     """Оптимизированное встраивание floats-group"""
     body_elem = root.find('.//body') or root.find('.//ns:body', NS)
@@ -287,74 +415,113 @@ def embed_floats_optimized(root):
     
     return body_xml
 
+# ========== S3 ЗАГРУЗКА ==========
+
+def load_archive_from_s3(s3_key: str):
+    """Загружает архив из S3 и возвращает file-like объект."""
+    ARCHIVE_BUCKET = "knowledge-map-data"
+    s3 = get_s3_client()
+    response = s3.s3.get_object(Bucket=ARCHIVE_BUCKET, Key=s3_key)
+    return response['Body']
+
+def parse_archive_from_s3(file_path: str):
+    """Парсит архив из S3 или локального пути."""
+    import gzip
+    import tarfile
+    import io
+    from pathlib import Path
+    
+    nodes, rels = [], []
+    count = 0
+    total_articles = 0
+    
+    s3 = get_s3_client()
+    archive_name = Path(file_path).name
+    
+    try:
+        # Проверяем - локальный файл или S3 ключ
+        if Path(file_path).exists():
+            # Локальный файл
+            with open(file_path, 'rb') as f:
+                body_bytes = f.read()
+            body = io.BytesIO(body_bytes)
+        else:
+            # S3 ключ
+            body = s3.s3.get_object(Bucket="knowledge-map-data", Key=file_path)['Body']
+        with tarfile.open(fileobj=io.BytesIO(body.read()), mode='r:gz') as tar:
+            xml_files = [member for member in tar.getmembers() if member.name.endswith('.xml')]
+            
+            if not xml_files:
+                logger.error(f"Archive {archive_name} does not contain XML files")
+                return archive_name
+            
+            logger.info(f"Found {len(xml_files)} XML files in {archive_name}")
+            
+            pbar_desc = f"{archive_name[:30]}"
+            with tqdm(total=len(xml_files), desc=pbar_desc, unit="xml", leave=False, position=2) as xml_pbar:
+                for xml_file in xml_files:
+                    try:
+                        xml_content = tar.extractfile(xml_file)
+                        if xml_content is None:
+                            xml_pbar.update(1)
+                            continue
+                        
+                        root = LET.parse(xml_content).getroot()
+                        if root.tag != 'article':
+                            xml_pbar.update(1)
+                            continue
+                        
+                        total_articles += 1
+                        
+                        data, cited_list, primary_id = parse_article_optimized(root, total_articles)
+                        
+                        nodes.append(data)
+                        count += 1
+                        
+                        for cited in cited_list:
+                            link_id = cited.get('pmcid') or cited.get('pmid')
+                            if link_id:
+                                rels.append({
+                                    'source_pmid': link_id,
+                                    'source_title': cited.get('title'),
+                                    'target_pmid': primary_id,
+                                    'target_title': data['title']
+                                })
+                        
+                        if count % BATCH_SIZE == 0:
+                            logger.info(f"{archive_name}: enqueue batch #{count//BATCH_SIZE}")
+                            write_queue.put((archive_name, nodes.copy(), rels.copy()))
+                            nodes.clear()
+                            rels.clear()
+                            
+                            if count % (BATCH_SIZE * 5) == 0:
+                                import gc
+                                gc.collect()
+                                time.sleep(0.1)
+                        
+                        xml_pbar.update(1)
+                        xml_pbar.set_postfix_str(f"articles: {count}")
+                    
+                    except Exception as e:
+                        logger.error(f"Error processing XML {xml_file.name}: {e}")
+                        xml_pbar.update(1)
+                        continue
+        
+        if nodes or rels:
+            logger.info(f"{archive_name}: enqueue final batch")
+            write_queue.put((archive_name, nodes, rels))
+        
+        logger.info(f"{archive_name}: Articles processed: {total_articles}, Accepted: {count}")
+        return archive_name
+    
+    except Exception as e:
+        logger.error(f"Error opening archive {archive_name}: {e}")
+        return archive_name
+
+
 # ========== ОПТИМИЗИРОВАННЫЙ ПАРСИНГ ==========
 
-def parse_article_optimized(article, total_articles):
-    """Оптимизированный парсинг одной статьи O(log R)"""
-    
-    # Извлекаем идентификаторы одним проходом
-    pmid = extract_text_optimized(article, XPATH_CACHE['pmid'], NS)
-    pmcid = extract_text_optimized(article, XPATH_CACHE['pmcid'], NS)
-    
-    # Создаем временный ID если нужно
-    if not pmid and not pmcid:
-        primary_id = f"temp_id_{total_articles}"
-        pmid = primary_id
-    else:
-        # ВАЖНО: Приоритет PMCID > PMID для consistency с ссылками
-        primary_id = pmcid or pmid
-    
-    # Извлекаем остальные поля
-    doi = extract_text_optimized(article, XPATH_CACHE['doi'], NS)
-    title = extract_text_optimized(article, XPATH_CACHE['title'], NS)
-    journal = extract_text_optimized(article, XPATH_CACHE['journal'], NS)
-    
-    # Год публикации
-    year_elem = extract_element_optimized(article, XPATH_CACHE['year'], NS)
-    publication_time = extract_year_from_date_optimized(year_elem.text) if year_elem is not None and year_elem.text else None
-    
-    # Абстракт
-    abstract = extract_text_optimized(article, XPATH_CACHE['abstract'], NS)
-    
-    # Авторы и ключевые слова
-    authors = extract_authors_optimized(article)
-    keywords = extract_keywords_optimized(article)
-    
-    # Конвертируем XML → Markdown через xml_to_md микросервис и сохраняем в S3
-    xml_bytes = LET.tostring(article, encoding='utf-8')
-    markdown = get_xml_to_md_client().convert_pmc_xml(xml_bytes)
-    body_s3_key = None
-    if markdown:
-        uid_for_path = primary_id
-        s3_key = f"documents/{uid_for_path}/{uid_for_path}.md"
-        if get_s3_client().upload_text(markdown, S3_BUCKET_NAME, s3_key):
-            body_s3_key = s3_key
-        else:
-            logger.warning(f"[{primary_id}] Не удалось загрузить Markdown в S3")
-    else:
-        logger.debug(f"[{primary_id}] xml_to_md вернул пустой результат (сервис недоступен или XML пуст)")
-
-    # Данные статьи
-    data = {
-        'uid': primary_id,  # ВАЖНО: Используем вычисленный primary_id как uid
-        'pmid': pmid,
-        'pmcid': pmcid,
-        'doi': doi,
-        'title': title,
-        'publication_time': publication_time,
-        'journal': journal,
-        'abstract': abstract,
-        'body': body_s3_key,  # S3-ключ к Markdown файлу, или None если не удалось
-        'authors': authors,
-        'keywords': keywords
-    }
-    
-    # Библиографические ссылки
-    cited_list = extract_bibliographic_links_optimized(article, primary_id)
-    
-    return data, cited_list, primary_id
-
-def parse_one_file_optimized(path: Path):
+def parse_one_file_optimized(path_or_key):
     """Оптимизированный парсинг файла O(A × log R)"""
     nodes, rels = [], []
     count = 0
@@ -472,20 +639,55 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
     
     def tx_work(tx):
         if nodes:
+            doc_nodes = []
+            for node in nodes:
+                body_s3_key = node.get('body')
+                doc_id = node.get('uid') or node.get('pmcid') or node.get('pmid')
+                doc_nodes.append({
+                    'uid': doc_id,
+                    'original_filename': f"{doc_id}.xml",
+                    'md5_hash': f"pmc_{node.get('pmcid') or node.get('pmid', 'unknown')}",
+                    's3_key': f"documents/{doc_id}/{doc_id}.md",
+                    'docling_raw_md_s3_key': body_s3_key,
+                    'formatted_md_s3_key': body_s3_key,
+                    'title': node.get('title', ''),
+                    'authors': json.dumps(node.get('authors', [])),
+                    'abstract': node.get('abstract', ''),
+                    'keywords': json.dumps(node.get('keywords', [])),
+                    'journal': node.get('journal', ''),
+                    'doi': node.get('doi', ''),
+                    'pubmed_id': node.get('pmid'),
+                    'pmc_id': node.get('pmcid'),
+                    'source': 'pmc',
+                    'is_open_access': True,
+                    'is_processed': bool(body_s3_key),
+                    'processing_status': 'processed' if body_s3_key else 'pending',
+                })
             tx.run("""
                 UNWIND $nodes AS row
-                  MERGE (n:Article {uid: row.uid})
-                  ON CREATE SET n = row,
-                      n.layout_status = 'unprocessed',
-                      n.layer = null,
-                      n.level = null,
-                      n.sublevel_id = null,
-                      n.x = 0.0,
-                      n.y = 0.0,
-                      n.is_pinned = false
-                  ON MATCH SET n = row,
-                      n.layout_status = 'unprocessed'
-            """, nodes=nodes)
+                  MERGE (n:Document {uid: row.uid})
+                  ON CREATE SET 
+                      n.original_filename = row.original_filename,
+                      n.md5_hash = row.md5_hash,
+                      n.s3_key = row.s3_key,
+                      n.title = row.title,
+                      n.authors = row.authors,
+                      n.abstract = row.abstract,
+                      n.keywords = row.keywords,
+                      n.journal = row.journal,
+                      n.doi = row.doi,
+                      n.pubmed_id = row.pubmed_id,
+                      n.pmc_id = row.pmc_id,
+                      n.source = row.source,
+                      n.is_open_access = row.is_open_access,
+                      n.is_processed = row.is_processed,
+                      n.processing_status = row.processing_status
+                  ON MATCH SET 
+                      n.title = coalesce(row.title, n.title),
+                      n.s3_key = coalesce(row.s3_key, n.s3_key),
+                      n.is_processed = row.is_processed,
+                      n.processing_status = row.processing_status
+            """, nodes=doc_nodes)
         if rels:
             # УНИФИЦИРОВАННАЯ СЕМАНТИКА SOURCE/TARGET:
             # Направление: SOURCE (cited, старая) -> TARGET (citing, новая)
@@ -649,33 +851,55 @@ def process_all():
         logger.error(f"Cannot connect to Neo4j: {e}")
         return
     
-    # files = sorted(DATA_DIR.glob("*.tar.gz"))
-    files = [f for f in sorted(DATA_DIR.glob("*.tar.gz")) if "PMC011" in f.name][:1]
-    logger.info(f"TEST MODE: Processing {len(files)} file(s)")
+    # FULL PRODUCTION MODE - читаем из S3
+    s3 = get_s3_client()
+    ARCHIVE_BUCKET = "knowledge-map-data"
+    ARCHIVE_PREFIX = "archives/pmc/"
+    
+    archives = s3.s3.list_objects(Bucket=ARCHIVE_BUCKET, Prefix=ARCHIVE_PREFIX)
+    files = []
+    for obj in archives.get('Contents', []):
+        key = obj['Key']
+        if key.endswith('.tar.gz'):
+            files.append(key)
+    files = sorted(files)
+    logger.info(f"Found {len(files)} archives in S3")
     
     if not files:
-        logger.error("No files found for processing")
+        logger.warning("No archives in S3, downloading from FTP...")
+        try:
+            from .pmc_oa_bulk_ftp_downloader import download_all_files
+            if download_all_files():
+                archives = s3.s3.list_objects(Bucket=ARCHIVE_BUCKET, Prefix=ARCHIVE_PREFIX)
+                files = [obj['Key'] for obj in archives.get('Contents', []) if obj['Key'].endswith('.tar.gz')]
+                files = sorted(files)
+                logger.info(f"Downloaded {len(files)} archives from FTP")
+            else:
+                logger.error("Failed to download from FTP")
+                return
+        except Exception as e:
+            logger.error(f"Error downloading archives: {e}")
+            return
+    
+    if not files:
+        logger.error("No archives found in S3")
         return
 
-    logger.info(f"Found files: {len(files)}")
-    for i, file in enumerate(files[:10]):  # Show first 10 only
-        logger.info(f"  {i+1}. {file.name}")
+    logger.info(f"Found archives: {len(files)}")
+    for i, f in enumerate(files[:10]):
+        logger.info(f"  {i+1}. {f}")
     if len(files) > 10:
-        logger.info(f"  ... and {len(files) - 10} more files")
+        logger.info(f"  ... and {len(files) - 10} more archives")
 
     # ========== FULL PRODUCTION MODE ==========
     # Test mode disabled - processing all files
     # files = files[:1]  # Uncomment for testing
 
-    # Показываем информацию о файлах
-    total_size = 0
-    for file in files:
-        mod_time = datetime.datetime.fromtimestamp(file.stat().st_mtime)
-        file_size_mb = file.stat().st_size / (1024 * 1024)
-        total_size += file_size_mb
-        logger.info(f"  {file.name}: {file_size_mb:.1f} MB, modified: {mod_time.strftime('%Y-%m-%d %H:%M:%S')}")
-
-    logger.info(f"Total file size: {total_size:.1f} MB")
+    # Показываем информацию об архивах
+    logger.info(f"Processing archives from S3:")
+    for i, f in enumerate(files):
+        archive_name = f.split('/')[-1]
+        logger.info(f"  {i+1}. {archive_name}")
     logger.info(f"Processing files: {len(files)} file(s)")
     
     # Очистка базы
@@ -686,21 +910,21 @@ def process_all():
     write_progress_bar = tqdm(total=len(files), desc="Writing to Neo4j", unit="file", position=1, leave=True)
 
     try:
-        # Параллельная обработка файлов с прогресс-баром
+        # Параллельная обработка архивов из S3
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            future_to_file = {executor.submit(parse_one_file_optimized, f): f for f in files}
+            future_to_file = {executor.submit(parse_archive_from_s3, f): f for f in files}
 
             # Создаём прогресс-бар для парсинга
-            with tqdm(total=len(files), desc="Parsing files", unit="file", position=0, leave=True) as pbar:
+            with tqdm(total=len(files), desc="Parsing S3 archives", unit="archive", position=0, leave=True) as pbar:
                 for future in as_completed(future_to_file):
-                    file_to_process = future_to_file[future]
+                    file_key = future_to_file[future]
                     try:
                         res = future.result()
-                        pbar.set_postfix_str(f"✓ {file_to_process.name[:40]}")
+                        pbar.set_postfix_str(f"✓ {res[:40]}")
                         logger.info(f"[OK] {res} processed successfully")
                     except Exception as e:
-                        pbar.set_postfix_str(f"✗ {file_to_process.name[:40]}")
-                        logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")
+                        pbar.set_postfix_str(f"✗ {file_key[:40]}")
+                        logger.error(f"[PARSE-ERR] {file_key}: {e}")
                     finally:
                         pbar.update(1)
         

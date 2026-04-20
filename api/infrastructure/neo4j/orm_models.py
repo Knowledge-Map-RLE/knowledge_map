@@ -45,7 +45,7 @@ class User(StructuredNode):
     nickname = StringProperty(required=True)
     data = JSONProperty()
 
-    uploaded = RelationshipTo("PDFDocument", "UPLOADED")
+    uploaded = RelationshipTo("Document", "UPLOADED")
 
 
 class Tag(StructuredNode):
@@ -85,8 +85,8 @@ class Block(StructuredNode):
     target = RelationshipTo("Block", "LINK_TO", model=LinkRel)
 
 
-class PDFDocument(StructuredNode):
-    """ORM-модель PDF-документа."""
+class Document(StructuredNode):
+    """ORM-модель документа — объединяет PDFDocument и Article."""
     uid = UniqueIdProperty(primary_key=True)
     original_filename = StringProperty(required=True, index=True)
     md5_hash = StringProperty(required=True, unique_index=True)
@@ -107,7 +107,7 @@ class PDFDocument(StructuredNode):
     formatted_md_s3_key = StringProperty()
     user_md_s3_key = StringProperty()
 
-    source = StringProperty(default="upload")
+    source = StringProperty(default="upload")  # upload / pubmed / pmc / ncbi
     pubmed_id = StringProperty()
     pmc_id = StringProperty()
     is_open_access = BooleanProperty(default=False)
@@ -135,7 +135,7 @@ class PDFAnnotation(StructuredNode):
     metadata = JSONProperty()
     created_date = DateTimeProperty(default=datetime.utcnow)
 
-    document = RelationshipFrom("PDFDocument", "HAS_ANNOTATION")
+    document = RelationshipFrom("Document", "HAS_ANNOTATION")
     created_by = RelationshipFrom("User", "CREATED_ANNOTATION")
 
 
@@ -161,7 +161,7 @@ class MarkdownAnnotation(StructuredNode):
     source = StringProperty(default="user", index=True)
     processor_version = StringProperty()
 
-    document = RelationshipFrom("PDFDocument", "HAS_MARKDOWN_ANNOTATION")
+    document = RelationshipFrom("Document", "HAS_MARKDOWN_ANNOTATION")
     created_by = RelationshipFrom("User", "CREATED_MARKDOWN_ANNOTATION")
     relations_to = RelationshipTo(
         "MarkdownAnnotation", "RELATES_TO", model=AnnotationRelationRel
@@ -182,7 +182,7 @@ class LabelStudioProject(StructuredNode):
     created_date = DateTimeProperty(default=datetime.utcnow)
 
     created_by = RelationshipFrom("User", "CREATED_PROJECT")
-    documents = RelationshipTo("PDFDocument", "USES_PROJECT")
+    documents = RelationshipTo("Document", "USES_PROJECT")
 
 
 class LinguisticPatternRel(StructuredRel):

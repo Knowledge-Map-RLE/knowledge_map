@@ -38,5 +38,5 @@ def delete_all_annotations(
         NotFoundError: документ не найден
     """
     if document_repo.get_by_id(doc_id) is None:
-        raise NotFoundError("PDFDocument", doc_id)
+        raise NotFoundError("Document", doc_id)
     return annotation_repo.delete_all_for_document(doc_id)

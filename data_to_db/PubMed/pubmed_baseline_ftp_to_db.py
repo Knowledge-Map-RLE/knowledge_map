@@ -2,6 +2,7 @@ import gzip
 import time
 import datetime
 import re
+import json
 from pathlib import Path
 from queue import Queue
 from threading import Thread
@@ -11,12 +12,11 @@ from typing import Dict, Tuple, List, Any
 from neo4j import exceptions as neo4j_exceptions  # type: ignore[attr-defined]
 import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from common import get_driver, load_checkpoint, append_checkpoint, setup_logging
+from s3_client import get_s3_client
 
 # ========== LOADER DISABLED ==========
-# This loader is DISABLED as per project requirements.
-# Use PubMed Central loader (pmc_oa_bulk_to_db.py) instead.
-# Reason: PubMed Central data has more comprehensive reference sections.
-LOADER_DISABLED = True
+# PubMed loader enabled for processing downloaded archives
+LOADER_DISABLED = False
 
 # ========== КОНФИГУРАЦИЯ ==========
 DATA_DIR        = Path(r"D:/Данные/PubMed")
@@ -218,22 +218,54 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
 
     def tx_work(tx):
         if nodes:
+            doc_nodes = []
+            for node in nodes:
+                pmid = node.get('pmid')
+                doc_nodes.append({
+                    'uid': pmid,
+                    'original_filename': f"{pmid}.xml",
+                    'md5_hash': f"pubmed_{pmid}",
+                    's3_key': f"documents/{pmid}/{pmid}.md",
+                    'docling_raw_md_s3_key': f"documents/{pmid}/{pmid}.md",
+                    'formatted_md_s3_key': f"documents/{pmid}/{pmid}.md",
+                    'title': node.get('title', ''),
+                    'authors': json.dumps(node.get('authors', [])),
+                    'abstract': node.get('abstract', ''),
+                    'keywords': json.dumps(node.get('keywords', [])),
+                    'journal': node.get('journal', ''),
+                    'doi': node.get('doi', ''),
+                    'pubmed_id': pmid,
+                    'pmc_id': None,
+                    'source': 'pubmed',
+                    'is_open_access': True,
+                    'is_processed': True,
+                    'processing_status': 'processed',
+                })
             tx.run("""
                 UNWIND $nodes AS row
-                  MERGE (n:Article {uid: row.pmid})
-                  ON CREATE SET n = row,
-                      n.uid = row.pmid,
-                      n.layout_status = 'unprocessed',
-                      n.layer = null,
-                      n.level = null,
-                      n.sublevel_id = null,
-                      n.x = 0.0,
-                      n.y = 0.0,
-                      n.is_pinned = false
-                  ON MATCH SET n = row,
-                      n.uid = row.pmid,
-                      n.layout_status = 'unprocessed'
-            """, nodes=nodes)
+                  MERGE (n:Document {uid: row.uid})
+                  ON CREATE SET 
+                      n.original_filename = row.original_filename,
+                      n.md5_hash = row.md5_hash,
+                      n.s3_key = row.s3_key,
+                      n.title = row.title,
+                      n.authors = row.authors,
+                      n.abstract = row.abstract,
+                      n.keywords = row.keywords,
+                      n.journal = row.journal,
+                      n.doi = row.doi,
+                      n.pubmed_id = row.pubmed_id,
+                      n.pmc_id = row.pmc_id,
+                      n.source = row.source,
+                      n.is_open_access = row.is_open_access,
+                      n.is_processed = row.is_processed,
+                      n.processing_status = row.processing_status
+                  ON MATCH SET 
+                      n.title = coalesce(row.title, n.title),
+                      n.s3_key = coalesce(row.s3_key, n.s3_key),
+                      n.is_processed = row.is_processed,
+                      n.processing_status = row.processing_status
+            """, nodes=doc_nodes)
         if rels:
             # УНИФИЦИРОВАННАЯ СЕМАНТИКА SOURCE/TARGET:
             # Направление: SOURCE (cited, старая) -> TARGET (citing, новая)
@@ -458,6 +490,53 @@ def parse_one_file(path: Path):
 # ========== ГЛАВНЫЙ ПРОЦЕСС ==========
 
 def process_all():
+    """Для совместимости с __main__."""
+    return process_all_files()
+
+
+def process_xml_gz(s3_key: str) -> bool:
+    """Обрабатывает один XML.gz архив из S3.
+    
+    Args:
+        s3_key: S3 ключ, например 'archives/pubmed/pubmed24n0001.xml.gz'
+    
+    Returns:
+        True при успехе
+    """
+    from pathlib import Path
+    from .s3_client import get_s3_client
+    
+    ensure_schema()
+    
+    # Скачиваем из S3 во временный файл
+    s3 = get_s3_client()
+    filename = s3_key.split('/')[-1]
+    temp_dir = Path("./temp_pubmed")
+    temp_dir.mkdir(exist_ok=True)
+    local_path = temp_dir / filename
+    
+    logger.info(f"Downloading {s3_key} to {local_path}")
+    s3.s3.download_file("knowledge-map-data", s3_key, str(local_path))
+    
+    # Обрабатываем локальный файл
+    try:
+        parse_one_file(local_path)
+        return True
+    finally:
+        # Удаляем временный файл
+        if local_path.exists():
+            local_path.unlink()
+
+
+def process_all_files():
+    """Главная функция обработки - вызывается из worker.py.
+    
+    Обходит LOADER_DISABLED проверку.
+    """
+    if LOADER_DISABLED:
+        logger.info("PubMed loader is disabled by config, skipping")
+        return
+    
     ensure_schema()
 
     # проверка соединения

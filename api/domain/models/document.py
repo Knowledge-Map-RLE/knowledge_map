@@ -17,8 +17,8 @@ from typing import Optional, List, Any
 
 
 @dataclass
-class PDFDocument:
-    """Документ в формате PDF со своими метаданными и S3-ключами."""
+class Document:
+    """Унифицированная модель документа — объединяет PDFDocument и Article."""
     uid: str
     original_filename: str
     md5_hash: str
@@ -41,7 +41,7 @@ class PDFDocument:
     formatted_md_s3_key: Optional[str] = None
     user_md_s3_key: Optional[str] = None
 
-    # Источник
+    # Источник: upload / pubmed / pmc / ncbi
     source: str = "upload"
     pubmed_id: Optional[str] = None
     pmc_id: Optional[str] = None
@@ -69,6 +69,19 @@ class PDFDocument:
 
     def get_s3_url(self) -> str:
         return f"s3://{self.s3_bucket}/{self.s3_key}"
+
+    @property
+    def is_upload(self) -> bool:
+        return self.source == "upload"
+
+    @property
+    def is_pubmed(self) -> bool:
+        return self.source in ("pubmed", "pmc", "ncbi")
+
+    @property
+    def has_full_text(self) -> bool:
+        """Есть ли полный текст статьи (не только abstract)."""
+        return bool(self.docling_raw_md_s3_key or self.formatted_md_s3_key)
 
 
 @dataclass

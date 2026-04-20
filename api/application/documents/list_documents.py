@@ -10,9 +10,9 @@ from __future__ import annotations
 
 from typing import List
 
-from domain.models.document import PDFDocument
+from domain.models.document import Document
 from application.ports.repositories import DocumentRepositoryProtocol
 
 
-def list_documents(repo: DocumentRepositoryProtocol) -> List[PDFDocument]:
+def list_documents(repo: DocumentRepositoryProtocol) -> List[Document]:
     return repo.list_all()

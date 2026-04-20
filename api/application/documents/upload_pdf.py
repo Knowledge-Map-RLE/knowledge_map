@@ -14,7 +14,7 @@ from __future__ import annotations
 import logging
 from typing import Callable, Awaitable, Dict, Any
 
-from domain.models.document import PDFDocument
+from domain.models.document import Document
 from domain.exceptions import DocumentAlreadyExistsError, StorageError
 from application.ports.repositories import DocumentRepositoryProtocol
 from application.ports.object_storage import ObjectStorageProtocol
@@ -72,7 +72,7 @@ async def upload_pdf(
 
     # Создаём/обновляем запись в Neo4j
     if not existing:
-        doc = PDFDocument(
+        doc = Document(
             uid=md5_hash,
             original_filename=filename,
             md5_hash=md5_hash,

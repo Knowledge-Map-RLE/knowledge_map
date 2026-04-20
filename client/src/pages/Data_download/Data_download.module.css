@@ -1,0 +1,224 @@
+.container {
+    min-height: 100vh;
+    background: var(--bg-primary, #f5f5f5);
+}
+
+.main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.titleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    margin: 0;
+}
+
+.connectionStatus {
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-weight: 500;
+}
+
+.connected {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.disconnected {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.description {
+    color: var(--text-secondary, #666);
+    margin-bottom: 24px;
+    font-size: 15px;
+}
+
+.sourcesList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.sourceName {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    margin: 0;
+}
+
+.stateBadge {
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: var(--bg-secondary, #f0f0f0);
+    color: var(--text-secondary, #666);
+}
+
+.progressContainer {
+    margin-bottom: 12px;
+}
+
+.progressBar {
+    height: 24px;
+    background: var(--bg-secondary, #e8e8e8);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #66bb6a);
+    border-radius: 12px;
+    transition: width 0.3s ease;
+}
+
+.progressText {
+    font-size: 14px;
+    color: var(--text-secondary, #666);
+}
+
+.currentFile {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary, #888);
+    margin-top: 4px;
+    padding: 4px 8px;
+    background: var(--bg-secondary, #f0f0f0);
+    border-radius: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ftpUrl {
+    margin-bottom: 16px;
+    padding: 8px 12px;
+    background: var(--bg-secondary, #f8f8f8);
+    border-radius: 6px;
+}
+
+.ftpLink {
+    font-size: 13px;
+    color: #1976d2;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.ftpLink:hover {
+    text-decoration: underline;
+}
+
+.errorMessage {
+    padding: 12px;
+    background: #ffebee;
+    border-radius: 8px;
+    color: #c62828;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+}
+
+.startBtn,
+.pauseBtn,
+.resetBtn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.startBtn {
+    background: #4caf50;
+    color: white;
+}
+
+.startBtn:hover {
+    background: #43a047;
+}
+
+.startBtn:active {
+    transform: scale(0.98);
+}
+
+.pauseBtn {
+    background: #ff9800;
+    color: white;
+}
+
+.pauseBtn:hover {
+    background: #f57c00;
+}
+
+.resetBtn {
+    background: var(--bg-secondary, #e8e8e8);
+    color: var(--text-primary, #1a1a1a);
+}
+
+.resetBtn:hover {
+    background: #dcdcdc;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 16px;
+    color: var(--text-secondary, #666);
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 16px;
+    color: #c62828;
+}
+
+.empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary, #666);
+    font-size: 15px;
+}

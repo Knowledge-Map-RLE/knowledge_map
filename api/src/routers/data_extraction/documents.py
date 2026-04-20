@@ -188,7 +188,7 @@ async def get_document_image(doc_id: str, image_name: str):
 async def get_document_progress(doc_id: str):
     """Возвращает текущий прогресс конвертации документа."""
     from services.data_extraction_service import _conversion_progress
-    from src.models import PDFDocument as OrmDoc
+    from src.models import Document as OrmDoc
     try:
         orm_doc = OrmDoc.nodes.get_or_none(uid=doc_id)
     except Exception:

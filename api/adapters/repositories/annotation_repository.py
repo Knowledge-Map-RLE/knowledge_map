@@ -16,7 +16,7 @@ from neomodel import db, DoesNotExist
 
 from infrastructure.neo4j.orm_models import (
     MarkdownAnnotation as OrmAnnotation,
-    PDFDocument as OrmDocument,
+    Document as OrmDocument,
 )
 from domain.models.annotation import MarkdownAnnotation, AnnotationRelation
 from domain.exceptions import NotFoundError
@@ -50,7 +50,7 @@ class AnnotationRepository:
         try:
             orm_doc = OrmDocument.nodes.get(uid=doc_id)
         except DoesNotExist:
-            raise NotFoundError("PDFDocument", doc_id)
+            raise NotFoundError("Document", doc_id)
 
         orm_ann = OrmAnnotation(
             text=annotation.text,
@@ -93,7 +93,7 @@ class AnnotationRepository:
 
         # Запрос total (без SKIP/LIMIT)
         count_query = f"""
-        MATCH (doc:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
+        MATCH (doc:Document {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
         WHERE 1=1{extra_where}
         RETURN count(ann)
         """
@@ -105,7 +105,7 @@ class AnnotationRepository:
 
         # Запрос данных — свойства напрямую, без inflate()
         fetch_query = f"""
-        MATCH (doc:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
+        MATCH (doc:Document {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
         WHERE 1=1{extra_where}
         RETURN ann.uid, ann.text, ann.annotation_type,
                ann.start_offset, ann.end_offset, ann.color,
@@ -166,7 +166,7 @@ class AnnotationRepository:
     def delete_all_for_document(self, doc_id: str) -> int:
         result, _ = db.cypher_query(
             """
-            MATCH (doc:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
+            MATCH (doc:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
             DETACH DELETE ann
             RETURN count(ann) as deleted
             """,
@@ -176,7 +176,7 @@ class AnnotationRepository:
 
     def count_for_document(self, doc_id: str) -> int:
         result, _ = db.cypher_query(
-            "MATCH (doc:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(ann) RETURN count(ann)",
+            "MATCH (doc:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(ann) RETURN count(ann)",
             {"doc_id": doc_id},
         )
         return result[0][0] if result else 0
@@ -222,7 +222,7 @@ class AnnotationRepository:
     def get_relations_for_document(self, doc_id: str) -> List[AnnotationRelation]:
         result, _ = db.cypher_query(
             """
-            MATCH (doc:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(s:MarkdownAnnotation)
+            MATCH (doc:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(s:MarkdownAnnotation)
             -[r:RELATES_TO]->(t:MarkdownAnnotation)
             RETURN s.uid as source_uid, t.uid as target_uid,
                    r.uid as rel_uid, r.relation_type as rel_type,

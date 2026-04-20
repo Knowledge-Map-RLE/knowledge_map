@@ -99,13 +99,13 @@ class TestAutoAnnotation:
             pytest.skip("Dataset sample_001 not available")
 
         from services.annotation_service import AnnotationService
-        from src.models import PDFDocument
+        from src.models import Document
 
         # Mock Neo4j document
-        mock_document = MagicMock(spec=PDFDocument)
+        mock_document = MagicMock(spec=Document)
         mock_document.uid = doc_data["doc_id"]
 
-        with patch("services.annotation_service.PDFDocument") as mock_pdf_class, \
+        with patch("services.annotation_service.Document") as mock_pdf_class, \
              patch("services.annotation_service.get_s3_client", return_value=mock_s3_client):
 
             mock_pdf_class.nodes.get_or_none.return_value = mock_document

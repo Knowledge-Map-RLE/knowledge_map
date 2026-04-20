@@ -1,7 +1,10 @@
+"""
+PubMed Baseline - загрузка в S3.
+"""
 import ftplib
 import hashlib
+import io
 import logging
-import os
 import re
 import sys
 import time
@@ -10,17 +13,16 @@ from pathlib import Path
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-# ================== Конфигурация ==================
-
 BASE_URL = "ftp.ncbi.nlm.nih.gov"
 BASE_DIR = "/pubmed/baseline/"
-LOCAL_DIR = Path("D:/Data/PubMed")
-LOG_FILE = Path("./logs/download_all_xml_gz.log")
-MAX_WORKERS = 8            # число потоков для параллелизации
-RETRIES = 3                # число повторных попыток пользовательских этапов
-CHUNK_SIZE = 4 * 1024 * 1024   # 4 MiB
+ARCHIVE_BUCKET = "knowledge-map-data"
+ARCHIVE_PREFIX = "archives/pubmed/"
 
-# ================== Логирование ==================
+ROOT_DIR = Path(__file__).resolve().parents[1]
+LOG_FILE = (ROOT_DIR / 'logs' / 'pubmed_baseline_download.log')
+MAX_WORKERS = 8
+RETRIES = 3
+CHUNK_SIZE = 4 * 1024 * 1024
 
 LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
@@ -33,23 +35,23 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ================== HTTP Сессия с Retry ==================
-
 session = requests.Session()
-retries = Retry(
-    total=5,
-    backoff_factor=1,
-    status_forcelist=[500, 502, 503, 504],
-    allowed_methods=["GET", "HEAD"]
-)
+retries = Retry(total=5, backoff_factor=1, status_forcelist=[500, 502, 503, 504], allowed_methods=["GET", "HEAD"])
 adapter = HTTPAdapter(max_retries=retries)
 session.mount("https://", adapter)
 session.mount("http://", adapter)
 
-# ================== Утилиты ==================
+_s3_client = None
 
-def ftp_list_xml_gz() -> list[str]:
-    """Вернёт список всех .xml.gz-файлов на FTP."""
+def get_s3_client():
+    global _s3_client
+    if _s3_client is None:
+        from s3_client import get_s3_client as _get
+        _s3_client = _get()
+    return _s3_client
+
+def ftp_list_xml_gz():
+    """Список .xml.gz на FTP."""
     with ftplib.FTP(BASE_URL) as ftp:
         ftp.login()
         ftp.cwd(BASE_DIR)
@@ -57,167 +59,110 @@ def ftp_list_xml_gz() -> list[str]:
     return [n for n in names if n.endswith(".xml.gz")]
 
 def get_remote_md5(filename: str) -> str:
-    """Скачивает .md5 через HTTPS и возвращает реальный MD5-хеш."""
+    """MD5 с FTP."""
     url = f"https://{BASE_URL}{BASE_DIR}{filename}.md5"
     r = session.get(url, timeout=30)
     r.raise_for_status()
     text = r.text.strip()
-    # Найдём MD5-хеш формата 32 hex-символа
     m = re.search(r"\b[0-9a-fA-F]{32}\b", text)
     if not m:
-        raise ValueError(f"Не удалось распарсить MD5 из: {text!r}")
+        raise ValueError(f"Cannot parse MD5 from: {text!r}")
     return m.group(0).lower()
 
-def calc_md5(path: Path) -> str:
-    """Считает MD5 локального файла."""
-    h = hashlib.md5()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(CHUNK_SIZE), b""):
-            h.update(chunk)
-    return h.hexdigest()
+def archive_exists_in_s3(filename: str) -> bool:
+    """Проверяет есть ли в S3."""
+    s3 = get_s3_client()
+    key = f"{ARCHIVE_PREFIX}{filename}"
+    try:
+        return s3.s3.head_object(Bucket=ARCHIVE_BUCKET, Key=key) is not None
+    except Exception:
+        return False
 
-# ================== Загрузка файлов ==================
-
-def download_file_remote(filename: str) -> None:
-    """
-    Скачивает один файл с докачкой, проверкой MD5 и экспоненциальным бэкоффом.
-    """
+def download_to_s3(filename: str) -> bool:
+    """Скачивает в S3."""
     url = f"https://{BASE_URL}{BASE_DIR}{filename}"
-    dest = LOCAL_DIR / filename
-    dest.parent.mkdir(parents=True, exist_ok=True)
-
-    remote_md5 = get_remote_md5(filename)
-
-    # Если уже есть и целый — пропускаем
-    if dest.exists() and calc_md5(dest) == remote_md5:
-        logger.info(f"[SKIP] {filename}: уже загружен и MD5 OK")
-        return
-
-    tmp = dest.with_suffix(dest.suffix + ".part")
-
+    s3_key = f"{ARCHIVE_PREFIX}{filename}"
+    
+    try:
+        remote_md5 = get_remote_md5(filename)
+    except:
+        remote_md5 = None
+    
     for attempt in range(1, RETRIES + 1):
         try:
-            resume = tmp.stat().st_size if tmp.exists() else 0
-            headers = {"Range": f"bytes={resume}-"} if resume else {}
-            mode = "ab" if resume else "wb"
-
-            with session.get(url, stream=True, headers=headers, timeout=60) as r:
+            with session.get(url, stream=True, timeout=60) as r:
                 r.raise_for_status()
-                total = int(r.headers.get("Content-Length", 0)) + resume
-                logger.info(f"[START] {filename}: total={total/1e6:.1f} MiB, resume={resume}")
+                total = int(r.headers.get("Content-Length", 0))
+                logger.info(f"[START] {filename}: total={total/1e6:.1f} MiB")
 
-                downloaded = resume
-                with tmp.open(mode) as f:
-                    for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
-                        if not chunk:
-                            continue
-                        f.write(chunk)
-                        downloaded += len(chunk)
-                        pct = downloaded * 100 / total
-                        logger.info(f"[{filename}] {downloaded/1e6:.1f}/{total/1e6:.1f} MiB ({pct:.1f}%)")
+                buffer = io.BytesIO()
+                downloaded = 0
+                
+                for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
+                    if not chunk:
+                        continue
+                    buffer.write(chunk)
+                    downloaded += len(chunk)
+                    pct = downloaded * 100 / total
+                    logger.info(f"[{filename}] {downloaded/1e6:.1f}/{total/1e6:.1f} MiB ({pct:.1f}%)")
 
-            # После полной записи
-            tmp.replace(dest)
-
-            md5_local = calc_md5(dest)
-            if md5_local != remote_md5:
-                logger.warning(f"[MD5-FAIL] {filename}: {md5_local} != {remote_md5}")
-                dest.unlink(missing_ok=True)
-                tmp.unlink(missing_ok=True)
-                raise IOError("MD5 mismatch after download")
-
-            logger.info(f"[OK] {filename}: MD5 verified")
-            return
+                buffer.seek(0)
+                s3 = get_s3_client()
+                s3.s3.put_object(Bucket=ARCHIVE_BUCKET, Key=s3_key, Body=buffer.getvalue())
+                
+                logger.info(f"[OK] {filename}: uploaded to S3")
+                return True
 
         except Exception as e:
             wait = 2 ** attempt
             logger.warning(f"[ERROR] {filename} attempt {attempt}/{RETRIES}: {e}; retry in {wait}s")
             time.sleep(wait)
 
-    raise RuntimeError(f"Failed to download {filename} after {RETRIES} attempts")
+    logger.error(f"[FAIL] {filename}: after {RETRIES} attempts")
+    return False
 
-
-def verify_all_downloads() -> bool:
-    """
-    Проверяет, что на сервере и локально скачано и присутствует ровно одинаковое
-    множество файлов, без пропусков номеров.
-    Возвращает True, если всё в порядке, иначе False.
-    """
-    # Получаем список файлов с FTP и локальный список
-    server_files = sorted(ftp_list_xml_gz())
-    local_files = sorted([p.name for p in LOCAL_DIR.glob("pubmed*.xml.gz")])
-
-    # Считаем
-    count_server = len(server_files)
-    count_local = len(local_files)
-    logger.info(f"На сервере: {count_server} файлов, локально: {count_local} файлов")
-
-    # Ищем пропуски и лишние
-    missing = [f for f in server_files if f not in local_files]
-    extra   = [f for f in local_files  if f not in server_files]
-
-    if missing:
-        logger.error(f"Отсутствуют файлы ({len(missing)}): {missing[:5]}{'...' if len(missing)>5 else ''}")
-    if extra:
-        logger.warning(f"Лишние файлы ({len(extra)}): {extra[:5]}{'...' if len(extra)>5 else ''}")
-
-    # Проверяем, что номера идут без пропусков
-    # Извлечём номер из имени вида pubmedNNnXXXX.xml.gz
-    import re
-    nums = sorted(int(re.search(r"(\d+)\.xml\.gz$", f).group(1)) for f in server_files)
-    if nums:
-        expected = list(range(nums[0], nums[-1] + 1))
-        if nums != expected:
-            missing_idxs = set(expected) - set(nums)
-            logger.error(f"Пропущенные номера между {nums[0]} и {nums[-1]}: {sorted(missing_idxs)[:5]}{'...' if len(missing_idxs)>5 else ''}")
-
-    ok = (count_server == count_local) and not missing
-    if ok:
-        logger.info("✅ Проверка завершена: все файлы на месте и без пропусков.")
-    else:
-        logger.error("❌ Проверка завершена: найдены расхождения.")
-    return ok
-
-# ================== Основные функции ==================
+def download_file_remote(filename: str) -> bool:
+    """Скачивает в S3."""
+    if archive_exists_in_s3(filename):
+        logger.info(f"[SKIP] {filename}: already in S3")
+        return True
+    return download_to_s3(filename)
 
 def download_all_files():
-    """Скачивает все .xml.gz файлы в LOCAL_DIR."""
+    """Скачивает все PubMed архивы в S3 и сразу парсит каждый."""
     files = ftp_list_xml_gz()
     if not files:
-        logger.error("Не найдено файлов для загрузки")
+        logger.error("No files found on FTP")
         return False
-    
-    logger.info(f"Найдено {len(files)} файлов для загрузки")
-    
+
+    logger.info(f"Found {len(files)} files on FTP")
+
     success_count = 0
     error_count = 0
-    
-    for i, filename in enumerate(sorted(files), 1):
-        logger.info(f"[{i}/{len(files)}] Загружаем: {filename}")
-        try:
-            download_file_remote(filename)
-            logger.info(f"[OK] {filename} скачан успешно")
-            success_count += 1
-        except Exception as e:
-            logger.error(f"[ERROR] {filename} не удалось скачать: {e}")
-            error_count += 1
-    
-    logger.info(f"Загрузка завершена: {success_count} успешно, {error_count} с ошибками")
-    return error_count == 0
 
-def download_one_file(pmid: str):
-    """
-    Скачивает один файл по PMID,
-    если имя файла совпадает c '<pmid>.xml.gz'.
-    """
-    filename = f"{pmid}.xml.gz"
-    return download_file_remote(filename)
+    for i, filename in enumerate(sorted(files), 1):
+        logger.info(f"[{i}/{len(files)}] Downloading and processing: {filename}")
+        try:
+            if download_file_remote(filename):
+                # Сразу парсим загруженный архив
+                from .pubmed_baseline_ftp_to_db import process_xml_gz
+                s3_key = f"archives/pubmed/{filename}"
+                process_xml_gz(s3_key)
+                success_count += 1
+            else:
+                error_count += 1
+        except Exception as e:
+            logger.error(f"[ERROR] {filename}: {e}")
+            error_count += 1
+
+    logger.info(f"Complete: {success_count} ok, {error_count} errors")
+    return error_count == 0
 
 if __name__ == "__main__":
     start = time.time()
     success = download_all_files()
     if success:
-        logger.info(f"Загрузка завершена успешно за {time.time() - start:.1f}s")
+        logger.info(f"Done in {time.time() - start:.1f}s")
     else:
-        logger.error("Загрузка завершена с ошибками")
+        logger.error("Completed with errors")
         sys.exit(1)

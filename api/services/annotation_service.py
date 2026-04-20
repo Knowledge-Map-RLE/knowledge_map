@@ -6,7 +6,7 @@ from datetime import datetime
 from fastapi import HTTPException
 from neomodel import db
 
-from src.models import MarkdownAnnotation, PDFDocument, User, AnnotationRelationRel
+from src.models import MarkdownAnnotation, Document, User, AnnotationRelationRel
 from services.nlp_service import NLPService
 from services import get_s3_client, settings
 from services.markdown_filter import MarkdownFilter
@@ -48,7 +48,7 @@ class AnnotationService:
         """
         try:
             # Проверка существования документа
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
             if not document:
                 raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
 
@@ -112,7 +112,7 @@ class AnnotationService:
             Словарь с аннотациями и метаданными пагинации
         """
         try:
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
             if not document:
                 raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
 
@@ -132,7 +132,7 @@ class AnnotationService:
 
             # Запрос для подсчета общего количества
             count_query = f"""
-            MATCH (d:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            MATCH (d:Document {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
             {where_clause}
             RETURN count(a) as total
             """
@@ -145,7 +145,7 @@ class AnnotationService:
                 params['limit'] = limit
 
             query = f"""
-            MATCH (d:PDFDocument {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            MATCH (d:Document {{uid: $doc_id}})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
             {where_clause}
             RETURN a
             ORDER BY a.start_offset
@@ -277,15 +277,15 @@ class AnnotationService:
             Информация об удаленных аннотациях
         """
         try:
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
             if not document:
                 raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
 
             # Удаляем все аннотации документа через Cypher запрос
             query = """
-            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
             WITH count(a) as total
-            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
             DETACH DELETE a
             RETURN total
             """
@@ -406,13 +406,13 @@ class AnnotationService:
             Список связей
         """
         try:
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
             if not document:
                 raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
 
             # Cypher запрос для получения всех связей между аннотациями документа
             query = """
-            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a1:MarkdownAnnotation)
+            MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a1:MarkdownAnnotation)
             MATCH (a1)-[r:RELATES_TO]->(a2:MarkdownAnnotation)
             RETURN a1.uid AS source_uid, a2.uid AS target_uid, r.relation_type AS relation_type,
                    r.uid AS relation_uid, r.created_date AS created_date, r.metadata AS metadata
@@ -558,7 +558,7 @@ class AnnotationService:
         """
         try:
             # Проверка существования документа
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
             if not document:
                 raise HTTPException(status_code=404, detail=f"Документ {doc_id} не найден")
 
@@ -804,7 +804,7 @@ class AnnotationService:
             # Обновляем напрямую через Cypher чтобы избежать stale neomodel объекта
             from neomodel import db as _neo4j_db
             _neo4j_db.cypher_query(
-                "MATCH (d:PDFDocument {uid: $uid}) SET d.processing_status = 'annotated'",
+                "MATCH (d:Document {uid: $uid}) SET d.processing_status = 'annotated'",
                 {"uid": doc_id}
             )
             logger.info(f"Документ {doc_id}: processing_status → annotated (Cypher)")

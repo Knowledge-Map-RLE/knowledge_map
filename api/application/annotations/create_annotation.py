@@ -36,7 +36,7 @@ def create_annotation(
         DomainValidationError: некорректные offsets
     """
     if document_repo.get_by_id(doc_id) is None:
-        raise NotFoundError("PDFDocument", doc_id)
+        raise NotFoundError("Document", doc_id)
 
     validate_offsets(start_offset, end_offset)
 

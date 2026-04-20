@@ -13,16 +13,16 @@ from typing import Optional, List
 
 from neomodel import DoesNotExist
 
-from infrastructure.neo4j.orm_models import PDFDocument as OrmDocument
-from domain.models.document import PDFDocument
+from infrastructure.neo4j.orm_models import Document as OrmDocument
+from domain.models.document import Document
 from domain.exceptions import NotFoundError
 
 logger = logging.getLogger(__name__)
 
 
-def _orm_to_domain(orm_doc: OrmDocument) -> PDFDocument:
-    """Транслирует ORM-объект PDFDocument в доменный dataclass."""
-    return PDFDocument(
+def _orm_to_domain(orm_doc: OrmDocument) -> Document:
+    """Транслирует ORM-объект Document в доменный dataclass."""
+    return Document(
         uid=orm_doc.uid,
         original_filename=orm_doc.original_filename,
         md5_hash=orm_doc.md5_hash,
@@ -50,7 +50,7 @@ def _orm_to_domain(orm_doc: OrmDocument) -> PDFDocument:
     )
 
 
-def _domain_to_orm(doc: PDFDocument, orm_doc: Optional[OrmDocument] = None) -> OrmDocument:
+def _domain_to_orm(doc: Document, orm_doc: Optional[OrmDocument] = None) -> OrmDocument:
     """Заполняет ORM-объект из доменного dataclass."""
     if orm_doc is None:
         orm_doc = OrmDocument(
@@ -86,23 +86,23 @@ def _domain_to_orm(doc: PDFDocument, orm_doc: Optional[OrmDocument] = None) -> O
 
 class DocumentRepository:
     """
-    neomodel-реализация репозитория PDF-документов.
+    neomodel-реализация репозитория документов.
     Удовлетворяет DocumentRepositoryProtocol (structural subtyping).
     """
 
-    def get_by_id(self, uid: str) -> Optional[PDFDocument]:
+    def get_by_id(self, uid: str) -> Optional[Document]:
         try:
             return _orm_to_domain(OrmDocument.nodes.get(uid=uid))
         except DoesNotExist:
             return None
 
-    def get_by_md5(self, md5_hash: str) -> Optional[PDFDocument]:
+    def get_by_md5(self, md5_hash: str) -> Optional[Document]:
         try:
             return _orm_to_domain(OrmDocument.nodes.get(md5_hash=md5_hash))
         except DoesNotExist:
             return None
 
-    def save(self, doc: PDFDocument) -> PDFDocument:
+    def save(self, doc: Document) -> Document:
         try:
             orm_doc = OrmDocument.nodes.get(uid=doc.uid) if doc.uid else None
         except DoesNotExist:
@@ -117,10 +117,10 @@ class DocumentRepository:
         try:
             orm_doc = OrmDocument.nodes.get(uid=uid)
         except DoesNotExist:
-            raise NotFoundError("PDFDocument", uid)
+            raise NotFoundError("Document", uid)
         orm_doc.delete()
 
-    def list_all(self) -> List[PDFDocument]:
+    def list_all(self) -> List[Document]:
         try:
             return [_orm_to_domain(d) for d in OrmDocument.nodes.all()]
         except Exception as e:

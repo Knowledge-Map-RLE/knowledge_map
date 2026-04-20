@@ -15,7 +15,7 @@ from utils.hash_utils import _compute_md5
 from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
 from src.schemas.api import DataExtractionResponse, ImportAnnotationsRequest
 from . import settings, get_s3_client
-from src.models import PDFDocument
+from src.models import Document
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +136,7 @@ class DataExtractionService:
 
             # Обновляем статус на pdf_to_markdown
             try:
-                doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                doc = Document.nodes.get_or_none(uid=doc_id)
                 if doc:
                     doc.processing_status = 'pdf_to_markdown'
                     doc.save()
@@ -224,9 +224,9 @@ class DataExtractionService:
                 # Сохраняем документ в Neo4j для поддержки аннотаций
                 try:
                     # Проверяем, существует ли документ
-                    existing_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                    existing_doc = Document.nodes.get_or_none(uid=doc_id)
                     if not existing_doc:
-                        PDFDocument(
+                        Document(
                             uid=doc_id,
                             original_filename=filename or f"{doc_id}.pdf",
                             md5_hash=doc_id,
@@ -262,7 +262,7 @@ class DataExtractionService:
                 logger.exception(f"PDF to MD processing failed for {doc_id}: {e}")
                 # Устанавливаем статус error в Neo4j
                 try:
-                    err_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                    err_doc = Document.nodes.get_or_none(uid=doc_id)
                     if err_doc:
                         err_doc.processing_status = 'error'
                         err_doc.save()
@@ -282,8 +282,8 @@ class DataExtractionService:
 
         # Создаём запись в Neo4j сразу, до запуска фоновой задачи
         try:
-            if not PDFDocument.nodes.get_or_none(uid=doc_id):
-                PDFDocument(
+            if not Document.nodes.get_or_none(uid=doc_id):
+                Document(
                     uid=doc_id,
                     original_filename=file.filename or f"{doc_id}.pdf",
                     md5_hash=doc_id,
@@ -317,7 +317,7 @@ class DataExtractionService:
             logger.info(f"[upload] Дубликат с markdown: doc_id={doc_id}")
             # Обновляем статус если документ был только что создан с uploading
             try:
-                dup_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                dup_doc = Document.nodes.get_or_none(uid=doc_id)
                 if dup_doc and dup_doc.processing_status == 'uploading':
                     dup_doc.processing_status = 'ready_for_annotation'
                     dup_doc.is_processed = True
@@ -389,7 +389,7 @@ class DataExtractionService:
 
         # Получаем активную версию markdown используя логику версионирования
         try:
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
         except Exception as e:
             logger.error(f"Ошибка получения документа из Neo4j: {e}")
             document = None
@@ -472,14 +472,14 @@ class DataExtractionService:
 
         # Получаем документ из Neo4j для определения активной версии
         try:
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
         except Exception as e:
             logger.error(f"Ошибка получения документа из Neo4j: {e}")
             document = None
 
         # Определяем S3 ключ в зависимости от версии
         if version == "active":
-            # Используем логику из PDFDocument.get_active_markdown_key()
+            # Используем логику из Document.get_active_markdown_key()
             if document:
                 if document.user_md_s3_key:
                     md_key = document.user_md_s3_key
@@ -560,11 +560,11 @@ class DataExtractionService:
 
         # Удаляем все связанные данные из Neo4j одним запросом
         try:
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
             if document:
                 # Комплексное удаление всех связанных данных
                 query = """
-                MATCH (d:PDFDocument {uid: $doc_id})
+                MATCH (d:Document {uid: $doc_id})
                 OPTIONAL MATCH (d)-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
                 OPTIONAL MATCH (p:Pattern {source_token_uid: a.uid})
                 DETACH DELETE p, a, d
@@ -574,7 +574,7 @@ class DataExtractionService:
                 deleted_count = result[0][0] if result else 0
                 logger.info(f"[delete] Neo4j: удалено {deleted_count} объектов для doc_id={doc_id}")
 
-                check_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+                check_doc = Document.nodes.get_or_none(uid=doc_id)
                 if check_doc:
                     logger.error(f"[delete] Документ {doc_id} всё ещё существует в Neo4j после удаления")
             else:
@@ -686,7 +686,7 @@ class DataExtractionService:
         # Обновляем Neo4j PDFDocument с user_md_s3_key и title
         extracted_title = None
         try:
-            document = PDFDocument.nodes.get_or_none(uid=doc_id)
+            document = Document.nodes.get_or_none(uid=doc_id)
             if document:
                 document.user_md_s3_key = md_key
                 extracted_title = extract_title_from_markdown(markdown)
@@ -712,42 +712,32 @@ class DataExtractionService:
 
         Использует Neo4j как source of truth для избежания проблем с eventual consistency в S3.
         """
-        from src.models import PDFDocument
+        from src.models import Document
 
         bucket = settings.S3_BUCKET_NAME
         documents = []
 
+        import sys
+        print(f"DEBUG list_documents START", file=sys.stderr, flush=True)
+        
         try:
             # Получаем все документы из Neo4j
-            all_docs = PDFDocument.nodes.all()
-            # Пересоздаем итератор (первый all() использован для подсчёта)
-            all_docs = PDFDocument.nodes.all()
+            all_docs = Document.nodes.all()
+            docs_list = list(all_docs)
+            print(f"DEBUG: Found {len(docs_list)} docs", file=sys.stderr, flush=True)
+            all_docs = docs_list
 
             for pdf_doc in all_docs:
                 doc_id = pdf_doc.uid
                 prefix = f"documents/{doc_id}/"
                 pdf_key = f"{prefix}{doc_id}.pdf"
 
-                # Определяем markdown ключ (приоритет: user > formatted > raw > старый формат)
-                md_key = (
-                    pdf_doc.user_md_s3_key
-                    or pdf_doc.formatted_md_s3_key
-                    or pdf_doc.docling_raw_md_s3_key
-                    or f"{prefix}{doc_id}.md"
-                )
-
-                pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
+                # Просто проверяем s3_key напрямую - это путь к markdown
+                md_key = pdf_doc.s3_key
                 md_exists = await self.s3_client.object_exists(bucket, md_key)
-
-                # Для PubMed/PMC статей без PDF проверяем прямой s3_key
-                if not md_exists and not pdf_exists and pdf_doc.s3_key:
-                    direct_exists = await self.s3_client.object_exists(bucket, pdf_doc.s3_key)
-                    if direct_exists:
-                        md_exists = pdf_doc.s3_key.endswith('.md')
-                        pdf_exists = pdf_doc.s3_key.endswith('.pdf')
-
-                # Показываем документ если есть хотя бы PDF или markdown
-                if pdf_exists or md_exists:
+                
+                # Показываем документ если есть markdown
+                if md_exists:
                     item = {
                         "doc_id": doc_id,
                         "has_markdown": md_exists,
@@ -781,7 +771,7 @@ class DataExtractionService:
         Returns:
             Dict со статусом доступности данных
         """
-        from src.models import PDFDocument
+        from src.models import Document
         from neomodel import db
 
         bucket = settings.S3_BUCKET_NAME
@@ -793,7 +783,7 @@ class DataExtractionService:
 
         # Проверка Markdown
         markdown_exists = False
-        document = PDFDocument.nodes.get_or_none(uid=doc_id)
+        document = Document.nodes.get_or_none(uid=doc_id)
         if document:
             # Проверяем активный markdown
             if document.user_md_s3_key:
@@ -810,7 +800,7 @@ class DataExtractionService:
 
         # Проверка аннотаций
         query_annotations = """
-        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+        MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
         RETURN count(a) as count
         """
         results, _ = db.cypher_query(query_annotations, {"doc_id": doc_id})
@@ -819,7 +809,7 @@ class DataExtractionService:
 
         # Проверка связей
         query_relations = """
-        MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a1:MarkdownAnnotation)
+        MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a1:MarkdownAnnotation)
         MATCH (a1)-[r:RELATES_TO]->(a2:MarkdownAnnotation)
         RETURN count(r) as count
         """

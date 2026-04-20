@@ -1,25 +1,28 @@
+"""
+PMC OA Bulk архивов - загрузка в S3.
+"""
 import ftplib
+import io
 import logging
 import sys
-import time
+import os
 from pathlib import Path
+from typing import Optional
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-# ================== Конфигурация ==================
-
 BASE_URL = 'ftp.ncbi.nlm.nih.gov'
-BASE_DIR = '/pub/pmc/oa_bulk/oa_comm/xml/'
-LOCAL_DIR = Path('D:/Data/PubMed_Central')
+BASE_DIR = '/pub/pmc/deprecated/oa_bulk/oa_comm/xml/'
+ARCHIVE_BUCKET = 'knowledge-map-data'
+ARCHIVE_PREFIX = 'archives/pmc/'
 
-ROOT_DIR = Path(__file__).resolve().parents[1]  # worker_data_to_db
+ROOT_DIR = Path(__file__).resolve().parents[1]
 LOG_FILE = (ROOT_DIR / 'logs' / 'pmc_oa_bulk_download.log')
-MAX_WORKERS = 4            # зарезервировано для будущей параллелизации
-RETRIES = 3                # число повторных попыток пользовательских этапов
-CHUNK_SIZE = 4 * 1024 * 1024   # 4 MiB
-
-# ================== Логирование ==================
+MAX_WORKERS = 4
+RETRIES = 3
+CHUNK_SIZE = 4 * 1024 * 1024
 
 LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
@@ -32,117 +35,122 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ================== HTTP Сессия с Retry ==================
-
 session = requests.Session()
-retries = Retry(
-    total=5,
-    backoff_factor=1,
-    status_forcelist=[500, 502, 503, 504],
-    allowed_methods=["GET", "HEAD"],
-)
+retries = Retry(total=5, backoff_factor=1, status_forcelist=[500, 502, 503, 504], allowed_methods=["GET", "HEAD"])
 adapter = HTTPAdapter(max_retries=retries)
 session.mount('https://', adapter)
 session.mount('http://', adapter)
 
-# ================== Утилиты ==================
+_s3_client = None
+
+def get_s3_client():
+    global _s3_client
+    if _s3_client is None:
+        from s3_client import get_s3_client as _get
+        _s3_client = _get()
+    return _s3_client
 
 def ftp_list_tar_gz() -> list[str]:
-    """Вернёт список всех .tar.gz-файлов в каталоге PMC OA Bulk (comm/xml)."""
+    """Список всех .tar.gz на FTP."""
     with ftplib.FTP(BASE_URL) as ftp:
         ftp.login()
         ftp.cwd(BASE_DIR)
         names = ftp.nlst()
     return [n for n in names if n.endswith('.tar.gz')]
 
+def archive_exists_in_s3(filename: str) -> bool:
+    """Проверяет есть ли архив в S3."""
+    s3 = get_s3_client()
+    key = f"{ARCHIVE_PREFIX}{filename}"
+    try:
+        return s3.s3.head_object(Bucket=ARCHIVE_BUCKET, Key=key) is not None
+    except Exception:
+        return False
 
-# ================== Загрузка файлов ==================
-
-def download_file_remote(filename: str) -> None:
-    """
-    Скачивает один файл с докачкой (без проверки MD5), с экспоненциальным бэкоффом.
-    """
+def download_to_s3(filename: str, resume_byte: int = 0) -> bool:
+    """Скачивает архив напрямую в S3."""
     url = f"https://{BASE_URL}{BASE_DIR}{filename}"
-    dest = LOCAL_DIR / filename
-    dest.parent.mkdir(parents=True, exist_ok=True)
-
-    tmp = dest.with_suffix(dest.suffix + '.part')
+    s3_key = f"{ARCHIVE_PREFIX}{filename}"
 
     for attempt in range(1, RETRIES + 1):
         try:
-            resume = tmp.stat().st_size if tmp.exists() else 0
-            headers = {"Range": f"bytes={resume}-"} if resume else {}
-            mode = 'ab' if resume else 'wb'
+            headers = {"Range": f"bytes={resume_byte}-"} if resume_byte else {}
+            mode = 'ab' if resume_byte else 'wb'
 
             with session.get(url, stream=True, headers=headers, timeout=60) as r:
                 r.raise_for_status()
-                total = int(r.headers.get('Content-Length', 0)) + resume
-                logger.info(f"[START] {filename}: total={total/1e6:.1f} MiB, resume={resume}")
+                total = int(r.headers.get('Content-Length', 0)) + resume_byte
+                logger.info(f"[START] {filename}: total={total/1e6:.1f} MiB, resume={resume_byte}")
 
-                downloaded = resume
-                with tmp.open(mode) as f:
-                    for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
-                        if not chunk:
-                            continue
-                        f.write(chunk)
-                        downloaded += len(chunk)
-                        if total:
-                            pct = downloaded * 100 / total
-                            logger.info(f"[{filename}] {downloaded/1e6:.1f}/{total/1e6:.1f} MiB ({pct:.1f}%)")
+                buffer = io.BytesIO()
+                downloaded = resume_byte
+                
+                for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
+                    if not chunk:
+                        continue
+                    buffer.write(chunk)
+                    downloaded += len(chunk)
+                    if total:
+                        pct = downloaded * 100 / total
+                        logger.info(f"[{filename}] {downloaded/1e6:.1f}/{total/1e6:.1f} MiB ({pct:.1f}%)")
 
-            # После полной записи
-            tmp.replace(dest)
-            logger.info(f"[OK] {filename}: скачан")
-            return
+                buffer.seek(0)
+                s3 = get_s3_client()
+                s3.s3.put_object(Bucket=ARCHIVE_BUCKET, Key=s3_key, Body=buffer.getvalue())
+                logger.info(f"[OK] {filename}: uploaded to S3")
+                return True
 
         except Exception as e:
             wait = 2 ** attempt
             logger.warning(f"[ERROR] {filename} attempt {attempt}/{RETRIES}: {e}; retry in {wait}s")
             time.sleep(wait)
 
-    raise RuntimeError(f"Failed to download {filename} after {RETRIES} attempts")
+    logger.error(f"[FAIL] {filename}: after {RETRIES} attempts")
+    return False
 
+def download_file_remote(filename: str) -> bool:
+    """Скачивает архив в S3, проверяя существующий."""
+    if archive_exists_in_s3(filename):
+        logger.info(f"[SKIP] {filename}: already in S3")
+        return True
 
-# ================== Основные функции ==================
+    return download_to_s3(filename)
 
 def download_all_files() -> bool:
-    """Скачивает все .tar.gz файлы из каталога PMC OA Bulk в LOCAL_DIR."""
+    """Скачивает все архивы PMC в S3 и сразу парсит каждый."""
     files = ftp_list_tar_gz()
     if not files:
-        logger.error('Не найдено файлов для загрузки')
+        logger.error('No files found on FTP')
         return False
 
-    logger.info(f"Найдено {len(files)} файлов для загрузки")
+    logger.info(f"Downloading all {len(files)} files from FTP")
 
     success_count = 0
     error_count = 0
 
     for i, filename in enumerate(sorted(files), 1):
-        logger.info(f"[{i}/{len(files)}] Загружаем: {filename}")
+        logger.info(f"[{i}/{len(files)}] Downloading and processing: {filename}")
         try:
-            download_file_remote(filename)
-            logger.info(f"[OK] {filename} скачан успешно")
-            success_count += 1
+            if download_file_remote(filename):
+                # Сразу парсим загруженный архив
+                from .pmc_oa_bulk_to_db import parse_archive_from_s3
+                s3_key = f"archives/pmc/{filename}"
+                parse_archive_from_s3(s3_key)
+                success_count += 1
+            else:
+                error_count += 1
         except Exception as e:
-            logger.error(f"[ERROR] {filename} не удалось скачать: {e}")
+            logger.error(f"[ERROR] {filename}: {e}")
             error_count += 1
 
-    logger.info(f"Загрузка завершена: {success_count} успешно, {error_count} с ошибками")
+    logger.info(f"Complete: {success_count} ok, {error_count} errors")
     return error_count == 0
-
-
-def download_one_file(archive_name: str):
-    """
-    Скачивает один конкретный архив по имени (например, 'comm_use.A-B.xml.tar.gz').
-    """
-    return download_file_remote(archive_name)
-
 
 if __name__ == '__main__':
     start = time.time()
     success = download_all_files()
     if success:
-        logger.info(f"Загрузка завершена успешно за {time.time() - start:.1f}s")
+        logger.info(f"Done in {time.time() - start:.1f}s")
     else:
-        logger.error('Загрузка завершена с ошибками')
+        logger.error('Completed with errors')
         sys.exit(1)

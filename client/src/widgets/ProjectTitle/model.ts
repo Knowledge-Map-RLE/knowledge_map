@@ -11,11 +11,12 @@ export const SLOGANS = [
 
 export const LINKS: readonly ProjectTitleLink[] = [
     { to: '/', label: 'Главная — Лендинг' },
-    { to: '/km', label: 'Карта знаний' },
     { to: '/introduction', label: 'Введение' },
+    { to: '/km', label: 'Карта знаний' },
     { to: '/rle_databases', label: 'Базы данных РПЖ' },
-    { to: '/science_articles', label: 'Карта научных статей' },
+    { to: '/data_download', label: 'Загрузка данных' },
     { to: '/data_extraction', label: 'Извлечение данных' },
+    { to: '/science_articles', label: 'Карта научных статей' },
     { to: '/pattern_analysis', label: 'Анализ паттернов' },
 ] as const;
 

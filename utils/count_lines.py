@@ -21,7 +21,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 # Конфигурация
 # ---------------------------------------------------------------------------
 
-BASE = Path(__file__).parent.resolve()
+BASE = Path(__file__).parent.parent.resolve()
 
 # Директории, которые всегда пропускаются (независимо от .gitignore)
 SKIP_DIRS: set = {

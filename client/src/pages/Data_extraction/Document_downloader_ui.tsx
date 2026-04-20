@@ -6,7 +6,6 @@ import {
     type PubMedSearchResult
 } from '../../services/api';
 import DocumentContextMenu from './DocumentContextMenu';
-import WorkerStatusIndicator from './WorkerStatusIndicator';
 
 interface PDFDocument {
     uid: string;
@@ -542,9 +541,6 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                     </div>
                 </div>
             </div>
-
-            {/* Блок статуса воркера пакетной загрузки */}
-            <WorkerStatusIndicator />
 
             {contextMenu && (
                 <DocumentContextMenu

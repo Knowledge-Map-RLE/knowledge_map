@@ -28,15 +28,15 @@ class XmlToMdClient:
         self.stub = xml_to_md_pb2_grpc.XmlToMarkdownServiceStub(self.channel)
         logger.info(f"[xml_to_md_client] Создан синхронный клиент: {host}:{port}")
 
-    def convert_pmc_xml(self, xml_bytes: bytes, timeout: int = 60) -> str:
+    def convert_pmc_xml(self, xml_bytes: bytes, timeout: int = 60) -> dict:
         """Конвертирует PMC XML в Markdown через gRPC.
 
         Args:
-            xml_bytes: XML байты статьи (весь <article> элемент)
+            xml_bytes: XML байты статьи
             timeout: таймаут запроса в секундах
 
         Returns:
-            Markdown-строка или "" при ошибке/недоступности сервиса
+            dict с ключами: success, markdown_content, title
         """
         try:
             request = xml_to_md_pb2.ConvertPmcXmlRequest(
@@ -45,17 +45,57 @@ class XmlToMdClient:
                 provider=xml_to_md_pb2.PMC,
             )
             response = self.stub.ConvertPmcXml(request, timeout=timeout)
-            if response.success:
-                return response.markdown_content
-            else:
-                logger.warning(f"[xml_to_md_client] Сервис вернул ошибку: {response.message}")
-                return ""
+            return {
+                "success": response.success,
+                "markdown_content": response.markdown_content or "",
+                "title": "",
+                "message": response.message or "",
+            }
         except grpc.RpcError as e:
             logger.warning(f"[xml_to_md_client] gRPC ошибка: {e.code()} — {e.details()}")
-            return ""
+            return {"success": False, "markdown_content": "", "title": "", "message": str(e)}
         except Exception as e:
             logger.warning(f"[xml_to_md_client] Ошибка convert_pmc_xml: {e}")
-            return ""
+            return {"success": False, "markdown_content": "", "title": "", "message": str(e)}
+
+    def convert_pubmed_xml(self, xml_bytes: bytes, timeout: int = 60) -> dict:
+        """Конвертирует PubMed XML в Markdown через gRPC.
+
+        Args:
+            xml_bytes: XML байты статьи
+            timeout: таймаут запроса в секундах
+
+        Returns:
+            dict с ключами: success, markdown_content, title, journal
+        """
+        try:
+            from xml_to_md_pb2 import ParsePubmedMetadataRequest
+            
+            request = ParsePubmedMetadataRequest(xml_bytes=xml_bytes)
+            response = self.stub.ParsePubmedMetadata(request, timeout=timeout)
+            
+            articles = []
+            for article in response.articles:
+                articles.append({
+                    "pmid": article.pmid,
+                    "title": article.title,
+                    "journal": article.journal,
+                    "pub_date": article.pub_date,
+                    "abstract": article.abstract,
+                    "authors": list(article.authors),
+                })
+            
+            return {
+                "success": response.success,
+                "articles": articles,
+                "message": response.message,
+            }
+        except grpc.RpcError as e:
+            logger.warning(f"[xml_to_md_client] gRPC ошибка: {e.code()} — {e.details()}")
+            return {"success": False, "articles": [], "message": str(e)}
+        except Exception as e:
+            logger.warning(f"[xml_to_md_client] Ошибка convert_pubmed_xml: {e}")
+            return {"success": False, "articles": [], "message": str(e)}
 
 
 def get_xml_to_md_client() -> XmlToMdClient:

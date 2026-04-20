@@ -348,7 +348,7 @@ class OntologyService:
         """Get all ontologies for a specific document"""
         with self.driver.session() as session:
             query = """
-            MATCH (doc:PDFDocument {uid: $doc_uid})
+            MATCH (doc:Document {uid: $doc_uid})
             MATCH (doc)-[:HAS_MARKDOWN_ANNOTATION]->(ann:MarkdownAnnotation)
             MATCH (o:Ontology {source_token_uid: ann.uid})
             RETURN o.ontology_id as ontology_id,

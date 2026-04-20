@@ -33,7 +33,7 @@ async def get_document_assets(
     """
     doc = document_repo.get_by_id(doc_id)
     if doc is None:
-        raise NotFoundError("PDFDocument", doc_id)
+        raise NotFoundError("Document", doc_id)
 
     import asyncio
 

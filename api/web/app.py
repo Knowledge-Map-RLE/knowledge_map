@@ -122,6 +122,11 @@ app.include_router(auto_review_router.router, prefix="/api/data_extraction")
 app.include_router(shared_actions_router.router, prefix="/api/data_extraction")
 app.include_router(worker_status.router, prefix="/api")
 
+# Data download (загрузка данных из внешних источников)
+from web.routers import data_download, data_download_ws
+app.include_router(data_download.router, prefix="/api/data_download")
+app.include_router(data_download_ws.router, prefix="/api/data_download")
+
 # Паттерны (Action + LexicalUnit графы)
 from web.routers.data_extraction import patterns as patterns_router
 app.include_router(patterns_router.router, prefix="/api/data_extraction")

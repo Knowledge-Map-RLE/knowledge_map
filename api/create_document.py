@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-"""Скрипт для создания PDFDocument в Neo4j"""
+"""Скрипт для создания Document в Neo4j"""
 
-from src.models import PDFDocument
+from src.models import Document
 from neomodel import config
 
 # Подключаемся к Neo4j
@@ -12,14 +12,14 @@ doc_id = '886f1448799d4aba1076c65e059a3d58'
 
 try:
     # Проверяем существование
-    existing = PDFDocument.nodes.get_or_none(uid=doc_id)
+    existing = Document.nodes.get_or_none(uid=doc_id)
     if existing:
         print(f'Документ {doc_id} уже существует')
         print(f'  uid: {existing.uid}')
         print(f'  filename: {existing.original_filename}')
     else:
         # Создаем новый документ
-        pdf_doc = PDFDocument(
+        pdf_doc = Document(
             uid=doc_id,
             original_filename=f'{doc_id}.pdf',
             md5_hash=doc_id,

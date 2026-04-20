@@ -24,7 +24,7 @@ from typing import Dict, Any, List
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from services import settings, get_s3_client
-from src.models import PDFDocument, MarkdownAnnotation
+from src.models import Document, MarkdownAnnotation
 from neomodel import db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -64,7 +64,7 @@ class DatasetExporter:
         """Export document metadata and files from Neo4j and S3"""
         logger.info(f"Exporting document {self.doc_id}...")
 
-        document = PDFDocument.nodes.get_or_none(uid=self.doc_id)
+        document = Document.nodes.get_or_none(uid=self.doc_id)
         if not document:
             raise ValueError(f"Document {self.doc_id} not found in Neo4j")
 
@@ -128,7 +128,7 @@ class DatasetExporter:
 
         results, _ = db.cypher_query(
             """
-            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+            MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
             RETURN a.uid, a.text, a.annotation_type, a.start_offset, a.end_offset,
                    a.color, a.source, a.confidence, a.processor_version, a.created_date, a.metadata
             ORDER BY a.start_offset
@@ -167,7 +167,7 @@ class DatasetExporter:
 
         results, _ = db.cypher_query(
             """
-            MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(src:MarkdownAnnotation)
+            MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(src:MarkdownAnnotation)
             MATCH (src)-[r:RELATES_TO]->(tgt:MarkdownAnnotation)
             RETURN r.uid, src.uid, tgt.uid, r.relation_type, r.created_date, r.metadata
             """,

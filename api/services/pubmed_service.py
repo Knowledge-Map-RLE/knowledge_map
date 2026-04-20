@@ -11,7 +11,7 @@ from xml.etree import ElementTree as ET
 
 import httpx
 
-from src.models import PDFDocument
+from src.models import Document
 from src.schemas.api import PubMedSearchResult
 from services import settings, get_s3_client
 from services.xml_to_md_grpc_client import get_xml_to_md_grpc_client
@@ -560,7 +560,7 @@ class PubMedService:
                 logger.info(f"[pubmed] doc_id={doc_id} для id_str={id_str}")
 
                 # 4. Проверяем, не загружена ли уже статья
-                existing = PDFDocument.nodes.get_or_none(uid=doc_id)
+                existing = Document.nodes.get_or_none(uid=doc_id)
                 if existing:
                     # Проверяем, реально ли файл существует в S3
                     bucket = self.bucket
@@ -859,7 +859,7 @@ class PubMedService:
                 )
 
             # Обновляем документ
-            doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+            doc = Document.nodes.get_or_none(uid=doc_id)
             if doc:
                 if markdown:
                     extracted_title = extract_title_from_markdown(markdown)
@@ -876,7 +876,7 @@ class PubMedService:
             logger.info(f"[pubmed] Docling pipeline завершен для doc_id={doc_id}")
         except Exception as e:
             logger.error(f"[pubmed] Ошибка Docling pipeline для {doc_id}: {e}")
-            doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+            doc = Document.nodes.get_or_none(uid=doc_id)
             if doc:
                 doc.processing_status = "error"
                 doc.error_message = str(e)
@@ -963,7 +963,7 @@ class PubMedService:
 
         # Сохраняем в Neo4j
         try:
-            existing = PDFDocument.nodes.get_or_none(uid=doc_id)
+            existing = Document.nodes.get_or_none(uid=doc_id)
             if existing:
                 if markdown and md_key:
                     existing.docling_raw_md_s3_key = md_key
@@ -978,7 +978,7 @@ class PubMedService:
                 existing.save()
                 logger.info(f"[pubmed] Neo4j запись обновлена: doc_id={doc_id}")
             else:
-                doc = PDFDocument(
+                doc = Document(
                     uid=doc_id,
                     original_filename=filename,
                     md5_hash=doc_id,

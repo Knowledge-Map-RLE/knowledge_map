@@ -150,11 +150,11 @@ async def _run_multilevel_analysis(
 ):
     """Фоновая задача: полный NLP анализ + сохранение аннотаций."""
     try:
-        from src.models import PDFDocument
+        from src.models import Document
         from services import settings
         from services.s3_client import get_s3_client
 
-        document = PDFDocument.nodes.get_or_none(uid=doc_id)
+        document = Document.nodes.get_or_none(uid=doc_id)
         if not document:
             logger.error(f"Background NLP: document {doc_id} not found")
             return
@@ -241,7 +241,7 @@ async def _run_multilevel_analysis(
             db.cypher_query(
                 """
                 UNWIND $rows AS row
-                MATCH (d:PDFDocument {uid: $doc_id})
+                MATCH (d:Document {uid: $doc_id})
                 CREATE (a:MarkdownAnnotation {
                     uid: row.uid,
                     text: row.text,
@@ -327,10 +327,10 @@ async def analyze_document_multilevel(
     Сначала проверяет доступность NLP сервиса, затем запускает фоновую задачу.
     """
     try:
-        from src.models import PDFDocument
+        from src.models import Document
         from services.nlp_grpc_client import get_nlp_grpc_client
 
-        document = PDFDocument.nodes.get_or_none(uid=doc_id)
+        document = Document.nodes.get_or_none(uid=doc_id)
         if not document:
             raise HTTPException(status_code=404, detail="Document not found")
 

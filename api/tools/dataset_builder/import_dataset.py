@@ -22,7 +22,7 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from services import settings, get_s3_client
-from src.models import PDFDocument, MarkdownAnnotation
+from src.models import Document, MarkdownAnnotation
 from neomodel import db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -66,19 +66,19 @@ class DatasetImporter:
 
         return md_path.read_text(encoding="utf-8")
 
-    async def import_document(self, metadata: Dict[str, Any], markdown: str) -> PDFDocument:
+    async def import_document(self, metadata: Dict[str, Any], markdown: str) -> Document:
         """Import document to Neo4j and S3"""
         doc_id = metadata["doc_id"]
         logger.info(f"Importing document {doc_id}...")
 
         # Clean existing document if requested
         if self.clean:
-            existing_doc = PDFDocument.nodes.get_or_none(uid=doc_id)
+            existing_doc = Document.nodes.get_or_none(uid=doc_id)
             if existing_doc:
                 logger.info(f"Cleaning existing document {doc_id}...")
                 # Delete annotations
                 query = """
-                MATCH (d:PDFDocument {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
+                MATCH (d:Document {uid: $doc_id})-[:HAS_MARKDOWN_ANNOTATION]->(a:MarkdownAnnotation)
                 DETACH DELETE a
                 """
                 db.cypher_query(query, {"doc_id": doc_id})
@@ -86,7 +86,7 @@ class DatasetImporter:
                 existing_doc.delete()
 
         # Create document in Neo4j
-        document = PDFDocument(
+        document = Document(
             uid=doc_id,
             original_filename=metadata.get("original_filename", f"{doc_id}.pdf"),
             md5_hash=doc_id,
@@ -125,7 +125,7 @@ class DatasetImporter:
 
         return document
 
-    def import_annotations(self, document: PDFDocument) -> List[MarkdownAnnotation]:
+    def import_annotations(self, document: Document) -> List[MarkdownAnnotation]:
         """Import annotations to Neo4j"""
         linguistic_path = self.ann_dir / "linguistic.json"
         if not linguistic_path.exists():

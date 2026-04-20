@@ -183,7 +183,7 @@ async def analyze_document_patterns(
     # Проверяем документ
     doc = document_repo.get_by_id(doc_id)
     if doc is None:
-        raise NotFoundError("PDFDocument", doc_id)
+        raise NotFoundError("Document", doc_id)
 
     # Загружаем аннотации нужных типов
     annotations, _ = annotation_repo.get_by_document(

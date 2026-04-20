@@ -30,7 +30,7 @@ async def delete_document(
     """
     doc = document_repo.get_by_id(doc_id)
     if doc is None:
-        raise NotFoundError("PDFDocument", doc_id)
+        raise NotFoundError("Document", doc_id)
 
     bucket = doc.s3_bucket
     prefix = f"documents/{doc_id}/"

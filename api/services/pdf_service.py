@@ -13,7 +13,7 @@ from fastapi.responses import Response
 from src.schemas.pdf import (
     PDFUploadResponse, PDFDocumentResponse, PDFAnnotationResponse
 )
-from src.models import PDFDocument, PDFAnnotation, User
+from src.models import Document, PDFAnnotation, User
 from neomodel import DoesNotExist
 from . import settings, get_s3_client
 from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
@@ -52,7 +52,7 @@ class PDFService:
             
             # Проверяем, существует ли уже такой файл
             try:
-                existing_doc = PDFDocument.nodes.get(md5_hash=md5_hash)
+                existing_doc = Document.nodes.get(md5_hash=md5_hash)
                 return PDFUploadResponse(
                     success=True,
                     message="Файл уже существует в системе",
@@ -101,7 +101,7 @@ class PDFService:
                 else:
                     raise HTTPException(status_code=404, detail="Пользователь не найден")
             
-            pdf_doc = PDFDocument(
+            pdf_doc = Document(
                 original_filename=file.filename,
                 md5_hash=md5_hash,
                 s3_bucket="knowledge-map-pdfs",
@@ -167,7 +167,7 @@ class PDFService:
     async def get_pdf_document(self, document_id: str) -> PDFDocumentResponse:
         """Получает информацию о PDF документе"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             
             return PDFDocumentResponse(
                 uid=doc.uid,
@@ -192,7 +192,7 @@ class PDFService:
     async def view_pdf_document(self, document_id: str) -> Response:
         """Просматривает PDF документ в браузере"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             
             # s3_client = get_s3_client()
             # file_content = await s3_client.download_bytes(
@@ -210,7 +210,7 @@ class PDFService:
                 media_type="application/pdf",
                 headers={"Content-Disposition": "inline"}
             )
-        except PDFDocument.DoesNotExist:
+        except Document.DoesNotExist:
             raise HTTPException(status_code=404, detail="Документ не найден")
         except Exception as e:
             logger.error(f"Ошибка просмотра PDF документа {document_id}: {e}")
@@ -219,7 +219,7 @@ class PDFService:
     async def download_pdf_document(self, document_id: str) -> Response:
         """Скачивает PDF документ из S3"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             
             # s3_client = get_s3_client()
             # file_content = await s3_client.download_bytes(
@@ -247,7 +247,7 @@ class PDFService:
     async def get_pdf_annotations(self, document_id: str) -> List[PDFAnnotationResponse]:
         """Получает аннотации PDF документа"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             annotations = doc.annotations.all()
             
             return [
@@ -272,7 +272,7 @@ class PDFService:
     async def start_pdf_annotation(self, document_id: str, user_id: str) -> Dict[str, Any]:
         """Запускает процесс автоматической аннотации PDF документа"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             
             if doc.processing_status == "processing":
                 raise HTTPException(status_code=400, detail="Документ уже обрабатывается")
@@ -380,7 +380,7 @@ class PDFService:
     async def reset_document_status(self, document_id: str) -> Dict[str, Any]:
         """Сбрасывает статус документа для повторной обработки"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             doc.processing_status = "uploaded"
             doc.error_message = None
             doc.is_processed = False
@@ -397,7 +397,7 @@ class PDFService:
     async def delete_document(self, document_id: str) -> Dict[str, Any]:
         """Удаляет документ из системы"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             
             # Удаляем файл из S3, если он есть
             if doc.s3_key:
@@ -423,7 +423,7 @@ class PDFService:
     async def convert_pdf_to_markdown(self, document_id: str) -> Dict[str, Any]:
         """Конвертирует PDF в Markdown используя PDF to MD микросервис"""
         try:
-            doc = PDFDocument.nodes.get(uid=document_id)
+            doc = Document.nodes.get(uid=document_id)
             
             # Получаем PDF файл из S3
             # s3_client = get_s3_client()
