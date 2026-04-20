@@ -3,7 +3,7 @@ import Header from '../../widgets/Header';
 import MarkdownEditor from '../../widgets/MarkdownEditor';
 import { AnnotationWorkspace } from './Annotation';
 import { LinguisticPatternAnalysis } from './Patterns';
-import GoalPatternAnalysis from './Patterns/GoalPatternAnalysis';
+
 import { ArticleActionGraph } from './Patterns/ArticleActionGraph';
 import { ArticleLinguisticGraph } from './Patterns/ArticleLinguisticGraph';
 import Document_downloader_ui from './Document_downloader_ui';
@@ -68,12 +68,6 @@ const DataExtractionUI: React.FC = () => {
                             onClick={() => setActiveTab('pdf')}
                         >
                             Исходный PDF
-                        </button>
-                        <button
-                            className={`${styles.tabButton} ${activeTab === 'goals' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('goals')}
-                        >
-                            Анализ целей
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'patterns' ? styles.active : ''}`}
@@ -159,16 +153,6 @@ const DataExtractionUI: React.FC = () => {
                                         onUpdateDocumentStatus={updateDocumentStatus}
                                         onNlpProcessingChange={setIsNlpProcessing}
                                     />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
-                                )}
-                            </div>
-                        )}
-
-                        {activeTab === 'goals' && (
-                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
-                                {selectedDocument ? (
-                                    <GoalPatternAnalysis docId={selectedDocument.uid} />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
                                 )}

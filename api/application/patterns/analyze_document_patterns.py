@@ -168,17 +168,8 @@ async def analyze_document_patterns(
     3. Для каждой аннотации вызывает NLP-сервис (syntax level).
     4. Агрегирует частоты паттернов.
     5. Сохраняет в Neo4j через pattern_repo.
-    6. Возвращает таблицы по 4 типам аннотаций.
+    6. Возвращает таблицы по указанным типам аннотаций.
     """
-    _GOAL_TYPES = [
-        "Успешная цель",
-        "Не успешная цель",
-        "Фрагмент ведёт к успеху",
-        "Фрагмент ведёт к неуспеху",
-    ]
-
-    if annotation_types is None:
-        annotation_types = _GOAL_TYPES
 
     # Проверяем документ
     doc = document_repo.get_by_id(doc_id)

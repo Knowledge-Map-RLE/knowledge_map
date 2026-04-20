@@ -301,13 +301,13 @@ async def get_patterns_endpoint(
     if doc is None:
         raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
     rows = pattern_repo.get_for_document(doc_id)
-    _GOAL_TYPES = ["Успешная цель", "Не успешная цель", "Фрагмент ведёт к успеху", "Фрагмент ведёт к неуспеху"]
-    groups: dict = {t: [] for t in _GOAL_TYPES}
+    groups: dict = {}
     for row in rows:
         at = row.get("annotation_type", "")
-        if at in groups:
-            groups[at].append(PatternRow(pattern_str=row["pattern_str"], pattern_type=row["pattern_type"], frequency=row["frequency"]))
-    pydantic_results = [AnnotationTypePatterns(annotation_type=at, patterns=groups[at], total_annotations=0) for at in _GOAL_TYPES]
+        if at not in groups:
+            groups[at] = []
+        groups[at].append(PatternRow(pattern_str=row["pattern_str"], pattern_type=row["pattern_type"], frequency=row["frequency"]))
+    pydantic_results = [AnnotationTypePatterns(annotation_type=at, patterns=groups[at], total_annotations=0) for at in groups]
     total = sum(len(r.patterns) for r in pydantic_results)
     return AnalyzePatternsResponse(success=True, doc_id=doc_id, results=pydantic_results, total_patterns_saved=total, message=f"Загружено {total} паттернов" if total > 0 else "Паттерны не найдены")
 
@@ -351,95 +351,4 @@ async def save_document_for_tests(doc_id: str, request: SaveForTestsRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ---------------------------------------------------------------------------
-# Goal Analysis endpoints (анализ целей — 4 типа goal-аннотаций)
-# ---------------------------------------------------------------------------
 
-@router.post("/documents/{doc_id}/analyze-goals", response_model=AnalyzePatternsResponse)
-async def analyze_goals_endpoint(
-    doc_id: str,
-    request_body: AnalyzePatternsRequest,
-    ann_repo=Depends(get_annotation_repository),
-    doc_repo=Depends(get_document_repository),
-    pattern_repo=Depends(get_linguistic_pattern_repository),
-):
-    """Анализ лингвистических паттернов в goal-аннотациях документа."""
-    from application.patterns.analyze_document_patterns import analyze_document_patterns
-    from services.nlp_grpc_client import get_nlp_grpc_client
-    from fastapi import HTTPException
-
-    nlp_client = get_nlp_grpc_client()
-
-    doc = doc_repo.get_by_id(doc_id)
-    if doc is None:
-        raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
-
-    GOAL_TYPES = [
-        "Успешная цель", "Не успешная цель",
-        "Фрагмент ведёт к успеху", "Фрагмент ведёт к неуспеху",
-    ]
-    annotations, _ = ann_repo.get_by_document(
-        doc_id, skip=0, limit=None, annotation_types=GOAL_TYPES,
-    )
-    if not annotations:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                f"В документе нет аннотаций типов: {', '.join(GOAL_TYPES)}. "
-                "Сначала создайте аннотации во вкладке 'Аннотации'."
-            ),
-        )
-
-    try:
-        results = await analyze_document_patterns(
-            annotation_repo=ann_repo,
-            document_repo=doc_repo,
-            pattern_repo=pattern_repo,
-            nlp_client=nlp_client,
-            doc_id=doc_id,
-            annotation_types=GOAL_TYPES,
-            clear_existing=request_body.clear_existing,
-            min_frequency=request_body.min_frequency,
-        )
-    except Exception as e:
-        logger.exception(f"[analyze-goals] Ошибка анализа целей для doc={doc_id}")
-        raise HTTPException(status_code=500, detail=f"Ошибка NLP-анализа: {e}")
-
-    pydantic_results = [
-        AnnotationTypePatterns(
-            annotation_type=r.annotation_type,
-            patterns=[PatternRow(pattern_str=p.pattern_str, pattern_type=p.pattern_type, frequency=p.frequency) for p in r.patterns],
-            total_annotations=r.total_annotations,
-        )
-        for r in results
-    ]
-    total = sum(len(r.patterns) for r in pydantic_results)
-    return AnalyzePatternsResponse(success=True, doc_id=doc_id, results=pydantic_results, total_patterns_saved=total, message=f"Проанализировано {total} паттернов целей")
-
-
-@router.get("/documents/{doc_id}/goals", response_model=AnalyzePatternsResponse)
-async def get_goals_endpoint(
-    doc_id: str,
-    pattern_repo=Depends(get_linguistic_pattern_repository),
-    doc_repo=Depends(get_document_repository),
-):
-    """Возвращает сохранённые goal-паттерны документа."""
-    from fastapi import HTTPException
-
-    doc = doc_repo.get_by_id(doc_id)
-    if doc is None:
-        raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
-
-    GOAL_TYPES = [
-        "Успешная цель", "Не успешная цель",
-        "Фрагмент ведёт к успеху", "Фрагмент ведёт к неуспеху",
-    ]
-    rows = pattern_repo.get_for_document(doc_id, annotation_types=GOAL_TYPES)
-    groups: dict = {t: [] for t in GOAL_TYPES}
-    for row in rows:
-        at = row.get("annotation_type", "")
-        if at in groups:
-            groups[at].append(PatternRow(pattern_str=row["pattern_str"], pattern_type=row["pattern_type"], frequency=row["frequency"]))
-    pydantic_results = [AnnotationTypePatterns(annotation_type=at, patterns=groups[at], total_annotations=0) for at in GOAL_TYPES]
-    total = sum(len(r.patterns) for r in pydantic_results)
-    return AnalyzePatternsResponse(success=True, doc_id=doc_id, results=pydantic_results, total_patterns_saved=total, message=f"Загружено {total} паттернов целей" if total > 0 else "Паттерны целей не найдены")

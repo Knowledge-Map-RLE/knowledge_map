@@ -299,9 +299,7 @@ class ValidateMarkdownResponse(BaseModel):
 
 # Схемы для анализа лингвистических паттернов
 class AnalyzePatternsRequest(BaseModel):
-    annotation_types: List[str] = Field(
-        default=["Успешная цель", "Не успешная цель", "Фрагмент ведёт к успеху", "Фрагмент ведёт к неуспеху"],
-    )
+    annotation_types: List[str] = Field(default=[])
     clear_existing: bool = Field(default=True)
     min_frequency: int = Field(default=1, ge=1)
 

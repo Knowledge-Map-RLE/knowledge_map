@@ -129,12 +129,7 @@ export const ANNOTATION_TYPES: Record<string, AnnotationType> = {
   'Единицы измерения': { label: 'Единицы измерения', category: 'Научные сущности', defaultColor: '#4caf50', source: 'user' },
   'Аббревиатура': { label: 'Аббревиатура', category: 'Научные сущности', defaultColor: '#8bc34a', source: 'user' },
 
-  // === ЦЕЛИ ===
-  'Цель': { label: 'Цель', category: 'Цели', defaultColor: '#FF9800', source: 'user' },
-  'Успешная цель': { label: 'Успешная цель', category: 'Цели', defaultColor: '#4CAF50', source: 'user' },
-  'Не успешная цель': { label: 'Не успешная цель', category: 'Цели', defaultColor: '#F44336', source: 'user' },
-  'Фрагмент текста для цели': { label: 'Фрагмент текста для цели', category: 'Цели', defaultColor: '#90CAF9', source: 'user' },
-};
+  };
 
 // Группировка по категориям для UI (автоматически генерируется из ANNOTATION_TYPES)
 export const ANNOTATION_CATEGORIES: Record<string, string[]> = {};

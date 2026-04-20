@@ -45,27 +45,6 @@ export async function getDocumentSpecificPatterns(docId: string): Promise<Analyz
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/patterns/specific`);
 }
 
-export async function analyzeDocumentGoals(
-  docId: string,
-  minFrequency: number = 1,
-): Promise<AnalyzePatternsResponse> {
-  const GOAL_TYPES = [
-    'Успешная цель',
-    'Не успешная цель',
-    'Фрагмент ведёт к успеху',
-    'Фрагмент ведёт к неуспеху',
-  ];
-  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/analyze-goals`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ annotation_types: GOAL_TYPES, clear_existing: true, min_frequency: minFrequency }),
-  });
-}
-
-export async function getDocumentGoals(docId: string): Promise<AnalyzePatternsResponse> {
-  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/goals`);
-}
-
 export async function extractDocumentActions(docId: string): Promise<ExtractActionsResponse> {
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/extract-actions`, {
     method: 'POST',

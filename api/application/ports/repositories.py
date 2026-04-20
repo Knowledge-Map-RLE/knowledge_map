@@ -164,8 +164,8 @@ class ActionRepositoryProtocol(Protocol):
         """Сохраняет список action-словарей, возвращает количество."""
         ...
 
-    def save_leads_to(self, action_edges: List[dict], goal_edges: List[dict], doc_id: str) -> int:
-        """Сохраняет рёбра Action→Action и Action→Goal, возвращает общее количество."""
+    def save_leads_to(self, action_edges: List[dict], doc_id: str) -> int:
+        """Сохраняет рёбра Action→Action, возвращает количество."""
         ...
 
     def get_for_document(self, doc_id: str) -> List[dict]:

@@ -371,21 +371,6 @@ export default function PDFAnnotation({ documentId, onAnnotationsChange }: PDFAn
                                 </select>
                             </div>
 
-                            <div className={s.formGroup}>
-                                <label>Цель:</label>
-                                <select 
-                                    value={selectedAnnotations[1] || ''}
-                                    onChange={(e) => setSelectedAnnotations([selectedAnnotations[0], e.target.value])}
-                                >
-                                    <option value="">Выберите цель</option>
-                                    {annotations.filter(ann => ann.id !== selectedAnnotations[0]).map(ann => (
-                                        <option key={ann.id} value={ann.id}>
-                                            {labels.find(l => l.value === ann.label)?.label}: "{ann.content}"
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
                             <div className={s.modalButtons}>
                                 <button onClick={addRelation} className={s.addButton}>
                                     Создать связь

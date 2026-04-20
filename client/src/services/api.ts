@@ -18,7 +18,7 @@ export { uploadPdfForExtraction, listDocuments, searchPubMed, getByPubMedId, ing
 export { getGlobalLinguisticGraph, getDocumentLinguisticGraph, getDependencyNgrams, getPatternContext, getExtractedPatterns, getExtractStatus, getPatternGraph, getPatternText, savePatternsToDb, createPatternsInDb, getPatternCreateStatus } from './api/graphs';
 export { createAnnotation, getAnnotations, updateAnnotation, deleteAnnotation, deleteAllAnnotations, batchUpdateAnnotationOffsets, createAnnotationRelation, deleteAnnotationRelation, getAnnotationRelations } from './api/annotations';
 export { analyzeText, autoAnnotateDocument, autoAnnotateMultilevel, getNlpTaskStatus, exportAnnotationsYAML, importAnnotationsYAML } from './api/nlp';
-export { checkDataAvailability, saveDocumentForTests, analyzeDocumentPatterns, getDocumentPatterns, getDocumentSpecificPatterns, analyzeDocumentGoals, getDocumentGoals, extractDocumentActions, getPendingEdges, reviewEdge, autoReview, getConfirmedActionGraph, backfillNormKeys } from './api/patterns';
+export { checkDataAvailability, saveDocumentForTests, analyzeDocumentPatterns, getDocumentPatterns, getDocumentSpecificPatterns, extractDocumentActions, getPendingEdges, reviewEdge, autoReview, getConfirmedActionGraph, backfillNormKeys } from './api/patterns';
 export { buildAnnotationsCSV, parseAnnotationsCSV } from './api/csv';
 
 export type { Link } from '../entities/link';

@@ -13,28 +13,7 @@ from typing import Any, List
 from application.patterns.analyze_document_patterns import AnnotationTypePatterns, PatternRow
 
 
-_SPECIFIC_PAIRS = [
-    {
-        "title":   "Специфичные: только Успешная цель",
-        "source":  "Успешная цель",
-        "exclude": "Не успешная цель",
-    },
-    {
-        "title":   "Специфичные: только Не успешная цель",
-        "source":  "Не успешная цель",
-        "exclude": "Успешная цель",
-    },
-    {
-        "title":   "Специфичные: только Фрагмент ведёт к успеху",
-        "source":  "Фрагмент ведёт к успеху",
-        "exclude": "Фрагмент ведёт к неуспеху",
-    },
-    {
-        "title":   "Специфичные: только Фрагмент ведёт к неуспеху",
-        "source":  "Фрагмент ведёт к неуспеху",
-        "exclude": "Фрагмент ведёт к успеху",
-    },
-]
+_SPECIFIC_PAIRS = []
 
 
 def _pattern_key(row: PatternRow) -> tuple:

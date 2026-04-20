@@ -339,7 +339,7 @@ async def extract_document_actions(
     if cycle_skipped:
         logger.info("[actions] doc=%s: skipped %d cycle-forming edges", doc_id, cycle_skipped)
 
-    edges_count = action_repo.save_leads_to(dag_filtered_edges, [], doc_id)
+    edges_count = action_repo.save_leads_to(dag_filtered_edges, doc_id)
     pending_count = len(dag_filtered_edges)
     
     logger.info(

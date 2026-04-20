@@ -17,7 +17,7 @@
     <node id="n0">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="87.74454595576117" width="155.83167879965094" x="-4309.997467322626" y="7201.49822747562"/>
+          <y:Geometry height="87.74454595576117" width="155.83167879965094" x="-4309.997467322626" y="7388.111949064456"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="70.39453125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="155.83167879965094" x="0.0" xml:space="preserve" y="8.67500735288013">Если на вход подан вопрос, нужно делать его переформулировку?</y:NodeLabel>
@@ -28,7 +28,7 @@
     <node id="n1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="70.0" width="150.0" x="-4307.0816279228" y="7123.05151175081"/>
+          <y:Geometry height="70.0" width="150.0" x="-4307.0816279228" y="7309.665233339646"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="54.2958984375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="7.85205078125">Сделать ответы на вопросы о структуре чего либо</y:NodeLabel>
@@ -342,7 +342,7 @@
         <node id="n22::n5">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="99.25944670948047" width="150.0" x="-3424.7217536041467" y="6787.234838438975"/>
+              <y:Geometry height="99.25944670948047" width="150.0" x="-3449.307460988503" y="6688.57568956788"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="102.591796875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="-1.6661750827597643">Выявление успешных и не успешных паттернов достижения любой цели</y:NodeLabel>
@@ -404,7 +404,7 @@
         <node id="n22::n10">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="30.0" width="30.0" x="-3289.776852020599" y="6771.035111489778"/>
+              <y:Geometry height="30.0" width="30.0" x="-3314.3625594049554" y="6672.375962618682"/>
               <y:Fill color="#FFCC99" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="13.0" y="13.0">
@@ -551,7 +551,7 @@
               <y:Geometry height="122.34433378123958" width="150.0" x="-3825.4618337962593" y="6775.692394903095"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="102.591796875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="9.876268453120247">Паттерн — это граф с лингвистикой, блоками и направленными связями карты знаний</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="102.591796875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="9.876268453119337">Паттерн — это граф с лингвистикой, блоками и направленными связями карты знаний</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -645,7 +645,6 @@
           </data>
         </node>
         <node id="n22::n25">
-          <data key="d5"/>
           <data key="d6">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="30.0" x="-2714.0362033145766" y="6969.656214977853"/>
@@ -1057,7 +1056,7 @@
               <y:Geometry height="122.34433378123958" width="150.0" x="-3233.871476579129" y="6626.203795728063"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="118.6904296875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="1.8269520468702467">Изменение свойства объекта или действия таким образом как ещё не делали и устремление его в будущее</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="118.6904296875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="1.8269520468693372">Изменение свойства объекта или действия таким образом как ещё не делали и устремление его в будущее</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -1086,7 +1085,7 @@
               <y:Geometry height="108.87785866434115" width="150.0" x="-3630.1404662206464" y="6529.095700887634"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="102.591796875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="3.143030894670119">Построение непротиворечивых моделей реальности (их может быть несколько)</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="102.591796875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="3.1430308946710284">Построение непротиворечивых моделей реальности (их может быть несколько)</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -1236,6 +1235,35 @@
             </y:ShapeNode>
           </data>
         </node>
+        <node id="n22::n66">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="122.34433378123958" width="150.0" x="-3435.572030629164" y="6817.835136277361"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="118.6904296875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="1.8269520468693372">Выявление паттернов которые в карте знаний дают наиболее длинные или широкие цепочки и наиболе короткие или узкие</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n22::n67">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="30.0" x="-3300.6271290456166" y="6801.6354093281625"/>
+              <y:Fill color="#FFCC99" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="13.0" y="13.0">
+                <y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:Shape type="ellipse"/>
+            </y:ShapeNode>
+          </data>
+        </node>
       </graph>
     </node>
     <node id="n23" yfiles.foldertype="group">
@@ -1243,14 +1271,14 @@
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="509.3505569880981" width="180.0" x="-4322.0816279228" y="6502.6783582810185"/>
+              <y:Geometry height="650.4903415957679" width="217.51809105237317" x="-4322.0816279228" y="6502.6783582810185"/>
               <y:Fill color="#F2F2F228" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Arial" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="17.40625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="tl" textColor="#000000" verticalTextPosition="bottom" visible="true" width="74.640625" x="0.0" xml:space="preserve" y="0.0">      Метрики</y:NodeLabel>
               <y:Shape type="rectangle"/>
               <y:State closed="false" closedHeight="80.0" closedWidth="100.0" innerGraphDisplayEnabled="false"/>
               <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
-              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="38" rightF="37.518091052373165" top="0" topF="0.0"/>
             </y:GroupNode>
             <y:GroupNode>
               <y:Geometry height="116.95225315806084" width="136.4102512607061" x="-4240.359141456511" y="6337.370529255829"/>
@@ -1306,6 +1334,17 @@
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="86.4931640625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="-2.5768943093671624">Количество статей которые были предсказаны (а точнее методы и результаты в них)</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n23::n4">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="136.0923597293795" width="150.0" x="-4307.0816279228" y="7002.076340147407"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Arial" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="134.7890625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.0" x="0.0" xml:space="preserve" y="0.6516486146902025">Длинна или ширина паттерна как показатель успешности цепочки и короткость и узость паттерна как показатель его неуспешности</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -6947,7 +6986,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e0" source="n22::n3" target="n22::n5">
+    <edge id="n22::e0" source="n22::n3" target="n22::n0">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -6957,7 +6996,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e1" source="n22::n3" target="n22::n0">
+    <edge id="n22::e1" source="n22::n0" target="n22::n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -6967,7 +7006,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e2" source="n22::n0" target="n22::n4">
+    <edge id="n22::e2" source="n22::n7" target="n22::n6">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -6977,7 +7016,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e3" source="n22::n7" target="n22::n6">
+    <edge id="n22::e3" source="n22::n7" target="n22::n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -6987,17 +7026,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e4" source="n22::n7" target="n22::n4">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#B266FF" type="line" width="3.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:BendStyle smoothed="true"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n22::e5" source="n22::n6" target="n22::n4">
+    <edge id="n22::e4" source="n22::n6" target="n22::n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7217,7 +7246,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e6" source="n22::n18" target="n22::n3">
+    <edge id="n22::e5" source="n22::n18" target="n22::n3">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7227,7 +7256,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e7" source="n22::n5" target="n22::n21">
+    <edge id="n22::e6" source="n22::n5" target="n22::n21">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7237,7 +7266,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e8" source="n22::n21" target="n22::n19">
+    <edge id="n22::e7" source="n22::n21" target="n22::n19">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7247,7 +7276,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e9" source="n22::n19" target="n22::n23">
+    <edge id="n22::e8" source="n22::n19" target="n22::n23">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7257,7 +7286,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e10" source="n22::n23" target="n22::n4">
+    <edge id="n22::e9" source="n22::n23" target="n22::n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7267,7 +7296,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e11" source="n22::n28" target="n22::n7">
+    <edge id="n22::e10" source="n22::n28" target="n22::n7">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7277,7 +7306,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e12" source="n22::n26" target="n22::n28">
+    <edge id="n22::e11" source="n22::n26" target="n22::n28">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7287,7 +7316,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e13" source="n22::n8" target="n22::n28">
+    <edge id="n22::e12" source="n22::n8" target="n22::n28">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7297,7 +7326,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e14" source="n22::n1" target="n22::n23">
+    <edge id="n22::e13" source="n22::n1" target="n22::n23">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7307,7 +7336,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e15" source="n22::n2" target="n22::n23">
+    <edge id="n22::e14" source="n22::n2" target="n22::n23">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7317,7 +7346,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e16" source="n22::n32" target="n22::n31">
+    <edge id="n22::e15" source="n22::n32" target="n22::n31">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7327,7 +7356,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e17" source="n22::n31" target="n22::n26">
+    <edge id="n22::e16" source="n22::n31" target="n22::n26">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7337,7 +7366,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e18" source="n22::n33" target="n22::n26">
+    <edge id="n22::e17" source="n22::n33" target="n22::n26">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7347,7 +7376,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e19" source="n22::n5" target="n22::n37">
+    <edge id="n22::e18" source="n22::n5" target="n22::n37">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7357,7 +7386,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e20" source="n22::n7" target="n22::n37">
+    <edge id="n22::e19" source="n22::n7" target="n22::n37">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7367,7 +7396,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e21" source="n22::n37" target="n22::n23">
+    <edge id="n22::e20" source="n22::n37" target="n22::n23">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7377,7 +7406,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e22" source="n22::n30" target="n22::n39">
+    <edge id="n22::e21" source="n22::n30" target="n22::n39">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7387,7 +7416,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e23" source="n22::n39" target="n22::n41">
+    <edge id="n22::e22" source="n22::n39" target="n22::n41">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7397,7 +7426,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e24" source="n22::n41" target="n22::n3">
+    <edge id="n22::e23" source="n22::n41" target="n22::n3">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7407,7 +7436,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e25" source="n22::n41" target="n22::n8">
+    <edge id="n22::e24" source="n22::n41" target="n22::n8">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7417,7 +7446,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e26" source="n22::n41" target="n22::n43">
+    <edge id="n22::e25" source="n22::n41" target="n22::n43">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7427,7 +7456,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e27" source="n22::n43" target="n22::n32">
+    <edge id="n22::e26" source="n22::n43" target="n22::n32">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7437,7 +7466,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e28" source="n22::n45" target="n22::n5">
+    <edge id="n22::e27" source="n22::n45" target="n22::n5">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7447,7 +7476,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e29" source="n22::n49" target="n22::n50">
+    <edge id="n22::e28" source="n22::n49" target="n22::n50">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7457,7 +7486,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e30" source="n22::n50" target="n22::n47">
+    <edge id="n22::e29" source="n22::n50" target="n22::n47">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7467,7 +7496,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e31" source="n22::n50" target="n22::n39">
+    <edge id="n22::e30" source="n22::n50" target="n22::n39">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7477,7 +7506,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e32" source="n22::n53" target="n22::n21">
+    <edge id="n22::e31" source="n22::n53" target="n22::n21">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7487,7 +7516,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e33" source="n22::n55" target="n22::n53">
+    <edge id="n22::e32" source="n22::n55" target="n22::n53">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7497,7 +7526,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e34" source="n22::n47" target="n22::n57">
+    <edge id="n22::e33" source="n22::n47" target="n22::n57">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7507,7 +7536,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e35" source="n22::n57" target="n22::n55">
+    <edge id="n22::e34" source="n22::n57" target="n22::n55">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7517,7 +7546,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e36" source="n22::n8" target="n22::n53">
+    <edge id="n22::e35" source="n22::n8" target="n22::n53">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -7530,7 +7559,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e37" source="n22::n59" target="n22::n55">
+    <edge id="n22::e36" source="n22::n59" target="n22::n55">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7540,7 +7569,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e38" source="n22::n26" target="n22::n59">
+    <edge id="n22::e37" source="n22::n26" target="n22::n59">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -7554,7 +7583,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e39" source="n22::n55" target="n22::n61">
+    <edge id="n22::e38" source="n22::n55" target="n22::n61">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7564,7 +7593,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e40" source="n22::n39" target="n22::n57">
+    <edge id="n22::e39" source="n22::n39" target="n22::n57">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -7577,7 +7606,7 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e41" source="n22::n63" target="n22::n37">
+    <edge id="n22::e40" source="n22::n63" target="n22::n37">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7587,13 +7616,33 @@ SALES</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n22::e42" source="n22::n50" target="n22::n64">
+    <edge id="n22::e41" source="n22::n50" target="n22::n64">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
             <y:Point x="-4059.8973295290616" y="6965.466782322881"/>
             <y:Point x="-4042.6857775162025" y="6834.861475872362"/>
           </y:Path>
+          <y:LineStyle color="#B266FF" type="line" width="3.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n22::e42" source="n22::n3" target="n22::n66">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#B266FF" type="line" width="3.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n22::e43" source="n22::n41" target="n22::n66">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#B266FF" type="line" width="3.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="true"/>

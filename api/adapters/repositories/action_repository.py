@@ -356,38 +356,23 @@ class ActionRepository:
     def save_leads_to(
         self,
         action_edges: List[Dict[str, Any]],
-        goal_edges: List[Dict[str, Any]],
         doc_id: str,
     ) -> int:
-        total = 0
+        if not action_edges:
+            return 0
 
-        if action_edges:
-            query = """
-            UNWIND $edges AS e
-            MATCH (s:Action {uid: e.src_uid}), (t:Action {uid: e.tgt_uid})
-            MERGE (s)-[r:LEADS_TO {doc_id: e.doc_id, relation_subtype: e.relation_subtype}]->(t)
-            ON CREATE SET
-                r.confidence = e.confidence,
-                r.evidence   = e.evidence,
-                r.status     = e.status
-            """
-            db.cypher_query(query, {"edges": action_edges})
-            total += len(action_edges)
-            logger.debug("Saved %d Action→Action edges for doc %s", len(action_edges), doc_id)
-
-        if goal_edges:
-            query = """
-            UNWIND $edges AS e
-            MATCH (s:Action {uid: e.src_uid}), (t:MarkdownAnnotation {uid: e.tgt_uid})
-            MERGE (s)-[r:LEADS_TO {doc_id: e.doc_id, relation_subtype: 'PART_OF_GOAL'}]->(t)
-            ON CREATE SET
-                r.confidence = 1.0,
-                r.status     = 'confirmed'
-            """
-            db.cypher_query(query, {"edges": goal_edges})
-            total += len(goal_edges)
-            logger.debug("Saved %d Action→Goal edges for doc %s", len(goal_edges), doc_id)
-
+        query = """
+        UNWIND $edges AS e
+        MATCH (s:Action {uid: e.src_uid}), (t:Action {uid: e.tgt_uid})
+        MERGE (s)-[r:LEADS_TO {doc_id: e.doc_id, relation_subtype: e.relation_subtype}]->(t)
+        ON CREATE SET
+            r.confidence = e.confidence,
+            r.evidence   = e.evidence,
+            r.status     = e.status
+        """
+        db.cypher_query(query, {"edges": action_edges})
+        total = len(action_edges)
+        logger.debug("Saved %d Action→Action edges for doc %s", len(action_edges), doc_id)
         return total
 
     def get_for_document(self, doc_id: str) -> List[Dict[str, Any]]:

@@ -222,7 +222,7 @@ class LinguisticPattern(StructuredNode):
 
 
 class LeadsToRel(StructuredRel):
-    """Отношение LEADS_TO между Action→Action или Action→MarkdownAnnotation."""
+    """Отношение LEADS_TO между Action→Action."""
     relation_subtype = StringProperty()   # causes|enables|prevents|via_mechanism|sequential
     confidence = FloatProperty(default=1.0)
     evidence = ArrayProperty(StringProperty())
@@ -277,7 +277,6 @@ class Action(StructuredNode):
     object_span_idx = IntegerProperty(default=-1)
 
     leads_to_action = RelationshipTo("Action", "LEADS_TO", model=LeadsToRel)
-    leads_to_goal = RelationshipTo("MarkdownAnnotation", "LEADS_TO", model=LeadsToRel)
     syntactic_dep = RelationshipTo("Action", "SYNTACTIC_DEP", model=SyntacticDepRel)
     lexical_units = RelationshipFrom("LexicalUnit", "PART_OF")
 
