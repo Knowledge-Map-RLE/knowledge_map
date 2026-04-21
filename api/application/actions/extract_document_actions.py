@@ -89,6 +89,128 @@ def _assign_action_class(verb_lemma: str) -> str:
     return "action"
 
 
+def _get_predecessors(uid: str, all_edges: List[dict]) -> List[str]:
+    """Find all predecessors of a vertex (nodes that have edges pointing to this node)."""
+    return [e['src_uid'] for e in all_edges if e['tgt_uid'] == uid]
+
+
+def _get_successors(uid: str, all_edges: List[dict]) -> List[str]:
+    """Find all successors of a vertex (nodes that this node points to)."""
+    return [e['tgt_uid'] for e in all_edges if e['src_uid'] == uid]
+
+
+def _create_action_copy(action_row: dict, new_uid: str) -> dict:
+    """Create a deep copy of an action row with a new UID."""
+    return {
+        'uid': new_uid,
+        'verb': action_row['verb'],
+        'verb_text': action_row['verb_text'],
+        'full_phrase': action_row['full_phrase'],
+        'subject': action_row['subject'],
+        'object': action_row['object'],
+        'sentence_text': action_row['sentence_text'],
+        'char_start': action_row['char_start'],
+        'char_end': action_row['char_end'],
+        'doc_id': action_row['doc_id'],
+        'annotation_uid': action_row['annotation_uid'],
+        'action_class': action_row['action_class'],
+        'tokens': action_row.get('tokens', []),
+        'spans': action_row.get('spans', []),
+        'verb_span_idx': action_row.get('verb_span_idx', -1),
+        'subject_span_idx': action_row.get('subject_span_idx', -1),
+        'object_span_idx': action_row.get('object_span_idx', -1),
+    }
+
+
+def _split_cycle_and_expand_edges(
+    src_uid: str,
+    tgt_uid: str,
+    edge_data: dict,
+    action_rows: List[dict],
+    all_edges: List[dict],
+    new_action_rows: List[dict],
+    new_edges: List[dict],
+    uid_to_row: dict,
+) -> None:
+    """
+    Split a cycle edge A→B by creating copies A' and B'.
+    
+    Original: A -x→ B, B -y→ A (cycle)
+    Result:   A -x→ B', B' -y→ A' (no cycle)
+    
+    Additionally:
+    - All predecessors P of A get edges P → B' (duplicate original P → A)
+    - All successors S of B get edges A' → S (duplicate original B → S)
+    """
+    src_row = uid_to_row.get(src_uid)
+    tgt_row = uid_to_row.get(tgt_uid)
+    
+    if not src_row or not tgt_row:
+        return
+    
+    b_prime_uid = str(uuid.uuid4())
+    a_prime_uid = str(uuid.uuid4())
+    
+    b_prime = _create_action_copy(tgt_row, b_prime_uid)
+    a_prime = _create_action_copy(src_row, a_prime_uid)
+    
+    new_action_rows.append(b_prime)
+    new_action_rows.append(a_prime)
+    uid_to_row[b_prime_uid] = b_prime
+    uid_to_row[a_prime_uid] = a_prime
+    
+    new_edges.append({
+        'src_uid': src_uid,
+        'tgt_uid': b_prime_uid,
+        'relation_subtype': edge_data.get('relation_subtype', 'causes'),
+        'confidence': edge_data.get('confidence', 0.5),
+        'evidence': edge_data.get('evidence', []),
+        'doc_id': edge_data['doc_id'],
+        'status': edge_data.get('status', 'pending'),
+    })
+    
+    reverse_edges = [e for e in all_edges if e['src_uid'] == tgt_uid and e['tgt_uid'] == src_uid]
+    if reverse_edges:
+        reverse_edge = reverse_edges[0]
+        new_edges.append({
+            'src_uid': b_prime_uid,
+            'tgt_uid': a_prime_uid,
+            'relation_subtype': reverse_edge.get('relation_subtype', 'causes'),
+            'confidence': reverse_edge.get('confidence', 0.5),
+            'evidence': reverse_edge.get('evidence', []),
+            'doc_id': reverse_edge['doc_id'],
+            'status': reverse_edge.get('status', 'pending'),
+        })
+    
+    predecessors = _get_predecessors(src_uid, all_edges)
+    for pred_uid in predecessors:
+        pred_row = uid_to_row.get(pred_uid)
+        if pred_row:
+            new_edges.append({
+                'src_uid': pred_uid,
+                'tgt_uid': b_prime_uid,
+                'relation_subtype': 'causes',
+                'confidence': 0.5,
+                'evidence': [],
+                'doc_id': edge_data['doc_id'],
+                'status': 'pending',
+            })
+    
+    successors = _get_successors(tgt_uid, all_edges)
+    for succ_uid in successors:
+        succ_row = uid_to_row.get(succ_uid)
+        if succ_row:
+            new_edges.append({
+                'src_uid': a_prime_uid,
+                'tgt_uid': succ_uid,
+                'relation_subtype': 'causes',
+                'confidence': 0.5,
+                'evidence': [],
+                'doc_id': edge_data['doc_id'],
+                'status': 'pending',
+            })
+
+
 @dataclass
 class ExtractActionsResult:
     actions_count: int
@@ -296,7 +418,59 @@ async def extract_document_actions(
         len(all_action_rows), len(all_action_edges), len(all_syntactic_edges)
     )
 
-    # 5. Сохраняем узлы, получаем uid_remap для дедупликации
+    # 5a. Анализ циклов и создание копий вершин для развёртывания
+    # Строим маппинг uid → action_row для быстрого поиска
+    uid_to_action_row: dict[str, dict] = {row['uid']: row for row in all_action_rows}
+    
+    # Ищем циклы в рёбрах и создаём копии вершин
+    new_action_copies: List[dict] = []
+    new_expanded_edges: List[dict] = []
+    expanded_edge_uids: set = set()  # пары (src_uid, tgt_uid) которые уже развернули
+    
+    # Проверяем каждое ребро на возможность цикла
+    edges_to_check = list(all_action_edges)
+    checked_pairs: set = set()
+    
+    for edge in edges_to_check:
+        src = edge['src_uid']
+        tgt = edge['tgt_uid']
+        pair_key = (src, tgt)
+        
+        if pair_key in checked_pairs:
+            continue
+        checked_pairs.add(pair_key)
+        
+        # Проверяем обратное ребро (tgt -> src)
+        reverse_key = (tgt, src)
+        has_reverse = any(
+            e['src_uid'] == tgt and e['tgt_uid'] == src 
+            for e in all_action_edges
+        )
+        
+        if has_reverse and pair_key not in expanded_edge_uids:
+            # Нашли цикл A -> B и B -> A, разворачиваем его
+            _split_cycle_and_expand_edges(
+                src_uid=src,
+                tgt_uid=tgt,
+                edge_data=edge,
+                action_rows=all_action_rows,
+                all_edges=all_action_edges,
+                new_action_rows=new_action_copies,
+                new_edges=new_expanded_edges,
+                uid_to_row=uid_to_action_row,
+            )
+            expanded_edge_uids.add(pair_key)
+            expanded_edge_uids.add(reverse_key)
+    
+    if new_action_copies:
+        logger.info(
+            "[actions] doc=%s: expanded %d cycles -> created %d action copies, %d new edges",
+            doc_id, len(expanded_edge_uids) // 2, len(new_action_copies), len(new_expanded_edges)
+        )
+        # Добавляем копии к оригинальным вершинам
+        all_action_rows.extend(new_action_copies)
+    
+    # 5b. Сохраняем узлы, получаем uid_remap для дедупликации
     uid_remap = action_repo.save_actions(all_action_rows, doc_id)
     actions_count = len(set(uid_remap.values())) if isinstance(uid_remap, dict) else uid_remap
 
@@ -308,6 +482,13 @@ async def extract_document_actions(
         for edge in all_syntactic_edges:
             edge['src_uid'] = uid_remap.get(edge['src_uid'], edge['src_uid'])
             edge['tgt_uid'] = uid_remap.get(edge['tgt_uid'], edge['tgt_uid'])
+        # Also remap the newly expanded edges from cycle splitting
+        for edge in new_expanded_edges:
+            edge['src_uid'] = uid_remap.get(edge['src_uid'], edge['src_uid'])
+            edge['tgt_uid'] = uid_remap.get(edge['tgt_uid'], edge['tgt_uid'])
+    
+    # Combine original edges with expanded edges (from cycle splitting)
+    all_leads_to_edges = list(all_action_edges) + list(new_expanded_edges)
 
     # 6. Фильтруем LEADS_TO рёбра по DAG-правилу
     # Загружаем все существующие рёбра документа один раз — O(1) Neo4j запрос
@@ -327,7 +508,7 @@ async def extract_document_actions(
 
     dag_filtered_edges: List[dict] = []
     cycle_skipped = 0
-    for edge in all_action_edges:
+    for edge in all_leads_to_edges:
         src = edge['src_uid']
         tgt = edge['tgt_uid']
         if would_create_cycle(src, tgt, get_neighbors):
@@ -337,7 +518,7 @@ async def extract_document_actions(
         in_memory_neighbors.setdefault(src, []).append(tgt)
 
     if cycle_skipped:
-        logger.info("[actions] doc=%s: skipped %d cycle-forming edges", doc_id, cycle_skipped)
+        logger.info("[actions] doc=%s: still has %d cycle-forming edges (fallback)", doc_id, cycle_skipped)
 
     edges_count = action_repo.save_leads_to(dag_filtered_edges, doc_id)
     pending_count = len(dag_filtered_edges)
