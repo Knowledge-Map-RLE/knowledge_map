@@ -10,7 +10,8 @@
  *
  * Browser support: Chrome 105+, Edge 105+, Safari 17.2+, Firefox 140+
  */
-import { ViewPlugin } from '@codemirror/view';
+import { ViewPlugin, Decoration, DecorationSet } from '@codemirror/view';
+import { RangeSet } from '@codemirror/state';
 import type { ViewUpdate, EditorView } from '@codemirror/view';
 import { annotationField, queryAnnotationsInRange } from './annotationStateField';
 
@@ -149,12 +150,69 @@ function updateHighlights(view: EditorView): Set<string> {
   return usedKeys;
 }
 
+function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  const h = hex.replace('#', '');
+  return {
+    r: parseInt(h.slice(0, 2), 16),
+    g: parseInt(h.slice(2, 4), 16),
+    b: parseInt(h.slice(4, 6), 16),
+  };
+}
+
+/**
+ * Строит DecorationSet с data-атрибутами для поиска аннотаций из RelationsOverlay.
+ * Когда CSS Custom Highlight API недоступен — также добавляет стили подсветки.
+ * Когда Highlight API доступен — стили рисует браузер, декорации нужны только
+ * для querySelector([data-annotation-id]) в RelationsOverlay.
+ */
+function buildDecorations(view: EditorView): DecorationSet {
+  const annotations = view.state.field(annotationField);
+  if (annotations.length === 0) return Decoration.none;
+
+  const docLength = view.state.doc.length;
+  const ranges: { from: number; to: number; value: Decoration }[] = [];
+  const seen = new Set<string>();
+
+  for (const { from, to } of view.visibleRanges) {
+    for (const ann of queryAnnotationsInRange(annotations, from, to)) {
+      if (seen.has(ann.uid)) continue;
+      seen.add(ann.uid);
+
+      const annFrom = Math.max(0, ann.start);
+      const annTo   = Math.min(docLength, ann.end);
+      if (annFrom >= annTo) continue;
+
+      const attrs: Record<string, string> = {
+        'data-annotation-id': ann.uid,
+        'data-ann': ann.uid,
+      };
+
+      // Когда Highlight API недоступен — применяем стили через Decoration.mark
+      if (!CSS_HIGHLIGHT_SUPPORTED) {
+        const { r, g, b } = hexToRgb(ann.color || '#ffeb3b');
+        attrs.style = `background-color:rgba(${r},${g},${b},0.35);border-radius:2px;cursor:pointer;`;
+        attrs.title = `${ann.annotation_type}: "${ann.text}"`;
+      }
+
+      ranges.push({
+        from: annFrom,
+        to: annTo,
+        value: Decoration.mark({ attributes: attrs }),
+      });
+    }
+  }
+
+  if (ranges.length === 0) return Decoration.none;
+  return RangeSet.of(ranges.map(({ from, to, value }) => value.range(from, to)), true);
+}
+
 export const cssHighlightPlugin = ViewPlugin.fromClass(
   class {
-    // Храним использованные ключи на инстансе плагина, не на view
     private usedKeys: Set<string> = new Set();
+    decorations: DecorationSet;
 
     constructor(view: EditorView) {
+      this.decorations = buildDecorations(view);
       this.scheduleMeasure(view);
     }
 
@@ -165,13 +223,12 @@ export const cssHighlightPlugin = ViewPlugin.fromClass(
       if (update.docChanged || annotationsChanged || update.viewportChanged) {
         this.clearKeys();
         this.usedKeys = updateHighlights(update.view);
+        this.decorations = buildDecorations(update.view);
         this.scheduleMeasure(update.view);
       }
     }
 
     private scheduleMeasure(view: EditorView) {
-      // key гарантирует что в очереди будет не больше одного запроса за цикл.
-      // DOM обновляется CM6 асинхронно — domAtPos() безопасен только в requestMeasure.
       view.requestMeasure({
         key: this,
         read: () => {
@@ -195,5 +252,8 @@ export const cssHighlightPlugin = ViewPlugin.fromClass(
       }
       this.usedKeys.clear();
     }
+  },
+  {
+    decorations: v => v.decorations,
   }
 );

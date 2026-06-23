@@ -13,12 +13,7 @@ import {
   toAnnotationWithPos,
   replaceDocAnnotation,
 } from './annotationStateField';
-import { annotationDecorationsPlugin } from './annotationDecorations';
-import {
-  cssHighlightPlugin,
-  CSS_HIGHLIGHT_SUPPORTED,
-  injectAnnotationHighlightStyles,
-} from './cssHighlightPlugin';
+import { cssHighlightPlugin } from './cssHighlightPlugin';
 import type { Annotation } from '../../../../services/api';
 
 interface UseCM6EditorParams {
@@ -89,13 +84,7 @@ export function useCM6Editor({
       }
     );
 
-    if (CSS_HIGHLIGHT_SUPPORTED) {
-      injectAnnotationHighlightStyles();
-    }
-
-    const highlightPlugin = CSS_HIGHLIGHT_SUPPORTED
-      ? cssHighlightPlugin
-      : annotationDecorationsPlugin;
+    const highlightPlugin = cssHighlightPlugin;
 
     // Используем самый свежий текст на момент создания view
     const state = EditorState.create({

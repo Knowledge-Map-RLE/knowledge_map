@@ -28,6 +28,7 @@ stanza = "^1.11.0"
 pymorphy2 = "^0.9.1"
 
 # Utilities
+pandas = ">=2.0,<2.3"
 networkx = "3.5"
 setuptools = "^80.9.0"
 rdflib = "^7.5.0"
