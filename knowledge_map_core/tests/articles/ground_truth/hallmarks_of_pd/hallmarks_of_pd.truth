@@ -1,0 +1,168 @@
+# Article: The hallmarks of Parkinson's disease
+# Sentence format: <uuidv7> | <subject> → <predicate> → <object>
+# Lines starting with # are comments
+# Blank lines separate different sentences
+
+# sentence: Since the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson's disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors.
+019f0e79-1000-7000-0000-000000000001 | dopamine → be → neurotransmitter
+019f0e79-1000-7000-0000-000000000002 | 019f0e79-1000-7000-0000-000000000001 → discovered in → 1950s
+019f0e79-1000-7000-0000-000000000003 | PD research → generate → body of knowledge
+019f0e79-1000-7000-0000-000000000004 | body of knowledge → be → rich
+019f0e79-1000-7000-0000-000000000005 | body of knowledge → be → complex
+019f0e79-1000-7000-0000-000000000006 | PD → be → age-related disease
+019f0e79-1000-7000-0000-000000000007 | PD → be → multifactorial disease
+019f0e79-1000-7000-0000-000000000008 | PD → be influenced by → genetic factors
+019f0e79-1000-7000-0000-000000000009 | PD → be influenced by → environmental factors
+019f0e79-1000-7000-0000-00000000000a | 019f0e79-1000-7000-0000-000000000006 → revealed by → PD research
+019f0e79-1000-7000-0000-00000000000b | 019f0e79-1000-7000-0000-000000000007 → revealed by → PD research
+019f0e79-1000-7000-0000-00000000000c | 019f0e79-1000-7000-0000-000000000008 → revealed by → PD research
+019f0e79-1000-7000-0000-00000000000d | 019f0e79-1000-7000-0000-000000000009 → revealed by → PD research
+
+# sentence: The tremendous complexity of the disease is increased by a nonlinear progression of the pathogenesis between molecular, cellular and organic systems.
+019f0e79-2000-7000-0000-000000000001 | complexity of the disease → be increased by → nonlinear progression of pathogenesis
+
+# sentence: In this minireview, we explore the complexity of PD and propose a systems-based approach, organizing the available information around cellular disease hallmarks.
+019f0e79-3000-7000-0000-000000000001 | we → explore → complexity of PD
+019f0e79-3000-7000-0000-000000000002 | we → propose → systems-based approach
+
+# sentence: We encourage our peers to adopt this cell-based view with the aim of improving communication in interdisciplinary research endeavors targeting the molecular events, modulatory cell-to-cell signaling pathways and emerging clinical phenotypes related to PD.
+019f0e79-4000-7000-0000-000000000001 | cell-based view → improve → communication in interdisciplinary research
+
+# sentence: Idiopathic Parkinson's disease (IPD) is the second most common neurodegenerative disease after Alzheimer's disease, and affects populations worldwide.
+019f0e79-5000-7000-0000-000000000001 | IPD → be → second most common neurodegenerative disease
+019f0e79-5000-7000-0000-000000000002 | IPD → affect → populations worldwide
+
+# sentence: The clinical syndrome of IPD is characterized by bradykinesia, resting tremor, rigidity, and postural instability.
+019f0e79-6000-7000-0000-000000000001 | clinical syndrome of IPD → be characterized by → bradykinesia
+019f0e79-6000-7000-0000-000000000002 | clinical syndrome of IPD → be characterized by → resting tremor
+019f0e79-6000-7000-0000-000000000003 | clinical syndrome of IPD → be characterized by → rigidity
+019f0e79-6000-7000-0000-000000000004 | clinical syndrome of IPD → be characterized by → postural instability
+
+# sentence: Bradykinesia is considered to be the main feature of and the necessary condition for a diagnosis of IPD.
+019f0e79-7000-7000-0000-000000000001 | bradykinesia → be → main feature of IPD
+019f0e79-7000-7000-0000-000000000002 | bradykinesia → be → necessary condition for diagnosis of IPD
+
+# sentence: In addition to these motor symptoms, many patients experience a wide range of nonmotor symptoms that sometimes even precede the typical movement disorder, such as hyposmia, sleep disturbances (i.e. rapid eye movement sleep behavior disorder), depression, constipation, and other dysautonomic symptoms.
+019f0e79-8000-7000-0000-000000000001 | patients → experience → nonmotor symptoms
+019f0e79-8000-7000-0000-000000000002 | nonmotor symptoms → precede → typical movement disorder
+019f0e79-8000-7000-0000-000000000003 | nonmotor symptoms → include → hyposmia
+019f0e79-8000-7000-0000-000000000004 | nonmotor symptoms → include → sleep disturbances
+019f0e79-8000-7000-0000-000000000005 | nonmotor symptoms → include → depression
+019f0e79-8000-7000-0000-000000000006 | nonmotor symptoms → include → constipation
+019f0e79-8000-7000-0000-000000000007 | nonmotor symptoms → include → dysautonomic symptoms
+
+# sentence: In particular, hyposmia and rapid eye movement sleep behavior disorder often start prior to the onset of the core motor syndrome.
+019f0e79-9000-7000-0000-000000000001 | hyposmia → start prior to → onset of core motor syndrome
+019f0e79-9000-7000-0000-000000000002 | REM sleep behavior disorder → start prior to → onset of core motor syndrome
+
+# sentence: The motor symptoms of PD are thought to arise primarily from the loss of dopaminergic (DA) neurons within the substantia nigra (SN), although other neurotransmitter systems (i.e. glutamatergic, cholinergic, tryptaminergic, noradrenergic, adrenergic, serotoninergic, and peptidergic) also appear to be affected.
+019f0e79-a000-7000-0000-000000000001 | motor symptoms of PD → arise from → loss of DA neurons within SN
+
+# sentence: Treatment of PD is currently symptomatic, and essentially involves substituting dopamine, or suppressing pathological neuronal oscillations via deep brain stimulation.
+019f0e79-b000-7000-0000-000000000001 | treatment of PD → be → symptomatic
+019f0e79-b000-7000-0000-000000000002 | treatment of PD → involve → substituting dopamine
+019f0e79-b000-7000-0000-000000000003 | treatment of PD → involve → suppressing pathological neuronal oscillations via deep brain stimulation
+
+# sentence: Population-based prevalence and incidence studies show a strong correlation with age.
+019f0e79-c000-7000-0000-000000000001 | prevalence and incidence studies → show → strong correlation with age
+
+# sentence: Indeed, to date, aging represents the most significant risk factor for developing PD.
+019f0e79-d000-7000-0000-000000000001 | aging → be → most significant risk factor for developing PD
+
+# sentence: IPD is an age-related disorder.
+019f0e79-e000-7000-0000-000000000001 | IPD → be → age-related disorder
+
+# sentence: In 5-10% of cases, PD presents as a Mendelian form with autosomal dominant or recessive inheritance.
+019f0e79-f000-7000-0000-000000000001 | PD → present as → Mendelian form
+019f0e79-f000-7000-0000-000000000002 | Mendelian form → have → autosomal dominant inheritance
+019f0e79-f000-7000-0000-000000000003 | Mendelian form → have → autosomal recessive inheritance
+
+# sentence: Mutations of a-synuclein are fully penetrant, and typically cause fast-progressing early-onset to late-onset PD, with widespread and abundant Lewy body formation as a pathophysiological hallmark.
+019f0e7a-0000-7000-0000-000000000001 | mutations of a-synuclein → be → fully penetrant
+019f0e7a-0000-7000-0000-000000000002 | mutations of a-synuclein → cause → fast-progressing PD
+
+# sentence: In contrast, LRRK2 mutations show variable penetrance, approximately 30-70% at age 80 years, and typically cause late-onset PD, mostly without dementia, and in most cases typical Lewy body pathology.
+019f0e7a-0100-7000-0000-000000000001 | LRRK2 mutations → show → variable penetrance
+019f0e7a-0100-7000-0000-000000000002 | LRRK2 mutations → cause → late-onset PD
+
+# sentence: Finally, mutations in ATP13A2 cause an atypical form of PD with dementia, named Kufor-Rakeb syndrome.
+019f0e7a-0200-7000-0000-000000000001 | mutations in ATP13A2 → cause → atypical form of PD with dementia
+019f0e7a-0200-7000-0000-000000000002 | atypical form of PD with dementia → be → Kufor-Rakeb syndrome
+
+# sentence: However, many of those have been identified only on the basis of chromosomal linkage studies and causality, and confirmation is still pending.
+019f0e7a-0300-7000-0000-000000000001 | many chromosomal regions → be identified by → chromosomal linkage studies
+
+# sentence: MPTP is an inhibitor of complex I of the mitochondrial electron transport chain.
+019f0e7a-0400-7000-0000-000000000001 | MPTP → be → inhibitor of complex I of mitochondrial electron transport chain
+
+# sentence: PD has also been linked to living in a rural environment, gardening, farming, and occupational exposure to agricultural chemicals.
+019f0e7a-0500-7000-0000-000000000001 | PD → be linked to → living in rural environment
+019f0e7a-0500-7000-0000-000000000002 | PD → be linked to → gardening
+019f0e7a-0500-7000-0000-000000000003 | PD → be linked to → farming
+019f0e7a-0500-7000-0000-000000000004 | PD → be linked to → occupational exposure to agricultural chemicals
+
+# sentence: a-Synuclein is the major protein component of Lewy bodies, the pathological hallmark not only in the brains of mutation carriers, but also in the common sporadic form of the disease.
+019f0e7a-0600-7000-0000-000000000001 | a-synuclein → be → major protein component of Lewy bodies
+
+# sentence: Indeed, genome-wide association studies revealed that genetic variants in the a-synuclein gene represent the most consistent genetic risk factor for PD across different populations.
+019f0e7a-0700-7000-0000-000000000001 | genetic variants in a-synuclein gene → be → most consistent genetic risk factor for PD
+
+# sentence: Dysfunction of molecular and organelle degradation pathways is a further hallmark of PD, and increasing evidence indicates functional interactions between the ubiquitin-proteasome system and autophagy.
+019f0e7a-0800-7000-0000-000000000001 | dysfunction of molecular and organelle degradation pathways → be → hallmark of PD
+
+# sentence: This clearance process is controlled via PINK1 and Parkin.
+019f0e7a-0900-7000-0000-000000000001 | clearance process → be controlled by → PINK1
+019f0e7a-0900-7000-0000-000000000002 | clearance process → be controlled by → Parkin
+
+# sentence: In PD, the dysfunction of these clearance systems facilitates the accumulation of a-synuclein and defective mitochondria.
+019f0e7a-0a00-7000-0000-000000000001 | dysfunction of clearance systems → facilitate → accumulation of a-synuclein
+019f0e7a-0a00-7000-0000-000000000002 | dysfunction of clearance systems → facilitate → accumulation of defective mitochondria
+
+# sentence: PINK1 and Parkin are important for maintaining the delicate orchestration of mitochondrial turnover.
+019f0e7a-0b00-7000-0000-000000000001 | PINK1 → be important for → maintaining mitochondrial turnover
+019f0e7a-0b00-7000-0000-000000000002 | Parkin → be important for → maintaining mitochondrial turnover
+
+# sentence: DJ-1 is involved in oxidative stress responses.
+019f0e7a-0c00-7000-0000-000000000001 | DJ-1 → be involved in → oxidative stress responses
+
+# sentence: The level of DJ-1 increases when cellular levels of ROS increase.
+019f0e7a-0d00-7000-0000-000000000001 | level of DJ-1 → increase when → cellular levels of ROS increase
+
+# sentence: The oxidized form of DJ-1 translocates to the mitochondrial outer membrane and protects neurons from cell death, by an as yet unknown mechanism.
+019f0e7a-0e00-7000-0000-000000000001 | oxidized form of DJ-1 → translocate to → mitochondrial outer membrane
+019f0e7a-0e00-7000-0000-000000000002 | oxidized form of DJ-1 → protect → neurons from cell death
+
+# sentence: Similar to the loss of function of PINK1, mutations in DJ-1 also lead to a fragmentation of mitochondria in mammalian models of acute PD.
+019f0e7a-0f00-7000-0000-000000000001 | mutations in DJ-1 → lead to → fragmentation of mitochondria
+
+# sentence: Resting microglia monitor the local environment and control the response of the immune system.
+019f0e7a-1000-7000-0000-000000000001 | resting microglia → monitor → local environment
+019f0e7a-1000-7000-0000-000000000002 | resting microglia → control → response of immune system
+
+# sentence: Under minor stress, microglia release anti-inflammatory cytokines and growth factors.
+019f0e7a-1100-7000-0000-000000000001 | microglia → release → anti-inflammatory cytokines
+
+# sentence: Under more significant stress, microglia release proinflammatory cytokines to recruit systemic immune cells and toxic factors to kill the pathogen.
+019f0e7a-1200-7000-0000-000000000001 | microglia → release → proinflammatory cytokines
+
+# sentence: Astrocytes modulate the microglial response and play a supportive role for brain neurons.
+019f0e7a-1300-7000-0000-000000000001 | astrocytes → modulate → microglial response
+019f0e7a-1300-7000-0000-000000000002 | astrocytes → play → supportive role for brain neurons
+
+# sentence: The proportion of astrocytes in the SN is the lowest of any brain area.
+019f0e7a-1400-7000-0000-000000000001 | proportion of astrocytes in SN → be → lowest of any brain area
+
+# sentence: The SN shows neuronal loss and gliosis, but Lewy bodies are typically lacking in affected carriers of mutations in the Parkin gene.
+019f0e7a-1500-7000-0000-000000000001 | SN → show → neuronal loss
+019f0e7a-1500-7000-0000-000000000002 | SN → show → gliosis
+019f0e7a-1500-7000-0000-000000000003 | Lewy bodies → be lacking in → affected carriers of Parkin mutations
+
+# sentence: The proportion of astrocytes in the SN is the lowest of any brain area.
+019f0e7a-1600-7000-0000-000000000001 | proportion of astrocytes in SN → be → lowest of any brain area
+
+# sentence: The exact role of environmental factors in the pathogenesis of PD remains elusive.
+019f0e7a-1700-7000-0000-000000000001 | exact role of environmental factors in PD → remain → elusive
+
+# sentence: Two centuries after the first detailed clinical description of PD by James Parkinson, and more than a decade after the first identification of genetic factors in this disease, PD research has evolved into a very mature research field, which has developed an arsenal of successfully applied symptomatic treatments.
+019f0e7a-1800-7000-0000-000000000001 | PD research → evolve into → very mature research field
+019f0e7a-1800-7000-0000-000000000002 | PD research field → develop → arsenal of symptomatic treatments

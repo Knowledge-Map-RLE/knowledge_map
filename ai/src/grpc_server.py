@@ -1,13 +1,32 @@
 """gRPC server for AI Model Service."""
 
-import sys
 import logging
+import subprocess
+import sys
 from concurrent import futures
 from datetime import datetime
 
 import grpc
 
 logger = logging.getLogger(__name__)
+
+
+def _kill_process_on_port(port: int) -> None:
+    try:
+        result = subprocess.run(
+            ["netstat", "-ano"],
+            capture_output=True, text=True,
+        )
+        lines = result.stdout.split("\n")
+        for line in lines:
+            if f":{port}" in line and "LISTENING" in line:
+                parts = line.strip().split()
+                if parts:
+                    pid = parts[-1]
+                    logger.warning("Killing process %s on port %s", pid, port)
+                    subprocess.run(["taskkill", "/F", "/PID", pid], capture_output=True)
+    except Exception:
+        pass
 
 # Add src to path for imports
 sys.path.insert(0, str(__file__).rsplit("\\", 2)[0])
@@ -234,6 +253,11 @@ def serve():
     ai_model_pb2_grpc.add_AIModelServiceServicer_to_server(
         AIModelServicer(), server
     )
+
+    # Ensure port is available (always kill previous instance)
+    _kill_process_on_port(settings.grpc_port)
+    import time
+    time.sleep(1)
 
     # Bind to port
     server_address = f"{settings.grpc_host}:{settings.grpc_port}"

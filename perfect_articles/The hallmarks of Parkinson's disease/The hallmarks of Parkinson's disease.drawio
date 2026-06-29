@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2026-05-11T07:19:46.630Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.13 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="Rdpxv9jJdADbG3XkPFU4" version="24.4.13" type="device">
+<mxfile host="Electron" modified="2026-06-27T14:43:31.670Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.13 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="9BzKZ0F8TCF2rtS9TLTu" version="24.4.13" type="device" pages="2">
   <diagram name="Страница — 1" id="StWODMb9PkcDyiyz2-C0">
     <mxGraphModel dx="1503" dy="1043" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -2089,8 +2089,115 @@
         <mxCell id="gHr533mswfBlHFvUK7O9-119" value="Синдром идиопатической болезни Паркинсона (ИБП) &lt;b&gt;&lt;font color=&quot;#b266ff&quot;&gt;характеризуется&lt;/font&gt;&lt;/b&gt;&amp;nbsp;постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="720" y="1400" width="560" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="JJP_Vn9-zKOYOjIxQPEo-1" value="&lt;div&gt;В 1950-х годах открыли&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;что дофамин это нейромедиатор&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="JJP_Vn9-zKOYOjIxQPEo-1" value="&lt;div&gt;В 1950-х годах открыли&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;что дофамин это нейромедиатор&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="720" y="-60" width="560" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="61ieKOxdOAh-XS7R3jyT-1" value="&lt;font color=&quot;#ff8000&quot;&gt;Дофамин &lt;/font&gt;&lt;span style=&quot;color: rgb(178, 102, 255);&quot;&gt;открыт в&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; color: rgb(51, 153, 255);&quot;&gt;1950-1959 годах&lt;/span&gt;&lt;div&gt;&lt;font style=&quot;background-color: initial;&quot;&gt;&lt;font color=&quot;#ff8000&quot;&gt;Dopamine&lt;/font&gt;&amp;nbsp;&lt;font color=&quot;#b266ff&quot;&gt;&lt;span style=&quot;white-space-collapse: preserve;&quot; data-src-align=&quot;8:6&quot; class=&quot;YPkS7KbdpWfGdYKd3QB9&quot;&gt;discovered&lt;/span&gt;&lt;span style=&quot;white-space-collapse: preserve;&quot;&gt; &lt;/span&gt;&lt;span style=&quot;white-space-collapse: preserve;&quot; data-src-align=&quot;15:1&quot; class=&quot;YPkS7KbdpWfGdYKd3QB9&quot;&gt;in&lt;/span&gt;&lt;/font&gt;&amp;nbsp;&lt;span style=&quot;color: rgb(51, 153, 255); background-color: initial;&quot;&gt;1950-1959 years&lt;/span&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;align=center;" vertex="1" parent="1">
+          <mxGeometry x="2600" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="9QYDIpaeLSBFMTCA-kNu" name="Попытка 4">
+    <mxGraphModel dx="1647" dy="727" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-1" value="&amp;nbsp;Мы призываем наших коллег принять этот клеточно-ориентированный подход с целью улучшения коммуникации в междисциплинарных исследованиях, нацеленных на молекулярные события, модулирующие межклеточные сигнальные пути и возникающие клинические фенотипы, связанные с БП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="760" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-2" value="С момента открытия дофамина как нейромедиатора в 1950-х годах исследования болезни Паркинсона (БП) сформировали богатую и сложную базу знаний, выявив, что БП является возрастным многофакторным заболеванием, на которое влияют как генетические, так и факторы окружающей среды." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;" vertex="1" parent="1">
+          <mxGeometry y="120" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-3" value="Огромная сложность заболевания усиливается нелинейным прогрессированием патогенеза между молекулярными, клеточными и органическими системами." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="320" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-4" value="В этом мини-обзоре мы исследуем сложность БП и предлагаем системный подход, организуя доступную информацию вокруг клеточных признаков заболевания." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="561.25" width="200" height="158.75" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-5" value="Предложения&lt;div&gt;Sentences&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;" vertex="1" parent="1">
+          <mxGeometry width="440" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-6" value="Идиопатическая болезнь Паркинсона (ИБП) является вторым наиболее распространенным нейродегенеративным заболеванием после болезни Альцгеймера и поражает популяции по всему миру." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="1080" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-7" value="Клинический синдром ИБП характеризуется брадикинезией, тремором покоя, ригидностью и постуральной нестабильностью." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="1280" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-8" value="Брадикинезия считается основным признаком и необходимым условием для диагностики ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="1520" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-9" value="В дополнение к этим двигательным симптомам многие пациенты испытывают широкий спектр немоторных симптомов, которые иногда даже предшествуют типичному двигательному расстройству, такие как гипосмия, нарушения сна (т.е. расстройство поведения в фазе быстрого сна), депрессия, запоры и другие дизавтономные симптомы." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="1800" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-10" value="В частности, гипосмия и расстройство поведения в фазе быстрого сна часто начинаются до появления основных двигательных симптомов." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="2080" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-11" value="Действительно, многие клеточные признаки обнаружены как при БП, так и при ИБП." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="2600" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-12" value="Считается, что двигательные симптомы БП возникают в первую очередь из-за потери дофаминергических (ДА) нейронов в чёрной субстанции (ЧС), хотя, по-видимому, затронуты и другие нейромедиаторные системы (т.е. глутаматергическая, холинергическая, триптаминергическая, норадренергическая, адренергическая, серотонинергическая и пептидергическая)." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="2880" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-13" value="Лечение БП в настоящее время является симптоматическим и по существу включает замещение дофамина или подавление патологических нейронных осцилляций посредством глубокой стимуляции мозга." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="3200" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-14" value="Since the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson’s disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="240" y="120" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-15" value="RUS" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="80" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-16" value="ENG" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="80" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-17" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;&amp;nbsp;The tremendous complexity of the disease is increased by a nonlinear progression of the pathogenesis between molecular, cellular and organic systems.&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="320" width="200" height="198.75" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-18" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;In this mini-review, we explore the complexity of PD and propose a systems-based&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;approach, organizing the available information around cellular disease hall&lt;/span&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;marks.&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="561.25" width="200" height="158.75" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-19" value="We encourage our peers to adopt this cell-based view with the aim of improving communication in interdisciplinary research endeavors targeting the molecular events, modulatory cell-to-cell signaling pathways and emerging clinical phenotypes related to PD." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="760" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-20" value="Idiopathic Parkinson&#39;s disease (IPD) is the second most common neurodegenerative disease after Alzheimer&#39;s disease, and affects populations worldwide." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1080" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-21" value="The clinical syndrome of IPD is characterized by bradykinesia, resting tremor, rigidity, and postural instability." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1280" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-22" value="Bradykinesia is considered to be the main feature of and the necessary condition for a diagnosis of IPD [1]." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1520" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-23" value="In addition to these motor symptoms, many patients experience a wide range of nonmotor symptoms that sometimes even precede the typical movement disorder, such as hyposmia, sleep disturbances (i.e. rapid eye movement sleep behavior disorder), depression, constipation, and other dysautonomic symptoms [2] [3] [4]." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1800" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-24" value="In particular, hyposmia and rapid eye movement sleep behavior disorder often start prior to the onset of the core motor syndrome [5]. In this review, we discuss." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="2080" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-25" value="Parkinson&#39;s disease in the global sense of the term (PD), including IPD and genetically or environmentally induced forms of parkinsonism." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="2338" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-26" value="Болезнь Паркинсона в глобальном смысле этого термина (БП), включая ИПД и генетически или экологически обусловленные формы паркинсонизма." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry y="2338" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-27" value="Indeed, many cellular hallmarks have been found to occur in both PD and IPD." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="2600" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-28" value="The motor symptoms of PD are thought to arise primarily from the loss of dopaminergic (DA) neurons within the substantia nigra (SN), although other neurotransmitter systems (i.e. glutamatergic, cholinergic, tryptaminergic, noradrenergic, adrenergic, serotoninergic, and peptidergic) also appear to be affected." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="2880" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="U6CXLNfED8xbbBeeGp7L-29" value="Treatment of PD is currently symptomatic, and essentially involves substituting dopamine, or suppressing pathological neuronal oscillations via deep brain stimulation." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="3200" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="O9YM3Ab485R5Pff_bLsr-1" value="Абстракт&lt;div&gt;Abstract&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" width="1080" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="O9YM3Ab485R5Pff_bLsr-2" value="Попытка 4&lt;div&gt;Превращаем предложения в триплеты&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=30;" vertex="1" parent="1">
+          <mxGeometry x="-240" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="7xEnFoj-w9ofKqPZO-3O-81" value="&lt;div&gt;F1: дофамин → является → нейромедиатором&lt;/div&gt;&lt;div&gt;M1: F1 → открыто в → 1950-х годах&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;F2: исследования → объект → болезнь Паркинсона&lt;/div&gt;&lt;div&gt;F3: исследования → сформировали → базу знаний&lt;/div&gt;&lt;div&gt;M2: M1 → раньше → F3&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;F4: база знаний → свойство → богатая&lt;/div&gt;&lt;div&gt;F5: база знаний → свойство → сложная&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;F6: болезнь Паркинсона → является → возрастной&lt;/div&gt;&lt;div&gt;F7: болезнь Паркинсона → является → многофакторной&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;M3: исследования → выявили → F6&lt;/div&gt;&lt;div&gt;M4: исследования → выявили → F7&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;F8: генетические факторы → влияют на → болезнь Паркинсона&lt;/div&gt;&lt;div&gt;F9: факторы окружающей среды → влияют на → болезнь Паркинсона&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;M5: исследования → выявили → F8&lt;/div&gt;&lt;div&gt;M6: исследования → выявили → F9&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Calibri;fontSize=13;align=left;" vertex="1" parent="1">
+          <mxGeometry x="520" y="120" width="380" height="360" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
