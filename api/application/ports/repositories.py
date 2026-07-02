@@ -63,9 +63,26 @@ class DocumentRepositoryProtocol(Protocol):
 
     def delete(self, uid: str) -> None: ...
 
-    def list_all(self) -> List[Document]: ...
+    def list_all(
+        self,
+        skip: int = 0,
+        limit: Optional[int] = None,
+    ) -> List[Document]: ...
 
+    def count_all(self) -> int:
+        """Общее количество документов — для пагинации."""
+        ...
 
+    def search(
+        self,
+        q: str,
+        skip: int = 0,
+        limit: int = 100,
+    ) -> Tuple[List[Document], int]:
+        """Нечёткий поиск по названию. Возвращает (документы, всего_найдено)."""
+        ...
+
+    
 class AnnotationRepositoryProtocol(Protocol):
     """Операции с Markdown-аннотациями."""
 

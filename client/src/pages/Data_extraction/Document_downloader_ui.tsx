@@ -1,7 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
 import s from './Document_downloader_ui.module.css';
 import {
-    uploadPdfForExtraction, listDocuments, deleteDocument as apiDeleteDocument,
+    uploadPdfForExtraction, listDocuments, searchDocuments as apiSearchDocuments,
+    deleteDocument as apiDeleteDocument,
     searchPubMed, getByPubMedId, ingestPubMedArticle, getDocumentProgress,
     type PubMedSearchResult
 } from '../../services/api';
@@ -70,6 +71,9 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
 
     const [ingestingId, setIngestingId] = useState<string | null>(null);
     const [localQuery, setLocalQuery] = useState('');
+    const [searchResults, setSearchResults] = useState<PDFDocument[] | null>(null);
+    const searchDebounceRef = useRef<number | null>(null);
+    const searchAbortRef = useRef<AbortController | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const showToast = (msg: string) => {
@@ -77,13 +81,26 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
         setTimeout(() => setToast(null), 3000);
     };
 
+    const abortRef = useRef<AbortController | null>(null);
+
     const loadDocuments = async (): Promise<PDFDocument[]> => {
+        // Отменяем предыдущий висячий запрос
+        if (abortRef.current) abortRef.current.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
+
         try {
-            const data = await listDocuments();
+            const timeoutMs = 10000;
+            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+            const data = await listDocuments(0, 200, controller.signal);
+            clearTimeout(timeoutId);
+
             if (!data?.success || !Array.isArray(data.documents)) {
                 setError('Ошибка загрузки документов');
                 return [];
             }
+            const total = data.total_count ?? data.documents.length;
             const mapped = data.documents.map((d) => {
                 try {
                     const status = d.has_markdown ? 'annotated' : 'ready_for_annotation';
@@ -114,8 +131,13 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                 }
             });
             setDocuments(mapped);
+            (window as any).__documents_total = total;
             return mapped;
-        } catch (err) {
+        } catch (err: any) {
+            if (err.name === 'AbortError') {
+                console.warn('Загрузка документов прервана по таймауту');
+                return [];
+            }
             setError(`Ошибка загрузки документов: ${err instanceof Error ? err.message : String(err)}`);
             return [];
         }
@@ -124,7 +146,7 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
     useImperativeHandle(ref, () => ({ reloadDocuments: () => loadDocuments().then(() => {}) }));
     useEffect(() => {
         loadDocuments();
-        const id = setInterval(() => { loadDocuments(); }, 15000);
+        const id = setInterval(() => { loadDocuments(); }, 30000);
         return () => clearInterval(id);
     }, []);
 
@@ -257,15 +279,57 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
         }
     };
 
-    // --- Local document filter ---
-    const filteredDocuments = localQuery.length >= 3
-        ? documents.filter(doc => {
-            const q = localQuery.toLowerCase();
-            return (doc.title || '').toLowerCase().includes(q)
-                || (doc.original_filename || '').toLowerCase().includes(q);
-        })
+    // --- Server-side fuzzy search (APOC Levenshtein) ---
+    useEffect(() => {
+        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        if (searchAbortRef.current) searchAbortRef.current.abort();
+
+        const q = localQuery.trim();
+        if (q.length < 3) {
+            setSearchResults(null);
+            return;
+        }
+
+        searchDebounceRef.current = window.setTimeout(async () => {
+            const controller = new AbortController();
+            searchAbortRef.current = controller;
+
+            try {
+                const data = await apiSearchDocuments(q, 0, 100, controller.signal);
+                if (!data?.success || !Array.isArray(data.documents)) {
+                    setSearchResults([]);
+                    return;
+                }
+                const mapped = data.documents.map((d: any) => ({
+                    uid: d.doc_id,
+                    original_filename: d.original_filename || d.doc_id + '.pdf',
+                    md5_hash: d.doc_id,
+                    title: d.title || undefined,
+                    upload_date: new Date().toISOString(),
+                    processing_status: d.has_markdown ? 'annotated' : 'ready_for_annotation',
+                    is_processed: !!d.has_markdown,
+                    pdf_url: d.files?.pdf ? `${(import.meta as any).env?.VITE_API_BASE_URL || ''}${d.files.pdf}` : '',
+                    pubmed_id: d.pubmed_id,
+                    pmc_id: d.pmc_id,
+                } as PDFDocument));
+                setSearchResults(mapped);
+            } catch (err: any) {
+                if (err.name === 'AbortError') return;
+                console.warn('Ошибка поиска документов:', err);
+                setSearchResults([]);
+            }
+        }, 300);
+
+        return () => {
+            if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        };
+    }, [localQuery]);
+
+    // --- Document list: search results if query >=3, else full list ---
+    const filteredDocuments = localQuery.trim().length >= 3
+        ? (searchResults ?? documents)
         : documents.slice(0, 100);
-    const hasMoreDocuments = localQuery.length < 3 && documents.length > 100;
+    const hasMoreDocuments = localQuery.trim().length < 3 && documents.length > 100;
 
     // --- PDF upload ---
     const handleFileUpload = async (file: File) => {
@@ -488,9 +552,13 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                         );
                     })}
                 </div>
-                {hasMoreDocuments && (
+                {localQuery.trim().length >= 3 ? (
                     <p className={s.docListHint}>
-                        Показано 100 из {documents.length}. Введите запрос для поиска.
+                        Найдено {filteredDocuments.length} документов по запросу «{localQuery}».
+                    </p>
+                ) : (hasMoreDocuments || (window as any).__documents_total > 100) && (
+                    <p className={s.docListHint}>
+                        Показано {Math.min(100, documents.length)} из {(window as any).__documents_total || documents.length}. Введите запрос для поиска.
                     </p>
                 )}
             </div>

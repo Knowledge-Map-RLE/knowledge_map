@@ -25,10 +25,10 @@ class S3Config:
     """Конфигурация для подключения к S3/MinIO."""
     
     def __init__(self):
-        self.endpoint_url = getattr(settings, 's3_endpoint_url', os.getenv('S3_ENDPOINT_URL', 'http://localhost:9000'))
-        self.access_key = getattr(settings, 's3_access_key', os.getenv('S3_ACCESS_KEY', 'minio'))
-        self.secret_key = getattr(settings, 's3_secret_key', os.getenv('S3_SECRET_KEY', 'minio123456'))
-        self.region = getattr(settings, 's3_region', os.getenv('S3_REGION', 'us-east-1'))
+        self.endpoint_url = settings.S3_ENDPOINT_URL
+        self.access_key = settings.S3_ACCESS_KEY
+        self.secret_key = settings.S3_SECRET_KEY
+        self.region = settings.S3_REGION
         
     def get_boto3_config(self) -> Dict:
         """Возвращает конфигурацию для aioboto3."""

@@ -706,60 +706,53 @@ class DataExtractionService:
             "message": "Пользовательский markdown успешно сохранен"
         }
 
-    async def list_documents(self) -> Dict[str, Any]:
+    async def list_documents(
+        self,
+        skip: int = 0,
+        limit: int = 200,
+    ) -> Dict[str, Any]:
         """
-        Список документов из Neo4j с проверкой файлов в S3.
+        Список документов из Neo4j (без S3-проверок — они выполняются per-document).
 
-        Использует Neo4j как source of truth для избежания проблем с eventual consistency в S3.
+        Args:
+            skip: смещение
+            limit: максимальное количество
         """
-        from src.models import Document
+        import asyncio
 
-        bucket = settings.S3_BUCKET_NAME
-        documents = []
-
-        import sys
-        print(f"DEBUG list_documents START", file=sys.stderr, flush=True)
-        
         try:
-            # Получаем все документы из Neo4j
-            all_docs = Document.nodes.all()
-            docs_list = list(all_docs)
-            print(f"DEBUG: Found {len(docs_list)} docs", file=sys.stderr, flush=True)
-            all_docs = docs_list
+            from application.documents.list_documents import list_documents as list_docs_usecase
+            from adapters.repositories.document_repository import DocumentRepository
 
-            for pdf_doc in all_docs:
-                doc_id = pdf_doc.uid
-                prefix = f"documents/{doc_id}/"
-                pdf_key = f"{prefix}{doc_id}.pdf"
+            repo = DocumentRepository()
+            docs, total = await asyncio.to_thread(
+                list_docs_usecase, repo=repo, skip=skip, limit=limit,
+            )
 
-                # Просто проверяем s3_key напрямую - это путь к markdown
-                md_key = pdf_doc.s3_key
-                md_exists = await self.s3_client.object_exists(bucket, md_key)
-                
-                # Показываем документ если есть markdown
-                if md_exists:
-                    item = {
-                        "doc_id": doc_id,
-                        "has_markdown": md_exists,
-                        "files": {},
-                        "title": pdf_doc.title,
-                        "original_filename": pdf_doc.original_filename,
-                        "pubmed_id": pdf_doc.pubmed_id if hasattr(pdf_doc, 'pubmed_id') else None,
-                        "pmc_id": pdf_doc.pmc_id if hasattr(pdf_doc, 'pmc_id') else None,
+            return {
+                "success": True,
+                "total_count": total,
+                "skip": skip,
+                "limit": limit,
+                "documents": [
+                    {
+                        "doc_id": d.uid,
+                        "title": d.title,
+                        "original_filename": d.original_filename,
+                        "processing_status": d.processing_status,
+                        "is_processed": d.is_processed,
+                        "source": d.source,
+                        "has_markdown": d.get_active_markdown_key() is not None,
+                        "pubmed_id": d.pubmed_id,
+                        "pmc_id": d.pmc_id,
+                        "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key else {},
                     }
-
-                    # Добавляем файлы только если они реально существуют
-                    if md_exists:
-                        item['files']['markdown'] = md_key
-                    if pdf_exists:
-                        item['files']['pdf'] = pdf_key
-
-                    documents.append(item)
-
+                    for d in docs
+                ],
+            }
         except Exception as e:
-            logger.error(f"Ошибка получения списка документов: {e}")
-
-        return {"success": True, "documents": documents}
+            logger.error(f"list_documents failed: {e}")
+            return {"success": False, "documents": [], "total_count": 0, "skip": skip, "limit": limit}
 
     async def check_data_availability(self, doc_id: str) -> Dict[str, Any]:
         """

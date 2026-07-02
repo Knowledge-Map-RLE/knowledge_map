@@ -14,7 +14,7 @@ export const api = httpClient;
 export { fetchJson };
 
 export { edgesByViewport, loadLayout, loadAround, createBlock, deleteBlock, createLink, deleteLink, createBlockAndLink, pinBlock, unpinBlock, pinBlockWithScale, moveBlockToLevel, getNLPMarkdown, getKnowledgeMapPage } from './api/layout';
-export { uploadPdfForExtraction, listDocuments, searchPubMed, getByPubMedId, ingestPubMedArticle, getDocumentProgress, getDocumentAssets, deleteDocument, importAnnotations, exportAnnotations, saveMarkdown } from './api/documents';
+export { uploadPdfForExtraction, listDocuments, searchDocuments, searchPubMed, getByPubMedId, ingestPubMedArticle, getDocumentProgress, getDocumentAssets, deleteDocument, importAnnotations, exportAnnotations, saveMarkdown } from './api/documents';
 export { getGlobalLinguisticGraph, getDocumentLinguisticGraph, getDependencyNgrams, getPatternContext, getExtractedPatterns, getExtractStatus, getPatternGraph, getPatternText, savePatternsToDb, createPatternsInDb, getPatternCreateStatus } from './api/graphs';
 export { createAnnotation, getAnnotations, updateAnnotation, deleteAnnotation, deleteAllAnnotations, batchUpdateAnnotationOffsets, createAnnotationRelation, deleteAnnotationRelation, getAnnotationRelations } from './api/annotations';
 export { analyzeText, autoAnnotateDocument, autoAnnotateMultilevel, getNlpTaskStatus, exportAnnotationsYAML, importAnnotationsYAML } from './api/nlp';

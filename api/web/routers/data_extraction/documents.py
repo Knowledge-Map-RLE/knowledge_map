@@ -32,6 +32,7 @@ from application.documents.upload_pdf import upload_pdf
 from application.documents.get_document_assets import get_document_assets
 from application.documents.delete_document import delete_document
 from application.documents.list_documents import list_documents
+from application.documents.search_documents import SearchDocumentsUseCase
 from application.documents.get_markdown import get_markdown
 from application.documents.update_markdown import update_markdown
 from web.dependencies import (
@@ -92,12 +93,54 @@ async def delete_document_route(
 
 
 @router.get("/documents")
-async def list_documents_route(doc_repo=Depends(get_document_repository)):
-    """Список документов из Neo4j."""
+async def list_documents_route(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    doc_repo=Depends(get_document_repository),
+):
+    """Список документов из Neo4j с пагинацией."""
     import asyncio
-    docs = await asyncio.to_thread(list_documents, repo=doc_repo)
+    docs, total = await asyncio.to_thread(list_documents, repo=doc_repo, skip=skip, limit=limit)
     return {
         "success": True,
+        "total_count": total,
+        "skip": skip,
+        "limit": limit,
+        "documents": [
+            {
+                "doc_id": d.uid,
+                "title": d.title,
+                "original_filename": d.original_filename,
+                "processing_status": d.processing_status,
+                "is_processed": d.is_processed,
+                "source": d.source,
+                "has_markdown": d.get_active_markdown_key() is not None,
+                "pubmed_id": d.pubmed_id,
+                "pmc_id": d.pmc_id,
+                "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key else {},
+            }
+            for d in docs
+        ],
+    }
+
+
+@router.get("/documents/search")
+async def search_documents_route(
+    q: str = Query(..., min_length=1, description="Поисковый запрос"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    doc_repo=Depends(get_document_repository),
+):
+    """Нечёткий поиск документов по названию через APOC Levenshtein."""
+    import asyncio
+    use_case = SearchDocumentsUseCase(repo=doc_repo)
+    docs, total = await asyncio.to_thread(use_case.execute, q=q, skip=skip, limit=limit)
+    return {
+        "success": True,
+        "total_count": total,
+        "skip": skip,
+        "limit": limit,
+        "query": q,
         "documents": [
             {
                 "doc_id": d.uid,

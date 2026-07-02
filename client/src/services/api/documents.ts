@@ -91,9 +91,25 @@ export async function deleteDocument(docId: string): Promise<any> {
   return res.json();
 }
 
-export async function listDocuments(): Promise<any> {
+export async function listDocuments(skip: number = 0, limit: number = 200, signal?: AbortSignal): Promise<any> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents`);
+  const params = new URLSearchParams({ skip: String(skip), limit: String(limit) });
+  const res = await fetch(`${base}/api/data_extraction/documents?${params}`, { signal });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+export async function searchDocuments(q: string, skip: number = 0, limit: number = 100, signal?: AbortSignal): Promise<any> {
+  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+  const params = new URLSearchParams({ q, skip: String(skip), limit: String(limit) });
+  const res = await fetch(`${base}/api/data_extraction/documents/search?${params}`, { signal });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+  }
   return res.json();
 }
 

@@ -42,9 +42,9 @@ async def delete_document(doc_id: str):
 
 
 @router.get("/documents")
-async def list_documents():
-    """Список документов по префиксу documents/ из S3."""
-    return await data_extraction_service.list_documents()
+async def list_documents(skip: int = 0, limit: int = 200):
+    """Список документов из Neo4j с пагинацией."""
+    return await data_extraction_service.list_documents(skip=skip, limit=limit)
 
 
 @router.put("/documents/{doc_id}/markdown", response_model=UpdateMarkdownResponse)
