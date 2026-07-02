@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
     default_llm_model: str = Field(default="Qwen/Qwen2.5-0.5B-Instruct", alias="DEFAULT_LLM_MODEL")
+    local_llm_model: str = Field(default="Qwen/Qwen2.5-0.5B-Instruct", alias="LOCAL_LLM_MODEL")
 
     hugging_face_token: str = Field(default="", alias="HUGGING_FACE_TOKEN")
 

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from src.domain.models import Statement, StatementType, StatementID, Concept
 from src.extractor.context import ExtractionContext
 from src.extractor.engine import RuleEngine
-from src.llm.ai_client import AIClient
 from src.meta.meta_builder import MetaBuilder
 from src.normalizer.concept_normalizer import ConceptNormalizerImpl
 from src.parser.dep_tree import DependencyTree
@@ -20,7 +20,6 @@ class Pipeline:
     def __init__(
         self,
         nlp_client: NLPClient | None = None,
-        ai_client: AIClient | None = None,
         rule_engine: RuleEngine | None = None,
         meta_builder: MetaBuilder | None = None,
         normalizer: ConceptNormalizerImpl | None = None,
@@ -28,20 +27,27 @@ class Pipeline:
         serializer: Serializer | None = None,
     ):
         self._nlp = nlp_client or NLPClient()
-        self._ai = ai_client or AIClient()
         self._engine = rule_engine or RuleEngine()
         self._meta = meta_builder or MetaBuilder()
         self._normalizer = normalizer or ConceptNormalizerImpl()
         self._validator = validator or Validator()
         self._serializer = serializer or Serializer()
 
+    @staticmethod
+    def _preprocess_text(text: str) -> str:
+        """Clean text before NLP: strip HTML, citations, split on semicolons."""
+        text = re.sub(r'<[^>]+>', '', text)
+        text = re.sub(r'\[\d+\](?:\s*\[\d+\])*', '', text)
+        text = re.sub(r';\s*(?=[A-Z"\'(])', '. ', text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text
+
     async def process(
         self,
         text: str,
         doc_id: str = "",
-        use_llm: bool = False,
-        llm_model_id: str | None = None,
     ) -> dict:
+        text = self._preprocess_text(text)
         trees = await self._get_dependency_trees(text)
         if not trees:
             return {
@@ -78,9 +84,6 @@ class Pipeline:
 
         all_statements, concepts = self._meta.process(all_statements, concepts, {"doc_id": doc_id})
 
-        if use_llm and all_statements:
-            await self._enrich_with_llm(text, all_statements, concepts, llm_model_id)
-
         stmt_protos, concept_protos = self._serializer.to_proto(all_statements, concepts)
 
         return {
@@ -95,40 +98,6 @@ class Pipeline:
     async def _get_dependency_trees(self, text: str) -> list[DependencyTree]:
         async with self._nlp as client:
             return await client.get_dependency_trees(text)
-
-    async def _enrich_with_llm(
-        self,
-        text: str,
-        statements: list[Statement],
-        concepts: dict[str, Concept],
-        model_id: str | None,
-    ) -> None:
-        existing = []
-        for s in statements:
-            obj_val = s.object_id
-            existing.append({
-                "id": str(s.id),
-                "subject": s.subject_id,
-                "predicate": s.predicate,
-                "object": obj_val,
-            })
-
-        async with self._ai as client:
-            suggestions = await client.suggest_meta_statements(text, existing, model_id)
-
-        for suggestion in suggestions:
-            subject = concepts.get(suggestion["subject_id"])
-            obj_ref = concepts.get(suggestion["object_id"])
-            if subject and obj_ref:
-                meta = Statement(
-                    id=StatementID.new(),
-                    type=StatementType.META,
-                    subject=subject,
-                    predicate=suggestion["predicate"],
-                    object=obj_ref,
-                    sentence_text=text,
-                )
-                statements.append(meta)
 
     def _normalize_concepts(self, statements: list[Statement], concepts: dict[str, Concept]) -> None:
         for stmt in statements:

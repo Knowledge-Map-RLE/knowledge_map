@@ -73,11 +73,28 @@ class ModelRegistry:
                 model_id="Qwen/Qwen2.5-0.5B-Instruct",
                 name="Qwen 2.5 0.5B Instruct",
                 description="Alibaba's Qwen 2.5 0.5B instruction-tuned model - fast and lightweight",
-                max_context_length=32000,  # Qwen 2.5 supports 32k context
+                max_context_length=32000,
                 model_class="instruct_model.InstructModel",
                 default_params={
                     "max_tokens": 2048,
                     "temperature": 0.7,
+                    "top_p": 0.9,
+                    "top_k": 50,
+                },
+            )
+        )
+
+        # Qwen 2.5 1.5B Instruct — for relation extraction fallback (CPU-friendly)
+        self.register_model(
+            ModelConfig(
+                model_id="Qwen/Qwen2.5-1.5B-Instruct",
+                name="Qwen 2.5 1.5B Instruct",
+                description="Alibaba's Qwen 2.5 1.5B instruction-tuned model — relation extraction fallback",
+                max_context_length=32768,
+                model_class="instruct_model.InstructModel",
+                default_params={
+                    "max_tokens": 512,
+                    "temperature": 0.1,
                     "top_p": 0.9,
                     "top_k": 50,
                 },

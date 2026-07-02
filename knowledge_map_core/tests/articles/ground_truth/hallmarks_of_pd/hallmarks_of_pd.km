@@ -1,0 +1,1228 @@
+# Article: the hallmarks of parkinsons disease
+# Sentence format: <uuid> | <subject> -> <predicate> -> <object>
+
+# sentence: # The hallmarks of Parkinson's disease.
+
+# sentence: Since the discovery of dopamine as a neurotransmitter in the 1950s, Parkinson's disease (PD) research has generated a rich and complex body of knowledge, revealing PD to be an age-related multifactorial disease, influenced by both genetic and environmental factors.
+ec1141e6-ac2e-5416-a530-36b83da287ba | parkinson 's disease pd research -> be revealing by -> both genetic and environmental factor
+087c92ff-0994-5d50-b431-7fead643c187 | pd -> be influenced by -> both genetic and environmental factor
+ab1fe093-0f78-5378-8434-0d874fc1c3a0 | pd -> be -> age-related multifactorial disease
+c02f6256-9535-554f-8ba4-4227753639b8 | parkinson 's disease pd research -> generate -> rich and complex body of knowledge
+d5e23a2e-cafc-5a19-a49b-67cfc0f35ca3 | body of knowledge -> property -> rich and complex
+e9130fa9-d81b-5bbe-9a8e-e8f8d4a4f39b | body of knowledge -> property -> complex
+e7c1af8f-3d59-54ce-b16c-725b8ded966d | by factor -> property -> both genetic and environmental
+202a68d9-cb80-55e9-8ed0-c4c8a8646319 | by factor -> property -> environmental
+c09bb4cb-436c-52f8-9a19-16e8dd1d3d36 | dopamine -> be -> neurotransmitter
+
+# sentence: The tremendous complexity of the disease is increased by a nonlinear progression of the pathogenesis between molecular, cellular and organic systems.
+7fa5a98b-8fa5-52ca-8624-b8882edbf739 | tremendous complexity of the disease -> be increased by -> nonlinear progression of the pathogenesis between molecular cellular and organic system
+681377f1-9f84-5e66-9214-14fd9b42ed15 | between system -> property -> molecular cellular and organic
+32ae958e-5636-578d-be0d-5c957a40cd5b | between system -> property -> cellular and organic
+e4a37f86-024e-5c51-9d05-d5fbb49385ea | molecular -> property -> cellular and organic
+a3e6a31f-4074-5b96-8711-2e0d7f59f980 | molecular -> property -> organic
+
+# sentence: In this minireview, we explore the complexity of PD and propose a systems-based approach, organizing the available information around cellular disease hallmarks.
+bb2de7a7-e11f-5bef-b892-31d25785770a | we -> explore -> complexity of pd
+61ad628e-daa2-5bf2-a185-207ea3203fbe | we -> propose -> systems-based approach
+
+# sentence: We encourage our peers to adopt this cell-based view with the aim of improving communication in interdisciplinary research endeavors targeting the molecular events, modulatory cell-to-cell signaling pathways and emerging clinical phenotypes related to PD..
+d4324b0a-acad-57c7-b4ef-1c2f226507d1 | with the aim -> be improving in -> interdisciplinary research endeavor
+3b1aebf3-e2c4-59d1-8635-e9e4fce618a5 | with the aim -> be improving to -> pd
+72b2d632-10da-5043-982a-9b46a7ea31a4 | in interdisciplinary research endeavor -> be targeting to -> pd
+07f6aeaf-ae7f-514c-b5dd-529d115ec756 | we -> encourage -> our peer
+23b97522-8d04-5176-9027-38e9756b2263 | we -> encourage to adopt -> this cell-based view with the aim of improving communication in interdisciplinary research endeavors targeting the molecular events modulatory cell-to-cell signaling pathways and emerging clinical phenotypes related to pd
+
+# sentence: Idiopathic Parkinson's disease (IPD) is the second most common neurodegenerative disease after Alzheimer's disease, and affects populations worldwide.
+973b4c27-1625-5ead-b662-9bfbd4299339 | idiopathic parkinson 's disease ipd -> be -> second most common neurodegenerative disease after alzheimer 's disease
+720405f8-8e0c-5b9e-b7ac-87d6745c9cc7 | idiopathic parkinson 's disease ipd -> affect -> populations worldwide
+
+# sentence: The clinical syndrome of IPD is characterized by bradykinesia, resting tremor, rigidity, and postural instability.
+a4dbbbe9-eac6-521d-a835-3d3446b0bc39 | clinical syndrome of ipd -> be characterized by -> bradykinesia
+68a36462-1f42-572b-89d9-c8e0bf94beda | clinical syndrome of ipd -> be characterized by -> resting tremor
+1a0996df-4978-5dcc-9899-5dae560857dc | clinical syndrome of ipd -> be characterized by -> rigidity
+6c12c854-611b-53e2-a172-1edd9b9434fb | clinical syndrome of ipd -> be characterized by -> postural instability
+
+# sentence: Bradykinesia is considered to be the main feature of and the necessary condition for a diagnosis of IPD .
+e63d8a5e-eb76-5774-b440-3be3eb563bdd | bradykinesia -> be considered for -> diagnosis of ipd
+d2934211-7647-545c-a6f3-c0f926090184 | bradykinesia -> be considered to -> feature
+b0a472e1-1047-5f64-9e58-7505b1a053c5 | bradykinesia -> be -> main feature of
+
+# sentence: In addition to these motor symptoms, many patients experience a wide range of nonmotor symptoms that sometimes even precede the typical movement disorder, such as hyposmia, sleep disturbances (i.e. rapid eye movement sleep behavior disorder), depression, constipation, and other dysautonomic symptoms .
+443884b2-0346-5a9b-b93a-9475648192fa | many patient -> experience -> wide range of nonmotor symptoms that sometimes even precede the typical movement disorder such as hyposmia sleep disturbances i.e. rapid eye movement sleep behavior disorder depression constipation and other dysautonomic symptom
+74b42a12-0e6d-5811-bd9a-b4de905383d7 | nonmotor symptom -> precede -> typical movement disorder
+ebab6fe2-7afd-5c07-b19d-67d94d156af6 | nonmotor symptom -> include -> hyposmia
+1f909c72-0a68-59d1-9857-a7df740dc226 | nonmotor symptom -> include -> sleep disturbance
+26d3e17c-855f-5fd0-b51c-3b43a0a76413 | nonmotor symptom -> include -> depression
+8976682f-8f6f-553d-a6c4-b2aad4f2206d | nonmotor symptom -> include -> constipation
+2e77bab3-266d-57cd-81a5-9c774af062fc | nonmotor symptom -> include -> other dysautonomic symptom
+
+# sentence: In particular, hyposmia and rapid eye movement sleep behavior disorder often start prior to the onset of the core motor syndrome .
+8980daca-a54d-5fe7-885c-d8a9e17613c9 | hyposmia and rapid eye movement sleep behavior disorder -> start prior to -> onset of the core motor syndrome
+63de9305-9bfe-50b0-9425-3ee1c80aa5d5 | rapid eye movement sleep behavior disorder -> start prior to -> onset of the core motor syndrome
+
+# sentence: In this review, we discuss.
+
+# sentence: Parkinson's disease in the global sense of the term (PD), including IPD and genetically or environmentally induced forms of parkinsonism.
+a7258a90-22e9-58d4-9b6d-a40cc46d0ced | parkinson 's disease -> include -> ipd
+cfeeaf13-ae8b-5ae5-919f-4b840dae1366 | parkinson 's disease -> include -> genetically or environmentally induced form
+
+# sentence: Indeed, many cellular hallmarks have been found to occur in both PD and IPD.
+58aa5fa8-0883-5f1e-9772-3068104e5cad | many cellular hallmark -> be found in -> both pd
+12772c3b-2637-5b16-be82-caa1217bcc34 | many cellular hallmark -> be found in -> ipd
+54c42e6b-30f8-5de4-bea6-7e2e2612e463 | many cellular hallmark -> be found to -> occur in both pd and ipd
+4df5b90f-946c-53fb-a2a8-547fa80a0554 | many cellular hallmark -> occur in -> pd
+980e0951-fdec-59b8-b4ef-d821f765a5a1 | many cellular hallmark -> occur in -> ipd
+
+# sentence: The motor symptoms of PD are thought to arise primarily from the loss of dopaminergic (DA) neurons within the substantia nigra (SN), although other neurotransmitter systems (i.e. glutamatergic, cholinergic, tryptaminergic, noradrenergic, adrenergic, serotoninergic, and peptidergic) also appear to be affected.
+89b36a2a-f9f9-5458-a7e0-d0750153251a | motor symptoms of pd -> be thought to -> arise primarily from the loss of dopaminergic da neurons within the substantia nigra sn
+e961918f-76ac-5529-8e6f-8aff14aa6fe4 | other neurotransmitter systems i.e. glutamatergic cholinergic tryptaminergic noradrenergic adrenergic serotoninergic and peptidergic -> appear -> affected
+1ad26e5c-4c3b-55aa-bcb3-3c4fcffd03a2 | other neurotransmitter system -> property -> i.e. glutamatergic cholinergic tryptaminergic noradrenergic adrenergic serotoninergic and peptidergic
+a033832a-836a-5b8e-84b0-2f441c66cd34 | other neurotransmitter system -> property -> cholinergic
+afc93ba0-7380-589f-aee4-c302f8c147f0 | other neurotransmitter system -> property -> tryptaminergic
+25f5b12a-6970-5009-b50b-d0d19d45d361 | other neurotransmitter system -> property -> noradrenergic
+4a7a7702-3651-5f3a-81db-944a5f646123 | other neurotransmitter system -> property -> adrenergic
+57e01bb6-559e-54dd-a2b7-036d39252b24 | other neurotransmitter system -> property -> serotoninergic
+37ee517d-3c64-5f12-bea7-7a6b0f480683 | other neurotransmitter system -> property -> peptidergic
+865a6991-4c13-5404-8a39-8a592d581773 | motor symptoms of pd -> arise from -> loss of dopaminergic da neurons within the substantia nigra sn
+9d651a34-9a8d-5e85-a60e-fb48b2d69f74 | other neurotransmitter systems i.e. glutamatergic cholinergic tryptaminergic noradrenergic adrenergic serotoninergic and peptidergic -> appear -> to be affected
+
+# sentence: Treatment of PD is currently symptomatic, and essentially involves substituting dopamine, or suppressing pathological neuronal oscillations via deep brain stimulation.
+644c9a2c-dfd5-5625-95d6-d12a81df50be | treatment of pd -> be -> symptomatic
+8f177bd3-964d-533b-967f-36135af1e74d | treatment of pd -> involve -> substituting dopamine
+52dedceb-30ff-59a0-9b30-04293f1fb5e1 | treatment of pd -> involve -> suppressing pathological neuronal oscillations via deep brain stimulation
+5a69c261-9565-5279-a030-c4453ce6d9fe | treatment of pd is currently symptomatic and essentially involves substituting dopamine or suppressing pathological neuronal oscillations via deep brain stimulation -> and -> essentially involves substituting dopamine or suppressing pathological neuronal oscillations via deep brain stimulation
+
+# sentence: It is tempting to speculate that the search for the origin and effective treatment of this disease will continue to add complexity to the scientific literature.
+782543b0-0ee5-50b1-acc6-4c4fca9c3a64 | it -> be -> tempting
+bbfca68f-8ad9-5932-99a2-ea607fb2cfa7 | search for the origin and effective treatment of this disease -> continue to add -> complexity
+3489c2e4-7f50-5122-aa6c-ee55253ea5d3 | it -> be tempting to -> speculate that the search for the origin and effective treatment of this disease will continue to add complexity to the scientific literature
+045d404c-85c6-575d-b8ed-4f5cb9a8262f | search for the origin and effective treatment of this disease -> be continue to -> add complexity to the scientific literature
+
+# sentence: However, appreciating the progress in cancer research , we anticipate otherwise: the new generation of PD researchers will be practicing a dramatically different type of science than PD researchers from the old school, which deserves full credit for developments such as dopamine substitution and deep brain stimulation.
+6ddbb238-e617-55de-bc22-eebca0cc5a1f | we -> be appreciating in -> cancer research
+7c8e35ef-5db4-541b-851d-d91b0f252dff | new generation of pd researcher -> be deserves for -> developments such as dopamine substitution and deep brain stimulation
+9c54991e-828d-5b68-b823-a97676333f32 | new generation of pd researcher -> practice -> dramatically different type of science than pd researchers from the old school
+4f0a447b-6da5-54a2-9973-be30743cb6ba | which -> deserve -> full credit for developments such as dopamine substitution and deep brain stimulation
+7f09a0df-83aa-5367-bc52-6bc68ecba33d | development -> include -> dopamine substitution
+abf0cb65-9614-595e-b06f-b50e0c112b6a | development -> include -> deep brain stimulation
+
+# sentence: The approaches that have driven the development of these treatments have been practice-oriented and often pragmatic.
+2b356bfd-d660-537d-848e-889bca61715e | that -> drive -> development of these treatment
+22281752-459a-5260-a4d3-a6465408307f | approache -> drive -> development of these treatment
+daf034a0-9638-5fd2-897c-62fc046bd0b6 | practice-oriented and often pragmatic -> and -> often pragmatic
+
+# sentence: The fundamental conceptual change required to progress efficiently from this point will be to develop PD research into a more exact science in terms of mathematical concepts.
+d6e35d8b-37c2-52bb-9fe7-80cec1777e4a | fundamental conceptual change required to progress efficiently from this point -> be -> develop pd research into a more exact science in terms of mathematical concept
+e63d6055-5d51-54c5-b59f-b9ab9a955f7b | fundamental conceptual change required to progress efficiently from this point -> be develop in -> terms of mathematical concept
+
+# sentence: The complex relationships between molecular, cellular and clinical traits will need to be explained in an intelligible way, in terms of a small number of underlying principles.
+0cbc50e0-ac08-5fc8-b84b-67553d78ec5b | complex relationships between molecular cellular and clinical trait -> need -> explained in an intelligible way in terms of a small number of underlying principle
+14abc264-4ecf-5320-8493-397ed7cf0b90 | between trait -> property -> molecular cellular and clinical
+6823dee9-ac15-5689-94df-dc23e951ec35 | between trait -> property -> cellular and clinical
+2c870d1e-87e4-5303-923c-6dc9cbf65989 | molecular -> property -> cellular and clinical
+976085da-6d93-50e7-8c07-eaaa69a0ce3b | molecular -> property -> clinical
+b95e48aa-8a4c-5a10-9277-dc76587f03ca | complex relationships between molecular cellular and clinical trait -> be need to -> be explained in an intelligible way in terms of a small number of underlying principle
+
+# sentence: In this review, we focus on the cellular hallmarks of PD, and discuss strategies for understanding the relationships between these cellular traits, molecular factors, and clinical traits..
+95029374-9a7b-5602-8fc2-1e61258222e4 | we -> focus -> strategies for understanding the relationships between these cellular traits molecular factors and clinical trait
+281126de-9204-53a6-9865-83229625eb51 | we -> discuss -> strategies for understanding the relationships between these cellular traits molecular factors and clinical trait
+f8e734d4-f46e-51d0-be33-48733d0562b7 | we -> focus on -> cellular hallmarks of pd
+
+# sentence: IPD is an age-related disorder.
+bfa93b67-a251-594e-8288-2d805e7caf5e | ipd -> be -> age-related disorder
+
+# sentence: Population-based prevalence and incidence studies show a strong correlation with age , with ~ 1% of people older than 60 years  being affected.
+35531afa-27e0-5e28-a316-4f00dd2b7b6a | population-based prevalence and incidence study -> show -> strong correlation with age
+0c56b65f-ed2b-520f-80c8-89d44af6c5b4 | strong correlation -> have -> age
+
+# sentence: At the age of 80 years, the prevalence rises to 3%.
+
+# sentence: In familial forms of PD, an earlier onset is possible, but, with increasing age, the risk of disease onset rises as well .
+0af5a3ae-c63d-53c4-9fdc-9b8092c31774 | earlier onset -> be -> in familial forms of pd possible
+89b6f182-5b6d-59b3-ad0d-a333e772d881 | in familial forms of pd an earlier onset is possible but with increasing age the risk of disease onset rises as well -> and -> with increasing age the risk of disease onset rises as well
+d0867481-e507-50dc-9924-7de470f79b62 | earlier onset -> be possible in -> familial forms of pd
+
+# sentence: Indeed, to date, aging represents the most significant risk factor for developing PD ..
+9b10be75-3af8-5fb2-9fd8-21487e3f756d | aging -> be -> most significant risk factor for developing pd
+d4cc85d9-e24b-516a-b64a-7392a851bc1d | aging -> represent -> most significant risk factor
+
+# sentence: In 5-10% of cases, PD presents as a Mendelian form with autosomal dominant or recessive inheritance.
+b2b4be14-db1e-5ca2-8ff8-09747830c01c | with inheritance -> property -> autosomal dominant or recessive
+b10bad89-70c2-5a27-96a3-df189cbd1d88 | with inheritance -> property -> recessive
+ca437062-afed-54a9-8fca-57bac1440cd9 | pd -> be -> mendelian form with autosomal dominant or recessive inheritance
+9dc5e1f6-7683-5973-abf0-14d889ceca50 | pd -> present as -> mendelian form with autosomal dominant or recessive inheritance
+962b3fad-c544-5f20-8081-04ca3a43fb5e | mendelian form -> have -> autosomal dominant inheritance
+76ffabda-801b-5533-bd2f-7fc8bbca7194 | mendelian form -> have -> autosomal recessive inheritance
+
+# sentence: The genetic contribution to PD had been discounted until the early 1990s; however, 15 years after the identification of the first gene related to an autosomal dominant form of PD, we know of ~ 28 distinct chromosomal regions that are related to PD .
+1cbd7b6c-7d97-5a61-be8d-1cd50cdeccb2 | genetic contribution to pd -> be discounted to -> pd
+2d4caeb8-425e-538b-a846-620dc0df1203 | genetic contribution to pd -> be discounted to -> autosomal dominant form of pd
+703b9a6e-bb8a-5802-a3ae-7a99207595d9 | that -> be -> related to pd
+4d6da2f4-bca4-557e-a7d5-b82b9e90e328 | that -> be related to -> pd
+
+# sentence: For only six of these regions have the underlying genes that cause common monogenic forms of PD been identified, namely SNCA ( a-synuclein) and LRRK2 for autosomal dominant PD, and PINK1, PARK7 (DJ-1), ATPase type 13A2 (ATP13A2), and PARK2 ( Parkin ) for autosomal recessive PD.
+73c89233-11cd-540e-b812-f8330e05c9f1 | that -> cause -> common monogenic forms of pd
+dc27c789-406c-5a42-b8d6-7dd955dc3b7e | underlying genes that cause common monogenic forms of pd -> be identified for -> only six of these region
+851e2970-ae52-58ff-a297-317ecb5fe907 | underlying genes that cause common monogenic forms of pd -> be identified for -> autosomal dominant pd
+6477d148-f7b0-5078-96ad-5e9dec045ac0 | underlying genes that cause common monogenic forms of pd -> be identified for -> autosomal recessive pd
+c074a25b-a4d6-50ce-81bc-1ba1b3d5c524 | underlying gene -> cause -> common monogenic forms of pd
+
+# sentence: It is noteworthy that the clinical features of the early-onset PD subtypes associated with PINK1, Parkin, and DJ-1, which are all either directly or indirectly involved in oxidative stress mechanisms, are indistinguishable.
+347b4a8c-5210-5a67-9a68-2eeb24a2c88d | with pink1 parkin and dj-1 which are all either directly or indirectly involved in oxidative stress mechanism -> be involved in -> oxidative stress mechanism
+a1ed94e4-ad4e-53f0-a21e-1e14b243a6ab | of the early-onset pd subtype -> be associated with -> pink1 which are all either directly or indirectly involved in oxidative stress mechanism
+b2bdd4d8-9931-5957-b888-cae2aa629372 | of the early-onset pd subtype -> be associated with -> parkin
+5d371659-6ae3-5b70-944c-bf3676f120a0 | of the early-onset pd subtype -> be associated with -> dj-1
+136a5685-9c97-5c62-ac6c-65df44420cd5 | of the early-onset pd subtype -> be associated in -> oxidative stress mechanism
+2c280f22-2eb8-509b-8ac6-80f98f04305d | clinical features of the early-onset pd subtypes associated with pink1 parkin and dj-1 which are all either directly or indirectly involved in oxidative stress mechanism -> be -> indistinguishable
+
+# sentence: The SN shows neuronal loss and gliosis, but Lewy bodies are typically lacking in affected carriers of mutations in the Parkin gene.
+14fbf6f3-ce1f-5eca-b77b-e644fe7af945 | sn -> show -> neuronal loss
+0cc567ac-ab47-5782-b49f-085ba28c994b | sn -> show -> gliosi
+675eb66b-9a07-5167-a9b2-f631e8a01085 | sn -> lack -> neuronal loss typically in affected carriers of mutations in the parkin gene
+659ddf82-1638-506f-9216-28cdcdc8b956 | sn -> lack -> gliosis typically in affected carriers of mutations in the parkin gene
+9bf11042-d4b5-597b-9edb-e3b5a423b717 | lewy body -> be lacking in -> affected carriers of mutations in the parkin gene
+
+# sentence: In contrast, the forms of PD associated with other common monogenic factors are clearly distinguishable.
+fb99b5ec-bbc7-5d1a-b1d1-d39257628f84 | forms of pd -> be associated with -> other common monogenic factor
+f7e8f707-0840-5cf9-8aa8-0875d20aaf31 | forms of pd associated with other common monogenic factor -> be -> distinguishable
+128487fe-4f79-55e6-9692-b1502334d5e1 | forms of pd associated with other common monogenic factor -> be distinguishable in -> contrast
+
+# sentence: Mutations of a-synuclein are fully penetrant, and typically cause fast-progressing earlyonset to late-onset PD, with widespread and abundant Lewy body formation as a pathophysiological hallmark.
+ead1eaa2-9eca-5bc8-be42-9f5d33f690ca | mutations of a-synuclein -> be -> penetrant
+4ed12d33-e7f9-5e88-bba5-32ae954f34e1 | mutations of a-synuclein -> cause -> fast-progressing earlyonset to late-onset pd with widespread and abundant lewy body formation as a pathophysiological hallmark
+45ef2106-4459-5ad1-b4f4-5ff045bee3c2 | mutations of a-synuclein are fully penetrant and typically cause fast-progressing earlyonset to late-onset pd with widespread and abundant lewy body formation as a pathophysiological hallmark -> and -> typically cause fast-progressing earlyonset to late-onset pd with widespread and abundant lewy body formation as a pathophysiological hallmark
+0194863d-2986-5c03-914e-4c120533a7df | with lewy body formation as a pathophysiological hallmark -> property -> widespread and abundant
+4038d22d-4a67-55e7-b4ae-53bd30dd54a0 | with lewy body formation as a pathophysiological hallmark -> property -> abundant
+
+# sentence: In contrast, LRRK2 mutations show variable penetrance, approximately 30-70% at age 80 years, and typically cause late-onset PD, mostly without dementia, and in most cases typical Lewy body pathology .
+cec4089c-ddbd-54e9-a800-0b73abd91ab6 | lrrk2 mutation -> show -> variable penetrance approximately 30 70
+80b222ae-0948-58fb-9321-b545ed359670 | lrrk2 mutation -> show -> 80 year
+0cbe18cd-3c25-52fd-9932-0c28a55c5ecc | lrrk2 mutation -> cause -> late-onset pd mostly without dementia
+
+# sentence: Finally, mutations in ATP13A2 cause an atypical form of PD with dementia, named Kufor-Rakeb syndrome .
+e7341497-6f73-53c0-a172-971a18610e12 | mutations in atp13a2 -> cause -> atypical form of pd with dementia named kufor-rakeb syndrome
+9c5cda72-7e31-5abe-9507-a14bb66f2331 | atypical form -> have -> dementia
+ec9abf72-29fc-5e05-8349-c5c7f8291488 | atypical form of pd with dementia -> be -> kufor-rakeb syndrome
+
+# sentence: Among all of the suspected chromosomal regions, 18 have by now gained the status of 'PARK' loci (Table 1).
+94403981-ee23-5e52-830d-286fa41dc426 | 18 -> gain -> status of park loci
+
+# sentence: However, many of those have been identified only on the basis of chromosomal linkage studies and causality, and confirmation is still pending.
+eac7b2ac-99a4-5a3c-8356-9576d2877730 | many of those -> be identified on -> only the basis of chromosomal linkage studies and causality
+
+# sentence: Incomplete penetrance, variable expression and phenocopies often pose problems in assessing whether PD is caused solely by genetic susceptibility or is modified by environmental factors.
+87db191b-ce43-57b9-9679-87db76cabbb1 | pd -> be caused by -> solely genetic susceptibility
+ebc8dd43-5c36-5d7e-85d2-ca50c3d1e03a | pd -> be caused by -> environmental factor
+134c7163-6305-52ba-af5c-066cd1ea3077 | incomplete penetrance variable expression and phenocopy -> be assessing by -> solely genetic susceptibility
+b6b4af33-448d-551d-81df-9ed61d765a85 | incomplete penetrance variable expression and phenocopy -> be assessing by -> environmental factor
+f241c74f-6dfd-508a-abe5-7778f988a19d | incomplete penetrance -> pose -> problem
+01e37465-2ceb-5fcb-b7d7-374f046e2d8a | variable expression -> pose -> problem
+973ff388-dc34-5876-9e1f-212564abfb17 | phenocopy -> pose -> problem
+
+# sentence: Genetic factors with PARK status.
+121e85ae-44c3-5108-9d9b-fe6941cd0d47 | genetic factor -> have -> park statu
+
+# sentence: Among all the genes that have been proposed as potential PD-related genetic factors, only a subgroup, listed here, have gained the official status of PARK loci.
+3271350f-ff82-5905-a67c-fec4bd48594b | among all the genes that have been proposed as potential pd-related genetic factor -> be proposed as -> potential pd-related genetic factor
+65ca920c-5a84-5520-b7cd-718d99d8e5fc | only a subgroup listed here -> gain -> official status of park loci
+
+# sentence: The column 'Inheritance' summarizes the modes of inheritance, namely, autosomal dominant (AD), autosomal recessive (AR), and unknown modes of inheritance (not available, NA).
+8c0e5698-60b1-506f-8b75-9aa582ed6265 | column inheritance -> summarize -> modes of inheritance namely autosomal dominant ad autosomal recessive ar and unknown modes of inheritance not available na
+5cab37ce-71c9-59f6-949d-05081f89bfd8 | modes of inheritance -> property -> namely autosomal dominant ad autosomal recessive ar and unknown modes of inheritance not available na
+38de54d6-c57c-517e-9363-f70eaa8bf8bf | modes of inheritance -> property -> autosomal recessive ar
+f247051c-ee95-51d6-96fb-1a6f2baafb4b | modes of inheritance -> property -> unknown modes of inheritance not available na
+
+# sentence: The column 'Association with PD' summarizes the population-based frequency of genetic association with PD.
+1f54b5ac-9474-5dd8-9698-6411a4bc76fa | column association with pd -> summarize -> population-based frequency of genetic association with pd
+126f4016-4785-554c-a39a-64af2f8f10e1 | association -> have -> pd
+154a4f96-79a3-52bf-95ca-adba614da285 | genetic association -> have -> pd
+
+# sentence: In contrast to 'rare' and 'common' genetic factors, 'risk factors' are not sufficient to cause the disease, but are only associated with the risk of disease onset                   Locus         Gene         Inheritance         Association with PD         Chromosome         Gene product description                   PARK1         SNCA         AD         Common         4q21         Four point mutations of a-synuclein                   PARK2         Parkin         AR         Common         6q25.2- 27         E3 ubiquitin protein ligase; &gt; 150 mutations, including point mutations, deletions, and insertions                   PARK3         Unknown         AD         Rare         2p13         NA                   PARK4         SNCA         AD         Common         4p15         Duplication or triplication of a-synuclein                   PARK5         UCHL1         AD         Rare         4p14         Ubiquitin C-terminal hydrolase L1; single point mutation                   PARK6         PINK1         AR         Common         1p35- 36         PTEN-induced mitochondrial serine/threonine kinase; &gt; 60 mutations, including point mutations (most), rarely deletions, and insertions                   PARK7         DJ-1         AR         Common         1p36         Redox-dependent molecular chaperone; &gt; 10 mutations, including point mutations, deletions, and duplications                   PARK8         LRRK2         AD         Common         12q12         Leucine-rich repeat-containing kinase; point mutations as the most frequent cause for AD PD                   PARK9         ATP13A2         AR         Common         1p36         Neuronal P-type ATPase, atypical PD                   PARK10         Unknown         NA         Risk factor         1p32         NA/identified by linkage analysis                   PARK11         &#39; GIGYF2 ′ ?
+48c7bbd3-5e11-50e7-bd94-6bc64e69105d | risk factor -> not sufficient cause -> disease
+50a3a85a-2f36-5629-a19f-4b5a1db7093e | risk factor -> be not -> sufficient gt 150 mutations including point mutations deletions and insertions park3 unknown ad rare 2p13 na park4 snca ad common 4p15 duplication or triplication of a-synuclein park5 uchl1 ad rare 4p14 ubiquitin c-terminal hydrolase l1 single point mutation park6 pink1 ar common 1p35- 36 pten-induced mitochondrial serine/threonine kinase gt 60 mutations including point mutations most rarely deletions and insertions park7 dj-1 ar common 1p36 redox-dependent molecular chaperone gt 10 mutations including point mutations deletions and duplications park8 lrrk2 ad common 12q12 leucine-rich repeat-containing kinase point mutations as the most frequent cause for ad pd park9 atp13a2 ar common 1p36 neuronal p-type atpase atypical pd park10 unknown na risk factor 1p32 na/identified by linkage analysis park11 39 gigyf2
+27c2ac42-20fc-539b-a95c-a500311734b7 | risk factors are not sufficient to cause the disease but are only associated with the risk of disease onset locus gene inheritance association with pd chromosome gene product description park1 snca ad common 4q21 four point mutations of a-synuclein park2 parkin ar common 6q25.2- 27 e3 ubiquitin protein ligase gt 150 mutations including point mutations deletions and insertions park3 unknown ad rare 2p13 na park4 snca ad common 4p15 duplication or triplication of a-synuclein park5 uchl1 ad rare 4p14 ubiquitin c-terminal hydrolase l1 single point mutation park6 pink1 ar common 1p35- 36 pten-induced mitochondrial serine/threonine kinase gt 60 mutations including point mutations most rarely deletions and insertions park7 dj-1 ar common 1p36 redox-dependent molecular chaperone gt 10 mutations including point mutations deletions and duplications park8 lrrk2 ad common 12q12 leucine-rich repeat-containing kinase point mutations as the most frequent cause for ad pd park9 atp13a2 ar common 1p36 neuronal p-type atpase atypical pd park10 unknown na risk factor 1p32 na/identified by linkage analysis park11 39 gigyf2 -> property -> in contrast to rare and common genetic factor
+82e606f2-13ea-527b-900c-e2b2800d5f7a | risk factors are not sufficient to cause the disease but are only associated with the risk of disease onset locus gene inheritance association with pd chromosome gene product description park1 snca ad common 4q21 four point mutations of a-synuclein park2 parkin ar common 6q25.2- 27 e3 ubiquitin protein ligase gt 150 mutations including point mutations deletions and insertions park3 unknown ad rare 2p13 na park4 snca ad common 4p15 duplication or triplication of a-synuclein park5 uchl1 ad rare 4p14 ubiquitin c-terminal hydrolase l1 single point mutation park6 pink1 ar common 1p35- 36 pten-induced mitochondrial serine/threonine kinase gt 60 mutations including point mutations most rarely deletions and insertions park7 dj-1 ar common 1p36 redox-dependent molecular chaperone gt 10 mutations including point mutations deletions and duplications park8 lrrk2 ad common 12q12 leucine-rich repeat-containing kinase point mutations as the most frequent cause for ad pd park9 atp13a2 ar common 1p36 neuronal p-type atpase atypical pd park10 unknown na risk factor 1p32 na/identified by linkage analysis park11 39 gigyf2 -> property -> common
+4fe5f217-2350-5ea5-afe8-18b4ac43c2af | in contrast to rare and common genetic factors risk factors are not sufficient to cause the disease but are only associated with the risk of disease onset locus gene inheritance association with pd chromosome gene product description park1 snca ad common 4q21 four point mutations of a-synuclein park2 parkin ar common 6q25.2- 27 e3 ubiquitin protein ligase gt 150 mutations including point mutations deletions and insertions park3 unknown ad rare 2p13 na park4 snca ad common 4p15 duplication or triplication of a-synuclein park5 uchl1 ad rare 4p14 ubiquitin c-terminal hydrolase l1 single point mutation park6 pink1 ar common 1p35- 36 pten-induced mitochondrial serine/threonine kinase gt 60 mutations including point mutations most rarely deletions and insertions park7 dj-1 ar common 1p36 redox-dependent molecular chaperone gt 10 mutations including point mutations deletions and duplications park8 lrrk2 ad common 12q12 leucine-rich repeat-containing kinase point mutations as the most frequent cause for ad pd park9 atp13a2 ar common 1p36 neuronal p-type atpase atypical pd park10 unknown na risk factor 1p32 na/identified by linkage analysis park11 39 gigyf2 -> and -> are only associated with the risk of disease onset locus gene inheritance association with pd chromosome gene product description park1 snca ad common 4q21 four point mutations of a-synuclein park2 parkin ar common 6q25.2- 27 e3 ubiquitin protein ligase
+1a05a5f2-80c5-5e99-b7fe-9b5c170b14b9 | gt 150 mutation -> include -> point mutation
+42f2db28-7a7f-5944-9bca-da12731560a2 | gt 150 mutation -> include -> deletion
+4140df12-8323-59bc-be71-0dc3cabaf996 | gt 150 mutation -> include -> insertion
+dabaf64a-3f02-5a1d-9462-5023f58d1c92 | gt 60 mutation -> include -> point mutation
+cf023de5-014d-508b-a538-c84426bb7023 | gt 10 mutation -> include -> point mutation
+4dfccff8-791f-5b17-88c3-e691825b57b9 | gt 10 mutation -> include -> deletion
+9b15ed70-e17a-5c56-aca6-b36f72d82a09 | gt 10 mutation -> include -> duplication
+f4e0bc36-84f9-5419-a41f-825f4c83b121 | risk factor -> be sufficient to -> rare common
+23ba8380-fd38-50bf-847e-a14094cade95 | risk factor -> be sufficient to -> cause the disease
+
+# sentence: AD         Rare or risk         2q36- 37         The gene GIGYF2 remains unconfirmed                   PARK12         Unknown         NA         Risk factor         Xq21- 25         NA/identified by linkage analysis                   PARK13         Omi/HTRA2         AD?
+1dc19d21-f6cb-5102-afdd-b32a4c1baa03 | ad the gene gigyf2 remains unconfirmed park12 unknown na risk factor xq21- 25 na/identified by linkage analysis park13 omi/htra2 ad -> property -> rare or risk 2q36- 37
+dca93942-049d-5749-b9d0-2023e768abd7 | ad the gene gigyf2 remains unconfirmed park12 unknown na risk factor xq21- 25 na/identified by linkage analysis park13 omi/htra2 ad -> property -> risk 2q36- 37
+2711acf9-4f7e-502a-b30b-08c53010f3c7 | gene gigyf2 -> remain -> unconfirmed
+
+# sentence: Rare or risk         2p12         Mitochondrial serine protease, point mutations                   PARK14         PLA2G6         AR         Rare         22q13.1         Phospholipase A2, atypical PD                   PARK15         FBXO7         NA         Risk factor         22q12- 13         E3 ubiquitin protein ligase, atypical PD                   PARK16         Unknown         NA         Risk factor         1q32         NA/identified by linkage analysis                   PARK17         VPS35         AD         Rare         16q11.2         Vacuolar protein sorting 35, point mutations                   PARK18         EIF4G1         AD         Rare         3q27.1         Eukaryotic translation initiation factor 4 gamma 1, point mutations.
+fb0e96e9-1276-5963-9382-4c9f8f13a7ff | point mutations park14 pla2g6 ar rare 22q13.1 phospholipase a2 atypical pd park15 fbxo7 na risk factor 22q12- 13 e3 ubiquitin protein ligase atypical pd park16 unknown na risk factor 1q32 na/identified by linkage analysis park17 vps35 ad rare 16q11.2 vacuolar protein sorting 35 point mutations park18 eif4g1 ad rare 3q27.1 eukaryotic translation initiation factor 4 gamma 1 point mutation -> property -> rare or risk 2p12 mitochondrial serine protease
+d67c3335-9a1b-5366-a822-c0ede8e8b047 | point mutations park14 pla2g6 ar rare 22q13.1 phospholipase a2 atypical pd park15 fbxo7 na risk factor 22q12- 13 e3 ubiquitin protein ligase atypical pd park16 unknown na risk factor 1q32 na/identified by linkage analysis park17 vps35 ad rare 16q11.2 vacuolar protein sorting 35 point mutations park18 eif4g1 ad rare 3q27.1 eukaryotic translation initiation factor 4 gamma 1 point mutation -> property -> risk
+
+# sentence: Many reports have shown that exposure to environmental toxins is associated with an increased risk of PD.
+5143e526-d49c-5a42-ae47-737b3051c8b9 | exposure to environmental toxin -> be associated to -> environmental toxin
+8b79d3ce-e3be-52e8-b7ea-5362efaf33f8 | exposure to environmental toxin -> be associated with -> increased risk of pd
+
+# sentence: Proof of principle that an environmental toxin could lead to PD was the observation that a side product produced in the synthesis of the narcotic drug meperidine, namely 1-methyl-4-phenyl-1,2,3,6-tetrahydropyridine (MPTP), caused irreversible parkinsonism, with all of the clinical features of PD .
+97d3e0a4-eabe-5639-9b61-38431f179a63 | side product produced in the synthesis of the narcotic drug meperidine namely 1-methyl-4-phenyl-1,2,3,6-tetrahydropyridine mptp -> cause -> irreversible parkinsonism
+7b832ba9-9e72-5527-9969-6e58808e2670 | proof of principle -> be lead to -> pd
+72231b54-9dd3-5334-88de-efa307bc837b | side product namely 1-methyl-4-phenyl-1,2,3,6-tetrahydropyridine mptp -> be produced in -> synthesis of the narcotic drug meperidine
+ffdf2de1-1a91-5ff8-befc-5455f7dcb977 | side product produced in the synthesis of the narcotic drug meperidine namely 1-methyl-4-phenyl-1,2,3,6-tetrahydropyridine mptp -> cause -> irreversible parkinsonism with all of the clinical features of pd
+a9c91b6b-103d-5e05-9d4b-7a9be6a52073 | environmental toxin -> lead to -> pd
+1c15f95c-0f7e-514f-bc21-450fbbdfdc50 | environmental toxin -> be lead to -> pd
+
+# sentence: As MPTP is an inhibitor of complex I of the mitochondrial electron transport chain , this observation was instrumental in identifying the key role of mitochondria in the pathogenesis of PD.
+5b16dd3d-bbe4-5721-be91-8a1a700c5b93 | this observation -> be identifying in -> pathogenesis of pd
+a051b0fb-c652-55d3-aaa7-e09525a06b7a | mptp -> be -> inhibitor of complex i of the mitochondrial electron transport chain
+86168caa-956d-516b-8a18-cbcd78673951 | this observation -> be -> instrumental
+e67a6366-3079-57c4-b587-a067d40c72a5 | complex i of the mitochondrial electron transport chain -> be -> complex i of the mitochondrial electron transport chain
+85292d39-3eff-5c5b-8f17-8632ba41adeb | this observation -> be instrumental in -> identifying the key role of mitochondria in the pathogenesis of pd
+
+# sentence: Later, it was recognized that various insecticides, such as paraquat and rotenone, as well as solvents such as trichloroethylene and perchloroethylene, also cause mitochondrial dysfunction .
+f7419d24-e408-59e2-83e7-b7c31224ce8e | various insecticides such as paraquat and rotenone as well as solvents such as trichloroethylene and perchloroethylene -> cause -> mitochondrial dysfunction
+bef40ae2-ddde-5325-9fe4-543e4db65b60 | solvents such as trichloroethylene and perchloroethylene -> cause -> mitochondrial dysfunction
+bdf43cfa-d373-5e90-86af-d588212cc2cf | various insecticide -> cause -> mitochondrial dysfunction
+645efe26-6e4f-55f8-8f0d-db590cdb1ceb | solvent -> cause -> mitochondrial dysfunction
+4ac06663-b0a0-5a52-9e28-e57acfecb8a0 | various insecticide -> include -> paraquat
+6cee3715-d176-5ad6-a2f3-505e9c06a01d | various insecticide -> include -> rotenone
+74be02ad-7e01-5900-90e2-924744701fb9 | solvent -> include -> trichloroethylene
+bf89894d-952b-54c3-87c8-2c76490add81 | solvent -> include -> perchloroethylene
+
+# sentence: PD has also been linked to living in a rural environment, gardening, farming, and occupational exposure to agricultural chemicals .
+fa72dc42-404a-504f-a53b-598c2c9dbc68 | pd -> be linked to -> living
+7b0599e8-0438-5a47-a832-5a27f0e45e7a | pd -> be linked to -> gardening
+a50e148f-dc52-5c43-b578-9946107a1427 | pd -> be linked to -> farming
+dd125e0b-1345-562f-8e75-4bc683b04775 | pd -> be linked to -> occupational exposure
+a03361cb-649e-5fe7-bc5c-be0178c47780 | pd -> be linked in -> rural environment
+86b0c9fc-52bc-58fd-9fb1-626963001c92 | pd -> be linked to -> agricultural chemical
+
+# sentence: The exact role of environmental factors in the pathogenesis of PD remains elusive.
+35c03c75-fda7-5fdc-a840-1860566322ec | exact role of environmental factors in the pathogenesis of pd -> remain -> elusive
+
+# sentence: However, it is well established that both environmental and genetic factors correlate with cellular phenotypes that can be considered to be cellular hallmarks of PD (Fig. 1).
+53609c74-58b1-53fa-83f6-99c925c43070 | it -> be established with -> cellular phenotypes that can be considered to be cellular hallmarks of pd
+5050bc0b-07ef-5738-bd33-9aa52fd2582d | with cellular phenotypes that can be considered to be cellular hallmarks of pd -> be considered to -> hallmarks of pd
+2f148432-6935-5357-9fef-a62b486cad99 | that -> be -> cellular hallmarks of pd
+5e296dac-82d6-55fe-88c3-afaed565802f | that correlate with cellular phenotypes that can be considered to be cellular hallmarks of pd -> property -> both environmental and genetic factor
+9928fe2d-5fdc-5e9e-8c1a-7ed72f204eb9 | that correlate with cellular phenotypes that can be considered to be cellular hallmarks of pd -> property -> genetic factor
+b7c69b37-1624-5073-8ad7-5abcfe909a60 | both environmental and genetic factor -> correlate with -> cellular phenotype
+702692b7-948d-5102-8b7a-3dbacce63cac | genetic factor -> correlate with -> cellular phenotype
+
+# sentence: Cellular hallmarks of PD.
+
+# sentence: All subtypes of PD may share common cellular phenotypes.
+25d1efda-43a9-5ab2-aa2a-013b21874a8b | all subtypes of pd -> share -> common cellular phenotype
+
+# sentence: Correlations between the represented cellular phenotypes and disease progression are well established.
+
+# sentence: In contrast, the chronology and mechanisms of cell type-specific and PD subtype-specific cellular dysfunction remain to be elucidated.
+0bcd5f4f-f2bf-5f3e-918c-525641dcec00 | chronology -> remain -> elucidated
+019b8025-3501-5ff1-a29c-0dfd524d070e | mechanism -> remain -> elucidated
+79db76f2-24c1-5f6f-97be-f1fa065f8740 | of cellular dysfunction -> property -> cell type-specific and pd subtype-specific
+5383c762-8671-5b1e-aacf-d8a88e08b38b | of cellular dysfunction -> property -> pd subtype-specific
+5fcda43c-fe8f-57ca-b26a-e8ae8f303081 | chronology and mechanisms of cell type-specific and pd subtype-specific cellular dysfunction -> remain -> to be elucidated
+
+# sentence: Although PD pathogenesis has been associated with different cellular dysfunctions, it is likely that the respective initial tipping point of disease progression is caused by a PD subtypespecific process.
+17b93983-83be-5ea5-8515-ca6bdc9fd1b5 | pd pathogenesi -> be associated with -> different cellular dysfunction
+29e3d189-0a0d-5da3-92c7-f4bdea2a234d | respective initial tipping point of disease progression -> be caused by -> pd subtypespecific process
+4315d6eb-3415-5a93-86ed-554ee8cef1f1 | it -> be associated with -> different cellular dysfunction
+e991421a-8c46-5909-af90-2cbc8c82261b | it -> be -> likely
+
+# sentence: Finally, it is also likely that multiple hits on different cellular targets may hasten the emergence of higher-scale organic dysfunction..
+542d2060-ee74-52ef-b1b7-8192e854cfab | it -> be -> likely
+ed5b65a3-2b14-5717-9425-48f68e0789d6 | multiple hits on different cellular target -> hasten -> emergence of higher-scale organic dysfunction
+
+# sentence: Up until the 1990s, hypotheses regarding genetic causes of PD had not been confirmed.
+
+# sentence: This situation changed when PD-causative dominant mutations in the a-synuclein gene were identified. a-Synuclein is the major protein component of Lewy bodies, the pathological hallmark not only in the brains of mutation carriers, but also in the common sporadic form of the disease.
+2a8e2f4d-650d-5b45-a648-8e5c0b9e8813 | pd-causative dominant mutations in the a-synuclein gene -> be identified in -> a-synuclein gene
+6168af47-560e-5ea6-ab4f-6f7437587cc1 | this situation -> be identified in -> a-synuclein gene
+b137ff39-27c1-5b34-9d63-fc8756a8d317 | this situation -> change when -> when pd-causative dominant mutations in the a-synuclein gene were identified
+a1bc1c75-d858-549f-b07d-632bb295af20 | a-synuclein -> be -> major protein component of lewy bodies the pathological hallmark not only in the brains of mutation carriers but also in the common sporadic form of the disease
+
+# sentence: Indeed, genome-wide association studies revealed that genetic variants in the a-synuclein gene represent the most consistent genetic risk factor for PD across different populations .
+54999468-5a2b-5c39-bffe-0e34d259be68 | genetic variants in the a-synuclein gene -> be -> most consistent genetic risk factor for pd
+00603e65-9b68-57e7-b8c0-93179df3e838 | genetic variants in the a-synuclein gene -> represent -> most consistent genetic risk factor for pd
+
+# sentence: Abnormal protein structure resulting from pathological amino acid substitutions, or overexpression of physiological a-synuclein owing to gene dose effects, can lead to oligomerization, fibrillization, and aggregation, and to subsequent neurodegeneration.
+214feb2b-01b5-510d-b680-f39de73a6459 | abnormal protein structure resulting from pathological amino acid substitutions or overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> oligomerization
+1d4a340c-2be3-53c2-a54c-3b8c3debd0da | abnormal protein structure resulting from pathological amino acid substitutions or overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> fibrillization
+8580f611-342a-53f4-9a89-f2107559bfd8 | abnormal protein structure resulting from pathological amino acid substitutions or overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> aggregation
+3fa6be5d-0664-5c6f-b831-2a9de3288e86 | abnormal protein structure resulting from pathological amino acid substitutions or overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> subsequent neurodegeneration
+296af911-d5be-532c-a157-fb98278c0f0f | overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> oligomerization
+c196c950-66f1-535b-a926-8991872e1742 | overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> fibrillization
+c422b2b0-56fa-5ba7-9bda-5d338dd8b1fb | overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> aggregation
+5486f236-6769-5236-9baf-940ed15d7a12 | overexpression of physiological a-synuclein owing to gene dose effect -> lead to -> subsequent neurodegeneration
+bb74a4d5-f6a2-5c29-9f88-407740e515b3 | abnormal protein structure resulting from pathological amino acid substitutions or overexpression of physiological a-synuclein owing to gene dose effect -> be lead to -> oligomerization fibrillization aggregation to subsequent neurodegeneration
+dd5f80b1-a141-57f2-b676-7be23b872efc | overexpression of physiological a-synuclein owing to gene dose effect -> be lead to -> oligomerization fibrillization aggregation to subsequent neurodegeneration
+
+# sentence: Aggregated a-synuclein (in the form of Lewy bodies or Lewy neurites) interferes with the mechanisms of microtubule-based subcellular transport, thus causing synaptic dysfunction and other disruptions to neuronal homeostasis .
+bb77acde-43a3-5ebe-82b4-99a6c7b2f7f1 | aggregated a-synuclein in the form of lewy bodies or lewy neurite -> be causing to -> neuronal homeostasi
+25c541a0-9a83-5af9-99d8-7c8b88f06b7c | aggregated a-synuclein in the form of lewy bodies or lewy neurite -> interfere with -> mechanisms of microtubule-based subcellular transport
+
+# sentence: In addition to functional genetic variants in regulatory regions of the a-synuclein gene and duplications or triplications that promote the aggregation of a-synuclein, other factors can contribute to this process.
+ebbd7942-0677-5d0d-a625-3d602f3ef4b8 | that -> promote -> aggregation of a-synuclein
+8868c58d-0d58-5416-bb2c-99ed93d8808f | duplication -> promote -> aggregation of a-synuclein
+9f7a08d2-4acc-5f41-ad27-9198e7b7fc39 | triplication -> promote -> aggregation of a-synuclein
+c229cf8e-bf26-5a3e-bfb8-ce5070e2a278 | other factor -> contribute to -> this process
+f41a859f-71cc-51ad-a3ee-1f34c5e265c5 | other factor -> be contribute in -> addition to functional genetic variants in regulatory regions of the a-synuclein gene and duplications or triplications that promote the aggregation of a-synuclein
+b56edeb6-eda1-5207-97ee-96f44a17b89d | other factor -> be contribute to -> this process
+
+# sentence: A well-validated and common risk factor that influences the aggregation of a-synuclein is the lysosomal enzyme b-glucocerebrosidase.
+c08b7986-1b6a-507b-9d3c-4a80bcfe6d6f | that -> influence -> aggregation of a-synuclein
+515bf14e-8a95-534a-83cd-50854e0151a0 | well-validated and common risk factor that influences the aggregation of a-synuclein -> be -> lysosomal enzyme b-glucocerebrosidase
+c1d4fd4a-d6b8-5476-ac3a-b388b40d035d | well-validated and common risk factor -> influence -> aggregation of a-synuclein
+4ac4aeb6-a4e4-5572-a9a9-82124273a94a | risk factor that influences the aggregation of a-synuclein -> property -> well-validated and common
+69fe8349-6a7a-5508-bf6b-1cca850423c0 | risk factor that influences the aggregation of a-synuclein -> property -> common
+
+# sentence: Whereas homozygous mutations in the gene encoding this enzyme cause Gaucher disease, a lysosomal storage disorder, heterozygous mutations lead to a five-fold increased risk for PD, and functional loss of the enzyme, leading to an accumulation of glucocerebroside.
+b796de87-5bcd-588b-8096-002f9d14b69e | homozygous mutations in the gene encoding this enzyme -> cause -> gaucher disease a lysosomal storage disorder
+833a10df-e797-5898-83de-0eb963a6c1d0 | heterozygous mutation -> be cause in -> gene
+eab12ac9-3712-5ccc-97e6-fd3fc38e827f | functional loss of the enzyme -> be leading to -> accumulation of glucocerebroside
+e53bb529-fbaf-5713-880c-d6de50584e74 | heterozygous mutation -> lead to -> five-fold increased risk for pd
+202c2a69-3a5b-582d-8b01-1ca77ff8de5c | heterozygous mutation -> lead to -> functional loss of the enzyme
+
+# sentence: This, in turn, influences the aggregation of a-synuclein by stabilizing oligomeric intermediates and interfering with lysosomal clearance .
+e7b7e81e-e3d3-5a05-b886-bf188da7a01c | thi -> influence -> aggregation of a-synuclein
+fc45e02c-33e5-5b16-9e40-245a1343d253 | thi -> be stabilizing with -> lysosomal clearance
+
+# sentence: The consideration of a-synuclein aggregation as a major pathophysiological hallmark of PD led Braak and others to formulate and refine the ascending spread hypothesis.
+baa644f6-fc80-5b4f-a6a0-0a3808313cbc | consideration of a-synuclein aggregation as a major pathophysiological hallmark of pd -> lead -> braak and other
+3221eac9-ba4a-588b-85b3-14ab1aca1340 | consideration of a-synuclein aggregation as a major pathophysiological hallmark of pd -> lead -> other
+888e29a6-7f4b-5d5c-8304-0f69f33fb2b7 | consideration of a-synuclein aggregation as a major pathophysiological hallmark of pd -> lead -> braak
+c58563c1-9cca-54a2-9a46-3ae7e75dd7f5 | consideration of a-synuclein aggregation as a major pathophysiological hallmark of pd -> lead to formulate -> ascending spread hypothesi
+4c033aa7-8e60-5a02-896a-26c12c0cdf15 | consideration of a-synuclein aggregation as a major pathophysiological hallmark of pd -> lead -> refine
+85fa4918-700a-5396-a40b-cb7fafca7e8c | a-synuclein aggregation -> be -> major pathophysiological hallmark of pd
+
+# sentence: This hypothesis states that PD could have its origin in the bulbus olfactorius, in the motor nucleus of the vagal nerve, or at a strictly peripheral site.
+82e0c04b-ee26-5393-9181-84a0819b96c0 | pd -> have -> its origin in the bulbus olfactorius in the motor nucleus of the vagal nerve or at a strictly peripheral site
+
+# sentence: One idea is that the spread of PD pathogenesis may start in the gastrointestinal tract and propagate cell to cell, spreading from the enteric nervous system all the way up to the brainstem, midbrain, and other parts of the central nervous system (CNS), finally resulting in disease staging, as proposed by Braak et al. .
+30d78024-00a4-5c5e-bc97-3ed36ff1ccbb | propagate cell to cell -> be spreading to -> brainstem
+1da1ebb7-cc01-529e-9606-ba12586863fc | propagate cell to cell -> be spreading to -> midbrain
+4408917b-68fa-56e2-850e-4da051a23025 | propagate cell to cell -> be spreading to -> other parts of the central nervous system cn
+830e0186-4fd3-5944-9f05-e530003b18c0 | spread of pd pathogenesi -> be resulting in -> disease staging
+f58892f4-f2b6-5f67-bde6-5d58e0750f97 | spread of pd pathogenesi -> be proposed by -> braak et
+a9fdc735-f053-529a-919c-cb80979b8326 | spread of pd pathogenesi -> start in -> gastrointestinal tract
+87ddf958-45dd-5baa-9594-082d216aea69 | spread of pd pathogenesi -> result in -> disease staging
+d3ce05c7-581b-5c9e-9bb8-2d5e0c2e2f09 | spread of pd pathogenesi -> be start in -> gastrointestinal tract
+
+# sentence: However, it remains to be seen whether this ascending spread of the disease is related to a-synuclein or other factors.
+fee9edf5-b1a5-54e4-88de-e6a594a454f3 | this ascending spread of the disease -> be -> related to a-synuclein or other factor
+63b37ff6-ab36-54e1-a460-1a0e02ab28be | it -> remain -> seen
+e1cd92da-e028-5240-9485-c17d52a0cbdf | it -> remain -> to be seen
+9cb44b17-5c18-5ced-aa66-32feb8d96ddd | this ascending spread of the disease -> be related to -> a-synuclein other factor
+
+# sentence: As recently as 2009, Braak et al. revisited and strengthened the 'dual hit' theory, which proposes that an unknown neurotropic pathogen, possibly a virus, could gain access to the brain via the nose and/or the gut .
+f1a83165-1970-5ed2-95f4-d99b8a34945e | braak et al. -> revisit -> dual hit theory
+2aaa0430-6e21-51d1-8b91-e2f6ec73692f | braak et al. -> strengthen -> dual hit theory
+fb155b78-7ec7-55e5-a4bf-ff82f3af7d20 | unknown neurotropic pathogen possibly a viru -> gain -> access to the brain
+78935ff7-753e-5a48-a1fd-2eb60d8fd0ce | braak et al. -> be -> as recently 2009
+
+# sentence: Another idea is that misfolded a-synuclein spreads in a prion-like manner .
+4eff4d4e-11db-5bfa-b183-ba5ed87dfff8 | misfolded a-synuclein -> spread in -> prion-like manner
+
+# sentence: In wild-type mice, it has been demonstrated that intrastriatal inoculation of synthetic a-synuclein leads to the cell-to-cell transmission of PD-like Lewy pathology in anatomically interconnected brain regions .
+0fbdff49-2dc9-5da7-94a1-4f873247b533 | it -> be demonstrated in -> wild-type mice
+0b53c61d-8fc6-5f33-97da-a44846776a49 | it -> be demonstrated to -> cell-to-cell transmission of pd-like lewy pathology in anatomically interconnected brain region
+313e70b9-52a3-50ac-915c-a866e5f47e12 | it -> be demonstrated in -> anatomically interconnected brain region
+feecc4a1-b769-58e3-b804-b87d708c4016 | intrastriatal inoculation of synthetic a-synuclein -> lead to -> cell-to-cell transmission of pd-like lewy pathology in anatomically interconnected brain region
+
+# sentence: Desplats et al. demonstrated a-synuclein propagation between neuronal cells in culture, and the propagation of a-synuclein to transplanted stem cells in mice .
+ff971a00-42be-5621-9231-3a59e841df8a | desplats et al. -> demonstrate -> a-synuclein propagation between neuronal cells in culture
+875b04d1-0076-5dfc-96ee-dbecaa05e70b | desplats et al. -> demonstrate -> propagation of a-synuclein to transplanted stem cells in mice
+
+# sentence: There is also increasing evidence, going beyond cell culture and mouse brain models, to support the idea of a-synuclein as a key factor in the ascending spread of disease.
+61804960-89b6-5ac1-b99b-f4dc9a270efa | idea of a-synuclein -> be -> key factor in the ascending spread of disease
+
+# sentence: First, as mentioned above, the acquisition of exogenous a-synuclein fibrils triggers the formation of PD-like Lewy bodies and Lewy neurites .
+558634d6-afaf-59a4-a47d-ab162676e9a0 | acquisition of exogenous a-synuclein fibril -> trigger -> formation of pd-like lewy bodies and lewy neurite
+
+# sentence: Second, evidence is accumulating that cell-to-cell transmission of toxic a-synuclein oligomers occurs both in experimental models and in patients .
+e8052377-5074-555c-bc25-85a3ede9a63a | evidence -> be occurs in -> both experimental model
+e303f976-b649-57f1-9090-9663038ed17e | evidence -> be occurs in -> patient
+73d46439-2ab8-548e-9021-d080bc73f24e | cell-to-cell transmission of toxic a-synuclein oligomer -> occur in -> experimental model
+eb4dd4b2-64d0-5b5d-a708-d16292da2233 | cell-to-cell transmission of toxic a-synuclein oligomer -> occur in -> patient
+
+# sentence: Third, autopsy studies have shown that healthy grafted embryonic neurons of mesencephalic origin rapidly acquire Lewy body-like inclusions after being placed in the host brain of a patient with PD , suggesting the spread of pathology from host tissues to the grafts.
+e5f2a7e3-4dd9-5bf8-b9ef-cda4004c681f | healthy grafted embryonic neurons of mesencephalic origin -> be placed in -> host brain of a patient with pd
+cf6ae352-b9cb-5f98-9cfa-f841931c7fb7 | healthy grafted embryonic neurons of mesencephalic origin -> be placed with -> pd
+73a22313-a44b-5252-b428-91795dc6f45b | healthy grafted embryonic neurons of mesencephalic origin -> be suggesting to -> graft
+280342ec-d2eb-57d8-8030-da303b9dbcac | healthy grafted embryonic neurons of mesencephalic origin -> acquire -> lewy body-like inclusion
+84da9e4f-7ba6-5c11-90bc-947784711011 | after being placed in the host brain of a patient with pd -> after -> third autopsy studies have shown that healthy grafted embryonic neurons of mesencephalic origin rapidly acquire lewy body-like inclusions after being placed in the host brain of a patient with pd suggesting the spread of pathology from host tissues to the graft
+a105a851-eede-500c-a07b-94ebbe3d47bc | patient -> have -> pd
+
+# sentence: Finally, Pan Montojo et al. modeled environmental causes for the ascending spread of a-synuclein accumulation through intragastric administration of the pesticide rotenone in mice .
+cfb2c2df-2eda-5d08-95d9-a232c7d8af7c | pan montojo et al. -> model -> environmental causes for the ascending spread of a-synuclein accumulation through intragastric administration of the pesticide rotenone in mice
+
+# sentence: Resection of the autonomic nerves in these mice stops the spread of the PD-specific pathology ..
+0f3651ef-b992-520e-b036-9da671d303c8 | resection of the autonomic nerves in these mice -> stop -> spread of the pd-specific pathology
+
+# sentence: Dysfunction of molecular and organelle degradation pathways is a further hallmark of PD, and increasing evidence indicates functional interactions between the ubiquitin-proteasome system and autophagy .
+025dfaad-a1e0-580c-8d9e-51e2688e9f2f | dysfunction of molecular and organelle degradation pathway -> be -> further hallmark of pd
+53d5b62a-9686-5984-a0e9-9c137edd3ed1 | increasing evidence -> be -> functional interactions between the ubiquitin-proteasome system and autophagy
+87fe867a-d183-532f-b724-350c9f48b862 | dysfunction of molecular and organelle degradation pathway -> indicate -> functional interactions between the ubiquitin-proteasome system and autophagy
+4e04e563-162d-52f8-8521-ba1e43e0ba29 | increasing evidence -> indicate -> functional interactions between the ubiquitin-proteasome system and autophagy
+a62c9b70-ef0b-56bf-91dc-97c882218c85 | of degradation pathway -> property -> molecular and organelle
+0c18386d-78d5-5727-b1a2-892d5a5c9392 | of degradation pathway -> property -> organelle
+
+# sentence: Whereas both degradation systems are involved in the clearance of misfolded proteins, a special form of autophagy, also known as mitophagy, removes defective mitochondria from cells .
+d8a27a3e-9c00-5ef6-a611-cff33416a5af | both degradation system -> be involved in -> clearance of misfolded protein
+34db30d7-4ba3-5dd2-8723-0f22073648e8 | special form of autophagy also known as mitophagy -> be involved in -> clearance of misfolded protein
+e4fefd2d-8ea8-58f4-b419-a32031b5ef7c | special form of autophagy -> be known as -> mitophagy
+5850a9ef-12b9-5e75-b0e6-41928a1debc6 | special form of autophagy also known as mitophagy -> remove -> defective mitochondria from cell
+
+# sentence: This clearance process is controlled via PINK1 and Parkin .
+9ad2a48c-c95e-562c-872b-780e526f22e7 | this clearance process -> be controlled by -> pink1
+15ab5ea2-92d0-521b-83e3-9d4ab0c0a8b8 | this clearance process -> be controlled by -> parkin
+
+# sentence: In PD, the dysfunction of these clearance systems facilitates the accumulation of a-synuclein and defective mitochondria.
+446b8c36-0238-5fcd-9439-0a613451b875 | dysfunction of these clearance system -> facilitate -> accumulation of a-synuclein and defective mitochondria
+
+# sentence: A positive feedback loop, which turns seemingly mild dysfunctions in misfolded protein handling into a selfpotentiating cycle, is provided by the finding that mutated forms of a-synuclein may inhibit their own degradation via chaperone-mediated autophagy .
+af6483eb-42a1-52f8-99c2-4c8eec702a9c | positive feedback loop which turns seemingly mild dysfunctions in misfolded protein handling into a selfpotentiating cycle -> be provided in -> misfolded protein handling
+b20b134a-d8da-5694-9017-41484bfb83f3 | positive feedback loop which turns seemingly mild dysfunctions in misfolded protein handling into a selfpotentiating cycle -> be provided by -> finding that mutated forms of a-synuclein may inhibit their own degradation via chaperone-mediated autophagy
+e0c66ce4-c4a3-544a-b5b9-7c8c58db9506 | positive feedback loop which turns seemingly mild dysfunctions in misfolded protein handling into a selfpotentiating cycle -> be provided by -> chaperone-mediated autophagy
+437f73f7-06a3-5b25-aacd-3ae27a3eb051 | positive feedback loop -> turn -> seemingly mild dysfunctions in misfolded protein handling into a selfpotentiating cycle
+d9d49320-8f00-5799-b5c0-ad0bf708bbb6 | mutated forms of a-synuclein -> inhibit -> their own degradation
+
+# sentence: Further insights into lysosomal dysfunction in PD come from studies investigating the lysosomal enzyme b-glucocerebrosidase, as described above, and from studies on the transmembrane lysosomal P5-type ATPase named ATP13A2.
+dedb52e0-3223-5111-a268-a5f719fede15 | further insights into lysosomal dysfunction in pd -> come from -> study
+7ae1d739-9933-5d66-b67e-3c737f8eca6a | further insights into lysosomal dysfunction in pd -> come from -> studies on the transmembrane lysosomal p5-type atpase named atp13a2
+537105f8-0a4a-58d6-834f-86c38f08a841 | on the transmembrane lysosomal p5-type atpase -> be -> atp13a2
+
+# sentence: In cell culture models, a loss of function of this PD-associated protein is correlated with impaired lysosomal acidification, decreased proteolytic processing of lysosomal enzymes, reduced degradation of lysosomal substrates, and diminished lysosome-mediated clearance of autophagosomes.
+b5b5712f-24a9-5457-b4bd-e16ee776b38f | loss of function of this pd-associated protein -> be correlated in -> cell culture model
+995a7b5f-0d32-5c07-bd78-22a290053027 | loss of function of this pd-associated protein -> be correlated with -> impaired lysosomal acidification
+f506a845-0721-56e8-a5c4-f4b8d8a2d601 | loss of function of this pd-associated protein -> be correlated with -> decreased proteolytic processing of lysosomal enzyme
+b1a178f4-b649-5fd1-bc7f-4a0db8c09bcd | loss of function of this pd-associated protein -> be correlated with -> reduced degradation of lysosomal substrate
+5bc017a5-670d-5359-95a9-393669b17b2c | loss of function of this pd-associated protein -> be correlated with -> diminished lysosome-mediated clearance of autophagosome
+
+# sentence: In addition to these findings, Dehay et al.  have shown that DA SN neurons from patients with sporadic PD show decreased levels of ATP13A2..
+f3d1388d-1350-530e-a4ea-013d3ca1b01c | da sn neurons from patients with sporadic pd -> show -> decreased levels of atp13a2
+9704a184-6667-531f-a36f-e2c6cbef1af3 | patient -> have -> sporadic pd
+49b6edc1-b3d3-5b68-99f5-62cfdd7174f5 | dehay et al. -> be shown in -> addition to these finding
+
+# sentence: Evidence for the involvement of mitochondrial dysfunction in the pathogenesis of PD comes primarily from two sources.
+7eebced7-b6b3-5398-a962-33bff2b53810 | evidence for the involvement of mitochondrial dysfunction in the pathogenesis of pd -> come from -> two source
+
+# sentence: As described above, some toxins that can act as complex I inhibitors cause parkinsonism.
+99e8b5d6-a45b-5160-a135-989c36b2fe5c | some toxins that can act as complex i inhibitor -> cause -> parkinsonism
+1dcac251-1feb-542a-996f-3bd54a552ff7 | that -> be -> complex i inhibitor
+d8b9603e-97d2-5e6b-a661-a38a07e52217 | that -> act as -> complex i inhibitor
+
+# sentence: For example, rotenone and paraquat lead to DA cell death in the SN and the induction of PD-like symptoms.
+cbcf364f-257c-5024-8f9f-c7dc590fcc8b | rotenone and paraquat -> lead to -> da cell death in the sn
+4324a7a4-fa79-58de-bff0-c755978721a6 | rotenone and paraquat -> lead to -> induction of pd-like symptom
+bfaddd45-52e1-5b16-a67f-2a1f52fd67e9 | paraquat -> lead to -> da cell death in the sn
+3f5a06a3-1303-5f82-babe-1f38098fc1f4 | paraquat -> lead to -> induction of pd-like symptom
+
+# sentence: Even more compelling is the observation that most of the genes known to cause familial PD are also involved in some aspect of mitochondrial function.
+7a70ddec-5b51-5a3d-946d-6fa9d71ae153 | most of the genes known to cause familial pd -> be involved in -> some aspect of mitochondrial function
+723879a9-a2ea-5678-b917-d8236a211ed0 | observation that most of the genes known to cause familial pd are also involved in some aspect of mitochondrial function -> be -> compelling
+
+# sentence: These include the genes encoding Parkin, PINK1, and DJ-1.
+9c4fc925-5c60-549b-b70c-c781c36589da | these -> include -> genes encoding parkin pink1 and dj-1
+
+# sentence: PINK1 and Parkin are important for maintaining the delicate orchestration of mitochondrial turnover .
+1e3797c4-616d-5f44-8115-243136cdfe4f | pink1 -> be -> important
+5486aacc-9b4a-55f6-abcb-88d00d9aa41a | parkin -> be -> important
+933c6d0f-8fe2-5d0b-87d1-53ab4712eaf2 | pink1 and parkin -> be important for -> maintaining the delicate orchestration of mitochondrial turnover
+4393c87d-6202-5a6e-a84d-135e54626eb2 | parkin -> be important for -> maintaining the delicate orchestration of mitochondrial turnover
+
+# sentence: DJ-1 is involved in oxidative stress responses.
+29e059ea-2949-576a-addd-ad52605ecf79 | dj-1 -> be involved in -> oxidative stress respons
+
+# sentence: The level of DJ-1 increases when cellular levels of ROS increase .
+cb19e5a7-1512-5531-add7-9db9e25a9b63 | level of dj-1 -> increase when -> when cellular levels of ros increase
+
+# sentence: The oxidized form of DJ-1 translocates to the mitochondrial outer membrane and protects neurons from cell death, by an as yet unknown mechanism .
+b9b0e648-2fec-5f02-9891-672291cc0b1c | oxidized form of dj-1 -> translocate -> neuron
+e27118a2-eb69-5d37-8a02-e83b4f0b8a47 | oxidized form of dj-1 -> protect -> neurons from cell death
+bca29f76-fc47-5232-8d51-72760f4d8abd | oxidized form of dj-1 -> translocate to -> mitochondrial outer membrane
+
+# sentence: Similar to the loss of function of PINK1, mutations in DJ-1 also lead to a fragmentation of mitochondria in mammalian models of acute PD, a phenotypic response that is often associated with a loss of the mitochondrial membrane potential, and dysfunction of this organelle.
+4a3b36d5-558c-55cf-874b-d43e4e46f142 | phenotypic response that is often associated with a loss of the mitochondrial membrane potential and dysfunction of this organelle -> be associated with -> loss of the mitochondrial membrane potential
+30a4c892-2fdc-5c68-be89-0892109097a0 | phenotypic response that is often associated with a loss of the mitochondrial membrane potential and dysfunction of this organelle -> be associated with -> dysfunction of this organelle
+12f0f002-ce9d-5d8f-93ba-61db4dbbf99e | mutations in dj-1 -> lead to -> fragmentation of mitochondria in mammalian models of acute pd
+64f10f03-5e22-54d4-b9b6-49b8335518eb | that -> be associated with -> loss of the mitochondrial membrane potential
+af22e9bf-9521-50fe-8130-80a9351236fd | that -> be associated with -> dysfunction of this organelle
+
+# sentence: Fusion and fission of mitochondria, two processes that actively control the level of mitochondrial fragmentation, are pivotal for quality control and turnover of mitochondria, and are highly relevant to PD pathogenesis .
+f3436a05-e678-597f-8e43-ddaad3b1dab2 | fusion of mitochondria -> be -> pivotal for quality control and turnover of mitochondria
+3c323326-80f1-5f79-ad58-f99879c7a2c3 | fission -> be -> pivotal for quality control and turnover of mitochondria
+b193863a-6248-529a-b8b7-cb163812be46 | two process -> control -> level of mitochondrial fragmentation
+bce3c126-2d57-509c-a181-cc8b90da3c12 | fusion and fission of mitochondria two processes that actively control the level of mitochondrial fragmentation are pivotal for quality control and turnover of mitochondria and are highly relevant to pd pathogenesi -> and -> are highly relevant to pd pathogenesi
+aa665fbc-4c34-5192-a45f-fc32363d7f80 | fusion and fission of mitochondria two processes that actively control the level of mitochondrial fragmentation -> be pivotal for -> quality control turnover of mitochondria
+3821a145-3879-5e5b-af9b-85fe21cd4257 | fission -> be pivotal for -> quality control turnover of mitochondria
+
+# sentence: Despite all the progress made in understanding mitochondrial biology and its role in controlling apoptosis, it is not well understood why mitochondrial dysfunction takes such a center stage in PD .
+553b00ac-7d77-5217-9b9d-bf667563d7bc | it -> be not understood in -> pd
+bbb3c2b6-512d-58bb-b1ba-9595d0e7b4d6 | mitochondrial dysfunction -> take -> such a center stage in pd
+
+# sentence: Bolam et al. suggest that this is a result of the specific neuroanatomical features of DA neurons and their projections into the striatum.
+45b10b4f-ca88-5a13-8537-336e94068b87 | thi -> be -> result of the specific neuroanatomical features of da neurons and their projections into the striatum
+
+# sentence: DA neurons have extremely long projections from the SN into the striatum, are unmyelinated, and are characterized by a high degree of arborization and a high number of synapses .
+d063d5e4-0861-584c-9e8d-a18fe1147129 | da neuron -> have -> extremely long projections from the sn into the striatum
+47eb8f0f-fac5-5615-b41d-e86b84cea563 | da neuron -> characterize -> extremely long projection
+4df3c630-762a-5f22-995d-23ebae41ed2e | da neurons have extremely long projections from the sn into the striatum are unmyelinated and are characterized by a high degree of arborization and a high number of synaps -> and -> are unmyelinated
+
+# sentence: Moreover, DA neurons of the SN show reduced mitochondrial mass as compared with other neuronal subpopulations in the same area, at least in mice .
+a384ad8e-e384-5853-b827-835cee349667 | da neurons of the sn -> be compared with -> other neuronal subpopulation
+1dd043c8-22bb-5bc7-ac96-bd854936c4b9 | da neurons of the sn -> be compared in -> same area
+59f9ff13-0ec4-5a02-a9e8-c0b1967874b8 | da neurons of the sn -> be compared in -> mice
+ced76300-3e7f-5a21-b02e-afa1975289b0 | da neurons of the sn -> show -> reduced mitochondrial mass
+
+# sentence: However, a significant number of non-DA central and peripheral neurons are also subject to degeneration in PD.
+a85e38ff-e023-5a74-ac89-035c30add7b1 | significant number of non-da central and peripheral neuron -> be -> subject to degeneration in pd
+290aa54d-10cb-5b8d-8e22-eaedfa626eda | of neuron -> property -> non-da central and peripheral
+19143c7d-3647-5104-b5a7-19a18699dd0c | of neuron -> property -> peripheral
+c5df4d7d-a364-5102-885e-eab5e6e9900b | significant number of non-da central and peripheral neuron -> be subject to -> degeneration in pd
+
+# sentence: Interestingly, the at-risk populations of neurons share a number of features with DA neurons, including highly branched axons, pacemaker activity, elevated oxidative stress, and $Ca^{2+}$ buffering stress.
+cfc385a3-a299-54dd-9595-633487db2492 | at-risk populations of neuron -> share -> number of features with da neurons including highly branched axons pacemaker activity elevated oxidative stress and $ ca^{2+}$ buffering stress
+f95c5a80-0591-59f5-8eb4-5fe3b63988d8 | number -> include -> branched axon
+09f5f350-0560-50cb-94fb-3781ba19a2b4 | number -> include -> pacemaker activity
+4bdfb214-205e-51ce-8332-0ec870993945 | number -> include -> elevated oxidative stress
+674f227d-3e5c-5904-815c-ab74dc350f84 | number -> include -> $ ca^{2+}$ buffering stress
+1abaf516-2ca5-53a4-805d-cfc530f33689 | number -> have -> da neuron
+
+# sentence: It has been speculated that these physiological cellular characteristics could potentially explain the selective local degeneration of both DA and non-DA cells in PD .
+a0cd430e-b270-56aa-a5e3-95fa9024dc9c | it -> be speculated in -> pd
+4b0e94ae-b14e-51ce-b8ed-57ad4924b21c | these physiological cellular characteristic -> explain -> selective local degeneration of both da and non-da cells in pd
+123d28a0-11b5-54c3-b2b0-83a624708ab3 | selective local degeneration in pd -> property -> of both da and non-da cell
+b2d2b256-20e8-5d23-b358-bbf94f803474 | selective local degeneration in pd -> property -> non-da
+
+# sentence: In general, the brain in its resting state consumes ~ 20% of the total body energy, while accounting for only 2% of the total body mass.
+34791b97-9e27-57ef-9fa5-048789f101ed | brain -> be accounting for -> only 2 of the total body mass
+56aa824c-266c-58fb-b84e-f611f59cdc8d | brain -> consume -> ~ 20 of the total body energy
+10c19101-355f-59b9-9c14-c72a284c62f1 | while accounting for only 2 of the total body mass -> while -> in general the brain in its resting state consumes ~ 20 of the total body energy while accounting for only 2 of the total body mass
+2710a247-8cdf-56b8-9bbf-82c8cfb544b0 | brain -> account for -> only 2 of the total body mass
+
+# sentence: Striatal DA neurons, because of their autonomously generated activity (pacemaker function) and their above-mentioned physiological properties, are among the highest-energy-consuming and, therefore, the most vulnerable cells of all the neurons in the CNS .
+3fa124af-eb30-50b3-ad83-469c70d15936 | are among the highest-energy-consuming and therefore the most vulnerable cells of all the neurons in the cn -> and -> therefore
+06ec4dbc-c966-5c53-8f5d-1bbe80604463 | are among the highest-energy-consuming and therefore the most vulnerable cells of all the neurons in the cn -> and -> most vulnerable cells of all the neurons in the cn
+
+# sentence: The maintenance of a balanced energy budget might therefore be more difficult for DA neurons than for other neuronal cell types.
+cdb3064c-8122-5e4c-ad7d-5432014de76d | maintenance of a balanced energy budget -> be -> difficult for da neurons than for other neuronal cell type
+61dc246c-774a-5d47-8a74-ba3096aa3d02 | maintenance of a balanced energy budget -> be difficult for -> da neuron
+37a24379-ef54-5657-a760-14f76ea8f575 | maintenance of a balanced energy budget -> be difficult for -> other neuronal cell type
+
+# sentence: Moreover, Yo et al.  demonstrated that PINK1 deficiency leads to a very different response in neurons than in myocytes with respect to changes in mitochondrial membrane potential, mitochondrial $Ca^{2+}$ buffering capacity, and cell survival.
+d0682020-a709-5ade-9ed7-bb42f8aa0a55 | pink1 deficiency -> lead to -> very different response in neurons than in myocyte
+
+# sentence: It has also been suggested that DA neurons are particularly sensitive to repetitive cycles of energetic stress triggered by oscillatory increases in $Ca^{2+}$ .
+cdf5477b-e34a-589d-8609-138371267722 | it -> be suggested to -> repetitive cycles of energetic stress triggered by oscillatory increases in $ ca^{2+}$
+2de6320c-1dc1-5821-bdd0-db21ff24676e | it -> be suggested by -> oscillatory increases in $ ca^{2+}$
+298510d8-1653-5ada-b66f-a988aee43be3 | it -> be suggested in -> $
+80a8fe7b-67b1-5889-998d-6932f0cebd28 | of energetic stress -> be triggered by -> oscillatory increases in $ ca^{2+}$
+1cce7763-9f55-5c40-9c88-6ee7ade8be26 | of energetic stress -> be triggered in -> $
+944b192a-b834-5f6f-8342-9eefeef80739 | da neuron -> be -> sensitive to repetitive cycles of energetic stress triggered by oscillatory increases in $ ca^{2+}$
+13276f9a-286e-5112-9cff-fcf5f5660cee | da neuron -> be sensitive to -> repetitive cycles of energetic stress triggered by oscillatory increases in $ ca^{2+}$
+
+# sentence: Mitochondrial dysfunction not only leads to a deficit in energy supply, but is also an important factor in the generation of oxidative stress.
+bb1ee9db-44a8-52e1-91e6-d303ea6f4be4 | mitochondrial dysfunction -> be -> important factor in the generation of oxidative stress
+33c7228e-cf44-564d-859c-a524c79c162e | mitochondrial dysfunction -> lead to -> deficit in energy supply
+
+# sentence: During the transfer of electrons through the electron transfer chain, single electrons can escape and lead to the reduction of molecular oxygen to form superoxide anions (O2 /C0 ).
+70881b95-afa0-5609-ae7d-8b20feafcfc3 | single electron -> lead to -> reduction of molecular oxygen
+9e42c7da-f99c-55cf-bcb1-695822ea190f | single electron -> be escape to -> form superoxide anions o2 /c0
+
+# sentence: Under normal circumstances, the amount of ROS produced can reach up to 1% of all the oxygen consumed.
+1030079b-2b10-5568-8346-d22b0b42369a | amount of ros produced -> reach -> up to 1 of all the oxygen consumed
+
+# sentence: In cases of mitochondrial dysfunction, increased production of ROS is observed, which can have detrimental consequences such as oxidative DNA damage, lipid peroxidation, or protein oxidation .
+32cf13c5-27b4-573d-84b8-0d5aa0da507e | increased production of ro -> be observed in -> cases of mitochondrial dysfunction
+70fca2c2-83e5-5b22-a791-07e6f1430078 | which -> have -> detrimental consequence
+68347d99-da5b-5546-8857-39ee580ed85f | detrimental consequence -> include -> oxidative dna damage
+47a119a9-9d2d-56a2-b468-d6d660e7ecef | detrimental consequence -> include -> lipid peroxidation
+71e78b7c-26a4-5e0f-8a17-66c248a00f72 | detrimental consequence -> include -> protein oxidation
+
+# sentence: ROS also have a physiological role as signaling molecules, with abnormal levels therefore disrupting physiological signaling cascades .
+9b25645a-706c-515e-b8fe-65f88d93b5f6 | ros -> have -> physiological role as signaling molecule
+2a34b808-af49-55b8-a069-a0accc5726e4 | abnormal level -> disrupt -> physiological signaling cascade
+96630100-16cc-52d6-bcde-2975706aacef | physiological role -> be -> signaling molecule
+
+# sentence: There is ample evidence that oxidative stress plays an important role in the pathogenesis of PD.
+23b845a0-2ed6-5c0f-8bdb-1902d96ea7b3 | ample evidence -> be plays in -> pathogenesis of pd
+dca621d0-4627-512d-a84e-08581db6c876 | oxidative stress -> play -> important role in the pathogenesis of pd
+
+# sentence: A substantial proportion of patients with sporadic PD have reduced levels of complex I in the brain, and the levels of many markers of oxidative damage are increased during the clinical syndrome .
+b9dfad93-d7eb-5ebd-8cb5-90c751df556e | substantial proportion of patients with sporadic pd -> have -> reduced levels of complex i in the brain
+ed0db93b-2f18-5c74-8ee4-facde52ad78a | substantial proportion of patients with sporadic pd -> increase -> reduced levels of complex i in the brain
+66d10937-2c68-5e95-b38d-cb903587c77c | patient -> have -> sporadic pd
+
+# sentence: Findings from phosphorus and proton magnetic resonance spectroscopy in the mesostriatal region of patients with PD support this concept by revealing the bilateral reduction of highenergy phosphates such as ATP .
+7698a024-bcd9-5234-8951-d9768f66c736 | findings from phosphorus and proton magnetic resonance spectroscopy in the mesostriatal region of patients with pd -> support -> this concept
+9099c232-62a6-5912-af52-21aed6738017 | highenergy phosphate -> include -> atp
+e3725852-fd1b-5609-8a80-9031b643b147 | patient -> have -> pd
+
+# sentence: At the same time, antioxidative defense mechanisms are activated to compensate for the deranged redox homeostasis.
+7a516e5d-a2fc-59e8-a077-f16bb07d7311 | antioxidative defense mechanism -> be activated for -> deranged redox homeostasi
+baed6c92-1179-5c3d-ab2c-276184269959 | antioxidative defense mechanism -> be activated to -> compensate for the deranged redox homeostasi
+
+# sentence: One of the key components in this process is the Nrf2-Keap1 pathway .
+000b52cd-ebc5-5717-ac2a-f84ebf19957e | one of the key components in this process -> be -> nrf2-keap1 pathway
+
+# sentence: In response to a changed redox status, Nrf2 activates an antioxidative cascade of cytoprotective and anti-inflammatory genes, counteracting the increased load of ROS and cellular damage .
+c01bbe94-b0e1-530f-b9d1-22154efc22ed | nrf2 -> activate -> antioxidative cascade of cytoprotective and anti-inflammatory gene
+6e97dd8a-c94c-5ebd-8a18-60681c31b5bc | of gene -> property -> cytoprotective and anti-inflammatory
+a7fcd329-04ca-53a8-b2d4-99951788fcb3 | of gene -> property -> anti-inflammatory
+
+# sentence: In addition to their pivotal roles in energy metabolism and $Ca^{2+}$ homeostasis, mitochondria are important in many other processes, such as programmed cell death and inflammatory reactions .
+d7e615a6-2a07-55df-a533-5784349a5be6 | mitochondria -> be -> important in many other processes such as programmed cell death and inflammatory reaction
+0b926d56-4dea-554c-9f6c-4e43ce696f32 | many other process -> include -> programmed cell death
+ccbe2bf8-2cf9-58b9-ac92-00a5dd20aea0 | many other process -> include -> inflammatory reaction
+ba337809-29c7-5239-a18f-dac6f3a6d26b | mitochondria -> be important in -> addition to their pivotal roles in energy metabolism and $ ca^{2+}$ homeostasi
+294ff4b8-f395-5319-a88f-580e79b71d31 | mitochondria -> be important in -> many other processes such as programmed cell death and inflammatory reaction
+
+# sentence: It is likely that many of these processes are directly or indirectly involved in PD pathogenesis, even though it is not clear whether they are causative or consequential.
+0a7dccd4-be1e-5fc3-8b08-ad2f5a5eb97a | it -> not clear -> even though it is not clear whether they are causative or consequential
+95b1acc5-6c81-5a35-8302-a9c290fdf980 | many of these process -> be involved in -> pd pathogenesi
+d52e111a-4fc3-5da6-b621-b0a69171bd2d | it -> be -> likely
+9c76e1bf-8e6c-5f92-8daa-b1e082ebfe48 | it -> be not -> clear
+8f7e42bf-8efa-54f4-9fa9-2b619727a638 | they -> be -> causative
+6f4e98d2-debb-5d1e-87aa-f21b4718a588 | even though it is not clear -> property -> whether they are causative or consequential
+d4b10c3f-a3d5-5f18-89b9-5e778e44220a | even though it is not clear -> property -> consequential
+
+# sentence: It is important to keep in mind that mitochondria are evolutionarily of bacterial origin, and have undergone endosymbiosis.
+7afdf590-0f7c-5314-9fa6-5a31953818af | it -> be -> important
+ebf209ff-52a0-5c9a-8f08-d87009466df0 | mitochondria -> be -> of bacterial origin
+a84c310d-2709-52cd-a87b-574c8fd512f4 | it -> be important to -> keep in mind that mitochondria are evolutionarily of bacterial origin have undergone endosymbiosi
+
+# sentence: This evolutionary history is reflected in the fact that mitochondria still have their own genome.
+8504021c-9e14-5ec6-9db7-d4a4314a1a3d | this evolutionary history -> be reflected in -> fact
+5f99ce7f-cf2c-511f-b13b-248c28f1c82d | mitochondria -> have -> their own genome
+
+# sentence: It consists of 13 protein-coding genes and 22 rRNA genes that are contained in the mitochondrial DNA, the majority of mitochondrial genes being in the nucleus.
+c7c3961d-cfa6-5877-9035-ba1b1f0d8c33 | 22 rrna genes that are contained in the mitochondrial dna -> be contained in -> mitochondrial dna
+77f55bad-d7fa-5b4e-a0ff-2153d07c152e | majority of mitochondrial gene -> be -> in the nucleu
+29033c3d-6e06-51fb-b910-617acde2ff34 | it -> consist of -> 13 protein-coding gene
+c987caa3-4f13-56c7-9e49-41d1b572dbfb | it -> consist of -> 22 rrna gene
+
+# sentence: Many efforts have been made to identify mitochondrial DNA mutations as a potential causal factor in PD.
+66301add-445d-5b3a-887e-4f812884c375 | many effort -> be made as -> potential causal factor
+05e9e6a5-2898-5e1f-8965-bdc17b345a61 | many effort -> be made in -> pd
+2625e790-02e1-5ba7-8aa2-cb77ab46d2a1 | many effort -> be made to -> identify mitochondrial dna mutations as a potential causal factor in pd
+2b4a65d2-af4e-5112-ac99-ef580197243e | mitochondrial dna mutation -> be -> potential causal factor in pd
+
+# sentence: Thus far, these efforts have not yielded clear answers, but it has been observed that neurons of patients with PD have an unusually high rate of mitochondrial DNA deletions .
+6e6fb39d-0a6a-58d2-afef-a58dc84ec257 | these effort -> not yield -> clear answer
+c34ef76e-b6fe-551d-b548-f20a6f64d9ef | it -> be observed with -> pd
+a3277413-fa11-5831-aede-3772b8e55764 | these effort -> observe -> clear answer
+3c8103a7-03a8-51bf-8da8-eb460e4758f9 | neurons of patients with pd -> have -> unusually high rate of mitochondrial dna deletion
+fce3c628-4555-5af9-a46a-f2ecffe88310 | patient -> have -> pd
+
+# sentence: In the early stages of PD, these mutations are seen exclusively in neurons of the basal ganglia, but not in glial cells-a finding indicating a specific susceptibility to mitochondrial damage in this cell type.
+f8c361ca-17c6-55ee-97d2-a07fa60d4565 | these mutation -> be seen in -> early stages of pd
+5cc04e94-61f8-5b60-9f21-a7561fa9ffec | these mutation -> be seen in -> exclusively neurons of the basal ganglia
+4ace76b8-2887-512c-86ee-1c63d202e718 | these mutation -> be seen in -> glial cells-a
+1a1a416c-82f1-5a7a-b02b-20d5940721c0 | these mutation -> be seen to -> mitochondrial damage
+dd0b1af6-5261-5f29-829c-314325a417cc | these mutation -> be seen in -> this cell type
+da9cfdbc-16fb-55bc-8d53-f29e4038b3b4 | finding -> be indicating to -> mitochondrial damage
+e72fbd4b-1bc6-5e1f-a1f6-8e1b3aa798a5 | finding -> be indicating in -> this cell type
+
+# sentence: Indeed, the number of mitochondrial DNA deletions is closely correlated with the aging process .
+07984bdd-2f54-57f9-b114-d4233ea53755 | number of mitochondrial dna deletion -> be correlated with -> aging process
+
+# sentence: One of the biggest challenges in the analysis of mitochondrial DNA mutations is heteroplasmy-the fact that each individual cell can contain hundreds of mitochondria, and not all of them will carry the same mutation.
+c8e954fb-1d08-5070-8ffe-945d8bf39e8c | one of the biggest challenges in the analysis of mitochondrial dna mutation -> be -> heteroplasmy-the
+e0b48974-4b6d-55b5-93cf-d907c8368fe3 | each individual cell -> contain -> hundreds of mitochondria
+a0066b87-d3f5-5d54-a72b-be2882f378ff | each individual cell -> carry -> same mutation
+18e34b6c-8421-52f7-9ebe-76cb04f39c88 | not all of them -> carry -> same mutation
+
+# sentence: Similarly, even if all mitochondria within a cell are mutated, not all cells within an organ necessarily carry mutated mitochondria..
+02043de0-1106-5951-bc70-edd076aa0bd8 | not all cells within an organ -> carry -> mutated mitochondria
+
+# sentence: In addition to a wide spectrum of genetic and environmental factors, PD is also significantly linked to a disturbance of iron metabolism .
+94bbef84-1423-59b4-9501-606811be054b | pd -> be linked to -> wide spectrum of genetic and environmental factor
+f7c2b18c-1dca-57ce-83a2-f2d7b2ac436b | pd -> be linked to -> disturbance of iron metabolism
+880f8706-72eb-5583-a4bc-8547a7e524b0 | of factor -> property -> genetic and environmental
+f45707e4-64fc-59b4-8a4a-89ba42bfef4d | of factor -> property -> environmental
+
+# sentence: In fact, apoptotic cell death in DA neurons correlates with iron-mediated hydroxyl radical formation.
+a76c86a8-bd06-5379-80d8-0727fd52824e | apoptotic cell death in da neuron -> correlate with -> iron-mediated hydroxyl radical formation
+
+# sentence: This is mainly because both superoxide and peroxide, which are mitochondrial byproducts, can react with iron, through the Fenton and Haber-Weiss reactions .
+293f400d-4e0e-5c75-aa46-4475f85ef2f9 | thi -> be -> react with iron through the fenton and haber-weiss reaction
+52a8e41a-01b4-5e5a-9d3c-7aa0956074ba | superoxide -> be -> react with iron through the fenton and haber-weiss reaction
+38cbf1ac-a79b-5f27-b586-4f87e5ebb4ff | peroxide -> be -> react with iron through the fenton and haber-weiss reaction
+420404a5-959d-5821-b4fc-0fd89c9dc414 | which -> be -> mitochondrial byproduct
+088c97ef-7c5e-5d46-bb95-1e51e60bc1e8 | thi -> react with -> iron
+de09b5ac-8c37-518a-bc76-42dc4ad686b4 | thi -> be react with -> iron
+
+# sentence: In turn, iron has a catalytic function in producing hydroxyl radicals, which are the most damaging of the ROS.
+bf0c4735-b575-55ef-909e-56d68def75d9 | which -> be -> damaging of the ro
+ee26f016-6944-5182-9afe-1b9c284085fd | iron -> have -> catalytic function
+
+# sentence: It is of note that the SN is the brain region with the highest iron content , an additional feature that adds to our understanding of its high degree of vulnerability in PD.
+a8b5573c-0f73-5e68-bf9d-3681914df496 | sn -> be -> brain region with the highest iron content an additional feature that adds to our understanding of its high degree of vulnerability in pd
+52b75320-883f-552b-9638-ad9651fce6fd | brain region -> have -> highest iron content
+
+# sentence: Neuromelanin efficiently binds iron and thereby contributes to the high iron load in the SN .
+b2f05ab0-5c5d-5979-945f-bd4aabf24a39 | neuromelanin -> bind -> iron
+5b1ccd95-4c43-5a38-8d7e-4e883ec40f37 | neuromelanin -> contribute -> iron thereby
+19acb204-dd31-5d29-86d5-594e2dccf69c | neuromelanin -> contribute to -> high iron load in the sn
+
+# sentence: Importantly, abnormally increased SN iron contents have been described in both genetic and idiopathic forms of PD .
+a6f4aa7f-4f38-5cbf-bab2-2e402b365b05 | abnormally increased sn iron content -> be described in -> both genetic and idiopathic forms of pd
+efa2c2d0-e978-5fdb-8faf-7cf96fc25502 | in forms of pd -> property -> both genetic and idiopathic
+5453bea9-fc0e-5036-8239-020f349eb16b | in forms of pd -> property -> idiopathic
+
+# sentence: This increased iron content is, however, more pronounced in idiopathic forms of PD than in familial forms.
+2c70997f-357f-5ca8-8ce1-536bb6571466 | this increased iron content -> be -> pronounced in idiopathic forms of pd than in familial form
+91035d7b-9e52-529f-a5a5-0379e7a89d08 | this increased iron content -> be pronounced in -> idiopathic forms of pd
+6c003f09-705e-5fce-8674-090af751aa51 | this increased iron content -> be pronounced in -> familial form
+
+# sentence: Furthermore, iron levels in a chronic MPTP mouse model have been shown to correlate with the selective degeneration of DA neurons in the SN .
+66139ade-ea81-5af9-ab0b-b37dc2212004 | iron levels in a chronic mptp mouse model -> be shown in -> chronic mptp mouse model
+681bd85b-ef7e-58cf-9c1c-95721c4a8d9f | iron levels in a chronic mptp mouse model -> be shown with -> selective degeneration of da neurons in the sn
+e1d56912-4f55-5756-865f-5fd6622abb17 | iron levels in a chronic mptp mouse model -> be shown in -> sn
+b130e7ef-ffd2-54a2-af46-842982d155e4 | iron levels in a chronic mptp mouse model -> be shown to -> correlate with the selective degeneration of da neurons in the sn
+45190fcb-00df-57af-bfa6-b13d1a6eb82d | iron levels in a chronic mptp mouse model -> correlate with -> selective degeneration of da neurons in the sn
+
+# sentence: The two main types of organelle involved in iron accumulation in the brain are lysosomes and mitochondria .
+0e99120a-e5e1-51f9-9385-6fc3807e1ec5 | two main types of organelle -> be involved in -> iron accumulation
+c64c6976-26f7-52e1-9e12-4ac6ea19dc73 | two main types of organelle -> be involved in -> brain
+fe85e338-eac8-5874-b2ca-53b3f4120e92 | two main types of organelle involved in iron accumulation in the brain -> be -> lysosome
+
+# sentence: Two genetic PD factors that are clearly correlated with iron accumulation are PLA2G6 and ATP13A2 .
+6ebffee7-22a1-59b2-90e3-b5d42cf0d35e | two genetic pd factors that are clearly correlated with iron accumulation -> be correlated with -> iron accumulation
+41f5d736-37e3-58e2-8a09-c7e07f7883f4 | two genetic pd factors that are clearly correlated with iron accumulation -> be -> pla2g6
+e587badf-02e7-5847-be5e-f2ce5b74b7e9 | that -> be correlated with -> iron accumulation
+
+# sentence: Their precise mechanisms of action remain to be understood.
+a3e87f2b-8f50-5d87-80ae-d9bca88d0618 | their precise mechanisms of action -> remain -> understood
+bf682450-3f19-5514-af1a-c6bde0ad53a9 | their precise mechanisms of action -> remain -> to be understood
+
+# sentence: Mitochondria usually constitute the main source of cellular ROS, in the form of peroxide and superoxide.
+cf7f4f60-059b-50d1-b1d6-71a15453edb7 | mitochondria -> be -> main source of cellular ros in the form of peroxide and superoxide
+d47546cc-93f2-5327-87f7-86f8c0d5421d | mitochondria -> constitute -> main source of cellular ros in the form of peroxide and superoxide
+
+# sentence: The release of these comparatively mild ROS in the presence of free iron can lead to the formation of highly reactive hydroxyl radicals and initiate a positive feedback loop that triggers the release of additional iron from mitochondrial iron-sulfur centers .
+41aff40f-6603-5df8-842a-dcb579e65631 | that -> trigger -> release of additional iron from mitochondrial iron-sulfur center
+97f213de-9834-5098-ab14-e4c00d674931 | release of these comparatively mild ros in the presence of free iron -> lead -> positive feedback loop
+e3195b4c-3d32-5c35-9c0b-67fadf9c363a | release of these comparatively mild ros in the presence of free iron -> initiate -> positive feedback loop
+852bea26-64de-5329-9cfb-62d1d9c0013a | positive feedback loop -> trigger -> release of additional iron from mitochondrial iron-sulfur center
+744a2eae-6bdd-5245-a60d-5139fec6ab18 | release of these comparatively mild ros in the presence of free iron -> lead to -> formation of highly reactive hydroxyl radical
+d7502c31-444c-5949-93f3-855b5b598012 | release of these comparatively mild ros in the presence of free iron -> be lead to -> formation of highly reactive hydroxyl radical
+
+# sentence: Inter- estingly, not only iron but also other redox metals, such as copper, and nonredox metals, such as zinc, have also been reported to be involved in oxidative stress in the context of age-related neurodegenerative diseases .
+a54343ab-0a3e-5314-820d-3d86f24bf75d | not only iron but also other redox metals such as copper and nonredox metals such as zinc -> be reported in -> oxidative stress
+084cad31-e3e9-5235-94cc-f8bf96ec2494 | not only iron but also other redox metals such as copper and nonredox metals such as zinc -> be reported in -> context of age-related neurodegenerative diseas
+2e73dc67-f883-5225-a5d3-961a1a9fa306 | not only iron but also other redox metals such as copper and nonredox metals such as zinc -> be reported to -> involved in oxidative stress in the context of age-related neurodegenerative diseas
+08a8ed1e-a879-575e-8da6-14c52d2bbd0e | other redox metal -> include -> copper
+d5a8322c-d2b4-5d6a-b54c-54a3a72c1c73 | nonredox metal -> include -> zinc
+
+# sentence: Potential chelation therapies are currently under development ..
+f21305f6-53c1-5200-9890-42c17660ca4f | potential chelation therapy -> be -> currently under development
+
+# sentence: Whereas the main function of neurons, namely communication with neighboring neurons, requires synaptic activity, synaptic function requires tight control of intracellular processes such as neurotransmitter packaging, energetic homoeostasis, and $Ca^{2+}$ buffering.
+175e12c9-97c3-59f8-bdf9-21564b365e46 | main function of neurons namely communication with neighboring neuron -> require -> synaptic activity
+bd68e602-8f25-584f-aa91-e363b4afd3ab | synaptic function -> require -> tight control of intracellular processes such as neurotransmitter packaging energetic homoeostasis and $ ca^{2+}$ buffering
+9e1e8bb9-1581-5a8c-934e-6071e7cbb086 | synaptic function -> be requires with -> neighboring neuron
+7ac9f15b-d1b9-54ad-adec-a2d8da3cd187 | intracellular process -> include -> neurotransmitter packaging
+6fb8de91-396a-5b0b-af05-9f13f3940383 | intracellular process -> include -> energetic homoeostasi
+bcc8f6c1-c9ed-528d-9ccf-7a40f5059ecd | intracellular process -> include -> ca^{2+}$ buffering
+3a093d01-2f02-52af-856b-7cbaae3f8b4a | namely communication -> have -> neighboring neuron
+
+# sentence: SN DA neurons have a very complex morphology, with ~ 150 000 presynaptic terminals per neuron in the striatum .
+67c846d9-1391-5992-8f4a-787406824085 | sn da neuron -> have -> very complex morphology with ~ 150 000 presynaptic terminals per neuron in the striatum
+
+# sentence: It is likely that the high number and the widespread distribution of synapses, with the accompanying high local demands on energy and $Ca^{2+}$ buffering resources, correlate with decreased robustness of SN DA neurons against mitochondrial dysfunction and axonal transport defects .
+e976ba00-cf96-555a-98be-5eae3e7b34ca | it -> be -> likely
+c5a7d8b5-ce62-5a55-aaab-5b20f413e7d6 | high number and the widespread distribution of synapses with the accompanying high local demands on energy and $ ca^{2+}$ buffering resource -> correlate with -> decreased robustness of sn da neurons against mitochondrial dysfunction and axonal transport defect
+8cbaeae5-bdfa-5144-8775-2f11d9d75c74 | widespread distribution -> correlate with -> decreased robustness of sn da neurons against mitochondrial dysfunction and axonal transport defect
+6370d735-2adb-53f6-a229-d4dbff8b3f41 | high number -> have -> accompanying high local demand
+
+# sentence: Furthermore, local dysfunctions in protein degradation and turnover may affect synaptic function .
+41c4ba26-926d-53fe-bae0-c2e7eb81a338 | local dysfunctions in protein degradation and turnover -> affect -> synaptic function
+
+# sentence: In cell cultures, a-synuclein associates with presynaptic vesicles prior to neurotransmitter release, upon which it rapidly redistributes into the cytosol .
+35f34985-ce34-5b62-a26f-bd48931a7616 | a-synuclein -> associate with -> presynaptic vesicle
+
+# sentence: It has been shown that modest overexpression is sufficient to markedly inhibit neurotransmitter release .
+9cd06837-cabe-57e2-925e-aea0a16fe28d | modest overexpression -> be -> sufficient
+7a37f003-1ef8-5a00-bfc0-0cdb32cbcce1 | modest overexpression -> be sufficient to -> markedly inhibit neurotransmitter release
+
+# sentence: Most likely, this functional relationship between a-synuclein and synaptic function is attributable to the ability of a-synuclein to bind membranes, synaptic proteins, and actin filaments, and to cause changes in membrane dynamics ..
+c598ff3d-c05e-51b0-9f75-ca17f2b9e01f | to the ability of a-synuclein -> be bind in -> membrane dynamic
+6624d2c5-6cae-5285-b0b2-874ef08c050f | this functional relationship between a-synuclein and synaptic function -> be -> attributable to the ability of a-synuclein to bind membranes synaptic proteins and actin filaments and to cause changes in membrane dynamic
+9a01af42-eadd-5a7c-a94b-b1148803949f | this functional relationship between a-synuclein and synaptic function -> be attributable to -> ability of a-synuclein to bind membranes synaptic proteins and actin filaments and to cause changes in membrane dynamic
+
+# sentence: Neither the complex etiology of PD nor its relationship with neuroinflammation are yet fully understood (Fig. 2).
+5686eddc-7d9d-5581-99cd-18d877c8b414 | neither the complex etiology of pd nor its relationship with neuroinflammation -> be understood with -> neuroinflammation
+e4f7368b-a723-5a1c-bf46-17dd32108953 | relationship -> have -> neuroinflammation
+
+# sentence: Research on neuroinflammation in PD is mainly focused on the innate immune system and, in particular, on the role of microglia, the most abundant resting macrophage population in the CNS .
+092b5ff2-6de1-5c75-8146-01add51859ee | research on neuroinflammation in pd -> be focused on -> neuroinflammation
+8df072fe-4ee0-526b-8226-88b1a3fdfe85 | research on neuroinflammation in pd -> be focused in -> pd
+ba297575-36c8-5fd8-bb8a-80b68dd65d93 | research on neuroinflammation in pd -> be focused on -> innate immune system
+ec3d2573-18fb-5f25-a433-65635d229a90 | research on neuroinflammation in pd -> be focused on -> particular
+204a3d2c-def4-559c-8119-fa6a158b37f1 | research on neuroinflammation in pd -> be focused on -> role of microglia the most abundant resting macrophage population in the cn
+602f1e96-1906-51e1-938a-19e69287a1c9 | research on neuroinflammation in pd -> be focused in -> cns
+49df92e2-91ae-547e-823e-13ef1294a4dd | research on neuroinflammation in pd is mainly focused -> property -> on the innate immune system and in particular on the role of microglia the most abundant resting macrophage population in the cn
+a2ddd81e-4524-5ab6-bcce-fd45d8e12940 | research on neuroinflammation in pd is mainly focused -> property -> in particular
+
+# sentence: Reductionist and holistic views of PD.
+7a8bb5bc-5195-5223-96b4-fefba23b96ce | views of pd -> property -> reductionist and holistic
+55c32b57-6f61-5357-9871-a74e5aa3bedf | views of pd -> property -> holistic
+
+# sentence: Since the discovery of dopamine as a neurotransmitter, a reductionist view of depletion of dopamine in the striatum has been the driving force for translational research in PD (left panel).
+5fdcdead-0845-55fd-b112-a6bb85434168 | reductionist view of depletion of dopamine in the striatum -> be -> since the discovery of dopamine as a neurotransmitter the driving force for translational research in pd
+30bb0fdf-f5f6-5c39-a01d-bb8c3e56673c | dopamine -> be -> neurotransmitter
+
+# sentence: Looking forward, we believe that important new developments will come from more holistic, systems-based approaches that aim to understand the transfer functions between molecular, cellular, intercellular and high-level pathogenic events.
+ef82137d-3bf6-5b89-8e9c-94b322d6f225 | more holistic systems-based approache -> aim to understand -> transfer functions between molecular cellular intercellular and high-level pathogenic event
+96551569-aaa0-598a-be6a-ccef4427e5f4 | transfer function -> property -> between molecular cellular intercellular and high-level pathogenic event
+a35c4cb0-0314-583e-bb7e-8df2e1eb4e47 | transfer function -> property -> cellular
+923d61d9-13e9-5a41-b8f8-793cdf2c44c8 | transfer function -> property -> intercellular
+5fa09d43-9c99-5c6a-9127-fcc6602d1ff9 | transfer function -> property -> high-level pathogenic event
+8462f4f8-d388-5288-9bb4-760928510a41 | important new development -> come from -> more holistic systems-based approache
+
+# sentence: For example, the control of neuroinflammation, which involves intercellular interactions between astrocytes, microglia, and DA neurons, could potentially influence emerging clinical symptoms.
+a81e7077-90a6-53a3-b87a-e81eeaad841d | which -> involve -> intercellular interactions between astrocytes microglia and da neuron
+b43b867c-a7c0-558e-b191-1e75c0ecdb5c | control of neuroinflammation which involves intercellular interactions between astrocytes microglia and da neuron -> influence -> emerging clinical symptom
+a9e6edc9-7c5e-50dd-81e4-0fe23f2bf90a | neuroinflammation -> involve -> intercellular interactions between astrocytes microglia and da neuron
+5ccd4853-64e7-512f-9825-21db8b8b91ec | control of neuroinflammation which involves intercellular interactions between astrocytes microglia and da neuron -> be influence for -> example
+
+# sentence: An oversimplified reductionist model that ignores these intercellular interactions could serve to complicate rather than facilitate the development of diseasemodifying therapies.
+f7ab2915-72d7-52a8-9f91-d5f737b48a9d | oversimplified reductionist model that ignores these intercellular interaction -> serve -> complicate
+82e9a94e-ed81-5682-ae08-3e4f57f2e1f5 | oversimplified reductionist model that ignores these intercellular interaction -> serve -> facilitate the development of diseasemodifying therapy
+821db58c-0f0f-5c77-a831-ef8c495c26e7 | oversimplified reductionist model -> ignore -> these intercellular interaction
+6095822a-7013-5920-bade-243d7c67cb0e | oversimplified reductionist model that ignores these intercellular interaction -> be serve to -> complicate facilitate the development of diseasemodifying therapy
+
+# sentence: It is important to understand that the onset of motor symptoms does not correlate in a linear manner with the decrease in the number of DA neurons.
+33d48327-23b9-50ff-a8d5-0b30f0253b16 | onset of motor symptom -> not correlate in -> in a linear manner
+cdf32900-3143-54c3-9107-0f85b03c692a | it -> be -> important
+187d9244-950c-5258-a298-b3c206daf0dc | onset of motor symptom -> not correlate with -> decrease in the number of da neuron
+3ef246e7-3d36-58b2-86a7-a421cea330ff | it -> be important to -> understand that the onset of motor symptoms does not correlate in a linear manner with the decrease in the number of da neuron
+e6fc2d50-cf37-516d-8e27-1d41ba920beb | onset of motor symptom -> be correlate in -> linear manner
+a1812063-9b92-5113-b827-986e3e50e0ac | onset of motor symptom -> be correlate with -> decrease in the number of da neuron
+
+# sentence: Instead, the motor symptoms start only after the loss of the majority of DA neurons projecting from the SN into the striatum.
+aab6a1a9-7c8a-50ba-81af-ba7018cfa4a3 | motor symptom -> start after -> loss of the majority of da neurons projecting from the sn into the striatum
+3c1c31b9-1ffb-5aa9-a307-69c63afb6f83 | motor symptom -> start in -> loss of the majority of da neurons projecting from the sn into the striatum
+
+# sentence: In addition, a nonreductionist view needs to integrate other neurotransmitter systems, as well as nonmotor symptoms and their underlying cell populations in the CNS or in autonomic ganglia.
+8caafe62-934e-55c9-85be-f09147c961bc | nonreductionist view -> need to integrate -> other neurotransmitter system
+8b9cb3be-11bc-5616-afe6-b446d0238ff9 | nonreductionist view -> need to integrate -> nonmotor symptom
+6d435fd4-fb9e-5c13-b1f6-fb61bf674fb7 | nonreductionist view -> need to integrate -> their underlying cell populations in the cns or in autonomic ganglia
+
+# sentence: Finally, we stress that the heterogeneous disease progression observed from patient to patient cannot be understood with oversimplified reductionist views.
+74990f3e-8590-5de2-93db-f28c374f0c97 | heterogeneous disease progression observed from patient to patient -> be understood to -> patient
+9ffa2fd5-52ec-5ba9-b1f0-ad9f11c7e62e | heterogeneous disease progression observed from patient to patient -> be understood with -> oversimplified reductionist view
+00e3415d-fa8b-589c-9c9b-a9f809a2f0dc | heterogeneous disease progression -> be observed to -> patient
+
+# sentence: The challenge is to understand the key factors in each case, and to bring this concept to the level of personalized medicine.
+fd21b515-4ddd-52e1-adbb-975344dc6f9c | challenge -> be -> understand the key factors in each case
+475c42b5-bf1c-59d1-88b3-748f1c0b8c86 | challenge -> bring -> this concept
+
+# sentence: Resting microglia monitor the local environment  and control the response of the immune system.
+8059c469-1bbe-5d9e-a770-9934f04bb2cd | resting microglia -> monitor -> local environment
+4f86bdcc-69f7-547f-a2ed-6128dc76f790 | resting microglia -> control -> response of the immune system
+
+# sentence: Under minor stress, microglia release anti-inflammatory cytokines and growth factors.
+17d27159-9ad1-50bf-bb04-0232e350a882 | microglia -> release -> anti-inflammatory cytokine
+5999393b-6f08-50e3-80ca-9c9ee90b4d3b | microglia -> release -> growth factor
+
+# sentence: Under more significant stress, microglia release proinflammatory cytokines to recruit systemic immune cells and toxic factors to kill the pathogen.
+3fafdfa4-032b-5917-af09-392e9fc48f72 | microglia -> release -> proinflammatory cytokine
+
+# sentence: The interpretation by microglia of a given environmental state makes the difference between beneficial and detrimental outcomes of the immune response.
+19eae86b-8cfd-5632-8fe1-1fc5d0e044fc | interpretation by microglia of a given environmental state -> make -> difference between beneficial and detrimental outcomes of the immune response
+b8afdd4f-4ad8-5a9e-bcfb-f407d0405fc7 | between outcomes of the immune response -> property -> beneficial and detrimental
+5ee2beeb-5d12-596b-8919-2ca1cebf4423 | between outcomes of the immune response -> property -> detrimental
+
+# sentence: It remains unclear, however, whether neuroinflammation is purely a side effect of PD, or whether it plays a more causal role in the pathogenesis.
+c245b7b3-fc53-5222-875b-8045a5441422 | neuroinflammation -> be -> side effect of pd
+a253e2e3-ace3-5660-8cbd-c7496f105be2 | neuroinflammation -> play -> more causal role in the pathogenesi
+a2a4c731-cdf7-5d63-9684-596aed626f6f | it -> play -> more causal role in the pathogenesi
+be167e25-0541-5441-98bd-3df3f1414b91 | it -> remain -> unclear
+
+# sentence: It has been demonstrated that neurons can exert feedback control on microglia.
+e09c7460-cded-599c-8058-dbfc0bc482e4 | it -> be demonstrated on -> microglia
+b0e8b8b6-7baf-5ffa-b834-737885b89c8e | neuron -> exert -> feedback control on microglia
+3ee5e1bb-b7d5-5721-a339-9e474da0afe1 | neuron -> be exert on -> microglia
+
+# sentence: Many neuronal products, including membrane glycoproteins such as CD22, CD47, and CD200, and neuronal cell adhesion molecules, bind microglia receptors and inhibit microglial activation .
+f57f29bf-44ed-5751-914c-cea07eae3907 | many neuronal product -> bind -> microglia receptor
+64b3b4d9-f0af-53f1-8cf4-9e6ab3ddef9b | many neuronal product -> inhibit -> microglial activation
+7ce967a2-c973-5734-bb4f-96571545eabf | neuronal cell adhesion molecule -> bind -> microglia receptor
+5c8dda86-82dc-5e85-b6ef-02fd0673d53d | neuronal cell adhesion molecule -> inhibit -> microglial activation
+c459fa57-ea16-5f55-abd6-a1ad0ca2194b | many neuronal product -> include -> membrane glycoprotein
+5c20499b-01e7-5199-8c6e-be8441351b77 | membrane glycoprotein -> include -> cd22
+fe5c041e-5e79-5948-99d2-fee16b65c4de | membrane glycoprotein -> include -> cd47
+3b3ec32f-b27b-52f9-bcdb-2aef8173caca | membrane glycoprotein -> include -> cd200
+cbb4607c-aac0-5c68-ba9d-36e3b4db7f0e | many neuronal products including membrane glycoproteins such as cd22 cd47 and cd200 and neuronal cell adhesion molecule -> bind to -> microglia receptor
+464d83e5-d0dd-5a25-a289-ce556290c27a | neuronal cell adhesion molecule -> bind to -> microglia receptor
+
+# sentence: In the majority of experimental approaches, neuroinflammation is a secondary detrimental effect triggered by PD-related chemical or genetic stress factors .
+07a8cef3-8443-598d-accc-2be2bf76bef4 | neuroinflammation -> be triggered by -> pd-related chemical or genetic stress factor
+284adbd6-d207-5b6b-8ea3-1ff1e54062b7 | neuroinflammation -> be -> in the majority of experimental approaches a secondary detrimental effect
+ff90e69f-0bc8-5e5d-9420-b1ad6f78bfcc | by pd-related stress factor -> property -> chemical or genetic
+9c720333-369e-58b4-a63f-a1b36d907a0e | by pd-related stress factor -> property -> genetic
+
+# sentence: For example, microglia are able to detect misfolded a-synuclein and increase neurotoxicity through the production of ROS and proinflammatory cytokines .
+24528bd7-8109-515b-90a3-eb6880e7577e | microglia -> be -> able
+a681e196-6d88-5647-a06c-13dff5718dce | microglia -> be able for -> example
+0172b053-45a1-562a-ae38-d23df2200e9f | microglia -> be able to -> detect misfolded a-synuclein increase neurotoxicity through the production of ros and proinflammatory cytokine
+
+# sentence: Astrocytes modulate the microglial response and play a supportive role for brain neurons .
+b443fe26-c06a-5c7f-a914-f6eaa8c9ee5a | astrocyte -> modulate -> microglial response
+b7e4dc48-8b57-50f4-be01-b5b21cff2ee2 | astrocyte -> play -> supportive role for brain neuron
+
+# sentence: Recent in vitro data suggest that DJ-1 deficiency in astrocytes might deregulate their neuroinflammatory response, thereby contributing to neurodegeneration .
+2aa4587a-a0b1-5a83-9f6e-0cf0b00fe3b5 | dj-1 deficiency in astrocyte -> be contributing to -> neurodegeneration
+b0239919-0ee4-59fe-b158-d54f53b2e4a5 | dj-1 deficiency in astrocyte -> deregulate -> their neuroinflammatory response
+08e7bee6-b6ea-5702-8089-5b3b6399932f | dj-1 deficiency in astrocyte -> contribute to -> neurodegeneration
+
+# sentence: The proportion of astrocytes in the SN is the lowest of any brain area .
+ae708467-49fe-5dac-846a-c7eac69e4b1b | proportion of astrocytes in the sn -> be -> lowest of any brain area
+
+# sentence: The high number of microglia promoting neuroinflammation, opposing a low number of regulatory astrocytes, appears to provide a plausible explanation for the elevated risk of neuroinflammation in this brain region.
+93c5cb88-94cc-5d77-81ba-f83c5f88a06a | high number of microglia promoting neuroinflammation opposing a low number of regulatory astrocyte -> appear to provide -> plausible explanation for the elevated risk of neuroinflammation in this brain region
+c043d1d0-0da4-591b-b94e-1ffa17905c60 | high number of microglia promoting neuroinflammation opposing a low number of regulatory astrocyte -> appear -> to provide a plausible explanation for the elevated risk of neuroinflammation in this brain region
+
+# sentence: Furthermore, the pigment neuromelanin, which is present in substantia nigra pars compacta neurons, has been shown to activate microglia , which further increases the susceptibility of this brain area to neuroinflammation.
+727789bb-38ff-5db5-97ab-b05181e692fb | pigment neuromelanin which is present in substantia nigra pars compacta neuron -> be shown in -> substantia nigra pars compacta neuron
+9536db92-ae87-5e78-b4e3-5f8c029d538f | pigment neuromelanin which is present in substantia nigra pars compacta neuron -> be shown to -> neuroinflammation
+db4a922f-0365-5918-9ad3-06a8860d80d9 | pigment neuromelanin which is present in substantia nigra pars compacta neuron -> be shown to -> activate microglia which further increases the susceptibility of this brain area to neuroinflammation
+3bcb9048-8dee-5a56-a48b-d0e265553db1 | which -> be -> present in substantia nigra pars compacta neuron
+2985b616-554d-524c-a624-bd3331f3fda6 | microglia -> increase -> susceptibility of this brain area to neuroinflammation
+a4c41be1-f024-5cde-869e-1b66bc11f5b7 | which -> be present in -> substantia nigra pars compacta neuron
+
+# sentence: Finally, there is evidence supporting the idea that the adaptive immune system, as well as the innate immune system, might be involved in PD.
+276f1551-a615-5737-a2b1-ea051494e3ca | adaptive immune system as well as the innate immune system -> be involved in -> pd
+19a40c39-a0e3-5c9a-9ebb-8dc4d3422694 | evidence -> be supporting in -> pd
+
+# sentence: For example, a genetic association has been found between a region of the human leukocyte antigen and PD .
+12f76824-6488-5e65-84ae-b5bb31c5bb76 | genetic association -> be found for -> example
+
+# sentence: Responses of the adaptive immune system have been reported near both activated microglia and degenerating neurons, in particular in the substantia nigra pars compacta .
+82a6b434-b57c-51dc-a140-0266f031e6e7 | responses of the adaptive immune system -> be reported near -> both activated microglia
+549bff00-bd86-529c-8993-085c802e58c2 | responses of the adaptive immune system -> be reported near -> degenerating neuron
+9f146456-8880-5bd5-b2c7-acc8f9acc233 | responses of the adaptive immune system -> be reported in -> substantia nigra pars compacta
+
+# sentence: Importantly, regulatory T cells have been shown to attenuate nigrostriatal DA neurodegeneration in an MPTP mouse model .
+4cacdb29-8194-505c-adbd-51dd51456e32 | regulatory t cell -> be shown in -> mptp mouse model
+b743463b-d8eb-5ff2-813e-a2f194052d25 | regulatory t cell -> be shown to -> attenuate nigrostriatal da neurodegeneration in an mptp mouse model
+
+# sentence: Given this plethora of supporting evidence, we believe that neuroinflammation is at least a modulator of disease progression, and that further basic research in this field is needed to form the basis for future developments that target inflammatory pathways for disease-modifying therapies ..
+af4ff980-905f-5451-9243-232f7a4acdc0 | further basic research in this field -> be needed in -> this field
+05069b4d-e3c7-5a61-85fc-b815109d1038 | further basic research in this field -> be needed for -> future developments that target inflammatory pathways for disease-modifying therapy
+0fdd5a40-9aeb-59f0-823c-9b082a825859 | further basic research in this field -> be needed for -> disease-modifying therapy
+ab6917a3-e09d-5b80-a4f2-994ff470d96b | further basic research in this field -> be needed to -> form the basis for future developments that target inflammatory pathways for disease-modifying therapy
+449bdcba-86d3-5269-9e42-ce9630bd40ac | neuroinflammation -> be -> modulator of disease progression
+20305065-75ae-5838-bfe4-85a6b18de602 | neuroinflammation -> need to form -> basis for future developments that target inflammatory pathways for disease-modifying therapy
+5cf15da3-159e-5b34-8566-449323fabd59 | future development -> target -> inflammatory pathways for disease-modifying therapy
+
+# sentence: Historically, PD research has been driven by medical knowledge.
+c2672717-6896-50d6-882d-d2ab212288bf | pd research -> be driven by -> medical knowledge
+
+# sentence: However, neuroscience research based on molecular and cellular biology has added further layers of complexity to our understanding of PD.
+d61a658a-e59a-524e-9623-cf05e4d17303 | neuroscience research -> be based on -> molecular and cellular biology
+bf172460-e899-50ce-8045-ac9bef79422d | neuroscience research based on molecular and cellular biology -> add -> further layers of complexity
+ae612b8a-7a47-5b23-b1af-784af087da21 | on biology -> property -> molecular and cellular
+bbfc3070-7b21-537e-b42a-e2296fcc22a1 | on biology -> property -> cellular
+5f557ff6-9127-5236-a7be-2abb21ac109d | neuroscience research based on molecular and cellular biology -> be added to -> our understanding of pd
+
+# sentence: In turn, increased efforts are required to coordinate and integrate interdisciplinary PD research.
+1cd479ec-67fc-59b5-81eb-08db1c758012 | increased effort -> be required to -> coordinate
+d1fa44ad-f902-5e64-8c47-8d1ddfa25021 | increased effort -> be required to -> integrate interdisciplinary pd research
+7a47bc7d-0798-56fb-ac67-fae69e2bb080 | increased effort -> be required in -> turn
+
+# sentence: The ultimate aim in systems PD biomedicine is to translate mechanistic insights into clinical applications, and to use these to improve patient quality of life .
+79af9720-0b68-5bab-9cb9-e88b4259e997 | ultimate aim in systems pd biomedicine -> be -> translate mechanistic insights into clinical application
+80d1e715-ccf7-5063-82ce-6d06c4a44886 | ultimate aim in systems pd biomedicine -> use -> these
+c01eb03d-c168-5aad-a7f1-0ef79acdeadc | ultimate aim in systems pd biomedicine -> use to improve -> patient quality of life
+
+# sentence: One important challenge is the need to develop theoretical models that are able to accurately represent the pathogenesis of PD.
+390b13f1-9acf-544e-b8bf-0eefaeaec7ec | one important challenge -> be -> need
+710272c3-c7b9-5c07-81c9-b31c6389e719 | that -> be -> able
+34a5b85b-8af0-5543-8008-eb7787415576 | that -> be able to -> accurately represent the pathogenesis of pd
+
+# sentence: We believe that such models will help interdisciplinary cooperation by helping to structure both the interdisciplinary learning process and the formulation of testable key hypotheses.
+ddc91a9b-c9b4-5d72-8072-5280923e7655 | such model -> help -> interdisciplinary cooperation
+
+# sentence: However, a multifactorial disease such as PD, whose progression is believed to be influenced by the collective action of several genes and environmental factors, cannot be adequately represented by a simple model.
+c0934465-5213-52e5-a120-d4352603b7e6 | multifactorial disease such as pd whose progression is believed to be influenced by the collective action of several genes and environmental factor -> be represented by -> collective action of several genes and environmental factor
+521c7999-d5f1-5ef3-89c9-609a418e77ed | multifactorial disease such as pd whose progression is believed to be influenced by the collective action of several genes and environmental factor -> be represented by -> simple model
+5d1785b4-4fd5-5ad9-98db-377794f57485 | whose progression -> be believed by -> collective action of several genes and environmental factor
+3b996a27-e353-55a8-9c7e-4c5d28de281f | whose progression -> be believed to -> influenced by the collective action of several genes and environmental factor
+73adc759-7591-532f-a907-bf0d011c5acf | multifactorial disease -> include -> pd
+
+# sentence: The multifactorial nature renders making predictions related to onset and progression a very challenging task.
+15b99bc7-b198-5fbb-9b48-454e52afc034 | multifactorial nature -> render -> predictions related to onset and progression a very challenging task
+
+# sentence: The progression of the syndrome emerges from the flow of spatiotemporal information between molecular and organic scales.
+e3e31c0d-ac84-5fd9-a4c5-ba9c2ce2fb24 | between scale -> property -> molecular and organic
+583a1028-1ff4-5cdf-89c5-20735d6544cf | between scale -> property -> organic
+ee775ead-f72d-501d-b2d3-ca9fb8ec40c8 | progression of the syndrome -> emerge from -> flow of spatiotemporal information between molecular and organic scale
+
+# sentence: Adequate multiple-scale models, aiming to bring PD research to a more integrated level, should therefore aim to understand the subsystem properties that connect the scales and to incorporate information about as many manageable factors as possible, including environmental factors, genetics, proteomics, metabolomics, cell biology, higher-level physiology, and patient quality of life.
+d3b65378-dae9-5845-af6c-c68ccd3c7f76 | adequate multiple-scale model -> be aiming to -> more integrated level
+c870e8fd-7c30-5b89-b867-8b8898291ee5 | subsystem property -> connect -> scale
+78d2fbe2-db9f-5c3e-8cd5-86beee472671 | as many manageable factor -> include -> environmental factor
+5d3ab1f1-6e27-5cf3-83a2-c1d4aa8c0878 | as many manageable factor -> include -> genetic
+d4749e0b-9f29-5802-9fbf-3b2099a0e560 | as many manageable factor -> include -> proteomic
+ccf3bf7f-3e71-5fe5-91ff-2d9d0ab63a2e | as many manageable factor -> include -> metabolomic
+e4b22504-af1a-5046-86ea-b79491d193a2 | as many manageable factor -> include -> cell biology
+b9195081-b902-5a61-bb35-07817e02aa53 | as many manageable factor -> include -> higher-level physiology
+03662a2a-a079-5f73-960e-0666b61f122b | as many manageable factor -> include -> patient quality
+
+# sentence: Graphical network modeling can provide an adequate view of a dynamic system such as PD, which is defined by the coordinated action of several factors and their local dynamics .
+f195ecf4-0483-51bc-a22c-8da2e140427a | graphical network modeling -> provide -> adequate view of a dynamic system such as pd which is defined by the coordinated action of several factors and their local dynamic
+a9f3c15b-a288-5a79-b74b-bd898f0789f9 | such as pd which is defined by the coordinated action of several factors and their local dynamic -> be defined by -> coordinated action of several factor
+529d2f72-b63a-5636-b8c8-3d71a85b5e04 | such as pd which is defined by the coordinated action of several factors and their local dynamic -> be defined by -> their local dynamic
+050e14a2-7910-5521-b3b0-a1eb05fb4380 | dynamic system -> include -> pd
+
+# sentence: Wellstead et al. recently described a systems-control approach in which disturbances in energy metabolism act as a driving core module, and serve as an analytical and modeling framework with which to study the pathogenesis of PD .
+663ac294-528a-54e3-8cd2-0a94d5b5d2c9 | wellstead et al. -> describe -> systems-control approach
+dc32a843-ca46-5e86-9333-d3fae4c3f13d | as an framework with which to study the pathogenesis of pd -> property -> analytical and modeling
+ad0f806a-9b18-5048-93f6-6bb75d1bca82 | as an framework with which to study the pathogenesis of pd -> property -> modeling
+eaef72ab-4b08-5fc1-bef8-e75b74abad31 | disturbances in energy metabolism -> be -> driving core module
+71d88a83-e66e-5fa8-ab30-c0c658418c3b | disturbances in energy metabolism -> act as -> driving core module
+6fa2d467-6ac6-5fe4-8261-13ddb2df63ad | disturbances in energy metabolism -> serve to -> analytical and modeling framework
+
+# sentence: It is important to keep in mind that energy metabolism is highly integrated with complex cell-to-cell interactions.
+44f4f51b-1cef-5367-939e-27d2f921fab9 | energy metabolism -> be integrated with -> complex cell-to-cell interaction
+701c689e-d7b3-5d07-a688-585f6840c03c | it -> be -> important
+21447f49-d950-549f-a356-2470d5056d22 | it -> be important to -> keep in mind that energy metabolism is highly integrated with complex cell-to-cell interaction
+
+# sentence: Astrocytes, for example, are closely coupled to neurons, and play a key role in energy metabolism, neurotransmission, and many other neuronal functions .
+9a623232-20a4-5b69-ae12-4b3bbd6dacbd | astrocyte -> be coupled to -> neuron
+00cbeebf-5647-50bf-acb3-eb5c387c92fd | astrocyte -> be coupled in -> energy metabolism
+41ca361c-06e3-5852-9648-ae258fa1a292 | astrocyte -> be coupled in -> neurotransmission
+b3fa69f2-f0ec-5345-a297-6ff295c024bf | astrocyte -> be coupled in -> many other neuronal function
+7a433c32-f018-59d7-b8a4-464367bc8b36 | astrocyte -> play -> key role in energy metabolism neurotransmission and many other neuronal function
+
+# sentence: This is reflected in the concept of the tripartite synapse, describing the importance of bidirectional communication between synapses formed by presynaptic and postsynaptic neurons and astrocytes .
+07bfa123-b346-588a-a8bd-b4678d4d9c14 | thi -> be reflected in -> concept of the tripartite synapse
+a427cf88-657c-5e6c-9b71-d2e47990c6ea | thi -> be reflected by -> presynaptic and postsynaptic neuron
+4e874a76-2fa8-567b-94b3-39dedc29b410 | thi -> be reflected by -> astrocyte
+43692fb0-1df8-5041-9a2c-1f9da8350248 | thi -> be describing by -> presynaptic and postsynaptic neuron
+e122c781-21cd-577b-be34-5473bf652cc7 | thi -> be describing by -> astrocyte
+2a0d5966-1cde-5f84-ae51-bf58cd0f86f7 | between synaps -> be formed by -> presynaptic and postsynaptic neuron
+15d75188-f6b9-5f8e-a2fc-e0818324f87b | between synaps -> be formed by -> astrocyte
+243cd3b2-eaca-511b-980b-7aa3d47b59ac | by neurons and astrocyte -> property -> presynaptic and postsynaptic
+e994b887-e935-58ee-ae55-90d4cfee247b | by neurons and astrocyte -> property -> postsynaptic
+
+# sentence: A major challenge in the experimental analysis of multifactorial diseases is the extensive phenotypic buffering driven by network robustness.
+e522bda8-2a2a-52c2-a73d-de509989c275 | major challenge in the experimental analysis of multifactorial diseas -> be driven by -> network robustness
+eeaa84a1-a993-5c41-bb86-85d8aafe78bd | major challenge in the experimental analysis of multifactorial diseas -> be -> extensive phenotypic buffering
+
+# sentence: In turn, well-chosen predictions of phenotypic changes need to consider the network context and prior knowledge.
+473442e0-b9bb-59e7-8817-4b8429ff0d19 | well-chosen predictions of phenotypic change -> need to consider -> network context
+5914ea09-9f69-5ed2-88fe-bafa24c73f98 | well-chosen predictions of phenotypic change -> need to consider -> prior knowledge
+
+# sentence: Detailed knowledge of both biology and systems theory are prerequisites for meaningfully furthering our understanding of PD.
+3e196153-973c-57e8-9547-a424fb4afec4 | detailed knowledge of both biology and systems theory -> be -> prerequisite
+
+# sentence: The main challenge will be to understand the transfer functions that connect the multiple scales involved in PD pathogenesis.
+46ff502b-a99f-5e79-acc2-e141104446fa | multiple scale -> be involved in -> pd pathogenesi
+b01a4bab-1a4f-5119-830c-6d9897c8495b | main challenge -> be -> understand the transfer functions that connect the multiple scales involved in pd pathogenesi
+7f25a0fa-6ad5-54db-838c-3c8482a3ffc7 | transfer function -> connect -> multiple scales involved in pd pathogenesi
+
+# sentence: We believe that our understanding of the signaling pathways connecting molecular events to clinical traits will have made significant progress in a decade from now.
+18d3a7e9-02e0-53a2-9830-9de12c7b4d88 | of the signaling pathway -> be connecting to -> clinical trait
+dba9539a-6a89-52a1-8d2a-d5350ef22ec3 | our understanding of the signaling pathways connecting molecular events to clinical trait -> make -> significant progress in a decade from now
+ac9d000a-9d53-530b-b556-5454a12bb22e | our understanding of the signaling pathways connecting molecular events to clinical trait -> be made in -> decade from now
+
+# sentence: In addition to an appropriate analytical framework, it will be crucial to develop noninvasive experimental approaches for time-resolved analyses in experimental models.
+1b586c8e-9c03-597e-bb5e-74efc32f0029 | it -> be -> crucial
+fab0dd97-2da5-5d52-9a97-fbf8f75daf49 | it -> be crucial in -> addition to an appropriate analytical framework
+c95993e2-c51a-5bb0-a0e5-18ef34b1c826 | it -> be crucial to -> develop noninvasive experimental approaches for time-resolved analyses in experimental model
+
+# sentence: Because of the multitude of relevant cellular phenotypes in PD, and the need to understand causality in cellular pathogenesis, we believe that light microscopy applications in systems biology will be a major source of data in time-resolved multifactorial single-cell analysis .
+af5804f1-ebb4-5d18-aff4-a0c753630832 | need -> be understand in -> cellular pathogenesi
+0753d4df-81b2-51b5-911e-84912b750b22 | light microscopy applications in systems biology -> be -> major source of data in time-resolved multifactorial single-cell analysi
+
+# sentence: We also think that the integration of information from different, coordinated experimental approaches, combined with appropriate modeling strategies, will greatly enhance our understanding of PD pathogenesis, as well as the predictive power for early PD diagnosis and personalized identification of underlying disease factors.
+97bff128-87ea-51b7-9dc6-db0736a211bf | integration of information from different coordinated experimental approache -> be combined with -> appropriate modeling strategy
+967bfa5a-e5ae-5b44-9b46-a78a55cc94cf | integration of information from different coordinated experimental approaches combined with appropriate modeling strategy -> enhance -> our understanding of pd pathogenesi
+65077c3d-4992-58a7-8af9-1f7a7ddf966b | integration of information from different coordinated experimental approaches combined with appropriate modeling strategy -> enhance -> predictive power for early pd diagnosis and personalized identification of underlying disease factor
+
+# sentence: Currently, genetic testing of patients with PD is already possible, and is acting as a driving force for translational research; the current lack of PD subtypespecific therapies, however, makes the use of such genetic testing disputable .
+12768c7c-2ddf-5661-89b7-a45aa8c03d39 | genetic testing of patients with pd -> be -> possible
+a318eae0-ca7d-5b30-b495-11086ef72261 | current lack of pd subtypespecific therapies however makes the use of such genetic testing disputable -> property -> currently genetic testing of patients with pd is already possible and is acting as a driving force for translational research
+b98e9939-4461-5891-a16c-f93f599ff8b6 | current lack of pd subtypespecific therapies however makes the use of such genetic testing disputable -> property -> is acting as a driving force for translational research
+f5c2ceda-53fc-5c21-a285-76c330587d8c | patient -> have -> pd
+
+# sentence: Preparing for an integrated systems-level understanding of PD is now within reach, but remains an extremely ambitious goal.
+
+# sentence: We believe that this major endeavor will pave the way for a new era of improved personalized medicine.
+4a56b4d5-d7a0-5689-8d28-d9832951d2a8 | this major endeavor -> pave -> way for a new era of improved personalized medicine
+
+# sentence: More short-term goals include improved human cell culture models for genetic and pharmacological screening approaches, and the development of more efficient differentiation methods for patient-derived induced pluripotent stem cells , as well as improved animal models for translational research .
+44fb28da-4477-5b14-a475-0feec22c7e03 | more short-term goal -> include -> improved human cell culture models for genetic and pharmacological screening approache
+5de09123-7520-5dae-89b6-7c99e8edfdc6 | more short-term goal -> include -> development of more efficient differentiation methods for patient-derived induced pluripotent stem cell
+3c6c1520-a8cd-5d68-af5d-d1995a138dd0 | more short-term goal -> include -> improved animal models for translational research
+43ffa4f1-fc33-5d78-9dcf-61886346d2fe | for screening approache -> property -> genetic and pharmacological
+02f5bd3c-0426-5656-9d18-b624391e3d85 | for screening approache -> property -> pharmacological
+
+# sentence: In ongoing projects, the integration of high-dimensional and nonlinear data is already creating an interesting challenge for data interpretation, and stresses the urgent need to extend the application of systems theory to PD research.
+5a2cd2cd-5ced-55a1-90ef-c2370197876d | urgent need -> be extend to -> pd research
+d5931ee3-85a2-53e4-a261-7f626c92b088 | integration of high-dimensional and nonlinear data -> create -> interesting challenge for data interpretation
+170c956e-4864-5223-9ef7-f6884e732bc5 | integration of high-dimensional and nonlinear data -> stress -> urgent need to extend the application of systems theory to pd research
+a0845a70-d62e-57ab-ae3a-2828aef44a23 | of data -> property -> high-dimensional and nonlinear
+11ee8274-152d-5e19-899f-a5ef83f661a4 | of data -> property -> nonlinear
+5832b28a-6266-5941-8db8-41d11bdb36e7 | integration of high-dimensional and nonlinear data -> be creating in -> ongoing project
+4a971a12-eebf-5ca1-ac14-1a31992fafd6 | integration of high-dimensional and nonlinear data -> be creating for -> data interpretation
+
+# sentence: Although regenerative medicine aiming to restore dopamine levels in the striatum offers transient relief from at least some clinical symptoms, we believe that systems approaches will allow for the development of increasingly sustainable and personalized disease-modifying therapies..
+aa784b70-a19b-5cb9-82aa-277cc25b6ee6 | regenerative medicine -> be aiming in -> striatum
+fa1a04af-71f6-5683-9ebc-2532905027a0 | we -> be offers in -> striatum
+6967e7a1-3a3a-5bd3-8edf-3c448491f68a | regenerative medicine aiming to restore dopamine levels in the striatum -> offer -> transient relief from at least some clinical symptom
+bb28938c-7d7b-5da6-9e66-2553909c4aac | of disease-modifying therapy -> property -> increasingly sustainable and personalized
+c406751c-1253-5ad0-9a47-bee3f645c523 | of disease-modifying therapy -> property -> personalized
+5156e68a-a711-5205-94d9-dec3c3ec1463 | systems approache -> be allow for -> development of increasingly sustainable and personalized disease-modifying therapy
+
+# sentence: Two centuries after the first detailed clinical description of PD by James Parkinson, and more than a decade after the first identification of genetic factors in this disease, PD research has evolved into a very mature research field, which has developed an arsenal of successfully applied symptomatic treatments.
+71a9605a-413c-57c4-99e7-e949c6adbe3e | very mature research field -> develop -> arsenal of successfully applied symptomatic treatment
+0c554d65-3040-52d4-bb8f-3d410669beb6 | pd research -> evolve into -> very mature research field
+
+# sentence: However, causative treatment approaches for PD have not yet become available, and both motor and nonmotor symptoms continue to interfere with patient quality of life.
+271751ad-e431-59b8-a78b-e87db3a20281 | causative treatment approaches for pd -> not become -> however causative treatment approaches for pd have not yet become available and both motor and nonmotor symptoms continue to interfere with patient quality of life
+64fe4d2c-297e-5c2b-98d6-8275209fce9c | causative treatment approaches for pd -> continue -> interfere with patient quality of life
+247e3cd0-3adc-512d-8c6f-291707fa3a82 | both motor and nonmotor symptom -> continue -> interfere with patient quality of life
+9e36bfb1-680b-5f88-b016-37ec238a5d10 | symptom -> property -> both motor and nonmotor
+ade02131-bf4d-50ef-bc96-e2bad062df7a | symptom -> property -> nonmotor
+2662f84d-1d6a-582b-a0d1-711aab4068a7 | both motor and nonmotor symptom -> interfere with -> patient quality of life
+059237c8-db28-5417-87b3-f506c313cfa2 | causative treatment approaches for pd -> become -> available
+
+# sentence: This fact highlights the complexity of this disease, and stresses the need for an intelligible integration of findings from 200 years of PD research.
+1386ad75-3abb-516c-9669-9c58c5c66a71 | this fact -> highlight -> complexity of this disease
+14346e74-e481-59f3-a103-7648d57c98de | this fact -> stress -> need for an intelligible integration of findings from 200 years of pd research
+
+# sentence: Only a few research fields in translational medicine are more advanced than PD research and hence can serve as role models.
+4686889d-475e-5f70-a2ad-b50ccb742970 | only a few research fields in translational medicine -> be -> advanced than pd research
+f36c0c4f-6983-5a5a-ac24-6abddcb276b2 | only a few research fields in translational medicine are more advanced than pd research and hence can serve as role model -> and -> hence can serve as role model
+
+# sentence: Cancer research is certainly one of those.
+f1eeeccc-d0e1-5b7e-b907-bd8a53807eb5 | cancer research -> be -> one of those
+
+# sentence: There are two main take-home messages : first, it is crucial to define the signals exchanged between various cell types involved in the disease, and it is important to understand the effects of those signals on the integrated circuits of each of those cell types.
+5f39eb07-c2e0-517b-afdb-3d93ec143c67 | signal -> be exchanged in -> disease
+a9cb9ea9-323e-5120-8e60-73f263f72864 | between various cell type -> be involved in -> disease
+5def6079-12d4-51f6-8181-398582080b1e | it -> be -> crucial
+1ceb5c76-c9ee-5cf8-a5d4-601905187a04 | it -> be -> important
+f1755f8a-ac5d-576a-b0cf-c6255fe6f7fc | there are two main take-home message -> property -> first it is crucial to define the signals exchanged between various cell types involved in the disease and it is important to understand the effects of those signals on the integrated circuits of each of those cell type
+12835c3b-9afe-5b15-a766-be424183b54a | there are two main take-home message -> property -> it is important to understand the effects of those signals on the integrated circuits of each of those cell type
+d4127e02-12ad-5446-abeb-6bac41d70097 | it -> be crucial to -> define the signals exchanged between various cell types involved in the disease
+a114d70d-a7f8-5310-bb23-84f6035f620c | it -> be important to -> understand the effects of those signals on the integrated circuits of each of those cell type
+
+# sentence: Second, to develop accurate disease prognosis and treatment paradigms, it will be crucial to reach a level of mathematical clarity with regard to pathogenesis mechanisms, integrating the conceptual structure of systems theory and the logical coherence of neuroscience.
+17b3a750-e878-5ee4-8d15-8972a17211bf | it -> be -> crucial
+c393c9dd-5c92-5f09-900e-2b873ed5b3d5 | it -> be crucial to -> second develop accurate disease prognosis and treatment paradigm
+a1ca3ada-8047-5971-99bb-7b9d2ac64aa6 | it -> be crucial to -> reach a level of mathematical clarity with regard to pathogenesis mechanisms integrating the conceptual structure of systems theory and the logical coherence of neuroscience
+
+# sentence: We foresee that PD research will evolve to be an increasingly exact science, in which the growing myriad of measurable phenotypic traits will be understood as manifestations of a small set of key principles.
+aa0a164a-9219-599f-b5f8-74d7a9e8e90c | growing myriad of measurable phenotypic trait -> be understood in -> which
+16928ff1-ea4d-5944-86f0-d59d33cef22d | growing myriad of measurable phenotypic trait -> be understood as -> manifestations of a small set of key principle
+08a88a12-e04a-51e0-a9de-18c37fc4c2da | pd research -> be -> increasingly exact science in which the growing myriad of measurable phenotypic traits will be understood as manifestations of a small set of key principle
+9d2d5d8f-811d-5174-a1e5-5a152d35b808 | pd research -> be evolve to -> be an increasingly exact science in which the growing myriad of measurable phenotypic traits will be understood as manifestations of a small set of key principle

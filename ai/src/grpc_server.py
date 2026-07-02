@@ -1,10 +1,12 @@
 """gRPC server for AI Model Service."""
 
 import logging
+import os
 import subprocess
 import sys
 from concurrent import futures
 from datetime import datetime
+from typing import Optional
 
 import grpc
 
@@ -225,7 +227,7 @@ class AIModelServicer(ai_model_pb2_grpc.AIModelServiceServicer):
             )
 
 
-def serve():
+def serve(preload_model: Optional[str] = None):
     """Start the gRPC server."""
     # Setup logging
     logging.basicConfig(
@@ -239,6 +241,8 @@ def serve():
     logger.info(f"gRPC Port: {settings.grpc_port}")
     logger.info(f"Device: {settings.device}")
     logger.info(f"Model Cache: {settings.model_cache_dir}")
+    if preload_model:
+        logger.info(f"Pre-load model: {preload_model}")
 
     # Create gRPC server
     server = grpc.server(
@@ -267,6 +271,19 @@ def serve():
     server.start()
     logger.info(f"AI Model Service started on {server_address}")
 
+    # Pre-load model in background thread
+    if preload_model:
+        def _load_model():
+            logger.info(f"Background loading model: {preload_model}")
+            try:
+                model_service._get_model_instance(preload_model)
+                logger.info(f"Model pre-loaded: {preload_model}")
+            except Exception as e:
+                logger.error(f"Failed to pre-load model {preload_model}: {e}")
+        import threading
+        t = threading.Thread(target=_load_model, daemon=True)
+        t.start()
+
     # Wait for termination
     try:
         server.wait_for_termination()
@@ -276,4 +293,9 @@ def serve():
 
 
 if __name__ == "__main__":
-    serve()
+    import argparse
+    parser = argparse.ArgumentParser(description="AI Model Service")
+    parser.add_argument("--preload-model", type=str, default=os.environ.get("PRELOAD_MODEL", ""),
+                        help="Model ID to pre-load at startup (or PRELOAD_MODEL env var)")
+    args = parser.parse_args()
+    serve(preload_model=args.preload_model or None)

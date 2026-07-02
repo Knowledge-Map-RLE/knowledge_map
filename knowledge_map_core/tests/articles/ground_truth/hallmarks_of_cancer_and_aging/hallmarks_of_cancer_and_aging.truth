@@ -1,0 +1,560 @@
+# Article: Hallmarks of cancer and hallmarks of aging
+# Sentence format: <uuidv7> | <subject> → <predicate> → <object>
+# Lines starting with # are comments
+# Blank lines separate different sentences
+# Total: 166 sentences, 293 triplets (target)
+
+# sentence: # Hallmarks of cancer and hallmarks of aging.
+
+# sentence: A thought-provoking article by Gems and de Magalhães suggests that canonic hallmarks of aging are superficial imitations of hallmarks of cancer.
+019fffff-1000-7000-0000-000000000001 | canonic hallmarks of aging → be → superficial imitations of hallmarks of cancer
+
+# sentence: I took their work a step further and proposed hallmarks of aging based on a hierarchical principle and the hyperfunction theory.
+019fffff-2000-7000-0000-000000000001 | hallmarks of aging → be based on → hierarchical principle
+019fffff-2000-7000-0000-000000000002 | hallmarks of aging → be based on → hyperfunction theory
+019fffff-2000-7000-0000-000000000003 | I → propose → hallmarks of aging
+
+# sentence: To do this, I first reexamine the hallmarks of cancer proposed by Hanahan and Weinberg in 2000.
+019fffff-3000-7000-0000-000000000001 | I → reexamine → hallmarks of cancer
+019fffff-3000-7000-0000-000000000002 | hallmarks of cancer → be proposed in → 2000
+
+# sentence: Although six hallmarks of cancer are genuine, they are not hierarchically arranged, i.e., molecular, intra-cellular, cellular, tissue, organismal and extra-organismal.
+019fffff-4000-7000-0000-000000000001 | six hallmarks of cancer → be → genuine
+019fffff-4000-7000-0000-000000000002 | six hallmarks of cancer → be not → hierarchically arranged
+
+# sentence: (For example, invasion and angiogenesis are manifestations of molecular alterations on the tissue level; metastasis on the organismal level, whereas cell immortality is observed outside the host).
+019fffff-5000-7000-0000-000000000001 | invasion → be → manifestation of molecular alterations on tissue level
+019fffff-5000-7000-0000-000000000002 | angiogenesis → be → manifestation of molecular alterations on tissue level
+019fffff-5000-7000-0000-000000000003 | metastasis → be → manifestation of molecular alterations on organismal level
+019fffff-5000-7000-0000-000000000004 | cell immortality → be observed → outside host
+
+# sentence: The same hierarchical approach is applicable to aging.
+019fffff-6000-7000-0000-000000000001 | hierarchical approach → be applicable to → aging
+
+# sentence: Unlike cancer, however, aging is not a molecular disease.
+019fffff-7000-7000-0000-000000000001 | aging → be not → molecular disease
+
+# sentence: The lowest level of its origin is normal intracellular signaling pathways such as mTOR that drive developmental growth and, later in life, become hyperfunctional, causing age-related diseases, whose sum is aging.
+019fffff-8000-7000-0000-000000000001 | normal intracellular signaling pathways → be → lowest level of origin of aging
+019fffff-8000-7000-0000-000000000002 | mTOR → drive → developmental growth
+019fffff-8000-7000-0000-000000000003 | age-related diseases → constitute → aging
+
+# sentence: The key hallmark of organismal aging, from worms to humans, are age-related diseases.
+019fffff-9000-7000-0000-000000000001 | key hallmark of organismal aging → be → age-related diseases
+
+# sentence: In addition, hallmarks of aging can be arranged as a timeline, wherein initial hyperfunction is followed by dysfunction, organ damage and functional decline.
+019fffff-a000-7000-0000-000000000001 | hallmarks of aging → be arranged as → timeline
+019fffff-a000-7000-0000-000000000002 | initial hyperfunction → be followed by → dysfunction
+019fffff-a000-7000-0000-000000000003 | initial hyperfunction → be followed by → organ damage
+019fffff-a000-7000-0000-000000000004 | initial hyperfunction → be followed by → functional decline
+
+# sentence: As depicted by Hanahan and Weinberg in 2000 [1], the circle schema of six hallmarks of cancer somewhat compares apples and oranges.
+019fffff-b000-7000-0000-000000000001 | hallmarks of cancer → be depicted in → 2000
+
+# sentence: The hallmarks themselves are exact, but they are not equal.
+019fffff-c000-7000-0000-000000000001 | hallmarks → be → exact
+019fffff-c000-7000-0000-000000000002 | six hallmarks → be not → equal
+
+# sentence: For example, limitless replicative potential (cell immortality) cannot be directly compared to sustained angiogenesis.
+019fffff-d000-7000-0000-000000000001 | limitless replicative potential → be compared to → sustained angiogenesis
+019fffff-d000-7000-0000-000000000002 | cell immortality → be compared to → sustained angiogenesis
+
+# sentence: Cell immortality is revealed outside the host (extra-organismal level), for example, in cell culture where clonal cell lines can proliferate indefinitely without interaction with normal tissues.
+019fffff-e000-7000-0000-000000000001 | cell immortality → be revealed → outside host
+019fffff-e000-7000-0000-000000000002 | clonal cell lines → proliferate → indefinitely
+
+# sentence: In contrast, sustained angiogenesis requires interaction of cancer cells with normal cells of several tissues.
+019fffff-f000-7000-0000-000000000001 | sustained angiogenesis → require → interaction of cancer cells with normal cells
+
+# sentence: Angiogenesis can be only understood on the tissue level.
+019fffff-0101-7000-0000-000000000001 | angiogenesis → be understood on → tissue level
+
+# sentence: Second, cancer cells undergo Darwinian-type selection [2] for resistance to anti-growth signals, resistance to apoptosis and self-sufficiency in mitogenic signals.
+019fffff-0201-7000-0000-000000000001 | cancer cells → undergo → Darwinian-type selection for resistance to anti-growth signals
+019fffff-0201-7000-0000-000000000002 | cancer cells → undergo → resistance to apoptosis
+019fffff-0201-7000-0000-000000000003 | cancer cells → undergo → self-sufficiency in mitogenic signals
+
+# sentence: This trio represents three out of six hallmarks of cancer [1].
+019fffff-0301-7000-0000-000000000001 | trio → represent → three out of six hallmarks of cancer
+
+# sentence: They can be combined in one super-hallmark: resistance to growth-limiting conditions [3].
+
+# sentence: (Note: The definition of oncogenic resistance to growth-limiting conditions was discussed previously [4]).
+
+# sentence: Not only resistance to apoptosis and anti-growth signals but also self-sufficiency in mitogenic signals constitute resistance to growth-limiting conditions [3] [5] [6].
+019fffff-0402-7000-0000-000000000001 | resistance to apoptosis → constitute → resistance to growth-limiting conditions
+019fffff-0402-7000-0000-000000000002 | anti-growth signals → constitute → resistance to growth-limiting conditions
+019fffff-0402-7000-0000-000000000003 | self-sufficiency in mitogenic signals → constitute → resistance to growth-limiting conditions
+
+# sentence: Examples of growth-limiting conditions include lack of external mitogenic signals, cytostatic cytokines such as TGF-beta, cytotoxic carcinogens such as tobacco smoke, anti-cancer drugs, contact inhibition, glucose deprivation, cellular senescence, hypoxia, absence of nutrients and growth factors [5] [6].
+019fffff-0401-7000-0000-000000000001 | growth-limiting conditions → include → lack of external mitogenic signals
+019fffff-0401-7000-0000-000000000002 | growth-limiting conditions → include → cytostatic cytokines
+019fffff-0401-7000-0000-000000000003 | growth-limiting conditions → include → cytotoxic carcinogens
+019fffff-0401-7000-0000-000000000004 | growth-limiting conditions → include → contact inhibition
+019fffff-0401-7000-0000-000000000005 | growth-limiting conditions → include → glucose deprivation
+019fffff-0401-7000-0000-000000000006 | growth-limiting conditions → include → cellular senescence
+019fffff-0401-7000-0000-000000000007 | growth-limiting conditions → include → hypoxia
+019fffff-0401-7000-0000-000000000008 | growth-limiting conditions → include → absence of nutrients
+019fffff-0401-7000-0000-000000000009 | growth-limiting conditions → include → growth factors
+
+# sentence: For example, glucose deprivation selects for oncogenic Ras [6].
+019fffff-0501-7000-0000-000000000001 | glucose deprivation → select for → oncogenic Ras
+
+# sentence: Whereas normal cells do not proliferate in growth-limiting conditions, cancer cells do.
+019fffff-0502-7000-0000-000000000001 | normal cells → not proliferate in → growth-limiting conditions
+
+# sentence: Resistance to growth-limiting conditions provides an immediate selective advantage.
+019fffff-0601-7000-0000-000000000001 | resistance to growth-limiting conditions → provide → immediate selective advantage
+
+# sentence: But what immediate advantages can be provided by cellular immortality?
+
+# sentence: The cell cannot tell the future, that it will live in cell culture one day.
+
+# sentence: Cellular immortality is selected indirectly as derived hallmarks [3], because the same mutations that provide resistance to growth-limiting conditions also make cells immortal, angiogenic, invasive and metastatic [1] [7] [8].
+019fffff-0701-7000-0000-000000000001 | cellular immortality → be selected as → derived hallmarks
+019fffff-0701-7000-0000-000000000002 | same mutations → provide → resistance to growth-limiting conditions
+
+# sentence: Cellular immortality, angiogenesis, invasion and metastasis are derived hallmarks.
+019fffff-0801-7000-0000-000000000001 | cellular immortality → be → derived hallmarks
+019fffff-0801-7000-0000-000000000002 | angiogenesis → be → derived hallmarks
+019fffff-0801-7000-0000-000000000003 | invasion → be → derived hallmarks
+019fffff-0801-7000-0000-000000000004 | metastasis → be → derived hallmarks
+
+# sentence: Third, molecular alterations (e.g., DNA mutations) are absent in the six-hallmark circle by Hanahan and Weinberg [1].
+019fffff-0901-7000-0000-000000000001 | molecular alterations → be absent in → six-hallmark circle by Hanahan and Weinberg
+
+# sentence: As discussed by Gems and de Magalhães, the hallmarks do not include mutations (or genetic instability) because this hallmark is implicitly taken for granted [9].
+019fffff-0a01-7000-0000-000000000001 | hallmarks → not include → mutations
+019fffff-0a01-7000-0000-000000000002 | hallmarks → not include → genetic instability
+
+# sentence: In fact, Hanahan and Weinberg called it an enabling hallmark in their revised paper published in 2011 [7].
+019fffff-0b01-7000-0000-000000000001 | revised paper → be published in → 2011
+
+# sentence: In 2005, I explicitly included the molecular hallmark (mutations) and suggested the hierarchical principle to arrange these hallmarks from molecular to organismal levels [5].
+019fffff-0c01-7000-0000-000000000001 | I → include → molecular hallmark mutations
+019fffff-0c01-7000-0000-000000000002 | I → suggest → hierarchical principle to arrange hallmarks from molecular to organismal levels
+
+# sentence: Here I present the hallmarks of cancer, depicted as a circle by Hanahan and Weinberg [1], not as the circle but hierarchically, from molecular levels to the organism (Figure 1).
+019fffff-0d01-7000-0000-000000000001 | I → present → hallmarks of cancer hierarchically
+019fffff-0d01-7000-0000-000000000002 | hallmarks of cancer → be depicted as → circle
+019fffff-0d01-7000-0000-000000000003 | hallmarks of cancer → be depicted by → Hanahan and Weinberg
+
+# sentence: See text for explanation.</figcaption> </figure>.
+
+# sentence: Genome instability is an enabling hallmark of cancer because it enables the acquisition of molecular alterations, such as DNA mutations, aneuploidy and epigenetic alterations [7].
+019fffff-0e01-7000-0000-000000000001 | genome instability → be → enabling hallmark of cancer
+019fffff-0e01-7000-0000-000000000002 | genome instability → enable → acquisition of molecular alterations
+019fffff-0e01-7000-0000-000000000003 | molecular alterations → include → DNA mutations
+019fffff-0e01-7000-0000-000000000004 | molecular alterations → include → aneuploidy
+019fffff-0e01-7000-0000-000000000005 | molecular alterations → include → epigenetic alterations
+
+# sentence: Vogelstein et al. suggested that a typical human tumor contains relatively few driver gene mutations that each confers a growth advantage of 0.4% and numerous passenger gene mutations that confer no selective advantage [8] [10].
+019fffff-0f01-7000-0000-000000000001 | typical human tumor → contain → relatively few driver gene mutations
+019fffff-0f01-7000-0000-000000000002 | typical human tumor → contain → numerous passenger gene mutations
+019fffff-0f01-7000-0000-000000000003 | driver gene mutations → confer → growth advantage
+019fffff-0f01-7000-0000-000000000004 | passenger gene mutations → confer → no selective advantage
+
+# sentence: Signal-transduction pathways are ambivalent, causing opposite outcomes depending on cellular context.
+019fffff-1001-7000-0000-000000000001 | signal-transduction pathways → be → ambivalent
+
+# sentence: Oncogenic mutations re-wire signal transduction pathways.
+019fffff-1101-7000-0000-000000000001 | oncogenic mutations → re-wire → signal transduction pathways
+
+# sentence: For example, MAPK pathways can simultaneously induce cyclin D1 and CDK inhibitors, leading either to cellular proliferation or senescence [11].
+019fffff-1201-7000-0000-000000000001 | MAPK pathways → induce → cyclin D1
+019fffff-1201-7000-0000-000000000002 | MAPK pathways → induce → CDK inhibitors
+019fffff-1201-7000-0000-000000000003 | MAPK pathways → lead to → cellular proliferation
+019fffff-1201-7000-0000-000000000004 | MAPK pathways → lead to → cellular senescence
+
+# sentence: Inactivation of CDK inhibitors such as p16 may translate this ambivalent signaling into proliferation [12].
+
+# sentence: TGF-beta inhibits normal cell proliferation, but in cancer it can induce proliferation and invasion [7] [13].
+019fffff-1301-7000-0000-000000000001 | TGF-beta → inhibit → normal cell proliferation
+019fffff-1301-7000-0000-000000000002 | TGF-beta → induce → proliferation in cancer
+019fffff-1301-7000-0000-000000000003 | TGF-beta → induce → invasion in cancer
+
+# sentence: Growth-promoting and mitogen/nutrient-sensing signaling pathways are constantly activated by mutations to promote growth and proliferation [13].
+019fffff-1302-7000-0000-000000000001 | growth-promoting signaling pathways → be activated by → mutations
+019fffff-1302-7000-0000-000000000002 | mitogen/nutrient-sensing signaling pathways → be activated by → mutations
+
+# sentence: This, in turn, is manifested as three hallmarks of cancer on the next hierarchical level: cellular.
+019fffff-1401-7000-0000-000000000001 | three hallmarks of cancer → be manifested → on next hierarchical level
+
+# sentence: This trio can be combined as one super-hallmark of resistance to growth-limiting conditions.
+
+# sentence: Oncogenic mutations make cancer cells resistant to growth-limiting conditions (a definition of oncogenic-type of resistance was discussed previously [4]).
+019fffff-1501-7000-0000-000000000001 | oncogenic mutations → make → cancer cells resistant to growth-limiting conditions
+
+# sentence: This is the driver hallmark of cancer because it provides a selective advantage to cancer cells.
+019fffff-1601-7000-0000-000000000001 | driver hallmark of cancer → provide → selective advantage to cancer cells
+
+# sentence: Cells, capable of proliferation, are unicellular organisms in a Darwinian sense [2] [14] [15].
+019fffff-1701-7000-0000-000000000001 | cells capable of proliferation → be → unicellular organisms in Darwinian sense
+
+# sentence: Selection can be “natural” (during carcinogenesis) and “artificial” (during cancer therapy) [14] [16] [17] [18] [19].
+019fffff-1801-7000-0000-000000000001 | selection → be → natural during carcinogenesis
+019fffff-1801-7000-0000-000000000002 | selection → be → artificial during cancer therapy
+
+# sentence: For example, selection for therapy resistance increases oncogenic properties of cancer cells because selective forces act on the cellular level [14].
+019fffff-1901-7000-0000-000000000001 | selection for therapy resistance → increase → oncogenic properties of cancer cells
+
+# sentence: Simultaneously, the same combination of mutations enables metastasis and other higher-level hallmarks [2].
+019fffff-2001-7000-0000-000000000001 | same combination of mutations → enable → metastasis
+019fffff-2001-7000-0000-000000000002 | same combination of mutations → enable → higher-level hallmarks
+
+# sentence: There is no direct selection for metastatic potential, angiogenesis and immortality.
+019fffff-2101-7000-0000-000000000001 | direct selection → not exist for → metastatic potential
+019fffff-2101-7000-0000-000000000002 | direct selection → not exist for → angiogenesis
+019fffff-2101-7000-0000-000000000003 | direct selection → not exist for → immortality
+
+# sentence: They are derived hallmarks.
+019fffff-2201-7000-0000-000000000001 | they → be → derived hallmarks
+
+# sentence: Cancer cells produce cytokines and enzymes, which enable the cells to invade and to attract normal cells of different tissues in order to form new blood vessels.
+019fffff-2301-7000-0000-000000000001 | cancer cells → produce → cytokines
+019fffff-2301-7000-0000-000000000002 | cancer cells → produce → enzymes
+019fffff-2301-7000-0000-000000000003 | cytokines → enable → invasion
+019fffff-2301-7000-0000-000000000004 | enzymes → enable → invasion
+
+# sentence: Metastasis is the deadliest hallmark of cancer.
+019fffff-2401-7000-0000-000000000001 | metastasis → be → deadliest hallmark of cancer
+
+# sentence: Yet, there is no direct selection for metastatic potential.
+019fffff-2501-7000-0000-000000000001 | direct selection → not exist for → metastatic potential
+
+# sentence: Direct selection for metastatic potential could take place only if metastases produced new metastases (self-seeding) [2] [21] [22].
+
+# sentence: Simply, selection for cells resistant to growth-limiting conditions (survival and proliferation) brings along metastasis and other tissue-level hallmarks as side effects.
+
+# sentence: There are no specific “metastasis” genes [8] [20].
+019fffff-2601-7000-0000-000000000001 | specific metastasis genes → not exist
+
+# sentence: They are the same oncogenes and tumor suppressors that act on cellular levels for the “trio” hallmarks.
+019fffff-2701-7000-0000-000000000001 | oncogenes → act on → cellular levels for trio hallmarks
+019fffff-2701-7000-0000-000000000002 | tumor suppressors → act on → cellular levels for trio hallmarks
+
+# sentence: Let us consider an analogy.
+
+# sentence: If we select people for their ability to run faster, these selected people will also jump higher than average [2].
+
+# sentence: The fastest runners are the farthest jumpers.
+
+# sentence: Some cancer cell lines live for more than half of a century in cell culture and for thousands of years in the wild.
+019fffff-2801-7000-0000-000000000001 | cancer cell lines → live for → more than half of a century in cell culture
+019fffff-2801-7000-0000-000000000002 | cancer cell lines → live for → thousands of years in wild
+
+# sentence: Originating in one animal, viable cancer cells are directly transmitted into unrelated hosts in a process akin to allotransplantation or xenotransplantation [23].
+019fffff-2901-7000-0000-000000000001 | viable cancer cells → be transmitted into → unrelated hosts
+
+# sentence: Transmissible cancers have been observed in domestic dogs, the Tasmanian devil, hamsters and six bivalve mollusk species [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34].
+019fffff-3001-7000-0000-000000000001 | transmissible cancers → be observed in → domestic dogs
+019fffff-3001-7000-0000-000000000002 | transmissible cancers → be observed in → Tasmanian devil
+019fffff-3001-7000-0000-000000000003 | transmissible cancers → be observed in → hamsters
+019fffff-3001-7000-0000-000000000004 | transmissible cancers → be observed in → bivalve mollusk species
+
+# sentence: Canine transmissible venereal tumors (transmitted during sexual intercourse) may have originated thousands of years ago [30] [34] [35].
+019fffff-3101-7000-0000-000000000001 | canine transmissible venereal tumors → be transmitted during → sexual intercourse
+
+# sentence: The Tasmanian devil facial tumor disease [24] spreads through the Tasmanian devil population by transfer of cancer cells during biting [25] [32] [36].
+
+# sentence: Derived from a single original clam, leukemia-like cancer spreads among marine bivalves through sea water [34] [37].
+
+# sentence: The number of hallmarks of cancer is arbitrary.
+019fffff-3201-7000-0000-000000000001 | number of hallmarks of cancer → be → arbitrary
+
+# sentence: Some can be combined, and others can be added.
+
+# sentence: Numerous authors have re-visited the hallmarks of cancer, adding hallmarks or suggesting a new set of hallmarks [1] [38] [39] [40] [41] [42] [43].
+
+# sentence: Some hallmarks of cancer may be pseudo-hallmarks.
+019fffff-3301-7000-0000-000000000001 | some hallmarks of cancer → be → pseudo-hallmarks
+
+# sentence: For example, visiting an oncologist is a “hallmark” of cancer.
+
+# sentence: We can be 99% sure that if someone has 20 appointments in an oncology clinic, then this person has cancer.
+
+# sentence: However, it would be ridiculous to include this pseudo-hallmark in Figure 1.
+
+# sentence: And the hierarchical principle makes this impossible, because there is no level (among the six levels) for visiting an oncologist.
+
+# sentence: To start with, let us depict the hallmarks of aging suggested by López-Otín et al. [38] based on the hierarchical principle.
+019fffff-3401-7000-0000-000000000001 | hallmarks of aging → be suggested by → López-Otín et al.
+
+# sentence: This representation renders hallmarks tangible but reveals three shortcomings (Figure 2). <figure>
+019fffff-3501-7000-0000-000000000001 | representation → render → hallmarks tangible
+019fffff-3501-7000-0000-000000000002 | representation → reveal → three shortcomings
+
+# sentence: See text for explanation.</figcaption> </figure> First is the lack of hallmarks on the organismal level.
+019fffff-3601-7000-0000-000000000001 | lack of hallmarks → be → on organismal level
+
+# sentence: Yet, the main hallmark of organismal aging is age-related diseases in all species from C. elegans [33] to humans.
+019fffff-3701-7000-0000-000000000001 | main hallmark of organismal aging → be → age-related diseases
+
+# sentence: Aging is the sum of all age-related diseases, which cause death “from aging”.
+019fffff-3801-7000-0000-000000000001 | aging → be → sum of all age-related diseases
+019fffff-3801-7000-0000-000000000002 | age-related diseases → cause → death from aging
+
+# sentence: Second, the relationship between hallmarks on different levels are unclear.
+
+# sentence: Third, the inclusion of genetic instability as a hallmark is based on the theory that aging is caused by accumulation of molecular damage.
+019fffff-3901-7000-0000-000000000001 | inclusion of genetic instability → be based on → theory that aging is caused by accumulation of molecular damage
+
+# sentence: The molecular damage theory was refuted by key experiments, as discussed in detail [44] [45] [46] [47] [48] [49] [50] [51].
+019fffff-4001-7000-0000-000000000001 | molecular damage theory → be refuted by → key experiments
+
+# sentence: Yes, damage accumulates and is harmful and potentially lethal [52] [53] [54] [55] but it is not life-limiting because aging caused by hyperfunction is life-limiting.
+019fffff-4101-7000-0000-000000000001 | damage → be → harmful
+019fffff-4101-7000-0000-000000000002 | damage → be → potentially lethal
+019fffff-4101-7000-0000-000000000003 | damage → be not → life-limiting
+019fffff-4101-7000-0000-000000000004 | aging caused by hyperfunction → be → life-limiting
+
+# sentence: The reason why mTOR-driven aging is life-limiting has been discussed [49] [56] [57].
+019fffff-4201-7000-0000-000000000001 | mTOR-driven aging → be → life-limiting
+
+# sentence: It was also suggested that the levels of DNA repair needed to avoid cancer at a young age greatly exceeds the levels that are needed to avoid aging [58] [59].
+
+# sentence: As previously discussed, the role of molecular damage in cancer supports the role of mTOR-driven hyperfunction in aging [49].
+
+# sentence: Let us depict hallmarks of aging, according to the hyperfunction theory of aging (Figure 3).
+
+# sentence: Non-life-limiting hallmarks are shown in brown color.
+019fffff-4301-7000-0000-000000000001 | non-life-limiting hallmarks → be shown in → brown color
+
+# sentence: See text for explanation.</figcaption> </figure>.
+
+# sentence: The hyperfunction theory of aging was extensively reviewed previously [44] [45] [49] [56] [57] [60] [61] [62] [63] [64] [65] [66], and its essence is recapitulated here.
+019fffff-4401-7000-0000-000000000001 | hyperfunction theory of aging → be reviewed → extensively
+
+# sentence: According to hyperfunction theory, aging is a continuation of developmental and reproductive programs that were not turned off upon reaching adulthood.
+019fffff-4501-7000-0000-000000000001 | aging → be → continuation of developmental and reproductive programs
+
+# sentence: Continuously active signaling pathways that initially drive developmental growth, drive aging later in life.
+019fffff-4601-7000-0000-000000000001 | signaling pathways → drive → developmental growth
+019fffff-4601-7000-0000-000000000002 | signaling pathways → drive → aging
+
+# sentence: Signaling pathways establish feedback loops, involving also gene expression and epigenetic modifications.
+019fffff-4701-7000-0000-000000000001 | signaling pathways → establish → feedback loops
+
+# sentence: These pathways become hyperfunctional, meaning that their activity is higher than optimal for longevity.
+019fffff-4801-7000-0000-000000000001 | signaling pathways → become → hyperfunctional
+
+# sentence: How does normal function become a deadly hyperfunction?
+
+# sentence: Consider an analogy.
+
+# sentence: When you pump air into an inflatable balloon, it grows in size.
+
+# sentence: But when it reaches its intended size and you continue to pump air at the same rate, it will not grow further and will eventually explode.
+
+# sentence: This event can be compared with a stroke due to hypertension, resulting in brain damage.
+019fffff-4901-7000-0000-000000000001 | stroke → be compared with → balloon explosion
+019fffff-4901-7000-0000-000000000002 | hypertension → cause → stroke
+
+# sentence: The brain is not damaged by life-long accumulation of molecular damage, but by hyperfunction, such as hypertension.
+019fffff-5001-7000-0000-000000000001 | brain → be damaged by → hyperfunction
+019fffff-5001-7000-0000-000000000002 | hyperfunction → include → hypertension
+
+# sentence: Hyper-function does not necessarily mean increased function.
+019fffff-5101-7000-0000-000000000001 | hyperfunction → not mean → increased function
+
+# sentence: Even unchanged or slightly decreased activity of growth-promoting pathways, such as mTOR, can be hyperfunctional.
+019fffff-5201-7000-0000-000000000001 | decreased activity of growth-promoting pathways → be → hyperfunctional
+
+# sentence: As an analogy, 55 mph on the highway is not speeding, but even 40 mph on the driveway is too fast.
+
+# sentence: Hyperfunction causes organ damage and functional decline.
+019fffff-5301-7000-0000-000000000001 | hyperfunction → cause → organ damage
+019fffff-5301-7000-0000-000000000002 | hyperfunction → cause → functional decline
+
+# sentence: The accumulation of molecular damage is associated with decline, but it is hyperfunction that causes it.
+
+# sentence: Unlike cancer, aging is not a molecular disease.
+019fffff-5401-7000-0000-000000000001 | aging → be not → molecular disease
+
+# sentence: Development is not driven by accumulation of molecular damage or mutations in signaling pathways, and aging is driven by developmental programs.
+019fffff-5501-7000-0000-000000000001 | development → not be driven by → accumulation of molecular damage
+019fffff-5501-7000-0000-000000000002 | aging → be driven by → developmental programs
+
+# sentence: Nutrient-sensing pathways (e.g., mTOR) are not altered by random mutations.
+019fffff-5601-7000-0000-000000000001 | nutrient-sensing pathways → not be altered by → random mutations
+
+# sentence: The lowest level of hallmarks of aging is a continuous activation of normal signal transduction pathways.
+019fffff-5701-7000-0000-000000000001 | lowest level of hallmarks of aging → be → continuous activation of normal signal transduction pathways
+
+# sentence: Deactivation of these pathways by knockout of a single gene extends lifespan in animals [70] [71] [72] [73].
+019fffff-5801-7000-0000-000000000001 | deactivation of pathways → extend → lifespan
+
+# sentence: Rapamycin, a drug that inhibits normal mTOR signaling, extends lifespan [74] [75] [76] [77].
+019fffff-5901-7000-0000-000000000001 | rapamycin → extend → lifespan
+
+# sentence: Hyperfunctional signaling directly drives age-related diseases.
+019fffff-6001-7000-0000-000000000001 | hyperfunctional signaling → drive → age-related diseases
+
+# sentence: There are no longevity pathways/mechanisms inhibitable by pro-aging pathways such as mTOR.
+
+# sentence: Pro-aging pathways do not drive aging by inhibiting longevity mechanisms.
+019fffff-6101-7000-0000-000000000001 | pro-aging pathways → not drive aging by → inhibiting longevity mechanisms
+
+# sentence: Why would nature create something that inhibits longevity mechanisms?
+
+# sentence: Pro-aging pathways such as mTOR directly drive age-related diseases because they are a continuation of developmental growth.
+019fffff-6201-7000-0000-000000000001 | pro-aging pathways → drive → age-related diseases
+019fffff-6201-7000-0000-000000000002 | pro-aging pathways → be → continuation of developmental growth
+
+# sentence: Among numerous harmful processes, only one can be life-limiting in a particular individual.
+019fffff-6301-7000-0000-000000000001 | one harmful process → be → life-limiting in particular individual
+
+# sentence: If an animal dies from one cause, it cannot die from another cause even a day later.
+
+# sentence: If quasi-programmed (e.g., mTOR-driven) aging is life-limiting, then accumulation of random damages is not a cause of death.
+019fffff-6401-7000-0000-000000000001 | quasi-programmed aging → be → life-limiting
+019fffff-6401-7000-0000-000000000002 | accumulation of random damages → be not → cause of death
+
+# sentence: López-Otín et al. [38] suggested three criteria for hallmarks of aging but two of them are criteria for both life-limiting and non-life-limiting hallmarks.
+019fffff-6501-7000-0000-000000000001 | López-Otín et al. → suggest → three criteria for hallmarks of aging
+
+# sentence: However, experimental aggravation can make any process life-limiting.
+019fffff-6601-7000-0000-000000000001 | experimental aggravation → make → any process life-limiting
+
+# sentence: Telomere shortening becomes life-limiting in mice lacking telomerase, but their symptoms are drastically different from normal aging [79].
+019fffff-6701-7000-0000-000000000001 | telomere shortening → become → life-limiting in mice lacking telomerase
+
+# sentence: Although telomere shortening is associated with cardiovascular disease (CVD) in humans, patients with CVD do not have short telomeres and vice versa [80] [81].
+
+# sentence: Hyperfunction theory explains how hyper-functional signaling leads to CVD in humans [80].
+019fffff-6801-7000-0000-000000000001 | hyperfunction theory → explain → how hyper-functional signaling leads to CVD
+
+# sentence: But telomere shortening cannot explain it.
+019fffff-6901-7000-0000-000000000001 | telomere shortening → not explain → CVD
+
+# sentence: Anything can shorten lifespan including starvation and the atomic bomb but they are not causes of aging.
+
+# sentence: Only the third criterion matters: (3) its experimental amelioration should slow down aging and increase lifespan.
+019fffff-7001-7000-0000-000000000001 | experimental amelioration → slow down → aging
+019fffff-7001-7000-0000-000000000002 | experimental amelioration → increase → lifespan
+
+# sentence: Not surprisingly, “the last criterion is the most difficult to achieve and not all of the hallmarks meet the third criterion” [38].
+019fffff-7101-7000-0000-000000000001 | last criterion → be → most difficult to achieve
+
+# sentence: In other words, they are not hallmarks of normal aging.
+019fffff-7201-7000-0000-000000000001 | they → be not → hallmarks of normal aging
+
+# sentence: (Note: Even the third criterion is not sufficient to define a life-limiting hallmark.
+
+# sentence: Besides interventions may have off-target effects.
+
+# sentence: For example, NAC, an antioxidant, is also a mTOR inhibitor [81]).
+
+# sentence: In conclusion, numerous deadly processes develop in parallel but only a few (or one) are life-limiting.
+019fffff-7301-7000-0000-000000000001 | numerous deadly processes → develop → in parallel
+019fffff-7301-7000-0000-000000000002 | few deadly processes → be → life-limiting
+
+# sentence: Therefore, non-limiting hallmarks are not included in the version of life-limiting hallmarks of aging (Figure 4).
+019fffff-7401-7000-0000-000000000001 | non-limiting hallmarks → not be included in → version of life-limiting hallmarks of aging
+
+# sentence: This final re-presentation is generic and can be applied to any species, from C. elegans to humans.
+019fffff-7501-7000-0000-000000000001 | final re-presentation → be → generic
+019fffff-7501-7000-0000-000000000002 | final re-presentation → be applied to → any species
+
+# sentence: Hyperfunction of intracellular signaling pathways leads to cellular and systemic hyperfunctions, which cause age-related diseases and death (Figure 4). <figure>
+019fffff-7601-7000-0000-000000000001 | hyperfunction of intracellular signaling pathways → lead to → cellular hyperfunctions
+019fffff-7601-7000-0000-000000000002 | hyperfunction of intracellular signaling pathways → lead to → systemic hyperfunctions
+019fffff-7601-7000-0000-000000000003 | cellular hyperfunctions → cause → age-related diseases
+019fffff-7601-7000-0000-000000000004 | systemic hyperfunctions → cause → age-related diseases
+019fffff-7601-7000-0000-000000000005 | age-related diseases → cause → death
+
+# sentence: Specific hyperfunctions and diseases may be different in different species and therefore are not shown.
+
+# sentence: For example, human systemic hyperfunctions (e.g., hypertension, hyperlipidemia, hyperglycemia) and diseases (e.g., CVD, stroke, diabetes) are shown.
+
+# sentence: Common cancers are age-related diseases.
+019fffff-7701-7000-0000-000000000001 | common cancers → be → age-related diseases
+
+# sentence: This cannot be explained by simple accumulation of mutations with age.
+019fffff-7801-7000-0000-000000000001 | simple accumulation of mutations → not explain → age-related cancers
+
+# sentence: For example, melanoma and lung cancer in smokers have atypically high mutation burden [8] but still increase with age.
+019fffff-7901-7000-0000-000000000001 | melanoma → have → atypically high mutation burden
+019fffff-7901-7000-0000-000000000002 | lung cancer in smokers → have → atypically high mutation burden
+
+# sentence: Centenarians, who age slower, are protected from cancer.
+019fffff-8001-7000-0000-000000000001 | centenarians → be protected from → cancer
+
+# sentence: Rapamycin and calorie restriction slow aging in mice and prevent cancer.
+019fffff-8101-7000-0000-000000000001 | rapamycin → slow → aging in mice
+019fffff-8101-7000-0000-000000000002 | calorie restriction → slow → aging in mice
+019fffff-8101-7000-0000-000000000003 | rapamycin → prevent → cancer
+019fffff-8101-7000-0000-000000000004 | calorie restriction → prevent → cancer
+
+# sentence: As discussed, the selective force driving carcinogenesis is growth-limiting conditions, also named micro-environmental constraints [2].
+019fffff-8201-7000-0000-000000000001 | selective force driving carcinogenesis → be → growth-limiting conditions
+
+# sentence: For example, the aging hematopoietic system selects for robust hematopoietic cells and such a preleukemic niche may favor leukemia [82] [83].
+019fffff-8301-7000-0000-000000000001 | aging hematopoietic system → select for → robust hematopoietic cells
+019fffff-8301-7000-0000-000000000002 | preleukemic niche → favor → leukemia
+
+# sentence: Specifically, chronic inflammatory microenvironments in old age may select for cells harboring oncogenic mutations [84].
+019fffff-8401-7000-0000-000000000001 | chronic inflammatory microenvironments → select for → cells harboring oncogenic mutations
+
+# sentence: Chronic inflammation is a hyper-function and is in part mTOR-dependent [84] [85] [86] [87] [88].
+019fffff-8501-7000-0000-000000000001 | chronic inflammation → be → hyper-function
+019fffff-8501-7000-0000-000000000002 | chronic inflammation → be → mTOR-dependent
+
+# sentence: An aging microenvironment puts stem cells on the path of hyper-activation [89] and geroconversion [90] [91] [92].
+019fffff-8601-7000-0000-000000000001 | aging microenvironment → put → stem cells on path of hyper-activation
+019fffff-8601-7000-0000-000000000002 | aging microenvironment → put → stem cells on path of geroconversion
+
+# sentence: Mutations are necessary (with a few exceptions) but not sufficient for inducing cancer.
+019fffff-8701-7000-0000-000000000001 | mutations → be necessary for → inducing cancer
+019fffff-8701-7000-0000-000000000002 | mutations → be not sufficient for → inducing cancer
+
+# sentence: The second requirement is selective force, favoring these mutations.
+019fffff-8801-7000-0000-000000000001 | second requirement → be → selective force favoring mutations
+
+# sentence: Aging is a leading selective force.
+019fffff-8901-7000-0000-000000000001 | aging → be → leading selective force
+
+# sentence: One of the potential mechanisms of growth-limiting conditions that drive cancer progression is mTOR-dependent cellular senescence.
+019fffff-9001-7000-0000-000000000001 | mTOR-dependent cellular senescence → be → potential mechanism of growth-limiting conditions
+019fffff-9001-7000-0000-000000000002 | growth-limiting conditions → drive → cancer progression
+
+# sentence: Cellular senescence is a two-step process: cell cycle arrest followed by geroconversion [93].
+019fffff-9101-7000-0000-000000000001 | cellular senescence → be → two-step process
+019fffff-9101-7000-0000-000000000002 | cell cycle arrest → be followed by → geroconversion
+
+# sentence: Like organismal aging, geroconversion is a continuation of growth driven in part by hyperfunctional mTOR and MAPK [93].
+019fffff-9201-7000-0000-000000000001 | geroconversion → be → continuation of growth
+019fffff-9201-7000-0000-000000000002 | hyperfunctional mTOR → drive → geroconversion
+019fffff-9201-7000-0000-000000000003 | MAPK → drive → geroconversion
+
+# sentence: When the cell cycle is blocked by p21/p16, but growth-promoting pathways such as mTOR and MAPK are active, the cell undergoes geroconversion [93].
+019fffff-9301-7000-0000-000000000001 | cell cycle → be blocked by → p21/p16
+019fffff-9301-7000-0000-000000000002 | mTOR → be → active during geroconversion
+019fffff-9301-7000-0000-000000000003 | MAPK → be → active during geroconversion
+019fffff-9301-7000-0000-000000000004 | cell → undergo → geroconversion
+
+# sentence: A hallmark of cellular senescence is active mTOR pathway in non-proliferating cells.
+019fffff-9401-7000-0000-000000000001 | hallmark of cellular senescence → be → active mTOR pathway in non-proliferating cells
+
+# sentence: Rapamycin suppresses geroconversion to senescence [93] [94] [95] [96] [97].
+019fffff-9501-7000-0000-000000000001 | rapamycin → suppress → geroconversion to senescence
+
+# sentence: Figuratively, organismal aging is a quasi-growth after developmental growth is completed.
+019fffff-9601-7000-0000-000000000001 | organismal aging → be → quasi-growth after developmental growth
+
+# sentence: In cancer, the PI3K/mTOR pathway is almost universally activated by mutations [98] [99] [100].
+019fffff-9701-7000-0000-000000000001 | PI3K/mTOR pathway → be activated by → mutations
+
+# sentence: Figuratively, cancer cells are proliferating senescent cells.
+019fffff-9801-7000-0000-000000000001 | cancer cells → be → proliferating senescent cells
+
+# sentence: In organismal aging, cancer and cellular senescence, the same key signaling pathways, such as mTOR, are involved.
+019fffff-9901-7000-0000-000000000001 | same key signaling pathways → be involved in → organismal aging
+019fffff-9901-7000-0000-000000000002 | same key signaling pathways → be involved in → cancer
+019fffff-9901-7000-0000-000000000003 | same key signaling pathways → be involved in → cellular senescence
+019fffff-9901-7000-0000-000000000004 | mTOR → be → key signaling pathway
+
+# sentence: This is why the same drugs, such as rapamycin, can suppress all of them.
+019fffff-9a01-7000-0000-000000000001 | rapamycin → suppress → organismal aging
+019fffff-9a01-7000-0000-000000000002 | rapamycin → suppress → cancer
+019fffff-9a01-7000-0000-000000000003 | rapamycin → suppress → cellular senescence

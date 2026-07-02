@@ -19,17 +19,30 @@ class AdjectivePrepositionRule(BaseRule):
         → Lewy bodies → be lacking in → affected carriers
     """
 
-    ACCEPTED_PREPS = {"for", "in", "at"}
+    ACCEPTED_PREPS = {"for", "in", "at", "to", "with", "on"}
 
     @property
     def name(self) -> str:
         return "adjective_preposition"
 
     def _has_prep_child(self, tok, tree: DependencyTree) -> bool:
+        # Direct: tok → advcl/nmod/xcomp (head) → case/mark (prep)
         for c in tree.children(tok.idx):
-            if c.dep in ("advcl", "nmod"):
+            if c.dep in ("advcl", "nmod", "xcomp"):
                 for cc in tree.children(c.idx):
                     if cc.dep in ("mark", "case") and cc.lemma in self.ACCEPTED_PREPS:
+                        return True
+            # Adverb gap: tok → advmod → advcl/nmod/xcomp → case/mark
+            if c.dep == "advmod":
+                for gc in tree.children(c.idx):
+                    if gc.dep in ("advcl", "nmod", "xcomp"):
+                        for cc in tree.children(gc.idx):
+                            if cc.dep in ("mark", "case") and cc.lemma in self.ACCEPTED_PREPS:
+                                return True
+            # Prep directly: tok → prep/mark (lemma=prep) → nmod/pobj/xcomp
+            if c.lemma in self.ACCEPTED_PREPS and c.dep in ("prep", "case", "mark"):
+                for gc in tree.children(c.idx):
+                    if gc.dep in ("nmod", "pobj", "xcomp"):
                         return True
         return False
 
@@ -75,28 +88,19 @@ class AdjectivePrepositionRule(BaseRule):
     def _handle_prep_child(self, tok, verb_text: str, tree: DependencyTree,
                            nsubj_tokens: list, ctx: ExtractionContext) -> list[Statement]:
         statements: list[Statement] = []
-        for prep_child in tree.children(tok.idx):
-            if prep_child.dep not in ("advcl", "nmod"):
-                continue
-            prep_lemmas = [c.lemma for c in tree.children(prep_child.idx) if c.dep in ("mark", "case")]
-            matching_prep = next((p for p in prep_lemmas if p in self.ACCEPTED_PREPS), None)
-            if not matching_prep:
-                continue
 
-            obj_text = self._object_text(tree, prep_child.idx)
+        def _make_statement(obj_head_idx: int, matching_prep: str) -> None:
+            obj_text = self._object_text(tree, obj_head_idx)
             if not obj_text:
-                continue
+                return
             obj = ctx.get_or_create_concept(obj_text)
-
             predicate = f"be {verb_text} {matching_prep}"
-
             subject_idxs = self._collect_conjuncts(tree, nsubj_tokens[0].idx)
             for s_idx in subject_idxs:
                 subject_text = tree.subtree_text(s_idx)
                 if not subject_text:
                     continue
                 subject = ctx.get_or_create_concept(subject_text)
-
                 statement = Statement(
                     id=StatementID.new(),
                     type=StatementType.FACT,
@@ -106,6 +110,30 @@ class AdjectivePrepositionRule(BaseRule):
                     sentence_text=ctx.sentence_text,
                 )
                 statements.append(statement)
+
+        for prep_child in tree.children(tok.idx):
+            if prep_child.dep in ("advcl", "nmod", "xcomp"):
+                prep_lemmas = [c.lemma for c in tree.children(prep_child.idx) if c.dep in ("mark", "case")]
+                matching_prep = next((p for p in prep_lemmas if p in self.ACCEPTED_PREPS), None)
+                if matching_prep:
+                    _make_statement(prep_child.idx, matching_prep)
+
+            # Adverb gap: tok → advmod → advcl/nmod/xcomp
+            if prep_child.dep == "advmod":
+                for gc in tree.children(prep_child.idx):
+                    if gc.dep in ("advcl", "nmod", "xcomp"):
+                        prep_lemmas = [c.lemma for c in tree.children(gc.idx) if c.dep in ("mark", "case")]
+                        matching_prep = next((p for p in prep_lemmas if p in self.ACCEPTED_PREPS), None)
+                        if matching_prep:
+                            _make_statement(gc.idx, matching_prep)
+
+            # Prep directly: tok → prep/mark (lemma=prep) → nmod/pobj/xcomp
+            if prep_child.lemma in self.ACCEPTED_PREPS and prep_child.dep in ("prep", "case", "mark"):
+                for gc in tree.children(prep_child.idx):
+                    if gc.dep in ("nmod", "pobj", "xcomp"):
+                        _make_statement(gc.idx, prep_child.lemma)
+                        break
+
         return statements
 
     def extract(self, tree: DependencyTree, ctx: ExtractionContext) -> list[Statement]:

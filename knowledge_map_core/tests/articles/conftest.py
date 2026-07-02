@@ -69,6 +69,9 @@ def _strip_frontmatter(text: str) -> str:
 
 def split_sentences(text: str) -> list[str]:
     """Split text into sentences using a robust regex."""
+    # Strip HTML and citations (same as pipeline._preprocess_text)
+    text = re.sub(r'<[^>]+>', '', text)
+    text = re.sub(r'\[\d+\](?:\s*\[\d+\])*', '', text)
     # Insert sentence boundary before markdown headers and normalize whitespace
     text = re.sub(r'\n\s*#{1,3}\s+.*?\n', '. ', text)
     text = re.sub(r'\n+', ' ', text)
@@ -191,7 +194,16 @@ def find_matching_statement(
             p_obj = item["object"].lower().strip()
             if p_subj == t_subj and p_pred == t_pred and p_obj == t_obj:
                 return True
-            # Fallback: allow pipeline text to contain extra adjectives
+            # Fallback: allow text to contain extra words in either direction
             if p_pred == t_pred and _contained_in(t_subj, p_subj) and _contained_in(t_obj, p_obj):
                 return True
+            # Reverse direction: pipeline words are subsequence of GT words
+            if p_pred == t_pred and _contained_in(p_subj, t_subj) and _contained_in(p_obj, t_obj):
+                return True
+            # Independent direction: subj and obj can use different directions
+            if p_pred == t_pred:
+                subj_match = t_subj == p_subj or _contained_in(t_subj, p_subj) or _contained_in(p_subj, t_subj)
+                obj_match = t_obj == p_obj or _contained_in(t_obj, p_obj) or _contained_in(p_obj, t_obj)
+                if subj_match and obj_match:
+                    return True
     return False

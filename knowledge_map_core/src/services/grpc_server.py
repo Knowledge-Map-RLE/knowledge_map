@@ -20,8 +20,6 @@ class KnowledgeLanguageServicer:
             result = await self._pipeline.process(
                 text=request.text,
                 doc_id=request.doc_id,
-                use_llm=request.use_llm,
-                llm_model_id=request.llm_model_id or None,
             )
 
             response = knowledge_language_pb2.KnowledgeGraphResponse(
