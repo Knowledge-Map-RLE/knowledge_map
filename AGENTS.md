@@ -104,8 +104,16 @@ English only. Deterministic spaCy dependency tree rules. LLM only for complex ca
 - **Coverage**: Article 1 (PD): **158/293 (53.9%) → 172/293 (58.7%)**, +14 matches. Article 2 (Cancer): **unchanged at 137/222 (61.7%)**.
 - **All 12 unit tests pass** — no regressions.
 
+### Changes This Session (Article Editor Bug fix)
+- **ROOT CAUSE**: `poetry run python` imports `web.app` in ~98 секунд (slowest: `src.routers.article_editor` ~25s, GraphQL/strawberry ~22s). `api/web/app.py` routes ARE correct (article_editor зарегистрирован).
+- **Проблема**: `start.ps1` использует `poetry run python -m uvicorn web.app:app --reload` — `--reload` перезапускает worker если импорт не завершился за ожидаемое время (98s > reloader timeout). Worker-процесс убивается, перезапускается — цикл повторяется, article_editor роуты не регистрируются.
+- **Решение 1** (`api/start.ps1`): убран `--reload`, добавлен pre-warm импорт (создаёт .pyc кэш), fallback портов (8000→8001→8002…), попытка system Python если poetry pre-warm упал.
+- **Решение 2** (`client/.env`, `client/vite.config.ts`): VITE_API_BASE_URL и proxy target переключены на порт 8001 (временный сервер через system Python работает, порт 8000 занят зомби-процессом без article_editor).
+- **Статус на 03.07.2026**: порт 8001 (PID 15152, system Python) работает со всеми роутами, включая article_editor. Порт 8000 (PID 13864, poetry) — зомби-процесс без article_editor, не убивается без админа.
+
 ### Next Steps
-1. **First-person narrator**: `I → propose`, `I → include` — ActiveVoiceRule subject is `I` (PROPN) which gets concept-ID but `I` as subject is non-obvious; handle via special-case in ActiveVoiceRule or new rule.
-2. **Subordinate `that`-clauses**: `article... suggests that canonic hallmarks...` — extract from subordinate `that`-clause predicates.
-3. **Long noun-phrase subjects**: e.g., `DNA repair deficiencies, inflammatory signaling, epigenetic alterations and related mechanisms → contribute to` — pipeline can't find verb because NP spans many tokens.
-4. **CopularRule conjoined subject splitting**: implemented but produces no NEW coverage gains for Article 2 (already matched via `_contained_in` subsequence check).
+1. **Освободить порт 8000**: `taskkill /F /PID 13864` из PowerShell Administrator
+2. **First-person narrator**: `I → propose`, `I → include` — ActiveVoiceRule subject is `I` (PROPN)
+3. **Subordinate `that`-clauses**: `article... suggests that canonic hallmarks...`
+4. **Long noun-phrase subjects**: e.g., `DNA repair deficiencies, inflammatory signaling, epigenetic alterations and related mechanisms → contribute to`
+5. **Diagnose poetry import slowdown**: какой импорт в `web.app` висит дольше всего (strawberry/GraphQL? neomodel? grpcio?)

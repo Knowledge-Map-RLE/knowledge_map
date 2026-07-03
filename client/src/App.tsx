@@ -8,6 +8,7 @@ import PatternAnalysis from './pages/Pattern_analysis';
 import Science_articles from './pages/Science_articles';
 import { ViewportProvider } from './shared/contexts';
 import Data_extraction from './pages/Data_extraction';
+import Article_editor from './pages/Article_editor';
 import RLE_Databases from './pages/RLE_databases';
 import Data_download from './pages/Data_download';
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/science_articles" element={<><Science_articles /><Knowledge_map_ui /></>} />
           <Route path="/pattern_analysis" element={<><PatternAnalysis /><Knowledge_map_ui /></>} />
           <Route path="/data_download" element={<Data_download />} />
+          <Route path="/article_editor" element={<Article_editor />} />
         </Routes>
       </Router>
     </ViewportProvider>

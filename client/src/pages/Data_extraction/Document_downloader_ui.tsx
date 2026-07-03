@@ -90,7 +90,7 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
         abortRef.current = controller;
 
         try {
-            const timeoutMs = 10000;
+            const timeoutMs = 60000;
             const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
             const data = await listDocuments(0, 200, controller.signal);

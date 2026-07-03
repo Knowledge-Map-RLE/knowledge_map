@@ -196,7 +196,7 @@ class CoordinateExtractionService:
             return extracted_images
 
         logger.info(f"Step 3: Загрузка {len(image_files)} изображений в S3...")
-        s3_folder = f"documents/{document_id}/images" if document_id else "images"
+        s3_folder = f"documents/{document_id}" if document_id else "images"
         total = len(image_files)
 
         # Строим индекс: имя файла ODL → {page_index, bbox} из ODL JSON
@@ -315,6 +315,14 @@ class CoordinateExtractionService:
                 bottom = page_height - y_bot1
                 fitz_rect = _fitz.Rect(x1, top, x2, bottom)
 
+                rect_w_pts = fitz_rect.x1 - fitz_rect.x0  # width in points
+                rect_h_pts = fitz_rect.y1 - fitz_rect.y0  # height in points
+                MIN_RECT_DIM = 2.0  # points — degenerate if smaller
+
+                if rect_w_pts < MIN_RECT_DIM or rect_h_pts < MIN_RECT_DIM:
+                    logger.warning(f"  {img_path.name}: degenerate rect {rect_w_pts:.1f}x{rect_h_pts:.1f}pt — skipping PDF extraction")
+                    raise ValueError("degenerate rect")
+
                 # Ищем embedded растр, bbox которого близко совпадает с fitz_rect
                 try:
                     best_xref = None
@@ -351,6 +359,9 @@ class CoordinateExtractionService:
                             pil = Image.open(io.BytesIO(img_bytes))
                             image_size = pil.size
                             pil.close()
+                            # Если embedded слишком мал — не используем его
+                            if image_size[0] < 50 or image_size[1] < 50:
+                                raise ValueError(f"embedded image too small: {image_size}")
                             logger.info(
                                 f"  {img_path.name}: embedded xref={best_xref} overlap={best_overlap:.2f} "
                                 f"size={image_size}"
@@ -363,6 +374,9 @@ class CoordinateExtractionService:
                 try:
                     matrix = _fitz.Matrix(RENDER_SCALE, RENDER_SCALE)
                     pixmap = page.get_pixmap(matrix=matrix, clip=fitz_rect, alpha=False)
+                    # Проверяем размер — если слишком мал, падаем на ODL fallback
+                    if pixmap.width < 50 or pixmap.height < 50:
+                        raise ValueError(f"rendered image too small: {pixmap.width}x{pixmap.height}")
                     img_bytes = pixmap.tobytes("png")
                     image_size = (pixmap.width, pixmap.height)
                     logger.info(
@@ -411,7 +425,7 @@ class CoordinateExtractionService:
     async def get_document_images(self, document_id: str) -> Dict[str, Any]:
         """Получить все изображения документа из S3"""
         try:
-            s3_folder = f"documents/{document_id}/images"
+            s3_folder = f"documents/{document_id}"
             result = await self.s3_service.list_images(folder=s3_folder)
             if result["success"]:
                 return {

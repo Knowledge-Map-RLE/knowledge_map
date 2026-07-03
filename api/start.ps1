@@ -52,6 +52,38 @@ foreach ($file in $grpcFiles) {
     }
 }
 
-# 5) Start server
-Write-Host "Starting uvicorn on port 8000..."
-poetry run python -m uvicorn web.app:app --host 0.0.0.0 --port 8000 --reload
+# 5) Pre-warm: import app to generate .pyc cache (cold start ~98s via poetry)
+Write-Host "Pre-warming module cache..."
+try {
+    & poetry run python -c "import sys; sys.path.insert(0, '.'); from web.app import app; print('Pre-warm OK')" 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "pre-warm exit code $LASTEXITCODE" }
+    Write-Host "  poetry pre-warm OK"
+} catch {
+    Write-Host "  poetry pre-warm failed ($_), trying system Python..."
+    try {
+        & python -c "import sys; sys.path.insert(0, '.'); from web.app import app; print('Pre-warm OK')" 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "pre-warm exit code $LASTEXITCODE" }
+        Write-Host "  system Python pre-warm OK"
+    } catch {
+        Write-Host "  WARNING: pre-warm failed, starting anyway..."
+    }
+}
+
+# 6) Find free port
+$ports = @(8000, 8001, 8002, 8003, 8004)
+$selectedPort = $null
+foreach ($port in $ports) {
+    $used = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Listen' }
+    if (-not $used) {
+        $selectedPort = $port
+        break
+    }
+}
+if (-not $selectedPort) {
+    Write-Host "All ports 8000-8004 in use, trying random port..."
+    $selectedPort = Get-Random -Minimum 8100 -Maximum 8900
+}
+
+# 7) Start server (no --reload: cold start is ~98s, --reload watcher kills worker mid-import)
+Write-Host "Starting uvicorn on port $selectedPort..."
+poetry run python -m uvicorn web.app:app --host 0.0.0.0 --port $selectedPort

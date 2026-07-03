@@ -46,17 +46,13 @@ async def get_document_assets(
 
     # Параллельно: markdown + список изображений в images/
     markdown_task = storage.download_text(bucket, active_key) if active_key else asyncio.sleep(0, result=None)
-    images_task = storage.list_objects(bucket, prefix=f"{prefix}images/")
+    images_task = storage.list_objects(bucket, prefix=prefix)
 
     markdown_raw, objects = await asyncio.gather(markdown_task, images_task)
 
     markdown = None
     if markdown_raw:
         markdown = _convert_image_paths(markdown_raw, doc_id)
-
-    if not objects:
-        # fallback — изображения прямо в prefix без подпапки images/
-        objects = await storage.list_objects(bucket, prefix=prefix)
 
     image_names = []
     image_urls: Dict[str, str] = {}
@@ -65,7 +61,7 @@ async def get_document_assets(
         name = key.split("/")[-1]
         if name and any(name.lower().endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".webp")):
             image_names.append(name)
-            image_urls[name] = f"/api/v1/s3/image/{key}"
+            image_urls[name] = f"/api/data_extraction/documents/{doc_id}/images/{name}"
 
     return {
         "doc_id": doc_id,
@@ -77,7 +73,7 @@ async def get_document_assets(
 
 def _convert_image_paths(markdown_text: str, doc_id: str) -> str:
     """Преобразует относительные пути изображений в HTML figure/img теги с относительными URL."""
-    image_prefix = f"/api/v1/s3/image/documents/{doc_id}/images/"
+    image_prefix = f"/api/data_extraction/documents/{doc_id}/images/"
 
     def replace_path(match):
         alt = match.group(1)

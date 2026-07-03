@@ -3,9 +3,9 @@
 import grpc
 import warnings
 
-from . import layout_pb2 as layout__pb2
+from . import knowledge_language_pb2 as knowledge__language__pb2
 
-GRPC_GENERATED_VERSION = '1.73.0'
+GRPC_GENERATED_VERSION = '1.74.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -18,16 +18,15 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in layout_pb2_grpc.py depends on'
+        + f' but the generated code in knowledge_language_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class LayoutServiceStub(object):
-    """Сервис для расчета укладки графа
-    """
+class KnowledgeLanguageServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -35,63 +34,59 @@ class LayoutServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.CalculateLayout = channel.unary_unary(
-                '/layout.LayoutService/CalculateLayout',
-                request_serializer=layout__pb2.LayoutRequest.SerializeToString,
-                response_deserializer=layout__pb2.LayoutResponse.FromString,
+        self.ProcessText = channel.unary_unary(
+                '/knowledge_language.KnowledgeLanguageService/ProcessText',
+                request_serializer=knowledge__language__pb2.ProcessTextRequest.SerializeToString,
+                response_deserializer=knowledge__language__pb2.KnowledgeGraphResponse.FromString,
                 _registered_method=True)
         self.HealthCheck = channel.unary_unary(
-                '/layout.LayoutService/HealthCheck',
-                request_serializer=layout__pb2.HealthCheckRequest.SerializeToString,
-                response_deserializer=layout__pb2.HealthCheckResponse.FromString,
+                '/knowledge_language.KnowledgeLanguageService/HealthCheck',
+                request_serializer=knowledge__language__pb2.HealthCheckRequest.SerializeToString,
+                response_deserializer=knowledge__language__pb2.HealthCheckResponse.FromString,
                 _registered_method=True)
 
 
-class LayoutServiceServicer(object):
-    """Сервис для расчета укладки графа
-    """
+class KnowledgeLanguageServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
 
-    def CalculateLayout(self, request, context):
-        """Основной метод для расчета укладки графа
-        """
+    def ProcessText(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def HealthCheck(self, request, context):
-        """Проверка здоровья сервиса
-        """
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_LayoutServiceServicer_to_server(servicer, server):
+def add_KnowledgeLanguageServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'CalculateLayout': grpc.unary_unary_rpc_method_handler(
-                    servicer.CalculateLayout,
-                    request_deserializer=layout__pb2.LayoutRequest.FromString,
-                    response_serializer=layout__pb2.LayoutResponse.SerializeToString,
+            'ProcessText': grpc.unary_unary_rpc_method_handler(
+                    servicer.ProcessText,
+                    request_deserializer=knowledge__language__pb2.ProcessTextRequest.FromString,
+                    response_serializer=knowledge__language__pb2.KnowledgeGraphResponse.SerializeToString,
             ),
             'HealthCheck': grpc.unary_unary_rpc_method_handler(
                     servicer.HealthCheck,
-                    request_deserializer=layout__pb2.HealthCheckRequest.FromString,
-                    response_serializer=layout__pb2.HealthCheckResponse.SerializeToString,
+                    request_deserializer=knowledge__language__pb2.HealthCheckRequest.FromString,
+                    response_serializer=knowledge__language__pb2.HealthCheckResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'layout.LayoutService', rpc_method_handlers)
+            'knowledge_language.KnowledgeLanguageService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('layout.LayoutService', rpc_method_handlers)
+    server.add_registered_method_handlers('knowledge_language.KnowledgeLanguageService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class LayoutService(object):
-    """Сервис для расчета укладки графа
-    """
+class KnowledgeLanguageService(object):
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def CalculateLayout(request,
+    def ProcessText(request,
             target,
             options=(),
             channel_credentials=None,
@@ -104,9 +99,9 @@ class LayoutService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/layout.LayoutService/CalculateLayout',
-            layout__pb2.LayoutRequest.SerializeToString,
-            layout__pb2.LayoutResponse.FromString,
+            '/knowledge_language.KnowledgeLanguageService/ProcessText',
+            knowledge__language__pb2.ProcessTextRequest.SerializeToString,
+            knowledge__language__pb2.KnowledgeGraphResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -131,9 +126,9 @@ class LayoutService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/layout.LayoutService/HealthCheck',
-            layout__pb2.HealthCheckRequest.SerializeToString,
-            layout__pb2.HealthCheckResponse.FromString,
+            '/knowledge_language.KnowledgeLanguageService/HealthCheck',
+            knowledge__language__pb2.HealthCheckRequest.SerializeToString,
+            knowledge__language__pb2.HealthCheckResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -143,95 +138,3 @@ class LayoutService(object):
             timeout,
             metadata,
             _registered_method=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

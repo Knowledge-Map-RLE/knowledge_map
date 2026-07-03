@@ -61,7 +61,7 @@ class DataExtractionService:
         Преобразует относительные пути изображений в абсолютные.
 
         Заменяет пути вида 'page_1_pic_0.png' на полные URL:
-        'http://localhost:8000/api/v1/s3/image/documents/{doc_id}/images/page_1_pic_0.png'
+        'http://localhost:8000/api/data_extraction/documents/{doc_id}/images/page_1_pic_0.png'
 
         Args:
             markdown_text: Исходный markdown с относительными путями
@@ -87,7 +87,7 @@ class DataExtractionService:
             # Фоллбэк
             base_url = 'http://localhost:8000'
 
-        image_prefix = f"{base_url}/api/v1/s3/image/documents/{doc_id}/images/"
+        image_prefix = f"{base_url}/api/data_extraction/documents/{doc_id}/images/"
 
         # Заменяем относительные пути изображений на абсолютные
         # Паттерн: ![alt](filename.png) где filename не содержит http

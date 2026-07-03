@@ -750,7 +750,7 @@ class PubMedService:
             ok = await self.s3_client.upload_bytes(img_data, bucket, s3_key, content_type=content_type)
             if ok:
                 # Формируем URL через API image proxy (такой же как у Docling-изображений)
-                img_url = f"{base_url}/api/v1/s3/image/documents/{doc_id}/{img_name}"
+                img_url = f"{base_url}/api/data_extraction/documents/{doc_id}/images/{img_name}"
                 image_urls[img_name] = img_url
                 # Также регистрируем по имени без расширения — не перезаписываем если уже есть
                 # лучший формат (благодаря сортировке первым идёт jpg/png)

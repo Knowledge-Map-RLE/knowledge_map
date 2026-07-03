@@ -45,6 +45,9 @@ from web.routers.data_extraction import (
 # Статик роутер — оставляем из src (TRANSITIONAL)
 from src.routers import static
 
+# Редактор статей (article_editor + parse + graph)
+from src.routers import article_editor as article_editor_router
+
 logger = logging.getLogger(__name__)
 
 # Настройка логирования
@@ -138,6 +141,9 @@ app.include_router(linguistic_router.router)
 # Лингвистический граф (Action + LexicalUnit)
 from web.routers import pattern_graph as pattern_graph_router
 app.include_router(pattern_graph_router.router)
+
+# Редактор статей (article_editor)
+app.include_router(article_editor_router.router, prefix="/api")
 
 # GraphQL
 if _graphql_available:

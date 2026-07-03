@@ -26,15 +26,15 @@ class SpacyProcessor(BaseNLPProcessor):
     def _load_model(self):
         """Load spaCy model.
 
-        Note: spaCy GPU requires cupy, which on Windows needs cl.exe (MSVC).
-        Without MSVC, spaCy runs on CPU. The HuggingFace scibert model inside
-        spaCy-transformers still uses torch with CUDA for its forward pass.
+        require_gpu() enables cupy backend for spaCy ops AND tells
+        spacy-transformers to place the HF model on CUDA.
+        Must be called BEFORE spacy.load().
         """
-        # prefer_gpu() returns True only if cupy is installed and CUDA is available.
-        if spacy.prefer_gpu():
+        try:
+            spacy.require_gpu()
             print("spaCy: GPU activated (cupy backend)")
-        else:
-            print("spaCy: using CPU (install Visual Studio Build Tools to enable GPU)")
+        except Exception:
+            print("spaCy: GPU not available, using CPU")
 
         try:
             # Try to load the configured model

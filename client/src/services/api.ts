@@ -20,6 +20,7 @@ export { createAnnotation, getAnnotations, updateAnnotation, deleteAnnotation, d
 export { analyzeText, autoAnnotateDocument, autoAnnotateMultilevel, getNlpTaskStatus, exportAnnotationsYAML, importAnnotationsYAML } from './api/nlp';
 export { checkDataAvailability, saveDocumentForTests, analyzeDocumentPatterns, getDocumentPatterns, getDocumentSpecificPatterns, extractDocumentActions, getPendingEdges, reviewEdge, autoReview, getConfirmedActionGraph, backfillNormKeys } from './api/patterns';
 export { buildAnnotationsCSV, parseAnnotationsCSV } from './api/csv';
+export { createArticle, listArticles, getArticle, getArticleText, saveArticleText, saveStatements, parseText, getArticleGraph } from './api/article_editor';
 
 export type { Link } from '../entities/link';
 export type { User } from '../entities/user';
