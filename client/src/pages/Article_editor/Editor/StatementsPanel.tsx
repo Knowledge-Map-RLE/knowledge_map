@@ -2,6 +2,21 @@ import React, { forwardRef, useCallback, useEffect } from 'react';
 import type { KnowledgeStatement } from '../model';
 import styles from '../Article_editor.module.css';
 
+function uuid8Time(uuid: string): string | null {
+    try {
+        const hex = uuid.replace(/-/g, '');
+        if (hex.length < 16) return null;
+        const tsUs = BigInt('0x' + hex.slice(0, 16));
+        const ms = Number(tsUs / 1000n);
+        const us = Number(tsUs % 1000n);
+        const d = new Date(ms);
+        const pad = (n: number, z = 2) => String(n).padStart(z, '0');
+        return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(ms % 1000, 3)}${pad(us, 3)}`;
+    } catch {
+        return null;
+    }
+}
+
 interface StatementsPanelProps {
     statements: KnowledgeStatement[];
     selectedIndex: number | null;
@@ -75,6 +90,7 @@ const StatementsPanel = forwardRef<HTMLDivElement, StatementsPanelProps>(({
                 >
                     <div className={styles.statementId}>
                         {stmt.id || `#${idx + 1}`}
+                        {stmt.id && <span style={{ marginLeft: 8, color: '#9ca3af' }}>{uuid8Time(stmt.id)}</span>}
                     </div>
                     <div className={styles.statementTriple}>
                         <span className={styles.statementSubject}>{stmt.subject_text}</span>

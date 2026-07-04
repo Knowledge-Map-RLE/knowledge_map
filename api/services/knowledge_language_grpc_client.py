@@ -73,8 +73,17 @@ class KnowledgeLanguageGrpcClient:
             })
         concept_map = {c["id"]: c["text"] for c in concepts}
         for stmt in statements:
-            stmt["subject_text"] = concept_map.get(stmt.get("subject_id", ""), "")
-            stmt["object_text"] = concept_map.get(stmt.get("object_id", ""), "")
+            subj_id = stmt.get("subject_id", "")
+            obj_id = stmt.get("object_id", "")
+            subj_type = stmt.get("subject_type", "concept")
+            obj_type = stmt.get("object_type", "concept")
+            stmt["subject_text"] = concept_map.get(subj_id, "")
+            stmt["object_text"] = concept_map.get(obj_id, "")
+            # For Statement-typed subject/object, use UUID as fallback text
+            if not stmt["subject_text"] and subj_type == "statement":
+                stmt["subject_text"] = subj_id  # UUID of the referenced statement
+            if not stmt["object_text"] and obj_type == "statement":
+                stmt["object_text"] = obj_id  # UUID of the referenced statement
         return {
             "success": response.success,
             "statements": statements,

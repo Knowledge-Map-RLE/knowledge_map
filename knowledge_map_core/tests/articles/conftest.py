@@ -113,8 +113,27 @@ def parse_truth_file(path: Path) -> dict[str, list[GroundTruthEntry]]:
     return entries_by_sentence
 
 
+PROTO_STATEMENT_META = 2
+PROTO_SUBJECT_CONCEPT = 1
+PROTO_SUBJECT_STATEMENT = 2
+PROTO_OBJECT_CONCEPT = 1
+PROTO_OBJECT_STATEMENT = 2
+PROTO_OBJECT_LITERAL = 3
+
+
+def _get_attr(obj, name: str, default=None):
+    """Get attribute or dict key from a proto-or-dict response object."""
+    return obj if isinstance(obj, dict) else (
+        obj.get(name, default) if isinstance(obj, dict) else getattr(obj, name, default)
+    )
+
+
 def extract_triplets(resp) -> list[dict]:
-    """Convert a pipeline response (dict or proto) to a list of {subject, predicate, object} dicts."""
+    """Convert a pipeline response (dict or proto) to a list of triplet dicts.
+
+    Each result dict has: subject, predicate, object (text),
+    plus type (FACT/META), subject_type, object_type (proto ints).
+    """
     if resp is None:
         return []
     if isinstance(resp, dict):
@@ -125,19 +144,40 @@ def extract_triplets(resp) -> list[dict]:
         concepts_list = resp.concepts
     concept_map = {}
     for c in concepts_list:
-        cid = c.id if hasattr(c, 'id') else c.get('id')
-        ctext = c.normalized_text or c.text if hasattr(c, 'normalized_text') else (c.get('normalized_text') or c.get('text'))
+        cid = _get_attr(c, 'id')
+        ctext = _get_attr(c, 'normalized_text') or _get_attr(c, 'text')
         concept_map[cid] = ctext
 
     result = []
     for stmt in stmts:
-        sid = stmt.subject_id if hasattr(stmt, 'subject_id') else stmt.get('subject_id')
-        oid = stmt.object_id if hasattr(stmt, 'object_id') else stmt.get('object_id')
-        pred = stmt.predicate if hasattr(stmt, 'predicate') else stmt.get('predicate')
-        lit = stmt.literal_value if hasattr(stmt, 'literal_value') else stmt.get('literal_value', '')
-        subj_text = concept_map.get(sid, "")
-        obj_text = lit or concept_map.get(oid, "")
-        result.append({"subject": subj_text, "predicate": pred, "object": obj_text})
+        sid = _get_attr(stmt, 'subject_id', '')
+        oid = _get_attr(stmt, 'object_id', '')
+        pred = _get_attr(stmt, 'predicate', '')
+        lit = _get_attr(stmt, 'literal_value', '')
+        stmt_type = _get_attr(stmt, 'type', 1)
+        subj_type = _get_attr(stmt, 'subject_type', 1)
+        obj_type = _get_attr(stmt, 'object_type', 1)
+
+        if subj_type == PROTO_SUBJECT_STATEMENT:
+            subj_text = sid
+        else:
+            subj_text = concept_map.get(sid, "")
+
+        if obj_type == PROTO_OBJECT_STATEMENT:
+            obj_text = oid
+        elif obj_type == PROTO_OBJECT_LITERAL:
+            obj_text = lit or concept_map.get(oid, "")
+        else:
+            obj_text = concept_map.get(oid, "")
+
+        result.append({
+            "subject": subj_text,
+            "predicate": pred,
+            "object": obj_text,
+            "type": stmt_type,
+            "subject_type": subj_type,
+            "object_type": obj_type,
+        })
     return result
 
 
@@ -163,15 +203,21 @@ def _words_match(a: str, b: str) -> bool:
     return False
 
 
+def _strip_punct(word: str) -> str:
+    """Strip trailing punctuation from a word for matching."""
+    return word.rstrip('.,;:!?\'\")]}>')
+
+
 def _contained_in(needle: str, haystack: str) -> bool:
     """Check if needle words appear in order within haystack (word-subsequence match).
 
     Allows additional words between GT words, e.g. GT "age-related disease" matches
     pipeline "age-related multifactorial disease" because "age-related" → "disease"
     appear as a subsequence. Also handles singular/plural mismatch via _words_match.
+    Trailing punctuation is stripped before comparison.
     """
-    n_words = needle.lower().split()
-    h_words = haystack.lower().split()
+    n_words = [_strip_punct(w) for w in needle.lower().split()]
+    h_words = [_strip_punct(w) for w in haystack.lower().split()]
     i = 0
     for word in h_words:
         if i < len(n_words) and _words_match(word, n_words[i]):
@@ -179,31 +225,77 @@ def _contained_in(needle: str, haystack: str) -> bool:
     return i == len(n_words)
 
 
+def _text_match(gt_text: str, pipe_text: str) -> bool:
+    """Check if two texts match (exact or contained)."""
+    return (gt_text == pipe_text
+            or _contained_in(gt_text, pipe_text)
+            or _contained_in(pipe_text, gt_text))
+
+
 def find_matching_statement(
     triplet: Triplet,
     responses: list,
+    *,
+    is_meta: bool = False,
+    gt_entry: GroundTruthEntry | None = None,
+    lookup: dict[str, GroundTruthEntry] | None = None,
 ) -> bool:
-    """Check if any pipeline statement matches the triplet by content."""
+    """Check if any pipeline statement matches the triplet.
+
+    For META (is_meta=True): also verifies the pipeline created a META-type
+    statement with the correct Statement→Statement link side.
+    """
     t_subj = triplet.subject.lower().strip()
     t_pred = triplet.predicate.lower().strip()
     t_obj = triplet.object.lower().strip()
+
+    gt_subj_is_uuid = gt_entry is not None and is_uuid(gt_entry.subject)
+    gt_obj_is_uuid = gt_entry is not None and is_uuid(gt_entry.object)
+
     for resp in responses:
         for item in extract_triplets(resp):
+            p_type = item.get("type", 1)
+            p_subj_type = item.get("subject_type", 1)
+            p_obj_type = item.get("object_type", 1)
             p_subj = item["subject"].lower().strip()
             p_pred = item["predicate"].lower().strip()
             p_obj = item["object"].lower().strip()
-            if p_subj == t_subj and p_pred == t_pred and p_obj == t_obj:
-                return True
-            # Fallback: allow text to contain extra words in either direction
-            if p_pred == t_pred and _contained_in(t_subj, p_subj) and _contained_in(t_obj, p_obj):
-                return True
-            # Reverse direction: pipeline words are subsequence of GT words
-            if p_pred == t_pred and _contained_in(p_subj, t_subj) and _contained_in(p_obj, t_obj):
-                return True
-            # Independent direction: subj and obj can use different directions
-            if p_pred == t_pred:
-                subj_match = t_subj == p_subj or _contained_in(t_subj, p_subj) or _contained_in(p_subj, t_subj)
-                obj_match = t_obj == p_obj or _contained_in(t_obj, p_obj) or _contained_in(p_obj, t_obj)
-                if subj_match and obj_match:
+
+            if p_pred != t_pred:
+                continue
+
+            if is_meta:
+                if p_type != PROTO_STATEMENT_META:
+                    continue
+                if gt_subj_is_uuid and p_subj_type != PROTO_SUBJECT_STATEMENT:
+                    continue
+                if gt_obj_is_uuid and p_obj_type != PROTO_OBJECT_STATEMENT:
+                    continue
+                if not gt_subj_is_uuid and p_subj_type != PROTO_SUBJECT_CONCEPT:
+                    continue
+                if not gt_obj_is_uuid and p_obj_type != PROTO_OBJECT_LITERAL:
+                    if p_obj_type != PROTO_OBJECT_CONCEPT:
+                        continue
+                # For META: match only the TEXT side (non-UUID);
+                # UUID side is validated by type check above.
+                # We use raw gt_entry text, not resolved triplet text.
+                if p_pred != t_pred:
+                    continue
+                if not gt_subj_is_uuid and _text_match(gt_entry.subject, p_subj):
                     return True
+                if not gt_obj_is_uuid and _text_match(gt_entry.object, p_obj):
+                    return True
+                continue
+
+            # Text matching (FACT only)
+            if p_subj == t_subj and p_obj == t_obj:
+                return True
+            if _contained_in(t_subj, p_subj) and _contained_in(t_obj, p_obj):
+                return True
+            if _contained_in(p_subj, t_subj) and _contained_in(p_obj, t_obj):
+                return True
+            subj_match = _text_match(t_subj, p_subj)
+            obj_match = _text_match(t_obj, p_obj)
+            if subj_match and obj_match:
+                return True
     return False

@@ -168,6 +168,7 @@
 
 # sentence: Many reports have shown that exposure to environmental toxins is associated with an increased risk of PD.
 019f126e-f3ac-730e-83bd-a481302b26c1 | exposure to environmental toxins → be associated with → increased risk of PD
+019f126e-f3ac-730e-8000-0000000000a1 | many reports → show → 019f126e-f3ac-730e-83bd-a481302b26c1
 
 # sentence: Proof of principle that an environmental toxin could lead to PD was the observation that a side product produced in the synthesis of the narcotic drug meperidine, namely 1-methyl-4-phenyl-1,2,3,6-tetrahydropyridine (MPTP), caused irreversible parkinsonism, with all of the clinical features of PD [17].
 019f126e-f3ac-7acd-a04f-ae4cebb5071b | MPTP → cause → irreversible parkinsonism
@@ -253,6 +254,7 @@
 
 # sentence: One idea is that the spread of PD pathogenesis may start in the gastrointestinal tract and propagate cell to cell, spreading from the enteric nervous system all the way up to the brainstem, midbrain, and other parts of the central nervous system (CNS), finally resulting in disease staging, as proposed by Braak et al. [30].
 019f126e-f3ad-7ff9-ab67-3b081282cc89 | spread of PD pathogenesis → start in → gastrointestinal tract
+019f126e-f3ad-7ff9-8000-0000000000a2 | 019f126e-f3ad-7ff9-ab67-3b081282cc89 → proposed by → Braak et al.
 
 # sentence: However, it remains to be seen whether this ascending spread of the disease is related to a-synuclein or other factors.
 
@@ -282,6 +284,7 @@
 
 # sentence: Third, autopsy studies have shown that healthy grafted embryonic neurons of mesencephalic origin rapidly acquire Lewy body-like inclusions after being placed in the host brain of a patient with PD [36] [37], suggesting the spread of pathology from host tissues to the grafts.
 019f126e-f3ad-7480-8c3e-14805f064b53 | healthy grafted embryonic neurons → acquire → Lewy body-like inclusions
+019f126e-f3ad-7480-8000-0000000000a3 | autopsy studies → show → 019f126e-f3ad-7480-8c3e-14805f064b53
 
 # sentence: Finally, Pan Montojo et al. modeled environmental causes for the ascending spread of a-synuclein accumulation through intragastric administration of the pesticide rotenone in mice [39].
 019f126e-f3ad-7b67-8744-301e4b90c2eb | intragastric administration of rotenone → cause → ascending spread of a-synuclein accumulation
@@ -316,6 +319,7 @@
 
 # sentence: In addition to these findings, Dehay et al. [45] have shown that DA SN neurons from patients with sporadic PD show decreased levels of ATP13A2..
 019f126e-f3ad-7949-9899-65757874e228 | DA SN neurons from patients with sporadic PD → show → decreased levels of LAMP2 and LAMP1
+019f126e-f3ad-7949-8000-0000000000a4 | Dehay et al → show → 019f126e-f3ad-7949-9899-65757874e228
 
 # sentence: Evidence for the involvement of mitochondrial dysfunction in the pathogenesis of PD comes primarily from two sources.
 
@@ -391,6 +395,7 @@
 
 # sentence: Moreover, Yo et al. [62] demonstrated that PINK1 deficiency leads to a very different response in neurons than in myocytes with respect to changes in mitochondrial membrane potential, mitochondrial $Ca^{2+}$ buffering capacity, and cell survival.
 019f126e-f3ae-76c1-b8e0-6d61a8ce5d8f | PINK1 deficiency → lead to → different response in neurons vs myocytes and fibroblasts
+019f126e-f3ae-76c1-8000-0000000000a5 | Yo et al → demonstrate → 019f126e-f3ae-76c1-b8e0-6d61a8ce5d8f
 
 # sentence: It has also been suggested that DA neurons are particularly sensitive to repetitive cycles of energetic stress triggered by oscillatory increases in $Ca^{2+}$ [63].
 019f126e-f3ae-74f9-be80-ba7c5582eb6c | DA neurons → be sensitive to → repetitive cycles of energetic stress
@@ -606,6 +611,7 @@
 # sentence: Recent in vitro data suggest that DJ-1 deficiency in astrocytes might deregulate their neuroinflammatory response, thereby contributing to neurodegeneration [103].
 019f126e-f3af-7dfe-993c-cfe17d6c87dc | DJ-1 deficiency in astrocytes → deregulate → neuroinflammatory response
 019f126e-f3af-7bcb-9f4a-8203d21c0c8a | DJ-1 deficiency in astrocytes → aggravate → DA neuronal death
+019f126e-f3af-7dfe-8000-0000000000a6 | recent in vitro data → suggest → 019f126e-f3af-7dfe-993c-cfe17d6c87dc
 
 # sentence: The proportion of astrocytes in the SN is the lowest of any brain area [104].
 019f0e7a-1400-7000-0000-000000000001 | proportion of astrocytes in SN → be → lowest of any brain area

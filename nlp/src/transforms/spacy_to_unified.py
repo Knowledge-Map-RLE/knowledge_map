@@ -6,7 +6,7 @@ All functions are deterministic and referentially transparent.
 """
 
 from typing import List, Dict, Optional, Set
-from uuid import uuid4
+from ..uuid8 import uuid8_str
 
 from spacy.tokens import Doc, Span, Token
 
@@ -408,7 +408,7 @@ def document_to_unified(
     """
     # Generate doc_id if not provided
     if doc_id is None:
-        doc_id = str(uuid4())
+        doc_id = uuid8_str()
 
     # Convert sentences
     sentences = []

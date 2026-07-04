@@ -22,6 +22,7 @@ from tests.articles.conftest import (
     find_matching_statement,
     GROUND_TRUTH,
     is_uuid,
+    GroundTruthEntry,
 )
 
 pytestmark = pytest.mark.e2e
@@ -80,17 +81,35 @@ def _resolve_lookup(entries: list) -> dict:
     return lookup
 
 
-def _find_matches(entries: list, responses: list) -> tuple[list[str], list[str]]:
+def _find_matches(
+    entries: list[GroundTruthEntry],
+    responses: list,
+) -> tuple[list[str], list[str], int, int, int, int]:
     lookup = _resolve_lookup(entries)
+    fact_matched, fact_total = 0, 0
+    meta_matched, meta_total = 0, 0
     matched = []
     missed = []
     for entry in entries:
+        if entry.is_fact:
+            fact_total += 1
+        else:
+            meta_total += 1
         triplet = entry.resolved_triplet(lookup)
-        if find_matching_statement(triplet, responses):
+        if find_matching_statement(
+            triplet, responses,
+            is_meta=not entry.is_fact,
+            gt_entry=entry,
+            lookup=lookup,
+        ):
             matched.append(entry.uuid)
+            if entry.is_fact:
+                fact_matched += 1
+            else:
+                meta_matched += 1
         else:
             missed.append((entry.uuid, entry.subject, entry.predicate, entry.object))
-    return matched, missed
+    return matched, missed, fact_matched, fact_total, meta_matched, meta_total
 
 
 @pytest.mark.asyncio
@@ -103,8 +122,7 @@ async def test_abstract_against_pipeline():
         pytest.skip("No ground truth files found")
 
     text = load_article_text("the hallmarks of parkinsons disease")
-    # Limit to first 30 sentences for quick iteration
-    sentences = split_sentences(text)[:30]
+    sentences = split_sentences(text)
 
     async with _channel() as channel:
         stub = knowledge_language_pb2_grpc.KnowledgeLanguageServiceStub(channel)
@@ -127,17 +145,20 @@ async def test_abstract_against_pipeline():
 
     total_matched = 0
     total_missed = 0
-    all_missed = []
+    total_fact_matched = 0
+    total_fact_total = 0
+    total_meta_matched = 0
+    total_meta_total = 0
+    all_missed: list = []
 
     for tf in truth_files:
         entries_by_sent = parse_truth_file(tf)
         for sent_text, entries in entries_by_sent.items():
             sent_responses = [
                 r for r, s in zip(responses, sentences)
-                if s.strip().startswith(sent_text[:50])  # fuzzy match by prefix
+                if s.strip().startswith(sent_text[:50])
             ]
             if not sent_responses:
-                # Try exact match
                 sent_responses = [
                     r for r, s in zip(responses, sentences)
                     if s.strip() == sent_text.strip()
@@ -145,17 +166,25 @@ async def test_abstract_against_pipeline():
             if all(r is None for r in sent_responses):
                 sent_responses = [r for r in responses if r is not None]
 
-            matched, missed = _find_matches(entries, sent_responses)
+            matched, missed, fact_m, fact_t, meta_m, meta_t = _find_matches(entries, sent_responses)
             total_matched += len(matched)
             total_missed += len(missed)
+            total_fact_matched += fact_m
+            total_fact_total += fact_t
+            total_meta_matched += meta_m
+            total_meta_total += meta_t
             for item in missed:
                 all_missed.append((sent_text[:60], item))
 
     total = total_matched + total_missed
     coverage = total_matched / total * 100 if total > 0 else 0
+    fact_cov = total_fact_matched / total_fact_total * 100 if total_fact_total > 0 else 0
+    meta_cov = total_meta_matched / total_meta_total * 100 if total_meta_total > 0 else 0
 
     print(f"\n{'='*60}")
-    print(f"GROUND TRUTH COVERAGE: {total_matched}/{total} ({coverage:.1f}%)")
+    print(f"ALL: {total_matched}/{total} ({coverage:.1f}%)")
+    print(f"FACT: {total_fact_matched}/{total_fact_total} ({fact_cov:.1f}%)")
+    print(f"META: {total_meta_matched}/{total_meta_total} ({meta_cov:.1f}%)")
     print(f"{'='*60}")
 
     if all_missed:

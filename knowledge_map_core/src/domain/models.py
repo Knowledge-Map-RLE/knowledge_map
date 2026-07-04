@@ -29,8 +29,8 @@ class StatementID:
 
     @classmethod
     def new(cls) -> StatementID:
-        from .uuidv7 import uuid7
-        return cls(uuid=uuid7())
+        from .uuidv8 import uuid8
+        return cls(uuid=uuid8())
 
     def __str__(self) -> str:
         return str(self.uuid)

@@ -15,8 +15,9 @@ Ontology structure:
 
 from neo4j import GraphDatabase, Session
 import json
-import uuid
 from typing import Generator, Dict, Any
+
+from src.uuid8 import uuid8_str
 import os
 import logging
 
@@ -146,7 +147,7 @@ class OntologyService:
                 props = token_record['props']
                 metadata = json.loads(props.get('metadata', '{}'))
 
-                ontology_id = str(uuid.uuid4())
+                ontology_id = uuid8_str()
 
                 ontology_data = {
                     'ontology_id': ontology_id,

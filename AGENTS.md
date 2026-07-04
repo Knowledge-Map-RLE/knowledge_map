@@ -42,10 +42,10 @@ English only. Deterministic spaCy dependency tree rules. LLM only for complex ca
     - Server restart via admin PowerShell required (non-admin shell cannot kill old PID)
 
 ### Current Coverage
-- **172/293 (58.7%)** on Hallmarks of PD (222 sentences).
+- **179/299 (59.9%)** on Hallmarks of PD (222 sentences).
 - **137/222 (61.7%)** on Hallmarks of cancer and hallmarks of aging (166 sentences).
 - Article 1: All 222 sentences produce pipeline output; 100/177 sentences with GT triplets have ≥1 match.
-- Pipeline handles: active/passive voice, copula, multi-word predicates, adjective+preposition, conj verbs with shared objects, conjoined subjects/objects split, negation in all rule types, reduced relative participles (acl/advcl) with by-agent.
+- Pipeline handles: active/passive voice, copula, multi-word predicates, adjective+preposition, conj verbs with shared objects, conjoined subjects/objects split, negation in all rule types, reduced relative participles (acl/advcl) with by-agent, META Statement→Statement links via MetaBuilder (6 patterns).
 
 ### Article 1 — Remaining 121 Missed By Category
 | Category | Count | Example |
@@ -57,7 +57,7 @@ English only. Deterministic spaCy dependency tree rules. LLM only for complex ca
 | Complex copular (verb+auxpass not cop+adj) | ~8 | `are well established`, `is within reach` |
 | Word-order mismatch | ~8 | `Lewy bodies → be lacking in → affected carriers` |
 | Noun subjects (nmod:of excluded) | ~5 | `fusion/fission → control → fragmentation` |
-| LLM required (META/UUID) | ~4 | UUID → `revealed by` |
+| META not producible by MetaBuilder | ~5 | `discovery of X in Z`, `revealing X to be Y` |
 | Complex transitive (dobj+acomp) | ~3 | `render → making → challenging` |
 | Other edge cases | ~28 | remaining complex syntactic patterns |
 
@@ -122,6 +122,25 @@ English only. Deterministic spaCy dependency tree rules. LLM only for complex ca
   - `localhost` → `127.0.0.1` в health check: Windows резолвит `localhost` в `::1` (IPv6), а uvicorn слушает `0.0.0.0` (IPv4) — health check зависал на 180 секунд
 - **Ускорение**: старт DoclingFast hybrid теперь занимает ~6-9 секунд (вместо 180+). DocumentConverter инициализируется за ~4.62с на CPU, health check срабатывает через ~3с после этого.
 - **Порт 8000** (PID 1688, zombie poetry API без article_editor) и **порт 8002** (PID 22784, zombie pdf-to-md REST) всё ещё висят — требуют админских прав для убийства.
+
+### Changes This Session (Iteration 13 — META coverage fix + matching improvement)
+- **Problem**: e2e тест обрабатывал только первые 30 предложений (`sentences[:30]`). Все META-паттерны MetaBuilder срабатывают в более поздних предложениях → META coverage 0/11.
+- **Fix 1** (`test_pipeline_vs_ground_truth.py:125`): убран `[:30]` — теперь все предложения обрабатываются.
+- **Fix 2** (`conftest.py:206-228`): `_contained_in` теперь стриппит trailing punctuation из слов (`_strip_punct`) перед сравнением. Чинит `"Braak et al."` (GT) vs `"braak et al"` (pipeline).
+- **META coverage**: 0/11 → **6/11 (54.5%)**:
+  - 5 ref_in_obj (MetaBuilder: `many reports → show`, `autopsy studies → show`, `Dehay et al → show`, `Yo et al → demonstrate`, `recent in vitro data → suggest`)
+  - 1 ref_in_subj (MetaBuilder: `[UUID] → proposed by → Braak et al.`) — matching fix
+  - 5 оставшихся META (`discovered in`, 4× `revealed by`) — артефакты старого GT формата, MetaBuilder не может их произвести (`discovery of X in Z`, `revealing X to be Y` не укладываются в regex-паттерны). Оставлены как есть.
+- **ALL coverage**: 177/299 (59.2%) → **179/299 (59.9%)**.
+- **Unit tests**: 12/12 pass — без регрессий.
+
+### Changes This Session (Iteration 14 — META save/display fix in UI + Neo4j)
+- **Root cause**: 3 cascading bugs prevented META statements from appearing in the UI:
+  - `knowledge_language_grpc_client.py:76-77`: `subject_text`/`object_text` were empty for Statement-typed refs (UUID not in concept_map). Fix: fallback to UUID when type=`statement`.
+  - `article_editor_service.py:109-125`: `save_statements` didn't save `type`, `subject_type`, `object_type` to Neo4j. Fix: added all 3 fields to CREATE query.
+  - `article_editor_service.py:52-62`: `get_article` didn't return type info. Fix: added `subject_type`, `object_type`, `type` to response.
+- **Cleanup**: Deleted 5071 stale `KnowledgeStatement` nodes (missing `type` field — old format).
+- **Result**: After API restart + re-parse, META statements now appear in UI with UUID fallback text (e.g. `many reports → show → 000655c6-...`).
 
 ### Next Steps
 1. **Запустить новый `start.ps1`** в `pdf_to_md/`: проверить, что hybrid backend (5002), gRPC (50053) и REST (8002) стартуют без EADDRINUSE

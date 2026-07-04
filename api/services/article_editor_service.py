@@ -1,6 +1,7 @@
 import logging
-import uuid
 from datetime import datetime, timezone
+
+from src.uuid8 import uuid8_str
 from typing import Any
 
 from neomodel import db
@@ -14,7 +15,7 @@ class ArticleEditorService:
     async def create_article(self, title: str = "New Article") -> dict[str, Any]:
         doc = Document(
             original_filename=title or "New Article",
-            md5_hash=str(uuid.uuid4()),
+            md5_hash=uuid8_str(),
             s3_key="",
             title=title or "New Article",
             processing_status="ready_for_annotation",
@@ -54,6 +55,9 @@ class ArticleEditorService:
                 "subject_text": s[0].get("subject_text", ""),
                 "predicate": s[0].get("predicate", ""),
                 "object_text": s[0].get("object_text", ""),
+                "subject_type": s[0].get("subject_type", "concept"),
+                "object_type": s[0].get("object_type", "concept"),
+                "type": s[0].get("type", "FACT"),
                 "confidence": s[0].get("confidence", 1.0),
                 "sentence_text": s[0].get("sentence_text", ""),
                 "sort_order": s[0].get("sort_order", 0),
@@ -106,16 +110,20 @@ class ArticleEditorService:
             {"uid": doc_id},
         )
         for i, stmt in enumerate(statements):
-            stmt_uid = stmt.get("id") or str(uuid.uuid4())
+            stmt_uid = stmt.get("id") or uuid8_str()
             db.cypher_query(
                 "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $subj, predicate: $pred, "
-                "object_text: $obj, confidence: $conf, sentence_text: $sent, sort_order: $order}) "
+                "object_text: $obj, subject_type: $subj_type, object_type: $obj_type, "
+                "type: $type, confidence: $conf, sentence_text: $sent, sort_order: $order}) "
                 "WITH s MATCH (d:Document {uid: $doc_id}) CREATE (d)-[:HAS_STATEMENT]->(s)",
                 {
                     "uid": stmt_uid,
                     "subj": stmt.get("subject_text", ""),
                     "pred": stmt.get("predicate", ""),
                     "obj": stmt.get("object_text", ""),
+                    "subj_type": stmt.get("subject_type", "concept"),
+                    "obj_type": stmt.get("object_type", "concept"),
+                    "type": stmt.get("type", "FACT"),
                     "conf": stmt.get("confidence", 1.0),
                     "sent": stmt.get("sentence_text", ""),
                     "order": i,
@@ -158,6 +166,9 @@ class ArticleEditorService:
                 "subject_text": s.get("subject_text", ""),
                 "predicate": s.get("predicate", ""),
                 "object_text": s.get("object_text", ""),
+                "subject_type": s.get("subject_type", "concept"),
+                "object_type": s.get("object_type", "concept"),
+                "type": s.get("type", "FACT"),
             })
         edges = []
         stmt_by_text: dict[str, str] = {}

@@ -9,8 +9,9 @@ Forbidden imports: fastapi, web
 from __future__ import annotations
 
 import logging
-import uuid
 from typing import Any, Dict, List, Optional
+
+from src.uuid8 import uuid8_str
 
 from neomodel import db
 
@@ -43,7 +44,7 @@ class LinguisticPatternRepository:
         rows = []
         for p in patterns:
             row = dict(p)
-            row.setdefault("uid", str(uuid.uuid4()))
+            row.setdefault("uid", uuid8_str())
             rows.append(row)
 
         # --- Создаём/обновляем LinguisticPattern + FOUND_IN ---

@@ -19,9 +19,23 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
-import uuid
+import time
+import uuid as _uuid
 from pathlib import Path
+
+
+def _uuid8_str() -> str:
+    ts_us = int(time.time() * 1_000_000)
+    rand = os.urandom(7)
+    b = bytearray(16)
+    for i in range(8):
+        b[i] = (ts_us >> (56 - i * 8)) & 0xFF
+    b[6] = (b[6] & 0x0F) | 0x80
+    b[8] = 0x80 | (rand[0] & 0x3F)
+    b[9:16] = rand[:]
+    return str(_uuid.UUID(bytes=bytes(b)))
 
 logging.basicConfig(
     level=logging.INFO,
@@ -196,7 +210,7 @@ def process_action(nlp, action: dict) -> dict | None:
     dependency_edges: list[dict] = []
 
     for token in tokens:
-        lu_uid = str(uuid.uuid4())
+        lu_uid = _uuid8_str()
         token_id_to_lu_uid[token["id"]] = lu_uid
 
         lexical_units.append({

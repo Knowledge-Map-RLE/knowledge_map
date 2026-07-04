@@ -23,8 +23,9 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import uuid
 from collections import Counter, defaultdict
+
+from src.uuid8 import uuid8_str
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -355,7 +356,7 @@ class PatternExtractor:
             return None
 
         pattern_hash = f"{abs(sig_hash_int):016x}"[:16]
-        pattern_uid = str(uuid.uuid4())
+        pattern_uid = uuid8_str()
 
         # Строим узлы и рёбра из сигнатуры
         # Сигнатура: (text, pos, rel, text, pos, rel, ..., text, pos)
@@ -463,7 +464,7 @@ class PatternExtractor:
 
             node_id = f"act_{row['uid']}"
             pattern = Pattern(
-                uid=str(uuid.uuid4()),
+                uid=uuid8_str(),
                 name=f"Action: {row['verb']} ({row['action_class']})",
                 description=f"Action '{row['verb']}' class='{row['action_class']}', "
                             f"in={row['in_degree']}, out={row['out_degree']}",
@@ -540,7 +541,7 @@ class PatternExtractor:
                 seen_hashes.add(chain_hash)
 
                 pattern = Pattern(
-                    uid=str(uuid.uuid4()),
+                    uid=uuid8_str(),
                     name=f"LEADS_TO chain (len={len(chain_actions)})",
                     description=" → ".join(a.get("verb", "?") for a in chain_actions),
                     pattern_hash=chain_hash,
@@ -679,7 +680,7 @@ class PatternExtractor:
             seen_hashes.add(pattern_hash)
 
             pattern = Pattern(
-                uid=str(uuid.uuid4()),
+                uid=uuid8_str(),
                 name=f"Mixed: {row['verb']} + {row['lu_count']} LU",
                 description=f"Action '{row['verb']}' с {row['lu_count']} LexicalUnit",
                 pattern_hash=pattern_hash,

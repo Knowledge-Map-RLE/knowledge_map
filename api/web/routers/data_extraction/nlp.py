@@ -205,14 +205,14 @@ async def _run_multilevel_analysis(
             logger.info(f"Background NLP: no annotations to create for {doc_id}")
             return
 
-        import uuid
+        from src.uuid8 import uuid8_str
         import time as _time
         now_ts = _time.time()  # Unix timestamp (float) — neomodel DateTimeProperty format
 
         # Присваиваем uid каждой аннотации заранее
         annotation_uid_map = {}
         for ann_data in annotations_data:
-            ann_uid = str(uuid.uuid4())
+            ann_uid = uuid8_str()
             ann_data['_uid'] = ann_uid
             meta = ann_data.get('metadata', {})
             if 'sent_idx' in meta and 'token_idx' in meta:

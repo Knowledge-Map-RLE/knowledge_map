@@ -11,8 +11,9 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
-import uuid
 from dataclasses import dataclass
+
+from src.uuid8 import uuid8_str
 from typing import List, Tuple
 
 from domain.rules.graph_acyclicity import would_create_cycle
@@ -148,8 +149,8 @@ def _split_cycle_and_expand_edges(
     if not src_row or not tgt_row:
         return
     
-    b_prime_uid = str(uuid.uuid4())
-    a_prime_uid = str(uuid.uuid4())
+    b_prime_uid = uuid8_str()
+    a_prime_uid = uuid8_str()
     
     b_prime = _create_action_copy(tgt_row, b_prime_uid)
     a_prime = _create_action_copy(src_row, a_prime_uid)
@@ -355,7 +356,7 @@ async def extract_document_actions(
     # Build uid_map: NLP action_id → persistent uuid
     uid_map: dict[str, str] = {}
     for a in nlp_actions:
-        persistent_uid = str(uuid.uuid4())
+        persistent_uid = uuid8_str()
         uid_map[a["action_id"]] = persistent_uid
         action_class = _assign_action_class(a["verb_lemma"])
         # Remap char positions from stripped text back to original text positions
