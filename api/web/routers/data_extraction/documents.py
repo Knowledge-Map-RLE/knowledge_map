@@ -12,7 +12,7 @@ Forbidden imports: neomodel (напрямую), services (напрямую), inf
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Request, Query
+from fastapi import APIRouter, Depends, UploadFile, File, Request, Query
 from fastapi.responses import Response
 
 from src.schemas.api import (
@@ -52,7 +52,6 @@ router = APIRouter(tags=["documents"])
 
 @router.post("/data_extraction", response_model=DataExtractionResponse)
 async def data_extraction_upload(
-    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     doc_repo=Depends(get_document_repository),
     storage=Depends(get_s3),
@@ -60,7 +59,7 @@ async def data_extraction_upload(
     """Загружает PDF, выполняет MD5-дедупликацию и запускает конвертацию в Markdown."""
     from services.data_extraction_service import DataExtractionService  # TRANSITIONAL
     svc = DataExtractionService()
-    result = await svc.upload_and_process_pdf(background_tasks, file)
+    result = await svc.upload_and_process_pdf(file)
     return result
 
 

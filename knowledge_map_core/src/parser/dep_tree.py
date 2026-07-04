@@ -53,11 +53,20 @@ class DependencyTree:
     _root: TokenInfo | None = field(default=None, repr=False)
 
     def __post_init__(self):
+        self._token_map: dict[int, TokenInfo] = {}
+        self._dep_index: dict[str, list[TokenInfo]] = {}
+        self._pos_index: dict[str, list[TokenInfo]] = {}
+        self._subtree_cache: dict[int, list[TokenInfo]] = {}
+
         for token in self.tokens:
+            self._token_map[token.idx] = token
             if token.dep == "ROOT":
                 self._root = token
             if token.head_idx != token.idx:
                 self._children.setdefault(token.head_idx, []).append(token)
+
+            self._dep_index.setdefault(token.dep, []).append(token)
+            self._pos_index.setdefault(token.pos, []).append(token)
 
     @property
     def root(self) -> TokenInfo | None:
@@ -67,47 +76,40 @@ class DependencyTree:
         return self._children.get(token_idx, [])
 
     def subtree_tokens(self, token_idx: int) -> list[TokenInfo]:
+        cached = self._subtree_cache.get(token_idx)
+        if cached is not None:
+            return cached
+
         result = []
         stack = [token_idx]
         while stack:
             idx = stack.pop()
-            for t in self.tokens:
-                if t.idx == idx:
-                    result.append(t)
-                    break
+            t = self._token_map.get(idx)
+            if t is not None:
+                result.append(t)
             stack.extend(c.idx for c in self.children(idx))
         result.sort(key=lambda t: t.idx)
+        self._subtree_cache[token_idx] = result
         return result
 
     def subtree_text(self, token_idx: int) -> str:
         return " ".join(t.text for t in self.subtree_tokens(token_idx) if not t.is_punct and not t.is_space)
 
     def head_text(self, token_idx: int) -> str:
-        stack = []
-        current = None
-        for t in self.tokens:
-            if t.idx == token_idx:
-                current = t
-                break
+        current = self._token_map.get(token_idx)
         if not current or current.dep == "ROOT":
             return ""
-        head_idx = current.head_idx
-        for t in self.tokens:
-            if t.idx == head_idx:
-                return t.lemma
-        return ""
+        head_t = self._token_map.get(current.head_idx)
+        return head_t.lemma if head_t else ""
 
     def token_by_idx(self, idx: int) -> TokenInfo | None:
-        for t in self.tokens:
-            if t.idx == idx:
-                return t
-        return None
+        return self._token_map.get(idx)
 
     def find_by_dep(self, dep: str) -> list[TokenInfo]:
-        return [t for t in self.tokens if t.dep == dep]
+        return self._dep_index.get(dep, [])
 
     def find_by_pos(self, pos: str) -> list[TokenInfo]:
-        return [t for t in self.tokens if t.pos == pos]
+        return self._pos_index.get(pos, [])
 
     @staticmethod
     def from_unified_sentence(sentence: dict) -> DependencyTree:

@@ -73,12 +73,12 @@ class MultiLevelAnalyzer:
                 LinguisticLevel.DISCOURSE
             ]
         
-        # Process text directly with spaCy
+        # Process text directly with spaCy (disable NER — not needed for rule extraction)
         if self.spacy_processor is None or self.spacy_processor.nlp is None:
             raise Exception("spaCy processor not loaded")
         
-        doc = self.spacy_processor.nlp(text)
-        print(f"spaCy processed text, found {len(doc.ents)} entities and {len(list(doc.sents))} sentences")
+        with self.spacy_processor.nlp.select_pipes(disable=["ner"]):
+            doc = self.spacy_processor.nlp(text)
         
         # Convert to unified format using adapter
         unified_sentences = []
@@ -86,18 +86,7 @@ class MultiLevelAnalyzer:
             unified_sent = self.spacy_adapter.to_unified_sentence(sent, i, 0, 1.0)
             unified_sentences.append(unified_sent)
         
-        # Convert entities
         unified_entities = []
-        for ent in doc.ents:
-            # Get tokens for this entity
-            entity_tokens = []
-            for unified_sent in unified_sentences:
-                for token in unified_sent.tokens:
-                    if ent.start <= token.idx < ent.end:
-                        entity_tokens.append(token)
-            
-            unified_entity = self.spacy_adapter.to_unified_entity(ent, entity_tokens, 1.0)
-            unified_entities.append(unified_entity)
         
         # Create document structure
         unified_doc = UnifiedDocument(

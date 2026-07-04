@@ -8,7 +8,7 @@ import re
 from pathlib import Path as SysPath
 from typing import Dict, Any
 
-from fastapi import BackgroundTasks, UploadFile, HTTPException
+from fastapi import UploadFile, HTTPException
 from fastapi.responses import StreamingResponse
 
 from utils.hash_utils import _compute_md5
@@ -19,10 +19,11 @@ from src.models import Document
 
 logger = logging.getLogger(__name__)
 
-import os
-
 # Хранилище прогресса конвертации (doc_id → {percent, phase, message})
 _conversion_progress: Dict[str, Any] = {}
+
+# Слежение за фоновыми задачами конвертации для отмены при delete
+_background_tasks: Dict[str, asyncio.Task] = {}
 
 
 def extract_title_from_markdown(markdown_content: str) -> str | None:
@@ -109,28 +110,20 @@ class DataExtractionService:
 
         return result
 
-    async def upload_and_process_pdf(
-        self, 
-        background_tasks: BackgroundTasks, 
-        file: UploadFile
-    ) -> DataExtractionResponse:
-        """Загрузка PDF, MD5-дедупликация, конвертация в Markdown, загрузка md+изображений+json в S3."""
-        if file.content_type not in ("application/pdf", "application/octet-stream"):
-            raise HTTPException(status_code=400, detail="Ожидается PDF файл")
+    async def _start_conversion_task(self, doc_id: str, pdf_bytes: bytes, filename: str | None = None) -> None:
+        """Запускает process_pdf_and_upload как отслеживаемую asyncio-задачу."""
+        import time as _time_module
+        from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
 
-        raw = await file.read()
-        if not raw:
-            raise HTTPException(status_code=400, detail="Пустой файл")
+        _task_t0 = _time_module.time()
+        pdf_size = len(pdf_bytes) if pdf_bytes else 0
+        logger.info(
+            f"[background_task] Создание задачи: doc_id={doc_id}, "
+            f"pdf_size={pdf_size} байт ({pdf_size/1024:.1f} KB), "
+            f"filename='{filename}'"
+        )
 
-        doc_id = _compute_md5(raw)
-        bucket = settings.S3_BUCKET_NAME
-        prefix = f"documents/{doc_id}/"
-        pdf_key = f"{prefix}{doc_id}.pdf"
-
-        logger.info(f"[upload] {file.filename} → doc_id={doc_id}")
-        pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
-
-        async def process_pdf_and_upload(pdf_bytes: bytes, filename: str = None):
+        async def process_pdf_and_upload(pdf_bytes: bytes, filename: str | None = None):
             # Конвертация PDF в Markdown через gRPC сервис
             logger.info(f"[background_task] STARTED process_pdf_and_upload for doc_id={doc_id}")
 
@@ -158,7 +151,6 @@ class DataExtractionService:
                         "message": payload.get("message", ""),
                     }
 
-                # Используем gRPC сервис для конвертации PDF в Markdown
                 grpc_client = get_pdf_to_md_grpc_client_instance()
 
                 result = await grpc_client.convert_pdf(
@@ -167,34 +159,32 @@ class DataExtractionService:
                     timeout=3600,
                     on_progress=_on_progress
                 )
-                
+
                 if not result["success"]:
                     raise RuntimeError(f"Ошибка конвертации: {result['message']}")
-                
-                # Создаем виртуальные outputs для совместимости
+
                 outputs = {"markdown": None, "images_dir": tmp_dir}
-                
-                # Сохраняем markdown во временную директорию
+
                 extracted_title = None
                 if result.get("markdown_content"):
                     md_path = tmp_dir / f"{doc_id}.md"
                     md_path.write_text(result["markdown_content"], encoding="utf-8", errors="ignore")
                     outputs["markdown"] = md_path
-
                     extracted_title = extract_title_from_markdown(result["markdown_content"])
 
-                # Сохраняем изображения
                 if result.get("images"):
                     for img_name, img_data in result["images"].items():
                         img_path = tmp_dir / img_name
                         img_path.write_bytes(img_data)
 
-                # Сохраняем метаданные если есть
                 if result.get("metadata_json"):
                     import json
                     meta_path = tmp_dir / f"{doc_id}_meta.json"
                     meta_path.write_text(result["metadata_json"], encoding="utf-8")
                     outputs["meta"] = meta_path
+
+                prefix = f"documents/{doc_id}/"
+                bucket = settings.S3_BUCKET_NAME
 
                 if outputs.get("markdown") is not None:
                     md_bytes = outputs["markdown"].read_bytes()
@@ -216,21 +206,18 @@ class DataExtractionService:
                             img.read_bytes(), bucket, f"{prefix}{img.name}",
                             content_type=mimetypes.guess_type(img.name)[0] or "image/jpeg"
                         )
-                
-                # Извлекаем S3 ключи для markdown версий
+
                 docling_raw_s3_key = result.get("docling_raw_s3_key")
                 formatted_s3_key = result.get("formatted_s3_key")
 
-                # Сохраняем документ в Neo4j для поддержки аннотаций
                 try:
-                    # Проверяем, существует ли документ
                     existing_doc = Document.nodes.get_or_none(uid=doc_id)
                     if not existing_doc:
                         Document(
                             uid=doc_id,
                             original_filename=filename or f"{doc_id}.pdf",
                             md5_hash=doc_id,
-                            s3_key=pdf_key,
+                            s3_key=f"{prefix}{doc_id}.pdf",
                             processing_status='ready_for_annotation',
                             is_processed=True,
                             title=extracted_title,
@@ -239,7 +226,6 @@ class DataExtractionService:
                         ).save()
                         logger.info(f"[pdf_to_md] Документ {doc_id} сохранён в Neo4j")
                     else:
-                        update_needed = True
                         existing_doc.processing_status = 'ready_for_annotation'
                         existing_doc.is_processed = True
                         if extracted_title and not existing_doc.title:
@@ -252,15 +238,23 @@ class DataExtractionService:
                             existing_doc.formatted_md_s3_key = formatted_s3_key
                         existing_doc.save()
                         logger.info(f"[pdf_to_md] Документ {doc_id} обновлён в Neo4j")
-                    # Очищаем прогресс после завершения
                     _conversion_progress.pop(doc_id, None)
                 except Exception as neo_err:
                     logger.error(f"[Neo4j] Ошибка сохранения документа {doc_id}: {neo_err}")
 
-                logger.info(f"[pdf_to_md] Обработка документа {doc_id} завершена")
+                _elapsed = _time_module.time() - _task_t0
+                logger.info(f"[pdf_to_md] Обработка документа {doc_id} завершена за {_elapsed:.2f}s")
+            except asyncio.CancelledError:
+                _elapsed = _time_module.time() - _task_t0
+                logger.info(f"[pdf_to_md] Задача отменена для doc_id={doc_id} через {_elapsed:.2f}s")
+                raise
             except Exception as e:
-                logger.exception(f"PDF to MD processing failed for {doc_id}: {e}")
-                # Устанавливаем статус error в Neo4j
+                _elapsed = _time_module.time() - _task_t0
+                logger.error(
+                    f"[background_task] FAILED for doc_id={doc_id}: {e} "
+                    f"(elapsed={_elapsed:.2f}s)",
+                    exc_info=True
+                )
                 try:
                     err_doc = Document.nodes.get_or_none(uid=doc_id)
                     if err_doc:
@@ -268,7 +262,6 @@ class DataExtractionService:
                         err_doc.save()
                 except Exception:
                     pass
-                # Обновляем in-memory прогресс
                 _conversion_progress[doc_id] = {
                     "percent": 0,
                     "phase": "error",
@@ -279,6 +272,137 @@ class DataExtractionService:
                     shutil.rmtree(tmp_dir, ignore_errors=True)
                 except Exception:
                     pass
+
+        # Отменяем предыдущую задачу для того же doc_id, если есть
+        old = _background_tasks.pop(doc_id, None)
+        if old is not None:
+            if not old.done():
+                logger.info(f"[background_task] Отмена предыдущей задачи doc_id={doc_id}")
+                old.cancel()
+                try:
+                    await old
+                    logger.info(f"[background_task] Предыдущая задача doc_id={doc_id} отменена")
+                except asyncio.CancelledError:
+                    logger.info(f"[background_task] Предыдущая задача doc_id={doc_id} подтвердила отмену")
+                    pass
+            else:
+                logger.info(f"[background_task] Предыдущая задача doc_id={doc_id} уже завершена (done={old.done()})")
+
+        task = asyncio.create_task(process_pdf_and_upload(pdf_bytes, filename))
+        _background_tasks[doc_id] = task
+
+        def _on_task_done(t: asyncio.Task) -> None:
+            _background_tasks.pop(doc_id, None)
+            exc = t.exception()
+            if isinstance(exc, asyncio.CancelledError):
+                logger.info(f"[background_task] Задача doc_id={doc_id} подтвердила отмену в done_callback")
+            elif exc:
+                logger.error(f"[background_task] Задача doc_id={doc_id} необработанная ошибка: {exc}")
+
+        task.add_done_callback(_on_task_done)
+        logger.info(f"[background_task] Задача doc_id={doc_id} создана")
+
+    async def _cleanup_s3_prefixes(self, doc_id: str) -> int:
+        """Удаляет все S3-объекты для doc_id, включая версии. Возвращает количество удалённых."""
+        bucket = settings.S3_BUCKET_NAME
+        deleted = 0
+
+        for prefix in [f"documents/{doc_id}/", f"markdown/{doc_id}"]:
+            keys = await self._list_all_objects(bucket, prefix)
+            if not keys:
+                continue
+            for key in keys:
+                ok = await self.s3_client.delete_object(bucket, key)
+                if ok:
+                    deleted += 1
+
+            # Retry с versioning-aware удалением
+            for retry in range(3):
+                await asyncio.sleep(0.5)
+                remaining = await self.s3_client.list_objects(bucket, prefix)
+                if not remaining:
+                    break
+                try:
+                    async with self.s3_client.client_context() as s3:
+                        versions_resp = await s3.list_object_versions(Bucket=bucket, Prefix=prefix)
+                        for v in versions_resp.get('Versions', []):
+                            key, ver = v.get('Key'), v.get('VersionId')
+                            if key and ver:
+                                await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
+                                deleted += 1
+                        for m in versions_resp.get('DeleteMarkers', []):
+                            key, ver = m.get('Key'), m.get('VersionId')
+                            if key and ver:
+                                await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
+                                deleted += 1
+                        if not versions_resp.get('Versions') and not versions_resp.get('DeleteMarkers'):
+                            for obj in remaining:
+                                key = obj.get('Key') or obj.get('key') or ''
+                                if key:
+                                    await s3.delete_object(Bucket=bucket, Key=key)
+                                    deleted += 1
+                except Exception as e:
+                    logger.warning(f"[delete] Попытка {retry + 1}/3 для {prefix}: {e}")
+
+            await asyncio.sleep(1.0)
+            remaining = await self.s3_client.list_objects(bucket, prefix)
+            if remaining:
+                rem_keys = [o.get('Key') or o.get('key') or '' for o in remaining]
+                logger.warning(f"[delete] Остались объекты под {prefix}: {rem_keys}")
+
+        return deleted
+
+    async def _list_all_objects(self, bucket: str, prefix: str) -> list[str]:
+        """list_objects_v2 с пагинацией — собирает все ключи под префиксом."""
+        keys = []
+        continuation_token = None
+        while True:
+            params = {"Bucket": bucket, "Prefix": prefix}
+            if continuation_token:
+                params["ContinuationToken"] = continuation_token
+            try:
+                async with self.s3_client.client_context() as s3:
+                    resp = await s3.list_objects_v2(**params)
+                for obj in resp.get("Contents", []):
+                    key = obj.get("Key")
+                    if key:
+                        keys.append(key)
+                if resp.get("IsTruncated"):
+                    continuation_token = resp.get("NextContinuationToken")
+                else:
+                    break
+            except Exception as e:
+                logger.error(f"_list_all_objects({prefix}): {e}")
+                break
+        return keys
+
+    async def upload_and_process_pdf(
+        self, 
+        file: UploadFile
+    ) -> DataExtractionResponse:
+        """Загрузка PDF, MD5-дедупликация, конвертация в Markdown, загрузка md+изображений+json в S3."""
+        if file.content_type not in ("application/pdf", "application/octet-stream"):
+            raise HTTPException(status_code=400, detail="Ожидается PDF файл")
+
+        raw = await file.read()
+        if not raw:
+            raise HTTPException(status_code=400, detail="Пустой файл")
+
+        doc_id = _compute_md5(raw)
+        bucket = settings.S3_BUCKET_NAME
+        prefix = f"documents/{doc_id}/"
+        pdf_key = f"{prefix}{doc_id}.pdf"
+
+        logger.info(f"[upload] {file.filename} → doc_id={doc_id}")
+        pdf_exists = await self.s3_client.object_exists(bucket, pdf_key)
+
+        # Fix 2: если PDF есть в S3, но нет записи в Neo4j — чистим S3 и грузим заново
+        if pdf_exists:
+            neo4j_doc = Document.nodes.get_or_none(uid=doc_id)
+            if neo4j_doc is None:
+                logger.info(f"[upload] PDF найден в S3, но Neo4j пуст для {doc_id} — очищаем S3 и грузим заново")
+                await self._cleanup_s3_prefixes(doc_id)
+                pdf_exists = False
 
         # Создаём запись в Neo4j сразу, до запуска фоновой задачи
         try:
@@ -296,7 +420,6 @@ class DataExtractionService:
             logger.warning(f"[Neo4j] Не удалось создать запись при загрузке: {neo_err}")
 
         if pdf_exists:
-            # Проверяем все возможные пути markdown
             md_key_old = f"{prefix}{doc_id}.md"
             md_key_raw = f"{prefix}{doc_id}_docling_raw.md"
             md_exists = (
@@ -308,14 +431,13 @@ class DataExtractionService:
                 if not existing_pdf:
                     raise HTTPException(status_code=500, detail="Не удалось прочитать существующий PDF из S3")
                 logger.info(f"[upload] PDF exists but no markdown, launching conversion for doc_id={doc_id}")
-                background_tasks.add_task(process_pdf_and_upload, existing_pdf, file.filename)
+                await self._start_conversion_task(doc_id, existing_pdf, file.filename)
                 return DataExtractionResponse(
                     success=True, doc_id=doc_id,
                     message="Конвертация запущена для существующего PDF",
                     files={"pdf": pdf_key}
                 )
             logger.info(f"[upload] Дубликат с markdown: doc_id={doc_id}")
-            # Обновляем статус если документ был только что создан с uploading
             try:
                 dup_doc = Document.nodes.get_or_none(uid=doc_id)
                 if dup_doc and dup_doc.processing_status == 'uploading':
@@ -336,7 +458,7 @@ class DataExtractionService:
         if not uploaded:
             raise HTTPException(status_code=500, detail="Не удалось сохранить PDF в S3")
 
-        background_tasks.add_task(process_pdf_and_upload, raw, file.filename)
+        await self._start_conversion_task(doc_id, raw, file.filename)
         logger.info(f"[upload] doc_id={doc_id} загружен, конвертация запущена")
 
         return DataExtractionResponse(
@@ -582,82 +704,18 @@ class DataExtractionService:
         except Exception as e:
             logger.error(f"[delete] Ошибка удаления Neo4j для {doc_id}: {e}", exc_info=True)
 
-        # Затем удаляем файлы из S3
-        bucket = settings.S3_BUCKET_NAME
-        deleted = 0
+        # Отменяем фоновую задачу конвертации (Fix 1)
+        old = _background_tasks.pop(doc_id, None)
+        if old and not old.done():
+            old.cancel()
+            try:
+                await old
+            except asyncio.CancelledError:
+                pass
+            logger.info(f"[delete] Отменена фоновая задача для doc_id={doc_id}")
 
-        # Префиксы для удаления:
-        # 1. documents/{doc_id}/ - основные файлы
-        # 2. markdown/{doc_id}* - версионированные markdown файлы
-        prefixes_to_delete = [
-            f"documents/{doc_id}/",
-            f"markdown/{doc_id}"
-        ]
-
-        import asyncio
-        for prefix in prefixes_to_delete:
-            # Собираем все ключи для удаления (один раз)
-            contents = await self.s3_client.list_objects(bucket, prefix)
-            keys_to_delete = []
-
-            for obj in contents:
-                key = obj.get('Key') or obj.get('key') or ''
-                if key and not key in keys_to_delete:
-                    keys_to_delete.append(key)
-
-            if not keys_to_delete:
-                continue
-
-            # Удаляем все собранные ключи
-            for key in keys_to_delete:
-                ok = await self.s3_client.delete_object(bucket, key)
-                if ok:
-                    deleted += 1
-
-            # Даём время на eventual consistency и повторно пытаемся удалить
-            for retry in range(3):
-                await asyncio.sleep(0.5)
-
-                remaining = await self.s3_client.list_objects(bucket, prefix)
-                if not remaining:
-                    break
-
-                # Если остались файлы - пробуем удалить версии или повторить удаление
-                try:
-                    async with self.s3_client.client_context() as s3:
-                        # Удаление всех версий
-                        versions_resp = await s3.list_object_versions(Bucket=bucket, Prefix=prefix)
-
-                        # Удаляем версии
-                        for v in versions_resp.get('Versions', []):
-                            key = v.get('Key')
-                            ver = v.get('VersionId')
-                            if key and ver:
-                                await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
-                                deleted += 1
-
-                        for m in versions_resp.get('DeleteMarkers', []):
-                            key = m.get('Key')
-                            ver = m.get('VersionId')
-                            if key and ver:
-                                await s3.delete_object(Bucket=bucket, Key=key, VersionId=ver)
-                                deleted += 1
-
-                        if not versions_resp.get('Versions') and not versions_resp.get('DeleteMarkers'):
-                            for obj in remaining:
-                                key = obj.get('Key') or obj.get('key') or ''
-                                if key:
-                                    await s3.delete_object(Bucket=bucket, Key=key)
-                                    deleted += 1
-                except Exception as e:
-                    logger.warning(f"[delete] Попытка {retry + 1}/3 для {prefix}: {e}")
-
-            await asyncio.sleep(1.0)
-            remaining = await self.s3_client.list_objects(bucket, prefix)
-            if remaining:
-                rem_keys = [o.get('Key') or o.get('key') or '' for o in remaining]
-                logger.warning(f"[delete] Остались объекты под {prefix}: {rem_keys}")
-
+        # Затем удаляем файлы из S3 (Fix 3: pagination в list_objects)
+        deleted = await self._cleanup_s3_prefixes(doc_id)
         logger.info(f"[delete] doc_id={doc_id}: удалено {deleted} файлов из S3")
         return {"success": True, "deleted": deleted, "doc_id": doc_id}
 

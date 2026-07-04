@@ -23,25 +23,41 @@ class NLPClient:
         self._host = host or settings.nlp_grpc_host
         self._port = port or settings.nlp_grpc_port
         self._channel: grpc.aio.Channel | None = None
+        self._stub = None
+
+    def _ensure_channel(self):
+        if self._channel is None:
+            self._channel = grpc.aio.insecure_channel(
+                f"{self._host}:{self._port}",
+                options=[
+                    ("grpc.max_send_message_length", 256 * 1024 * 1024),
+                    ("grpc.max_receive_message_length", 256 * 1024 * 1024),
+                ],
+            )
+        return self._channel
 
     async def __aenter__(self) -> NLPClient:
-        self._channel = grpc.aio.insecure_channel(
-            f"{self._host}:{self._port}",
-            options=[
-                ("grpc.max_send_message_length", 256 * 1024 * 1024),
-                ("grpc.max_receive_message_length", 256 * 1024 * 1024),
-            ],
-        )
+        self._ensure_channel()
         return self
 
     async def __aexit__(self, *args) -> None:
         if self._channel:
             await self._channel.close()
+            self._channel = None
+            self._stub = None
+
+    async def close(self) -> None:
+        if self._channel:
+            await self._channel.close()
+            self._channel = None
+            self._stub = None
 
     async def get_dependency_trees(self, text: str) -> list[DependencyTree]:
         from src.parser import nlp_pb2_grpc, nlp_pb2
 
-        stub = nlp_pb2_grpc.NLPServiceStub(self._channel)
+        channel = self._ensure_channel()
+
+        stub = nlp_pb2_grpc.NLPServiceStub(channel)
 
         request = nlp_pb2.AnalyzeTextRequest(
             text=text,

@@ -1,6 +1,6 @@
 """Роутер для работы с документами"""
 import logging
-from fastapi import APIRouter, BackgroundTasks, UploadFile, File, HTTPException, Request
+from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from fastapi.responses import Response
 
 from src.schemas.api import (
@@ -23,9 +23,9 @@ data_extraction_service = DataExtractionService()
 
 
 @router.post("/data_extraction", response_model=DataExtractionResponse)
-async def data_extraction_upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+async def data_extraction_upload(file: UploadFile = File(...)):
     """Загрузка PDF, MD5-дедупликация, конвертация в Markdown, загрузка md+изображений+json в S3."""
-    return await data_extraction_service.upload_and_process_pdf(background_tasks, file)
+    return await data_extraction_service.upload_and_process_pdf(file)
 
 
 @router.get("/documents/{doc_id}/assets", response_model=DocumentAssetsResponse)

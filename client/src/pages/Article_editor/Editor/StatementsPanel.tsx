@@ -74,7 +74,7 @@ const StatementsPanel = forwardRef<HTMLDivElement, StatementsPanelProps>(({
                     style={highlightIndex === idx ? { background: '#fef3c7', outline: '1px solid #f59e0b' } : undefined}
                 >
                     <div className={styles.statementId}>
-                        {stmt.id ? stmt.id.substring(0, 8) + '...' : `#${idx + 1}`}
+                        {stmt.id || `#${idx + 1}`}
                     </div>
                     <div className={styles.statementTriple}>
                         <span className={styles.statementSubject}>{stmt.subject_text}</span>

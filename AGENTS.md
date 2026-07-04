@@ -111,9 +111,22 @@ English only. Deterministic spaCy dependency tree rules. LLM only for complex ca
 - **Решение 2** (`client/.env`, `client/vite.config.ts`): VITE_API_BASE_URL и proxy target переключены на порт 8001 (временный сервер через system Python работает, порт 8000 занят зомби-процессом без article_editor).
 - **Статус на 03.07.2026**: порт 8001 (PID 15152, system Python) работает со всеми роутами, включая article_editor. Порт 8000 (PID 13864, poetry) — зомби-процесс без article_editor, не убивается без админа.
 
+### Changes This Session (Iteration 12 — Hybrid backend port conflict fix)
+- **ROOT CAUSE #1** (`hybrid_server.py`): `main()` вызывает `uvicorn.run()` без `if __name__ == "__main__":` — на Windows multiprocessing spawn повторно импортирует модуль, uvicorn пытается запустить второй worker на том же порту → `EADDRINUSE` сразу после `Application startup complete`.
+- **ROOT CAUSE #2**: Предыдущий запуск оставил zombie-процесс (PID 17876) на порту 5002 (с 9:34). Даже когда новый процесс (17204) стартовал, старый zombie создавал race condition при bind.
+- **Исправление** (`hybrid_wrapper.py` — новый файл): обёртка с `if __name__ == "__main__":` guard для стабильного запуска uvicorn на Windows.
+- **Исправление** (`start.ps1`):
+  - Cleanup: убивает любой процесс на порту 5002 перед стартом
+  - Использует `hybrid_wrapper.py` вместо прямого CLI entry point
+  - Retry-логика: если хайбрид упал после первого старта (health недоступен), перезапускает один раз
+  - `localhost` → `127.0.0.1` в health check: Windows резолвит `localhost` в `::1` (IPv6), а uvicorn слушает `0.0.0.0` (IPv4) — health check зависал на 180 секунд
+- **Ускорение**: старт DoclingFast hybrid теперь занимает ~6-9 секунд (вместо 180+). DocumentConverter инициализируется за ~4.62с на CPU, health check срабатывает через ~3с после этого.
+- **Порт 8000** (PID 1688, zombie poetry API без article_editor) и **порт 8002** (PID 22784, zombie pdf-to-md REST) всё ещё висят — требуют админских прав для убийства.
+
 ### Next Steps
-1. **Освободить порт 8000**: `taskkill /F /PID 13864` из PowerShell Administrator
-2. **First-person narrator**: `I → propose`, `I → include` — ActiveVoiceRule subject is `I` (PROPN)
-3. **Subordinate `that`-clauses**: `article... suggests that canonic hallmarks...`
-4. **Long noun-phrase subjects**: e.g., `DNA repair deficiencies, inflammatory signaling, epigenetic alterations and related mechanisms → contribute to`
-5. **Diagnose poetry import slowdown**: какой импорт в `web.app` висит дольше всего (strawberry/GraphQL? neomodel? grpcio?)
+1. **Запустить новый `start.ps1`** в `pdf_to_md/`: проверить, что hybrid backend (5002), gRPC (50053) и REST (8002) стартуют без EADDRINUSE
+2. **Проверить upload документа** через API — конвертация должна пройти через DoclingFast hybrid
+3. **Починить `--hybrid-fallback`** в Java OpenDataLoader: если хайбрид временно недоступен, падать не должно
+4. **First-person narrator**: `I → propose`, `I → include` — ActiveVoiceRule subject is `I` (PROPN)
+5. **Subordinate `that`-clauses**: `article... suggests that canonic hallmarks...`
+6. **Диагностика poetry import slowdown**: какой импорт в `web.app` висит дольше всего (strawberry/GraphQL? neomodel? grpcio?)

@@ -44,8 +44,9 @@ async def get_document_assets(
     if not active_key:
         active_key = f"{prefix}{doc_id}.md"
 
-    # Параллельно: markdown + список изображений в images/
-    markdown_task = storage.download_text(bucket, active_key) if active_key else asyncio.sleep(0, result=None)
+    # Проверяем существование markdown перед скачиванием (избегаем NoSuchKey)
+    md_exists = await storage.object_exists(bucket, active_key) if active_key else False
+    markdown_task = storage.download_text(bucket, active_key) if md_exists else asyncio.sleep(0, result=None)
     images_task = storage.list_objects(bucket, prefix=prefix)
 
     markdown_raw, objects = await asyncio.gather(markdown_task, images_task)

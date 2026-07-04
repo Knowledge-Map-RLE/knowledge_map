@@ -19,6 +19,7 @@ ai/.env
 nlp/.env
 .venv/
 worker_distributed_layering_rust/tests/artifacts/
+*.log
 
 target/
 

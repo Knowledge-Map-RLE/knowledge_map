@@ -226,10 +226,24 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
     
     async def ConvertPDF(self, request, context):
         """Конвертация PDF в Markdown"""
+        import time as time_module
+        _t0 = time_module.time()
+        doc_id = request.doc_id or "unknown"
+        pdf_size = len(request.pdf_content) if request.pdf_content else 0
+        logger.info(
+            f"[grpc] ConvertPDF запрос получен: doc_id={doc_id}, "
+            f"pdf_size={pdf_size} байт ({pdf_size/1024:.1f} KB), "
+            f"model_id={request.model_id or 'default'}"
+        )
+
         try:
-            logger.info(f"[grpc] Начинаем конвертацию PDF: doc_id={request.doc_id}")
-            logger.info(f"[grpc] Получен запрос с размером PDF: {len(request.pdf_content)} байт")
-            logger.info(f"[grpc] Запрошенная модель: {request.model_id or 'None (будет использована по умолчанию)'}")
+            if not request.pdf_content or len(request.pdf_content) == 0:
+                logger.error(f"[grpc] doc_id={doc_id}: PDF content is empty")
+                return pdf_to_md_pb2.ConvertPDFResponse(
+                    success=False, doc_id=doc_id,
+                    markdown_content="", images={},
+                    message="PDF content is empty"
+                )
 
             # Используем сервис конвертации с поддержкой Docling
             result = await self.conversion_service.convert_pdf(
@@ -239,8 +253,14 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
                 use_coordinate_extraction=True  # По умолчанию включено
             )
 
+            _elapsed = time_module.time() - _t0
             if result.success:
-                logger.info(f"[grpc] Конвертация завершена успешно: doc_id={request.doc_id}")
+                logger.info(
+                    f"[grpc] Конвертация завершена успешно: doc_id={doc_id}, "
+                    f"elapsed={_elapsed:.2f}s, "
+                    f"md_len={len(result.markdown_content or '')} chars, "
+                    f"images={len(result.images or {})}"
+                )
 
                 # Handle S3 images vs traditional images
                 response_images = {}
@@ -276,20 +296,29 @@ class PDFToMarkdownServicer(pdf_to_md_pb2_grpc.PDFToMarkdownServiceServicer):
                     formatted_s3_key=formatted_s3_key
                 )
             else:
-                logger.error(f"[grpc] Ошибка конвертации: {result.error_message}")
+                _elapsed = time_module.time() - _t0
+                logger.error(
+                    f"[grpc] Ошибка конвертации: doc_id={doc_id}, "
+                    f"elapsed={_elapsed:.2f}s, error={result.error_message}"
+                )
                 return pdf_to_md_pb2.ConvertPDFResponse(
                     success=False,
-                    doc_id=result.doc_id,
+                    doc_id=result.doc_id or doc_id,
                     markdown_content="",
                     images={},
                     message=f"Ошибка конвертации: {result.error_message}"
                 )
 
         except Exception as e:
-            logger.error(f"[grpc] Исключение при конвертации: {e}")
+            _elapsed = time_module.time() - _t0
+            logger.error(
+                f"[grpc] Исключение при конвертации: doc_id={doc_id}, "
+                f"elapsed={_elapsed:.2f}s, error={e}",
+                exc_info=True
+            )
             return pdf_to_md_pb2.ConvertPDFResponse(
                 success=False,
-                doc_id=request.doc_id or "unknown",
+                doc_id=doc_id,
                 markdown_content="",
                 images={},
                 message=f"Исключение: {str(e)}"
@@ -430,7 +459,14 @@ async def serve():
     """Запуск gRPC сервера"""
     logger.info("[grpc] Инициализация gRPC сервера")
 
-    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
+    # Increase max message size to 50MB for large PDFs and image responses
+    server = grpc.aio.server(
+        futures.ThreadPoolExecutor(max_workers=10),
+        options=[
+            ('grpc.max_send_message_length', 50 * 1024 * 1024),
+            ('grpc.max_receive_message_length', 50 * 1024 * 1024),
+        ]
+    )
     
     # Добавляем сервис
     pdf_to_md_pb2_grpc.add_PDFToMarkdownServiceServicer_to_server(

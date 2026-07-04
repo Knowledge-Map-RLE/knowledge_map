@@ -227,14 +227,18 @@ class ActiveVoiceRule(BaseRule):
                     if not subject_texts:
                         subject_texts = [tree.subtree_text(nsubj.idx)]
 
+            verbs_with_cop: set[int] = set()
+            for v in verbs:
+                if any(c.dep == "cop" for c in tree.children(v.idx)):
+                    verbs_with_cop.add(v.idx)
+
             for subject_text in subject_texts:
                 if not subject_text:
                     continue
                 subject = ctx.get_or_create_concept(subject_text)
 
                 for v in verbs:
-                    has_cop = any(c.dep == "cop" for c in tree.children(v.idx))
-                    if has_cop:
+                    if v.idx in verbs_with_cop:
                         continue
 
                     # First-person narrator: I/We propose that X → extract X's predicate from ccomp

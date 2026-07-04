@@ -51,7 +51,15 @@ class PDFToMarkdownGRPCClient:
         try:
             if not self._connected:
                 logger.info(f"[grpc_client] Пытаемся подключиться к {self.host}:{self.port}")
-                self.channel = aio.insecure_channel(f"{self.host}:{self.port}")
+                # Increase max message size to 50MB for large PDFs and image responses
+                channel_options = [
+                    ('grpc.max_send_message_length', 50 * 1024 * 1024),
+                    ('grpc.max_receive_message_length', 50 * 1024 * 1024),
+                ]
+                self.channel = aio.insecure_channel(
+                    f"{self.host}:{self.port}",
+                    options=channel_options
+                )
                 self.stub = pdf_to_md_pb2_grpc.PDFToMarkdownServiceStub(self.channel)
                 self._connected = True
                 logger.info(f"[grpc_client] Подключен к {self.host}:{self.port}")
@@ -87,10 +95,18 @@ class PDFToMarkdownGRPCClient:
         Returns:
             Результат конвертации
         """
+        import time as time_module
+        t0 = time_module.time()
+        pdf_size = len(pdf_content) if pdf_content else 0
+        logger.info(
+            f"[grpc_client] Отправляем запрос на конвертацию: "
+            f"doc_id={doc_id}, host={self.host}, port={self.port}, "
+            f"pdf_size={pdf_size} байт ({pdf_size / 1024:.1f} KB), "
+            f"timeout={timeout}s"
+        )
+        
         try:
             await self.connect()
-            
-            logger.info(f"[grpc_client] Отправляем запрос на конвертацию: doc_id={doc_id}, host={self.host}, port={self.port}")
             
             # Создаем запрос
             request = pdf_to_md_pb2.ConvertPDFRequest(
@@ -99,8 +115,24 @@ class PDFToMarkdownGRPCClient:
                 model_id=model_id  # Не передаем model_id, чтобы использовалась модель по умолчанию
             )
             
+            # Проверяем размер сериализованного запроса
+            serialized_size = len(request.SerializeToString())
+            logger.info(
+                f"[grpc_client] Запрос сериализован: doc_id={doc_id}, "
+                f"serialized_size={serialized_size} байт ({serialized_size / 1024:.1f} KB)"
+            )
+            
             # Выполняем gRPC вызов
             response = await self.stub.ConvertPDF(request, timeout=timeout)
+            
+            elapsed = time_module.time() - t0
+            logger.info(
+                f"[grpc_client] Получен ответ: doc_id={doc_id}, "
+                f"success={response.success}, elapsed={elapsed:.2f}s, "
+                f"md_len={len(response.markdown_content or '')} chars, "
+                f"images={len(dict(response.images))}, "
+                f"message='{response.message[:100] if response.message else ''}'"
+            )
 
             return {
                 "success": response.success,
@@ -113,8 +145,35 @@ class PDFToMarkdownGRPCClient:
                 "formatted_s3_key": response.formatted_s3_key or None
             }
             
+        except grpc.RpcError as rpc_err:
+            elapsed = time_module.time() - t0
+            logger.error(
+                f"[grpc_client] gRPC ошибка: doc_id={doc_id}, "
+                f"code={rpc_err.code().name}, details='{rpc_err.details()}', "
+                f"elapsed={elapsed:.2f}s"
+            )
+            return {
+                "success": False,
+                "doc_id": doc_id,
+                "markdown_content": "",
+                "images": {},
+                "metadata_json": "",
+                "message": f"gRPC ошибка ({rpc_err.code().name}): {rpc_err.details()}"
+            }
+        except asyncio.TimeoutError:
+            elapsed = time_module.time() - t0
+            logger.error(f"[grpc_client] Таймаут конвертации: doc_id={doc_id}, timeout={timeout}s, elapsed={elapsed:.2f}s")
+            return {
+                "success": False,
+                "doc_id": doc_id,
+                "markdown_content": "",
+                "images": {},
+                "metadata_json": "",
+                "message": f"Таймаут конвертации ({timeout}s)"
+            }
         except Exception as e:
-            logger.error(f"[grpc_client] Ошибка конвертации: {e}")
+            elapsed = time_module.time() - t0
+            logger.error(f"[grpc_client] Ошибка конвертации: doc_id={doc_id}, elapsed={elapsed:.2f}s, error={e}", exc_info=True)
             return {
                 "success": False,
                 "doc_id": doc_id,

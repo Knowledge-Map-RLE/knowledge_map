@@ -165,3 +165,20 @@ async def root():
 
 
 logger.info("Application startup complete.")
+
+
+@app.on_event("startup")
+async def _reset_stuck_documents():
+    """Сбрасывает документы, зависшие в не-терминальных статусах после перезапуска."""
+    try:
+        from neomodel import db
+        result, meta = db.cypher_query(
+            "MATCH (d:Document) WHERE d.processing_status IN ['uploading', 'pdf_to_markdown'] "
+            "SET d.processing_status = 'error' "
+            "RETURN count(d) as count"
+        )
+        count = result[0][0] if result else 0
+        if count:
+            logger.warning(f"[startup] Сброшено {count} зависших документов в статус 'error'")
+    except Exception as e:
+        logger.warning(f"[startup] Не удалось сбросить зависшие документы: {e}")
