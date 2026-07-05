@@ -4,7 +4,7 @@
  * Пробрасывает события через колбэки: onTextChange, onTextSelect, onCursorMove.
  */
 import { useEffect, useRef, useCallback } from 'react';
-import { EditorView, keymap, ViewPlugin } from '@codemirror/view';
+import { EditorView, keymap, ViewPlugin, lineNumbers } from '@codemirror/view';
 import { EditorState, Transaction, Compartment } from '@codemirror/state';
 import { defaultKeymap } from '@codemirror/commands';
 import {
@@ -14,7 +14,17 @@ import {
   replaceDocAnnotation,
 } from './annotationStateField';
 import { cssHighlightPlugin } from './cssHighlightPlugin';
+import {
+  validationField,
+  setValidationErrorsEffect,
+  toValidationErrorWithPos,
+} from './validationStateField';
+import {
+  validationDecorationsPlugin,
+  validationTooltip,
+} from './validationPlugin';
 import type { Annotation } from '../../../../services/api';
+import type { ValidationError } from '../../../../widgets/MarkdownEditor';
 
 interface UseCM6EditorParams {
   containerRef: React.RefObject<HTMLDivElement>;
@@ -29,6 +39,7 @@ interface UseCM6EditorParams {
 interface UseCM6EditorResult {
   viewRef: React.RefObject<EditorView | null>;
   setAnnotations: (annotations: Annotation[]) => void;
+  setValidationErrors: (errors: ValidationError[]) => void;
   doUndo: () => void;
   doRedo: () => void;
   scrollToOffset: (offset: number) => void;
@@ -60,6 +71,7 @@ export function useCM6Editor({
 
   // Очередь аннотаций, пришедших до создания view
   const pendingAnnotationsRef = useRef<Annotation[] | null>(null);
+  const pendingValidationRef = useRef<ValidationError[] | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -91,8 +103,12 @@ export function useCM6Editor({
       doc: initialTextRef.current,
       extensions: [
         keymap.of([...defaultKeymap]),
+        lineNumbers(),
         annotationField,
+        validationField,
         highlightPlugin,
+        validationDecorationsPlugin,
+        validationTooltip,
         listenerPlugin,
         editableCompartment.current.of(EditorView.editable.of(editable)),
         EditorView.lineWrapping,
@@ -135,6 +151,17 @@ export function useCM6Editor({
         ),
       });
       pendingAnnotationsRef.current = null;
+    }
+
+    // Применяем ошибки валидации, которые пришли до создания view
+    if (pendingValidationRef.current !== null) {
+      const withPos = pendingValidationRef.current
+        .map(toValidationErrorWithPos)
+        .filter(Boolean);
+      view.dispatch({
+        effects: setValidationErrorsEffect.of(withPos),
+      });
+      pendingValidationRef.current = null;
     }
 
     return () => {
@@ -192,6 +219,19 @@ export function useCM6Editor({
     }
   }, []);
 
+  const setValidationErrors = useCallback((errors: ValidationError[]) => {
+    if (!viewRef.current) {
+      pendingValidationRef.current = errors;
+      return;
+    }
+    const withPos = errors
+      .map(toValidationErrorWithPos)
+      .filter(Boolean);
+    viewRef.current.dispatch({
+      effects: setValidationErrorsEffect.of(withPos),
+    });
+  }, []);
+
   const doUndo = useCallback(() => {}, []);
   const doRedo = useCallback(() => {}, []);
 
@@ -203,7 +243,7 @@ export function useCM6Editor({
     });
   }, []);
 
-  return { viewRef, setAnnotations, doUndo, doRedo, scrollToOffset };
+  return { viewRef, setAnnotations, setValidationErrors, doUndo, doRedo, scrollToOffset };
 }
 
 export type { UseCM6EditorResult };

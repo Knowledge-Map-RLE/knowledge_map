@@ -123,6 +123,7 @@ class UpdateMarkdownRequest(BaseModel):
     markdown: str = Field(..., description="Markdown content to save")
     auto_validate: bool = Field(default=True, description="Validate markdown before saving")
     strict_mode: bool = Field(default=False, description="Reject save if validation fails (strict mode)")
+    annotate: bool = Field(default=False, description="Mark document as annotated after saving (requires valid markdown)")
 
 
 class UpdateMarkdownResponse(BaseModel):

@@ -43,15 +43,25 @@ async def get_article(doc_id: str):
 @router.put("/article_editor/articles/{doc_id}/text")
 async def save_article_text(doc_id: str, req: SaveTextRequest):
     result = await service.save_article_text(doc_id, req.text)
+    if not result.get("success"):
+        if result.get("error") == "not_annotated":
+            raise HTTPException(status_code=403, detail=result.get("message"))
+        return result
     return result
 
 
 @router.get("/article_editor/articles/{doc_id}/text")
 async def get_article_text(doc_id: str):
-    text = await service.get_article_text(doc_id)
-    return {"text": text, "success": True}
+    result = await service.get_article_text(doc_id)
+    if result.get("not_annotated"):
+        raise HTTPException(status_code=403, detail=result.get("message"))
+    return {"text": result.get("text", ""), "success": True}
 
 
 @router.put("/article_editor/articles/{doc_id}/statements")
 async def save_statements(doc_id: str, req: SaveStatementsRequest):
-    return await service.save_statements(doc_id, req.statements)
+    result = await service.save_statements(doc_id, req.statements)
+    if not result.get("success"):
+        if result.get("error") == "not_annotated":
+            raise HTTPException(status_code=403, detail=result.get("message"))
+    return result

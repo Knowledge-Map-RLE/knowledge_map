@@ -35,13 +35,21 @@ interface ValidationErrorAlertProps {
 }
 
 const ERROR_LABELS: Record<string, { label: string; icon: string; color: string }> = {
+  MISSING_FRONTMATTER: {
+    label: 'Отсутствует Frontmatter',
+    icon: '⚠️',
+    color: '#f57c00',
+  },
   MISSING_H1: { label: 'Отсутствует H1', icon: '📌', color: '#d32f2f' },
   MULTIPLE_H1: { label: 'Несколько H1', icon: '❌', color: '#d32f2f' },
+  TEXT_BETWEEN_FRONTMATTER_AND_H1: { label: 'Текст между --- и H1', icon: '📄', color: '#d32f2f' },
   MALFORMED_FRONTMATTER: { label: 'Ошибка frontmatter', icon: '⚠️', color: '#f57c00' },
   INVALID_YAML: { label: 'Невалидный YAML', icon: '❌', color: '#d32f2f' },
   MARKDOWN_TABLE_FOUND: { label: 'Markdown таблица', icon: '📊', color: '#d32f2f' },
   MARKDOWN_IMAGE_FOUND: { label: 'Markdown изображение', icon: '🖼️', color: '#d32f2f' },
   MISSING_REFERENCES_SECTION: { label: 'Отсутствует References', icon: '📚', color: '#f57c00' },
+  MISSING_DOI: { label: 'Отсутствует DOI', icon: '🔗', color: '#d32f2f' },
+  INVALID_DOI_FORMAT: { label: 'Неверный формат DOI', icon: '🔗', color: '#d32f2f' },
   CITATION_WITHOUT_REFERENCE: { label: 'Цитата без ссылки', icon: '🔗', color: '#d32f2f' },
   ORPHANED_REFERENCE: { label: 'Неиспользованная ссылка', icon: '🔗', color: '#1976d2' },
   DUPLICATE_REFERENCE_NUMBER: { label: 'Дубликат номера', icon: '❌', color: '#d32f2f' },
@@ -71,7 +79,11 @@ export const ValidationErrorAlert: React.FC<ValidationErrorAlertProps> = ({
   const allErrors = [...validation.errors, ...validation.warnings];
 
   const getErrorInfo = (errorType: string) => {
-    return ERROR_LABELS[errorType] || { label: errorType, icon: '⚠️', color: '#ff9800' };
+    return ERROR_LABELS[errorType] || ERROR_LABELS[errorType.toUpperCase()] || {
+      label: errorType,
+      icon: '⚠️',
+      color: '#ff9800',
+    };
   };
 
   if (compact) {
@@ -91,13 +103,14 @@ export const ValidationErrorAlert: React.FC<ValidationErrorAlertProps> = ({
     <div className={styles.alertContainer}>
       <div className={styles.alertHeader}>
         <div className={styles.headerContent}>
-          <h3 className={styles.title}>❌ Ошибки валидации Markdown</h3>
-          <p className={styles.subtitle}>
-            Найдено {validation.total_errors} ошибок и {validation.total_warnings} предупреждений.
-          </p>
+          ❌ Найдено {validation.total_errors} ошибок, {validation.total_warnings} предупреждений
         </div>
         {onDismiss && (
-          <button className={styles.dismissButton} onClick={onDismiss} title="Закрыть">
+          <button
+            className={styles.dismissButton}
+            onClick={onDismiss}
+            title="Закрыть"
+          >
             ✕
           </button>
         )}

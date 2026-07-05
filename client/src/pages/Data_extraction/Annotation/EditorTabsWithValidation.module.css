@@ -21,8 +21,8 @@
 
 /* Editor Wrapper - takes remaining space */
 .editorWrapper {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr auto;
   flex: 1;
   overflow: hidden;
 }

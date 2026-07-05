@@ -37,3 +37,53 @@
   border-radius: 2px;
   cursor: pointer;
 }
+
+/* ── Валидация markdown: красное волнистое подчёркивание ──────────────── */
+.cm-validation-error {
+  text-decoration: wavy underline #e53935;
+  text-underline-position: under;
+  text-decoration-skip-ink: none;
+}
+
+/* ── Тултип валидации markdown ─────────────────────────────────────────── */
+.cm-validation-tooltip {
+  background: #fff;
+  border: 1px solid #e53935;
+  border-radius: 6px;
+  padding: 8px 12px;
+  max-width: 400px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 13px;
+  line-height: 1.4;
+  z-index: 10000;
+}
+
+.cm-validation-tooltip-header {
+  font-weight: 600;
+  color: #c62828;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.cm-validation-tooltip-message {
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.cm-validation-tooltip-suggestion {
+  color: #1565c0;
+  font-size: 12px;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #eee;
+}
+
+/* ── Read-only режим: красное волнистое подчёркивание ──────────────────── */
+.annotated-text .cm-validation-error {
+  text-decoration: wavy underline #e53935;
+  text-underline-position: under;
+  text-decoration-skip-ink: none;
+  cursor: help;
+}

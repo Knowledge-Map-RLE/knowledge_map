@@ -67,44 +67,74 @@ class ArticleEditorService:
 
         return article
 
+    async def get_document_status(self, doc_id: str) -> str | None:
+        results, _ = db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) RETURN d.processing_status",
+            {"uid": doc_id},
+        )
+        return results[0][0] if results else None
+
+    def _is_editable_status(self, status: str | None) -> bool:
+        """Только документы в финальном статусе можно редактировать."""
+        if not status:
+            return False
+        blocked = {"uploaded", "uploading", "pdf_to_markdown", "processing", "error"}
+        return status not in blocked
+
     async def save_article_text(self, doc_id: str, text: str) -> dict[str, Any]:
+        status = await self.get_document_status(doc_id)
+        if not self._is_editable_status(status):
+            return {"success": False, "uid": doc_id, "error": "not_annotated",
+                    "message": "Редактирование доступно только для аннотированных документов. Перейдите в data_extraction редактор для приведения текста в каноничный вид."}
         now = datetime.now(timezone.utc).isoformat()
+        bucket = settings.S3_BUCKET_NAME
+        md_key = f"markdown/{doc_id}.md"
+        s3_client = get_s3_client()
+        ok = await s3_client.upload_bytes(
+            text.encode("utf-8"),
+            bucket,
+            md_key,
+            content_type="text/markdown; charset=utf-8",
+        )
+        if not ok:
+            return {"success": False, "uid": doc_id, "error": "S3 upload failed"}
         db.cypher_query(
             "MATCH (d:Document {uid: $uid}) "
-            "SET d.kl_text = $text, d.edit_date = datetime($now)",
-            {"uid": doc_id, "text": text, "now": now},
+            "SET d.user_md_s3_key = $key, d.edit_date = datetime($now)",
+            {"uid": doc_id, "key": md_key, "now": now},
         )
         return {"success": True, "uid": doc_id, "text_length": len(text)}
 
-    async def get_article_text(self, doc_id: str) -> str:
+    async def get_article_text(self, doc_id: str) -> dict[str, Any]:
+        status = await self.get_document_status(doc_id)
+        if not self._is_editable_status(status):
+            return {"text": "", "not_annotated": True,
+                    "message": "Редактирование доступно только для аннотированных документов. Перейдите в data_extraction редактор для приведения текста в каноничный вид."}
         results, _ = db.cypher_query(
-            "MATCH (d:Document {uid: $uid}) RETURN d.kl_text, "
+            "MATCH (d:Document {uid: $uid}) RETURN "
             "d.user_md_s3_key, d.formatted_md_s3_key, d.docling_raw_md_s3_key",
             {"uid": doc_id},
         )
-        if results and results[0][0]:
-            return results[0][0]
-
-        # Fallback: load from S3 and cache as kl_text
-        if results:
-            md_key = results[0][1] or results[0][2] or results[0][3]
-            if md_key:
-                bucket = settings.S3_BUCKET_NAME
-                s3_client = get_s3_client()
-                exists = await s3_client.object_exists(bucket, md_key)
-                if exists:
-                    text = await s3_client.download_text(bucket, md_key)
-                    if text:
-                        db.cypher_query(
-                            "MATCH (d:Document {uid: $uid}) SET d.kl_text = $text",
-                            {"uid": doc_id, "text": text},
-                        )
-                    return text or ""
-        return ""
+        if not results:
+            return {"text": ""}
+        md_key = results[0][0] or results[0][1] or results[0][2]
+        if not md_key:
+            return {"text": ""}
+        bucket = settings.S3_BUCKET_NAME
+        s3_client = get_s3_client()
+        exists = await s3_client.object_exists(bucket, md_key)
+        if not exists:
+            return {"text": ""}
+        text = await s3_client.download_text(bucket, md_key)
+        return {"text": text or ""}
 
     async def save_statements(
         self, doc_id: str, statements: list[dict[str, Any]]
     ) -> dict[str, Any]:
+        status = await self.get_document_status(doc_id)
+        if not self._is_editable_status(status):
+            return {"success": False, "error": "not_annotated",
+                    "message": "Редактирование доступно только для аннотированных документов. Перейдите в data_extraction редактор для приведения текста в каноничный вид."}
         db.cypher_query(
             "MATCH (d:Document {uid: $uid}) OPTIONAL MATCH (d)-[r:HAS_STATEMENT]->(s:KnowledgeStatement) DELETE r, s",
             {"uid": doc_id},
@@ -135,7 +165,7 @@ class ArticleEditorService:
     async def list_articles(self, skip: int = 0, limit: int = 200) -> list[dict[str, Any]]:
         results, meta = db.cypher_query(
             "MATCH (d:Document) RETURN d.uid, d.title, d.original_filename, "
-            "d.processing_status, d.upload_date, d.kl_text "
+            "d.processing_status, d.upload_date, d.user_md_s3_key "
             "ORDER BY d.upload_date DESC SKIP $skip LIMIT $limit",
             {"skip": skip, "limit": limit},
         )
@@ -148,7 +178,7 @@ class ArticleEditorService:
                 "original_filename": row[2],
                 "processing_status": row[3],
                 "created_at": ts.isoformat() if ts else "",
-                "has_kl_text": bool(row[5]),
+                "has_text": bool(row[5]),
             })
         return articles
 

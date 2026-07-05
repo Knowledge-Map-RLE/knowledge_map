@@ -1,9 +1,9 @@
 /**
  * Обертка для EditorTabs с поддержкой валидации markdown и справкой
  */
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import EditorTabs from './EditorTabs';
-import { ValidationErrorAlert, type ValidationResponse } from '../../../widgets/MarkdownEditor';
+import { ValidationErrorAlert, type ValidationResponse, type ValidationError } from '../../../widgets/MarkdownEditor';
 import { MarkdownValidationRules } from '../../../widgets/MarkdownEditor';
 import { useMarkdownValidation } from '../../../widgets/MarkdownEditor';
 import AnnotationFilters from './AnnotationFilters';
@@ -180,6 +180,15 @@ const EditorTabsWithValidation = React.forwardRef<
       return true;
     };
 
+    // Ошибки валидации с координатами в тексте — для подсветки в аннотаторе
+    const validationErrorsWithOffsets: ValidationError[] = useMemo(() => {
+      if (!validation) return [];
+      const all = [...validation.errors, ...validation.warnings];
+      return all.filter(
+        e => e.start_offset !== undefined && e.end_offset !== undefined && e.start_offset < e.end_offset
+      );
+    }, [validation]);
+
     return (
       <div ref={ref} className={styles.container}>
         {/* Toolbar с кнопками инструментов */}
@@ -271,13 +280,13 @@ const EditorTabsWithValidation = React.forwardRef<
               <span className={styles.spinner}>⟳</span>
             </span>
           )}
-          {!isValidating && validation && validation.is_valid && (
+          {!isValidating && validation && validation.is_valid && validation.total_warnings === 0 && (
             <span className={styles.validationBadgeOk} title="Markdown валидный">✓</span>
           )}
-          {!isValidating && validation && !validation.is_valid && (
+          {!isValidating && validation && (!validation.is_valid || validation.total_warnings > 0) && (
             <button
               className={styles.validationBadgeError}
-              title={`Ошибки markdown: ${validation.errors?.length ?? 0}`}
+              title={`${validation.errors?.length ?? 0} ошибок, ${validation.total_warnings ?? 0} предупреждений`}
               onClick={() => setShowValidationAlert((v) => !v)}
             >
               ✗ {validation.errors?.length ?? 0}
@@ -297,14 +306,6 @@ const EditorTabsWithValidation = React.forwardRef<
 
         {/* Editor and validation wrapper */}
         <div className={styles.editorWrapper}>
-          {/* Validation Alert — разворачивается по клику на индикатор ✗ */}
-          {showValidationAlert && validation && !validation.is_valid && (
-            <ValidationErrorAlert
-              validation={validation}
-              onDismiss={() => setShowValidationAlert(false)}
-            />
-          )}
-
           {/* Main Editor Tabs Component */}
           <EditorTabs
             mainTab={mainTab}
@@ -345,7 +346,16 @@ const EditorTabsWithValidation = React.forwardRef<
             onShiftRight={onShiftRight}
             hasCursor={hasCursor}
             onCursorMove={onCursorMove}
+            validationErrors={validationErrorsWithOffsets}
           />
+
+          {/* Validation Alert — под редактором */}
+          {showValidationAlert && validation && (!validation.is_valid || validation.total_warnings > 0) && (
+            <ValidationErrorAlert
+              validation={validation}
+              onDismiss={() => setShowValidationAlert(false)}
+            />
+          )}
         </div>
 
         {/* Validation Rules Modal */}

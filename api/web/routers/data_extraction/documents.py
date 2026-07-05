@@ -168,16 +168,17 @@ async def update_document_markdown(
     """Обновляет markdown документа с опциональной валидацией."""
     validation_result = None
 
-    # Авто-валидация через NLP сервис (делегируем через старый сервис — TRANSITIONAL)
-    if request_body.auto_validate:
+    # Валидация через NLP сервис
+    if request_body.auto_validate or request_body.annotate:
         try:
             from services.nlp_grpc_client import get_nlp_grpc_client
             grpc_client = get_nlp_grpc_client()
+            strict = request_body.strict_mode or request_body.annotate
             validation_result = await grpc_client.validate_markdown(
                 markdown=request_body.markdown,
-                strict_mode=request_body.strict_mode,
+                strict_mode=strict,
             )
-            if request_body.strict_mode and not validation_result.get("is_valid"):
+            if strict and not validation_result.get("is_valid"):
                 from fastapi import HTTPException
                 raise HTTPException(
                     status_code=400,
@@ -186,6 +187,8 @@ async def update_document_markdown(
                         "validation": validation_result,
                     },
                 )
+        except HTTPException:
+            raise
         except Exception as e:
             logger.warning(f"[documents] Валидация markdown не удалась: {e}")
 
@@ -195,6 +198,7 @@ async def update_document_markdown(
         doc_id=doc_id,
         markdown=request_body.markdown,
         bucket=settings.S3_BUCKET_NAME,
+        annotate=request_body.annotate,
     )
     return UpdateMarkdownResponse(
         success=True,

@@ -14,7 +14,7 @@ const ArticleEditorUI: React.FC = () => {
     const [selectedDocument, setSelectedDocument] = useState<any>(null);
 
     const {
-        text, statements, isParsing, parseProgress, parseError, saveStatus,
+        text, statements, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
         loadArticle, setText, triggerParse, save,
     } = useArticleState();
 
@@ -30,20 +30,21 @@ const ArticleEditorUI: React.FC = () => {
     }, [loadArticle, setText]);
 
     const handleTextChange = useCallback((newText: string) => {
+        if (notAnnotatedMessage) return;
         setText(newText);
-    }, [setText]);
+    }, [notAnnotatedMessage, setText]);
 
     useEffect(() => {
-        if (selectedDocId && text.length > 0) {
+        if (selectedDocId && text.length > 0 && !notAnnotatedMessage) {
             triggerParse(selectedDocId);
         }
-    }, [text, selectedDocId, triggerParse]);
+    }, [text, selectedDocId, triggerParse, notAnnotatedMessage]);
 
     const handleSave = useCallback(async () => {
-        if (selectedDocId) {
+        if (selectedDocId && !notAnnotatedMessage) {
             await save(selectedDocId);
         }
-    }, [selectedDocId, save]);
+    }, [selectedDocId, save, notAnnotatedMessage]);
 
     const handleCreateNew = useCallback(async () => {
         const { createArticle } = await import('../../services/api/article_editor');
@@ -112,17 +113,37 @@ const ArticleEditorUI: React.FC = () => {
 
                     <div className={styles.tabContent}>
                         {activeTab === 'editor' && (
-                            <EditorWorkspace
-                                text={text}
-                                statements={statements}
-                                isParsing={isParsing}
-                                parseProgress={parseProgress}
-                                parseError={parseError}
-                                onTextChange={handleTextChange}
-                                onSave={handleSave}
-                                saveStatus={saveStatus}
-                                docId={selectedDocId ?? undefined}
-                            />
+                            notAnnotatedMessage ? (
+                                <div style={{
+                                    flex: 1, display: 'flex', flexDirection: 'column',
+                                    alignItems: 'center', justifyContent: 'center',
+                                    padding: 40, textAlign: 'center',
+                                }}>
+                                    <div style={{
+                                        background: '#fff3cd', border: '1px solid #ffc107',
+                                        borderRadius: 8, padding: '24px 32px', maxWidth: 480,
+                                    }}>
+                                        <p style={{ fontSize: 16, fontWeight: 600, color: '#856404', margin: '0 0 8px' }}>
+                                            ⚠ Документ не аннотирован
+                                        </p>
+                                        <p style={{ fontSize: 14, color: '#856404', margin: 0, lineHeight: 1.5 }}>
+                                            {notAnnotatedMessage}
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <EditorWorkspace
+                                    text={text}
+                                    statements={statements}
+                                    isParsing={isParsing}
+                                    parseProgress={parseProgress}
+                                    parseError={parseError}
+                                    onTextChange={handleTextChange}
+                                    onSave={handleSave}
+                                    saveStatus={saveStatus}
+                                    docId={selectedDocId ?? undefined}
+                                />
+                            )
                         )}
                         {activeTab === 'graph' && (
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>

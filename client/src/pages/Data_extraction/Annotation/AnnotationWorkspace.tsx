@@ -576,11 +576,6 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       if (onSave) {
         await onSave();
       }
-      
-      // Update document status to 'annotated' after successful save
-      if (onUpdateDocumentStatus) {
-          onUpdateDocumentStatus(docId, 'annotated');
-      }
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {

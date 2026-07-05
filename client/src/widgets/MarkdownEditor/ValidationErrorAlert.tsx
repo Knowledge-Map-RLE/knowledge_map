@@ -96,7 +96,7 @@ export const ValidationErrorAlert: React.FC<ValidationErrorAlertProps> = ({
 }) => {
   const [expandedErrors, setExpandedErrors] = useState<Set<number>>(new Set());
 
-  if (!validation || validation.is_valid) {
+  if (!validation || (validation.is_valid && validation.total_warnings === 0)) {
     return null;
   }
 

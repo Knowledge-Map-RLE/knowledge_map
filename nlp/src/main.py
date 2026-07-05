@@ -839,8 +839,8 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
             severity=severity_map.get(error.severity.value, nlp_pb2.VALIDATION_ERROR_SEVERITY_UNSPECIFIED),
             line=error.line or 0,
             column=error.column or 0,
-            start_offset=error.start_offset or 0,
-            end_offset=error.end_offset or 0,
+            start_offset=-1 if error.start_offset is None else error.start_offset,
+            end_offset=-1 if error.end_offset is None else error.end_offset,
             context=error.context or "",
             suggestion=error.suggestion or "",
             metadata=metadata

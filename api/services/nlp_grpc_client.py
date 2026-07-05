@@ -629,9 +629,9 @@ class NLPGRPCClient:
     def _proto_validation_error_to_dict(self, error) -> Dict[str, Any]:
         """Конвертирует ValidationError из proto в dict"""
         severity_map = {
-            nlp_pb2.ERROR_SEVERITY_ERROR: "error",
-            nlp_pb2.ERROR_SEVERITY_WARNING: "warning",
-            nlp_pb2.ERROR_SEVERITY_INFO: "info",
+            nlp_pb2.VALIDATION_ERROR_SEVERITY_ERROR: "error",
+            nlp_pb2.VALIDATION_ERROR_SEVERITY_WARNING: "warning",
+            nlp_pb2.VALIDATION_ERROR_SEVERITY_INFO: "info",
         }
         return {
             "error_type": error.error_type,
@@ -639,8 +639,8 @@ class NLPGRPCClient:
             "severity": severity_map.get(error.severity, "unknown"),
             "line": error.line if error.line > 0 else None,
             "column": error.column if error.column > 0 else None,
-            "start_offset": error.start_offset if error.start_offset > 0 else None,
-            "end_offset": error.end_offset if error.end_offset > 0 else None,
+            "start_offset": error.start_offset if error.start_offset >= 0 else None,
+            "end_offset": error.end_offset if error.end_offset >= 0 else None,
             "context": error.context if error.context else None,
             "suggestion": error.suggestion if error.suggestion else None,
             "metadata": dict(error.metadata)

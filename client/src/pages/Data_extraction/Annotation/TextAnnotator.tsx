@@ -2,6 +2,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallba
 import { Transaction } from '@codemirror/state';
 import { Annotation, AnnotationRelation } from '../../../services/api';
 import { useCM6Editor } from './cm6/useCM6Editor';
+import type { ValidationError } from '../../../widgets/MarkdownEditor';
 import './TextAnnotator.css';
 
 interface TextAnnotatorProps {
@@ -26,6 +27,7 @@ interface TextAnnotatorProps {
   onRedo?: () => void;
   forceTextVersion?: number;
   onCursorMove?: (pos: number) => void;
+  validationErrors?: ValidationError[];
 }
 
 // ── HTML-утилиты ──────────────────────────────────────────────────────────────
@@ -179,6 +181,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   onRedo,
   forceTextVersion,
   onCursorMove,
+  validationErrors,
 }, forwardedRef) => {
   const [selection, setSelection] = useState<{ start: number; end: number } | null>(null);
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null);
@@ -195,7 +198,7 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
   const cm6ContainerRef = useRef<HTMLDivElement>(null);
 
   // ── CM6 хук — монтируется только когда editable=true ─────────────────────
-  const { viewRef, setAnnotations: setCM6Annotations, doUndo, doRedo } = useCM6Editor({
+  const { viewRef, setAnnotations: setCM6Annotations, setValidationErrors, doUndo, doRedo } = useCM6Editor({
     containerRef: cm6ContainerRef,
     initialText: text,
     editable,
@@ -258,6 +261,14 @@ const TextAnnotator = forwardRef<HTMLDivElement, TextAnnotatorProps>(({
       setCM6Annotations(annotations);
     }
   }, [annotations, editable, setCM6Annotations]);
+
+  // ── CM6: синхронизация ошибок валидации markdown ──────────────────────────
+
+  useEffect(() => {
+    if (editable && validationErrors) {
+      setValidationErrors(validationErrors);
+    }
+  }, [validationErrors, editable, setValidationErrors]);
 
   // ── CM6: синхронизация текста снаружи (undo/redo из AnnotationWorkspace) ───
 

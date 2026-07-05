@@ -26,12 +26,17 @@ class ErrorType(Enum):
     # Ошибки заголовков
     MULTIPLE_H1 = "multiple_h1"
     MISSING_H1 = "missing_h1"
+    TEXT_BETWEEN_FRONTMATTER_AND_H1 = "text_between_frontmatter_and_h1"
 
     # Ошибки таблиц
     MARKDOWN_TABLE_FOUND = "markdown_table_found"
 
     # Ошибки изображений
     MARKDOWN_IMAGE_FOUND = "markdown_image_found"
+
+    # Ошибки DOI
+    MISSING_DOI = "missing_doi"
+    INVALID_DOI_FORMAT = "invalid_doi_format"
 
     # Ошибки ссылок и ссылок
     MISSING_REFERENCES_SECTION = "missing_references_section"

@@ -36,9 +36,13 @@ async def update_markdown(
     doc_id: str,
     markdown: str,
     bucket: str,
+    annotate: bool = False,
 ) -> Dict[str, Any]:
     """
     Сохраняет markdown как user_md_s3_key.
+
+    Args:
+        annotate: если True, переводит документ в статус 'annotated'
 
     Raises:
         NotFoundError: документ не найден
@@ -59,13 +63,15 @@ async def update_markdown(
         raise StorageError("update_markdown", f"Не удалось сохранить markdown для {doc_id}")
 
     # Обновляем запись
+    if annotate:
+        doc.processing_status = "annotated"
     doc.user_md_s3_key = user_key
     new_title = _extract_title(markdown)
     if new_title:
         doc.title = new_title
 
     document_repo.save(doc)
-    logger.info(f"[update_markdown] Сохранён markdown для {doc_id}, ключ: {user_key}")
+    logger.info(f"[update_markdown] Сохранён markdown для {doc_id}, ключ: {user_key}, annotate={annotate}")
 
     return {
         "doc_id": doc_id,

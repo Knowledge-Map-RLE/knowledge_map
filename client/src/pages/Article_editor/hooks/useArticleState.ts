@@ -12,6 +12,7 @@ interface UseArticleStateResult {
     parseProgress: { processed: number; total: number } | null;
     parseError: string | null;
     saveStatus: SaveStatus;
+    notAnnotatedMessage: string | null;
     loadArticle: (docId: string) => Promise<void>;
     setText: (text: string) => void;
     triggerParse: (docId: string) => Promise<void>;
@@ -26,6 +27,7 @@ export function useArticleState(): UseArticleStateResult {
     const [parseProgress, setParseProgress] = useState<{ processed: number; total: number } | null>(null);
     const [parseError, setParseError] = useState<string | null>(null);
     const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+    const [notAnnotatedMessage, setNotAnnotatedMessage] = useState<string | null>(null);
     const parseTimerRef = useRef<number | null>(null);
     const abortRef = useRef<AbortController | null>(null);
     const lastDocIdRef = useRef<string>('');
@@ -33,19 +35,33 @@ export function useArticleState(): UseArticleStateResult {
     const loadArticle = useCallback(async (docId: string) => {
         lastDocIdRef.current = docId;
         setParseError(null);
+        setNotAnnotatedMessage(null);
+        setTextState('');
+        setStatements([]);
         // Пробуем получить статью (метаданные + statement'ы). Если 404 — не фатально.
         try {
             const resp = await getArticle(docId);
             if (resp?.success && resp?.article) {
                 setArticle(resp.article);
                 setStatements(resp.article.statements || []);
+
+                // Блокируем только документы, которые ещё в обработке или с ошибкой
+                const blockedStatuses = ['uploaded', 'uploading', 'pdf_to_markdown', 'processing', 'error'];
+                const status = resp.article.processing_status;
+                if (status && blockedStatuses.includes(status)) {
+                    setNotAnnotatedMessage(
+                        'Редактирование доступно только для аннотированных документов. '
+                        + 'Перейдите в data_extraction редактор для приведения текста в каноничный вид.'
+                    );
+                    return;
+                }
             }
         } catch (err) {
             console.warn('Article metadata not found (may be new document):', err);
             setArticle(null);
             setStatements([]);
         }
-        // Текст грузим всегда. Пробуем article_editor, затем data_extraction как fallback.
+        // Текст грузим только для аннотированных документов
         let loadedText = '';
         try {
             const textResp = await getArticleText(docId);
@@ -138,7 +154,11 @@ export function useArticleState(): UseArticleStateResult {
     const save = useCallback(async (docId: string) => {
         setSaveStatus('saving');
         try {
-            await saveArticleText(docId, text);
+            const result = await saveArticleText(docId, text);
+            if (!result?.success) {
+                setSaveStatus('error');
+                return;
+            }
             if (statements.length > 0) {
                 await saveStatements(docId, statements);
             }
@@ -151,7 +171,7 @@ export function useArticleState(): UseArticleStateResult {
     }, [text, statements]);
 
     return {
-        article, text, statements, isParsing, parseProgress, parseError, saveStatus,
+        article, text, statements, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
         loadArticle, setText, triggerParse, save,
     };
 }

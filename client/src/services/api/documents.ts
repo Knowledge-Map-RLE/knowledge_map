@@ -72,15 +72,17 @@ export async function getDocumentProgress(docId: string): Promise<any> {
   return res.json();
 }
 
-export async function saveMarkdown(docId: string, markdown: string): Promise<any> {
+export async function saveMarkdown(docId: string, markdown: string, annotate = false): Promise<any> {
   const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
   const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/markdown`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ markdown })
+    body: JSON.stringify({ markdown, annotate })
   });
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+    const body = await res.json().catch(() => null);
+    const detail = body?.detail || await res.text().catch(() => '');
+    throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
   }
   return res.json();
 }

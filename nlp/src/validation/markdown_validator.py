@@ -48,6 +48,8 @@ def validate_markdown(text: str, config: Optional[Any] = None) -> ValidationResu
     # Запустить все валидаторы (порядок важен!)
     validators = [
         validate_frontmatter,
+        validate_doi,
+        validate_no_text_between_frontmatter_and_h1,
         validate_h1_uniqueness,
         validate_html_tables,
         validate_html_images,
@@ -70,7 +72,7 @@ def validate_frontmatter(text: str, config: Optional[Any] = None) -> ValidationR
     Валидация YAML frontmatter.
 
     Правила:
-    - Документ может начинаться с --- (опционально)
+    - Документ должен начинаться с --- (блок метаданных)
     - Если начинается с ---, должен содержать валидный YAML
     - Должен заканчиваться на ---
 
@@ -89,7 +91,17 @@ def validate_frontmatter(text: str, config: Optional[Any] = None) -> ValidationR
 
     # Проверить, начинается ли с ---
     if not lines[0].strip() == '---':
-        # Без frontmatter - ОК
+        first_line_len = min(len(lines[0]), 80) if lines[0] else 1
+        result.add_error(ValidationError(
+            error_type=ErrorType.MISSING_FRONTMATTER,
+            message="Документ должен начинаться с блока YAML метаданных '---'",
+            severity=ErrorSeverity.ERROR,
+            line=1,
+            column=1,
+            start_offset=0,
+            end_offset=first_line_len if first_line_len > 0 else 1,
+            suggestion="Добавьте в начало документа блок YAML метаданных между маркерами '---'"
+        ))
         result.metadata['has_frontmatter'] = False
         return result
 
@@ -103,6 +115,7 @@ def validate_frontmatter(text: str, config: Optional[Any] = None) -> ValidationR
             break
 
     if closing_index is None:
+        opening_line_len = len(lines[0]) if lines else 3
         result.add_error(ValidationError(
             error_type=ErrorType.MALFORMED_FRONTMATTER,
             message="Найдено открытие frontmatter '---', но нет закрытия",
@@ -110,6 +123,7 @@ def validate_frontmatter(text: str, config: Optional[Any] = None) -> ValidationR
             line=1,
             column=1,
             start_offset=0,
+            end_offset=opening_line_len,
             suggestion="Добавьте закрывающую строку '---' после содержания YAML"
         ))
         return result
@@ -124,14 +138,196 @@ def validate_frontmatter(text: str, config: Optional[Any] = None) -> ValidationR
     except yaml.YAMLError as e:
         # Вычислить номер строки ошибки
         error_line = 1 + (e.problem_mark.line if hasattr(e, 'problem_mark') else 0)
+        yaml_start = len(lines[0]) + 1  # после открывающего ---\n
+        yaml_end = sum(len(l) + 1 for l in lines[:closing_index])  # до закрывающего ---
 
         result.add_error(ValidationError(
             error_type=ErrorType.INVALID_YAML,
             message=f"Невалидный YAML в frontmatter: {str(e)}",
             severity=ErrorSeverity.ERROR,
             line=error_line,
+            start_offset=yaml_start,
+            end_offset=yaml_end,
             context=yaml_text[:200] if len(yaml_text) > 200 else yaml_text,
             suggestion="Исправьте синтаксис YAML"
+        ))
+
+    return result
+
+
+def validate_doi(text: str, config: Optional[Any] = None) -> ValidationResult:
+    """
+    В метаданных frontmatter обязательно поле doi в формате полного URL.
+
+    Формат: https://doi.org/[префикс]/[суффикс]
+    Например: https://doi.org/10.1007/s00401-019-02056-w
+
+    Args:
+        text: Markdown текст
+        config: Конфигурация (не используется)
+
+    Returns:
+        ValidationResult с ошибками DOI
+    """
+    result = ValidationResult(is_valid=True)
+    lines = text.split('\n')
+
+    if not lines or lines[0].strip() != '---':
+        return result
+
+    closing_idx = None
+    for i, line in enumerate(lines[1:], start=1):
+        if line.strip() == '---':
+            closing_idx = i
+            break
+
+    if closing_idx is None:
+        return result
+
+    yaml_lines = lines[1:closing_idx]
+    yaml_text = '\n'.join(yaml_lines)
+
+    try:
+        yaml_data = yaml.safe_load(yaml_text)
+    except yaml.YAMLError:
+        return result
+
+    if yaml_data is None:
+        result.add_error(ValidationError(
+            error_type=ErrorType.MISSING_DOI,
+            message="В метаданных frontmatter обязательно поле doi",
+            severity=ErrorSeverity.ERROR,
+            line=1,
+            suggestion="Добавьте 'doi: https://doi.org/префикс/суффикс' в секцию frontmatter"
+        ))
+        return result
+
+    if not isinstance(yaml_data, dict):
+        return result
+
+    doi = yaml_data.get('doi')
+
+    if doi is None or (isinstance(doi, str) and not doi.strip()):
+        result.add_error(ValidationError(
+            error_type=ErrorType.MISSING_DOI,
+            message="В метаданных frontmatter обязательно поле doi",
+            severity=ErrorSeverity.ERROR,
+            line=1,
+            suggestion="Добавьте 'doi: https://doi.org/префикс/суффикс' в секцию frontmatter"
+        ))
+        return result
+
+    doi_str = str(doi).strip()
+    import re
+    doi_pattern = re.compile(r'^https://doi\.org/10\.\d{4,}/.+$')
+    if not doi_pattern.match(doi_str):
+        result.add_error(ValidationError(
+            error_type=ErrorType.INVALID_DOI_FORMAT,
+            message=f"Поле doi должно быть полным URL вида https://doi.org/10.xxxx/..., получено: '{doi_str}'",
+            severity=ErrorSeverity.ERROR,
+            line=1,
+            start_offset=0,
+            end_offset=len(lines[0]) if lines else 0,
+            suggestion="Исправьте формат: 'doi: https://doi.org/10.префикс/суффикс'"
+        ))
+
+    return result
+
+
+def validate_no_text_between_frontmatter_and_h1(text: str, config: Optional[Any] = None) -> ValidationResult:
+    """
+    Между закрывающим --- frontmatter и заголовком H1 должна быть ровно одна пустая строка.
+
+    Правила:
+    - Если между --- и H1 есть непустой текст → ошибка
+    - Если между --- и H1 0 пустых строк (H1 сразу после ---) → ошибка
+    - Если между --- и H1 больше 1 пустой строки → ошибка
+    - Ровно 1 пустая строка → корректно
+
+    Args:
+        text: Markdown текст
+        config: Конфигурация (не используется)
+
+    Returns:
+        ValidationResult с ошибками если найден текст между --- и H1
+    """
+    result = ValidationResult(is_valid=True)
+    lines = text.split('\n')
+
+    if not lines or lines[0].strip() != '---':
+        return result
+
+    closing_idx = None
+    for i, line in enumerate(lines[1:], start=1):
+        if line.strip() == '---':
+            closing_idx = i
+            break
+
+    if closing_idx is None:
+        return result
+
+    h1_idx = None
+    for i in range(closing_idx + 1, len(lines)):
+        if lines[i].strip().startswith('# '):
+            h1_idx = i
+            break
+
+    if h1_idx is None:
+        return result
+
+    lines_between = lines[closing_idx + 1:h1_idx]
+    non_empty = [(i, lines_between[i]) for i in range(len(lines_between))
+                 if lines_between[i].strip()]
+    empty_count = sum(1 for l in lines_between if not l.strip())
+
+    first_bad_idx = closing_idx + 1
+
+    if non_empty:
+        first_bad_idx += non_empty[0][0]
+        bad_line = non_empty[0][1]
+        offset = 0
+        for i in range(first_bad_idx):
+            offset += len(lines[i]) + 1
+
+        result.add_error(ValidationError(
+            error_type=ErrorType.TEXT_BETWEEN_FRONTMATTER_AND_H1,
+            message=f"Между '---' и H1 есть текст: '{bad_line.strip()}'",
+            severity=ErrorSeverity.ERROR,
+            line=first_bad_idx + 1,
+            column=1,
+            start_offset=offset,
+            end_offset=offset + len(bad_line),
+            context=bad_line.strip(),
+            suggestion="Удалите текст между '---' и заголовком H1, оставив только пустую строку"
+        ))
+    elif empty_count == 0:
+        first_bad_idx = closing_idx + 1
+        offset = 0
+        for i in range(first_bad_idx):
+            offset += len(lines[i]) + 1
+
+        result.add_error(ValidationError(
+            error_type=ErrorType.TEXT_BETWEEN_FRONTMATTER_AND_H1,
+            message="После '---' отсутствует пустая строка перед H1",
+            severity=ErrorSeverity.ERROR,
+            line=first_bad_idx,
+            start_offset=offset,
+            end_offset=offset,
+            suggestion="Добавьте пустую строку между '---' и заголовком H1"
+        ))
+    elif empty_count > 1:
+        offset = 0
+        for i in range(closing_idx + 2):
+            offset += len(lines[i]) + 1
+
+        result.add_error(ValidationError(
+            error_type=ErrorType.TEXT_BETWEEN_FRONTMATTER_AND_H1,
+            message=f"После '---' {empty_count} пустых строк вместо одной",
+            severity=ErrorSeverity.ERROR,
+            line=closing_idx + 2,
+            start_offset=offset,
+            end_offset=offset,
+            suggestion="Оставьте ровно одну пустую строку между '---' и заголовком H1"
         ))
 
     return result
@@ -332,7 +528,7 @@ def validate_references_bidirectional(text: str, config: Optional[Any] = None) -
             result.add_error(ValidationError(
                 error_type=ErrorType.MISSING_REFERENCES_SECTION,
                 message="Документ должен заканчиваться разделом ## References",
-                severity=ErrorSeverity.WARNING,
+                severity=ErrorSeverity.ERROR,
                 suggestion="Добавьте раздел '## References' в конец документа"
             ))
         return result
@@ -380,7 +576,7 @@ def validate_references_bidirectional(text: str, config: Optional[Any] = None) -
         result.add_error(ValidationError(
             error_type=ErrorType.ORPHANED_REFERENCE,
             message=f"Ссылка [{num}] не процитирована в тексте",
-            severity=ErrorSeverity.WARNING,
+            severity=ErrorSeverity.ERROR,
             line=reference.line,
             start_offset=reference.start_offset,
             end_offset=reference.end_offset,

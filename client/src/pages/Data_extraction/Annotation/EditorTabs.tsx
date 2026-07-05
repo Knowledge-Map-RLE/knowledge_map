@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import TextAnnotator from './TextAnnotator';
 import { Annotation, AnnotationRelation } from '../../../services/api';
+import type { ValidationError } from '../../../widgets/MarkdownEditor';
 
 interface EditorTabsProps {
   mainTab: 'text' | 'annotator';
@@ -41,6 +42,7 @@ interface EditorTabsProps {
   onShiftRight?: () => void;
   hasCursor?: boolean;
   onCursorMove?: (pos: number) => void;
+  validationErrors?: ValidationError[];
 }
 
 const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
@@ -82,6 +84,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
   onShiftRight,
   hasCursor,
   onCursorMove,
+  validationErrors,
 }, ref) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -380,6 +383,7 @@ const EditorTabs = forwardRef<HTMLDivElement, EditorTabsProps>(({
           onRedo={onRedo}
           forceTextVersion={forceTextVersion}
           onCursorMove={onCursorMove}
+          validationErrors={validationErrors}
         />
       </div>
     </div>

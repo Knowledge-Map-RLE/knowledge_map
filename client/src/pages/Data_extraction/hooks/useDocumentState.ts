@@ -94,8 +94,9 @@ export function useDocumentState(
             setSaveStatus('saving');
             setIsSaving(true);
 
-            await saveMarkdown(selectedDocument.uid, sourceMarkdown);
+            const result = await saveMarkdown(selectedDocument.uid, sourceMarkdown, true);
 
+            // Backend установил статус 'annotated' только если markdown прошёл валидацию
             updateDocumentStatus(selectedDocument.uid, 'annotated');
 
             setSaveStatus('saved');
@@ -106,6 +107,8 @@ export function useDocumentState(
             }, 3000);
         } catch (err) {
             setSaveStatus('error');
+            // Пробрасываем ошибку наверх для отображения в UI
+            throw err;
         } finally {
             setIsSaving(false);
         }
