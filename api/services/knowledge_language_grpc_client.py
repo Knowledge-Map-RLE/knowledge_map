@@ -94,9 +94,18 @@ class KnowledgeLanguageGrpcClient:
             "doc_id": doc_id,
         }
 
+    @staticmethod
+    def _strip_references(text: str) -> str:
+        """Remove the References/Bibliography section and trailing content."""
+        ref = re.search(r'\n##?\s*(?:References|Bibliography|Citations)\b', text, re.IGNORECASE)
+        if ref:
+            text = text[:ref.start()]
+        return text
+
     async def process_text(self, text: str, doc_id: str = "", use_llm: bool = False, timeout: int = 600) -> dict[str, Any]:
         await self.connect()
         try:
+            text = self._strip_references(text)
             request = knowledge_language_pb2.ProcessTextRequest(
                 text=text, doc_id=doc_id, use_llm=use_llm,
             )

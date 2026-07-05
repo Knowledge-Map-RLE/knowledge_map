@@ -158,30 +158,41 @@ class ArticleEditorService:
             "RETURN s ORDER BY s.sort_order",
             {"uid": doc_id},
         )
-        statements = []
+        all_statements = []
         for row in results:
             s = row[0]
-            statements.append({
+            pred = s.get("predicate", "")
+            # Exclude noisy "related_to" meta-statements from graph
+            if pred == "related_to":
+                continue
+            all_statements.append({
                 "uid": s.get("uid", ""),
                 "subject_text": s.get("subject_text", ""),
-                "predicate": s.get("predicate", ""),
+                "predicate": pred,
                 "object_text": s.get("object_text", ""),
                 "subject_type": s.get("subject_type", "concept"),
                 "object_type": s.get("object_type", "concept"),
                 "type": s.get("type", "FACT"),
             })
-        edges = []
-        stmt_by_text: dict[str, str] = {}
-        for stmt in statements:
-            key = (stmt["subject_text"], stmt["predicate"], stmt["object_text"])
-            stmt_by_text[str(key)] = stmt["uid"]
-
-        for stmt in statements:
-            for other in statements:
+        seen: set[tuple[str, str]] = set()
+        edges: list[dict[str, str]] = []
+        for stmt in all_statements:
+            for other in all_statements:
                 if stmt["uid"] == other["uid"]:
                     continue
                 if stmt["subject_text"] == other["object_text"]:
-                    edges.append({"source_id": other["uid"], "target_id": stmt["uid"]})
+                    pair = (other["uid"], stmt["uid"])
+                    if pair not in seen:
+                        seen.add(pair)
+                        edges.append({"source_id": other["uid"], "target_id": stmt["uid"]})
                 if stmt["object_text"] == other["subject_text"]:
-                    edges.append({"source_id": stmt["uid"], "target_id": other["uid"]})
-        return {"statements": statements, "edges": edges}
+                    pair = (stmt["uid"], other["uid"])
+                    if pair not in seen:
+                        seen.add(pair)
+                        edges.append({"source_id": stmt["uid"], "target_id": other["uid"]})
+        connected_ids: set[str] = set()
+        for e in edges:
+            connected_ids.add(e["source_id"])
+            connected_ids.add(e["target_id"])
+        all_statements = [s for s in all_statements if s["uid"] in connected_ids]
+        return {"statements": all_statements, "edges": edges}

@@ -35,9 +35,12 @@ class Pipeline:
 
     @staticmethod
     def _preprocess_text(text: str) -> str:
-        """Clean text before NLP: strip HTML, citations, split on semicolons."""
+        """Clean text before NLP: strip HTML, citations, references section, split on semicolons."""
         text = re.sub(r'<[^>]+>', '', text)
         text = re.sub(r'\[\d+\](?:\s*\[\d+\])*', '', text)
+        ref = re.search(r'\n##?\s*(?:References|Bibliography|Citations)\b', text, re.IGNORECASE)
+        if ref:
+            text = text[:ref.start()]
         text = re.sub(r';\s*(?=[A-Z"\'(])', '. ', text)
         text = re.sub(r'\s+', ' ', text).strip()
         return text
@@ -83,6 +86,7 @@ class Pipeline:
             logger.warning("Validation errors: %s", errors)
 
         all_statements, concepts = self._meta.process(all_statements, concepts, {"doc_id": doc_id})
+        all_statements = [s for s in all_statements if s.predicate != "related_to"]
 
         stmt_protos, concept_protos = self._serializer.to_proto(all_statements, concepts)
 

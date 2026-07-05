@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Container, Graphics, Text } from 'pixi.js';
+import { Application, extend } from '@pixi/react';
+import { Viewport, Link } from '../../../widgets/KnowledgeMap';
+import type { ViewportRef, BlockData, LinkData } from '../../../widgets/KnowledgeMap';
+import { BLOCK_WIDTH } from '../../../widgets/KnowledgeMap/constants';
+import { ArticleBlock } from './ArticleBlock';
 import { getArticleGraph } from '../../../services/api/article_editor';
-import type { BlockData, LinkData } from '../../../widgets/KnowledgeMap/types/types';
+
+extend({ Container, Graphics, Text });
 
 interface ArticleMapProps {
     docId: string;
@@ -8,6 +15,7 @@ interface ArticleMapProps {
 
 const SPACING_X = 300;
 const SPACING_Y = 120;
+const PADDING = 60;
 
 function computeTopoLayout(
     statements: { uid: string; subject_text: string; predicate: string; object_text: string }[],
@@ -67,20 +75,22 @@ function computeTopoLayout(
         return {
             id: s.uid,
             title: `${s.subject_text} → ${s.predicate} → ${s.object_text}`,
-            x: col * SPACING_X,
-            y: row * SPACING_Y,
+            x: col * SPACING_X + PADDING + BLOCK_WIDTH / 2,
+            y: row * SPACING_Y + PADDING + 37.5,
             layer: col,
             level: 0,
         };
     });
 
-    const links: LinkData[] = edges
-        .filter(e => stmtMap.has(e.source_id) && stmtMap.has(e.target_id))
-        .map(e => ({
-            id: `${e.source_id}-${e.target_id}`,
-            source_id: e.source_id,
-            target_id: e.target_id,
-        }));
+    const linkMap = new Map<string, LinkData>();
+    for (const e of edges) {
+        if (!stmtMap.has(e.source_id) || !stmtMap.has(e.target_id)) continue;
+        const id = `${e.source_id}-${e.target_id}`;
+        if (!linkMap.has(id)) {
+            linkMap.set(id, { id, source_id: e.source_id, target_id: e.target_id });
+        }
+    }
+    const links = [...linkMap.values()];
 
     return { blocks, links };
 }
@@ -90,6 +100,13 @@ const ArticleMap: React.FC<ArticleMapProps> = ({ docId }) => {
     const [error, setError] = useState<string | null>(null);
     const [blocks, setBlocks] = useState<BlockData[] | null>(null);
     const [links, setLinks] = useState<LinkData[] | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
+    const viewportRef = useRef<ViewportRef>(null);
+    const containerCbRef = useCallback((el: HTMLDivElement | null) => {
+        containerRef.current = el;
+        if (el) setContainerEl(el);
+    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -103,6 +120,18 @@ const ArticleMap: React.FC<ArticleMapProps> = ({ docId }) => {
             .catch(e => setError(e.message ?? 'Failed to load graph'))
             .finally(() => setLoading(false));
     }, [docId]);
+
+    useEffect(() => {
+        if (blocks && blocks.length > 0 && viewportRef.current) {
+            const minX = Math.min(...blocks.map(b => b.x));
+            const maxX = Math.max(...blocks.map(b => b.x));
+            const minY = Math.min(...blocks.map(b => b.y));
+            const maxY = Math.max(...blocks.map(b => b.y));
+            const cx = (minX + maxX) / 2;
+            const cy = (minY + maxY) / 2;
+            setTimeout(() => viewportRef.current?.focusOn(cx, cy), 100);
+        }
+    }, [blocks]);
 
     if (loading) {
         return (
@@ -129,61 +158,27 @@ const ArticleMap: React.FC<ArticleMapProps> = ({ docId }) => {
         );
     }
 
-    const maxX = Math.max(...blocks.map(b => b.x), 1);
-    const maxY = Math.max(...blocks.map(b => b.y), 1);
-
     return (
-        <svg width="100%" height="100%" style={{ background: '#f8fafc' }}>
-            <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-                    <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
-                </marker>
-            </defs>
-            {links?.map(link => {
-                const src = blocks?.find(b => b.id === link.source_id);
-                const tgt = blocks?.find(b => b.id === link.target_id);
-                if (!src || !tgt) return null;
-                return (
-                    <line
-                        key={link.id}
-                        x1={src.x + 100} y1={src.y + 30}
-                        x2={tgt.x + 100} y2={tgt.y}
-                        stroke="#6366f1" strokeWidth="2"
-                        markerEnd="url(#arrowhead)"
-                    />
-                );
-            })}
-            {blocks?.map(block => (
-                <g key={block.id}>
-                    <rect
-                        x={block.x} y={block.y}
-                        width="200" height="60" rx="8"
-                        fill="white" stroke="#6366f1" strokeWidth="2"
-                    />
-                    <text
-                        x={block.x + 100} y={block.y + 20}
-                        textAnchor="middle" fill="#059669"
-                        fontSize="11" fontWeight="600"
-                    >
-                        {block.title.split(' → ')[0]?.slice(0, 25)}
-                    </text>
-                    <text
-                        x={block.x + 100} y={block.y + 35}
-                        textAnchor="middle" fill="#6366f1"
-                        fontSize="10" fontStyle="italic"
-                    >
-                        {block.title.split(' → ')[1]?.slice(0, 25)}
-                    </text>
-                    <text
-                        x={block.x + 100} y={block.y + 50}
-                        textAnchor="middle" fill="#d97706"
-                        fontSize="11" fontWeight="600"
-                    >
-                        {block.title.split(' → ')[2]?.slice(0, 25)}
-                    </text>
-                </g>
-            ))}
-        </svg>
+        <div ref={containerCbRef} style={{ width: '100%', height: '100%' }}>
+            {containerEl && (
+                <Application resizeTo={containerEl} backgroundColor={0xf8fafc}>
+                    <Viewport ref={viewportRef}>
+                        {links.map(link => (
+                            <Link
+                                key={link.id}
+                                linkData={link}
+                                blocks={blocks}
+                                isSelected={false}
+                                onClick={() => {}}
+                            />
+                        ))}
+                        {blocks.map(block => (
+                            <ArticleBlock key={block.id} blockData={block} />
+                        ))}
+                    </Viewport>
+                </Application>
+            )}
+        </div>
     );
 };
 
