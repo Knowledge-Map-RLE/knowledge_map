@@ -1,5 +1,14 @@
 export type ArticleEditorTab = 'editor' | 'graph' | 'patterns';
 
+export type BlockType = 'sentence' | 'image' | 'table' | 'separator' | 'code' | 'formula' | 'paragraph';
+
+export interface ArticleBlock {
+  id: string;
+  type: BlockType;
+  content: string;
+  order: number;
+}
+
 export interface KnowledgeArticle {
     uid: string;
     title?: string;

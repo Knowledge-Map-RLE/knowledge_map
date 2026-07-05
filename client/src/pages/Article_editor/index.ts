@@ -1,2 +1,2 @@
 export { default } from './ui';
-export type { KnowledgeArticle, KnowledgeStatement, ArticleEditorTab, SaveStatus } from './model';
+export type { KnowledgeArticle, KnowledgeStatement, ArticleEditorTab, SaveStatus, ArticleBlock, BlockType } from './model';

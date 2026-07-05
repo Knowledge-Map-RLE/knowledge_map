@@ -14,6 +14,11 @@ INDEXES = [
     "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source)",
 ]
 
+TEXT_INDEXES = [
+    "CREATE TEXT INDEX IF NOT EXISTS FOR (d:Document) ON (d.title)",
+    "CREATE TEXT INDEX IF NOT EXISTS FOR (d:Document) ON (d.original_filename)",
+]
+
 if __name__ == "__main__":
     from neomodel import config as neomodel_config
     from infrastructure.config import settings
@@ -21,7 +26,7 @@ if __name__ == "__main__":
     if not settings.NEO4J_URI.startswith(("bolt+s://", "neo4j+s://")):
         neomodel_config.ENCRYPTED = False
 
-    for cypher in INDEXES:
+    for cypher in INDEXES + TEXT_INDEXES:
         try:
             db.cypher_query(cypher)
             logger.info(f"OK: {cypher}")

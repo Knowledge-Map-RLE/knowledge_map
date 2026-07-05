@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Header from '../../widgets/Header';
 import MarkdownEditor from '../../widgets/MarkdownEditor';
 import { AnnotationWorkspace } from './Annotation';
@@ -21,6 +21,8 @@ declare global {
 const DataExtractionUI: React.FC = () => {
     const [activeTab, setActiveTab] = useState<DataExtractionTab>('pdf');
     const [isNlpProcessing, setIsNlpProcessing] = useState(false);
+    const noopRef = useRef<() => void>(() => {});
+    const noopSetError = useRef<(e: string | null) => void>(() => {});
 
     const {
         selectedDocument,
@@ -43,9 +45,9 @@ const DataExtractionUI: React.FC = () => {
                     <Document_downloader_ui
                         selectedDocument={selectedDocument}
                         onSelectDocument={selectDocument}
-                        onDocumentsChange={() => {}}
+                        onDocumentsChange={noopRef.current}
                         error={null}
-                        setError={() => {}}
+                        setError={noopSetError.current}
                     />
                 </div>
 

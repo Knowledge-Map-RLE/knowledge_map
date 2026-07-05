@@ -182,3 +182,25 @@ async def _reset_stuck_documents():
             logger.warning(f"[startup] Сброшено {count} зависших документов в статус 'error'")
     except Exception as e:
         logger.warning(f"[startup] Не удалось сбросить зависшие документы: {e}")
+
+
+@app.on_event("startup")
+async def _ensure_document_indexes():
+    """Создаёт индексы Neo4j для быстрого поиска документов."""
+    INDEXES = [
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.upload_date)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.processing_status)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source)",
+        "CREATE TEXT INDEX IF NOT EXISTS FOR (d:Document) ON (d.title)",
+        "CREATE TEXT INDEX IF NOT EXISTS FOR (d:Document) ON (d.original_filename)",
+    ]
+    try:
+        from neomodel import db
+        for cypher in INDEXES:
+            try:
+                db.cypher_query(cypher)
+            except Exception as e:
+                logger.warning(f"[startup] INDEX FAIL: {cypher[:60]}... {e}")
+        logger.info("[startup] Индексы Document созданы/подтверждены")
+    except Exception as e:
+        logger.warning(f"[startup] Не удалось создать индексы: {e}")

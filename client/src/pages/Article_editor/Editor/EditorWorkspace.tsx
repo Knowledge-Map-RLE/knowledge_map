@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import KnowledgeEditor from './KnowledgeEditor';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
+import BlockEditor from './BlockEditor';
 import StatementsPanel from './StatementsPanel';
 import MarkdownPreview from './MarkdownPreview';
 import type { KnowledgeStatement } from '../model';
@@ -22,16 +22,33 @@ type SyncSource = 'editor' | 'statements' | 'preview' | null;
 const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     text, statements, isParsing, parseProgress, parseError, onTextChange, onSave, saveStatus, docId,
 }) => {
-    const [selectedStatement, setSelectedStatement] = useState<{ index: number; stmt: KnowledgeStatement } | null>(null);
-    const [highlightRange, setHighlightRange] = useState<{ start: number; end: number } | null>(null);
+    const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
+    const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
+    const [highlightStart, setHighlightStart] = useState<number | null>(null);
+    const [highlightEnd, setHighlightEnd] = useState<number | null>(null);
+    const [highlightContent, setHighlightContent] = useState<string | null>(null);
     const [highlightIndex, setHighlightIndex] = useState<number | null>(null);
     const scrollSyncSource = useRef<SyncSource>(null);
 
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const statementsRef = useRef<HTMLDivElement>(null);
     const previewRef = useRef<HTMLDivElement>(null);
 
     const isSyncing = useRef(false);
+    const textRef = useRef(text);
+    textRef.current = text;
+
+    const selectedStatement = useMemo(() =>
+        selectedStatementIdx !== null && selectedStatementStmt
+            ? { index: selectedStatementIdx, stmt: selectedStatementStmt }
+            : null,
+        [selectedStatementIdx, selectedStatementStmt]
+    );
+    const highlightRange = useMemo(() =>
+        highlightStart !== null && highlightEnd !== null
+            ? { start: highlightStart, end: highlightEnd }
+            : null,
+        [highlightStart, highlightEnd]
+    );
 
     const syncScroll = useCallback((source: SyncSource, scrollTop: number, scrollHeight: number) => {
         if (isSyncing.current) return;
@@ -45,7 +62,10 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         };
 
         requestAnimationFrame(() => {
-            if (source !== 'editor') syncTo(textareaRef.current);
+            if (source !== 'editor') {
+                const blockList = document.querySelector('[class*="blockList"]') as HTMLElement | null;
+                syncTo(blockList);
+            }
             if (source !== 'statements') syncTo(statementsRef.current);
             if (source !== 'preview') syncTo(previewRef.current);
             setTimeout(() => { isSyncing.current = false; }, 50);
@@ -64,31 +84,22 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         syncScroll('preview', scrollTop, scrollHeight);
     }, [syncScroll]);
 
-    const handleCursorMove = useCallback((offset: number) => {
-        if (statements.length === 0) return;
-        for (let i = 0; i < statements.length; i++) {
-            const stmt = statements[i];
-            const sentenceText = stmt.sentence_text || stmt.subject_text + ' ' + stmt.predicate + ' ' + stmt.object_text;
-            const idx = text.indexOf(sentenceText);
-            if (idx >= 0 && offset >= idx && offset <= idx + sentenceText.length) {
-                setHighlightIndex(i);
-                setHighlightRange({ start: idx, end: idx + sentenceText.length });
-                return;
-            }
-        }
-        setHighlightIndex(null);
-        setHighlightRange(null);
-    }, [text, statements]);
-
     const handleSelectStatement = useCallback((index: number, stmt: KnowledgeStatement) => {
-        setSelectedStatement({ index, stmt });
+        setSelectedStatementIdx(index);
+        setSelectedStatementStmt(stmt);
         setHighlightIndex(index);
-        const sentenceText = stmt.sentence_text || stmt.subject_text + ' → ' + stmt.predicate + ' → ' + stmt.object_text;
-        const idx = text.indexOf(sentenceText);
+        const sentenceText = stmt.sentence_text || stmt.subject_text + ' \u2192 ' + stmt.predicate + ' \u2192 ' + stmt.object_text;
+        setHighlightContent(sentenceText);
+        const currentText = textRef.current;
+        const idx = currentText.indexOf(sentenceText);
         if (idx >= 0) {
-            setHighlightRange({ start: idx, end: idx + sentenceText.length });
+            setHighlightStart(idx);
+            setHighlightEnd(idx + sentenceText.length);
+        } else {
+            setHighlightStart(null);
+            setHighlightEnd(null);
         }
-    }, [text]);
+    }, []);
 
     const saveLabel = saveStatus === 'saving' ? 'Сохранение...'
         : saveStatus === 'saved' ? 'Сохранено'
@@ -136,13 +147,12 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                         </svg>
                         Редактор
                     </div>
-                    <KnowledgeEditor
-                        ref={textareaRef}
+                    <BlockEditor
+                        key={docId || 'new'}
                         text={text}
                         onChange={onTextChange}
                         onScroll={handleEditorScroll}
-                        onCursorMove={handleCursorMove}
-                        highlightRange={highlightRange}
+                        highlightContent={highlightContent}
                     />
                 </div>
 

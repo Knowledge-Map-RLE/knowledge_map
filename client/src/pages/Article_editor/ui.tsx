@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Header from '../../widgets/Header';
 import Document_downloader_ui from '../Data_extraction/Document_downloader_ui';
 import EditorWorkspace from './Editor/EditorWorkspace';
@@ -12,6 +12,8 @@ const ArticleEditorUI: React.FC = () => {
     const [activeTab, setActiveTab] = useState<ArticleEditorTab>('editor');
     const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
     const [selectedDocument, setSelectedDocument] = useState<any>(null);
+    const noopRef = useRef<() => void>(() => {});
+    const noopSetError = useRef<(e: string | null) => void>(() => {});
 
     const {
         text, statements, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
@@ -71,9 +73,9 @@ const ArticleEditorUI: React.FC = () => {
                     <Document_downloader_ui
                         selectedDocument={selectedDocument}
                         onSelectDocument={handleSelectDocument}
-                        onDocumentsChange={() => {}}
+                        onDocumentsChange={noopRef.current}
                         error={null}
-                        setError={() => {}}
+                        setError={noopSetError.current}
                     />
                     <div style={{ padding: '8px 0', borderTop: '1px solid #e5e7eb', marginTop: 8 }}>
                         <button

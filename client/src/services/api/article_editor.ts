@@ -48,6 +48,19 @@ export async function getArticleGraph(docId: string): Promise<any> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/graph`);
 }
 
+export interface SplitBlocksResult {
+    success: boolean;
+    blocks: any[];
+}
+
+export async function splitIntoBlocks(text: string): Promise<SplitBlocksResult> {
+    return fetchJson('/api/article_editor/split_into_blocks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+    });
+}
+
 export interface ParseProgress {
     processed: number;
     total: number;
@@ -108,4 +121,4 @@ export async function parseTextStream(
     }
 }
 
-export { fetchJson }; // re-export for convenience
+export { fetchJson };

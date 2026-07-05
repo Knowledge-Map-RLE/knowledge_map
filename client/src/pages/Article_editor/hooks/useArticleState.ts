@@ -68,8 +68,8 @@ export function useArticleState(): UseArticleStateResult {
             if (textResp?.success) {
                 loadedText = textResp.text || '';
             }
-        } catch {
-            console.warn('Article text via article_editor failed, trying data_extraction...');
+        } catch (err) {
+            console.warn('getArticleText failed:', err instanceof Error ? err.message : String(err));
         }
         if (!loadedText) {
             try {
@@ -77,6 +77,8 @@ export function useArticleState(): UseArticleStateResult {
                 const assets = await getDocumentAssets(docId);
                 if (assets?.markdown) {
                     loadedText = assets.markdown;
+                } else {
+                    console.warn('getDocumentAssets returned no markdown:', assets);
                 }
             } catch (err) {
                 console.error('Failed to load text from data_extraction:', err);
@@ -88,6 +90,11 @@ export function useArticleState(): UseArticleStateResult {
     const setText = useCallback((newText: string) => {
         setTextState(newText);
     }, []);
+
+    const textRef = useRef(text);
+    textRef.current = text;
+    const statementsRef = useRef(statements);
+    statementsRef.current = statements;
 
     const triggerParse = useCallback(async (docId: string) => {
         setParseError(null);
@@ -101,7 +108,8 @@ export function useArticleState(): UseArticleStateResult {
             if (!docId && lastDocIdRef.current) {
                 docId = lastDocIdRef.current;
             }
-            if (!text.trim()) {
+            const currentText = textRef.current;
+            if (!currentText.trim()) {
                 setStatements([]);
                 return;
             }
@@ -114,7 +122,7 @@ export function useArticleState(): UseArticleStateResult {
                 // try streaming parse first
                 let gotResult = false;
                 try {
-                    await parseTextStream(text, docId, false, true, {
+                    await parseTextStream(currentText, docId, false, true, {
                         signal: controller.signal,
                         onProgress: (p) => setParseProgress(p),
                         onResult: (data) => {
@@ -134,7 +142,7 @@ export function useArticleState(): UseArticleStateResult {
 
                 if (!gotResult) {
                     // Fallback: regular parse
-                    const result = await parseText(text, docId, false, true);
+                    const result = await parseText(currentText, docId, false, true);
                     if (result?.success && result?.statements) {
                         setStatements(result.statements);
                     } else {
@@ -149,18 +157,20 @@ export function useArticleState(): UseArticleStateResult {
                 setParseProgress(null);
             }
         }, 800);
-    }, [text]);
+    }, []);
 
     const save = useCallback(async (docId: string) => {
+        const currentText = textRef.current;
+        const currentStatements = statementsRef.current;
         setSaveStatus('saving');
         try {
-            const result = await saveArticleText(docId, text);
+            const result = await saveArticleText(docId, currentText);
             if (!result?.success) {
                 setSaveStatus('error');
                 return;
             }
-            if (statements.length > 0) {
-                await saveStatements(docId, statements);
+            if (currentStatements.length > 0) {
+                await saveStatements(docId, currentStatements);
             }
             setSaveStatus('saved');
             setTimeout(() => setSaveStatus('idle'), 2000);
@@ -168,7 +178,7 @@ export function useArticleState(): UseArticleStateResult {
             console.error('Save failed:', err);
             setSaveStatus('error');
         }
-    }, [text, statements]);
+    }, []);
 
     return {
         article, text, statements, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,

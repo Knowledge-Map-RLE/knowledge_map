@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect } from 'react';
+import React, { forwardRef, useCallback, useEffect, memo } from 'react';
 import type { KnowledgeStatement } from '../model';
 import styles from '../Article_editor.module.css';
 
@@ -16,6 +16,35 @@ function uuid8Time(uuid: string): string | null {
         return null;
     }
 }
+
+const StatementItem = memo(function StatementItem({
+  stmt, idx, isSelected, isHighlighted, onSelect,
+}: {
+  stmt: KnowledgeStatement; idx: number; isSelected: boolean; isHighlighted: boolean;
+  onSelect: (index: number, stmt: KnowledgeStatement) => void;
+}) {
+  const handleClick = useCallback(() => onSelect(idx, stmt), [idx, stmt, onSelect]);
+  return (
+    <div
+      data-stmt-idx={idx}
+      className={`${styles.statementItem} ${isSelected ? styles.selected : ''} ${isHighlighted ? styles.selected : ''}`}
+      onClick={handleClick}
+      style={isHighlighted ? { background: '#fef3c7', outline: '1px solid #f59e0b' } as const : undefined}
+    >
+      <div className={styles.statementId}>
+        {stmt.id || `#${idx + 1}`}
+        {stmt.id && <span className="ml-1.5" style={{ color: '#9ca3af', fontSize: 11 }}>{uuid8Time(stmt.id)}</span>}
+      </div>
+      <div className={styles.statementTriple}>
+        <span className={styles.statementSubject}>{stmt.subject_text}</span>
+        <span className={styles.statementArrow}>&rarr;</span>
+        <span className={styles.statementPredicate}>{stmt.predicate}</span>
+        <span className={styles.statementArrow}>&rarr;</span>
+        <span className={styles.statementObject}>{stmt.object_text}</span>
+      </div>
+    </div>
+  );
+});
 
 interface StatementsPanelProps {
     statements: KnowledgeStatement[];
@@ -81,25 +110,14 @@ const StatementsPanel = forwardRef<HTMLDivElement, StatementsPanelProps>(({
                 </div>
             )}
             {statements.map((stmt, idx) => (
-                <div
-                    key={stmt.id || idx}
-                    data-stmt-idx={idx}
-                    className={`${styles.statementItem} ${selectedIndex === idx ? styles.selected : ''} ${highlightIndex === idx ? styles.selected : ''}`}
-                    onClick={() => onSelectStatement(idx, stmt)}
-                    style={highlightIndex === idx ? { background: '#fef3c7', outline: '1px solid #f59e0b' } : undefined}
-                >
-                    <div className={styles.statementId}>
-                        {stmt.id || `#${idx + 1}`}
-                        {stmt.id && <span style={{ marginLeft: 8, color: '#9ca3af' }}>{uuid8Time(stmt.id)}</span>}
-                    </div>
-                    <div className={styles.statementTriple}>
-                        <span className={styles.statementSubject}>{stmt.subject_text}</span>
-                        <span className={styles.statementArrow}>→</span>
-                        <span className={styles.statementPredicate}>{stmt.predicate}</span>
-                        <span className={styles.statementArrow}>→</span>
-                        <span className={styles.statementObject}>{stmt.object_text}</span>
-                    </div>
-                </div>
+                <StatementItem
+                    key={stmt.id || `stmt-${idx}`}
+                    stmt={stmt}
+                    idx={idx}
+                    isSelected={selectedIndex === idx}
+                    isHighlighted={highlightIndex === idx}
+                    onSelect={onSelectStatement}
+                />
             ))}
         </div>
     );

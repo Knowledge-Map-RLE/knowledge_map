@@ -37,7 +37,7 @@ interface DocumentDownloaderUIProps {
     setError: (error: string | null) => void;
 }
 
-const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloaderUIProps>(function Document_downloader_ui({
+const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, DocumentDownloaderUIProps>(function Document_downloader_ui({
     selectedDocument,
     onSelectDocument,
     onDocumentsChange,
@@ -83,7 +83,7 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
 
     const abortRef = useRef<AbortController | null>(null);
 
-    const loadDocuments = async (): Promise<PDFDocument[]> => {
+    const loadDocuments = useCallback(async (): Promise<PDFDocument[]> => {
         // Отменяем предыдущий висячий запрос
         if (abortRef.current) abortRef.current.abort();
         const controller = new AbortController();
@@ -141,14 +141,12 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
             setError(`Ошибка загрузки документов: ${err instanceof Error ? err.message : String(err)}`);
             return [];
         }
-    };
+    }, [setError]);
 
     useImperativeHandle(ref, () => ({ reloadDocuments: () => loadDocuments().then(() => {}) }));
     useEffect(() => {
         loadDocuments();
-        const id = setInterval(() => { loadDocuments(); }, 30000);
-        return () => clearInterval(id);
-    }, []);
+    }, [loadDocuments]);
 
     // Надёжная проверка "уже загружено" по pubmed_id/pmc_id из Neo4j
     const isAlreadyLoaded = (r: PubMedSearchResult): boolean => {
@@ -329,6 +327,10 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
     const filteredDocuments = localQuery.trim().length >= 3
         ? (searchResults ?? documents)
         : documents.slice(0, 100);
+    const sortedDocuments = [...filteredDocuments].sort((a, b) => {
+        if (a.is_processed === b.is_processed) return 0;
+        return a.is_processed ? -1 : 1;
+    });
     const hasMoreDocuments = localQuery.trim().length < 3 && documents.length > 100;
 
     // --- PDF upload ---
@@ -525,7 +527,7 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                 />
 
                 <div className={s.fileList}>
-                    {filteredDocuments.map((doc) => {
+                    {sortedDocuments.map((doc) => {
                         const displayName = doc.title || doc.original_filename || doc.uid;
                         const progressText = getProgressText(doc.processing_status, doc.uid);
                         return (
@@ -554,7 +556,7 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
                 </div>
                 {localQuery.trim().length >= 3 ? (
                     <p className={s.docListHint}>
-                        Найдено {filteredDocuments.length} документов по запросу «{localQuery}».
+                        Найдено {sortedDocuments.length} документов по запросу «{localQuery}».
                     </p>
                 ) : (hasMoreDocuments || (window as any).__documents_total > 100) && (
                     <p className={s.docListHint}>
@@ -620,6 +622,6 @@ const Document_downloader_ui = forwardRef<DocumentListHandle, DocumentDownloader
             )}
         </div>
     );
-});
+}) as typeof Document_downloader_ui);
 
 export default Document_downloader_ui;

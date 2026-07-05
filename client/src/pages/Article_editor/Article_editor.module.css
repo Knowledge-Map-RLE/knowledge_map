@@ -117,6 +117,8 @@
     position: relative;
 }
 
+/* ── Statement panel (unchanged) ───────────────────────────── */
+
 .statementItem {
     padding: 6px 10px;
     border-bottom: 1px solid #f3f4f6;
@@ -183,6 +185,324 @@
     font-size: 13px;
     color: #6b7280;
 }
+
+/* ── Block List ─────────────────────────────────────────────── */
+
+.blockList {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ── Block Item ─────────────────────────────────────────────── */
+
+.blockItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 4px 8px;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.1s;
+    position: relative;
+}
+
+.blockItem:hover {
+    background: #fafafa;
+}
+
+.blockItemParagraph {
+    opacity: 0.5;
+}
+
+.blockItemParagraph:hover {
+    opacity: 0.8;
+}
+
+.blockHighlighted {
+    background: #fef3c7 !important;
+    outline: 1px solid #f59e0b;
+    outline-offset: -1px;
+    border-radius: 4px;
+}
+
+/* ── Drag Handle ────────────────────────────────────────────── */
+
+.blockDragHandle {
+    cursor: grab;
+    color: #d1d5db;
+    padding: 8px 2px;
+    user-select: none;
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    transition: color 0.1s;
+}
+
+.blockDragHandle:hover {
+    color: #6b7280;
+}
+
+.blockDragHandle:active {
+    cursor: grabbing;
+    color: #6366f1;
+}
+
+/* ── Block Number ───────────────────────────────────────────── */
+
+.blockNumber {
+    min-width: 28px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca3af;
+    padding-top: 8px;
+    flex-shrink: 0;
+    font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.blockNumberIcon {
+    font-size: 14px;
+    padding-top: 6px;
+}
+
+/* ── Block Content ──────────────────────────────────────────── */
+
+.blockContent {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ── Textarea (generic) ─────────────────────────────────────── */
+
+.blockTextarea {
+    width: 100%;
+    border: 1px solid transparent;
+    resize: none;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: transparent;
+    outline: none;
+    font-family: inherit;
+    color: #1f2937;
+    min-height: 28px;
+    box-sizing: border-box;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.blockTextarea:focus {
+    border-color: #6366f1;
+    background: white;
+}
+
+.blockTextarea::placeholder {
+    color: #d1d5db;
+}
+
+.blockTextareaCode {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    background: #1f2937;
+    color: #f3f4f6;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.blockTextareaCode:focus {
+    background: #111827;
+    border-color: #6366f1;
+}
+
+.blockTextareaFormula {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 14px;
+    color: #374151;
+    border-left: 3px solid #e0e7ff;
+}
+
+.blockTextareaFormula:focus {
+    border-left-color: #6366f1;
+}
+
+/* ── Insert Zone (between items) ────────────────────────────── */
+
+.insertZone {
+    height: 24px;
+    margin-top: -12px;
+    margin-bottom: -12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.insertButton {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #6366f1;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+}
+
+.insertButton:hover {
+    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.4);
+}
+
+/* ── Separator Block Type ───────────────────────────────────── */
+
+.separatorLine {
+    border: none;
+    border-top: 2px solid #e5e7eb;
+    margin: 8px 0;
+}
+
+/* ── Code Block ─────────────────────────────────────────────── */
+
+.codeWrapper {
+    position: relative;
+}
+
+.codeBadge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 10px;
+    font-weight: 600;
+    color: #6366f1;
+    background: #eef2ff;
+    padding: 1px 6px;
+    border-radius: 0 4px 0 4px;
+    z-index: 2;
+    font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.codePreview {
+    background: #1f2937;
+    color: #f3f4f6;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    cursor: pointer;
+    min-height: 28px;
+}
+
+.codeToggle {
+    font-size: 11px;
+    color: #6366f1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    margin-top: 2px;
+}
+
+.codeToggle:hover {
+    text-decoration: underline;
+}
+
+/* Python syntax highlighting colors (Dracula-like) */
+.codeKeyword  { color: #ff79c6; }
+.codeString   { color: #f1fa8c; }
+.codeComment  { color: #6272a4; font-style: italic; }
+.codeFunction { color: #50fa7b; }
+.codeDecorator { color: #ffb86c; }
+.codeNumber   { color: #bd93f9; }
+
+/* ── Formula Block ──────────────────────────────────────────── */
+
+.formulaWrapper {
+    position: relative;
+}
+
+.formulaPreviewBtn {
+    font-size: 11px;
+    color: #6366f1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.formulaPreviewBtn:hover {
+    text-decoration: underline;
+}
+
+.formulaPreview {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 4px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 14px;
+    color: #374151;
+}
+
+/* ── Context Menu ───────────────────────────────────────────── */
+
+.contextMenu {
+    position: fixed;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 4px;
+    min-width: 140px;
+}
+
+.contextMenuItem {
+    display: block;
+    width: 100%;
+    padding: 6px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    text-align: left;
+    border-radius: 4px;
+    color: #374151;
+}
+
+.contextMenuItem:hover {
+    background: #f3f4f6;
+}
+
+.contextMenuItem:disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+}
+
+.contextMenuItem:disabled:hover {
+    background: transparent;
+}
+
+.contextMenuItem.danger {
+    color: #dc2626;
+}
+
+.contextMenuItem.danger:hover {
+    background: #fef2f2;
+}
+
+/* ── Markdown Preview (unchanged) ───────────────────────────── */
 
 :global(.article-markdown-preview) img {
     max-width: 100%;
