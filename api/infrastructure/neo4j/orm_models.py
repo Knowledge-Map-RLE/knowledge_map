@@ -37,17 +37,6 @@ class LinkRel(StructuredRel):
     uid = UniqueIdProperty(primary_key=True)
 
 
-class User(StructuredNode):
-    """ORM-модель пользователя."""
-    uid = UniqueIdProperty(primary_key=True)
-    login = StringProperty(required=True, unique_index=True)
-    password = StringProperty(required=True)
-    nickname = StringProperty(required=True)
-    data = JSONProperty()
-
-    uploaded = RelationshipTo("Document", "UPLOADED")
-
-
 class Tag(StructuredNode):
     """ORM-модель метки."""
     text = StringProperty(required=True, unique_index=True)
@@ -57,7 +46,7 @@ class Tag(StructuredNode):
 class LinkMetadata(StructuredNode):
     """ORM-модель метаданных связи."""
     uid = UniqueIdProperty()
-    created_by = RelationshipFrom("User", "CREATED")
+    created_by_uid = StringProperty()
     source_id = StringProperty(index=True)
     target_id = StringProperty(index=True)
 
@@ -81,7 +70,7 @@ class Block(StructuredNode):
     is_pinned = BooleanProperty(default=False)
     data = JSONProperty()
 
-    created_by = RelationshipFrom("User", "CREATED")
+    created_by_uid = StringProperty()
     target = RelationshipTo("Block", "LINK_TO", model=LinkRel)
 
 
@@ -116,7 +105,7 @@ class Document(StructuredNode):
     processing_status = StringProperty(default="uploaded")
     error_message = StringProperty()
 
-    created_by = RelationshipFrom("User", "UPLOADED")
+    created_by_uid = StringProperty()
     annotations = RelationshipTo("PDFAnnotation", "HAS_ANNOTATION")
     markdown_annotations = RelationshipTo("MarkdownAnnotation", "HAS_MARKDOWN_ANNOTATION")
 
@@ -136,7 +125,7 @@ class PDFAnnotation(StructuredNode):
     created_date = DateTimeProperty(default=datetime.utcnow)
 
     document = RelationshipFrom("Document", "HAS_ANNOTATION")
-    created_by = RelationshipFrom("User", "CREATED_ANNOTATION")
+    created_by_uid = StringProperty()
 
 
 class AnnotationRelationRel(StructuredRel):
@@ -162,7 +151,7 @@ class MarkdownAnnotation(StructuredNode):
     processor_version = StringProperty()
 
     document = RelationshipFrom("Document", "HAS_MARKDOWN_ANNOTATION")
-    created_by = RelationshipFrom("User", "CREATED_MARKDOWN_ANNOTATION")
+    created_by_uid = StringProperty()
     relations_to = RelationshipTo(
         "MarkdownAnnotation", "RELATES_TO", model=AnnotationRelationRel
     )
@@ -181,7 +170,7 @@ class LabelStudioProject(StructuredNode):
     is_active = BooleanProperty(default=True)
     created_date = DateTimeProperty(default=datetime.utcnow)
 
-    created_by = RelationshipFrom("User", "CREATED_PROJECT")
+    created_by_uid = StringProperty()
     documents = RelationshipTo("Document", "USES_PROJECT")
 
 

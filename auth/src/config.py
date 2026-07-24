@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     
     # gRPC
     GRPC_HOST: str = "0.0.0.0"
-    GRPC_PORT: int = 50051
+    GRPC_PORT: int = 50057
     
     # Безопасность
     PASSWORD_MIN_LENGTH: int = 8

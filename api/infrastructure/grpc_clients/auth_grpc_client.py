@@ -162,6 +162,55 @@ class AuthClient:
         except grpc.RpcError as e:
             return {"success": False, "message": f"Ошибка связи с сервисом авторизации: {e.details()}"}
 
+    def get_user_by_id(self, user_id: str) -> Dict[str, Any]:
+        try:
+            response = self.stub.GetUser(auth_pb2.GetUserRequest(user_id=user_id))
+            return {
+                "success": response.success,
+                "user": {
+                    "uid": response.user.uid,
+                    "login": response.user.login,
+                    "nickname": response.user.nickname,
+                    "is_active": response.user.is_active,
+                    "is_2fa_enabled": response.user.is_2fa_enabled,
+                } if response.user else None,
+                "message": response.message,
+            }
+        except grpc.RpcError as e:
+            return {"success": False, "message": f"Ошибка связи с сервисом авторизации: {e.details()}"}
+
+    def list_users(self) -> Dict[str, Any]:
+        try:
+            response = self.stub.ListUsers(auth_pb2.ListUsersRequest())
+            return {
+                "success": response.success,
+                "users": [
+                    {
+                        "uid": u.uid,
+                        "login": u.login,
+                        "nickname": u.nickname,
+                        "is_active": u.is_active,
+                        "is_2fa_enabled": u.is_2fa_enabled,
+                    }
+                    for u in response.users
+                ],
+                "message": response.message,
+            }
+        except grpc.RpcError as e:
+            return {"success": False, "message": f"Ошибка связи с сервисом авторизации: {e.details()}"}
+
+    def generate_captcha(self) -> Dict[str, Any]:
+        try:
+            response = self.stub.GenerateCaptcha(auth_pb2.GenerateCaptchaRequest())
+            return {
+                "success": response.success,
+                "captcha_id": response.captcha_id,
+                "captcha_image": response.captcha_image,
+                "message": response.message,
+            }
+        except grpc.RpcError as e:
+            return {"success": False, "message": f"Ошибка связи с сервисом авторизации: {e.details()}"}
+
     def __del__(self):
         if hasattr(self, "channel"):
             self.channel.close()

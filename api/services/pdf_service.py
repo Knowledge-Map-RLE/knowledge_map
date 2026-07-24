@@ -13,7 +13,7 @@ from fastapi.responses import Response
 from src.schemas.pdf import (
     PDFUploadResponse, PDFDocumentResponse, PDFAnnotationResponse
 )
-from src.models import Document, PDFAnnotation, User
+from src.models import Document, PDFAnnotation
 from neomodel import DoesNotExist
 from . import settings, get_s3_client
 from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
@@ -85,32 +85,14 @@ class PDFService:
                 raise HTTPException(status_code=500, detail="Ошибка загрузки файла в S3")
             
             # Создаем запись в Neo4j
-            try:
-                user = User.nodes.get(uid=user_id)
-            except DoesNotExist:
-                # Для тестового пользователя создаем его автоматически
-                if user_id == "test_user":
-                    user = User(
-                        uid="test_user",
-                        login="test_user",
-                        password="test_password",
-                        nickname="Test User",
-                        email="test@example.com",
-                        full_name="Test User"
-                    ).save()
-                else:
-                    raise HTTPException(status_code=404, detail="Пользователь не найден")
-            
             pdf_doc = Document(
                 original_filename=file.filename,
                 md5_hash=md5_hash,
                 s3_bucket="knowledge-map-pdfs",
                 s3_key=s3_key,
-                file_size=file_size
+                file_size=file_size,
+                created_by_uid=user_id
             ).save()
-            
-            # Связываем с пользователем
-            user.uploaded.connect(pdf_doc)
             
             return PDFUploadResponse(
                 success=True,
@@ -127,8 +109,7 @@ class PDFService:
     async def get_pdf_documents(self, user_id: str) -> List[PDFDocumentResponse]:
         """Получает список PDF документов пользователя"""
         try:
-            user = User.nodes.get(uid=user_id)
-            documents = user.uploaded.all()
+            documents = Document.nodes.filter(created_by_uid=user_id)
             
             return [
                 PDFDocumentResponse(

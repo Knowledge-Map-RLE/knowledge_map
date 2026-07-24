@@ -21,7 +21,6 @@ from typing import Protocol, Optional, List, Tuple
 from domain.models.block import Block, LinkRecord
 from domain.models.document import Document
 from domain.models.annotation import MarkdownAnnotation, AnnotationRelation
-from domain.models.user import User
 
 
 class BlockRepositoryProtocol(Protocol):
@@ -128,14 +127,6 @@ class AnnotationRepositoryProtocol(Protocol):
     ) -> Tuple[int, List[str]]:
         """Массовое обновление offsets. Возвращает (updated_count, errors)."""
         ...
-
-
-class UserRepositoryProtocol(Protocol):
-    """Операции с пользователями."""
-
-    def get_by_id(self, uid: str) -> Optional[User]: ...
-
-    def get_or_create_test_user(self) -> User: ...
 
 
 class LinguisticPatternRepositoryProtocol(Protocol):

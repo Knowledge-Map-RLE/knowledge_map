@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import s from './Modal.module.css';
+import { authService } from '../../../services/auth';
+import type { User } from '../../../entities/user';
 
 interface RegisterModalProps {
     onClose: () => void;
-    onSuccess: (user: { nickname: string; login: string; level: number }) => void;
+    onSuccess: (user: User) => void;
 }
 
 export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onSuccess }) => {
@@ -35,12 +37,32 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onSuccess
         }
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            onSuccess({
-                nickname: formData.displayName,
+            const registerResult = await authService.register({
                 login: formData.username,
-                level: 1
+                password: formData.password,
+                nickname: formData.displayName,
+                captcha: formData.captcha,
             });
+
+            if (!registerResult.success) {
+                setError(registerResult.message || 'Ошибка регистрации');
+                setIsLoading(false);
+                return;
+            }
+
+            const loginResult = await authService.login({
+                login: formData.username,
+                password: formData.password,
+                captcha: formData.captcha,
+            });
+
+            if (!loginResult.success || !loginResult.user) {
+                setError(loginResult.message || 'Ошибка автоматического входа');
+                setIsLoading(false);
+                return;
+            }
+
+            onSuccess(loginResult.user);
         } catch {
             setError('Ошибка регистрации. Возможно, такой логин уже существует.');
         } finally {

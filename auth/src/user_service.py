@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Tuple
 from .models import User, Session
 from .schemas import UserCreate, UserLogin, RecoveryRequest, PasswordReset
@@ -14,12 +14,16 @@ import json
 
 class UserService:
     def __init__(self):
-        self.redis_client = redis.from_url(settings.REDIS_URL)
+        try:
+            self.redis_client = redis.from_url(settings.REDIS_URL)
+            self.redis_client.ping()
+        except Exception:
+            self.redis_client = None
     
     def create_user(self, user_data: UserCreate) -> Tuple[User, List[str]]:
         """Создает нового пользователя"""
         # Проверяем, не существует ли уже пользователь с таким логином
-        existing_user = User.nodes.filter(login=user_data.login).first()
+        existing_user = User.nodes.get_or_none(login=user_data.login)
         if existing_user:
             raise ValueError("Пользователь с таким логином уже существует")
         
@@ -41,14 +45,14 @@ class UserService:
     
     def authenticate_user(self, login: str, password: str) -> Optional[User]:
         """Аутентифицирует пользователя"""
-        user = User.nodes.filter(login=login).first()
+        user = User.nodes.get_or_none(login=login)
         if not user:
             return None
         
         if not user.is_active:
             raise ValueError("Аккаунт заблокирован")
         
-        if user.locked_until and user.locked_until > datetime.utcnow():
+        if user.locked_until and user.locked_until > datetime.now(timezone.utc):
             raise ValueError(f"Аккаунт заблокирован до {user.locked_until}")
         
         if not verify_password(password, user.password_hash):
@@ -57,7 +61,7 @@ class UserService:
             
             # Блокируем аккаунт при превышении лимита
             if user.login_attempts >= settings.LOGIN_ATTEMPTS_LIMIT:
-                user.locked_until = datetime.utcnow() + timedelta(minutes=30)
+                user.locked_until = datetime.now(timezone.utc) + timedelta(minutes=30)
                 user.save()
                 raise ValueError("Аккаунт заблокирован на 30 минут из-за превышения лимита попыток входа")
             
@@ -66,7 +70,7 @@ class UserService:
         
         # Сбрасываем счетчик неудачных попыток при успешном входе
         user.login_attempts = 0
-        user.last_login = datetime.utcnow()
+        user.last_login = datetime.now(timezone.utc)
         user.save()
         
         return user
@@ -114,7 +118,7 @@ class UserService:
             token=token,
             device_info=device_info or {},
             ip_address=ip_address,
-            expires_at=datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            expires_at=datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         ).save()
         
         return session
@@ -125,15 +129,15 @@ class UserService:
         if not payload:
             return None
         
-        session = Session.nodes.filter(token=token, is_active=True).first()
-        if not session or session.expires_at < datetime.utcnow():
+        session = Session.nodes.get_or_none(token=token, is_active=True)
+        if not session or session.expires_at < datetime.now(timezone.utc):
             return None
         
-        return User.nodes.get(uid=payload.get("sub"))
+        return User.nodes.get_or_none(uid=payload.get("sub"))
     
     def logout_session(self, token: str):
         """Выходит из сессии"""
-        session = Session.nodes.filter(token=token).first()
+        session = Session.nodes.get_or_none(token=token)
         if session:
             session.is_active = False
             session.save()
@@ -149,9 +153,13 @@ class UserService:
         """Получает все активные сессии пользователя"""
         return Session.nodes.filter(user_id=user_id, is_active=True)
     
+    def list_users(self) -> list:
+        """Возвращает всех пользователей."""
+        return list(User.nodes.all())
+
     def cleanup_expired_sessions(self):
         """Очищает истекшие сессии"""
-        expired_sessions = Session.nodes.filter(expires_at__lt=datetime.utcnow())
+        expired_sessions = Session.nodes.filter(expires_at__lt=datetime.now(timezone.utc))
         for session in expired_sessions:
             session.delete()
     
@@ -161,16 +169,26 @@ class UserService:
     
     def check_rate_limit(self, login: str) -> bool:
         """Проверяет rate limiting для входа"""
+        if not self.redis_client:
+            return True
         key = self.get_rate_limit_key(login)
-        attempts = self.redis_client.get(key)
-        if attempts and int(attempts) >= settings.LOGIN_ATTEMPTS_LIMIT:
-            return False
+        try:
+            attempts = self.redis_client.get(key)
+            if attempts and int(attempts) >= settings.LOGIN_ATTEMPTS_LIMIT:
+                return False
+        except Exception:
+            return True
         return True
     
     def increment_rate_limit(self, login: str):
         """Увеличивает счетчик попыток входа"""
+        if not self.redis_client:
+            return
         key = self.get_rate_limit_key(login)
-        pipe = self.redis_client.pipeline()
-        pipe.incr(key)
-        pipe.expire(key, settings.LOGIN_ATTEMPTS_WINDOW)
-        pipe.execute() 
+        try:
+            pipe = self.redis_client.pipeline()
+            pipe.incr(key)
+            pipe.expire(key, settings.LOGIN_ATTEMPTS_WINDOW)
+            pipe.execute()
+        except Exception:
+            pass 

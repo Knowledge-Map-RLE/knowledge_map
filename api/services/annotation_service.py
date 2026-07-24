@@ -6,7 +6,7 @@ from datetime import datetime
 from fastapi import HTTPException
 from neomodel import db
 
-from src.models import MarkdownAnnotation, Document, User, AnnotationRelationRel
+from src.models import MarkdownAnnotation, Document, AnnotationRelationRel
 from services.nlp_service import NLPService
 from services import get_s3_client, settings
 from services.markdown_filter import MarkdownFilter
@@ -76,9 +76,8 @@ class AnnotationService:
 
             # Связь с пользователем (если указан)
             if user_id:
-                user = User.nodes.get_or_none(uid=user_id)
-                if user:
-                    annotation.created_by.connect(user)
+                annotation.created_by_uid = user_id
+                annotation.save()
 
             logger.info(f"Создана аннотация {annotation.uid} для документа {doc_id}")
 

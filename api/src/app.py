@@ -9,15 +9,13 @@ from fastapi import FastAPI
 
 logger = logging.getLogger(__name__)
 from fastapi.middleware.cors import CORSMiddleware
-from strawberry.fastapi import GraphQLRouter
 
 from services import settings
 from neomodel import config as neomodel_config
-from src.schema import schema
 
 from src.middleware import ORIGINS, log_requests, add_cors_headers
 from src.routers import (
-    blocks, links, auth, data_extraction, pdf, layout, s3, static, ai_models, image_proxy, article_editor
+    blocks, links, data_extraction, pdf, layout, s3, static, ai_models, image_proxy, article_editor
 )
 
 # Настройка логирования
@@ -68,7 +66,6 @@ app.middleware("http")(add_cors_headers)
 # Подключаем роутеры
 app.include_router(blocks.router)
 app.include_router(links.router)
-app.include_router(auth.router)
 app.include_router(data_extraction.router, prefix="/api/data_extraction")
 app.include_router(pdf.router)
 app.include_router(layout.router)
@@ -77,10 +74,6 @@ app.include_router(static.router)
 app.include_router(ai_models.router, prefix="/api")
 app.include_router(image_proxy.router)
 app.include_router(article_editor.router, prefix="/api")
-
-# Подключаем GraphQL
-graphql_app = GraphQLRouter(schema)
-app.include_router(graphql_app, prefix="/graphql")
 
 
 

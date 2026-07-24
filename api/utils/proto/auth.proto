@@ -8,6 +8,8 @@ service AuthService {
   rpc Logout (LogoutRequest) returns (LogoutResponse);
   rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
   rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+  rpc GenerateCaptcha (GenerateCaptchaRequest) returns (GenerateCaptchaResponse);
   rpc SendRecovery (RecoveryRequest) returns (RecoveryResponse);
   rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
   rpc Setup2FA (Setup2FARequest) returns (Setup2FAResponse);
@@ -66,6 +68,25 @@ message VerifyTokenResponse {
 
 message GetUserRequest {
   string user_id = 1;
+}
+
+message ListUsersRequest {
+}
+
+message ListUsersResponse {
+  bool success = 1;
+  repeated User users = 2;
+  string message = 3;
+}
+
+message GenerateCaptchaRequest {
+}
+
+message GenerateCaptchaResponse {
+  bool success = 1;
+  string captcha_id = 2;
+  string captcha_image = 3;
+  string message = 4;
 }
 
 message GetUserResponse {

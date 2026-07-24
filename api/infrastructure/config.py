@@ -37,7 +37,7 @@ class Settings(BaseSettings):
 
     # Auth сервис
     AUTH_SERVICE_HOST: str = "localhost"
-    AUTH_SERVICE_PORT: int = 50051
+    AUTH_SERVICE_PORT: int = 50057
 
     # PDF to Markdown сервис
     PDF_TO_MD_SERVICE_URL: str = "http://localhost:8002"

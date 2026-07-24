@@ -53,6 +53,10 @@ class AuthResponse(BaseModel):
     recovery_keys: Optional[List[str]] = None
 
 
+class TokenVerifyRequest(BaseModel):
+    token: str
+
+
 class TokenVerifyResponse(BaseModel):
     valid: bool
     message: str

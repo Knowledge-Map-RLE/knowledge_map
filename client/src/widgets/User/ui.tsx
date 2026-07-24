@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import s from './User.module.css';
 import { LoginModal } from './components/LoginModal';
 import { RegisterModal } from './components/RegisterModal';
@@ -13,9 +13,21 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userData, setUserData] = useState<UserType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         checkAuthStatus();
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const checkAuthStatus = async () => {
@@ -41,6 +53,7 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
             await authService.logout();
             setIsAuthenticated(false);
             setUserData(null);
+            setMenuOpen(false);
         } catch (error) {
             console.error('Ошибка при выходе:', error);
         }
@@ -123,14 +136,21 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
 
     return (
         <div className={`${s.user} ${className}`}>
-            <div className={s.avatar}></div>
-            <div className={s.user_info}>
-                <div className={s.name}>{userData?.nickname || 'Пользователь'}</div>
-                <div className={s.info}>@{userData?.login}</div>
+            <div className={s.user_trigger} onClick={() => setMenuOpen(!menuOpen)}>
+                <div className={s.avatar} />
+                <div className={s.user_info}>
+                    <div className={s.name}>{userData?.nickname || 'Пользователь'}</div>
+                    <div className={s.info}>@{userData?.login}</div>
+                </div>
             </div>
-            <button onClick={handleLogout} className={s.logout_button}>
-                Выйти
-            </button>
+
+            {menuOpen && (
+                <div className={s.dropdown} ref={menuRef}>
+                    <button onClick={handleLogout} className={s.logout_button}>
+                        Выйти
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

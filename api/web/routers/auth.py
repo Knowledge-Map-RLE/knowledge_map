@@ -27,6 +27,7 @@ from src.schemas.schemas import (
     User2FASetupRequest,
     User2FAVerifyRequest,
     AuthResponse,
+    TokenVerifyRequest,
     TokenVerifyResponse,
 )
 from application.auth.register_user import register_user
@@ -88,8 +89,8 @@ async def logout(token: str, logout_all: bool = False, gateway=Depends(get_auth_
 
 
 @router.post("/verify", response_model=TokenVerifyResponse)
-async def verify(token: str, gateway=Depends(get_auth_client)):
-    result = verify_token(gateway=gateway, token=token)
+async def verify(request: TokenVerifyRequest, gateway=Depends(get_auth_client)):
+    result = verify_token(gateway=gateway, token=request.token)
     return TokenVerifyResponse(valid=True, message=result["message"], user=result.get("user"))
 
 
@@ -133,9 +134,6 @@ async def verify_2fa_route(request: User2FAVerifyRequest, gateway=Depends(get_au
 
 
 @router.get("/captcha")
-async def get_captcha():
-    """Генерирует капчу (заглушка)."""
-    return {
-        "captcha_id": "test_captcha_123",
-        "captcha_image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
-    }
+async def get_captcha(gateway=Depends(get_auth_client)):
+    """Генерирует капчу через auth-микросервис."""
+    return gateway.generate_captcha()

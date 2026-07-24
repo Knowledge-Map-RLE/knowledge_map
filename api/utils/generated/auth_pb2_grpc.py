@@ -5,7 +5,7 @@ import warnings
 
 from . import auth_pb2 as auth__pb2
 
-GRPC_GENERATED_VERSION = '1.73.0'
+GRPC_GENERATED_VERSION = '1.74.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -58,6 +58,16 @@ class AuthServiceStub(object):
                 '/auth.AuthService/GetUser',
                 request_serializer=auth__pb2.GetUserRequest.SerializeToString,
                 response_deserializer=auth__pb2.GetUserResponse.FromString,
+                _registered_method=True)
+        self.ListUsers = channel.unary_unary(
+                '/auth.AuthService/ListUsers',
+                request_serializer=auth__pb2.ListUsersRequest.SerializeToString,
+                response_deserializer=auth__pb2.ListUsersResponse.FromString,
+                _registered_method=True)
+        self.GenerateCaptcha = channel.unary_unary(
+                '/auth.AuthService/GenerateCaptcha',
+                request_serializer=auth__pb2.GenerateCaptchaRequest.SerializeToString,
+                response_deserializer=auth__pb2.GenerateCaptchaResponse.FromString,
                 _registered_method=True)
         self.SendRecovery = channel.unary_unary(
                 '/auth.AuthService/SendRecovery',
@@ -114,6 +124,18 @@ class AuthServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListUsers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GenerateCaptcha(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def SendRecovery(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -165,6 +187,16 @@ def add_AuthServiceServicer_to_server(servicer, server):
                     servicer.GetUser,
                     request_deserializer=auth__pb2.GetUserRequest.FromString,
                     response_serializer=auth__pb2.GetUserResponse.SerializeToString,
+            ),
+            'ListUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListUsers,
+                    request_deserializer=auth__pb2.ListUsersRequest.FromString,
+                    response_serializer=auth__pb2.ListUsersResponse.SerializeToString,
+            ),
+            'GenerateCaptcha': grpc.unary_unary_rpc_method_handler(
+                    servicer.GenerateCaptcha,
+                    request_deserializer=auth__pb2.GenerateCaptchaRequest.FromString,
+                    response_serializer=auth__pb2.GenerateCaptchaResponse.SerializeToString,
             ),
             'SendRecovery': grpc.unary_unary_rpc_method_handler(
                     servicer.SendRecovery,
@@ -333,6 +365,60 @@ class AuthService(object):
             _registered_method=True)
 
     @staticmethod
+    def ListUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.AuthService/ListUsers',
+            auth__pb2.ListUsersRequest.SerializeToString,
+            auth__pb2.ListUsersResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GenerateCaptcha(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.AuthService/GenerateCaptcha',
+            auth__pb2.GenerateCaptchaRequest.SerializeToString,
+            auth__pb2.GenerateCaptchaResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
     def SendRecovery(request,
             target,
             options=(),
@@ -439,109 +525,6 @@ class AuthService(object):
             timeout,
             metadata,
             _registered_method=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

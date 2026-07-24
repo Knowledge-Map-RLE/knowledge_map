@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, List
 from neomodel import (
     StructuredNode, StringProperty, IntegerProperty, BooleanProperty,
@@ -39,7 +39,7 @@ class User(StructuredNode):
     recovery_keys = JSONProperty(default=list)
     """Ключи восстановления"""
     
-    created_at = DateTimeProperty(default=datetime.utcnow)
+    created_at = DateTimeProperty(default=lambda: datetime.now(timezone.utc))
     """Дата создания"""
     
     last_login = DateTimeProperty()
@@ -73,7 +73,7 @@ class Session(StructuredNode):
     ip_address = StringProperty()
     """IP адрес"""
     
-    created_at = DateTimeProperty(default=datetime.utcnow)
+    created_at = DateTimeProperty(default=lambda: datetime.now(timezone.utc))
     """Дата создания сессии"""
     
     expires_at = DateTimeProperty(required=True)

@@ -27,6 +27,7 @@ from application.blocks.create_block import create_block
 from application.links.create_link import create_link
 from application.links.delete_link import delete_link
 from domain.exceptions import NotFoundError, CyclicGraphError
+from infrastructure.grpc_clients.auth_grpc_client import auth_client
 
 
 def _get_block_repo() -> BlockRepository:
@@ -41,18 +42,23 @@ def _get_link_repo() -> LinkRepository:
 class Query:
     @strawberry.field
     def users(self) -> List[UserType]:
-        from infrastructure.neo4j.orm_models import User
-        return [UserType(id=u.uid, login=u.login, nickname=u.nickname) for u in User.nodes.all()]
+        result = auth_client.list_users()
+        if not result.get("success"):
+            return []
+        return [
+            UserType(id=u["uid"], login=u["login"], nickname=u["nickname"])
+            for u in result.get("users", [])
+        ]
 
     @strawberry.field
     def user(self, user_id: str) -> Optional[UserType]:
-        from infrastructure.neo4j.orm_models import User
         from neomodel import DoesNotExist
-        try:
-            u = User.nodes.get(uid=user_id)
-            return UserType(id=u.uid, login=u.login, nickname=u.nickname)
-        except DoesNotExist:
-            return None
+        # Пробуем через auth microservice
+        result = auth_client.get_user_by_id(user_id)
+        if result.get("success") and result.get("user"):
+            u = result["user"]
+            return UserType(id=u["uid"], login=u["login"], nickname=u["nickname"])
+        return None
 
     @strawberry.field
     def blocks(self) -> List[BlockType]:

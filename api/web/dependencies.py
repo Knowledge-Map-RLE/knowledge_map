@@ -16,7 +16,6 @@ from adapters.repositories.block_repository import BlockRepository
 from adapters.repositories.link_repository import LinkRepository
 from adapters.repositories.document_repository import DocumentRepository
 from adapters.repositories.annotation_repository import AnnotationRepository
-from adapters.repositories.user_repository import UserRepository
 from adapters.repositories.action_repository import ActionRepository
 from adapters.repositories.linguistic_pattern_repository import LinguisticPatternRepository
 from adapters.repositories.pattern_graph_repository import PatternGraphRepository
@@ -42,9 +41,6 @@ def get_document_repository() -> DocumentRepository:
 def get_annotation_repository() -> AnnotationRepository:
     return AnnotationRepository()
 
-
-def get_user_repository() -> UserRepository:
-    return UserRepository()
 
 
 

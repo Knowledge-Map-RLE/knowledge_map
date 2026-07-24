@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 .user {
+    position: relative;
     display: flex;
+    align-items: center;
     border-left: 1px solid #ccc;
     padding: 10px;
     height: 100%;
-    justify-items: center;
     gap: 10px;
+    box-sizing: border-box;
 }
 
 .user > button {
@@ -22,7 +24,10 @@
 }
 
 .avatar {
-    @apply bg-blue-200 h-[50px] w-[50px] rounded-full;
+    @apply bg-blue-200 rounded-full;
+    height: 100%;
+    aspect-ratio: 1;
+    flex-shrink: 0;
 }
 
 .name, .info {
@@ -32,10 +37,15 @@
 .user_info {
     @apply flex flex-col;
     font-size: 12px;
+    line-height: 1.2;
 }
 
-.logout_button {
-    @apply ml-2 px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 transition-colors;
+.user_trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    height: 100%;
 }
 
 .loading {
@@ -46,9 +56,43 @@
     color: white;
     width: 100%;
     border-radius: 5px;
+    font-size: 13px;
+    padding: 4px 12px;
+    white-space: nowrap;
     @apply bg-blue-500
 }
 
 .auth_button:hover {
     @apply bg-blue-600
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 50;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.logout_button {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: #e53e3e;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.logout_button:hover {
+    background: #fed7d7;
 }

@@ -10,6 +10,8 @@ from .models import User
 from .schemas import UserCreate, UserLogin, RecoveryRequest, PasswordReset, TwoFactorVerify
 from .config import settings
 import json
+import secrets
+import base64
 
 
 class AuthServicer(auth_pb2_grpc.AuthServiceServicer):
@@ -168,27 +170,70 @@ class AuthServicer(auth_pb2_grpc.AuthServiceServicer):
                 message="Ошибка проверки токена"
             )
     
-    def GetUser(self, request, context):
+    def ListUsers(self, request, context):
         try:
-            user = User.nodes.get(uid=request.user_id)
-            
-            return auth_pb2.GetUserResponse(
-                success=True,
-                user=auth_pb2.User(
-                    uid=user.uid,
-                    login=user.login,
-                    nickname=user.nickname,
-                    is_active=user.is_active,
-                    is_2fa_enabled=user.is_2fa_enabled,
-                    created_at=user.created_at.isoformat(),
-                    last_login=user.last_login.isoformat() if user.last_login else ""
+            users = self.user_service.list_users()
+            pb_users = [
+                auth_pb2.User(
+                    uid=u.uid,
+                    login=u.login,
+                    nickname=u.nickname,
+                    is_active=u.is_active,
+                    is_2fa_enabled=u.is_2fa_enabled,
+                    created_at=u.created_at.isoformat(),
+                    last_login=u.last_login.isoformat() if u.last_login else ""
                 )
+                for u in users
+            ]
+            return auth_pb2.ListUsersResponse(
+                success=True,
+                users=pb_users,
+                message="OK"
             )
         except Exception as e:
+            return auth_pb2.ListUsersResponse(
+                success=False,
+                message=str(e)
+            )
+
+    def GenerateCaptcha(self, request, context):
+        try:
+            captcha_id = secrets.token_hex(8)
+            stub_image = base64.b64encode(
+                b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+            ).decode("ascii")
+            return auth_pb2.GenerateCaptchaResponse(
+                success=True,
+                captcha_id=captcha_id,
+                captcha_image=f"data:image/png;base64,{stub_image}",
+                message="Captcha generated"
+            )
+        except Exception as e:
+            return auth_pb2.GenerateCaptchaResponse(
+                success=False,
+                message=str(e)
+            )
+
+    def GetUser(self, request, context):
+        user = User.nodes.get_or_none(uid=request.user_id)
+        if not user:
             return auth_pb2.GetUserResponse(
                 success=False,
                 message="Пользователь не найден"
             )
+        
+        return auth_pb2.GetUserResponse(
+            success=True,
+            user=auth_pb2.User(
+                uid=user.uid,
+                login=user.login,
+                nickname=user.nickname,
+                is_active=user.is_active,
+                is_2fa_enabled=user.is_2fa_enabled,
+                created_at=user.created_at.isoformat(),
+                last_login=user.last_login.isoformat() if user.last_login else ""
+            )
+        )
     
     def RecoveryRequest(self, request, context):
         try:
@@ -212,10 +257,14 @@ class AuthServicer(auth_pb2_grpc.AuthServiceServicer):
             )
     
     def ResetPassword(self, request, context):
+        user = User.nodes.get_or_none(uid=request.user_id)
+        if not user:
+            return auth_pb2.ResetPasswordResponse(
+                success=False,
+                message="Пользователь не найден"
+            )
         try:
-            user = User.nodes.get(uid=request.user_id)
             self.user_service.reset_password(user, request.new_password)
-            
             return auth_pb2.ResetPasswordResponse(
                 success=True,
                 message="Пароль успешно изменен"
@@ -227,10 +276,14 @@ class AuthServicer(auth_pb2_grpc.AuthServiceServicer):
             )
     
     def Setup2FA(self, request, context):
+        user = User.nodes.get_or_none(uid=request.user_id)
+        if not user:
+            return auth_pb2.Setup2FAResponse(
+                success=False,
+                message="Пользователь не найден"
+            )
         try:
-            user = User.nodes.get(uid=request.user_id)
             secret, qr_code, backup_codes = self.user_service.setup_2fa(user)
-            
             return auth_pb2.Setup2FAResponse(
                 success=True,
                 secret=secret,
@@ -245,10 +298,14 @@ class AuthServicer(auth_pb2_grpc.AuthServiceServicer):
             )
     
     def Verify2FA(self, request, context):
+        user = User.nodes.get_or_none(uid=request.user_id)
+        if not user:
+            return auth_pb2.Verify2FAResponse(
+                success=False,
+                message="Пользователь не найден"
+            )
         try:
-            user = User.nodes.get(uid=request.user_id)
             is_valid = self.user_service.verify_2fa(user, request.code)
-            
             if is_valid:
                 return auth_pb2.Verify2FAResponse(
                     success=True,
