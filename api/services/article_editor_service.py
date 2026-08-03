@@ -1,4 +1,7 @@
+import json
 import logging
+import mimetypes
+import os
 from datetime import datetime, timezone
 
 from src.uuid8 import uuid8_str
@@ -11,11 +14,19 @@ from . import settings, get_s3_client
 logger = logging.getLogger(__name__)
 
 
+def _chunks(lst: list, n: int):
+    """Разбивает список на батчи по n элементов."""
+    for i in range(0, len(lst), n):
+        yield lst[i : i + n]
+
+
 class ArticleEditorService:
     async def create_article(self, title: str = "New Article") -> dict[str, Any]:
+        article_uid = uuid8_str()
         doc = Document(
+            uid=article_uid,
             original_filename=title or "New Article",
-            md5_hash=uuid8_str(),
+            md5_hash=article_uid,
             s3_key="",
             title=title or "New Article",
             processing_status="ready_for_annotation",
@@ -139,28 +150,63 @@ class ArticleEditorService:
             "MATCH (d:Document {uid: $uid}) OPTIONAL MATCH (d)-[r:HAS_STATEMENT]->(s:KnowledgeStatement) DELETE r, s",
             {"uid": doc_id},
         )
+        content_uuids: list[str] = []
+        batch: list[dict[str, Any]] = []
         for i, stmt in enumerate(statements):
-            stmt_uid = stmt.get("id") or uuid8_str()
+            stmt_uid = stmt.get("uid") or uuid8_str()
+            content_uuids.append(stmt_uid)
+            batch.append({
+                "uid": stmt_uid,
+                "subj": stmt.get("subject_text", ""),
+                "pred": stmt.get("predicate", ""),
+                "obj": stmt.get("object_text", ""),
+                "subj_type": stmt.get("subject_type", "concept"),
+                "obj_type": stmt.get("object_type", "concept"),
+                "type": stmt.get("type", "FACT"),
+                "conf": stmt.get("confidence", 1.0),
+                "sent": stmt.get("sentence_text", ""),
+                "order": i,
+            })
+        for chunk in _chunks(batch, 500):
             db.cypher_query(
-                "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $subj, predicate: $pred, "
-                "object_text: $obj, subject_type: $subj_type, object_type: $obj_type, "
-                "type: $type, confidence: $conf, sentence_text: $sent, sort_order: $order}) "
-                "WITH s MATCH (d:Document {uid: $doc_id}) CREATE (d)-[:HAS_STATEMENT]->(s)",
-                {
-                    "uid": stmt_uid,
-                    "subj": stmt.get("subject_text", ""),
-                    "pred": stmt.get("predicate", ""),
-                    "obj": stmt.get("object_text", ""),
-                    "subj_type": stmt.get("subject_type", "concept"),
-                    "obj_type": stmt.get("object_type", "concept"),
-                    "type": stmt.get("type", "FACT"),
-                    "conf": stmt.get("confidence", 1.0),
-                    "sent": stmt.get("sentence_text", ""),
-                    "order": i,
-                    "doc_id": doc_id,
-                },
+                "MATCH (d:Document {uid: $doc_id}) "
+                "UNWIND $batch AS item "
+                "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: item.subj, predicate: item.pred, "
+                "object_text: item.obj, subject_type: item.subj_type, object_type: item.obj_type, "
+                "type: item.type, confidence: item.conf, sentence_text: item.sent, sort_order: item.order}) "
+                "CREATE (d)-[:HAS_STATEMENT]->(s)",
+                {"batch": chunk, "doc_id": doc_id},
             )
-        return {"success": True, "uid": doc_id, "statements_count": len(statements)}
+
+        article_uid = uuid8_str()
+        db.cypher_query(
+            "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $doc_id, predicate: 'является', "
+            "object_text: 'научная статья', subject_type: 'concept', object_type: 'concept', "
+            "type: 'META', confidence: 1.0, sentence_text: '', sort_order: $order}) "
+            "WITH s MATCH (d:Document {uid: $doc_id}) CREATE (d)-[:HAS_STATEMENT]->(s)",
+            {"uid": article_uid, "doc_id": doc_id, "order": len(content_uuids)},
+        )
+
+        meta_batch: list[dict[str, Any]] = []
+        for idx, stmt_uuid in enumerate(content_uuids):
+            meta_batch.append({
+                "uid": uuid8_str(),
+                "obj": stmt_uuid,
+                "order": len(content_uuids) + 1 + idx,
+            })
+        for chunk in _chunks(meta_batch, 500):
+            db.cypher_query(
+                "MATCH (d:Document {uid: $doc_id}) "
+                "UNWIND $batch AS item "
+                "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: $doc_id, predicate: 'содержит', "
+                "object_text: item.obj, subject_type: 'concept', object_type: 'concept', "
+                "type: 'META', confidence: 1.0, sentence_text: '', sort_order: item.order}) "
+                "CREATE (d)-[:HAS_STATEMENT]->(s)",
+                {"batch": chunk, "doc_id": doc_id},
+            )
+
+        return {"success": True, "uid": doc_id, "statements_count": len(content_uuids),
+                "statement_ids": content_uuids}
 
     async def list_articles(self, skip: int = 0, limit: int = 200) -> list[dict[str, Any]]:
         results, meta = db.cypher_query(
@@ -226,3 +272,116 @@ class ArticleEditorService:
             connected_ids.add(e["target_id"])
         all_statements = [s for s in all_statements if s["uid"] in connected_ids]
         return {"statements": all_statements, "edges": edges}
+
+    async def save_blocks(self, doc_id: str, blocks: list[dict[str, Any]]) -> dict[str, Any]:
+        status = await self.get_document_status(doc_id)
+        if not self._is_editable_status(status):
+            return {"success": False, "error": "not_annotated",
+                    "message": "Редактирование доступно только для аннотированных документов."}
+        db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) OPTIONAL MATCH (d)-[r:HAS_BLOCK]->(b:ArticleBlock) DELETE r, b",
+            {"uid": doc_id},
+        )
+        batch: list[dict[str, Any]] = []
+        for i, block in enumerate(blocks):
+            block_uid = block.get("instanceId") or uuid8_str()
+            batch.append({
+                "uid": block_uid,
+                "bt": int(block.get("blockType", 0)),
+                "data": json.dumps(block.get("data", {}), ensure_ascii=False),
+                "order": int(block.get("order", i)),
+            })
+        for chunk in _chunks(batch, 500):
+            db.cypher_query(
+                "MATCH (d:Document {uid: $doc_id}) "
+                "UNWIND $batch AS item "
+                "CREATE (b:ArticleBlock {uid: item.uid, block_type: item.bt, data: item.data, order: item.order}) "
+                "CREATE (d)-[:HAS_BLOCK]->(b)",
+                {"batch": chunk, "doc_id": doc_id},
+            )
+        db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) "
+            "SET d.edit_date = datetime($now)",
+            {"uid": doc_id, "now": datetime.now(timezone.utc).isoformat()},
+        )
+        return {"success": True, "uid": doc_id, "blocks_count": len(blocks)}
+
+    async def update_article_title(self, doc_id: str, title: str) -> dict[str, Any]:
+        now = datetime.now(timezone.utc).isoformat()
+        db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) "
+            "SET d.title = $title, d.original_filename = $title, d.edit_date = datetime($now)",
+            {"uid": doc_id, "title": title, "now": now},
+        )
+        return {"success": True, "uid": doc_id, "title": title}
+
+    async def get_blocks(self, doc_id: str) -> dict[str, Any]:
+        results, _ = db.cypher_query(
+            "MATCH (d:Document {uid: $uid})-[:HAS_BLOCK]->(b:ArticleBlock) "
+            "RETURN b.uid, b.block_type, b.data, b.order ORDER BY b.order",
+            {"uid": doc_id},
+        )
+        blocks = []
+        for row in results:
+            try:
+                data = json.loads(row[2])
+            except (json.JSONDecodeError, TypeError):
+                data = {}
+            blocks.append({
+                "instanceId": row[0],
+                "blockType": row[1],
+                "data": data,
+                "order": row[3],
+            })
+        return {"blocks": blocks, "success": True}
+
+    _IMAGE_EXTENSIONS = {
+        ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".bmp", ".tif", ".tiff",
+    }
+
+    async def upload_image(
+        self, doc_id: str, filename: str, content_type: str, data: bytes
+    ) -> dict[str, Any]:
+        """Загружает изображение статьи в S3 и возвращает object_key."""
+        status = await self.get_document_status(doc_id)
+        if not self._is_editable_status(status):
+            return {"success": False, "error": "not_annotated",
+                    "message": "Редактирование доступно только для аннотированных документов."}
+        if not data:
+            return {"success": False, "error": "empty_file"}
+        ext = os.path.splitext(filename or "")[1].lower()
+        if ext not in self._IMAGE_EXTENSIONS:
+            ext = ".png"
+        object_key = f"documents/{doc_id}/images/{uuid8_str()}{ext}"
+        s3_client = get_s3_client()
+        ok = await s3_client.upload_bytes(
+            data,
+            settings.S3_BUCKET_NAME,
+            object_key,
+            content_type=content_type or "application/octet-stream",
+        )
+        if not ok:
+            return {"success": False, "error": "S3 upload failed"}
+        return {"success": True, "object_key": object_key}
+
+    async def get_image(self, object_key: str) -> tuple[bytes, str] | None:
+        """Возвращает содержимое изображения и content-type, либо None."""
+        if ".." in object_key.split("/"):
+            return None
+        s3_client = get_s3_client()
+        if not await s3_client.object_exists(settings.S3_BUCKET_NAME, object_key):
+            return None
+        data = await s3_client.download_bytes(settings.S3_BUCKET_NAME, object_key)
+        if data is None:
+            return None
+        content_type = mimetypes.guess_type(object_key)[0] or "application/octet-stream"
+        return data, content_type
+
+    async def delete_image(self, object_key: str) -> bool:
+        """Удаляет изображение из S3."""
+        if ".." in object_key.split("/"):
+            return False
+        s3_client = get_s3_client()
+        if not await s3_client.object_exists(settings.S3_BUCKET_NAME, object_key):
+            return False
+        return await s3_client.delete_object(settings.S3_BUCKET_NAME, object_key)

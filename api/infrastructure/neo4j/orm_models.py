@@ -74,9 +74,27 @@ class Block(StructuredNode):
     target = RelationshipTo("Block", "LINK_TO", model=LinkRel)
 
 
+class ArticleBlock(StructuredNode):
+    """
+    Структурный блок статьи (редактор article_editor).
+
+    Блок — единица структурированного представления статьи:
+    T1 (заголовок), T14 (эксперимент), T18 (вмешательство),
+    T19 (организм/вид), T55 (группа), T56 (шаг эксперимента).
+    data хранится как JSON-строка (Neo4j не поддерживает вложенные map
+    в качестве свойств — только примитивы и массивы примитивов).
+    """
+    uid = StringProperty(primary_key=True)          # instanceId блока
+    block_type = IntegerProperty(required=True, index=True)
+    data = StringProperty(default="{}")             # JSON-строка
+    order = IntegerProperty(default=0, index=True)
+
+    document = RelationshipFrom("Document", "HAS_BLOCK")
+
+
 class Document(StructuredNode):
     """ORM-модель документа — объединяет PDFDocument и Article."""
-    uid = UniqueIdProperty(primary_key=True)
+    uid = StringProperty(primary_key=True)
     original_filename = StringProperty(required=True, index=True)
     md5_hash = StringProperty(required=True, unique_index=True)
     s3_bucket = StringProperty(default="knowledge-map-data")
@@ -108,6 +126,7 @@ class Document(StructuredNode):
     created_by_uid = StringProperty()
     annotations = RelationshipTo("PDFAnnotation", "HAS_ANNOTATION")
     markdown_annotations = RelationshipTo("MarkdownAnnotation", "HAS_MARKDOWN_ANNOTATION")
+    blocks = RelationshipTo("ArticleBlock", "HAS_BLOCK")
 
 
 class PDFAnnotation(StructuredNode):

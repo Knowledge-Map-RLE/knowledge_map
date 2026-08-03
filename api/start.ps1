@@ -15,8 +15,8 @@ Write-Host "Generating proto files..."
 New-Item -ItemType Directory -Force -Path "utils/generated" | Out-Null
 
 python -m grpc_tools.protoc `
-    -I./utils/proto `
     -I../nlp/proto `
+    -I./utils/proto `
     --python_out=./utils/generated `
     --grpc_python_out=./utils/generated `
     ./utils/proto/layout.proto `

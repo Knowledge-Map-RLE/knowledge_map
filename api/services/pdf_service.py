@@ -14,6 +14,7 @@ from src.schemas.pdf import (
     PDFUploadResponse, PDFDocumentResponse, PDFAnnotationResponse
 )
 from src.models import Document, PDFAnnotation
+from src.uuid8 import uuid8_str
 from neomodel import DoesNotExist
 from . import settings, get_s3_client
 from .pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
@@ -86,6 +87,7 @@ class PDFService:
             
             # Создаем запись в Neo4j
             pdf_doc = Document(
+                uid=uuid8_str(),
                 original_filename=file.filename,
                 md5_hash=md5_hash,
                 s3_bucket="knowledge-map-pdfs",

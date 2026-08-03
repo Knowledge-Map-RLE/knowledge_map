@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Header from '../../widgets/Header';
-import Document_downloader_ui from '../Data_extraction/Document_downloader_ui';
+import Document_downloader_ui, { type DocumentListHandle } from '../Data_extraction/Document_downloader_ui';
 import EditorWorkspace from './Editor/EditorWorkspace';
 import ArticleMap from './Editor/ArticleMap';
 import { LinguisticPatternAnalysis } from '../Data_extraction/Patterns';
@@ -14,10 +14,11 @@ const ArticleEditorUI: React.FC = () => {
     const [selectedDocument, setSelectedDocument] = useState<any>(null);
     const noopRef = useRef<() => void>(() => {});
     const noopSetError = useRef<(e: string | null) => void>(() => {});
+    const docListRef = useRef<DocumentListHandle>(null);
 
     const {
-        text, statements, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
-        loadArticle, setText, triggerParse, save,
+        text, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
+        loadArticle, initNewArticle, setText, addBlock, updateBlock, deleteBlock, reorderBlocks, triggerParse, save, uploadImage,
     } = useArticleState();
 
     const handleSelectDocument = useCallback(async (doc: any | null) => {
@@ -31,16 +32,11 @@ const ArticleEditorUI: React.FC = () => {
         }
     }, [loadArticle, setText]);
 
-    const handleTextChange = useCallback((newText: string) => {
-        if (notAnnotatedMessage) return;
-        setText(newText);
-    }, [notAnnotatedMessage, setText]);
-
     useEffect(() => {
-        if (selectedDocId && text.length > 0 && !notAnnotatedMessage) {
+        if (selectedDocId && text.length > 0 && !notAnnotatedMessage && blocks.length === 0) {
             triggerParse(selectedDocId);
         }
-    }, [text, selectedDocId, triggerParse, notAnnotatedMessage]);
+    }, [text, selectedDocId, triggerParse, notAnnotatedMessage, blocks.length]);
 
     const handleSave = useCallback(async () => {
         if (selectedDocId && !notAnnotatedMessage) {
@@ -50,8 +46,9 @@ const ArticleEditorUI: React.FC = () => {
 
     const handleCreateNew = useCallback(async () => {
         const { createArticle } = await import('../../services/api/article_editor');
-        const result = await createArticle('New Article');
+        const result = await createArticle('Новая статья');
         if (result?.uid) {
+            initNewArticle(result.uid);
             setSelectedDocId(result.uid);
             setSelectedDocument({
                 uid: result.uid,
@@ -60,9 +57,12 @@ const ArticleEditorUI: React.FC = () => {
                 processing_status: 'ready_for_annotation',
                 is_processed: false,
             });
-            setText('');
+            addBlock(1, { title: result.title || 'Новая статья' });
+            await docListRef.current?.reloadDocuments();
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await save(result.uid);
         }
-    }, [setText]);
+    }, [initNewArticle, addBlock, save]);
 
     return (
         <main className={styles.ae}>
@@ -71,6 +71,7 @@ const ArticleEditorUI: React.FC = () => {
             <div className={styles.mainRow}>
                 <div className={styles.leftColumn}>
                     <Document_downloader_ui
+                        ref={docListRef}
                         selectedDocument={selectedDocument}
                         onSelectDocument={handleSelectDocument}
                         onDocumentsChange={noopRef.current}
@@ -137,13 +138,19 @@ const ArticleEditorUI: React.FC = () => {
                                 <EditorWorkspace
                                     text={text}
                                     statements={statements}
+                                    blocks={blocks}
                                     isParsing={isParsing}
                                     parseProgress={parseProgress}
                                     parseError={parseError}
-                                    onTextChange={handleTextChange}
+                                    onAddBlock={addBlock}
+                                    onDeleteBlock={deleteBlock}
+                                    onUpdateBlock={updateBlock}
+                                    onReorderBlocks={reorderBlocks}
                                     onSave={handleSave}
                                     saveStatus={saveStatus}
                                     docId={selectedDocId ?? undefined}
+                                    articleUuid={articleUuid ?? undefined}
+                                    onUploadImage={uploadImage}
                                 />
                             )
                         )}

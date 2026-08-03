@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, memo } from 'react';
+import React, { useCallback, useEffect, memo, useRef } from 'react';
 import type { KnowledgeStatement } from '../model';
 import styles from '../Article_editor.module.css';
 
@@ -44,13 +44,20 @@ const StatementItem = memo(function StatementItem({
       </div>
     </div>
   );
-});
+}, (prev, next) =>
+  prev.idx === next.idx &&
+  prev.isSelected === next.isSelected &&
+  prev.isHighlighted === next.isHighlighted &&
+  prev.stmt.id === next.stmt.id &&
+  prev.stmt.subject_text === next.stmt.subject_text &&
+  prev.stmt.predicate === next.stmt.predicate &&
+  prev.stmt.object_text === next.stmt.object_text
+);
 
 interface StatementsPanelProps {
     statements: KnowledgeStatement[];
     selectedIndex: number | null;
     onSelectStatement: (index: number, stmt: KnowledgeStatement) => void;
-    onScroll?: (scrollTop: number, scrollHeight: number) => void;
     highlightIndex?: number | null;
     isParsing?: boolean;
     parseProgress?: { processed: number; total: number } | null;
@@ -58,19 +65,14 @@ interface StatementsPanelProps {
     hasText?: boolean;
 }
 
-const StatementsPanel = forwardRef<HTMLDivElement, StatementsPanelProps>(({
-    statements, selectedIndex, onSelectStatement, onScroll, highlightIndex, isParsing = false, parseProgress = null, parseError = null, hasText = false,
-}, ref) => {
-    const handleScroll = useCallback(() => {
-        const el = (ref as React.RefObject<HTMLDivElement>).current;
-        if (el && onScroll) {
-            onScroll(el.scrollTop, el.scrollHeight);
-        }
-    }, [ref, onScroll]);
+const StatementsPanel: React.FC<StatementsPanelProps> = ({
+    statements, selectedIndex, onSelectStatement, highlightIndex, isParsing = false, parseProgress = null, parseError = null, hasText = false,
+}) => {
+    const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (highlightIndex !== null && highlightIndex !== undefined) {
-            const el = (ref as React.RefObject<HTMLDivElement>).current;
+            const el = panelRef.current;
             if (el) {
                 const item = el.querySelector(`[data-stmt-idx="${highlightIndex}"]`);
                 if (item) {
@@ -78,12 +80,11 @@ const StatementsPanel = forwardRef<HTMLDivElement, StatementsPanelProps>(({
                 }
             }
         }
-    }, [highlightIndex, ref]);
+    }, [highlightIndex]);
 
     return (
         <div
-            ref={ref}
-            onScroll={handleScroll}
+            ref={panelRef}
             style={{ flex: 1, overflow: 'auto', position: 'relative' }}
         >
             {isParsing && (
@@ -121,8 +122,6 @@ const StatementsPanel = forwardRef<HTMLDivElement, StatementsPanelProps>(({
             ))}
         </div>
     );
-});
-
-StatementsPanel.displayName = 'StatementsPanel';
+};
 
 export default StatementsPanel;

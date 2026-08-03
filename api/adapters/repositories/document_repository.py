@@ -54,6 +54,7 @@ def _domain_to_orm(doc: Document, orm_doc: Optional[OrmDocument] = None) -> OrmD
     """Заполняет ORM-объект из доменного dataclass."""
     if orm_doc is None:
         orm_doc = OrmDocument(
+            uid=doc.uid,
             original_filename=doc.original_filename,
             md5_hash=doc.md5_hash,
             s3_bucket=doc.s3_bucket,

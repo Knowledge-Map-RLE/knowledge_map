@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useMemo } from 'react';
+import React, { forwardRef, useEffect, useMemo, useDeferredValue } from 'react';
 import { marked } from 'marked';
 
 const IMG_API = 'http://localhost:8000/api/data_extraction/documents';
@@ -6,23 +6,34 @@ const IMG_API = 'http://localhost:8000/api/data_extraction/documents';
 interface MarkdownPreviewProps {
     text: string;
     docId?: string;
-    onScroll?: (scrollTop: number, scrollHeight: number) => void;
     highlightRange?: { start: number; end: number } | null;
 }
 
 const MarkdownPreview = forwardRef<HTMLDivElement, MarkdownPreviewProps>(function MarkdownPreview(
-    { text, docId, onScroll, highlightRange },
+    { text, docId, highlightRange },
     ref
 ) {
-    const handleScroll = useCallback(() => {
-        const el = (ref as React.RefObject<HTMLDivElement>).current;
-        if (el && onScroll) {
-            onScroll(el.scrollTop, el.scrollHeight);
-        }
-    }, [ref, onScroll]);
+    // Defer the expensive markdown parse: the preview renders a slightly stale
+    // version while the user types, keeping input latency low.
+    const deferredText = useDeferredValue(text);
 
-    const rendered = useMemo(() => {
-        let processed = text || '';
+    const { yamlMeta, bodyHtml } = useMemo(() => {
+        let processed = deferredText || '';
+        let yamlMeta: Array<{ key: string; value: string }> | null = null;
+        const yamlMatch = processed.match(/^---\n([\s\S]*?)\n---/);
+        if (yamlMatch) {
+            const raw = yamlMatch[1];
+            yamlMeta = [];
+            for (const line of raw.split('\n')) {
+                const idx = line.indexOf(':');
+                if (idx > 0) {
+                    const k = line.slice(0, idx).trim();
+                    const v = line.slice(idx + 1).trim().replace(/^"|"$/g, '');
+                    if (k) yamlMeta.push({ key: k, value: v });
+                }
+            }
+            processed = processed.slice(yamlMatch[0].length);
+        }
         if (docId) {
             processed = processed.replace(
                 /!\[([^\]]*)\]\(([^)]+)\)/g,
@@ -33,8 +44,8 @@ const MarkdownPreview = forwardRef<HTMLDivElement, MarkdownPreviewProps>(functio
             );
         }
         const raw = marked.parse(processed, { async: false }) as string;
-        return raw;
-    }, [text, docId]);
+        return { yamlMeta, bodyHtml: raw };
+    }, [deferredText, docId]);
 
     useEffect(() => {
         if (highlightRange) {
@@ -69,15 +80,25 @@ const MarkdownPreview = forwardRef<HTMLDivElement, MarkdownPreviewProps>(functio
     return (
         <div
             ref={ref}
-            onScroll={handleScroll}
             className="article-markdown-preview"
             style={{
                 flex: 1, overflow: 'auto', padding: '12px 16px',
                 fontFamily: "'Georgia', 'Times New Roman', serif",
                 fontSize: '14px', lineHeight: '1.7', color: '#374151',
             }}
-            dangerouslySetInnerHTML={{ __html: rendered }}
-        />
+        >
+            {yamlMeta && (
+                <div className="md-yaml-block">
+                    {yamlMeta.map(({ key, value }) => (
+                        <div key={key} className="md-yaml-line">
+                            <span className="md-yaml-key">{key}</span>
+                            <span className="md-yaml-value">{value}</span>
+                        </div>
+                    ))}
+                </div>
+            )}
+            <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+        </div>
     );
 });
 

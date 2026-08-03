@@ -22,6 +22,14 @@ class SaveStatementsRequest(BaseModel):
     statements: list[dict]
 
 
+class SaveBlocksRequest(BaseModel):
+    blocks: list[dict]
+
+
+class UpdateTitleRequest(BaseModel):
+    title: str
+
+
 @router.post("/article_editor/articles")
 async def create_article(req: CreateArticleRequest):
     return await service.create_article(title=req.title)
@@ -65,3 +73,23 @@ async def save_statements(doc_id: str, req: SaveStatementsRequest):
         if result.get("error") == "not_annotated":
             raise HTTPException(status_code=403, detail=result.get("message"))
     return result
+
+
+@router.put("/article_editor/articles/{doc_id}/blocks")
+async def save_blocks(doc_id: str, req: SaveBlocksRequest):
+    result = await service.save_blocks(doc_id, req.blocks)
+    if not result.get("success"):
+        if result.get("error") == "not_annotated":
+            raise HTTPException(status_code=403, detail=result.get("message"))
+    return result
+
+
+@router.get("/article_editor/articles/{doc_id}/blocks")
+async def get_blocks(doc_id: str):
+    result = await service.get_blocks(doc_id)
+    return result
+
+
+@router.put("/article_editor/articles/{doc_id}/title")
+async def update_article_title(doc_id: str, req: UpdateTitleRequest):
+    return await service.update_article_title(doc_id, req.title)

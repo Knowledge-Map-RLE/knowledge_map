@@ -1,4 +1,4 @@
-import { fetchJson } from './http';
+import { fetchJson, withBase } from './http';
 
 export async function createArticle(title: string = 'New Article'): Promise<any> {
     return fetchJson('/api/article_editor/articles', {
@@ -33,6 +33,43 @@ export async function saveStatements(docId: string, statements: any[]): Promise<
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ statements }),
+    });
+}
+
+export async function saveBlocks(docId: string, blocks: any[]): Promise<any> {
+    return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/blocks`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ blocks }),
+    });
+}
+
+export async function getBlocks(docId: string): Promise<any> {
+    return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/blocks`);
+}
+
+export async function uploadArticleImage(docId: string, file: File): Promise<{ success: boolean; object_key?: string }> {
+    const form = new FormData();
+    form.append('doc_id', docId);
+    form.append('file', file);
+    return fetchJson('/api/article_editor/images', { method: 'POST', body: form });
+}
+
+export async function deleteArticleImage(objectKey: string): Promise<{ success: boolean }> {
+    const encoded = objectKey.split('/').map(encodeURIComponent).join('/');
+    return fetchJson(`/api/article_editor/images/${encoded}`, { method: 'DELETE' });
+}
+
+export function articleImageUrl(objectKey: string): string {
+    const encoded = objectKey.split('/').map(encodeURIComponent).join('/');
+    return withBase(`/api/article_editor/images/${encoded}`);
+}
+
+export async function updateArticleTitle(docId: string, title: string): Promise<any> {
+    return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/title`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
     });
 }
 
