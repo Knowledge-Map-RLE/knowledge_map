@@ -3,7 +3,7 @@ import Header from '../../widgets/Header';
 import Document_downloader_ui, { type DocumentListHandle } from '../Data_extraction/Document_downloader_ui';
 import EditorWorkspace from './Editor/EditorWorkspace';
 import ArticleMap from './Editor/ArticleMap';
-import { LinguisticPatternAnalysis } from '../Data_extraction/Patterns';
+import EvidencePatterns from './Editor/EvidencePatterns';
 import { useArticleState } from './hooks/useArticleState';
 import type { ArticleEditorTab } from './model';
 import styles from './Article_editor.module.css';
@@ -168,7 +168,7 @@ const ArticleEditorUI: React.FC = () => {
                         {activeTab === 'patterns' && (
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
                                 {selectedDocId ? (
-                                    <LinguisticPatternAnalysis docId={selectedDocId} />
+                                    <EvidencePatterns docId={selectedDocId} />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
                                         Выберите файл или создайте новую статью
