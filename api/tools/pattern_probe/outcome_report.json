@@ -1,0 +1,1761 @@
+{
+  "doc_id": "000657ba-aec6-8a11-9c5c-986526539651",
+  "hypothesis": {
+    "hypothesis": "Конкуренция с Acomys dimidiatus (ночной вид) за ограниченные ресурсы позволила Acomys russatus перейти к дневной или сумеречной активности, что привело к уникальным адаптациям к жёстким пустынным условиям (метаболическая и водная экономика)",
+    "disproofExplanation": "Точные механизмы устойчивости к старению ещё не полностью выяснены и, вероятно, многофакторны"
+  },
+  "goals": [
+    "идентификация",
+    "тестирование",
+    "всестороннее понимание биологии старения",
+    "идентификация и проверка каузальности"
+  ],
+  "findings_total": 94,
+  "evidence_counts": {
+    "context": 17,
+    "support": 11,
+    "context_support": 18,
+    "unknown": 15,
+    "weak_support": 33
+  },
+  "role_counts": {
+    "aged_other": 35,
+    "resilient_aged": 34,
+    "intervention": 20,
+    "unknown": 3,
+    "young": 2
+  },
+  "polarity_counts": {
+    "None": 35,
+    "benefit": 19,
+    "harm": 40
+  },
+  "experiments": {
+    "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N": {
+      "type": "Интервенция in vivo",
+      "findings": 20,
+      "control_groups": [
+        "000657f3-d7f8-8b77-a929-fc9881b34e8f"
+      ],
+      "exp_groups": [
+        "000657f3-d7f8-8b77-8141-cdd726113162"
+      ],
+      "counts": {
+        "unknown": 2,
+        "weak_support": 17,
+        "support": 1
+      },
+      "verdict": "подтвердилась"
+    },
+    "Иммунное старение лимфоидных органов: M. musculus vs A. russatus": {
+      "type": "Гистология",
+      "findings": 11,
+      "control_groups": [
+        "000657f3-d7f8-878f-b1f1-b27f2ea1af90",
+        "000657f3-d7f8-8b77-bdfd-d69176c870b1"
+      ],
+      "exp_groups": [
+        "000657f3-d7f8-878f-ad2d-fc1bdc7dc904",
+        "000657f3-d7f8-8b77-bd3d-719f3ed0c36e",
+        "000657f3-d7f8-8b77-aeee-4860747ab5b9"
+      ],
+      "counts": {
+        "weak_support": 7,
+        "context": 1,
+        "context_support": 2,
+        "unknown": 1
+      },
+      "verdict": "подтвердилась"
+    },
+    "Клеточно-автономное противовоспалительное действие кластерина (BMDM + моноциты человека)": {
+      "type": "In vitro",
+      "findings": 5,
+      "control_groups": [
+        "000657f3-d7f8-8f5e-aaaa-a9b3996ced3b"
+      ],
+      "exp_groups": [
+        "000657f3-d7f8-8f5e-a424-cc82ac2803e4",
+        "000657f3-d7f8-8f5e-8404-895aff2f3e8f",
+        "000657f3-d7f8-8f5e-aaaa-a9b3996ced3b"
+      ],
+      "counts": {
+        "unknown": 3,
+        "context": 2
+      },
+      "verdict": "недостаточно данных"
+    },
+    "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)": {
+      "type": "snRNA-seq",
+      "findings": 14,
+      "control_groups": [
+        "000657f3-d7f8-8b77-8303-1dfb622e4d58",
+        "000657f3-d7f8-8b77-94d4-98554dd4dc89"
+      ],
+      "exp_groups": [
+        "000657f3-d7f8-8b77-9050-0e1b4dea5d10",
+        "000657f3-d7f8-8b77-b6b6-9d847ad01287"
+      ],
+      "counts": {
+        "weak_support": 4,
+        "context": 3,
+        "unknown": 2,
+        "context_support": 3,
+        "support": 2
+      },
+      "verdict": "подтвердилась"
+    },
+    "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus": {
+      "type": "RNA-seq",
+      "findings": 24,
+      "control_groups": [
+        "000657f3-d7f8-8b77-8fcf-6205626a8b8f",
+        "000657f3-d7f8-8b77-8b8b-abd520368122"
+      ],
+      "exp_groups": [
+        "000657f3-d7f8-8b77-8444-fe7ce75f9de4",
+        "000657f3-d7f8-8b77-8e0e-30b003043357"
+      ],
+      "counts": {
+        "unknown": 4,
+        "weak_support": 4,
+        "context_support": 9,
+        "support": 2,
+        "context": 5
+      },
+      "verdict": "подтвердилась"
+    },
+    "Сравнение Acomys russatus vs Acomys dimidiatus": {
+      "type": "Поведенческий",
+      "findings": 20,
+      "control_groups": [
+        "000657d2-6d73-89c3-9616-ed65f7303506",
+        "000657d3-aae4-8f2a-93d3-e1419a546891"
+      ],
+      "exp_groups": [
+        "000657d3-f6b4-816b-b171-87b8970466e5",
+        "000657d3-f737-8836-b8f8-4891bffb5a82"
+      ],
+      "counts": {
+        "context": 6,
+        "support": 6,
+        "context_support": 4,
+        "unknown": 3,
+        "weak_support": 1
+      },
+      "verdict": "подтвердилась"
+    }
+  },
+  "claims": [
+    {
+      "statement": "Acomys russatus → является → видом с устойчивым старением: сохраняет высокую репаративную способность тканей, сниженную дряхлость, низкое воспалительное старение, фиброз и клеточное старение, молодой транскриптом даже после 4 лет",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported",
+      "domain": [
+        "fibrosis",
+        "inflammation",
+        "regeneration",
+        "senescence",
+        "transcription"
+      ],
+      "experiment_link": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus",
+      "linked": [
+        {
+          "finding": "Гены воспалительного старения Il1b, Ccr2, Cxcl1, Nos2",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context_support",
+          "score": 2.6
+        },
+        {
+          "finding": "Фиброз тимуса (Sirius Red)",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "weak_support",
+          "score": 1.6
+        },
+        {
+          "finding": "Фиброз печени (Sirius Red)",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "weak_support",
+          "score": 1.6
+        },
+        {
+          "finding": "Число DEG при старении",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "unknown",
+          "score": 1.6
+        },
+        {
+          "finding": "GATG score (глобальные тренды старения)",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context",
+          "score": 1.6
+        },
+        {
+          "finding": "Фиброз в gastrocnemius (Sirius Red)",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "weak_support",
+          "score": 1.3
+        },
+        {
+          "finding": "Фиброз в подкожной жировой ткани SAT",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "weak_support",
+          "score": 1.3
+        },
+        {
+          "finding": "Фиброз в селезёнке",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "weak_support",
+          "score": 1.3
+        }
+      ]
+    },
+    {
+      "statement": "Acomys russatus → связано с → поддержанием функциональной тимической архитектуры до 4-летнего возраста",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported (по эксперименту)",
+      "domain": [
+        "thymus"
+      ],
+      "experiment_link": "Сравнение Acomys russatus vs Acomys dimidiatus",
+      "linked": [
+        {
+          "finding": "Гены хронологического возраста и смертности (Cdkn1a, Cd74, Lgals3, Gpnmb, S100a6)",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context_support",
+          "score": 1.3
+        },
+        {
+          "finding": "Гены хронологического возраста и смертности в печени",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "weak_support",
+          "score": 1.0
+        },
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Средняя скорость (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context_support",
+          "score": 0.6
+        },
+        {
+          "finding": "Пройденная дистанция (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        }
+      ]
+    },
+    {
+      "statement": "Кластерин → ингибирует → воспалительное старение (inflammaging) и увеличивает продолжительность здоровой жизни",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported",
+      "domain": [
+        "inflammation"
+      ],
+      "experiment_link": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N",
+      "linked": [
+        {
+          "finding": "Гены воспалительного старения Il1b, Ccr2, Cxcl1, Nos2",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context_support",
+          "score": 2.3
+        },
+        {
+          "finding": "Сывороточный кластерин после введения CLU",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "unknown",
+          "score": 1.6
+        },
+        {
+          "finding": "Число DEG при старении",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "unknown",
+          "score": 1.3
+        },
+        {
+          "finding": "GATG score (глобальные тренды старения)",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context",
+          "score": 1.3
+        },
+        {
+          "finding": "Сила захвата передних конечностей",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "weak_support",
+          "score": 0.6
+        },
+        {
+          "finding": "Латентность падения в ротароде",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "weak_support",
+          "score": 0.6
+        },
+        {
+          "finding": "Масса тела",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Фиброз в gastrocnemius (Sirius Red)",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "weak_support",
+          "score": 0.6
+        }
+      ]
+    },
+    {
+      "statement": "Кластерин → связано с → рецепторами ApoER2 и VLDLR и обладает шапероноподобной активностью",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported (агрегация исследования)",
+      "domain": [
+        "generic"
+      ],
+      "experiment_link": null,
+      "linked": [
+        {
+          "finding": "Сывороточный кластерин после введения CLU",
+          "group": "C57BL/6N aged CLU (18 mo male)",
+          "evidence": "unknown",
+          "score": 1.0
+        }
+      ]
+    },
+    {
+      "statement": "Повышение экспрессии Clu → является → горметическим ответом при старении, поддерживающим здоровье",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported",
+      "domain": [
+        "transcription"
+      ],
+      "experiment_link": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus",
+      "linked": [
+        {
+          "finding": "Экспрессия кластерина (Clu)",
+          "group": "A. russatus aged (3.5 y)",
+          "evidence": "unknown",
+          "score": 2.0
+        },
+        {
+          "finding": "Экспрессия Il2 (ConA)",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "unknown",
+          "score": 1.3
+        },
+        {
+          "finding": "Экспрессия Il4 (ConA)",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "weak_support",
+          "score": 1.3
+        },
+        {
+          "finding": "Число DEG при старении",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "unknown",
+          "score": 1.3
+        },
+        {
+          "finding": "Гены воспалительного старения Il1b, Ccr2, Cxcl1, Nos2",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context_support",
+          "score": 1.3
+        },
+        {
+          "finding": "Экспрессия Spp1 (остеопонтин)",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "unknown",
+          "score": 1.3
+        },
+        {
+          "finding": "GATG score (глобальные тренды старения)",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context",
+          "score": 1.3
+        },
+        {
+          "finding": "GSEA: хемотаксис нейтрофилов и ответ на IFN-II",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context",
+          "score": 1.3
+        }
+      ]
+    },
+    {
+      "statement": "Acomys russatus → является → модельным организмом для идентификации мишеней устойчивости к возрастному функциональному упадку",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported (по эксперименту)",
+      "domain": [
+        "generic"
+      ],
+      "experiment_link": "Сравнение Acomys russatus vs Acomys dimidiatus",
+      "linked": [
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Средняя скорость (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context_support",
+          "score": 0.6
+        },
+        {
+          "finding": "Пройденная дистанция (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Число входов в центр (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Время в центре (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        }
+      ]
+    },
+    {
+      "statement": "Acomys russatus → является → видом, сохраняющим транскрипционную целостность, сходную с молодыми мышами, даже в преклонном возрасте",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported (по эксперименту)",
+      "domain": [
+        "generic"
+      ],
+      "experiment_link": "Сравнение Acomys russatus vs Acomys dimidiatus",
+      "linked": [
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Средняя скорость (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context_support",
+          "score": 0.6
+        },
+        {
+          "finding": "Пройденная дистанция (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Число входов в центр (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Время в центре (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        }
+      ]
+    },
+    {
+      "statement": "Биология Acomys russatus → определяет → терапевтически применимые мишени для поддержания функции при старении",
+      "negated": false,
+      "confidence": 0.8,
+      "outcome": "supported",
+      "domain": [
+        "generic"
+      ],
+      "experiment_link": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus",
+      "linked": [
+        {
+          "finding": "Число DEG при старении",
+          "group": "A. russatus aged (2.5 y)",
+          "evidence": "unknown",
+          "score": 1.6
+        },
+        {
+          "finding": "Гены воспалительного старения Il1b, Ccr2, Cxcl1, Nos2",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context_support",
+          "score": 1.6
+        },
+        {
+          "finding": "GATG score (глобальные тренды старения)",
+          "group": "M. musculus aged (2.5 y)",
+          "evidence": "context",
+          "score": 1.6
+        },
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Масса тела с возрастом",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context",
+          "score": 0.6
+        },
+        {
+          "finding": "Rearing (open field)",
+          "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+          "evidence": "support",
+          "score": 0.6
+        },
+        {
+          "finding": "Средняя скорость (open field)",
+          "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+          "evidence": "context_support",
+          "score": 0.6
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "parameter": "Масса тела с возрастом",
+      "direction": "повышено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Масса тела с возрастом",
+      "direction": "без изменений в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Rearing (open field)",
+      "direction": "понижено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Rearing (open field)",
+      "direction": "без изменений в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Средняя скорость (open field)",
+      "direction": "понижено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Пройденная дистанция (open field)",
+      "direction": "понижено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Число входов в центр (open field)",
+      "direction": "понижено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Время в центре (open field)",
+      "direction": "без изменений в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "non-significant",
+      "pvalue": null,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Латентность висения (wire hanging)",
+      "direction": "повышено в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Young Acomys russatus (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Время замирания (wire hanging)",
+      "direction": "повышено в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Young Acomys russatus (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Время достижения балки (beam walking)",
+      "direction": "понижено в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Young Acomys russatus (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Дискриминационный индекс (novel object)",
+      "direction": "понижено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Латентность выбора (T-maze)",
+      "direction": "без изменений в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "non-significant",
+      "pvalue": null,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Активность в фазе покоя",
+      "direction": "повышено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Активность в активной фазе",
+      "direction": "понижено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Нарушение циркадной активности",
+      "direction": "без изменений в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Young Acomys russatus (0.5 y)",
+      "significance": "non-significant",
+      "pvalue": null,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Регенерация ушной раковины (ear punch)",
+      "direction": "понижено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Закрытие ушного отверстия",
+      "direction": "повышено в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Экспрессия p16 в VAT",
+      "direction": "повышено в",
+      "group": "Aged Acomys dimidiatus (1.5, 2.5, 3.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Экспрессия p16 в VAT",
+      "direction": "без изменений в",
+      "group": "Aged Acomys russatus (1.5, 2.5, 3.5, 4.5 y)",
+      "comparison": "Acomys dimidiatus (young)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Сравнение Acomys russatus vs Acomys dimidiatus"
+    },
+    {
+      "parameter": "Липоатрофия тимуса",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Фиброз тимуса (Sirius Red)",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Сохранность mTEC (K14)",
+      "direction": "повышено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Декомпартментализация селезёнки",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Сенесцентные клетки селезёнки (Sudan Black B)",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Сенесцентные клетки селезёнки (Sudan Black B)",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "ConA-индуцированная пролиферация спленоцитов",
+      "direction": "понижено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "ConA-индуцированная пролиферация спленоцитов",
+      "direction": "повышено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "ConA-индуцированная пролиферация спленоцитов",
+      "direction": "повышено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Экспрессия Il2 (ConA)",
+      "direction": "повышено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Экспрессия Il4 (ConA)",
+      "direction": "повышено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Иммунное старение лимфоидных органов: M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Баллонная дистрофия гепатоцитов",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Воспаление печени (воспалительные очаги)",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Фиброз печени (Sirius Red)",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Число DEG при старении",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Гены фиброза Lcn2 и Acta2",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Гены воспалительного старения Il1b, Ccr2, Cxcl1, Nos2",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Ген сенесценции Cdkn1a",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Гены липидного метаболизма Ppara, Mup1, Acsl1",
+      "direction": "понижено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Гены гомеостаза Bmal1, Tnfaip8l1",
+      "direction": "повышено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Экспрессия Spp1 (остеопонтин)",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Кластеры Aging Atlas: воспаление, SASP, NF-κB",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Кластеры SASP и NF-κB",
+      "direction": "без изменений в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "non-significant",
+      "pvalue": null,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Кластеры сенсора питательных веществ и протеостаза",
+      "direction": "повышено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "GATG score (глобальные тренды старения)",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Гены хронологического возраста и смертности (Cdkn1a, Cd74, Lgals3, Gpnmb, S100a6)",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Индекс iAge",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "GSEA: хемотаксис нейтрофилов и ответ на IFN-II",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "GSEA: β-окисление жирных кислот и митофагия",
+      "direction": "понижено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "CMA score (шаперон-опосредованный аугофагический)",
+      "direction": "без изменений в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "CMA score (шаперон-опосредованный аугофагический)",
+      "direction": "понижено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Сенесцентные клетки печени (Sudan Black B)",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Сенесцентные клетки печени (Sudan Black B)",
+      "direction": "понижено в",
+      "group": "A. russatus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Гены SenMayo (провоспалительный ответ)",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Экспрессия p16 и γ-H2AX в печени",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Печёночное старение и воспаление: bulk RNA-seq M. musculus vs A. russatus"
+    },
+    {
+      "parameter": "Фиброз висцеральной жировой ткани (VAT)",
+      "direction": "понижено в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "M. musculus aged (2.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Транскрипты лимфоцитов (B-, NK-, T-клетки) и эпителия",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Доли лимфоцитов (B-, NK-, T-клетки) и эпителия",
+      "direction": "понижено в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "T-bet (Tbx21) и воспалительные гены (Il1a, Il1b, Il6, Tnf, Il11)",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "SASP/IASP score",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "SASP/IASP score",
+      "direction": "без изменений в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Экспрессия Cdkn1a",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "aged_other",
+      "evidence": "context_support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Экспрессия Cdkn1a",
+      "direction": "понижено в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Маркеры Treg (Foxp3) и истощения (Ctla4, Lag3, Tigit) в T-клетках",
+      "direction": "без изменений в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "non-significant",
+      "pvalue": null,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Комплемент классического/лектинового пути (C6, C4b) в макрофагах",
+      "direction": "повышено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Альтернативный путь комплемента (Cfd), митохондриальные гены (mt-Atp6, mt-Co2), Retnla в макрофагах",
+      "direction": "понижено в",
+      "group": "M. musculus aged (2.5 y)",
+      "comparison": "M. musculus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "aged_other",
+      "evidence": "context",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Хондроитин-сульфатный метаболизм, β-гексозаминидаза Hexb в макрофагах",
+      "direction": "повышено в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Провоспалительные гены Fabp4, Fth1 в макрофагах",
+      "direction": "понижено в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "resilient_aged",
+      "evidence": "weak_support",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Экспрессия кластерина (Clu)",
+      "direction": "повышено в",
+      "group": "A. russatus aged (3.5 y)",
+      "comparison": "A. russatus young (0.5 y)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "resilient_aged",
+      "evidence": "unknown",
+      "experiment": "Одноядерное РНК-секвенирование висцеральной жировой ткани (VAT)"
+    },
+    {
+      "parameter": "Сывороточный кластерин после введения CLU",
+      "direction": "повышено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "intervention",
+      "evidence": "unknown",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Сила захвата передних конечностей",
+      "direction": "повышено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Латентность падения в ротароде",
+      "direction": "повышено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Масса тела",
+      "direction": "без изменений в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "non-significant",
+      "pvalue": null,
+      "polarity": null,
+      "role": "intervention",
+      "evidence": "support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Фиброз в gastrocnemius (Sirius Red)",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Фиброз в подкожной жировой ткани SAT",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Фиброз в селезёнке",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Фиброз в печени",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Растворимый MAC (C5b-9)",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Провоспалительные цитокины сыворотки IL-1β, IL-6, TNF-α",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "MCP-1 сыворотки",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Провоспалительные гены Il1b, Tnf в печени/VAT/SAT",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Противовоспалительный ген Il4 в печени/VAT/SAT",
+      "direction": "повышено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Гены хронологического возраста и смертности в печени",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Возраст-ассоциированные B-клетки селезёнки (ABCs)",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Возраст-ассоциированные B-клетки VAT (AABs)",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "M1-подобные макрофаги VAT",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "M2-подобные макрофаги VAT",
+      "direction": "повышено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Treg клетки VAT",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "intervention",
+      "evidence": "unknown",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Экспрессия p16, p21, γ-H2AX в печени",
+      "direction": "понижено в",
+      "group": "C57BL/6N aged CLU (18 mo male)",
+      "comparison": "C57BL/6N aged VEH (18 mo male)",
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "harm",
+      "role": "intervention",
+      "evidence": "weak_support",
+      "experiment": "Влияние кластерина на здоровое старение у 18-месячных C57BL/6N"
+    },
+    {
+      "parameter": "Экспрессия противовоспалительных генов Retnla, Il4, Il10 в BMDM",
+      "direction": "повышено в",
+      "group": "BMDM M1-поляризованные",
+      "comparison": null,
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "unknown",
+      "evidence": "unknown",
+      "experiment": "Клеточно-автономное противовоспалительное действие кластерина (BMDM + моноциты человека)"
+    },
+    {
+      "parameter": "Экспрессия противовоспалительных генов Retnla, Il4, Il10 в BMDM",
+      "direction": "повышено в",
+      "group": "BMDM M2-поляризованные",
+      "comparison": null,
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": "benefit",
+      "role": "unknown",
+      "evidence": "unknown",
+      "experiment": "Клеточно-автономное противовоспалительное действие кластерина (BMDM + моноциты человека)"
+    },
+    {
+      "parameter": "Экспрессия Il1b в M1-подобных BMDM",
+      "direction": "тренд в",
+      "group": "BMDM M1-поляризованные",
+      "comparison": null,
+      "significance": "trend",
+      "pvalue": null,
+      "polarity": "harm",
+      "role": "unknown",
+      "evidence": "unknown",
+      "experiment": "Клеточно-автономное противовоспалительное действие кластерина (BMDM + моноциты человека)"
+    },
+    {
+      "parameter": "IL-1β продукция моноцитами человека (LPS)",
+      "direction": "понижено в",
+      "group": "Моноциты человека (healthy donors)",
+      "comparison": null,
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "young",
+      "evidence": "context",
+      "experiment": "Клеточно-автономное противовоспалительное действие кластерина (BMDM + моноциты человека)"
+    },
+    {
+      "parameter": "IL-18 продукция моноцитами человека (LPS)",
+      "direction": "понижено в",
+      "group": "Моноциты человека (healthy donors)",
+      "comparison": null,
+      "significance": "significant",
+      "pvalue": 0.05,
+      "polarity": null,
+      "role": "young",
+      "evidence": "context",
+      "experiment": "Клеточно-автономное противовоспалительное действие кластерина (BMDM + моноциты человека)"
+    }
+  ],
+  "method_flags": {
+    "control": {
+      "ok": true,
+      "control_pairs": 6,
+      "comparison_meta": 89
+    },
+    "statistics": {
+      "ok": true,
+      "t37_blocks": 1,
+      "stat_processing_stmts": true
+    },
+    "sample_size": {
+      "ok": true,
+      "groups_without_n": []
+    },
+    "p_value": {
+      "ok": false,
+      "significant_without_p": [
+        "Время в центре (open field)",
+        "Латентность выбора (T-maze)",
+        "Нарушение циркадной активности",
+        "Кластеры SASP и NF-κB",
+        "Маркеры Treg (Foxp3) и истощения (Ctla4, Lag3, Tigit) в T-клетках",
+        "Масса тела"
+      ]
+    },
+    "hypothesis": {
+      "ok": true
+    },
+    "design_incomplete": true
+  },
+  "study_verdict": {
+    "verdict": "гипотеза подтвердилась",
+    "experiments_confirmed": 5,
+    "experiments_refuted": 0,
+    "experiments_partial": 0,
+    "claims_supported": 8,
+    "claims_contradicted": 0
+  }
+}

@@ -618,7 +618,7 @@ const FieldInput: React.FC<FieldInputProps> = ({ field, value, onChange, availab
                             <div key={idx} style={{ display: 'flex', gap: 6, alignItems: 'flex-start' }}>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                     <UuidRefInput
-                                        field={{ key: `${field.key}_${idx}`, label: `${field.label} ${idx + 1}`, inputType: 'uuid-ref', placeholder: `Шаг ${idx + 1}`, uuidRefBlockTypes: field.uuidRefBlockTypes }}
+                                        field={{ key: `${field.key}_${idx}`, label: `${field.label} ${idx + 1}`, inputType: 'uuid-ref', placeholder: field.placeholder ? `${field.placeholder} ${idx + 1}` : `Элемент ${idx + 1}`, uuidRefBlockTypes: field.uuidRefBlockTypes }}
                                         value={uuid}
                                         availableUuids={availableUuids}
                                         onChange={(_k, v) => { const next = [...uuids]; next[idx] = typeof v === 'string' ? v : ''; setUuids(next); }}
@@ -662,7 +662,7 @@ const FieldInput: React.FC<FieldInputProps> = ({ field, value, onChange, availab
                             onClick={() => setUuids([...uuids, ''])}
                             style={{ alignSelf: 'flex-start', background: '#22c55e', color: '#fff', border: 'none', borderRadius: 4, padding: '4px 12px', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
                         >
-                            + Добавить шаг
+                            + {field.addLabel || 'Добавить шаг'}
                         </button>
                     </div>
                 </div>

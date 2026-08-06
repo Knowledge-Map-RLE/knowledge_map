@@ -157,7 +157,7 @@ const ArticleEditorUI: React.FC = () => {
                         {activeTab === 'graph' && (
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
                                 {selectedDocId ? (
-                                    <ArticleMap docId={selectedDocId} />
+                                    <ArticleMap blocks={blocks} />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
                                         Выберите файл или создайте новую статью

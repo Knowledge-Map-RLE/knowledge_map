@@ -381,6 +381,38 @@ class PubMedService:
             logger.warning(f"[pubmed] Ошибка конвертации PMID→PMCID для {pmid}: {e}")
         return None
 
+    async def resolve_doi(self, doi: str) -> tuple[Optional[str], Optional[str]]:
+        """Конвертирует DOI в (PMID, PMCID) через NCBI ID Converter.
+
+        Returns:
+            Кортеж (pmid, pmcid); любой элемент может быть None, если не найден.
+        """
+        doi = (doi or "").strip()
+        if not doi:
+            return None, None
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                params = {
+                    "ids": doi,
+                    "idtype": "doi",
+                    "format": "json",
+                    "tool": NCBI_TOOL,
+                    "email": NCBI_EMAIL,
+                }
+                resp = await client.get(f"{ID_CONV_BASE}/", params=params, timeout=15)
+                if resp.status_code != 200:
+                    logger.warning(f"[pubmed] ID Converter для DOI {doi} вернул {resp.status_code}")
+                    return None, None
+                records = resp.json().get("records", [])
+                if not records:
+                    logger.info(f"[pubmed] DOI {doi} не найден в ID Converter")
+                    return None, None
+                rec = records[0]
+                return rec.get("pmid"), rec.get("pmcid")
+        except Exception as e:
+            logger.warning(f"[pubmed] Ошибка конвертации DOI→PMID/PMCID для {doi}: {e}")
+            return None, None
+
     async def _find_pmcid_via_esearch(self, client: httpx.AsyncClient, pmid: str) -> Optional[str]:
         """Запасной вариант: найти PMCID через поиск в базе PMC по PMID.
 

@@ -16,6 +16,10 @@ export default defineConfig({
         target: 'http://localhost:8000',
         ws: true,
       },
+      '/ai': {
+        target: 'http://localhost:50054',
+        ws: true,
+      },
     },
   },
   worker: {

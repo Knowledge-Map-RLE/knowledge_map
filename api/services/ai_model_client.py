@@ -1,56 +1,29 @@
-"""gRPC client for AI Model Service."""
+"""HTTP client for the AI Agent microservice (OpenAI-compatible gateway).
 
-import os
+The microservice (``ai/``) exposes an OpenAI-compatible ``/v1/chat/completions``
+endpoint and forwards requests to configured providers (LM Studio, DeepSeek, ...).
+This client keeps the previous gRPC interface so callers (``src/routers/ai_models.py``)
+stay unchanged.
+"""
+
 import logging
+import os
 from typing import Optional
 
-import grpc
+import httpx
 
 logger = logging.getLogger(__name__)
 
-# Import generated proto files
-try:
-    from utils.generated import ai_model_pb2, ai_model_pb2_grpc
-except ImportError:
-    logger.warning("AI Model proto files not generated. Run proto generation script.")
-    ai_model_pb2 = None
-    ai_model_pb2_grpc = None
-
 
 class AIModelClient:
-    """Client for communicating with AI Model Service via gRPC."""
+    """Client for communicating with the AI Agent microservice via HTTP."""
 
     def __init__(self):
-        """Initialize the AI Model client."""
+        """Initialize the AI Agent client."""
         self.host = os.getenv("AI_MODEL_SERVICE_HOST", "127.0.0.1")
         self.port = os.getenv("AI_MODEL_SERVICE_PORT", "50054")
-        self.channel = None
-        self.stub = None
-
-        if ai_model_pb2 is None or ai_model_pb2_grpc is None:
-            logger.error("AI Model proto files not available")
-            return
-
-        try:
-            self._connect()
-        except Exception as e:
-            logger.error(f"Failed to connect to AI Model service: {e}")
-
-    def _connect(self):
-        """Establish connection to the AI Model service."""
-        address = f"{self.host}:{self.port}"
-        logger.info(f"Connecting to AI Model service at {address}")
-
-        self.channel = grpc.insecure_channel(
-            address,
-            options=[
-                ("grpc.max_send_message_length", 100 * 1024 * 1024),  # 100 MB
-                ("grpc.max_receive_message_length", 100 * 1024 * 1024),  # 100 MB
-            ],
-        )
-        self.stub = ai_model_pb2_grpc.AIModelServiceStub(self.channel)
-
-        logger.info("Connected to AI Model service")
+        self.root_url = f"http://{self.host}:{self.port}"
+        self.base_url = f"{self.root_url}/v1"
 
     def generate_text(
         self,
@@ -68,14 +41,15 @@ class AIModelClient:
         Generate text using the AI model.
 
         Args:
-            model_id: Model identifier (e.g., "meta-llama/Llama-3.2-1B-Instruct")
+            model_id: Model identifier (e.g., "qwen/qwen3-4b")
             prompt: Input prompt for text generation
             max_tokens: Maximum number of tokens to generate
             temperature: Sampling temperature (0.0 to 2.0)
             top_p: Nucleus sampling parameter (0.0 to 1.0)
             top_k: Top-k sampling parameter
             repetition_penalty: Repetition penalty (default 1.0)
-            enable_chunking: Whether to enable chunking for large prompts
+            enable_chunking: Kept for interface compatibility (no-op; the gateway
+                does not chunk prompts)
             timeout: Request timeout in seconds
 
         Returns:
@@ -92,89 +66,59 @@ class AIModelClient:
             }
 
         Raises:
-            Exception: If the service is not available or request fails
+            Exception: If the service is not available
         """
-        if self.stub is None:
-            raise Exception("AI Model service not connected")
+        payload = {
+            "model": model_id,
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": False,
+        }
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
+        if temperature is not None:
+            payload["temperature"] = temperature
+        if top_p is not None:
+            payload["top_p"] = top_p
+        if top_k is not None:
+            payload["top_k"] = top_k
+        if repetition_penalty is not None:
+            payload["repetition_penalty"] = repetition_penalty
 
         try:
-            # Create request
-            request = ai_model_pb2.GenerateTextRequest(
-                model_id=model_id,
-                prompt=prompt,
-                enable_chunking=enable_chunking,
-            )
-
-            # Add optional parameters if provided
-            if max_tokens is not None:
-                request.max_tokens = max_tokens
-            if temperature is not None:
-                request.temperature = temperature
-            if top_p is not None:
-                request.top_p = top_p
-            if top_k is not None:
-                request.top_k = top_k
-            if repetition_penalty is not None:
-                request.repetition_penalty = repetition_penalty
-
             logger.info(f"Sending generation request for model: {model_id}")
-
-            # Make gRPC call
-            response = self.stub.GenerateText(request, timeout=timeout)
-
-            # Convert response to dict
-            result = {
-                "success": response.success,
-                "generated_text": response.generated_text,
-                "message": response.message,
-                "model_used": response.model_used,
-                "input_tokens": response.input_tokens,
-                "output_tokens": response.output_tokens,
-                "chunked": response.chunked,
-                "num_chunks": response.num_chunks,
-            }
-
-            if response.success:
-                logger.info(
-                    f"Generation successful: {response.output_tokens} tokens generated"
-                )
-            else:
-                logger.warning(f"Generation failed: {response.message}")
-
-            return result
-
-        except grpc.RpcError as e:
-            logger.error(f"gRPC error: {e.code()} - {e.details()}")
+            response = httpx.post(
+                f"{self.base_url}/chat/completions", json=payload, timeout=timeout
+            )
+            response.raise_for_status()
+            data = response.json()
+            content = data["choices"][0]["message"].get("content", "")
+            usage = data.get("usage") or {}
             return {
-                "success": False,
-                "generated_text": "",
-                "message": f"gRPC error: {e.details()}",
-                "model_used": model_id,
-                "input_tokens": 0,
-                "output_tokens": 0,
+                "success": True,
+                "generated_text": content,
+                "message": "Text generated successfully",
+                "model_used": data.get("model", model_id),
+                "input_tokens": usage.get("prompt_tokens", 0),
+                "output_tokens": usage.get("completion_tokens", 0),
                 "chunked": False,
                 "num_chunks": 0,
             }
-
-        except Exception as e:
-            logger.error(f"Error calling AI Model service: {e}", exc_info=True)
-            return {
-                "success": False,
-                "generated_text": "",
-                "message": f"Error: {str(e)}",
-                "model_used": model_id,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "chunked": False,
-                "num_chunks": 0,
-            }
+        except httpx.HTTPStatusError as exc:
+            detail = exc.response.text[:500]
+            logger.error(
+                "AI Agent service error: HTTP %s - %s", exc.response.status_code, detail
+            )
+            return self._failure(model_id, f"AI Agent service error: {detail}")
+        except httpx.HTTPError as exc:
+            logger.error(f"AI Agent service unavailable: {exc}")
+            return self._failure(model_id, f"AI Agent service unavailable: {exc}")
+        except Exception as exc:
+            logger.error(f"Error calling AI Agent service: {exc}", exc_info=True)
+            return self._failure(model_id, f"Error: {str(exc)}")
 
     def get_models(self, filter_text: Optional[str] = None) -> dict:
         """
         Get list of available models.
-
-        Args:
-            filter_text: Optional filter string
 
         Returns:
             Dictionary with models list:
@@ -193,76 +137,72 @@ class AIModelClient:
                 ]
             }
         """
-        if self.stub is None:
-            raise Exception("AI Model service not connected")
-
         try:
-            request = ai_model_pb2.GetModelsRequest()
-            if filter_text:
-                request.filter = filter_text
-
-            response = self.stub.GetModels(request, timeout=10)
+            response = httpx.get(f"{self.base_url}/models", timeout=10)
+            response.raise_for_status()
+            data = response.json().get("data", [])
 
             models = []
-            for model in response.models:
+            for model in data:
+                model_id = model.get("id", "")
+                if filter_text and filter_text.lower() not in model_id.lower():
+                    continue
                 models.append({
-                    "model_id": model.model_id,
-                    "name": model.name,
-                    "description": model.description,
-                    "is_loaded": model.is_loaded,
-                    "max_context_length": model.max_context_length,
-                    "device": model.device,
+                    "model_id": model_id,
+                    "name": model_id,
+                    "description": f"Provider: {model.get('provider', 'unknown')}",
+                    "is_loaded": True,
+                    "max_context_length": 0,
+                    "device": model.get("provider", "remote"),
                 })
 
             return {
-                "success": response.success,
-                "message": response.message,
+                "success": True,
+                "message": f"Found {len(models)} models",
                 "models": models,
             }
-
-        except grpc.RpcError as e:
-            logger.error(f"gRPC error: {e.code()} - {e.details()}")
-            return {
-                "success": False,
-                "message": f"gRPC error: {e.details()}",
-                "models": [],
-            }
-
-        except Exception as e:
-            logger.error(f"Error calling AI Model service: {e}", exc_info=True)
-            return {
-                "success": False,
-                "message": f"Error: {str(e)}",
-                "models": [],
-            }
+        except httpx.HTTPStatusError as exc:
+            detail = exc.response.text[:500]
+            logger.error("Failed to get models: HTTP %s - %s", exc.response.status_code, detail)
+            return {"success": False, "message": f"AI Agent service error: {detail}", "models": []}
+        except httpx.HTTPError as exc:
+            logger.error(f"AI Agent service unavailable: {exc}")
+            return {"success": False, "message": f"AI Agent service unavailable: {exc}", "models": []}
+        except Exception as exc:
+            logger.error(f"Error calling AI Agent service: {exc}", exc_info=True)
+            return {"success": False, "message": f"Error: {str(exc)}", "models": []}
 
     def health_check(self) -> bool:
         """
-        Check if the AI Model service is healthy.
+        Check if the AI Agent service is healthy.
 
         Returns:
             True if service is healthy, False otherwise
         """
-        if self.stub is None:
-            return False
-
         try:
-            request = ai_model_pb2.HealthCheckRequest(service="ai_model")
-            response = self.stub.HealthCheck(request, timeout=5)
-            return response.status == "healthy"
-
-        except Exception as e:
-            logger.error(f"Health check failed: {e}")
+            response = httpx.get(f"{self.root_url}/health", timeout=5)
+            return response.status_code == 200 and response.json().get("status") == "ok"
+        except Exception as exc:
+            logger.error(f"Health check failed: {exc}")
             return False
 
     def close(self):
-        """Close the gRPC channel."""
-        if self.channel:
-            self.channel.close()
-            logger.info("AI Model client connection closed")
+        """Kept for interface compatibility (per-call HTTP client)."""
+
+    @staticmethod
+    def _failure(model_id: str, message: str) -> dict:
+        return {
+            "success": False,
+            "generated_text": "",
+            "message": message,
+            "model_used": model_id,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "chunked": False,
+            "num_chunks": 0,
+        }
 
     def __del__(self):
-        """Cleanup on deletion."""
         self.close()
 
 

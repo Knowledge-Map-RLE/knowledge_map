@@ -1,9 +1,11 @@
+"""Async HTTP client for the AI Agent microservice (OpenAI-compatible gateway)."""
+
 from __future__ import annotations
 
 import json
 import logging
 
-import grpc
+import httpx
 
 from src.config import settings
 
@@ -12,23 +14,16 @@ logger = logging.getLogger(__name__)
 
 class AIClient:
     def __init__(self, host: str | None = None, port: int | None = None):
-        self._host = host or settings.ai_grpc_host
-        self._port = port or settings.ai_grpc_port
-        self._channel: grpc.aio.Channel | None = None
+        self._host = host or settings.ai_service_host
+        self._port = port or settings.ai_service_port
+        self._base_url = f"http://{self._host}:{self._port}/v1"
 
     async def __aenter__(self) -> AIClient:
-        self._channel = grpc.aio.insecure_channel(
-            f"{self._host}:{self._port}",
-            options=[
-                ("grpc.max_send_message_length", 256 * 1024 * 1024),
-                ("grpc.max_receive_message_length", 256 * 1024 * 1024),
-            ],
-        )
+        self._client = httpx.AsyncClient(timeout=httpx.Timeout(120.0, connect=15.0))
         return self
 
     async def __aexit__(self, *args) -> None:
-        if self._channel:
-            await self._channel.close()
+        await self._client.aclose()
 
     async def suggest_meta_statements(
         self,
@@ -36,10 +31,7 @@ class AIClient:
         existing_statements: list[dict],
         model_id: str | None = None,
     ) -> list[dict]:
-        from src.llm import ai_model_pb2_grpc, ai_model_pb2
-
-        stub = ai_model_pb2_grpc.AIModelServiceStub(self._channel)
-
+        """Ask the AI agent for missing META statements between extracted facts."""
         facts_text = "\n".join(
             f"{s['id']}: {s['subject']} → {s['predicate']} → {s['object']}"
             for s in existing_statements
@@ -54,24 +46,26 @@ class AIClient:
             "If none, output: NONE"
         )
 
-        request = ai_model_pb2.GenerateTextRequest(
-            model_id=model_id or settings.default_llm_model,
-            prompt=prompt,
-            max_tokens=512,
-            temperature=0.1,
-        )
+        payload = {
+            "model": model_id or settings.default_llm_model,
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": False,
+            "max_tokens": 512,
+            "temperature": 0.1,
+        }
 
         try:
-            response = await stub.GenerateText(request)
-        except grpc.RpcError as e:
-            logger.error("AI gRPC call failed: %s", e)
+            response = await self._client.post(
+                f"{self._base_url}/chat/completions", json=payload
+            )
+            response.raise_for_status()
+            data = response.json()
+        except httpx.HTTPError as exc:
+            logger.error("AI Agent HTTP call failed: %s", exc)
             return []
 
-        if not response.success:
-            logger.warning("AI generation unsuccessful: %s", response.message)
-            return []
-
-        return self._parse_response(response.generated_text)
+        content = data["choices"][0]["message"].get("content", "")
+        return self._parse_response(content)
 
     def _parse_response(self, text: str) -> list[dict]:
         results = []

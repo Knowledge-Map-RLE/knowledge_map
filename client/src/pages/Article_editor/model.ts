@@ -67,6 +67,7 @@ export interface BlockFieldDef {
     label: string;
     inputType: FieldInputType;
     placeholder?: string;
+    addLabel?: string;
     options?: string[];
     required?: boolean;
     helpText?: string;

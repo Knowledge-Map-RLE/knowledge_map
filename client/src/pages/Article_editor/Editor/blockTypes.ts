@@ -19,6 +19,18 @@ import {
 const icon = (Component: React.ComponentType<{ size?: number; className?: string }>) =>
     React.createElement(Component, { size: 14 });
 
+// Поле «Последовательность»: uuid-list-ссылки на атомарные блоки-триплеты
+// (T4 «Прямой триплет», T22 «Сущность», T54 «Действие») в порядке следования.
+const TRIPLET_SEQUENCE_FIELD: BlockFieldDef = {
+    key: 'sequence',
+    label: 'Последовательность (триплеты)',
+    inputType: 'uuid-list',
+    placeholder: 'атомарный триплет',
+    addLabel: 'Добавить триплет',
+    uuidRefBlockTypes: [4, 22, 54],
+    helpText: 'Ссылки на блоки-триплеты (T4 «Прямой триплет», T22 «Сущность», T54 «Действие») в порядке следования. Каждый шаг — отдельный блок-триплет.',
+};
+
 export const BLOCK_TYPES: BlockTypeDef[] = [
     {
         typeNumber: 1,
@@ -103,6 +115,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         fields: [
             { key: 'hypothesis', label: 'Гипотеза', inputType: 'textarea', placeholder: 'Что пытаемся опровергнуть?' },
             { key: 'disproofExplanation', label: 'Почему нужно опровержение', inputType: 'textarea', placeholder: 'Пояснение почему нужно именно опровержение' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -225,6 +238,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Описание биологического механизма',
         fields: [
             { key: 'mechanism', label: 'Механизм', inputType: 'textarea', placeholder: 'Описание биологического механизма' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -291,6 +305,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             { key: 'subject', label: 'Субъект', inputType: 'uuid-ref', placeholder: 'выберите UUID' },
             { key: 'predicate', label: 'Предикат', inputType: 'text', placeholder: 'является сущностью' },
             { key: 'object', label: 'Объект', inputType: 'uuid-ref', placeholder: 'выберите UUID' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -303,6 +318,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         fields: [
             { key: 'term', label: 'Понятие', inputType: 'text', placeholder: 'Термин, который определяется' },
             { key: 'definition', label: 'Определение', inputType: 'textarea', placeholder: 'Определение понятия' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -465,6 +481,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         fields: [
             { key: 'statProcessing', label: 'Статистическая обработка', inputType: 'textarea', placeholder: 'Какие тесты применялись' },
             { key: 'expectationsComparison', label: 'Сопоставление с ожиданиями', inputType: 'textarea', placeholder: 'Что подтверждено, что опровергнуто' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -488,6 +505,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             { key: 'claimObject', label: 'Объект', inputType: 'text', placeholder: 'Объект утверждения', required: true },
             { key: 'confidenceNotes', label: 'Степень уверенности', inputType: 'textarea', placeholder: 'Список: почему нужно доверять утверждению (поддерживается N экспериментами и т.д.)' },
             { key: 'isNegated', label: 'Отрицание (не)', inputType: 'checkbox' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -499,6 +517,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Ограничения данного исследования',
         fields: [
             { key: 'limitations', label: 'Ограничения', inputType: 'textarea', placeholder: 'Перечислите ограничения' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -510,6 +529,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Какие побочные выводы или гипотезы показало исследование',
         fields: [
             { key: 'sideFindings', label: 'Побочные выводы', inputType: 'textarea', placeholder: 'Неожиданные находки и новые гипотезы' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -555,6 +575,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Научная новизна работы',
         fields: [
             { key: 'novelty', label: 'Новизна', inputType: 'textarea', placeholder: 'В чём научная новизна?' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -577,6 +598,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Какие эксперименты наиболее полезно провести',
         fields: [
             { key: 'futureResearch', label: 'Предложения', inputType: 'textarea', placeholder: 'Какие эксперименты стоит провести дальше' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -588,6 +610,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Библиографические ссылки и связи',
         fields: [
             { key: 'references', label: 'Ссылки', inputType: 'textarea', placeholder: 'Каждая ссылка с новой строки' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -675,6 +698,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             { key: 'subject', label: 'Действие', inputType: 'uuid-ref', placeholder: 'идентификация' },
             { key: 'predicate', label: 'Связь', inputType: 'text', placeholder: 'чего' },
             { key: 'object', label: 'Объект', inputType: 'uuid-ref', placeholder: 'механизм резистентности...' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -703,6 +727,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             { key: 'stepName', label: 'Название шага', inputType: 'text', placeholder: 'Open field test' },
             { key: 'details', label: 'Детали', inputType: 'textarea', placeholder: 'Параметры, условия, n на группу' },
             { key: 'duration', label: 'Длительность', inputType: 'text', placeholder: '10 мин, 5 недель...' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
     {
@@ -721,6 +746,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             { key: 'pValue', label: 'p-value (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на T27', uuidRefBlockTypes: [27], helpText: 'Ссылка на блок p-value (T27)' },
             { key: 'figureRef', label: 'Рисунок', inputType: 'text', placeholder: 'Fig. 1N, fig. S4G' },
             { key: 'detail', label: 'Детали', inputType: 'textarea', placeholder: 'Детали результата: величины, % изменения и т.п.' },
+            TRIPLET_SEQUENCE_FIELD,
         ],
     },
 ];

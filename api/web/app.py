@@ -45,6 +45,9 @@ from web.routers.data_extraction import (
 # Статик роутер — оставляем из src (TRANSITIONAL)
 from src.routers import static
 
+# Прокси /ai/* -> AI Agent микросервис (OpenAI-совместимый, порт 50054)
+from src.routers import ai_proxy as ai_proxy_router
+
 # Редактор статей (article_editor + parse + graph)
 from src.routers import article_editor as article_editor_router
 
@@ -145,6 +148,9 @@ app.include_router(pattern_graph_router.router)
 # Редактор статей (article_editor)
 app.include_router(article_editor_router.router, prefix="/api")
 
+# Прокси AI Agent микросервиса (фронтенд -> API -> ai:50054)
+app.include_router(ai_proxy_router.router)
+
 # GraphQL
 if _graphql_available:
     app.include_router(graphql_app, prefix="/graphql")
@@ -204,3 +210,11 @@ async def _ensure_document_indexes():
         logger.info("[startup] Индексы Document созданы/подтверждены")
     except Exception as e:
         logger.warning(f"[startup] Не удалось создать индексы: {e}")
+
+
+@app.on_event("shutdown")
+async def _close_ai_proxy_client():
+    """Закрывает общий httpx-клиент прокси AI Agent микросервиса."""
+    from src.routers.ai_proxy import close_client
+
+    await close_client()

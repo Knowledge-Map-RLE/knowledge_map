@@ -2,6 +2,7 @@ import json
 import logging
 import mimetypes
 import os
+import re
 from datetime import datetime, timezone
 
 from src.uuid8 import uuid8_str
@@ -12,6 +13,26 @@ from infrastructure.neo4j.orm_models import Document
 from . import settings, get_s3_client
 
 logger = logging.getLogger(__name__)
+
+_REFERENCES_HEADING_RE = re.compile(
+    r"^\s*(?:#{1,6}\s+)?(?:references|reference list|bibliography|works cited|"
+    r"literature cited|references and notes)(?:\s*[\[(].*?[\])])?\s*:?\s*$",
+    re.IGNORECASE,
+)
+
+
+def strip_references(text: str) -> str:
+    """Удаляет раздел References из текста статьи (для подачи в модель).
+
+    Содержимое S3 при этом не меняется — усечение применяется только к копии,
+    которая отправляется модели. Если заголовок References не найден — текст
+    возвращается без изменений.
+    """
+    lines = (text or "").splitlines()
+    for i in range(len(lines) - 1, -1, -1):
+        if lines[i].strip() and _REFERENCES_HEADING_RE.match(lines[i].strip()):
+            return "\n".join(lines[:i]).rstrip()
+    return text or ""
 
 
 def _chunks(lst: list, n: int):
@@ -385,3 +406,176 @@ class ArticleEditorService:
         if not await s3_client.object_exists(settings.S3_BUCKET_NAME, object_key):
             return False
         return await s3_client.delete_object(settings.S3_BUCKET_NAME, object_key)
+
+    # ── AI Agent: текст статьи для прикрепления к запросу модели ──────────────
+
+    async def get_agent_article_text(
+        self, doc_id: str, doi: str | None = None
+    ) -> dict[str, Any]:
+        """Возвращает текст статьи для прикрепления к запросу модели.
+
+        Приоритет:
+        1. Сохранённая текстовая версия (user/formatted/docling markdown в S3).
+        2. Загрузка полного текста по DOI через PubMed/PMC (PubMedService).
+        3. Распознавание PDF из S3 через Docling (pdf_to_md).
+
+        Полученный текст при необходимости сохраняется в S3 (с разделом
+        References) с ссылкой в БД. В ответе раздел References удаляется.
+
+        Returns:
+            {"success", "text", "source"} где source ∈ {"stored", "doi", "docling", "none"}.
+        """
+        doc = Document.nodes.get_or_none(uid=doc_id)
+        if not doc:
+            return {"success": False, "text": "", "source": "none"}
+
+        stored = await self._read_stored_markdown(doc_id)
+        if stored:
+            return {
+                "success": True,
+                "text": strip_references(stored),
+                "source": "stored",
+            }
+
+        resolved_doi = doi or getattr(doc, "doi", None) or ""
+        if resolved_doi:
+            fetched = await self._fetch_fulltext_by_doi(doc_id, resolved_doi)
+            if fetched:
+                return {
+                    "success": True,
+                    "text": strip_references(fetched),
+                    "source": "doi",
+                }
+
+        converted = await self._try_convert_pdf(doc_id)
+        if converted:
+            return {
+                "success": True,
+                "text": strip_references(converted),
+                "source": "docling",
+            }
+
+        return {"success": True, "text": "", "source": "none"}
+
+    async def _read_stored_markdown(self, doc_id: str) -> str:
+        """Читает текст статьи из S3 по сохранённым markdown-ключам."""
+        results, _ = db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) RETURN "
+            "d.user_md_s3_key, d.formatted_md_s3_key, d.docling_raw_md_s3_key",
+            {"uid": doc_id},
+        )
+        if not results:
+            return ""
+        md_key = results[0][0] or results[0][1] or results[0][2]
+        if not md_key:
+            return ""
+        s3_client = get_s3_client()
+        if not await s3_client.object_exists(settings.S3_BUCKET_NAME, md_key):
+            return ""
+        return (await s3_client.download_text(settings.S3_BUCKET_NAME, md_key)) or ""
+
+    async def _store_user_text(self, doc_id: str, text: str) -> bool:
+        """Сохраняет полный текст статьи в S3 (References сохраняется) и ссылку в БД."""
+        if not text:
+            return False
+        md_key = f"markdown/{doc_id}.md"
+        s3_client = get_s3_client()
+        ok = await s3_client.upload_bytes(
+            text.encode("utf-8"),
+            settings.S3_BUCKET_NAME,
+            md_key,
+            content_type="text/markdown; charset=utf-8",
+        )
+        if not ok:
+            return False
+        db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) SET d.user_md_s3_key = $key",
+            {"uid": doc_id, "key": md_key},
+        )
+        return True
+
+    async def _delete_document(self, doc_id: str) -> None:
+        try:
+            doc = Document.nodes.get_or_none(uid=doc_id)
+            if doc:
+                doc.delete()
+        except Exception as exc:
+            logger.warning(
+                "[agent-text] Не удалось удалить временный документ %s: %s",
+                doc_id,
+                exc,
+            )
+
+    async def _fetch_fulltext_by_doi(self, doc_id: str, doi: str) -> str | None:
+        """Загружает полный текст по DOI через PubMed/PMC и сохраняет в S3.
+
+        Использует существующий PubMedService.ingest_article (обрабатывает OA
+        tar.gz/XML, efetch и PDF→Docling), копирует полученный markdown в S3
+        текущей статьи и удаляет временный документ.
+        """
+        try:
+            from services.pubmed_service import PubMedService
+
+            pm = PubMedService()
+            pmid, pmcid = await pm.resolve_doi(doi)
+            if not pmid and not pmcid:
+                logger.info("[agent-text] DOI не найден в NCBI: %s", doi)
+                return None
+
+            result = await pm.ingest_article(pmid=pmid, pmcid=pmcid)
+            temp_id = result.get("doc_id")
+            if not result.get("success") or not temp_id:
+                logger.warning(
+                    "[agent-text] ingest_article для DOI %s не удался: %s",
+                    doi,
+                    result.get("message"),
+                )
+                return None
+
+            text = await self._read_stored_markdown(temp_id)
+            if text:
+                await self._store_user_text(doc_id, text)
+                await self._delete_document(temp_id)
+                logger.info(
+                    "[agent-text] Полный текст по DOI %s сохранён для %s (%d символов)",
+                    doi,
+                    doc_id,
+                    len(text),
+                )
+                return text
+            await self._delete_document(temp_id)
+        except Exception as exc:
+            logger.warning("[agent-text] Ошибка загрузки по DOI %s: %s", doi, exc)
+        return None
+
+    async def _try_convert_pdf(self, doc_id: str) -> str | None:
+        """Распознаёт PDF статьи из S3 через Docling (pdf_to_md) и сохраняет в S3."""
+        try:
+            from services.pdf_to_md_grpc_client import get_pdf_to_md_grpc_client
+
+            s3_client = get_s3_client()
+            pdf_key = f"documents/{doc_id}/{doc_id}.pdf"
+            if not await s3_client.object_exists(settings.S3_BUCKET_NAME, pdf_key):
+                return None
+            pdf_bytes = await s3_client.download_bytes(settings.S3_BUCKET_NAME, pdf_key)
+            if not pdf_bytes:
+                return None
+            client = get_pdf_to_md_grpc_client()
+            result = await client.convert_pdf(pdf_bytes, doc_id, timeout=600)
+            markdown = result.get("markdown_content") or ""
+            if result.get("success") and markdown:
+                await self._store_user_text(doc_id, markdown)
+                logger.info(
+                    "[agent-text] PDF через Docling конвертирован для %s (%d символов)",
+                    doc_id,
+                    len(markdown),
+                )
+                return markdown
+            logger.warning(
+                "[agent-text] Docling конвертация для %s не удалась: %s",
+                doc_id,
+                result.get("message"),
+            )
+        except Exception as exc:
+            logger.warning("[agent-text] Ошибка Docling конвертации %s: %s", doc_id, exc)
+        return None

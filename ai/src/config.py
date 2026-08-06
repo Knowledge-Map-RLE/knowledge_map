@@ -1,78 +1,92 @@
-"""Configuration for AI Model Service."""
+"""Configuration for the AI Agent microservice.
 
-import os
-from pathlib import Path
-from typing import Literal
+The service is an OpenAI-compatible chat gateway. It knows nothing about specific
+models: it forwards ``/v1/chat/completions`` requests to one of the configured
+providers (LM Studio during development, DeepSeek Pro/Flash later) and streams
+the reply back in OpenAI format.
+"""
 
-from pydantic import Field
-from pydantic_settings import BaseSettings
+from __future__ import annotations
+
+import json
+
+from pydantic import BaseModel, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Provider(BaseModel):
+    """An OpenAI-compatible upstream provider (LM Studio, DeepSeek, ...)."""
+
+    name: str
+    base_url: str
+    api_key: str | None = None
+    models: list[str] = Field(default_factory=list)
+    default_model: str | None = None
+    context_length: int | None = None
 
 
 class Settings(BaseSettings):
-    """AI Model Service settings."""
-
-    # gRPC Server settings
-    grpc_host: str = Field(default="0.0.0.0", env="GRPC_HOST")
-    grpc_port: int = Field(default=50054, env="GRPC_PORT")
-    grpc_max_workers: int = Field(default=10, env="GRPC_MAX_WORKERS")
-
-    # Model settings
-    model_cache_dir: Path = Field(
-        default=Path("./models"),
-        env="MODEL_CACHE_DIR",
-        description="Directory to cache downloaded models",
-    )
-    default_model: str = Field(
-        default="Qwen/Qwen2.5-0.5B-Instruct",
-        env="DEFAULT_MODEL",
-    )
-    device: Literal["auto", "cpu", "cuda"] = Field(
-        default="auto",
-        env="MODEL_DEVICE",
-        description="Device to run models on: auto (GPU if available), cpu, or cuda",
-    )
-    hugging_face_token: str | None = Field(
-        default=None,
-        env="HUGGING_FACE_TOKEN",
-        description="Hugging Face API token for accessing gated models",
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
     )
 
-    # Generation defaults
-    default_max_tokens: int = Field(default=2048, env="DEFAULT_MAX_TOKENS")
-    default_temperature: float = Field(default=0.7, env="DEFAULT_TEMPERATURE")
-    default_top_p: float = Field(default=0.9, env="DEFAULT_TOP_P")
-    default_top_k: int = Field(default=50, env="DEFAULT_TOP_K")
-    default_repetition_penalty: float = Field(default=1.1, env="DEFAULT_REPETITION_PENALTY")
+    host: str = Field(default="0.0.0.0", alias="AI_HOST")
+    port: int = Field(default=50054, alias="AI_PORT")
 
-    # Chunking settings
-    max_context_length: int = Field(
-        default=18000,
-        env="MAX_CONTEXT_LENGTH",
-        description="Maximum context length before chunking (18k for Qwen 0.5B - smaller chunks to avoid OOM)",
+    # Provider/model used when the client does not specify one.
+    default_provider: str = Field(default="lm-studio", alias="DEFAULT_PROVIDER")
+    default_model: str = Field(default="qwen/qwen3-4b", alias="DEFAULT_MODEL")
+
+    # Shorthand for the LM Studio provider. Overridden by AI_PROVIDERS when set.
+    lm_studio_base_url: str = Field(
+        default="http://localhost:1234/v1", alias="AI_BASE_URL"
     )
-    chunk_overlap: int = Field(
-        default=200,
-        env="CHUNK_OVERLAP",
-        description="Overlap between chunks in tokens",
+    lm_studio_api_key: str = Field(default="lm-studio", alias="AI_API_KEY")
+
+    # Optional persona. Prepended as a system message when the client sends none.
+    system_prompt: str = Field(
+        default=(
+            "You are an AI research assistant for a scientific knowledge-map editor. "
+            "Answer concisely and accurately in the user's language. "
+            "Do not output chain-of-thought reasoning; answer directly."
+        ),
+        alias="SYSTEM_PROMPT",
     )
 
-    # Logging
-    log_level: str = Field(default="INFO", env="LOG_LEVEL")
+    # Optional JSON list of providers. Example:
+    # [{"name":"lm-studio","base_url":"http://localhost:1234/v1",
+    #   "api_key":"lm-studio","models":["qwen/qwen3-4b"]}]
+    providers_json: str | None = Field(default=None, alias="AI_PROVIDERS")
 
-    # Resource limits
-    max_batch_size: int = Field(default=1, env="MAX_BATCH_SIZE")
-    timeout_seconds: int = Field(default=300, env="TIMEOUT_SECONDS")
+    request_timeout: float = Field(default=300.0, alias="AI_REQUEST_TIMEOUT")
+    connect_timeout: float = Field(default=15.0, alias="AI_CONNECT_TIMEOUT")
+    models_cache_ttl: float = Field(default=60.0, alias="AI_MODELS_CACHE_TTL")
 
-    class Config:
-        """Pydantic config."""
+    # Default context window (tokens) reported in GET /v1/models when a provider
+    # does not expose its own value. Used by the client to show the token ratio.
+    default_context_length: int = Field(default=32000, alias="AI_CONTEXT_LENGTH")
 
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
 
-# Global settings instance
 settings = Settings()
 
-# Ensure model cache directory exists
-settings.model_cache_dir.mkdir(parents=True, exist_ok=True)
+
+def load_providers() -> list[Provider]:
+    """Build the provider list from ``AI_PROVIDERS`` or the LM Studio defaults."""
+    if settings.providers_json:
+        data = json.loads(settings.providers_json)
+        return [Provider(**item) for item in data]
+
+    return [
+        Provider(
+            name=settings.default_provider,
+            base_url=settings.lm_studio_base_url,
+            api_key=settings.lm_studio_api_key,
+            models=[settings.default_model],
+            default_model=settings.default_model,
+        )
+    ]

@@ -1,24 +1,21 @@
-"""gRPC client for AI Model Service."""
+"""HTTP client for the AI Agent microservice (OpenAI-compatible gateway).
+
+The microservice (``ai/``) exposes an OpenAI-compatible ``/v1/chat/completions``
+endpoint. This client keeps the previous gRPC interface so callers
+(``src/services/ai_formatting_service.py``) stay unchanged.
+"""
 
 import os
 import logging
 from typing import Optional
 
-import grpc
+import httpx
 
 logger = logging.getLogger(__name__)
 
-# Import generated proto files - will be generated from ai/proto/ai_model.proto
-try:
-    from src import ai_model_pb2, ai_model_pb2_grpc
-except ImportError:
-    logger.warning("AI Model proto files not generated yet. Run proto generation script.")
-    ai_model_pb2 = None
-    ai_model_pb2_grpc = None
-
 
 class AIModelClient:
-    """Client for communicating with AI Model Service via gRPC."""
+    """Client for communicating with the AI Agent microservice via HTTP."""
 
     def __init__(self, host: Optional[str] = None, port: Optional[int] = None):
         """
@@ -30,39 +27,14 @@ class AIModelClient:
         """
         self.host = host or os.getenv("AI_MODEL_SERVICE_HOST", "127.0.0.1")
         self.port = port or int(os.getenv("AI_MODEL_SERVICE_PORT", "50054"))
-        self.channel = None
-        self.stub = None
-
-        if ai_model_pb2 is None or ai_model_pb2_grpc is None:
-            logger.error("AI Model proto files not available. Cannot initialize client.")
-            return
-
-        try:
-            self._connect()
-        except Exception as e:
-            logger.error(f"Failed to connect to AI Model service: {e}")
-
-    def _connect(self):
-        """Establish connection to the AI Model service."""
-        address = f"{self.host}:{self.port}"
-        logger.info(f"Connecting to AI Model service at {address}")
-
-        self.channel = grpc.insecure_channel(
-            address,
-            options=[
-                ("grpc.max_send_message_length", 100 * 1024 * 1024),  # 100 MB
-                ("grpc.max_receive_message_length", 100 * 1024 * 1024),  # 100 MB
-            ],
-        )
-        self.stub = ai_model_pb2_grpc.AIModelServiceStub(self.channel)
-
-        logger.info("Connected to AI Model service")
+        self.root_url = f"http://{self.host}:{self.port}"
+        self.base_url = f"{self.root_url}/v1"
 
     def format_markdown_chunk(
         self,
         raw_text: str,
         docling_markdown: str,
-        model_id: str = "meta-llama/Llama-3.2-1B-Instruct",
+        model_id: str = "qwen/qwen3-4b",
         max_tokens: int = 4096,
         temperature: float = 0.3,
         timeout: int = 600,
@@ -87,68 +59,64 @@ class AIModelClient:
                 "input_tokens": int,
                 "output_tokens": int
             }
-
-        Raises:
-            Exception: If the service is not available or request fails
         """
-        if self.stub is None:
-            raise Exception("AI Model service not connected. Check proto files and service availability.")
-
-        # Construct the prompt
         prompt = self._build_formatting_prompt(raw_text, docling_markdown)
+        payload = {
+            "model": model_id,
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": False,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "top_p": 0.9,
+            "repetition_penalty": 1.1,
+        }
 
         try:
-            # Create request
-            request = ai_model_pb2.GenerateTextRequest(
-                model_id=model_id,
-                prompt=prompt,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=0.9,
-                repetition_penalty=1.1,
-                enable_chunking=False,  # We handle chunking at a higher level
-            )
-
             logger.info(f"Sending formatting request to AI service (model: {model_id})")
-
-            # Make gRPC call
-            response = self.stub.GenerateText(request, timeout=timeout)
-
-            # Convert response to dict
+            response = httpx.post(
+                f"{self.base_url}/chat/completions", json=payload, timeout=timeout
+            )
+            response.raise_for_status()
+            data = response.json()
+            formatted_text = data["choices"][0]["message"].get("content", "")
+            usage = data.get("usage") or {}
             result = {
-                "success": response.success,
-                "formatted_text": response.generated_text if response.success else "",
-                "message": response.message,
-                "input_tokens": response.input_tokens,
-                "output_tokens": response.output_tokens,
+                "success": True,
+                "formatted_text": formatted_text,
+                "message": "Formatting successful",
+                "input_tokens": usage.get("prompt_tokens", 0),
+                "output_tokens": usage.get("completion_tokens", 0),
             }
-
-            if response.success:
-                logger.info(
-                    f"Formatting successful: {response.output_tokens} tokens generated "
-                    f"({response.input_tokens} input tokens)"
-                )
-            else:
-                logger.warning(f"Formatting failed: {response.message}")
-
+            logger.info(
+                f"Formatting successful: {result['output_tokens']} tokens generated "
+                f"({result['input_tokens']} input tokens)"
+            )
             return result
-
-        except grpc.RpcError as e:
-            logger.error(f"gRPC error: {e.code()} - {e.details()}")
+        except httpx.HTTPStatusError as exc:
+            detail = exc.response.text[:500]
+            logger.error("AI Agent service error: HTTP %s - %s", exc.response.status_code, detail)
             return {
                 "success": False,
                 "formatted_text": "",
-                "message": f"gRPC error: {e.details()}",
+                "message": f"AI Agent service error: {detail}",
                 "input_tokens": 0,
                 "output_tokens": 0,
             }
-
-        except Exception as e:
-            logger.error(f"Error calling AI Model service: {e}", exc_info=True)
+        except httpx.HTTPError as exc:
+            logger.error(f"AI Agent service unavailable: {exc}")
             return {
                 "success": False,
                 "formatted_text": "",
-                "message": f"Error: {str(e)}",
+                "message": f"AI Agent service unavailable: {exc}",
+                "input_tokens": 0,
+                "output_tokens": 0,
+            }
+        except Exception as exc:
+            logger.error(f"Error calling AI Agent service: {exc}", exc_info=True)
+            return {
+                "success": False,
+                "formatted_text": "",
+                "message": f"Error: {str(exc)}",
                 "input_tokens": 0,
                 "output_tokens": 0,
             }
@@ -199,31 +167,22 @@ FORMATTED MARKDOWN:
 
     def health_check(self) -> bool:
         """
-        Check if the AI Model service is healthy.
+        Check if the AI Agent service is healthy.
 
         Returns:
             True if service is healthy, False otherwise
         """
-        if self.stub is None:
-            return False
-
         try:
-            request = ai_model_pb2.HealthCheckRequest(service="ai_model")
-            response = self.stub.HealthCheck(request, timeout=5)
-            return response.status == "healthy"
-
-        except Exception as e:
-            logger.error(f"Health check failed: {e}")
+            response = httpx.get(f"{self.root_url}/health", timeout=5)
+            return response.status_code == 200 and response.json().get("status") == "ok"
+        except Exception as exc:
+            logger.error(f"Health check failed: {exc}")
             return False
 
     def close(self):
-        """Close the gRPC channel."""
-        if self.channel:
-            self.channel.close()
-            logger.info("AI Model client connection closed")
+        """Kept for interface compatibility (per-call HTTP client)."""
 
     def __del__(self):
-        """Cleanup on deletion."""
         self.close()
 
 

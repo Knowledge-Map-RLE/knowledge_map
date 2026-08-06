@@ -66,6 +66,21 @@ async def get_article_text(doc_id: str):
     return {"text": result.get("text", ""), "success": True}
 
 
+@router.get("/article_editor/articles/{doc_id}/agent-text")
+async def get_agent_article_text(doc_id: str, doi: str = ""):
+    """Текст статьи для прикрепления к запросу AI-агента.
+
+    Returns:
+        {"success", "text", "source"}: text без раздела References (в S3 References
+        сохраняется полностью). source ∈ {"stored", "doi", "docling", "none"} —
+        если "none", клиент использует конвертацию триплетов в текст.
+    """
+    result = await service.get_agent_article_text(doc_id, doi=doi.strip() or None)
+    if not result.get("success"):
+        raise HTTPException(status_code=404, detail="Article not found")
+    return result
+
+
 @router.put("/article_editor/articles/{doc_id}/statements")
 async def save_statements(doc_id: str, req: SaveStatementsRequest):
     result = await service.save_statements(doc_id, req.statements)

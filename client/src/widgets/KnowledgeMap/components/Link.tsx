@@ -13,9 +13,11 @@ export interface LinkProps {
   isSelected: boolean;
   onClick: () => void;
   perfMode?: boolean;
+  color?: number;
+  alpha?: number;
 }
 
-export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected, onClick, perfMode: _perfMode = false }: LinkProps) {
+export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected, onClick, perfMode: _perfMode = false, color, alpha = 1 }: LinkProps) {
   const source_block = (blockMap ? blockMap.get(linkData.source_id) : undefined) || (blocks || []).find(block => block.id === linkData.source_id);
   const target_block = (blockMap ? blockMap.get(linkData.target_id) : undefined) || (blocks || []).find(block => block.id === linkData.target_id);
 
@@ -41,14 +43,14 @@ export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected,
       return;
     }
 
-    const lineColor = isSelected ? 0xff0000 : 0x8a2be2;
+    const lineColor = color ?? (isSelected ? 0xff0000 : 0x8a2be2);
     const lineWidth = 5;
 
     g.moveTo(pathPoints[0].x, pathPoints[0].y);
     for (let i = 1; i < pathPoints.length; i++) {
       g.lineTo(pathPoints[i].x, pathPoints[i].y);
     }
-    g.stroke({ width: lineWidth, color: lineColor, cap: 'round', join: 'round' });
+    g.stroke({ width: lineWidth, color: lineColor, alpha, cap: 'round', join: 'round' });
 
     const lastPoint = pathPoints[pathPoints.length - 1];
     const preLastPoint = pathPoints[pathPoints.length - 2];
@@ -72,8 +74,8 @@ export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected,
     g.lineTo(arrowPoint1.x, arrowPoint1.y);
     g.lineTo(arrowPoint2.x, arrowPoint2.y);
     g.closePath();
-    g.fill({ color: lineColor });
-  }, [isSelected, pathPoints]);
+    g.fill({ color: lineColor, alpha });
+  }, [isSelected, pathPoints, color, alpha]);
 
   if (!source_block || !target_block) {
     return null;

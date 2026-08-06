@@ -20,6 +20,20 @@ export async function getArticleText(docId: string): Promise<any> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/text`);
 }
 
+export interface AgentArticleTextResult {
+    success: boolean;
+    text: string;
+    source: 'stored' | 'doi' | 'docling' | 'none';
+}
+
+export async function getAgentArticleText(docId: string, doi?: string): Promise<AgentArticleTextResult> {
+    const params = new URLSearchParams();
+    if (doi) params.set('doi', doi);
+    const qs = params.toString();
+    const url = `/api/article_editor/articles/${encodeURIComponent(docId)}/agent-text${qs ? `?${qs}` : ''}`;
+    return fetchJson(url);
+}
+
 export async function saveArticleText(docId: string, text: string): Promise<any> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/text`, {
         method: 'PUT',

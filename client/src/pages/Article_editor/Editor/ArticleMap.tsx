@@ -1,105 +1,30 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Container, Graphics, Text } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
 import { Viewport, Link } from '../../../widgets/KnowledgeMap';
-import type { ViewportRef, BlockData, LinkData } from '../../../widgets/KnowledgeMap';
-import { BLOCK_WIDTH } from '../../../widgets/KnowledgeMap/constants';
+import type { ViewportRef } from '../../../widgets/KnowledgeMap';
 import { ArticleBlock } from './ArticleBlock';
-import { getArticleGraph } from '../../../services/api/article_editor';
+import { buildArticleMapGraph, collectSubgraph, OUTCOME_COLORS } from './articleMapGraph';
+import type { ArticleMapGraph, ArticleMapLink, ArticleMapNode } from './articleMapGraph';
+import type { ArticleBlockData } from '../model';
 
 extend({ Container, Graphics, Text });
 
 interface ArticleMapProps {
-    docId: string;
+    blocks: ArticleBlockData[];
 }
 
-const SPACING_X = 300;
-const SPACING_Y = 120;
-const PADDING = 60;
+const DPR = typeof window !== 'undefined' ? Math.max(1, window.devicePixelRatio || 1) : 1;
 
-function computeTopoLayout(
-    statements: { uid: string; subject_text: string; predicate: string; object_text: string }[],
-    edges: { source_id: string; target_id: string }[]
-): { blocks: BlockData[]; links: LinkData[] } {
-    if (statements.length === 0) return { blocks: [], links: [] };
+const LEGEND: Array<{ color: string; label: string }> = [
+    { color: '#22c55e', label: 'поддержано' },
+    { color: '#f59e0b', label: 'частично' },
+    { color: '#ef4444', label: 'опровергнуто' },
+    { color: '#9ca3af', label: 'контекст / не определено' },
+];
 
-    const ids = statements.map(s => s.uid);
-    const inDegree: Record<string, number> = {};
-    const outNeighbors: Record<string, string[]> = {};
-    for (const id of ids) {
-        inDegree[id] = 0;
-        outNeighbors[id] = [];
-    }
-    for (const e of edges) {
-        if (inDegree[e.target_id] !== undefined && inDegree[e.source_id] !== undefined) {
-            outNeighbors[e.source_id].push(e.target_id);
-            inDegree[e.target_id] += 1;
-        }
-    }
-
-    const column: Record<string, number> = {};
-    const queue: string[] = [];
-    for (const id of ids) {
-        if (inDegree[id] === 0) {
-            queue.push(id);
-            column[id] = 0;
-        }
-    }
-
-    const remaining = { ...inDegree };
-    while (queue.length > 0) {
-        const cur = queue.shift()!;
-        for (const nb of outNeighbors[cur]) {
-            column[nb] = Math.max(column[nb] ?? 0, (column[cur] ?? 0) + 1);
-            remaining[nb] -= 1;
-            if (remaining[nb] === 0) queue.push(nb);
-        }
-    }
-
-    for (const id of ids) {
-        if (column[id] === undefined) column[id] = 0;
-    }
-
-    const rowInColumn: Record<string, number> = {};
-    const colCount: Record<number, number> = {};
-    for (const id of ids) {
-        const col = column[id] ?? 0;
-        rowInColumn[id] = colCount[col] ?? 0;
-        colCount[col] = (colCount[col] ?? 0) + 1;
-    }
-
-    const stmtMap = new Map(statements.map(s => [s.uid, s]));
-    const blocks: BlockData[] = statements.map(s => {
-        const col = column[s.uid] ?? 0;
-        const row = rowInColumn[s.uid] ?? 0;
-        return {
-            id: s.uid,
-            title: `${s.subject_text} → ${s.predicate} → ${s.object_text}`,
-            x: col * SPACING_X + PADDING + BLOCK_WIDTH / 2,
-            y: row * SPACING_Y + PADDING + 37.5,
-            layer: col,
-            level: 0,
-        };
-    });
-
-    const linkMap = new Map<string, LinkData>();
-    for (const e of edges) {
-        if (!stmtMap.has(e.source_id) || !stmtMap.has(e.target_id)) continue;
-        const id = `${e.source_id}-${e.target_id}`;
-        if (!linkMap.has(id)) {
-            linkMap.set(id, { id, source_id: e.source_id, target_id: e.target_id });
-        }
-    }
-    const links = [...linkMap.values()];
-
-    return { blocks, links };
-}
-
-const ArticleMap: React.FC<ArticleMapProps> = ({ docId }) => {
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [blocks, setBlocks] = useState<BlockData[] | null>(null);
-    const [links, setLinks] = useState<LinkData[] | null>(null);
+const ArticleMap: React.FC<ArticleMapProps> = ({ blocks }) => {
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
     const viewportRef = useRef<ViewportRef>(null);
@@ -108,76 +33,113 @@ const ArticleMap: React.FC<ArticleMapProps> = ({ docId }) => {
         if (el) setContainerEl(el);
     }, []);
 
-    useEffect(() => {
-        setLoading(true);
-        setError(null);
-        getArticleGraph(docId)
-            .then(data => {
-                const { blocks: b, links: l } = computeTopoLayout(data.statements || [], data.edges || []);
-                setBlocks(b);
-                setLinks(l);
-            })
-            .catch(e => setError(e.message ?? 'Failed to load graph'))
-            .finally(() => setLoading(false));
-    }, [docId]);
+    const graph: ArticleMapGraph = useMemo(() => buildArticleMapGraph(blocks), [blocks]);
+    const nodes = graph.nodes;
+    const links = graph.links;
+
+    const subgraph = useMemo(
+        () => (hoveredId ? collectSubgraph(graph, hoveredId) : null),
+        [graph, hoveredId],
+    );
+
+    const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n] as const)), [nodes]);
+
+    const linkAppearance = useCallback(
+        (link: ArticleMapLink): { color?: number; alpha: number } => {
+            if (!subgraph) return { alpha: 1 };
+            if (subgraph.links.has(link.id)) {
+                const src = nodeById.get(link.source_id);
+                const color = src ? OUTCOME_COLORS[src.outcome] : OUTCOME_COLORS.neutral;
+                return { color, alpha: 1 };
+            }
+            return { alpha: 0.15 };
+        },
+        [subgraph, nodeById],
+    );
 
     useEffect(() => {
-        if (blocks && blocks.length > 0 && viewportRef.current) {
-            const minX = Math.min(...blocks.map(b => b.x));
-            const maxX = Math.max(...blocks.map(b => b.x));
-            const minY = Math.min(...blocks.map(b => b.y));
-            const maxY = Math.max(...blocks.map(b => b.y));
+        if (nodes.length > 0 && viewportRef.current) {
+            const minX = Math.min(...nodes.map(b => b.x));
+            const maxX = Math.max(...nodes.map(b => b.x));
+            const minY = Math.min(...nodes.map(b => b.y));
+            const maxY = Math.max(...nodes.map(b => b.y));
             const cx = (minX + maxX) / 2;
             const cy = (minY + maxY) / 2;
-            setTimeout(() => viewportRef.current?.focusOn(cx, cy), 100);
+            const timer = setTimeout(() => viewportRef.current?.focusOn(cx, cy), 100);
+            return () => clearTimeout(timer);
         }
-    }, [blocks]);
+        return undefined;
+    }, [nodes]);
 
-    if (loading) {
-        return (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280' }}>
-                Загрузка графа...
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#ef4444' }}>
-                Ошибка: {error}
-            </div>
-        );
-    }
-
-    if (!blocks || blocks.length === 0) {
+    if (!nodes || nodes.length === 0) {
         return (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', textAlign: 'center', padding: '2rem' }}>
-                Нет утверждений для построения графа.<br />
-                Добавьте текст на вкладке «Редактор» и сохраните утверждения.
+                Нет структурных блоков для построения карты.<br />
+                Добавьте блоки на вкладке «Редактор» и сохраните статью.
             </div>
         );
     }
 
     return (
-        <div ref={containerCbRef} style={{ width: '100%', height: '100%' }}>
+        <div ref={containerCbRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
             {containerEl && (
-                <Application resizeTo={containerEl} backgroundColor={0xf8fafc}>
+                <Application
+                    resizeTo={containerEl}
+                    backgroundColor={0xf8fafc}
+                    resolution={DPR}
+                    antialias
+                    autoDensity
+                >
                     <Viewport ref={viewportRef}>
-                        {links.map(link => (
-                            <Link
-                                key={link.id}
-                                linkData={link}
-                                blocks={blocks}
-                                isSelected={false}
-                                onClick={() => {}}
+                        {links.map(link => {
+                            const { color, alpha } = linkAppearance(link);
+                            return (
+                                <Link
+                                    key={link.id}
+                                    linkData={link}
+                                    blocks={nodes}
+                                    isSelected={false}
+                                    onClick={() => {}}
+                                    color={color}
+                                    alpha={alpha}
+                                />
+                            );
+                        })}
+                        {nodes.map((node: ArticleMapNode) => (
+                            <ArticleBlock
+                                key={node.id}
+                                blockData={node}
+                                hovered={node.id === hoveredId}
+                                highlighted={subgraph ? subgraph.nodes.has(node.id) : false}
+                                dimmed={hoveredId !== null && subgraph ? !subgraph.nodes.has(node.id) : false}
+                                onHover={setHoveredId}
                             />
-                        ))}
-                        {blocks.map(block => (
-                            <ArticleBlock key={block.id} blockData={block} />
                         ))}
                     </Viewport>
                 </Application>
             )}
+            <div
+                style={{
+                    position: 'absolute', top: 12, right: 12, zIndex: 10, pointerEvents: 'none',
+                    background: 'rgba(255,255,255,0.95)', border: '1px solid #e5e7eb',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 12, color: '#374151',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.08)', maxWidth: 260,
+                }}
+            >
+                <div style={{ fontWeight: 600, marginBottom: 6 }}>Наведите на блок</div>
+                {LEGEND.map(item => (
+                    <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                        <span style={{ width: 10, height: 10, borderRadius: 2, background: item.color, display: 'inline-block' }} />
+                        <span>{item.label}</span>
+                    </div>
+                ))}
+                <div style={{ marginTop: 6, borderTop: '1px solid #e5e7eb', paddingTop: 4 }}>
+                    <span style={{ fontWeight: 600 }}>Вердикт:</span>{' '}
+                    <span style={{ color: graph.studyVerdict.includes('подтвердилась') && !graph.studyVerdict.includes('не') ? '#16a34a' : graph.studyVerdict.includes('не подтвердилась') ? '#dc2626' : '#6b7280' }}>
+                        {graph.studyVerdict}
+                    </span>
+                </div>
+            </div>
         </div>
     );
 };
