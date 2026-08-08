@@ -171,10 +171,9 @@ const EditorTabsWithValidation = React.forwardRef<
     // Handle save with validation check
     const handleSaveWithValidation = () => {
       if (validation && !validation.is_valid) {
-        // Показать ошибки валидации
+        // Показать ошибки валидации, но не блокировать сохранение
         setShowValidationAlert(true);
-        console.warn('Cannot save: Markdown validation failed', validation);
-        return false;
+        console.warn('Markdown validation failed, saving anyway', validation);
       }
       onSave();
       return true;

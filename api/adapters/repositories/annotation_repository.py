@@ -9,6 +9,7 @@ Forbidden imports: fastapi, web
 from __future__ import annotations
 
 import logging
+import uuid
 from datetime import datetime
 from typing import Optional, List, Tuple
 
@@ -23,6 +24,33 @@ from domain.exceptions import NotFoundError
 
 logger = logging.getLogger(__name__)
 
+# Список полей, читаемых из MarkdownAnnotation напрямую через raw Cypher.
+# RAW-чтение вместо OrmAnnotation.nodes.get(...) необходимо, потому что neomodel
+# DateTimeProperty умеет инфлейтить только float (epoch), а аннотации, созданные
+# через прямые Cypher-запросы (напр. spaCy-пайплайн), хранят created_date как
+# neo4j.time.DateTime — чтение таких узлов через inflate падает с InflateError.
+_ANNOTATION_FIELDS = (
+    "ann.uid, ann.text, ann.annotation_type, "
+    "ann.start_offset, ann.end_offset, ann.color, "
+    "ann.metadata, ann.confidence, ann.created_date, "
+    "ann.source, ann.processor_version"
+)
+
+
+def _row_to_annotation(row: list) -> MarkdownAnnotation:
+    return MarkdownAnnotation(
+        uid=row[0],
+        text=row[1],
+        annotation_type=row[2],
+        start_offset=row[3],
+        end_offset=row[4],
+        color=row[5] or "#ffeb3b",
+        metadata=row[6],
+        confidence=row[7],
+        created_date=row[8],
+        source=row[9] or "user",
+        processor_version=row[10],
+    )
 
 def _orm_to_domain(orm_ann: OrmAnnotation) -> MarkdownAnnotation:
     return MarkdownAnnotation(
@@ -67,10 +95,13 @@ class AnnotationRepository:
         return _orm_to_domain(orm_ann)
 
     def get_by_id(self, uid: str) -> Optional[MarkdownAnnotation]:
-        try:
-            return _orm_to_domain(OrmAnnotation.nodes.get(uid=uid))
-        except DoesNotExist:
+        result, _ = db.cypher_query(
+            f"MATCH (ann:MarkdownAnnotation {{uid: $uid}}) RETURN {_ANNOTATION_FIELDS}",
+            {"uid": uid},
+        )
+        if not result:
             return None
+        return _row_to_annotation(result[0])
 
     def get_by_document(
         self,
@@ -141,27 +172,44 @@ class AnnotationRepository:
         return annotations, total
 
     def save(self, annotation: MarkdownAnnotation) -> MarkdownAnnotation:
-        try:
-            orm_ann = OrmAnnotation.nodes.get(uid=annotation.uid)
-        except DoesNotExist:
+        result, _ = db.cypher_query(
+            """
+            MATCH (ann:MarkdownAnnotation {uid: $uid})
+            SET ann.text = $text,
+                ann.annotation_type = $annotation_type,
+                ann.start_offset = $start_offset,
+                ann.end_offset = $end_offset,
+                ann.color = $color,
+                ann.metadata = $metadata,
+                ann.confidence = $confidence
+            RETURN count(ann)
+            """,
+            {
+                "uid": annotation.uid,
+                "text": annotation.text,
+                "annotation_type": annotation.annotation_type,
+                "start_offset": annotation.start_offset,
+                "end_offset": annotation.end_offset,
+                "color": annotation.color,
+                "metadata": annotation.metadata,
+                "confidence": annotation.confidence,
+            },
+        )
+        if not result or result[0][0] == 0:
             raise NotFoundError("MarkdownAnnotation", annotation.uid)
-
-        orm_ann.text = annotation.text
-        orm_ann.annotation_type = annotation.annotation_type
-        orm_ann.start_offset = annotation.start_offset
-        orm_ann.end_offset = annotation.end_offset
-        orm_ann.color = annotation.color
-        orm_ann.metadata = annotation.metadata
-        orm_ann.confidence = annotation.confidence
-        orm_ann.save()
-        return _orm_to_domain(orm_ann)
+        return annotation
 
     def delete(self, uid: str) -> None:
-        try:
-            orm_ann = OrmAnnotation.nodes.get(uid=uid)
-        except DoesNotExist:
+        result, _ = db.cypher_query(
+            "MATCH (ann:MarkdownAnnotation {uid: $uid}) RETURN count(ann)",
+            {"uid": uid},
+        )
+        if not result or result[0][0] == 0:
             raise NotFoundError("MarkdownAnnotation", uid)
-        orm_ann.delete()
+        db.cypher_query(
+            "MATCH (ann:MarkdownAnnotation {uid: $uid}) DETACH DELETE ann",
+            {"uid": uid},
+        )
 
     def delete_all_for_document(self, doc_id: str) -> int:
         result, _ = db.cypher_query(
@@ -188,26 +236,37 @@ class AnnotationRepository:
         relation_type: str,
         metadata: Optional[dict] = None,
     ) -> AnnotationRelation:
-        try:
-            source = OrmAnnotation.nodes.get(uid=source_uid)
-        except DoesNotExist:
-            raise NotFoundError("MarkdownAnnotation", source_uid)
-        try:
-            target = OrmAnnotation.nodes.get(uid=target_uid)
-        except DoesNotExist:
-            raise NotFoundError("MarkdownAnnotation", target_uid)
+        for uid in (source_uid, target_uid):
+            result, _ = db.cypher_query(
+                "MATCH (ann:MarkdownAnnotation {uid: $uid}) RETURN count(ann)",
+                {"uid": uid},
+            )
+            if not result or result[0][0] == 0:
+                raise NotFoundError("MarkdownAnnotation", uid)
 
-        rel = source.relations_to.connect(
-            target,
-            {"relation_type": relation_type, "created_date": datetime.utcnow(), "metadata": metadata or {}},
+        rel_uid = uuid.uuid4().hex
+        result, _ = db.cypher_query(
+            """
+            MATCH (s:MarkdownAnnotation {uid: $src}), (t:MarkdownAnnotation {uid: $tgt})
+            CREATE (s)-[r:RELATES_TO {uid: $rel_uid, relation_type: $relation_type,
+                                      created_date: datetime(), metadata: $metadata}]->(t)
+            RETURN r.uid
+            """,
+            {
+                "src": source_uid,
+                "tgt": target_uid,
+                "rel_uid": rel_uid,
+                "relation_type": relation_type,
+                "metadata": metadata or {},
+            },
         )
         return AnnotationRelation(
-            uid=rel.uid,
+            uid=result[0][0] if result else rel_uid,
             source_uid=source_uid,
             target_uid=target_uid,
             relation_type=relation_type,
-            created_date=rel.created_date,
-            metadata=rel.metadata,
+            created_date=datetime.utcnow(),
+            metadata=metadata or {},
         )
 
     def delete_relation(self, source_uid: str, target_uid: str) -> None:

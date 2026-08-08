@@ -1555,6 +1555,77 @@
     color: #111827;
 }
 
+.agentChatExtractRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    flex-shrink: 0;
+}
+
+.agentChatExtractBtn {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4f46e5;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+.agentChatExtractBtn:hover:not(:disabled) {
+    background: #e0e7ff;
+}
+
+.agentChatExtractBtn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.agentChatExtractBtnStop {
+    color: #b91c1c;
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.agentChatExtractBtnStop:hover:not(:disabled) {
+    background: #fee2e2;
+}
+
+.agentChatExtractProgress {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.agentChatExtractBar {
+    height: 6px;
+    border-radius: 3px;
+    background: #e5e7eb;
+    overflow: hidden;
+}
+
+.agentChatExtractFill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.3s ease;
+}
+
+.agentChatExtractLabel {
+    font-size: 10px;
+    color: #6b7280;
+    font-variant-numeric: tabular-nums;
+}
+
 .agentChatMessages {
     flex: 1;
     min-height: 0;

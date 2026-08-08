@@ -10,6 +10,8 @@ Responsibility: Трансляция доменных исключений в HT
 Allowed imports: fastapi, starlette, domain.exceptions
 Forbidden imports: neomodel, grpc, application, adapters, infrastructure
 """
+import logging
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
@@ -105,6 +107,22 @@ async def domain_error_handler(request: Request, exc: KnowledgeMapError) -> JSON
     return JSONResponse(status_code=400, content={"detail": str(exc)})
 
 
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """
+    Последний рубеж: превращает необработанное исключение в JSON 500.
+
+    Без этого обработчика необработанные исключения долетают до
+    ServerErrorMiddleware uvicorn и возвращаются голым "Internal Server Error"
+    БЕЗ CORS-заголовков — браузер в этом случае показывает "No Access-Control-Allow-Origin",
+    а не реальный статус 500. Регистрация handler для Exception гарантирует,
+    что ответ формируется внутри ExceptionMiddleware и проходит через CORS middleware.
+    """
+    logging.getLogger(__name__).exception(
+        "Необработанное исключение: %s %s", request.method, request.url.path
+    )
+    return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
+
+
 def register_exception_handlers(app) -> None:
     """Регистрирует все обработчики на FastAPI-приложении."""
     app.add_exception_handler(NotFoundError, not_found_handler)
@@ -120,3 +138,4 @@ def register_exception_handlers(app) -> None:
     app.add_exception_handler(ProcessingError, processing_error_handler)
     app.add_exception_handler(BlockNotPinnedError, block_not_pinned_handler)
     app.add_exception_handler(KnowledgeMapError, domain_error_handler)
+    app.add_exception_handler(Exception, unhandled_exception_handler)

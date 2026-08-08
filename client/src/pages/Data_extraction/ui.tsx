@@ -23,6 +23,7 @@ const DataExtractionUI: React.FC = () => {
     const [isNlpProcessing, setIsNlpProcessing] = useState(false);
     const noopRef = useRef<() => void>(() => {});
     const noopSetError = useRef<(e: string | null) => void>(() => {});
+    const documentListRef = useRef<DocumentListHandle>(null);
 
     const {
         selectedDocument,
@@ -36,6 +37,13 @@ const DataExtractionUI: React.FC = () => {
         updateDocumentStatus,
     } = useDocumentState(setIsNlpProcessing);
 
+    // После успешного сохранения перечитываем список документов,
+    // чтобы статус 'Аннотирован' отобразился в левой колонке
+    const handleSaveAndReload = async () => {
+        await handleManualSave();
+        documentListRef.current?.reloadDocuments();
+    };
+
     return (
         <main className={styles.dex}>
             <Header showSearch={true} className={styles.headerRow} />
@@ -43,6 +51,7 @@ const DataExtractionUI: React.FC = () => {
             <div className={styles.mainRow}>
                 <div className={styles.leftColumn}>
                     <Document_downloader_ui
+                        ref={documentListRef}
                         selectedDocument={selectedDocument}
                         onSelectDocument={selectDocument}
                         onDocumentsChange={noopRef.current}
@@ -150,7 +159,7 @@ const DataExtractionUI: React.FC = () => {
                                         text={sourceMarkdown}
                                         readOnly={false}
                                         onTextChange={handleSourceMarkdownChange}
-                                        onSave={handleManualSave}
+                                        onSave={handleSaveAndReload}
                                         documentTitle={selectedDocument.title || selectedDocument.original_filename}
                                         onUpdateDocumentStatus={updateDocumentStatus}
                                         onNlpProcessingChange={setIsNlpProcessing}

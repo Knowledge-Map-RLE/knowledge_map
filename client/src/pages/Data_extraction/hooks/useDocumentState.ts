@@ -96,8 +96,11 @@ export function useDocumentState(
 
             const result = await saveMarkdown(selectedDocument.uid, sourceMarkdown, true);
 
-            // Backend установил статус 'annotated' только если markdown прошёл валидацию
-            updateDocumentStatus(selectedDocument.uid, 'annotated');
+            // Статус 'Аннотирован' только для валидного markdown:
+            // невалидный текст сохраняется, но статус не меняется
+            if (result?.validation?.is_valid) {
+                updateDocumentStatus(selectedDocument.uid, 'annotated');
+            }
 
             setSaveStatus('saved');
             setLastSavedAt(new Date());

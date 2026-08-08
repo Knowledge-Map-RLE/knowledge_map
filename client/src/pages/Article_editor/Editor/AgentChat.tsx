@@ -7,7 +7,7 @@ import {
     type AgentModel,
     type AgentUsage,
 } from '../../../services/api/agent';
-import { getAgentArticleText } from '../../../services/api/article_editor';
+import { getAgentArticleText, extractBlocksStream } from '../../../services/api/article_editor';
 import { statementsToResolvedText } from './blockConverter';
 import type { KnowledgeStatement, ArticleBlockData } from '../model';
 import styles from '../Article_editor.module.css';
@@ -24,14 +24,19 @@ interface AgentChatProps {
     articleUuid?: string | null;
     blocks?: ArticleBlockData[];
     statements?: KnowledgeStatement[];
+    text?: string;
+    onExtracted?: (docId: string, blocks: ArticleBlockData[]) => Promise<void>;
 }
 
-const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }) => {
+const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, text: editorText, onExtracted }) => {
     const [messages, setMessages] = useState<ChatEntry[]>([]);
     const [input, setInput] = useState('');
     const [models, setModels] = useState<AgentModel[]>([]);
     const [model, setModel] = useState('');
     const [sending, setSending] = useState(false);
+    const [extracting, setExtracting] = useState(false);
+    const [extractProgress, setExtractProgress] = useState<{ processed: number; total: number } | null>(null);
+    const [extractError, setExtractError] = useState<string | null>(null);
     const [attachEnabled, setAttachEnabled] = useState(false);
     const [attachSource, setAttachSource] = useState<string | null>(null);
     const [attachError, setAttachError] = useState<string | null>(null);
@@ -39,6 +44,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
     const [loadError, setLoadError] = useState<string | null>(null);
 
     const controllerRef = useRef<AbortController | null>(null);
+    const extractControllerRef = useRef<AbortController | null>(null);
     const nextIdRef = useRef(1);
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const attachTextRef = useRef<string>('');
@@ -75,7 +81,10 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
         if (el) el.scrollTop = el.scrollHeight;
     }, [messages, sending]);
 
-    useEffect(() => () => controllerRef.current?.abort(), []);
+    useEffect(() => () => {
+        controllerRef.current?.abort();
+        extractControllerRef.current?.abort();
+    }, []);
 
     const loadArticleText = useCallback(async (): Promise<string> => {
         if (!articleUuid) return '';
@@ -90,6 +99,62 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
         }
         return '';
     }, [articleUuid, blocks, statements]);
+
+    const handleExtract = useCallback(async () => {
+        if (!articleUuid) {
+            setExtractError('\u041D\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439 \u0441\u0442\u0430\u0442\u044C\u0438');
+            return;
+        }
+        if (extracting || sending) return;
+        setExtractError(null);
+        setExtractProgress(null);
+        setExtracting(true);
+        try {
+            let text = '';
+            try {
+                text = await loadArticleText();
+            } catch { /* fallback ниже */ }
+            if (!text && editorText) text = editorText;
+            if (!text) {
+                setExtractError('\u041D\u0435\u0442 \u0442\u0435\u043A\u0441\u0442\u0430 \u0441\u0442\u0430\u0442\u044C\u0438 \u0434\u043B\u044F \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u044F');
+                return;
+            }
+            const lang = /\p{Script=Cyrillic}/u.test(text) ? 'ru' : 'en';
+            const controller = new AbortController();
+            extractControllerRef.current = controller;
+            await extractBlocksStream(
+                { text, docId: articleUuid, lang, model: model || undefined, save: true },
+                {
+                    signal: controller.signal,
+                    onStart: (total) => setExtractProgress({ processed: 0, total }),
+                    onProgress: (p) => setExtractProgress(p),
+                    onResult: async (data) => {
+                        if (data?.success && Array.isArray(data.blocks)) {
+                            await onExtracted?.(articleUuid, data.blocks);
+                        } else {
+                            setExtractError(data?.message || '\u0418\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u043D\u0435 \u0434\u0430\u043B\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430');
+                        }
+                    },
+                    onCancelled: () => setExtractError('\u0418\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E'),
+                    onError: (err) => setExtractError(err),
+                },
+            );
+        } catch (err) {
+            if (err instanceof DOMException && err.name === 'AbortError') {
+                setExtractError('\u0418\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E');
+            } else {
+                setExtractError(err instanceof Error ? err.message : String(err));
+            }
+        } finally {
+            setExtracting(false);
+            setExtractProgress(null);
+            extractControllerRef.current = null;
+        }
+    }, [articleUuid, extracting, sending, loadArticleText, editorText, model, onExtracted]);
+
+    const handleStopExtract = useCallback(() => {
+        extractControllerRef.current?.abort();
+    }, []);
 
     const handleToggleAttach = useCallback(async () => {
         if (attachEnabled) {
@@ -135,11 +200,10 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
 
     const handleSend = useCallback(async () => {
         const text = input.trim();
-        if (!text || sending) return;
+        if (!text || sending || extracting) return;
 
         setInput('');
         setServiceError(null);
-
         let userContent = text;
         if (attachEnabled && attachTextRef.current) {
             userContent =
@@ -207,7 +271,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
                 setSending(false);
             },
         });
-    }, [input, sending, messages, model, attachEnabled]);
+    }, [input, sending, messages, model, attachEnabled, extracting]);
 
     const handleStop = useCallback(() => {
         controllerRef.current?.abort();
@@ -243,7 +307,6 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
         setAttachSource(null);
         setAttachError(null);
     }, []);
-
     const handleKeyDown = useCallback(
         (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
             if (event.key === 'Enter' && !event.shiftKey) {
@@ -260,7 +323,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
                 type="checkbox"
                 checked={attachEnabled}
                 onChange={() => void handleToggleAttach()}
-                disabled={!articleUuid || sending}
+                disabled={!articleUuid || sending || extracting}
             />
             <span className={styles.agentChatAttachLabel}>
                 {'\u041F\u0440\u0438\u043A\u0440\u0435\u043F\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u044C\u044E'}
@@ -282,6 +345,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
                     title="Модель AI"
+                    disabled={sending || extracting}
                 >
                     {models.length === 0 && <option value="">по умолчанию</option>}
                     {models.map((m) => (
@@ -293,11 +357,49 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
                 <button
                     className={styles.agentChatClearBtn}
                     onClick={handleClear}
-                    disabled={messages.length === 0 && !sending}
+                    disabled={(messages.length === 0 && !sending) || extracting}
                     title="Очистить чат"
                 >
                     {'\u0421\u0431\u0440\u043E\u0441'}
                 </button>
+            </div>
+
+            <div className={styles.agentChatExtractRow}>
+                {extracting ? (
+                    <>
+                        <button
+                            className={`${styles.agentChatExtractBtn} ${styles.agentChatExtractBtnStop}`}
+                            onClick={handleStopExtract}
+                            title="Прервать извлечение блоков"
+                        >
+                            {'\u2B15 \u041F\u0440\u0435\u0440\u0432\u0430\u0442\u044C'}
+                        </button>
+                        {extractProgress && extractProgress.total > 0 && (
+                            <div className={styles.agentChatExtractProgress}>
+                                <div className={styles.agentChatExtractBar}>
+                                    <div
+                                        className={styles.agentChatExtractFill}
+                                        style={{
+                                            width: `${Math.min(100, (extractProgress.processed / extractProgress.total) * 100)}%`,
+                                        }}
+                                    />
+                                </div>
+                                <span className={styles.agentChatExtractLabel}>
+                                    {`\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E \u0447\u0430\u043D\u043A\u043E\u0432: ${extractProgress.processed}/${extractProgress.total}`}
+                                </span>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <button
+                        className={styles.agentChatExtractBtn}
+                        onClick={() => void handleExtract()}
+                        disabled={!articleUuid || sending}
+                        title="Извлечь структурные блоки из текста статьи через AI-модель"
+                    >
+                        {'\u2699 \u0418\u0437\u0432\u043B\u0435\u0447\u044C \u0431\u043B\u043E\u043A\u0438 \u0438\u0437 \u0441\u0442\u0430\u0442\u044C\u0438'}
+                    </button>
+                )}
             </div>
 
             <div className={styles.agentChatMetaRow}>
@@ -333,6 +435,23 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
                 </div>
             )}
 
+            {extractError && (
+                <div className={styles.agentChatErrorBanner}>
+                    <span className={styles.agentChatErrorText} title={extractError}>
+                        {'\u041E\u0448\u0438\u0431\u043A\u0430 \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u044F: '}
+                        {extractError}
+                    </span>
+                    {extracting && (
+                        <button
+                            className={styles.agentChatRetryBtn}
+                            onClick={handleStopExtract}
+                        >
+                            {'\u041F\u0440\u0435\u0440\u0432\u0430\u0442\u044C'}
+                        </button>
+                    )}
+                </div>
+            )}
+
             {serviceError && (
                 <div className={styles.agentChatErrorBanner}>
                     <span className={styles.agentChatErrorText} title={serviceError}>
@@ -343,9 +462,14 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
             )}
 
             <div className={styles.agentChatMessages} ref={scrollRef}>
-                {messages.length === 0 && !sending && (
+                {messages.length === 0 && !sending && !extracting && (
                     <div className={styles.agentChatEmpty}>
                         {'\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u0432\u043E\u043F\u0440\u043E\u0441 AI-\u0430\u0433\u0435\u043D\u0442\u0443 \u043E\u0431 \u0441\u0442\u0430\u0442\u044C\u0435'}
+                    </div>
+                )}
+                {messages.length === 0 && extracting && (
+                    <div className={styles.agentChatEmpty}>
+                        {'\u0418\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u043D\u044B\u0445 \u0431\u043B\u043E\u043A\u043E\u0432 \u0438\u0437 \u0441\u0442\u0430\u0442\u044C\u0438...'}
                     </div>
                 )}
                 {messages.map((entry) => (
@@ -414,12 +538,13 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements }
                     placeholder={'\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0430\u0433\u0435\u043D\u0442\u0443...'}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    disabled={sending}
+                    disabled={sending || extracting}
                 />
-                {sending ? (
+                {sending || extracting ? (
                     <button
                         className={`${styles.agentChatSendBtn} ${styles.agentChatSendBtnStop}`}
-                        onClick={handleStop}
+                        onClick={sending ? handleStop : handleStopExtract}
+                        title={sending ? '\u041F\u0440\u0435\u0440\u0432\u0430\u0442\u044C \u0433\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044E' : '\u041F\u0440\u0435\u0440\u0432\u0430\u0442\u044C \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435'}
                     >
                         {'\u2B15'}
                     </button>

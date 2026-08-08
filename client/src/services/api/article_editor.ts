@@ -172,4 +172,80 @@ export async function parseTextStream(
     }
 }
 
+export interface ExtractBlocksRequest {
+    text: string;
+    docId: string;
+    lang?: 'ru' | 'en';
+    model?: string;
+    save?: boolean;
+}
+
+export interface ExtractBlocksCallbacks {
+    onStart?: (total: number) => void;
+    onProgress?: (progress: ParseProgress) => void;
+    onResult?: (result: any) => void;
+    onError?: (error: string) => void;
+    onCancelled?: () => void;
+    signal?: AbortSignal;
+}
+
+/** SSE-поток: LLM-экстракция структурных блоков из текста статьи. */
+export async function extractBlocksStream(
+    req: ExtractBlocksRequest,
+    callbacks: ExtractBlocksCallbacks = {},
+): Promise<void> {
+    const base = ((import.meta as any).env?.VITE_API_BASE_URL || '').replace(/\/$/, '');
+    const url = `${base}/api/article_editor/articles/${encodeURIComponent(req.docId)}/llm-extract`;
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            text: req.text,
+            doc_id: req.docId,
+            lang: req.lang || 'ru',
+            model: req.model,
+            save: req.save !== false,
+        }),
+        signal: callbacks.signal,
+    });
+    if (!response.ok) {
+        const body = await response.text().catch(() => '');
+        callbacks.onError?.(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+        return;
+    }
+    const reader = response.body?.getReader();
+    if (!reader) {
+        callbacks.onError?.('Нет ответа от сервера');
+        return;
+    }
+    const decoder = new TextDecoder();
+    let buffer = '';
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+        for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const payload = line.slice(6).trim();
+            if (payload === '[DONE]') return;
+            try {
+                const msg = JSON.parse(payload);
+                if (msg.type === 'start') {
+                    callbacks.onStart?.(msg.total ?? 0);
+                } else if (msg.type === 'progress') {
+                    callbacks.onProgress?.({ processed: msg.processed, total: msg.total });
+                } else if (msg.type === 'result') {
+                    callbacks.onResult?.(msg.data);
+                } else if (msg.type === 'cancelled') {
+                    callbacks.onCancelled?.();
+                } else if (msg.type === 'error') {
+                    callbacks.onError?.(msg.message || 'Ошибка извлечения');
+                }
+            } catch { /* skip malformed */ }
+        }
+    }
+}
+
 export { fetchJson };

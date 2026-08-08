@@ -24,6 +24,7 @@ interface UseArticleStateResult {
     notAnnotatedMessage: string | null;
     loadArticle: (docId: string) => Promise<void>;
     initNewArticle: (docId: string) => void;
+    applyExtractedBlocks: (docId: string, blocks: ArticleBlockData[]) => Promise<void>;
     setText: (text: string) => void;
     addBlock: (typeNumber: number, initialData?: Record<string, BlockDataValue>) => void;
     updateBlock: (instanceId: string, fieldKey: string, value: BlockDataValue) => void;
@@ -159,6 +160,18 @@ export function useArticleState(): UseArticleStateResult {
         setBlocks([]);
         setStatements([]);
         setTextState('');
+    }, []);
+
+    /** Применяет блоки, полученные от LLM-экстракции: пересобирает стейтменты
+     *  и markdown без перезагрузки статьи и без потери текущего текста. */
+    const applyExtractedBlocks = useCallback(async (docId: string, newBlocks: ArticleBlockData[]) => {
+        skipBlocksSyncRef.current = true;
+        const existing = statementsRef.current;
+        const derived = blocksToStatements(newBlocks, docId, existing);
+        statementsCountRef.current = derived.length;
+        setBlocks(newBlocks);
+        setStatements(derived);
+        setTextState(statementsToResolvedText(derived, newBlocks, docId, existing));
     }, []);
 
     // Blocks → statements + text sync
@@ -372,7 +385,7 @@ export function useArticleState(): UseArticleStateResult {
     return {
         article, text, statements, blocks, articleUuid,
         isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
-        loadArticle, initNewArticle, setText, addBlock, updateBlock, deleteBlock, reorderBlocks,
+        loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, updateBlock, deleteBlock, reorderBlocks,
         triggerParse, save, uploadImage,
     };
 }

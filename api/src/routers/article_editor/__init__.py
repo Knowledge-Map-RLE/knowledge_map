@@ -1,6 +1,6 @@
 import logging
 from fastapi import APIRouter
-from . import articles, parse, graph, split_blocks, images, patterns
+from . import articles, parse, graph, split_blocks, images, patterns, llm_extract
 
 logger = logging.getLogger(__name__)
 
@@ -12,5 +12,6 @@ router.include_router(graph.router, prefix="")
 router.include_router(split_blocks.router, prefix="")
 router.include_router(images.router, prefix="")
 router.include_router(patterns.router, prefix="")
+router.include_router(llm_extract.router, prefix="")
 
 __all__ = ["router"]

@@ -18,7 +18,7 @@ const ArticleEditorUI: React.FC = () => {
 
     const {
         text, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
-        loadArticle, initNewArticle, setText, addBlock, updateBlock, deleteBlock, reorderBlocks, triggerParse, save, uploadImage,
+        loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, updateBlock, deleteBlock, reorderBlocks, triggerParse, save, uploadImage,
     } = useArticleState();
 
     const handleSelectDocument = useCallback(async (doc: any | null) => {
@@ -43,6 +43,10 @@ const ArticleEditorUI: React.FC = () => {
             await save(selectedDocId);
         }
     }, [selectedDocId, save, notAnnotatedMessage]);
+
+    const handleExtracted = useCallback(async (docId: string, extractedBlocks: any[]) => {
+        await applyExtractedBlocks(docId, extractedBlocks);
+    }, [applyExtractedBlocks]);
 
     const handleCreateNew = useCallback(async () => {
         const { createArticle } = await import('../../services/api/article_editor');
@@ -151,6 +155,7 @@ const ArticleEditorUI: React.FC = () => {
                                     docId={selectedDocId ?? undefined}
                                     articleUuid={articleUuid ?? undefined}
                                     onUploadImage={uploadImage}
+                                    onExtracted={handleExtracted}
                                 />
                             )
                         )}

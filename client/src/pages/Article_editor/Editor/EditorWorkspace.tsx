@@ -23,13 +23,14 @@ interface EditorWorkspaceProps {
     docId?: string;
     articleUuid?: string;
     onUploadImage?: (key: string, file: File) => Promise<string>;
+    onExtracted?: (docId: string, blocks: ArticleBlockData[]) => Promise<void>;
 }
 
 const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     text, statements, blocks,
     isParsing, parseProgress, parseError,
     onAddBlock, onDeleteBlock, onUpdateBlock, onReorderBlocks,
-    onSave, saveStatus, docId, articleUuid, onUploadImage,
+    onSave, saveStatus, docId, articleUuid, onUploadImage, onExtracted,
 }) => {
     const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
     const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
@@ -193,6 +194,8 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                         articleUuid={articleUuid}
                         blocks={blocks}
                         statements={statements}
+                        text={text}
+                        onExtracted={onExtracted}
                     />
                 </div>
             </div>

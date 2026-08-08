@@ -173,7 +173,7 @@ async def update_document_markdown(
         try:
             from services.nlp_grpc_client import get_nlp_grpc_client
             grpc_client = get_nlp_grpc_client()
-            strict = request_body.strict_mode or request_body.annotate
+            strict = request_body.strict_mode
             validation_result = await grpc_client.validate_markdown(
                 markdown=request_body.markdown,
                 strict_mode=strict,
@@ -192,13 +192,19 @@ async def update_document_markdown(
         except Exception as e:
             logger.warning(f"[documents] Валидация markdown не удалась: {e}")
 
+    # Статус 'annotated' присваивается только для валидного markdown:
+    # невалидный текст сохраняется, но не переводит документ в 'Аннотирован'.
+    mark_annotated = request_body.annotate
+    if mark_annotated and (validation_result is None or not validation_result.get("is_valid")):
+        mark_annotated = False
+
     result = await update_markdown(
         document_repo=doc_repo,
         storage=storage,
         doc_id=doc_id,
         markdown=request_body.markdown,
         bucket=settings.S3_BUCKET_NAME,
-        annotate=request_body.annotate,
+        annotate=mark_annotated,
     )
     return UpdateMarkdownResponse(
         success=True,

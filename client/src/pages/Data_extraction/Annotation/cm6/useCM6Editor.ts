@@ -69,6 +69,13 @@ export function useCM6Editor({
   const initialTextRef = useRef(initialText);
   initialTextRef.current = initialText;
 
+  // Ref: последний текст, установленный самим CM6 (ввод пользователя).
+  // React state (initialText) обновляется с debounce (300мс) и на каждый ввод отстаёт.
+  // Если при изменении initialText документ был изменён самим CM6 и ещё не синхронизирован,
+  // полная замена текста НЕ выполняется — иначе введённый символ откатывается,
+  // а весь документ (тысячи символов + аннотации) перерисовывается ("фликер").
+  const lastDocRef = useRef<string | null>(null);
+
   // Очередь аннотаций, пришедших до создания view
   const pendingAnnotationsRef = useRef<Annotation[] | null>(null);
   const pendingValidationRef = useRef<ValidationError[] | null>(null);
@@ -80,6 +87,7 @@ export function useCM6Editor({
       class {
         update(update: import('@codemirror/view').ViewUpdate) {
           if (update.docChanged) {
+            lastDocRef.current = update.state.doc.toString();
             onTextChangeRef.current?.(update.state.doc.toString());
           }
           const sel = update.state.selection.main;
@@ -174,8 +182,13 @@ export function useCM6Editor({
   // Синхронизация текста при изменении пропса снаружи.
   useEffect(() => {
     if (!viewRef.current) return;
-    const currentDoc = viewRef.current.state.doc;
-    if (currentDoc.toString() !== initialText) {
+    const currentDoc = viewRef.current.state.doc.toString();
+    if (lastDocRef.current === currentDoc) {
+      // Документ изменялся самим CM6 (ввод пользователя), а React state (initialText)
+      // ещё не синхронизировался из-за debounce — не перезаписываем введённый текст.
+      return;
+    }
+    if (currentDoc !== initialText) {
       viewRef.current.dispatch({
         changes: { from: 0, to: currentDoc.length, insert: initialText },
         // Маркер: не трогать аннотации при замене текста снаружи
