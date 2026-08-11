@@ -14,10 +14,11 @@
 import logging
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from services.evidence_map_service import DEFAULT_MODEL, get_evidence_map_service
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +52,9 @@ class MatchRequest(BaseModel):
 
 
 @router.post("/article_editor/patterns/generate")
-async def generate_map(doc_id: str, req: GenerateMapRequest):
+async def generate_map(
+    doc_id: str, req: GenerateMapRequest, user: dict = Depends(get_current_user)
+):
     result = await service.generate_map(
         doc_id, model_id=req.model_id, temperature=req.temperature
     )
@@ -61,7 +64,9 @@ async def generate_map(doc_id: str, req: GenerateMapRequest):
 
 
 @router.put("/article_editor/articles/{doc_id}/evidence-map")
-async def save_map(doc_id: str, req: SaveMapRequest):
+async def save_map(
+    doc_id: str, req: SaveMapRequest, user: dict = Depends(get_current_user)
+):
     result = await service.save_map(doc_id, req.map)
     return result
 
@@ -75,7 +80,7 @@ async def get_map(doc_id: str):
 
 
 @router.delete("/article_editor/articles/{doc_id}/evidence-map")
-async def delete_map(doc_id: str):
+async def delete_map(doc_id: str, user: dict = Depends(get_current_user)):
     await service.delete_map(doc_id)
     return {"success": True}
 
@@ -86,7 +91,7 @@ async def list_maps():
 
 
 @router.post("/article_editor/patterns/mine")
-async def mine(req: MineRequest):
+async def mine(req: MineRequest, user: dict = Depends(get_current_user)):
     result = await service.mine(
         doc_ids=req.doc_ids,
         min_support=req.min_support,
@@ -98,7 +103,7 @@ async def mine(req: MineRequest):
 
 
 @router.post("/article_editor/articles/{doc_id}/evidence-map/match")
-async def match(doc_id: str, req: MatchRequest):
+async def match(doc_id: str, req: MatchRequest, user: dict = Depends(get_current_user)):
     result = await service.match(
         doc_id,
         patterns=req.patterns,

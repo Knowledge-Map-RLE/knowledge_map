@@ -54,7 +54,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onSuccess
                 login: formData.username,
                 password: formData.password,
                 captcha: formData.captcha,
-            });
+            }, true);
 
             if (!loginResult.success || !loginResult.user) {
                 setError(loginResult.message || 'Ошибка автоматического входа');

@@ -1,4 +1,5 @@
 import type { EditMode, LinkCreationStep } from '../types';
+import { EditMode as EditModeValue } from '../types';
 import styles from './ModeIndicator.module.css';
 
 interface ModeIndicatorProps {
@@ -12,18 +13,18 @@ export default function ModeIndicator({
 }: ModeIndicatorProps) {
   const getModeText = () => {
     switch (currentMode) {
-      case 'SELECT':
+      case EditModeValue.SELECT:
         return 'Выделение';
-      case 'CREATE_BLOCKS':
+      case EditModeValue.CREATE_BLOCKS:
         return 'Создание блоков (Q)';
-      case 'CREATE_LINKS':
-        if (linkCreationStep === 'selecting_source') {
+      case EditModeValue.CREATE_LINKS:
+        if (linkCreationStep === 'select_source') {
           return 'Выберите первый блок (W)';
-        } else if (linkCreationStep === 'selecting_target') {
+        } else if (linkCreationStep === 'select_target') {
           return 'Выберите второй блок (W)';
         }
         return 'Создание связей (W)';
-      case 'DELETE':
+      case EditModeValue.DELETE:
         return 'Удаление (E)';
       default:
         return 'Неизвестный режим';
@@ -32,13 +33,13 @@ export default function ModeIndicator({
 
   const getModeColor = () => {
     switch (currentMode) {
-      case 'SELECT':
+      case EditModeValue.SELECT:
         return '#6b7280';
-      case 'CREATE_BLOCKS':
+      case EditModeValue.CREATE_BLOCKS:
         return '#10b981';
-      case 'CREATE_LINKS':
+      case EditModeValue.CREATE_LINKS:
         return '#3b82f6';
-      case 'DELETE':
+      case EditModeValue.DELETE:
         return '#ef4444';
       default:
         return '#6b7280';
@@ -55,7 +56,7 @@ export default function ModeIndicator({
         {getModeText()}
       </div>
       
-      {currentMode !== 'SELECT' && (
+      {currentMode !== EditModeValue.SELECT && (
         <div className={styles.hint}>
           Отпустите клавишу для возврата к выделению
         </div>

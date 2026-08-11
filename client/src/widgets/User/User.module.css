@@ -24,10 +24,16 @@
 }
 
 .avatar {
-    @apply bg-blue-200 rounded-full;
+    @apply bg-blue-200 rounded-full overflow-hidden;
     height: 100%;
     aspect-ratio: 1;
     flex-shrink: 0;
+}
+
+.avatar_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .name, .info {
@@ -95,4 +101,71 @@
 
 .logout_button:hover {
     background: #fed7d7;
+}
+
+.menu_button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.menu_button:hover {
+    background: #f0f0f0;
+}
+
+.menu_badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.bell_button {
+    position: relative;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+}
+
+.bell_button:hover {
+    opacity: 0.8;
+}
+
+.bell_badge {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #fff;
 }

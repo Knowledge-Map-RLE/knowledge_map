@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  checkDataAvailability,
-  saveDocumentForTests,
+import type {
   DataAvailabilityStatus,
   SaveForTestsRequest,
   SaveForTestsResponse,
+} from '../../services/api';
+import {
+  checkDataAvailability,
+  saveDocumentForTests,
 } from '../../services/api';
 import './SaveForTestsDialog.css';
 

@@ -23,7 +23,7 @@ interface ArticlesRendererProps {
   onBlockPointerDown: (blockId: string, event: any) => void;
   onBlockMouseEnter: (blockId: string) => void;
   onBlockMouseLeave: (blockId: string) => void;
-  onArrowClick: (blockId: string, arrowPosition: 'left' | 'right') => void;
+  onArrowClick: (sourceBlock: BlockData, targetLevel: number) => void;
   onArrowHover: (blockId: string, arrowPosition: 'left' | 'right' | null) => void;
   onBlockRightClick: (blockId: string, event: any) => void;
   onSublevelClick: (sublevelId: number, x: number, y: number) => void;

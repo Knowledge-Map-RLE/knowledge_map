@@ -9,6 +9,7 @@ import {
 } from '../../../services/api/agent';
 import { getAgentArticleText, extractBlocksStream } from '../../../services/api/article_editor';
 import { statementsToResolvedText } from './blockConverter';
+import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
 import type { KnowledgeStatement, ArticleBlockData } from '../model';
 import styles from '../Article_editor.module.css';
 
@@ -29,6 +30,7 @@ interface AgentChatProps {
 }
 
 const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, text: editorText, onExtracted }) => {
+    const requireAuth = useRequireAuth();
     const [messages, setMessages] = useState<ChatEntry[]>([]);
     const [input, setInput] = useState('');
     const [models, setModels] = useState<AgentModel[]>([]);
@@ -101,6 +103,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     }, [articleUuid, blocks, statements]);
 
     const handleExtract = useCallback(async () => {
+        if (!requireAuth()) return;
         if (!articleUuid) {
             setExtractError('\u041D\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439 \u0441\u0442\u0430\u0442\u044C\u0438');
             return;
@@ -150,7 +153,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
             setExtractProgress(null);
             extractControllerRef.current = null;
         }
-    }, [articleUuid, extracting, sending, loadArticleText, editorText, model, onExtracted]);
+    }, [articleUuid, extracting, sending, loadArticleText, editorText, model, onExtracted, requireAuth]);
 
     const handleStopExtract = useCallback(() => {
         extractControllerRef.current?.abort();
@@ -199,6 +202,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                 : '';
 
     const handleSend = useCallback(async () => {
+        if (!requireAuth()) return;
         const text = input.trim();
         if (!text || sending || extracting) return;
 
@@ -271,7 +275,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                 setSending(false);
             },
         });
-    }, [input, sending, messages, model, attachEnabled, extracting]);
+    }, [input, sending, messages, model, attachEnabled, extracting, requireAuth]);
 
     const handleStop = useCallback(() => {
         controllerRef.current?.abort();

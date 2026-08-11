@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback, forwardRef, memo } from 'react';
 import { Transaction } from '@codemirror/state';
-import { Annotation, AnnotationRelation } from '../../../services/api';
+import type { Annotation, AnnotationRelation } from '../../../services/api';
 import { useCM6Editor } from './cm6/useCM6Editor';
 import type { ValidationError } from '../../../widgets/MarkdownEditor';
 import './TextAnnotator.css';

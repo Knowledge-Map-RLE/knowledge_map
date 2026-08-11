@@ -1,5 +1,6 @@
 import { Graphics, Container } from 'pixi.js';
 import { extend } from '@pixi/react';
+import { PixiText } from '../../../shared/pixi/PixiText';
 import { useCallback, useState, useEffect } from 'react';
 import { Sublevel } from './Sublevel';
 import type { BlockData, SublevelData, LevelData as LevelDataType } from '../types';
@@ -68,7 +69,7 @@ export function Level({
         }}
         zIndex={1}
       />
-      <pixiText
+      <PixiText
         text={levelName}
         x={(min_x ?? 0) + 10}
         y={(min_y ?? 0) + 10}

@@ -24,7 +24,7 @@ from application.annotations.get_annotations import get_annotations
 from application.annotations.update_annotation import update_annotation
 from application.annotations.delete_annotation import delete_annotation, delete_all_annotations
 from application.annotations.batch_update_offsets import batch_update_offsets
-from web.dependencies import get_annotation_repository, get_document_repository
+from web.dependencies import get_annotation_repository, get_document_repository, get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +53,7 @@ async def create_annotation_route(
     request: CreateAnnotationRequest,
     ann_repo=Depends(get_annotation_repository),
     doc_repo=Depends(get_document_repository),
+    _user: dict = Depends(get_current_user),
 ):
     ann = create_annotation(
         annotation_repo=ann_repo,
@@ -109,6 +110,7 @@ async def update_annotation_route(
     annotation_id: str,
     request: UpdateAnnotationRequest,
     ann_repo=Depends(get_annotation_repository),
+    _user: dict = Depends(get_current_user),
 ):
     ann = update_annotation(
         repo=ann_repo,
@@ -127,6 +129,7 @@ async def update_annotation_route(
 async def delete_annotation_route(
     annotation_id: str,
     ann_repo=Depends(get_annotation_repository),
+    _user: dict = Depends(get_current_user),
 ):
     delete_annotation(repo=ann_repo, annotation_id=annotation_id)
     return {"success": True, "message": f"Annotation {annotation_id} deleted"}
@@ -137,6 +140,7 @@ async def delete_all_annotations_route(
     doc_id: str,
     ann_repo=Depends(get_annotation_repository),
     doc_repo=Depends(get_document_repository),
+    _user: dict = Depends(get_current_user),
 ):
     count = delete_all_annotations(
         annotation_repo=ann_repo, document_repo=doc_repo, doc_id=doc_id
@@ -148,6 +152,7 @@ async def delete_all_annotations_route(
 async def batch_update_offsets_route(
     request: BatchUpdateOffsetsRequest,
     ann_repo=Depends(get_annotation_repository),
+    _user: dict = Depends(get_current_user),
 ):
     updates = [u.model_dump() for u in request.updates]
     updated_count, errors = batch_update_offsets(repo=ann_repo, updates=updates)

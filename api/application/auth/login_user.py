@@ -8,6 +8,7 @@ Forbidden imports: fastapi, neomodel, grpc, infrastructure, adapters, web
 """
 from __future__ import annotations
 
+import json
 from typing import Dict, Any
 
 from domain.exceptions import AuthenticationFailed, ExternalServiceError
@@ -21,6 +22,7 @@ def login_user(
     captcha: str,
     device_info: str = "",
     ip_address: str = "",
+    remember_me: bool = False,
 ) -> Dict[str, Any]:
     """
     Аутентифицирует пользователя.
@@ -29,6 +31,14 @@ def login_user(
         AuthenticationFailed: неверные учётные данные
         ExternalServiceError: ошибка связи с Auth-сервисом
     """
+    if remember_me:
+        try:
+            payload = json.loads(device_info) if device_info else {}
+        except (ValueError, TypeError):
+            payload = {}
+        payload["remember_me"] = True
+        device_info = json.dumps(payload)
+
     result = gateway.login(
         login=login,
         password=password,

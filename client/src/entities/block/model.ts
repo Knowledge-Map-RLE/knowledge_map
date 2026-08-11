@@ -1,3 +1,5 @@
+import type { Link } from '../link';
+
 export interface Block {
     id: string;
     title: string;
@@ -16,6 +18,10 @@ export interface Level {
     sublevel_ids: number[];
     name: string;
     color: string;
+    min_x?: number;
+    max_x?: number;
+    min_y?: number;
+    max_y?: number;
 }
 
 export interface Sublevel {
@@ -23,6 +29,10 @@ export interface Sublevel {
     level_id: number;
     block_ids: string[];
     color: string;
+    min_x?: number;
+    max_x?: number;
+    min_y?: number;
+    max_y?: number;
 }
 
 export interface ApiResponse {

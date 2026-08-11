@@ -1,28 +1,15 @@
-import type { AnalyzePatternsResponse, PendingEdgesResponse, ReviewEdgeRequest, ExtractActionsResponse, ConfirmedActionGraphResponse, AutoReviewResponse, DataAvailabilityStatus, SaveForTestsRequest, SaveForTestsResponse } from '../entities/annotation';
+import type { AnalyzePatternsResponse, PendingEdgesResponse, ReviewEdgeRequest, ExtractActionsResponse, ConfirmedActionGraphResponse, AutoReviewResponse, DataAvailabilityStatus, SaveForTestsRequest, SaveForTestsResponse } from '../../entities/document';
 import { fetchJson } from './http';
 
 export async function checkDataAvailability(docId: string): Promise<DataAvailabilityStatus> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/data-availability`);
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`HTTP ${res.status}: ${errorText}`);
-  }
-  return res.json();
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/data-availability`);
 }
 
 export async function saveDocumentForTests(docId: string, request: SaveForTestsRequest): Promise<SaveForTestsResponse> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/save-for-tests`, {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/save-for-tests`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request)
   });
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`HTTP ${res.status}: ${errorText}`);
-  }
-  return res.json();
 }
 
 export async function analyzeDocumentPatterns(

@@ -1,8 +1,9 @@
 import logging
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import Response
 
 from services.article_editor_service import ArticleEditorService
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,11 @@ service = ArticleEditorService()
 
 
 @router.post("/article_editor/images")
-async def upload_image(doc_id: str = Form(...), file: UploadFile = File(...)):
+async def upload_image(
+    doc_id: str = Form(...),
+    file: UploadFile = File(...),
+    user: dict = Depends(get_current_user),
+):
     """Загружает изображение статьи в S3, возвращает object_key."""
     data = await file.read()
     if not data:
@@ -40,7 +45,7 @@ async def get_image(object_key: str):
 
 
 @router.delete("/article_editor/images/{object_key:path}")
-async def delete_image(object_key: str):
+async def delete_image(object_key: str, user: dict = Depends(get_current_user)):
     """Удаляет изображение из S3."""
     ok = await service.delete_image(object_key)
     if not ok:

@@ -4,6 +4,7 @@ import AnnotationPanel from './AnnotationPanel';
 import RelationsPanel from './RelationsPanel';
 import EditorTabsWithValidation from './EditorTabsWithValidation';
 import ErrorBoundary from '../../../shared/ui/ErrorBoundary';
+import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
 import SaveForTestsDialog from '../SaveForTestsDialog';
 import { useAnnotationsWS } from './hooks/useAnnotationsWS';
 import { useAnnotationOffsets } from './hooks/useAnnotationOffsets';
@@ -46,6 +47,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
   onUpdateDocumentStatus,
   onNlpProcessingChange,
 }) => {
+  const requireAuth = useRequireAuth();
+
   // UI State
   const [mainTab, setMainTab] = useState<'text' | 'annotator'>('text');
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -310,6 +313,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   // Type toggle handler
   const handleTypeToggle = useCallback(async (type: string) => {
+    if (!requireAuth()) return;
+
     // Приоритет 1: есть pending text selection из редактора (state или ref)
     const selection = pendingTextSelection ?? pendingTextSelectionRef.current;
     if (selection && selection.text) {
@@ -368,7 +373,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
     // Нет валидного выделения — сообщаем пользователю
     console.warn('handleTypeToggle: нет выделения текста или выбранной аннотации');
-  }, [pendingTextSelection, selectedAnnotationGroup, annotations, createNewAnnotation, removeAnnotation, loadAnnotations, selectedColor]);
+  }, [pendingTextSelection, selectedAnnotationGroup, annotations, createNewAnnotation, removeAnnotation, loadAnnotations, selectedColor, requireAuth]);
 
   // Annotation selection handler
   const handleAnnotationSelect = useCallback((annotation: Annotation | Annotation[]) => {
@@ -392,6 +397,8 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   // Annotation delete handler
   const handleAnnotationDelete = useCallback(async (annotationId: string) => {
+    if (!requireAuth()) return;
+
     try {
       await removeAnnotation(annotationId);
       const newGroup = selectedAnnotationGroup.filter((ann) => ann.uid !== annotationId);
@@ -406,10 +413,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     } catch (error: any) {
       console.error('Не удалось удалить аннотацию:', error?.message || error);
     }
-  }, [removeAnnotation, selectedAnnotationGroup]);
+  }, [removeAnnotation, selectedAnnotationGroup, requireAuth]);
 
   // Annotation edit handler
   const handleAnnotationEdit = useCallback(async (annotation: Annotation) => {
+    if (!requireAuth()) return;
     const newType = prompt('Введите новый тип аннотации:', annotation.annotation_type);
     if (!newType) return;
 
@@ -418,10 +426,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     } catch (error: any) {
       console.error('Не удалось обновить аннотацию:', error?.message || error);
     }
-  }, [editAnnotation]);
+  }, [editAnnotation, requireAuth]);
 
   // Relation create handler
   const handleRelationCreate = useCallback(async (sourceId: string, targetId: string) => {
+    if (!requireAuth()) return;
     const relationType = prompt('Введите тип связи:');
     if (!relationType) return;
 
@@ -431,16 +440,17 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     } catch (error: any) {
       handleRelationError(error);
     }
-  }, [createRelation]);
+  }, [createRelation, requireAuth]);
 
   // Relation delete handler
   const handleRelationDelete = useCallback(async (sourceId: string, targetId: string) => {
+    if (!requireAuth()) return;
     try {
       await removeRelation(sourceId, targetId);
     } catch (error: any) {
       console.error('Не удалось удалить связь:', error?.message || error);
     }
-  }, [removeRelation]);
+  }, [removeRelation, requireAuth]);
 
   // Relation click handler
   const handleRelationClick = useCallback((relation: AnnotationRelation) => {
@@ -449,6 +459,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   // Relation edit handler
   const handleRelationEdit = useCallback(async (relation: AnnotationRelation) => {
+    if (!requireAuth()) return;
     const newType = prompt('Введите новый тип связи:', relation.relation_type);
     if (!newType || newType === relation.relation_type) return;
 
@@ -458,11 +469,12 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     } catch (error: any) {
       console.error('Не удалось изменить тип связи:', error?.message || error);
     }
-  }, [editRelation]);
+  }, [editRelation, requireAuth]);
 
   // Multi-level auto-annotate handler
   const handleMultiLevelAnnotate = useCallback(async () => {
     if (isAutoAnnotating) return;
+    if (!requireAuth()) return;
 
     const confirmed = confirm(
       'Запустить многоуровневый NLP-анализ с голосованием?\n\n' +
@@ -563,10 +575,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       setAnalysisProgress(null);
       if (onNlpProcessingChange) onNlpProcessingChange(false);
     }
-  }, [isAutoAnnotating, docId, loadAnnotations, loadRelations, onNlpProcessingChange, onUpdateDocumentStatus]);
+  }, [isAutoAnnotating, docId, loadAnnotations, loadRelations, onNlpProcessingChange, onUpdateDocumentStatus, requireAuth]);
 
   // Save handler
   const handleSave = useCallback(async () => {
+    if (!requireAuth()) return;
     try {
       savedTextareaScrollTop.current = textareaRef.current?.scrollTop || 0;
       savedAnnotatorScrollTop.current = textAnnotatorRef.current?.scrollTop || 0;
@@ -590,10 +603,11 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
     } catch (error) {
       console.error('Ошибка сохранения:', error);
     }
-  }, [annotations, saveAnnotationOffsets, loadAnnotations, onSave]);
+  }, [annotations, saveAnnotationOffsets, loadAnnotations, onSave, requireAuth]);
 
   // Delete all annotations handler
   const handleDeleteAllAnnotations = useCallback(async () => {
+    if (!requireAuth()) return;
     const confirmed = confirm(
       'Вы уверены, что хотите удалить все аннотации этого документа?\n\n' +
       'Это действие нельзя отменить!'
@@ -621,7 +635,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
         error?.message || error
       );
     }
-  }, [docId, loadAnnotations, loadRelations]);
+  }, [docId, loadAnnotations, loadRelations, requireAuth]);
 
   // Export CSV handler
   const handleExportCSV = useCallback(() => {
@@ -707,6 +721,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
 
   // Import CSV handler
   const handleImportCSV = useCallback(async (file: File) => {
+    if (!requireAuth()) return;
     if (isImportingRef.current) return;
     isImportingRef.current = true;
     try {
@@ -770,7 +785,7 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
       isImportingRef.current = false;
       setImportProgress(null);
     }
-  }, [docId, loadAnnotations, loadRelations]);
+  }, [docId, loadAnnotations, loadRelations, requireAuth]);
 
   // Cursor position handler (called from TextAnnotator on mouseup/keyup)
   const handleCursorMove = useCallback((pos: number) => {

@@ -1,7 +1,10 @@
-import { useState, useCallback, useRef, MutableRefObject } from 'react';
-import {
+import { useState, useCallback, useRef } from 'react';
+import type { MutableRefObject } from 'react';
+import type {
   Annotation,
   AnnotationRelation,
+} from '../../../../services/api';
+import {
   getAnnotationRelations,
   createAnnotationRelation,
   deleteAnnotationRelation,

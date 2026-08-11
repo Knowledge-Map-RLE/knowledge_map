@@ -3,11 +3,12 @@ import re
 import uuid
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from grpc import aio
 from pydantic import BaseModel
 
 from utils.generated import nlp_pb2, nlp_pb2_grpc
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -171,7 +172,7 @@ async def _split_into_blocks_inner(text: str) -> list[BlockItem]:
 
 
 @router.post("/article_editor/split_into_blocks", response_model=SplitBlocksResponse)
-async def split_into_blocks(req: SplitBlocksRequest):
+async def split_into_blocks(req: SplitBlocksRequest, user: dict = Depends(get_current_user)):
     try:
         blocks = await _split_into_blocks_inner(req.text)
         return SplitBlocksResponse(success=True, blocks=blocks)

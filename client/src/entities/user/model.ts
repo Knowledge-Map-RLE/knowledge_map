@@ -21,6 +21,7 @@ export interface LoginRequest {
     captcha: string;
     device_info?: string;
     ip_address?: string;
+    remember_me?: boolean;
 }
 
 export interface RegisterRequest {

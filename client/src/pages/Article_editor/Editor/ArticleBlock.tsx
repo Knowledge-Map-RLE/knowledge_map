@@ -1,5 +1,6 @@
 import { Graphics, Text, Container } from 'pixi.js';
 import { extend } from '@pixi/react';
+import { PixiText } from '../../../shared/pixi/PixiText';
 import { useCallback, useEffect, useRef, memo } from 'react';
 import { getBlockTypeDef } from './blockTypes';
 import { OUTCOME_COLORS } from './articleMapGraph';
@@ -74,7 +75,7 @@ export const ArticleBlock = memo(function ArticleBlock({
             onPointerLeave={() => onHover(null)}
         >
             <pixiGraphics draw={drawBg} />
-            <pixiText
+            <PixiText
                 text={typeDef?.name ?? `T${blockType}`}
                 x={0}
                 y={-BLOCK_HEIGHT / 2 + 12}
@@ -82,7 +83,7 @@ export const ArticleBlock = memo(function ArticleBlock({
                 resolution={DPR}
                 style={{ fontSize: 9, fill: typeColor, fontWeight: '600' }}
             />
-            <pixiText
+            <PixiText
                 text={label.slice(0, 44)}
                 x={0}
                 y={-BLOCK_HEIGHT / 2 + 30}
@@ -91,7 +92,7 @@ export const ArticleBlock = memo(function ArticleBlock({
                 style={{ fontSize: 10, fill: 0x111827, fontWeight: '500' }}
             />
             {outcome !== 'neutral' && outcomeLabel ? (
-                <pixiText
+                <PixiText
                     text={outcomeLabel.slice(0, 40)}
                     x={0}
                     y={BLOCK_HEIGHT / 2 - 10}
@@ -100,7 +101,7 @@ export const ArticleBlock = memo(function ArticleBlock({
                     style={{ fontSize: 9, fill: outcomeColor, fontStyle: 'italic' }}
                 />
             ) : null}
-            <pixiText
+            <PixiText
                 text={shortId(id)}
                 x={BLOCK_WIDTH / 2 - 4}
                 y={BLOCK_HEIGHT / 2 - 4}

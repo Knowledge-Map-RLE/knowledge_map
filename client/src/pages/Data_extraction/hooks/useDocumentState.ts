@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { getDocumentAssets, saveMarkdown } from '../../../services/api';
+import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
 import type { PDFDocument, SaveStatus } from '../model';
 
 interface UseDocumentStateResult {
@@ -27,6 +28,7 @@ export function useDocumentState(
 
     const saveTimeoutRef = useRef<number | null>(null);
     const selectTokenRef = useRef<number>(0);
+    const requireAuth = useRequireAuth();
 
     const selectDocument = useCallback(async (document: PDFDocument | null) => {
         if (!document) {
@@ -89,6 +91,7 @@ export function useDocumentState(
 
     const handleManualSave = useCallback(async () => {
         if (!selectedDocument) return;
+        if (!requireAuth()) return;
 
         try {
             setSaveStatus('saving');
@@ -115,7 +118,7 @@ export function useDocumentState(
         } finally {
             setIsSaving(false);
         }
-    }, [selectedDocument, sourceMarkdown, updateDocumentStatus]);
+    }, [selectedDocument, sourceMarkdown, updateDocumentStatus, requireAuth]);
 
     useEffect(() => {
         return () => {

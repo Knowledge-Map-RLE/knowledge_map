@@ -7,7 +7,7 @@ import { ValidationErrorAlert, type ValidationResponse, type ValidationError } f
 import { MarkdownValidationRules } from '../../../widgets/MarkdownEditor';
 import { useMarkdownValidation } from '../../../widgets/MarkdownEditor';
 import AnnotationFilters from './AnnotationFilters';
-import { Annotation, AnnotationRelation } from '../../../services/api';
+import type { Annotation, AnnotationRelation } from '../../../services/api';
 import styles from './EditorTabsWithValidation.module.css';
 
 export interface FilterProps {
@@ -127,7 +127,7 @@ const EditorTabsWithValidation = React.forwardRef<
     const [showValidationRules, setShowValidationRules] = useState(false);
     const [showValidationAlert, setShowValidationAlert] = useState(true);
     const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
-    const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const validationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     // Флаг: пользователь сам вводил текст через onTextChange
     const userEditedRef = useRef(false);
 

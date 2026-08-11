@@ -5,7 +5,7 @@ import queue
 import threading
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
@@ -14,6 +14,7 @@ from services.llm_triplet_extraction_service import (
     LLMTripletExtractionService,
     DEFAULT_MODEL,
 )
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +36,9 @@ def _event(data: Dict[str, Any]) -> str:
 
 
 @router.post("/article_editor/articles/{doc_id}/llm-extract")
-async def llm_extract_blocks(doc_id: str, req: LlmExtractRequest):
+async def llm_extract_blocks(
+    doc_id: str, req: LlmExtractRequest, user: dict = Depends(get_current_user)
+):
     """Извлекает структурные блоки из текста статьи через LLM (SSE-поток).
 
     События:

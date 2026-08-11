@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MdArrowBack } from 'react-icons/md';
 import s from './Modal.module.css';
 
 interface RecoveryModalProps {
@@ -99,7 +100,7 @@ export const RecoveryModal: React.FC<RecoveryModalProps> = ({ onClose, onSwitchT
                             onClick={onSwitchToLogin}
                             className={s.link_button}
                         >
-                            ← Вернуться к входу
+                            <MdArrowBack /> Вернуться к входу
                         </button>
                     </div>
                 </form>

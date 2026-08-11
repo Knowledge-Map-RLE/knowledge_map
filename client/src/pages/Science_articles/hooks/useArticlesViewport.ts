@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { ViewportRef } from '../../Knowledge_map/Viewport';
+import type { ViewportRef } from '../../../widgets/KnowledgeMap';
 
 export function useArticlesViewport(
   viewportRef: React.RefObject<ViewportRef>,

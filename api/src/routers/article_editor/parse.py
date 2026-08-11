@@ -1,12 +1,13 @@
 import asyncio
 import json
 import logging
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from services.knowledge_language_grpc_client import get_kl_grpc_client
 from services.article_editor_service import ArticleEditorService
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class ParseRequest(BaseModel):
 
 
 @router.post("/article_editor/parse")
-async def parse_text(req: ParseRequest):
+async def parse_text(req: ParseRequest, user: dict = Depends(get_current_user)):
     client = get_kl_grpc_client()
     result = await client.process_text(text=req.text, doc_id=req.doc_id, timeout=600)
     if not result.get("success"):
@@ -44,7 +45,7 @@ async def parse_text(req: ParseRequest):
 
 
 @router.post("/article_editor/parse_stream")
-async def parse_text_stream(req: ParseRequest):
+async def parse_text_stream(req: ParseRequest, user: dict = Depends(get_current_user)):
     client = get_kl_grpc_client()
 
     async def event_generator():

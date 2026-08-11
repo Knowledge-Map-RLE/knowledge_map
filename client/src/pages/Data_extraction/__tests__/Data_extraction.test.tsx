@@ -1,394 +1,184 @@
-/**
- * Тесты для компонента Data_extraction.
- */
-
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
+import type { Mock } from 'vitest';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { AuthProvider } from '../../../entities/auth';
+import { ToastProvider } from '../../../shared/ui/Toast';
 import Data_extraction from '../index';
 
-// Мокаем fetch
-global.fetch = jest.fn();
-
-// Мокаем window.URL.createObjectURL
-Object.defineProperty(window, 'URL', {
-  value: {
-    createObjectURL: jest.fn(() => 'mocked-url'),
-    revokeObjectURL: jest.fn(),
-  },
+const okJson = (body: unknown) => ({
+    ok: true,
+    status: 200,
+    clone: () => okJson(body),
+    text: async () => JSON.stringify(body),
+    json: async () => body,
 });
 
+const listResponse = (documents: unknown[]) => ({
+    success: true,
+    documents,
+    total_count: documents.length,
+});
+
+const renderPage = async () => {
+    await act(async () => {
+        render(
+            <MemoryRouter>
+                <AuthProvider>
+                    <ToastProvider>
+                        <Data_extraction />
+                    </ToastProvider>
+                </AuthProvider>
+            </MemoryRouter>,
+        );
+    });
+};
+
+const docWithFiles = (uid: string, title: string, hasMarkdown: boolean, pdf = `/files/${uid}.pdf`) => ({
+    doc_id: uid,
+    files: { pdf },
+    has_markdown: hasMarkdown,
+    title,
+});
+
+/** Мок XMLHttpRequest: по умолчанию завершается ошибкой сети. */
+class MockXHR {
+    upload = { addEventListener: () => {} };
+    status = 0;
+    statusText = '';
+    responseText = '';
+    private handlers: Record<string, Array<(event?: Event) => void>> = {};
+
+    addEventListener(type: string, handler: (event?: Event) => void) {
+        (this.handlers[type] ||= []).push(handler);
+    }
+
+    open() {}
+
+    send() {
+        queueMicrotask(() => {
+            (this.handlers['error'] || []).forEach((handler) => handler(new Event('error')));
+        });
+    }
+}
+
 describe('Data_extraction Component', () => {
-  beforeEach(() => {
-    (fetch as jest.Mock).mockClear();
-  });
-
-  test('рендерится корректно', () => {
-    render(<Data_extraction />);
-    
-    expect(screen.getByText('Загрузка PDF документов')).toBeInTheDocument();
-    expect(screen.getByText('Просмотр и аннотации')).toBeInTheDocument();
-    expect(screen.getByText('Перетащите PDF файл сюда или нажмите для выбора')).toBeInTheDocument();
-  });
-
-  test('отображает область загрузки файлов', () => {
-    render(<Data_extraction />);
-    
-    const uploadArea = screen.getByText('Перетащите PDF файл сюда или нажмите для выбора');
-    expect(uploadArea).toBeInTheDocument();
-    
-    const fileInput = document.querySelector('input[type="file"]');
-    expect(fileInput).toBeInTheDocument();
-    expect(fileInput).toHaveAttribute('accept', '.pdf');
-  });
-
-  test('обрабатывает выбор файла', async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        success: true,
-        document_id: 'test-doc-id',
-        md5_hash: 'test-hash',
-        already_exists: false
-      })
+    beforeEach(() => {
+        const fetchMock = vi.fn();
+        fetchMock.mockResolvedValue(okJson(listResponse([])));
+        vi.stubGlobal('fetch', fetchMock);
+        vi.stubGlobal('XMLHttpRequest', MockXHR);
     });
 
-    render(<Data_extraction />);
-    
-    const file = new File(['test pdf content'], 'test.pdf', { type: 'application/pdf' });
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    
-    fireEvent.change(fileInput, { target: { files: [file] } });
-    
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith('/api/pdf/upload', expect.objectContaining({
-        method: 'POST',
-        body: expect.any(FormData)
-      }));
-    });
-  });
-
-  test('показывает ошибку для не-PDF файлов', async () => {
-    render(<Data_extraction />);
-    
-    const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    
-    fireEvent.change(fileInput, { target: { files: [file] } });
-    
-    await waitFor(() => {
-      expect(screen.getByText('Пожалуйста, выберите PDF файл')).toBeInTheDocument();
-    });
-  });
-
-  test('обрабатывает drag and drop', async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        success: true,
-        document_id: 'test-doc-id',
-        md5_hash: 'test-hash',
-        already_exists: false
-      })
+    afterEach(() => {
+        vi.unstubAllGlobals();
     });
 
-    render(<Data_extraction />);
-    
-    const uploadArea = screen.getByText('Перетащите PDF файл сюда или нажмите для выбора').closest('div');
-    const file = new File(['test pdf content'], 'test.pdf', { type: 'application/pdf' });
-    
-    fireEvent.dragOver(uploadArea!, {
-      dataTransfer: {
-        files: [file]
-      }
-    });
-    
-    fireEvent.drop(uploadArea!, {
-      dataTransfer: {
-        files: [file]
-      }
-    });
-    
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith('/api/pdf/upload', expect.objectContaining({
-        method: 'POST',
-        body: expect.any(FormData)
-      }));
-    });
-  });
+    test('рендерится корректно', async () => {
+        await renderPage();
 
-  test('загружает список документов', async () => {
-    const mockDocuments = [
-      {
-        uid: 'doc1',
-        original_filename: 'test1.pdf',
-        md5_hash: 'hash1',
-        upload_date: '2023-12-01T00:00:00Z',
-        processing_status: 'uploaded',
-        is_processed: false
-      },
-      {
-        uid: 'doc2',
-        original_filename: 'test2.pdf',
-        md5_hash: 'hash2',
-        upload_date: '2023-12-02T00:00:00Z',
-        processing_status: 'annotated',
-        is_processed: true
-      }
-    ];
-
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockDocuments
+        expect(screen.getByText('КАРТА ЗНАНИЙ')).toBeInTheDocument();
+        expect(screen.getByText('Загруженные документы')).toBeInTheDocument();
+        expect(screen.getByText('Перетащите PDF или нажмите для выбора')).toBeInTheDocument();
+        expect(screen.getByText('Аннотатор')).toBeInTheDocument();
+        expect(screen.getByText('Исходный PDF')).toBeInTheDocument();
+        expect(screen.getByText('Паттерны')).toBeInTheDocument();
     });
 
-    render(<Data_extraction />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('test1.pdf')).toBeInTheDocument();
-      expect(screen.getByText('test2.pdf')).toBeInTheDocument();
-    });
-  });
+    test('отображает область загрузки файлов', async () => {
+        await renderPage();
 
-  test('показывает статус документов', async () => {
-    const mockDocuments = [
-      {
-        uid: 'doc1',
-        original_filename: 'test1.pdf',
-        md5_hash: 'hash1',
-        upload_date: '2023-12-01T00:00:00Z',
-        processing_status: 'uploaded',
-        is_processed: false
-      }
-    ];
-
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockDocuments
+        const fileInput = document.querySelector('input[type="file"]');
+        expect(fileInput).toBeInTheDocument();
+        expect(fileInput).toHaveAttribute('accept', '.pdf');
     });
 
-    render(<Data_extraction />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Загружен')).toBeInTheDocument();
-    });
-  });
+    test('загружает список документов', async () => {
+        (fetch as Mock).mockResolvedValueOnce(
+            okJson(listResponse([
+                docWithFiles('doc1', 'Test Paper', false),
+                docWithFiles('doc2', 'Second Paper', true),
+            ])),
+        );
 
-  test('позволяет выбрать документ', async () => {
-    const mockDocuments = [
-      {
-        uid: 'doc1',
-        original_filename: 'test1.pdf',
-        md5_hash: 'hash1',
-        upload_date: '2023-12-01T00:00:00Z',
-        processing_status: 'uploaded',
-        is_processed: false
-      }
-    ];
+        await renderPage();
 
-    const mockAnnotations = [
-      {
-        uid: 'ann1',
-        annotation_type: 'title',
-        content: 'Test Title',
-        confidence: 0.95,
-        page_number: 1
-      }
-    ];
-
-    (fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockDocuments
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockAnnotations
-      });
-
-    render(<Data_extraction />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('test1.pdf')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('Test Paper')).toBeInTheDocument();
+            expect(screen.getByText('Second Paper')).toBeInTheDocument();
+        });
     });
 
-    const documentItem = screen.getByText('test1.pdf').closest('div');
-    fireEvent.click(documentItem!);
-    
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith('/api/pdf/document/doc1/annotations');
-    });
-  });
+    test('показывает статус документов', async () => {
+        (fetch as Mock).mockResolvedValueOnce(
+            okJson(listResponse([
+                docWithFiles('doc1', 'Annotated Doc', true),
+                docWithFiles('doc2', 'Ready Doc', false),
+            ])),
+        );
 
-  test('запускает аннотацию документа', async () => {
-    const mockDocuments = [
-      {
-        uid: 'doc1',
-        original_filename: 'test1.pdf',
-        md5_hash: 'hash1',
-        upload_date: '2023-12-01T00:00:00Z',
-        processing_status: 'uploaded',
-        is_processed: false
-      }
-    ];
+        await renderPage();
 
-    (fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockDocuments
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, message: 'Аннотация запущена' })
-      });
-
-    render(<Data_extraction />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('test1.pdf')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('Аннотирован')).toBeInTheDocument();
+            expect(screen.getByText('Готов к аннотированию')).toBeInTheDocument();
+        });
     });
 
-    const annotateButton = screen.getByText('Аннотировать');
-    fireEvent.click(annotateButton);
-    
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith('/api/pdf/document/doc1/annotate', expect.objectContaining({
-        method: 'POST',
-        body: expect.any(FormData)
-      }));
-    });
-  });
+    test('позволяет выбрать документ и показывает PDF', async () => {
+        (fetch as Mock)
+            .mockResolvedValueOnce(
+                okJson(listResponse([docWithFiles('doc1', 'Test Paper', true)])),
+            )
+            .mockResolvedValueOnce(okJson({ pdf_url: '/files/doc1.pdf' }));
 
-  test('показывает PDF в iframe', async () => {
-    const mockDocuments = [
-      {
-        uid: 'doc1',
-        original_filename: 'test1.pdf',
-        md5_hash: 'hash1',
-        upload_date: '2023-12-01T00:00:00Z',
-        processing_status: 'uploaded',
-        is_processed: false
-      }
-    ];
+        await renderPage();
 
-    (fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockDocuments
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => []
-      });
+        const documentItem = await screen.findByText('Test Paper');
+        fireEvent.click(documentItem);
 
-    render(<Data_extraction />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('test1.pdf')).toBeInTheDocument();
+        await waitFor(() => {
+            const iframe = document.querySelector('iframe');
+            expect(iframe).toBeInTheDocument();
+            expect(iframe).toHaveAttribute('src', expect.stringContaining('/files/doc1.pdf'));
+        });
     });
 
-    const documentItem = screen.getByText('test1.pdf').closest('div');
-    fireEvent.click(documentItem!);
-    
-    await waitFor(() => {
-      const iframe = document.querySelector('iframe');
-      expect(iframe).toBeInTheDocument();
-      expect(iframe).toHaveAttribute('src', '/api/pdf/document/doc1/download');
-    });
-  });
+    test('показывает ошибку для не-PDF файлов', async () => {
+        await renderPage();
 
-  test('генерирует Markdown из аннотаций', async () => {
-    const mockDocuments = [
-      {
-        uid: 'doc1',
-        original_filename: 'test1.pdf',
-        md5_hash: 'hash1',
-        upload_date: '2023-12-01T00:00:00Z',
-        processing_status: 'annotated',
-        is_processed: true
-      }
-    ];
+        const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-    const mockAnnotations = [
-      {
-        uid: 'ann1',
-        annotation_type: 'title',
-        content: 'Research Paper Title',
-        confidence: 0.95,
-        page_number: 1
-      },
-      {
-        uid: 'ann2',
-        annotation_type: 'author',
-        content: 'John Doe',
-        confidence: 0.90,
-        page_number: 1
-      },
-      {
-        uid: 'ann3',
-        annotation_type: 'number',
-        content: '42',
-        confidence: 0.85,
-        page_number: 2
-      }
-    ];
+        fireEvent.change(fileInput, { target: { files: [file] } });
 
-    (fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockDocuments
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockAnnotations
-      });
-
-    render(<Data_extraction />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('test1.pdf')).toBeInTheDocument();
+        expect(screen.getByText('Пожалуйста, выберите PDF файл')).toBeInTheDocument();
     });
 
-    const documentItem = screen.getByText('test1.pdf').closest('div');
-    fireEvent.click(documentItem!);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Research Paper Title')).toBeInTheDocument();
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
-      expect(screen.getByText('42')).toBeInTheDocument();
+    test('показывает ошибки загрузки', async () => {
+        await renderPage();
+
+        const file = new File(['test pdf content'], 'test.pdf', { type: 'application/pdf' });
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+
+        fireEvent.change(fileInput, { target: { files: [file] } });
+
+        await waitFor(() => {
+            expect(screen.getByText('Ошибка загрузки файла')).toBeInTheDocument();
+        });
     });
-  });
 
-  test('показывает ошибки загрузки', async () => {
-    (fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+    test('показывает состояние загрузки', async () => {
+        await renderPage();
 
-    render(<Data_extraction />);
-    
-    const file = new File(['test pdf content'], 'test.pdf', { type: 'application/pdf' });
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    
-    fireEvent.change(fileInput, { target: { files: [file] } });
-    
-    await waitFor(() => {
-      expect(screen.getByText('Ошибка загрузки файла')).toBeInTheDocument();
+        const file = new File(['test pdf content'], 'test.pdf', { type: 'application/pdf' });
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+
+        fireEvent.change(fileInput, { target: { files: [file] } });
+
+        expect(screen.getByText('Загрузка файла...')).toBeInTheDocument();
+
+        await act(async () => {});
     });
-  });
-
-  test('показывает состояние загрузки', async () => {
-    (fetch as jest.Mock).mockImplementationOnce(() => 
-      new Promise(resolve => setTimeout(() => resolve({
-        ok: true,
-        json: async () => ({ success: true, document_id: 'test-id' })
-      }), 100))
-    );
-
-    render(<Data_extraction />);
-    
-    const file = new File(['test pdf content'], 'test.pdf', { type: 'application/pdf' });
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    
-    fireEvent.change(fileInput, { target: { files: [file] } });
-    
-    expect(screen.getByText('Загрузка файла...')).toBeInTheDocument();
-  });
 });

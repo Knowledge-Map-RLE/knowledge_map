@@ -13,9 +13,11 @@ import logging
 from typing import Optional
 
 import httpx
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.background import BackgroundTask
+
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +78,9 @@ async def list_models(request: Request) -> JSONResponse:
 
 
 @router.post("/v1/chat/completions", response_model=None)
-async def chat_completions(request: Request) -> StreamingResponse | JSONResponse:
+async def chat_completions(
+    request: Request, user: dict = Depends(get_current_user)
+) -> StreamingResponse | JSONResponse:
     client = get_client()
     try:
         body = await request.body()

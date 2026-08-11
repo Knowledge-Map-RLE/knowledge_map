@@ -1,4 +1,4 @@
-import { withBase } from './http';
+import { withBase, authHeaders } from './http';
 
 export interface AgentModel {
   id: string;
@@ -26,7 +26,7 @@ export function estimateTokens(text: string): number {
  * Load models exposed by the AI agent microservice (`GET /ai/v1/models`).
  */
 export async function getAgentModels(): Promise<AgentModel[]> {
-  const response = await fetch(withBase('/ai/v1/models'));
+  const response = await fetch(withBase('/ai/v1/models'), { headers: authHeaders() });
   if (!response.ok) {
     throw new Error(`HTTP ${response.status} ${response.statusText}`);
   }
@@ -58,7 +58,7 @@ export async function streamAgentChat(opts: StreamAgentChatOptions): Promise<voi
   try {
     const response = await fetch(withBase('/ai/v1/chat/completions'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({
         model: model || undefined,
         messages,

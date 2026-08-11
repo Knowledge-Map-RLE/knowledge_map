@@ -97,7 +97,7 @@ export const useKeyboardControlsWithProps = ({
         case 'KeyW':
           if (currentMode !== EditMode.CREATE_LINKS) {
             setModeWithLogging(EditMode.CREATE_LINKS);
-            setLinkCreationState({ step: 'selecting_source' });
+            setLinkCreationState({ step: 'select_source' });
           }
           break;
         case 'KeyE':

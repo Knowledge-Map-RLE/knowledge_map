@@ -23,6 +23,7 @@ from src.schemas.schemas import (
     UserRegisterRequest,
     UserLoginRequest,
     UserRecoveryRequest,
+    UserLogoutRequest,
     UserPasswordResetRequest,
     User2FASetupRequest,
     User2FAVerifyRequest,
@@ -73,6 +74,7 @@ async def login(request: UserLoginRequest, gateway=Depends(get_auth_client)):
         captcha=request.captcha,
         device_info=request.device_info or "",
         ip_address=request.ip_address or "",
+        remember_me=bool(request.remember_me),
     )
     return AuthResponse(
         success=True,
@@ -84,8 +86,8 @@ async def login(request: UserLoginRequest, gateway=Depends(get_auth_client)):
 
 
 @router.post("/logout")
-async def logout(token: str, logout_all: bool = False, gateway=Depends(get_auth_client)):
-    return logout_user(gateway=gateway, token=token, logout_all=logout_all)
+async def logout(request: UserLogoutRequest, gateway=Depends(get_auth_client)):
+    return logout_user(gateway=gateway, token=request.token, logout_all=request.logout_all)
 
 
 @router.post("/verify", response_model=TokenVerifyResponse)

@@ -288,7 +288,7 @@ const RU_SUFFIXES = [
 const EN_SUFFIXES = ['ing', 'tion', 'ed', 'es', 'ly', 's'];
 
 function normTokens(text: string): string[] {
-    const toks = (text || '').toLowerCase().match(/[а-яёa-z0-9]+/g) || [];
+    const toks: string[] = (text || '').toLowerCase().match(/[а-яёa-z0-9]+/g) || [];
     return toks.filter(t => !STOPWORDS.has(t) && t.length > 1);
 }
 

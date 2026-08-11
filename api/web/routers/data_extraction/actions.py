@@ -30,6 +30,7 @@ from web.dependencies import (
     get_action_repository,
     get_nlp_client_dep,
     get_s3,
+    get_current_user,
 )
 from domain.exceptions import NotFoundError, ConflictError
 
@@ -46,6 +47,7 @@ async def extract_actions(
     action_repo=Depends(get_action_repository),
     nlp_client=Depends(get_nlp_client_dep),
     storage=Depends(get_s3),
+    _user: dict = Depends(get_current_user),
 ):
     try:
         result = await extract_document_actions(
@@ -108,6 +110,7 @@ def review_edge(
     doc_id: str,
     body: ReviewEdgeRequest,
     action_repo=Depends(get_action_repository),
+    _user: dict = Depends(get_current_user),
 ):
     try:
         review_action_edge(
@@ -130,6 +133,7 @@ def review_edge(
 def delete_actions(
     doc_id: str,
     action_repo=Depends(get_action_repository),
+    _user: dict = Depends(get_current_user),
 ):
     count = action_repo.delete_for_document(doc_id)
     return {"success": True, "deleted": count}
@@ -181,6 +185,7 @@ async def auto_review_endpoint(
     doc_id: str,
     dry_run: bool = Query(default=False),
     action_repo=Depends(get_action_repository),
+    _user: dict = Depends(get_current_user),
 ):
     """Автоматическое ревью pending LEADS_TO рёбер."""
     from application.actions.auto_review import auto_review_pending_edges

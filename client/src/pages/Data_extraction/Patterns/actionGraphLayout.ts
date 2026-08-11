@@ -1,4 +1,4 @@
-import type { BlockData, LinkData } from '../../Knowledge_map/types';
+import type { BlockData, LinkData } from '../../../widgets/KnowledgeMap';
 import type { ConfirmedActionNode, ConfirmedActionEdge } from '../../../services/api';
 
 const SPACING_X = 380;

@@ -5,6 +5,7 @@ import {
     parseText, parseTextStream, uploadArticleImage,
 } from '../../../services/api/article_editor';
 import { blocksToStatements, statementsToBlocks, blocksToText, statementsToResolvedText, uuid8Str } from '../Editor/blockConverter';
+import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
 import type { KnowledgeArticle, KnowledgeStatement, SaveStatus, ArticleBlockData, BlockDataValue } from '../model';
 
 function newBlockId(): string {
@@ -36,6 +37,7 @@ interface UseArticleStateResult {
 }
 
 export function useArticleState(): UseArticleStateResult {
+    const requireAuth = useRequireAuth();
     const [article, setArticle] = useState<KnowledgeArticle | null>(null);
     const [text, setTextState] = useState<string>('');
     const [blocks, setBlocks] = useState<ArticleBlockData[]>([]);
@@ -213,6 +215,7 @@ export function useArticleState(): UseArticleStateResult {
     }, [blocks]);
 
     const addBlock = useCallback((typeNumber: number, initialData?: Record<string, BlockDataValue>) => {
+        if (!requireAuth()) return;
         setBlocks((prev) => {
             const maxOrder = prev.length > 0 ? Math.max(...prev.map((b) => b.order)) : -1;
             const newBlock: ArticleBlockData = {
@@ -223,7 +226,7 @@ export function useArticleState(): UseArticleStateResult {
             };
             return [...prev, newBlock];
         });
-    }, []);
+    }, [requireAuth]);
 
     const updateBlock = useCallback((instanceId: string, fieldKey: string, value: BlockDataValue) => {
         setBlocks((prev) =>
@@ -236,11 +239,12 @@ export function useArticleState(): UseArticleStateResult {
     }, []);
 
     const deleteBlock = useCallback((instanceId: string) => {
+        if (!requireAuth()) return;
         setBlocks((prev) => {
             const next = prev.filter((b) => b.instanceId !== instanceId);
             return next.map((b, i) => ({ ...b, order: i }));
         });
-    }, []);
+    }, [requireAuth]);
 
     const reorderBlocks = useCallback((fromIndex: number, toIndex: number) => {
         setBlocks((prev) => {
@@ -257,6 +261,7 @@ export function useArticleState(): UseArticleStateResult {
     statementsRef.current = statements;
 
     const triggerParse = useCallback(async (docId: string) => {
+        if (!requireAuth()) return;
         setParseError(null);
         if (abortRef.current) abortRef.current.abort();
         if (parseTimerRef.current) clearTimeout(parseTimerRef.current);
@@ -307,9 +312,10 @@ export function useArticleState(): UseArticleStateResult {
                 setParseProgress(null);
             }
         }, 800);
-    }, []);
+    }, [requireAuth]);
 
     const save = useCallback(async (docId: string) => {
+        if (!requireAuth()) return;
         const currentBlocks = blocksRef.current;
         const currentText = textRef.current;
         const currentArticleUuid = articleUuidRef.current;
@@ -370,9 +376,10 @@ export function useArticleState(): UseArticleStateResult {
         } catch {
             setSaveStatus('error');
         }
-    }, []);
+    }, [requireAuth]);
 
     const uploadImage = useCallback(async (_key: string, file: File): Promise<string> => {
+        if (!requireAuth()) throw new Error('Требуется авторизация');
         const docId = articleUuidRef.current;
         if (!docId) throw new Error('Документ не выбран');
         const result = await uploadArticleImage(docId, file);
@@ -380,7 +387,7 @@ export function useArticleState(): UseArticleStateResult {
             throw new Error('Не удалось загрузить изображение');
         }
         return result.object_key;
-    }, []);
+    }, [requireAuth]);
 
     return {
         article, text, statements, blocks, articleUuid,

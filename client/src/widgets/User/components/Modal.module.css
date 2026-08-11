@@ -56,6 +56,18 @@
     @apply pt-4;
 }
 
+.rememberRow {
+    @apply flex items-center;
+}
+
+.checkboxLabel {
+    @apply flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none;
+}
+
+.checkboxLabel input {
+    @apply w-4 h-4 accent-blue-500 cursor-pointer;
+}
+
 .submit_button {
     @apply w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors;
 }

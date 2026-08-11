@@ -1,5 +1,6 @@
 import { Graphics } from 'pixi.js';
 import { extend } from '@pixi/react';
+import { PixiText } from '../../../shared/pixi/PixiText';
 import { useCallback, useEffect } from 'react';
 import { BLOCK_WIDTH, BLOCK_HEIGHT } from '../constants';
 
@@ -104,7 +105,7 @@ export function BlockPreview({ sourceX, sourceY, targetX, targetY, isLeftArrow, 
         draw={draw}
         eventMode="none"
       />
-      <pixiText
+      <PixiText
         text="Новый блок"
         x={targetX}
         y={targetY}

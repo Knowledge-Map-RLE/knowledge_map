@@ -52,16 +52,29 @@ class UserService:
         if not user.is_active:
             raise ValueError("Аккаунт заблокирован")
         
-        if user.locked_until and user.locked_until > datetime.now(timezone.utc):
-            raise ValueError(f"Аккаунт заблокирован до {user.locked_until}")
+        now = datetime.now(timezone.utc)
+        
+        # Если блокировка истекла — снимаем её и даём новый набор попыток.
+        # Иначе счётчик попыток навсегда остаётся на пределе, и каждая следующая
+        # неудачная попытка мгновенно продлевает блокировку ещё на 30 минут.
+        if user.locked_until:
+            locked_until = user.locked_until
+            if locked_until.tzinfo is None:
+                locked_until = locked_until.replace(tzinfo=timezone.utc)
+            if locked_until <= now:
+                user.locked_until = None
+                user.login_attempts = 0
+                user.save()
+            else:
+                raise ValueError(f"Аккаунт заблокирован до {locked_until}")
         
         if not verify_password(password, user.password_hash):
             # Увеличиваем счетчик неудачных попыток
-            user.login_attempts += 1
+            user.login_attempts = (user.login_attempts or 0) + 1
             
             # Блокируем аккаунт при превышении лимита
             if user.login_attempts >= settings.LOGIN_ATTEMPTS_LIMIT:
-                user.locked_until = datetime.now(timezone.utc) + timedelta(minutes=30)
+                user.locked_until = now + timedelta(minutes=30)
                 user.save()
                 raise ValueError("Аккаунт заблокирован на 30 минут из-за превышения лимита попыток входа")
             
@@ -70,7 +83,8 @@ class UserService:
         
         # Сбрасываем счетчик неудачных попыток при успешном входе
         user.login_attempts = 0
-        user.last_login = datetime.now(timezone.utc)
+        user.locked_until = None
+        user.last_login = now
         user.save()
         
         return user
@@ -108,17 +122,27 @@ class UserService:
             return False
         return verify_2fa_code(user.two_fa_secret, code)
     
-    def create_session(self, user: User, device_info: dict = None, ip_address: str = None) -> Session:
+    def create_session(self, user: User, device_info: dict = None, ip_address: str = None, remember_me: bool = False) -> Session:
         """Создает сессию пользователя"""
         session_id = generate_session_id()
-        token = create_access_token({"sub": user.uid, "session_id": session_id})
-        
+
+        if remember_me:
+            expires_delta = timedelta(days=settings.REMEMBER_ME_EXPIRE_DAYS)
+        else:
+            expires_delta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+
+        token = create_access_token(
+            {"sub": user.uid, "session_id": session_id},
+            expires_delta=expires_delta,
+        )
+        expires_at = datetime.now(timezone.utc) + expires_delta
+
         session = Session(
             user_id=user.uid,
             token=token,
             device_info=device_info or {},
             ip_address=ip_address,
-            expires_at=datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            expires_at=expires_at
         ).save()
         
         return session

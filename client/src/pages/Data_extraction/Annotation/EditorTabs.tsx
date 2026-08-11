@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import TextAnnotator from './TextAnnotator';
-import { Annotation, AnnotationRelation } from '../../../services/api';
+import type { Annotation, AnnotationRelation } from '../../../services/api';
 import type { ValidationError } from '../../../widgets/MarkdownEditor';
 
 interface EditorTabsProps {

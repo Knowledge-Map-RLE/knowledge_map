@@ -5,13 +5,14 @@ import asyncio
 import os
 from datetime import datetime
 from typing import Dict, Any
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from neo4j import GraphDatabase
 
 from src.schemas.api import NLPAnalyzeRequest
 from services.annotation_service import AnnotationService
 from services.nlp_service import NLPService
 from services.multilevel_nlp_service import MultiLevelNLPService
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ _nlp_task_status: Dict[str, Dict[str, Any]] = {}
 
 
 @router.post("/nlp/analyze")
-async def analyze_text(request: NLPAnalyzeRequest):
+async def analyze_text(request: NLPAnalyzeRequest, _user: dict = Depends(get_current_user)):
     """
     NLP анализ текста с помощью spaCy
     Если указаны start и end, анализируется только выделенный фрагмент
@@ -49,7 +50,8 @@ async def auto_annotate_document(
     background_tasks: BackgroundTasks,
     processors: list[str] = ["spacy"],
     annotation_types: list[str] | None = None,
-    min_confidence: float = 0.7
+    min_confidence: float = 0.7,
+    _user: dict = Depends(get_current_user),
 ):
     """
     Автоматическая аннотация документа с помощью NLP процессоров.
@@ -83,7 +85,8 @@ async def auto_annotate_batch(
     processors: list[str] = ["spacy"],
     annotation_types: list[str] | None = None,
     min_confidence: float = 0.7,
-    chunk_size: int = 5000
+    chunk_size: int = 5000,
+    _user: dict = Depends(get_current_user),
 ):
     """
     Фоновая автоаннотация большого документа частями.
@@ -320,7 +323,8 @@ async def analyze_document_multilevel(
     enable_voting: bool = True,
     max_level: int = 3,
     create_annotations: bool = True,
-    min_confidence: float = 0.8
+    min_confidence: float = 0.8,
+    _user: dict = Depends(get_current_user),
 ):
     """
     Multi-level NLP analysis with voting and confidence scores.

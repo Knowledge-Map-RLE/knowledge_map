@@ -1,4 +1,5 @@
-import { ViewPlugin, Decoration, DecorationSet, hoverTooltip } from '@codemirror/view';
+import { ViewPlugin, Decoration, hoverTooltip } from '@codemirror/view';
+import type { DecorationSet } from '@codemirror/view';
 import { RangeSet } from '@codemirror/state';
 import type { ViewUpdate, EditorView } from '@codemirror/view';
 import { validationField } from './validationStateField';

@@ -1,5 +1,6 @@
 import { Graphics, Container, Point, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
+import { PixiText } from '../../../shared/pixi/PixiText';
 import { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { AddBlockArrow } from './AddBlockArrow';
 import type { BlockData } from '../types';
@@ -112,7 +113,7 @@ export const Block = memo(function Block({
      >
                <pixiGraphics draw={draw} />
       {/* @ts-ignore PixiText props typing */}
-      <pixiText
+      <PixiText
         text={title}
         x={0}
         y={0}

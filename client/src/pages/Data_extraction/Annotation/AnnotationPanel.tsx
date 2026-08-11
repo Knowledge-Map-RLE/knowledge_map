@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Annotation } from '../../../services/api';
+import type { Annotation } from '../../../services/api';
 import './AnnotationPanel.css';
 
 interface AnnotationPanelProps {
@@ -110,7 +110,7 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
     if (!selectedAnnotation) return;
     const idx = uidToGroupIndex.get(selectedAnnotation.uid);
     if (idx !== undefined) {
-      rowVirtualizer.scrollToIndex(idx, { align: 'nearest', behavior: 'smooth' });
+      rowVirtualizer.scrollToIndex(idx, { align: 'auto', behavior: 'smooth' });
     }
   }, [selectedAnnotation]); // eslint-disable-line react-hooks/exhaustive-deps
 

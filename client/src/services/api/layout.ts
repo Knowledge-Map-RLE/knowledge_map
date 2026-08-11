@@ -1,4 +1,5 @@
-import type { Block, Link, ApiResponse, LoadAroundResponse, CreateBlockRequest, UpdateBlockRequest, CreateLinkRequest, CreateBlockAndLinkRequest, CreateBlockAndLinkResponse } from '../entities/block';
+import type { Block, ApiResponse, LoadAroundResponse } from '../../entities/block';
+import type { Link } from '../../entities/link';
 import { fetchJson } from './http';
 
 export const layoutApi = {
@@ -30,19 +31,19 @@ export const layoutApi = {
     });
   },
 
-  async deleteBlock(id: string): Promise<{ success: boolean }> {
-    return fetchJson<{ success: boolean }>(`/api/blocks/${id}`, {
+  async deleteBlock(id: string): Promise<{ success: boolean; error?: string }> {
+    return fetchJson<{ success: boolean; error?: string }>(`/api/blocks/${id}`, {
       method: 'DELETE',
     });
   },
 };
 
 export async function loadLayout(): Promise<ApiResponse> {
-  return api.loadLayout();
+  return layoutApi.loadLayout();
 }
 
 export async function loadAround(centerX: number, centerY: number, limit: number = 50): Promise<LoadAroundResponse> {
-  return api.loadAround(centerX, centerY, limit);
+  return layoutApi.loadAround(centerX, centerY, limit);
 }
 
 export async function edgesByViewport(bounds: {left:number; right:number; top:number; bottom:number}): Promise<{blocks: Partial<Block>[]; links: Partial<Link>[]}> {
@@ -53,28 +54,28 @@ export async function edgesByViewport(bounds: {left:number; right:number; top:nu
   });
 }
 
-export async function createBlock(name: string): Promise<{ success: boolean; block: any }> {
-  return fetchJson<{ success: boolean; block: any }>('/api/blocks', {
+export async function createBlock(name: string): Promise<{ success: boolean; block: Block }> {
+  return fetchJson<{ success: boolean; block: Block }>('/api/blocks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content: name })
   });
 }
 
-export async function deleteBlock(id: string): Promise<{ success: boolean }> {
-  return api.deleteBlock(id);
+export async function deleteBlock(id: string): Promise<{ success: boolean; error?: string }> {
+  return layoutApi.deleteBlock(id);
 }
 
-export async function createLink(sourceId: string, targetId: string): Promise<{ success: boolean; link: any }> {
-  return fetchJson<{ success: boolean; link: any }>('/api/links', {
+export async function createLink(sourceId: string, targetId: string): Promise<{ success: boolean; link: Link }> {
+  return fetchJson<{ success: boolean; link: Link }>('/api/links', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source_id: sourceId, target_id: targetId })
   });
 }
 
-export async function deleteLink(id: string): Promise<{ success: boolean }> {
-  return fetchJson<{ success: boolean }>(`/api/links/${id}`, {
+export async function deleteLink(id: string): Promise<{ success: boolean; error?: string }> {
+  return fetchJson<{ success: boolean; error?: string }>(`/api/links/${id}`, {
     method: 'DELETE'
   });
 }
@@ -82,8 +83,8 @@ export async function deleteLink(id: string): Promise<{ success: boolean }> {
 export async function createBlockAndLink(
   sourceId: string,
   direction: 'to_source' | 'from_source'
-): Promise<{ success: boolean; new_block?: any; new_link?: any; error?: string }> {
-  return fetchJson<{ success: boolean; new_block?: any; new_link?: any; error?: string }>('/api/create_block_and_link', {
+): Promise<{ success: boolean; new_block?: Block; new_link?: Link; error?: string }> {
+  return fetchJson<{ success: boolean; new_block?: Block; new_link?: Link; error?: string }>('/api/create_block_and_link', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source_id: sourceId, direction })
@@ -132,6 +133,6 @@ export async function getKnowledgeMapPage(
   limit = 200,
   centerX = 0,
   centerY = 0,
-): Promise<any> {
-  return fetchJson(`/layout/knowledge_map_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
+): Promise<ApiResponse> {
+  return fetchJson<ApiResponse>(`/layout/knowledge_map_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
 }

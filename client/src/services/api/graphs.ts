@@ -1,4 +1,4 @@
-import type { LinguisticGraphResponse, DependencyNgramResponse, PatternContextResponse } from '../entities/annotation';
+import type { LinguisticGraphResponse, DependencyNgramResponse, PatternContextResponse, PatternData, PatternGraphData, ExtractPatternsResponse, PatternCreateStatus, SavePatternsResponse } from '../../entities/document';
 import { fetchJson } from './http';
 
 export async function getDocumentLinguisticGraph(docId: string): Promise<LinguisticGraphResponse> {
@@ -35,7 +35,7 @@ export async function getExtractedPatterns(options?: {
   limitPerN?: number;
   minFrequency?: number;
   mode?: 'all' | 'dependency' | 'action' | 'mixed';
-}): Promise<any> {
+}): Promise<ExtractPatternsResponse> {
   const params = new URLSearchParams();
   if (options?.maxNodes !== undefined) params.set('max_nodes', String(options.maxNodes));
   if (options?.maxDepth !== undefined) params.set('max_depth', String(options.maxDepth));
@@ -47,11 +47,11 @@ export async function getExtractedPatterns(options?: {
   return fetchJson(`/api/data_extraction/patterns/extract${query ? `?${query}` : ''}`, { method: 'POST' });
 }
 
-export async function getExtractStatus(): Promise<any> {
+export async function getExtractStatus(): Promise<ExtractPatternsResponse> {
   return fetchJson('/api/data_extraction/patterns/extract-status');
 }
 
-export async function getPatternGraph(patternUid: string): Promise<any> {
+export async function getPatternGraph(patternUid: string): Promise<PatternGraphData> {
   return fetchJson(`/api/data_extraction/patterns/${encodeURIComponent(patternUid)}/graph`);
 }
 
@@ -65,7 +65,7 @@ export async function getPatternText(patternUid: string): Promise<{
   return fetchJson(`/api/data_extraction/patterns/${encodeURIComponent(patternUid)}/text`);
 }
 
-export async function savePatternsToDb(patterns: any[]): Promise<any> {
+export async function savePatternsToDb(patterns: PatternData[]): Promise<SavePatternsResponse> {
   return fetchJson('/api/data_extraction/patterns/save', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -91,6 +91,6 @@ export async function createPatternsInDb(options?: {
   return fetchJson(`/api/data_extraction/patterns/create?${params.toString()}`, { method: 'POST' });
 }
 
-export async function getPatternCreateStatus(): Promise<any> {
+export async function getPatternCreateStatus(): Promise<PatternCreateStatus> {
   return fetchJson('/api/data_extraction/patterns/create-status');
 }

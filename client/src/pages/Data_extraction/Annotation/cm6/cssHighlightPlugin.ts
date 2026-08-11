@@ -10,7 +10,8 @@
  *
  * Browser support: Chrome 105+, Edge 105+, Safari 17.2+, Firefox 140+
  */
-import { ViewPlugin, Decoration, DecorationSet } from '@codemirror/view';
+import { ViewPlugin, Decoration } from '@codemirror/view';
+import type { DecorationSet } from '@codemirror/view';
 import { RangeSet } from '@codemirror/state';
 import type { ViewUpdate, EditorView } from '@codemirror/view';
 import { annotationField, queryAnnotationsInRange } from './annotationStateField';

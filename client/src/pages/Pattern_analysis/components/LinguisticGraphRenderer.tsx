@@ -235,7 +235,7 @@ export function NodesLayer({ nodes, visibleIds, scale, lod }: {
         return () => {
             try {
                 nodesGfx.destroy();
-                labels.destroy({ children: true, baseTexture: true });
+                labels.destroy({ children: true });
             } catch {
                 // Ignore cleanup errors
             }

@@ -99,6 +99,8 @@ export interface DocumentAssets {
     markdown?: string;
     images?: string[];
     image_urls?: Record<string, string>;
+    pdf_url?: string;
+    files?: { pdf?: string; pdf_url?: string };
 }
 
 export interface DataExtractionResponse {
@@ -327,8 +329,8 @@ export interface DependencyNgramResponse {
     max_depth: number;
     limit_per_n: number;
     unigrams: Array<{ pos: string; dep: string; lemma: string; node_type?: string; cnt: number }>;
-    n_grams: Record<string, Array<{ chain: string[][]; cnt: number }>>;
-    long_chains?: Array<{ texts: string[]; rel_types: string[]; depth: number; cnt: number }>;
+    n_grams: Record<string, Array<{ chain: string[][]; cnt: number; sig_hash: string; exemplars: number[][] }>>;
+    long_chains?: Array<{ texts: string[]; deps: string[]; depth: number; cnt: number; sig_hash: string; exemplars: number[][] }>;
     cross_doc: Array<{ lemmas: string[]; deps: string[]; depth: number; cnt: number }>;
 }
 

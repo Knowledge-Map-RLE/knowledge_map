@@ -39,11 +39,11 @@ export const useInteractionHandlers = ({
         handleBlockSelection(blockId); 
         break;
       case EditMode.CREATE_LINKS:
-        if (linkCreationState.step === 'selecting_source') {
-          setLinkCreationState({ step: 'selecting_target', sourceBlock: clickedBlock });
-        } else if (linkCreationState.step === 'selecting_target' && 'sourceBlock' in linkCreationState) {
-          handleCreateLink(linkCreationState.sourceBlock.id, blockId);
-          setLinkCreationState({ step: 'selecting_source' });
+        if (linkCreationState.step === 'select_source') {
+          setLinkCreationState({ step: 'select_target', sourceId: blockId });
+        } else if (linkCreationState.step === 'select_target' && linkCreationState.sourceId) {
+          handleCreateLink(linkCreationState.sourceId, blockId);
+          setLinkCreationState({ step: 'select_source' });
         }
         break;
       case EditMode.DELETE: 

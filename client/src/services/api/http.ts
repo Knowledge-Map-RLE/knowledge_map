@@ -1,4 +1,6 @@
-const API_BASE_URL = ((import.meta as any).env?.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+
+import { getToken } from '../token';
 
 const withBase = (path: string) => {
   if (!API_BASE_URL) {
@@ -7,8 +9,26 @@ const withBase = (path: string) => {
   return path.startsWith('/') ? `${API_BASE_URL}${path}` : `${API_BASE_URL}/${path}`;
 };
 
+/** Заголовки авторизации (Bearer-токен), если пользователь вошёл. */
+export function authHeaders(headersInit?: HeadersInit): HeadersInit {
+  const headers = new Headers(headersInit);
+  const token = getToken();
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+  return headers;
+}
+
 export async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(withBase(path), init);
+  const headers = new Headers(authHeaders(init?.headers));
+  if (init?.body && typeof init.body === 'string' && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+  const merged: RequestInit = {
+    ...init,
+    headers,
+  };
+  const response = await fetch(withBase(path), merged);
   if (!response.ok) {
     const errorBody = await response.text().catch(() => '');
     let detail = `HTTP ${response.status} ${response.statusText}`;

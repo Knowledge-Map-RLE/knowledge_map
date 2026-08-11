@@ -15,6 +15,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSwitchToRecov
         password: '',
         captcha: ''
     });
+    const [rememberMe, setRememberMe] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -28,7 +29,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSwitchToRecov
                 login: formData.username,
                 password: formData.password,
                 captcha: formData.captcha
-            });
+            }, rememberMe);
 
             if (result.success && result.user) {
                 onSuccess(result.user);
@@ -101,6 +102,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSwitchToRecov
                     </div>
 
                     {error && <div className={s.error}>{error}</div>}
+
+                    <div className={s.rememberRow}>
+                        <label className={s.checkboxLabel}>
+                            <input
+                                type="checkbox"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                            />
+                            Запомнить меня
+                        </label>
+                    </div>
 
                     <div className={s.actions}>
                         <button

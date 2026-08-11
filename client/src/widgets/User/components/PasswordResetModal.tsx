@@ -3,7 +3,7 @@ import s from './Modal.module.css';
 
 interface PasswordResetModalProps {
     onClose: () => void;
-    onSuccess: (user: { nickname: string; login: string; level: number }) => void;
+    onSuccess: () => void;
 }
 
 export const PasswordResetModal: React.FC<PasswordResetModalProps> = ({ onClose, onSuccess }) => {
@@ -33,11 +33,7 @@ export const PasswordResetModal: React.FC<PasswordResetModalProps> = ({ onClose,
 
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
-            onSuccess({
-                nickname: 'Пользователь',
-                login: 'user',
-                level: 1
-            });
+            onSuccess();
         } catch {
             setError('Ошибка сброса пароля');
         } finally {

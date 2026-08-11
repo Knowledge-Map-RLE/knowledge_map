@@ -2,10 +2,11 @@
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 
 from services.pubmed_service import PubMedService
 from src.schemas.api import PubMedIngestRequest, PubMedIngestResponse, PubMedSearchResponse, PubMedSearchResult
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +79,7 @@ async def get_by_id(
 async def ingest_pubmed_article(
     request: PubMedIngestRequest,
     background_tasks: BackgroundTasks,
+    _user: dict = Depends(get_current_user),
 ):
     """Загрузка статьи из PubMed/PMC в систему.
 

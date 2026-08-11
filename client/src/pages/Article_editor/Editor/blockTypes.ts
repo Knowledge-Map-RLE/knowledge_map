@@ -1,5 +1,5 @@
 import React from 'react';
-import type { BlockTypeDef } from '../model';
+import type { BlockFieldDef, BlockTypeDef } from '../model';
 import {
     MdDescription, MdGpsFixed, MdTextSnippet, MdSwapHoriz,
     MdStar, MdStarBorder, MdHelp, MdLink,

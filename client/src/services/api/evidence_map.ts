@@ -95,7 +95,7 @@ export interface MineResult {
 
 export interface MatchResult {
     success: boolean;
-    matched: any[];
+    matched: unknown[];
     prediction?: {
         verdict: string;
         confidence: number;

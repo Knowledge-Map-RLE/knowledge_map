@@ -17,8 +17,10 @@ import threading
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from neo4j import GraphDatabase
+
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -241,6 +243,7 @@ async def create_patterns_in_db(
     min_frequency: int = Query(1, ge=1, description="Мин. частота паттерна"),
     mode: str = Query("all", description="Режим: all, dependency, action, mixed"),
     save_to_db: bool = Query(True, description="Сохранять ли в Neo4j"),
+    _user: dict = Depends(get_current_user),
 ):
     """
     Фоновое создание паттернов в Neo4j с отслеживанием прогресса.
@@ -404,6 +407,7 @@ async def extract_patterns_start(
     limit_per_n: int = Query(50, ge=10, le=200, description="Лимит паттернов на длину"),
     min_frequency: int = Query(1, ge=1, description="Мин. частота паттерна"),
     mode: str = Query("all", description="Режим: all, dependency, action, mixed"),
+    _user: dict = Depends(get_current_user),
 ):
     """
     Запуск фонового извлечения паттернов с отслеживанием прогресса.
@@ -690,6 +694,7 @@ async def get_pattern_graph(pattern_uid: str):
 async def save_patterns_to_db(
     patterns: List[Dict[str, Any]],
     replace_existing: bool = Query(False, description="Заменить существующие"),
+    _user: dict = Depends(get_current_user),
 ):
     """
     Сохранить извлечённые паттерны в Neo4j.

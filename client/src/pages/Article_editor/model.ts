@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type ArticleEditorTab = 'editor' | 'graph' | 'patterns';
+export type ArticleEditorTab = 'editor' | 'graph' | 'patterns' | 'chat';
 
 export type BlockType = 'sentence' | 'image' | 'table' | 'separator' | 'code' | 'formula' | 'paragraph';
 

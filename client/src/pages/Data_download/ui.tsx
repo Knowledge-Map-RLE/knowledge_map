@@ -1,6 +1,6 @@
 import Header from "../../widgets/Header";
 import { useDataDownload } from "./hooks/useDataDownload";
-import { DataSourceStatus, DataSourceState } from "./model";
+import type { DataSourceStatus, DataSourceState } from "./model";
 import styles from "./Data_download.module.css";
 
 const stateLabels: Record<DataSourceState, string> = {

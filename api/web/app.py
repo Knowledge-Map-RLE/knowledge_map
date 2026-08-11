@@ -51,6 +51,9 @@ from src.routers import ai_proxy as ai_proxy_router
 # Редактор статей (article_editor + parse + graph)
 from src.routers import article_editor as article_editor_router
 
+# Социальная сеть (чат, друзья, сообщества, уведомления)
+from src.routers import social_network as social_network_router
+
 logger = logging.getLogger(__name__)
 
 # Настройка логирования
@@ -150,6 +153,9 @@ app.include_router(article_editor_router.router, prefix="/api")
 
 # Прокси AI Agent микросервиса (фронтенд -> API -> ai:50054)
 app.include_router(ai_proxy_router.router)
+
+# Социальная сеть (чат, друзья, сообщества, уведомления)
+app.include_router(social_network_router.router, prefix="/api")
 
 # GraphQL
 if _graphql_available:

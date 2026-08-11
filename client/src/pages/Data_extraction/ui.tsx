@@ -1,14 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Header from '../../widgets/Header';
 import MarkdownEditor from '../../widgets/MarkdownEditor';
 import { AnnotationWorkspace } from './Annotation';
 import { LinguisticPatternAnalysis } from './Patterns';
+import { useAuth } from '../../entities/auth';
 
 import { ArticleActionGraph } from './Patterns/ArticleActionGraph';
 import { ArticleLinguisticGraph } from './Patterns/ArticleLinguisticGraph';
 import Document_downloader_ui from './Document_downloader_ui';
 import type { DocumentListHandle } from './Document_downloader_ui';
 import { useDocumentState } from './hooks/useDocumentState';
+import { ChatPanel } from '../Social_network/components/ChatPanel';
+import type { ChatTarget } from '../Social_network/model';
 import type { DataExtractionTab } from './model';
 import styles from './Data_extraction.module.css';
 
@@ -20,10 +23,12 @@ declare global {
 
 const DataExtractionUI: React.FC = () => {
     const [activeTab, setActiveTab] = useState<DataExtractionTab>('pdf');
+    const [chatTarget, setChatTarget] = useState<ChatTarget | null>(null);
     const [isNlpProcessing, setIsNlpProcessing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const noopRef = useRef<() => void>(() => {});
-    const noopSetError = useRef<(e: string | null) => void>(() => {});
     const documentListRef = useRef<DocumentListHandle>(null);
+    const { isAuthenticated, user } = useAuth();
 
     const {
         selectedDocument,
@@ -36,6 +41,26 @@ const DataExtractionUI: React.FC = () => {
         handleManualSave,
         updateDocumentStatus,
     } = useDocumentState(setIsNlpProcessing);
+
+    const openDocumentChat = useCallback(() => {
+        if (!selectedDocument) return;
+        setChatTarget({
+            type: 'article',
+            uid: selectedDocument.uid,
+            label: selectedDocument.title || selectedDocument.original_filename,
+        });
+        setActiveTab('chat');
+    }, [selectedDocument]);
+
+    useEffect(() => {
+        if (selectedDocument) {
+            setChatTarget({
+                type: 'article',
+                uid: selectedDocument.uid,
+                label: selectedDocument.title || selectedDocument.original_filename,
+            });
+        }
+    }, [selectedDocument]);
 
     // После успешного сохранения перечитываем список документов,
     // чтобы статус 'Аннотирован' отобразился в левой колонке
@@ -55,8 +80,8 @@ const DataExtractionUI: React.FC = () => {
                         selectedDocument={selectedDocument}
                         onSelectDocument={selectDocument}
                         onDocumentsChange={noopRef.current}
-                        error={null}
-                        setError={noopSetError.current}
+                        error={error}
+                        setError={setError}
                     />
                 </div>
 
@@ -97,6 +122,14 @@ const DataExtractionUI: React.FC = () => {
                             onClick={() => setActiveTab('graph')}
                         >
                             Карта статьи
+                        </button>
+                        <button
+                            className={`${styles.tabButton} ${activeTab === 'chat' ? styles.active : ''}`}
+                            onClick={openDocumentChat}
+                            disabled={!selectedDocument}
+                            title={selectedDocument ? 'Обсуждение документа' : 'Сначала выберите документ'}
+                        >
+                            Обсуждение
                         </button>
 
                         {isNlpProcessing && (
@@ -196,6 +229,23 @@ const DataExtractionUI: React.FC = () => {
                                     <ArticleActionGraph docId={selectedDocument.uid} />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
+                                )}
+                            </div>
+                        )}
+                        {activeTab === 'chat' && (
+                            <div className={styles.chatContainer}>
+                                {selectedDocument && isAuthenticated && user ? (
+                                    <ChatPanel
+                                        target={chatTarget}
+                                        onOpenTarget={(t) => setChatTarget(t)}
+                                        myUid={user.uid}
+                                        hideRail
+                                        title={selectedDocument.title || selectedDocument.original_filename || 'Обсуждение документа'}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                        {!selectedDocument ? 'Выберите файл' : 'Войдите в аккаунт, чтобы участвовать в обсуждении'}
+                                    </div>
                                 )}
                             </div>
                         )}

@@ -1,8 +1,9 @@
 import logging
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from services.article_editor_service import ArticleEditorService
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class UpdateTitleRequest(BaseModel):
 
 
 @router.post("/article_editor/articles")
-async def create_article(req: CreateArticleRequest):
+async def create_article(req: CreateArticleRequest, user: dict = Depends(get_current_user)):
     return await service.create_article(title=req.title)
 
 
@@ -49,7 +50,7 @@ async def get_article(doc_id: str):
 
 
 @router.put("/article_editor/articles/{doc_id}/text")
-async def save_article_text(doc_id: str, req: SaveTextRequest):
+async def save_article_text(doc_id: str, req: SaveTextRequest, user: dict = Depends(get_current_user)):
     result = await service.save_article_text(doc_id, req.text)
     if not result.get("success"):
         if result.get("error") == "not_annotated":
@@ -82,7 +83,7 @@ async def get_agent_article_text(doc_id: str, doi: str = ""):
 
 
 @router.put("/article_editor/articles/{doc_id}/statements")
-async def save_statements(doc_id: str, req: SaveStatementsRequest):
+async def save_statements(doc_id: str, req: SaveStatementsRequest, user: dict = Depends(get_current_user)):
     result = await service.save_statements(doc_id, req.statements)
     if not result.get("success"):
         if result.get("error") == "not_annotated":
@@ -91,7 +92,7 @@ async def save_statements(doc_id: str, req: SaveStatementsRequest):
 
 
 @router.put("/article_editor/articles/{doc_id}/blocks")
-async def save_blocks(doc_id: str, req: SaveBlocksRequest):
+async def save_blocks(doc_id: str, req: SaveBlocksRequest, user: dict = Depends(get_current_user)):
     result = await service.save_blocks(doc_id, req.blocks)
     if not result.get("success"):
         if result.get("error") == "not_annotated":
@@ -106,5 +107,5 @@ async def get_blocks(doc_id: str):
 
 
 @router.put("/article_editor/articles/{doc_id}/title")
-async def update_article_title(doc_id: str, req: UpdateTitleRequest):
+async def update_article_title(doc_id: str, req: UpdateTitleRequest, user: dict = Depends(get_current_user)):
     return await service.update_article_title(doc_id, req.title)

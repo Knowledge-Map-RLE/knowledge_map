@@ -1,6 +1,65 @@
-import { fetchJson, withBase } from './http';
+import type { KnowledgeArticle, KnowledgeStatement, ArticleBlockData } from '../../pages/Article_editor/model';
+import { fetchJson, withBase, authHeaders } from './http';
 
-export async function createArticle(title: string = 'New Article'): Promise<any> {
+export interface ArticleResponse {
+    success: boolean;
+    article?: KnowledgeArticle;
+}
+
+export interface ArticleTextResponse {
+    success: boolean;
+    text?: string;
+}
+
+export interface ArticleListResponse {
+    success: boolean;
+    articles?: KnowledgeArticle[];
+}
+
+export interface SaveTextResponse {
+    success: boolean;
+    message?: string;
+}
+
+export interface SaveStatementsResponse {
+    success: boolean;
+    statement_ids?: string[];
+}
+
+export interface SaveStatementPayload {
+    uid?: string;
+    subject_text: string;
+    predicate: string;
+    object_text: string;
+    subject_type?: string;
+    object_type?: string;
+    type?: string;
+    confidence?: number;
+    sentence_text?: string;
+    sort_order?: number;
+    sourceBlockId?: string;
+}
+
+export interface CreateArticleResponse {
+    success?: boolean;
+    uid?: string;
+    title?: string;
+    original_filename?: string;
+}
+
+export interface ParseTextResult {
+    success?: boolean;
+    statements?: KnowledgeStatement[];
+    message?: string;
+}
+
+export interface ArticleGraphResponse {
+    success: boolean;
+    nodes: unknown[];
+    edges: unknown[];
+}
+
+export async function createArticle(title: string = 'New Article'): Promise<CreateArticleResponse> {
     return fetchJson('/api/article_editor/articles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -8,15 +67,15 @@ export async function createArticle(title: string = 'New Article'): Promise<any>
     });
 }
 
-export async function listArticles(skip = 0, limit = 200): Promise<any> {
+export async function listArticles(skip = 0, limit = 200): Promise<ArticleListResponse> {
     return fetchJson(`/api/article_editor/articles?skip=${skip}&limit=${limit}`);
 }
 
-export async function getArticle(docId: string): Promise<any> {
+export async function getArticle(docId: string): Promise<ArticleResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}`);
 }
 
-export async function getArticleText(docId: string): Promise<any> {
+export async function getArticleText(docId: string): Promise<ArticleTextResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/text`);
 }
 
@@ -34,7 +93,7 @@ export async function getAgentArticleText(docId: string, doi?: string): Promise<
     return fetchJson(url);
 }
 
-export async function saveArticleText(docId: string, text: string): Promise<any> {
+export async function saveArticleText(docId: string, text: string): Promise<SaveTextResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/text`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -42,7 +101,7 @@ export async function saveArticleText(docId: string, text: string): Promise<any>
     });
 }
 
-export async function saveStatements(docId: string, statements: any[]): Promise<any> {
+export async function saveStatements(docId: string, statements: SaveStatementPayload[]): Promise<SaveStatementsResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/statements`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -50,7 +109,7 @@ export async function saveStatements(docId: string, statements: any[]): Promise<
     });
 }
 
-export async function saveBlocks(docId: string, blocks: any[]): Promise<any> {
+export async function saveBlocks(docId: string, blocks: ArticleBlockData[]): Promise<SaveTextResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/blocks`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -58,7 +117,7 @@ export async function saveBlocks(docId: string, blocks: any[]): Promise<any> {
     });
 }
 
-export async function getBlocks(docId: string): Promise<any> {
+export async function getBlocks(docId: string): Promise<{ success: boolean; blocks?: ArticleBlockData[] }> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/blocks`);
 }
 
@@ -79,7 +138,7 @@ export function articleImageUrl(objectKey: string): string {
     return withBase(`/api/article_editor/images/${encoded}`);
 }
 
-export async function updateArticleTitle(docId: string, title: string): Promise<any> {
+export async function updateArticleTitle(docId: string, title: string): Promise<SaveTextResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/title`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -87,7 +146,7 @@ export async function updateArticleTitle(docId: string, title: string): Promise<
     });
 }
 
-export async function parseText(text: string, docId = '', useLlm = false, save = false): Promise<any> {
+export async function parseText(text: string, docId = '', useLlm = false, save = false): Promise<ParseTextResult> {
     return fetchJson('/api/article_editor/parse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -95,13 +154,13 @@ export async function parseText(text: string, docId = '', useLlm = false, save =
     });
 }
 
-export async function getArticleGraph(docId: string): Promise<any> {
+export async function getArticleGraph(docId: string): Promise<ArticleGraphResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/graph`);
 }
 
 export interface SplitBlocksResult {
     success: boolean;
-    blocks: any[];
+    blocks: ArticleBlockData[];
 }
 
 export async function splitIntoBlocks(text: string): Promise<SplitBlocksResult> {
@@ -119,7 +178,7 @@ export interface ParseProgress {
 
 export interface ParseStreamCallbacks {
     onProgress?: (progress: ParseProgress) => void;
-    onResult?: (result: any) => void;
+    onResult?: (result: ParseTextResult) => void;
     onError?: (error: string) => void;
     signal?: AbortSignal;
 }
@@ -128,11 +187,9 @@ export async function parseTextStream(
     text: string, docId = '', useLlm = false, save = false,
     callbacks: ParseStreamCallbacks = {},
 ): Promise<void> {
-    const base = ((import.meta as any).env?.VITE_API_BASE_URL || '').replace(/\/$/, '');
-    const url = `${base}/api/article_editor/parse_stream`;
-    const response = await fetch(url, {
+    const response = await fetch(withBase('/api/article_editor/parse_stream'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ text, doc_id: docId, use_llm: useLlm, save }),
         signal: callbacks.signal,
     });
@@ -163,7 +220,7 @@ export async function parseTextStream(
                 if (msg.type === 'progress') {
                     callbacks.onProgress?.({ processed: msg.processed, total: msg.total });
                 } else if (msg.type === 'result') {
-                    callbacks.onResult?.(msg.data);
+                    callbacks.onResult?.(msg.data as ParseTextResult);
                 } else if (msg.type === 'start') {
                     // no-op
                 }
@@ -180,10 +237,16 @@ export interface ExtractBlocksRequest {
     save?: boolean;
 }
 
+export interface ExtractBlocksResult {
+    success?: boolean;
+    blocks?: ArticleBlockData[];
+    message?: string;
+}
+
 export interface ExtractBlocksCallbacks {
     onStart?: (total: number) => void;
     onProgress?: (progress: ParseProgress) => void;
-    onResult?: (result: any) => void;
+    onResult?: (result: ExtractBlocksResult) => void;
     onError?: (error: string) => void;
     onCancelled?: () => void;
     signal?: AbortSignal;
@@ -194,11 +257,9 @@ export async function extractBlocksStream(
     req: ExtractBlocksRequest,
     callbacks: ExtractBlocksCallbacks = {},
 ): Promise<void> {
-    const base = ((import.meta as any).env?.VITE_API_BASE_URL || '').replace(/\/$/, '');
-    const url = `${base}/api/article_editor/articles/${encodeURIComponent(req.docId)}/llm-extract`;
-    const response = await fetch(url, {
+    const response = await fetch(withBase(`/api/article_editor/articles/${encodeURIComponent(req.docId)}/llm-extract`), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
             text: req.text,
             doc_id: req.docId,
@@ -237,7 +298,7 @@ export async function extractBlocksStream(
                 } else if (msg.type === 'progress') {
                     callbacks.onProgress?.({ processed: msg.processed, total: msg.total });
                 } else if (msg.type === 'result') {
-                    callbacks.onResult?.(msg.data);
+                    callbacks.onResult?.(msg.data as ExtractBlocksResult);
                 } else if (msg.type === 'cancelled') {
                     callbacks.onCancelled?.();
                 } else if (msg.type === 'error') {
@@ -248,4 +309,3 @@ export async function extractBlocksStream(
     }
 }
 
-export { fetchJson };

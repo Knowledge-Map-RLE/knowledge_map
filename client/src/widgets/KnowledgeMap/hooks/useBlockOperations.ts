@@ -29,6 +29,7 @@ export const useBlockOperations = ({
       // Оптимистичное добавление с корректными, но временными координатами
       const newBlock: BlockData = {
         id: response.new_block.id,
+        title: response.new_block.content || 'Новый блок',
         text: response.new_block.content || 'Новый блок',
         x: (sourceBlock.x || 0) + (linkDirection === 'from_source' ? 150 : -150), // Временная позиция
         y: sourceBlock.y || 0, // Временная позиция

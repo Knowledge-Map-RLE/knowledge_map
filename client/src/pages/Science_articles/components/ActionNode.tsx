@@ -1,8 +1,9 @@
-import { Graphics, Container, Text } from 'pixi.js';
+import { Graphics, Container } from 'pixi.js';
 import { extend } from '@pixi/react';
+import { PixiText } from '../../../shared/pixi/PixiText';
 import type { ActionNode as ActionNodeData } from '../hooks/useKnowledgeMapLoader';
 
-extend({ Graphics, Container, Text });
+extend({ Graphics, Container });
 
 const ACTION_COLORS: Record<string, number> = {
   result:    0xFF5722,  // оранжево-красный
@@ -34,21 +35,16 @@ export function ActionNode({ node, isSelected = false, onClick }: ActionNodeProp
 
   const draw = (g: Graphics) => {
     g.clear();
-    // Фон
-    g.beginFill(fillColor, isSelected ? 1.0 : 0.85);
-    g.drawRoundedRect(-NODE_WIDTH / 2, -NODE_HEIGHT / 2, NODE_WIDTH, NODE_HEIGHT, RADIUS);
-    g.endFill();
-    // Рамка
-    g.lineStyle({ width: isSelected ? borderWidth + 1 : borderWidth, color: isSelected ? 0xFFFFFF : BORDER_COLOR, alpha: 0.6 });
-    g.drawRoundedRect(-NODE_WIDTH / 2, -NODE_HEIGHT / 2, NODE_WIDTH, NODE_HEIGHT, RADIUS);
+    g.roundRect(-NODE_WIDTH / 2, -NODE_HEIGHT / 2, NODE_WIDTH, NODE_HEIGHT, RADIUS);
+    g.fill({ color: fillColor, alpha: isSelected ? 1.0 : 0.85 });
+    g.stroke({ width: isSelected ? borderWidth + 1 : borderWidth, color: isSelected ? 0xFFFFFF : BORDER_COLOR, alpha: 0.6 });
   };
 
   const drawBadge = (g: Graphics) => {
     if (node.doc_count <= 1) return;
     g.clear();
-    g.beginFill(0xFFFFFF, 0.9);
-    g.drawCircle(NODE_WIDTH / 2 - 6, -NODE_HEIGHT / 2 + 6, 10);
-    g.endFill();
+    g.circle(NODE_WIDTH / 2 - 6, -NODE_HEIGHT / 2 + 6, 10);
+    g.fill({ color: 0xFFFFFF, alpha: 0.9 });
   };
 
   return (
@@ -60,7 +56,7 @@ export function ActionNode({ node, isSelected = false, onClick }: ActionNodeProp
       onPointerDown={() => onClick?.(node.id)}
     >
       <graphics draw={draw} />
-      <text
+      <PixiText
         text={truncated}
         anchor={{ x: 0.5, y: 0.5 }}
         x={0}
@@ -78,7 +74,7 @@ export function ActionNode({ node, isSelected = false, onClick }: ActionNodeProp
       {node.doc_count > 1 && (
         <>
           <graphics draw={drawBadge} />
-          <text
+          <PixiText
             text={String(node.doc_count)}
             anchor={{ x: 0.5, y: 0.5 }}
             x={NODE_WIDTH / 2 - 6}

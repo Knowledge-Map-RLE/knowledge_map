@@ -71,6 +71,20 @@
     border-bottom-color: #2563eb;
 }
 
+.tabButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.chatContainer {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
 .tabContent {
     flex: 1;
     min-height: 0;

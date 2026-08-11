@@ -1,152 +1,132 @@
-import { fetchJson } from './http';
+import type {
+    Document,
+    DocumentAssets,
+    DocumentProgress,
+    PubMedIngestResponse,
+    PubMedSearchResponse,
+} from '../../entities/document';
+import { fetchJson, withBase } from './http';
 
-export async function uploadPdfForExtraction(file: File, onProgress?: (progress: number) => void): Promise<any> {
+export interface ExtractionUploadResponse {
+    success: boolean;
+    doc_id?: string;
+    message?: string;
+    files?: Record<string, string>;
+}
+
+export interface SaveMarkdownResponse {
+    success?: boolean;
+    message?: string;
+    validation?: { is_valid: boolean };
+}
+
+export interface DocumentsListResponse {
+    success: boolean;
+    documents: Document[];
+    total_count: number;
+}
+
+export interface DeleteDocumentResponse {
+    success: boolean;
+    message: string;
+}
+
+export async function uploadPdfForExtraction(file: File, onProgress?: (progress: number) => void): Promise<ExtractionUploadResponse> {
   const form = new FormData();
   form.append('file', file);
-  
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  
+
   if (onProgress) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      
+
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable) {
           const percentComplete = Math.round((event.loaded / event.total) * 100);
           onProgress(percentComplete);
         }
       });
-      
+
       xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
-            const response = JSON.parse(xhr.responseText);
+            const response = JSON.parse(xhr.responseText) as ExtractionUploadResponse;
             resolve(response);
-          } catch (e) {
+          } catch {
             reject(new Error('Failed to parse response'));
           }
         } else {
           reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
         }
       });
-      
+
       xhr.addEventListener('error', () => {
         reject(new Error('Network error'));
       });
-      
-      xhr.open('POST', `${base}/api/data_extraction/data_extraction`);
+
+      xhr.open('POST', withBase('/api/data_extraction/data_extraction'));
       xhr.send(form);
     });
   } else {
-    const res = await fetch(`${base}/api/data_extraction/data_extraction`, { method: 'POST', body: form });
-    return res.json();
+    const res = await fetch(withBase('/api/data_extraction/data_extraction'), { method: 'POST', body: form });
+    return (await res.json()) as ExtractionUploadResponse;
   }
 }
 
-export async function importAnnotations(docId: string, annotations: any): Promise<{ success: boolean; key?: string }> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/annotations/import`, {
+export async function importAnnotations(docId: string, annotations: unknown): Promise<{ success: boolean; key?: string }> {
+  return fetchJson(`/api/data_extraction/annotations/import`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ doc_id: docId, annotations_json: annotations })
   });
-  return res.json();
 }
 
 export async function exportAnnotations(docId: string): Promise<string> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/annotations/export?doc_id=${encodeURIComponent(docId)}`);
+  const res = await fetch(withBase(`/api/data_extraction/annotations/export?doc_id=${encodeURIComponent(docId)}`));
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return await res.text();
 }
 
-export async function getDocumentAssets(docId: string): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/assets?include_urls=true`);
-  return res.json();
+export async function getDocumentAssets(docId: string): Promise<DocumentAssets> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/assets?include_urls=true`);
 }
 
-export async function getDocumentProgress(docId: string): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/progress`);
-  return res.json();
+export async function getDocumentProgress(docId: string): Promise<DocumentProgress> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/progress`);
 }
 
-export async function saveMarkdown(docId: string, markdown: string, annotate = false): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}/markdown`, {
+export async function saveMarkdown(docId: string, markdown: string, annotate = false): Promise<SaveMarkdownResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/markdown`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ markdown, annotate })
   });
-  if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    const detail = body?.detail || await res.text().catch(() => '');
-    throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
-  }
-  return res.json();
 }
 
-export async function deleteDocument(docId: string): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${encodeURIComponent(docId)}`, { method: 'DELETE' });
-  return res.json();
+export async function deleteDocument(docId: string): Promise<DeleteDocumentResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}`, { method: 'DELETE' });
 }
 
-export async function listDocuments(skip: number = 0, limit: number = 200, signal?: AbortSignal): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+export async function listDocuments(skip: number = 0, limit: number = 200, signal?: AbortSignal): Promise<DocumentsListResponse> {
   const params = new URLSearchParams({ skip: String(skip), limit: String(limit) });
-  const res = await fetch(`${base}/api/data_extraction/documents?${params}`, { signal });
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-  }
-  return res.json();
+  return fetchJson(`/api/data_extraction/documents?${params}`, { signal });
 }
 
-export async function searchDocuments(q: string, skip: number = 0, limit: number = 100, signal?: AbortSignal): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+export async function searchDocuments(q: string, skip: number = 0, limit: number = 100, signal?: AbortSignal): Promise<DocumentsListResponse> {
   const params = new URLSearchParams({ q, skip: String(skip), limit: String(limit) });
-  const res = await fetch(`${base}/api/data_extraction/documents/search?${params}`, { signal });
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-  }
-  return res.json();
+  return fetchJson(`/api/data_extraction/documents/search?${params}`, { signal });
 }
 
-export async function searchPubMed(query: string, limit: number = 10): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+export async function searchPubMed(query: string, limit: number = 10): Promise<PubMedSearchResponse> {
   const params = new URLSearchParams({ query, limit: String(limit) });
-  const res = await fetch(`${base}/api/data_extraction/pubmed/search?${params}`);
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-  }
-  return res.json();
+  return fetchJson(`/api/data_extraction/pubmed/search?${params}`);
 }
 
-export async function getByPubMedId(id: string): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+export async function getByPubMedId(id: string): Promise<PubMedSearchResponse> {
   const params = new URLSearchParams({ id });
-  const res = await fetch(`${base}/api/data_extraction/pubmed/by-id?${params}`);
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-  }
-  return res.json();
+  return fetchJson(`/api/data_extraction/pubmed/by-id?${params}`);
 }
 
-export async function ingestPubMedArticle(pmid?: string, pmcid?: string, source: string = 'pubmed'): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/pubmed/ingest`, {
+export async function ingestPubMedArticle(pmid?: string, pmcid?: string, source: string = 'pubmed'): Promise<PubMedIngestResponse> {
+  return fetchJson(`/api/data_extraction/pubmed/ingest`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ pmid, pmcid, source }),
   });
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-  }
-  return res.json();
 }

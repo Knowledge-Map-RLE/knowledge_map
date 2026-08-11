@@ -1,4 +1,5 @@
-import { api } from './api'
+import { httpClient as api } from './api/httpClient'
+import { clearToken, getToken, saveToken } from './token'
 import type {
     User,
     AuthResponse,
@@ -24,23 +25,16 @@ export type {
 } from '../entities/user';
 
 class AuthService {
-    private token: string | null = null
-
-    setToken(token: string) {
-        this.token = token
-        localStorage.setItem('auth_token', token)
+    setToken(token: string, remember: boolean = true) {
+        saveToken(token, remember)
     }
 
     getToken(): string | null {
-        if (!this.token) {
-            this.token = localStorage.getItem('auth_token')
-        }
-        return this.token
+        return getToken()
     }
 
     clearToken() {
-        this.token = null
-        localStorage.removeItem('auth_token')
+        clearToken()
     }
 
     async register(data: RegisterRequest): Promise<AuthResponse> {
@@ -48,12 +42,12 @@ class AuthService {
         return await response.json()
     }
 
-    async login(data: LoginRequest): Promise<AuthResponse> {
-        const response = await api.post('/api/auth/login', data)
+    async login(data: LoginRequest, rememberMe: boolean = true): Promise<AuthResponse> {
+        const response = await api.post('/api/auth/login', { ...data, remember_me: rememberMe })
         const result = await response.json()
         
         if (result.success && result.token) {
-            this.setToken(result.token)
+            this.setToken(result.token, rememberMe)
         }
         
         return result
@@ -69,7 +63,7 @@ class AuthService {
             const response = await api.post('/api/auth/logout', { token, logout_all: logoutAll })
             this.clearToken()
             return await response.json()
-        } catch (error) {
+        } catch {
             this.clearToken()
             return { success: false, message: 'Ошибка при выходе' }
         }
@@ -85,7 +79,7 @@ class AuthService {
             const response = await api.post('/api/auth/verify', { token })
             const result = await response.json()
             return result.valid ? result.user : null
-        } catch (error) {
+        } catch {
             this.clearToken()
             return null
         }

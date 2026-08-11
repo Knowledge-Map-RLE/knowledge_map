@@ -90,10 +90,12 @@ class AuthServicer(auth_pb2_grpc.AuthServiceServicer):
             
             # Создаем сессию
             device_info = json.loads(request.device_info) if request.device_info else {}
+            remember_me = bool(device_info.pop("remember_me", False))
             session = self.user_service.create_session(
-                user, 
-                device_info, 
-                request.ip_address
+                user,
+                device_info,
+                request.ip_address,
+                remember_me=remember_me,
             )
             
             return auth_pb2.LoginResponse(

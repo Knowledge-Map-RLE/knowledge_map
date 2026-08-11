@@ -59,7 +59,7 @@ function meta(
     };
 }
 
-function splitLines(val: string | boolean): string[] {
+function splitLines(val: BlockDataValue): string[] {
     if (typeof val !== 'string') return [];
     return val.split('\n').map((s) => s.trim()).filter(Boolean);
 }
@@ -110,7 +110,7 @@ function bool(val: Record<string, BlockDataValue>, key: string): boolean {
 
 function findNameField(def: BlockTypeDef, data: Record<string, BlockDataValue>): BlockFieldDef | undefined {
     const nonEmptyText = (f: BlockFieldDef): boolean =>
-        typeof data[f.key] === 'string' && (data[f.key] as string).trim();
+        typeof data[f.key] === 'string' && (data[f.key] as string).trim().length > 0;
     for (const k of ['name', 'title', 'subject', 'term']) {
         const f = def.fields.find((f) => f.key === k && nonEmptyText(f));
         if (f) return f;

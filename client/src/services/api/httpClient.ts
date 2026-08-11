@@ -1,4 +1,4 @@
-const API_BASE_URL = ((import.meta as any).env?.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 
 const withBase = (path: string) => {
   if (!API_BASE_URL) {
@@ -7,26 +7,15 @@ const withBase = (path: string) => {
   return path.startsWith('/') ? `${API_BASE_URL}${path}` : `${API_BASE_URL}/${path}`;
 };
 
+import { getToken } from '../token';
+
 class HttpClient {
-  private token: string | null = null;
-
-  setToken(token: string) {
-    this.token = token;
-  }
-
-  getToken(): string | null {
-    if (!this.token) {
-      this.token = localStorage.getItem('auth_token');
-    }
-    return this.token;
-  }
-
-  async request(method: string, path: string, body?: any): Promise<Response> {
+  async request(method: string, path: string, body?: unknown): Promise<Response> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
     
-    const token = this.getToken();
+    const token = getToken();
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -44,11 +33,11 @@ class HttpClient {
     return this.request('GET', path);
   }
 
-  async post(path: string, body?: any): Promise<Response> {
+  async post(path: string, body?: unknown): Promise<Response> {
     return this.request('POST', path, body);
   }
 
-  async put(path: string, body?: any): Promise<Response> {
+  async put(path: string, body?: unknown): Promise<Response> {
     return this.request('PUT', path, body);
   }
 

@@ -13,5 +13,5 @@ export interface PDFDocument {
     pdf_url?: string;
 }
 
-export type DataExtractionTab = 'pdf' | 'markdown' | 'annotator' | 'patterns' | 'linguistic-graph' | 'graph';
+export type DataExtractionTab = 'pdf' | 'markdown' | 'annotator' | 'patterns' | 'linguistic-graph' | 'graph' | 'chat';
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';

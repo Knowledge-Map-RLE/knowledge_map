@@ -14,7 +14,7 @@ from src.schemas.api import CreateRelationRequest
 from application.relations.create_annotation_relation import create_annotation_relation
 from application.relations.delete_annotation_relation import delete_annotation_relation
 from application.relations.get_annotation_relations import get_annotation_relations
-from web.dependencies import get_annotation_repository, get_document_repository
+from web.dependencies import get_annotation_repository, get_document_repository, get_current_user
 
 router = APIRouter(tags=["relations"])
 
@@ -24,6 +24,7 @@ async def create_relation_route(
     source_id: str,
     request: CreateRelationRequest,
     ann_repo=Depends(get_annotation_repository),
+    _user: dict = Depends(get_current_user),
 ):
     rel = create_annotation_relation(
         repo=ann_repo,
@@ -50,6 +51,7 @@ async def delete_relation_route(
     source_id: str,
     target_id: str,
     ann_repo=Depends(get_annotation_repository),
+    _user: dict = Depends(get_current_user),
 ):
     delete_annotation_relation(repo=ann_repo, source_id=source_id, target_id=target_id)
     return {"success": True, "message": "Relation deleted"}

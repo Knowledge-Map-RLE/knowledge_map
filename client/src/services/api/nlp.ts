@@ -1,17 +1,11 @@
-import type { NLPAnalyzeRequest, NLPAnalyzeResponse, AutoAnnotateResponse, MultiLevelAnalysisResponse, AutoReviewResponse } from '../entities/annotation';
-import { fetchJson } from './http';
+import type { NLPAnalyzeRequest, NLPAnalyzeResponse, AutoAnnotateResponse, MultiLevelAnalysisResponse } from '../../entities/document';
+import { fetchJson, withBase } from './http';
 
 export async function analyzeText(request: NLPAnalyzeRequest): Promise<NLPAnalyzeResponse> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/nlp/analyze`, {
+  return fetchJson('/api/data_extraction/nlp/analyze', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request)
   });
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status}: ${await res.text()}`);
-  }
-  return res.json();
 }
 
 export async function autoAnnotateDocument(
@@ -20,21 +14,14 @@ export async function autoAnnotateDocument(
   annotationTypes: string[] | null = null,
   minConfidence: number = 0.7
 ): Promise<AutoAnnotateResponse> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${docId}/auto-annotate`, {
+  return fetchJson(`/api/data_extraction/documents/${docId}/auto-annotate`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       processors,
       annotation_types: annotationTypes,
       min_confidence: minConfidence
     })
   });
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`HTTP ${res.status}: ${errorText}`);
-  }
-  return res.json();
 }
 
 export async function autoAnnotateMultilevel(
@@ -44,10 +31,8 @@ export async function autoAnnotateMultilevel(
   createAnnotations: boolean = true,
   minConfidence: number = 0.8
 ): Promise<MultiLevelAnalysisResponse> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${docId}/analyze-multilevel`, {
+  return fetchJson(`/api/data_extraction/documents/${docId}/analyze-multilevel`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       enable_voting: enableVoting,
       max_level: maxLevel,
@@ -55,23 +40,14 @@ export async function autoAnnotateMultilevel(
       min_confidence: minConfidence
     })
   });
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`HTTP ${res.status}: ${errorText}`);
-  }
-  return res.json();
 }
 
 export async function getNlpTaskStatus(docId: string): Promise<{ status: string; error?: string | null }> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/documents/${docId}/nlp-status`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  return fetchJson(`/api/data_extraction/documents/${docId}/nlp-status`);
 }
 
 export async function exportAnnotationsYAML(docId: string): Promise<Blob> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
-  const res = await fetch(`${base}/api/data_extraction/annotations/export-yaml?doc_id=${encodeURIComponent(docId)}`);
+  const res = await fetch(withBase(`/api/data_extraction/annotations/export-yaml?doc_id=${encodeURIComponent(docId)}`));
   if (!res.ok) {
     const errorText = await res.text();
     throw new Error(`HTTP ${res.status}: ${errorText}`);
@@ -79,17 +55,11 @@ export async function exportAnnotationsYAML(docId: string): Promise<Blob> {
   return res.blob();
 }
 
-export async function importAnnotationsYAML(docId: string, file: File): Promise<any> {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
+export async function importAnnotationsYAML(docId: string, file: File): Promise<{ success: boolean; message?: string }> {
   const formData = new FormData();
   formData.append('file', file);
-  const res = await fetch(`${base}/api/data_extraction/annotations/import-yaml?doc_id=${encodeURIComponent(docId)}`, {
+  return fetchJson(`/api/data_extraction/annotations/import-yaml?doc_id=${encodeURIComponent(docId)}`, {
     method: 'POST',
     body: formData
   });
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`HTTP ${res.status}: ${errorText}`);
-  }
-  return res.json();
 }

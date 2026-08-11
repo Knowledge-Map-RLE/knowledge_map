@@ -1,4 +1,4 @@
-import type { Block, Level, Sublevel } from '../../entities/block/model';
+import type { Block, Level, Sublevel } from '../../../entities/block/model';
 
 export function calculateBlockCoordinates(blocks: Block[], levels: Level[], sublevels: Sublevel[]): Block[] {
     return blocks.map(block => {

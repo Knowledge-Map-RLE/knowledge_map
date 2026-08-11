@@ -1,9 +1,10 @@
-import { Graphics, Container, Text } from 'pixi.js';
+import { Graphics, Container } from 'pixi.js';
 import { extend } from '@pixi/react';
+import { PixiText } from '../../../shared/pixi/PixiText';
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 
-extend({ Graphics, Container, Text });
+extend({ Graphics, Container });
 
 export interface TestNodeProps {
   x?: number;
@@ -32,24 +33,21 @@ export function TestNode({ x = 0, y = 0, text = "Тестовая вершина
   const draw = (g: Graphics) => {
     g.clear();
     // Рисуем круг с градиентом
-    g.beginFill(0x3b82f6);
-    g.drawCircle(0, 0, 30);
-    g.endFill();
-    
+    g.circle(0, 0, 30);
+    g.fill(0x3b82f6);
+
     // Добавляем обводку
-    g.lineStyle({ width: 3, color: 0x1e40af });
-    g.drawCircle(0, 0, 30);
-    
+    g.stroke({ width: 3, color: 0x1e40af });
+
     // Добавляем внутренний круг для эффекта
-    g.lineStyle({ width: 1, color: 0x60a5fa });
-    g.drawCircle(0, 0, 20);
+    g.circle(0, 0, 20);
+    g.stroke({ width: 1, color: 0x60a5fa });
   };
 
   const drawText = (g: Graphics) => {
     g.clear();
-    g.beginFill(0xffffff);
-    g.drawRoundedRect(-60, 40, 120, 30, 8);
-    g.endFill();
+    g.roundRect(-60, 40, 120, 30, 8);
+    g.fill(0xffffff);
   };
 
   return (
@@ -62,7 +60,7 @@ export function TestNode({ x = 0, y = 0, text = "Тестовая вершина
     >
       <graphics draw={draw} />
       <graphics draw={drawText} />
-      <text
+      <PixiText
         text={text}
         anchor={{ x: 0.5, y: 0.5 }}
         x={0}

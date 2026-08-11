@@ -1,4 +1,4 @@
-import type { Annotation, AnnotationRelation } from '../entities/annotation';
+import type { Annotation, AnnotationRelation } from '../../entities/annotation';
 
 function csvEscape(value: string): string {
   const str = String(value ?? '');
@@ -83,20 +83,20 @@ export function parseAnnotationsCSV(csvText: string): {
     if (section === 'annotations') {
       if (annHeaders.length === 0) { annHeaders = csvParseLine(line); continue; }
       const vals = csvParseLine(line);
-      const obj: Partial<Annotation> = {};
+      const obj: Partial<Annotation> & Record<string, unknown> = {};
       annHeaders.forEach((h, i) => {
         const v = vals[i] ?? '';
         if (h === 'start_offset') obj.start_offset = parseInt(v, 10);
         else if (h === 'end_offset') obj.end_offset = parseInt(v, 10);
         else if (h === 'confidence') obj.confidence = v !== '' ? parseFloat(v) : undefined;
-        else (obj as any)[h] = v;
+        else obj[h] = v;
       });
       if (obj.text !== undefined) annotations.push(obj);
     } else if (section === 'relations') {
       if (relHeaders.length === 0) { relHeaders = csvParseLine(line); continue; }
       const vals = csvParseLine(line);
-      const obj: Partial<AnnotationRelation> = {};
-      relHeaders.forEach((h, i) => { (obj as any)[h] = vals[i] ?? ''; });
+      const obj: Partial<AnnotationRelation> & Record<string, unknown> = {};
+      relHeaders.forEach((h, i) => { obj[h] = vals[i] ?? ''; });
       if (obj.source_uid && obj.target_uid) relations.push(obj);
     }
   }

@@ -7,10 +7,13 @@ Responsibility: FastAPI Depends() — DI-wiring, связывает Protocol с 
 через FastAPI dependency injection. Это ЕДИНСТВЕННОЕ место, где use cases
 узнают о конкретных реализациях.
 
-Allowed imports: fastapi, adapters.repositories.*, infrastructure.*, application.ports.*
-Forbidden imports: neomodel (напрямую), domain (только через порты)
+Allowed imports: fastapi, adapters.repositories.*, infrastructure.*, application.*
+Forbidden imports: neomodel (напрямую)
 """
+from typing import Optional
+
 from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from adapters.repositories.block_repository import BlockRepository
 from adapters.repositories.link_repository import LinkRepository
@@ -22,6 +25,9 @@ from adapters.repositories.pattern_graph_repository import PatternGraphRepositor
 from infrastructure.s3.s3_storage import get_s3_client, AsyncS3Client
 from infrastructure.grpc_clients.auth_grpc_client import auth_client, AuthClient
 from infrastructure.config import settings
+
+from application.auth.verify_token import verify_token
+from domain.exceptions import AuthenticationFailed, ExternalServiceError
 
 
 # ── Репозитории ────────────────────────────────────────────────────────────────
@@ -79,3 +85,45 @@ def get_layout_client_dep():
 def get_nlp_client_dep():
     from services.nlp_grpc_client import get_nlp_grpc_client
     return get_nlp_grpc_client()
+
+
+# ── Авторизация ─────────────────────────────────────────────────────────────────
+
+_bearer_scheme = HTTPBearer(auto_error=False, description="Bearer-токен пользователя")
+
+
+def get_current_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
+) -> dict:
+    """FastAPI-зависимость: текущий пользователь из Bearer-токена.
+
+    Бросает AuthenticationFailed (401) при отсутствии/невалидности токена,
+    ExternalServiceError (502) — если сервис авторизации недоступен.
+    Обработчики исключений зарегистрированы в web/exception_handlers.py.
+    """
+    if credentials is None or not credentials.credentials:
+        raise AuthenticationFailed("Не авторизован: отсутствует Bearer-токен")
+    result = verify_token(auth_client, credentials.credentials)
+    user = result.get("user")
+    if not user:
+        raise AuthenticationFailed("Токен недействителен")
+    return user
+
+
+def get_optional_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
+) -> Optional[dict]:
+    """FastAPI-зависимость: текущий пользователь из Bearer-токена либо None.
+
+    Для публичных read-only эндпоинтов (профили, сообщества, граф), которые
+    должны работать и без регистрации: если токен отсутствует или невалиден —
+    возвращается None вместо исключения.
+    """
+    if credentials is None or not credentials.credentials:
+        return None
+    try:
+        result = verify_token(auth_client, credentials.credentials)
+    except (AuthenticationFailed, ExternalServiceError):
+        return None
+    user = result.get("user")
+    return user or None

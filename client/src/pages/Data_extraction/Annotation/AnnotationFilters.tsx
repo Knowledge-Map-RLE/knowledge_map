@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Annotation } from '../../../services/api';
+import type { Annotation } from '../../../services/api';
 import { ANNOTATION_CATEGORIES } from './annotationTypes';
 
 interface AnnotationFiltersProps {

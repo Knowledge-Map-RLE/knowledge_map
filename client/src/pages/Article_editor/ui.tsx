@@ -4,7 +4,11 @@ import Document_downloader_ui, { type DocumentListHandle } from '../Data_extract
 import EditorWorkspace from './Editor/EditorWorkspace';
 import ArticleMap from './Editor/ArticleMap';
 import EvidencePatterns from './Editor/EvidencePatterns';
+import { ChatPanel } from '../Social_network/components/ChatPanel';
+import type { ChatTarget } from '../Social_network/model';
 import { useArticleState } from './hooks/useArticleState';
+import { useAuth } from '../../entities/auth';
+import { useRequireAuth } from '../../shared/hooks/useRequireAuth';
 import type { ArticleEditorTab } from './model';
 import styles from './Article_editor.module.css';
 
@@ -12,9 +16,32 @@ const ArticleEditorUI: React.FC = () => {
     const [activeTab, setActiveTab] = useState<ArticleEditorTab>('editor');
     const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
     const [selectedDocument, setSelectedDocument] = useState<any>(null);
+    const [chatTarget, setChatTarget] = useState<ChatTarget | null>(null);
     const noopRef = useRef<() => void>(() => {});
     const noopSetError = useRef<(e: string | null) => void>(() => {});
     const docListRef = useRef<DocumentListHandle>(null);
+    const requireAuth = useRequireAuth();
+    const { isAuthenticated, user } = useAuth();
+
+    const openArticleChat = useCallback(() => {
+        if (!selectedDocId) return;
+        setChatTarget({
+            type: 'article',
+            uid: selectedDocId,
+            label: (selectedDocument as any)?.title || selectedDocId,
+        });
+        setActiveTab('chat');
+    }, [selectedDocId, selectedDocument]);
+
+    useEffect(() => {
+        if (selectedDocId) {
+            setChatTarget({
+                type: 'article',
+                uid: selectedDocId,
+                label: (selectedDocument as any)?.title || selectedDocId,
+            });
+        }
+    }, [selectedDocId, selectedDocument]);
 
     const {
         text, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
@@ -33,10 +60,10 @@ const ArticleEditorUI: React.FC = () => {
     }, [loadArticle, setText]);
 
     useEffect(() => {
-        if (selectedDocId && text.length > 0 && !notAnnotatedMessage && blocks.length === 0) {
+        if (isAuthenticated && selectedDocId && text.length > 0 && !notAnnotatedMessage && blocks.length === 0) {
             triggerParse(selectedDocId);
         }
-    }, [text, selectedDocId, triggerParse, notAnnotatedMessage, blocks.length]);
+    }, [text, selectedDocId, triggerParse, notAnnotatedMessage, blocks.length, isAuthenticated]);
 
     const handleSave = useCallback(async () => {
         if (selectedDocId && !notAnnotatedMessage) {
@@ -49,6 +76,7 @@ const ArticleEditorUI: React.FC = () => {
     }, [applyExtractedBlocks]);
 
     const handleCreateNew = useCallback(async () => {
+        if (!requireAuth()) return;
         const { createArticle } = await import('../../services/api/article_editor');
         const result = await createArticle('Новая статья');
         if (result?.uid) {
@@ -66,7 +94,7 @@ const ArticleEditorUI: React.FC = () => {
             await new Promise(resolve => setTimeout(resolve, 0));
             await save(result.uid);
         }
-    }, [initNewArticle, addBlock, save]);
+    }, [initNewArticle, addBlock, save, requireAuth]);
 
     return (
         <main className={styles.ae}>
@@ -115,6 +143,14 @@ const ArticleEditorUI: React.FC = () => {
                             onClick={() => setActiveTab('patterns')}
                         >
                             Паттерны
+                        </button>
+                        <button
+                            className={`${styles.tabButton} ${activeTab === 'chat' ? styles.active : ''}`}
+                            onClick={openArticleChat}
+                            disabled={!selectedDocId}
+                            title={selectedDocId ? 'Обсуждение статьи' : 'Сначала откройте или создайте статью'}
+                        >
+                            Обсуждение
                         </button>
                     </div>
 
@@ -177,6 +213,23 @@ const ArticleEditorUI: React.FC = () => {
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
                                         Выберите файл или создайте новую статью
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {activeTab === 'chat' && (
+                            <div className={styles.chatContainer}>
+                                {selectedDocId && isAuthenticated && user ? (
+                                    <ChatPanel
+                                        target={chatTarget}
+                                        onOpenTarget={(t) => setChatTarget(t)}
+                                        myUid={user.uid}
+                                        hideRail
+                                        title={(selectedDocument as any)?.title || 'Обсуждение статьи'}
+                                    />
+                                ) : (
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
+                                        {!selectedDocId ? 'Выберите файл или создайте новую статью' : 'Войдите в аккаунт, чтобы участвовать в обсуждении'}
                                     </div>
                                 )}
                             </div>

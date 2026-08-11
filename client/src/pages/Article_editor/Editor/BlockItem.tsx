@@ -13,6 +13,15 @@ interface BlockItemProps {
   onContextMenu: (e: React.MouseEvent) => void;
 }
 
+const TYPE_ICONS: Partial<Record<ArticleBlock['type'], string>> = {
+  image: '\u{1F5BC}\uFE0F',
+  table: '\u{1F4CA}',
+  separator: '\u2014',
+  code: '\u{1F4BB}',
+  formula: '\u03A3',
+  paragraph: '\u00B6',
+};
+
 const BlockItem: React.FC<BlockItemProps> = ({
   block, index, totalBlocks, isHighlighted, onChange,
   onDragStart, onContextMenu,

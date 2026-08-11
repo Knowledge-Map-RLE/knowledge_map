@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { BlockData, LevelData, SublevelData, LinkData, PolylinePoint } from '../types';
-import * as api from '../../../services/api';
+import type { Block, Link, Level, Sublevel } from '../../../entities';
 import { edgesByViewport } from '../../../services/api';
 import { calculateBlockCoordinates, calculateLevelCoordinates, calculateSublevelCoordinates } from '../utils/layout';
 
@@ -72,7 +72,7 @@ const mergeRegion = (regions: Bounds[], candidate: Bounds): Bounds[] => {
 };
 
 // Функция для преобразования блока из формата API в формат BlockData
-const convertApiBlockToBlockData = (apiBlock: api.Block): BlockData => {
+const convertApiBlockToBlockData = (apiBlock: Block): BlockData => {
   if (!apiBlock || !apiBlock.id) {
     throw new Error('Invalid block data from API');
   }
@@ -226,7 +226,7 @@ const extractPolylineFromMetadata = (
 };
 
 const extractPolylineFromLink = (
-  apiLink: api.Link,
+  apiLink: Link,
   metadata: Record<string, unknown> | undefined,
 ): PolylinePoint[] | undefined => {
   const fromMetadata = extractPolylineFromMetadata(metadata, apiLink.source_id, apiLink.target_id);
@@ -242,7 +242,7 @@ const extractPolylineFromLink = (
   return undefined;
 };
 
-const convertApiLinkToLinkData = (apiLink: api.Link): LinkData => {
+const convertApiLinkToLinkData = (apiLink: Link): LinkData => {
   if (!apiLink || !apiLink.source_id || !apiLink.target_id) {
     throw new Error('Invalid link data from API');
   }
@@ -294,7 +294,7 @@ const convertApiLinkToLinkData = (apiLink: api.Link): LinkData => {
   };
 };
 
-const convertApiLevelToLevelData = (apiLevel: api.Level): LevelData => {
+const convertApiLevelToLevelData = (apiLevel: Level): LevelData => {
   if (!apiLevel || typeof apiLevel.id !== 'number') {
     throw new Error('Invalid level data from API');
   }
@@ -313,7 +313,7 @@ const convertApiLevelToLevelData = (apiLevel: api.Level): LevelData => {
 };
 
 // Функция для преобразования подуровня из формата API в формат SublevelData
-const convertApiSublevelToSublevelData = (apiSublevel: api.Sublevel): SublevelData => {
+const convertApiSublevelToSublevelData = (apiSublevel: Sublevel): SublevelData => {
   if (!apiSublevel || typeof apiSublevel.id !== 'number') {
     console.error('Invalid sublevel data:', apiSublevel);
     throw new Error('Invalid sublevel data from API');
@@ -429,7 +429,7 @@ export function useDataLoading(): UseDataLoadingResult {
             level: b.level ?? 0,
             physical_scale: b.physical_scale ?? 0,
             is_pinned: b.is_pinned ?? false,
-          } as api.Block)
+          } as Block)
         );
         setBlocks(prev => smartUpdateArray(prev, mergedBlocks));
       }
@@ -442,7 +442,7 @@ export function useDataLoading(): UseDataLoadingResult {
             target_id: String(l.target_id),
             metadata: l.metadata,
             polyline: l.polyline,
-          } as api.Link)
+          } as Link)
         );
         setLinks(prev => smartUpdateArray(prev, mergedLinks));
       }

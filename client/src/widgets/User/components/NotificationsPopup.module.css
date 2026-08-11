@@ -1,0 +1,130 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+}
+
+.popup {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 100;
+    width: 340px;
+    max-width: calc(100vw - 24px);
+    max-height: 420px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.popupHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.popupTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.markAll {
+    border: none;
+    background: none;
+    color: #1d4ed8;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.markAll:hover {
+    background: #eff6ff;
+}
+
+.markAll:disabled {
+    color: #94a3b8;
+    cursor: default;
+    background: none;
+}
+
+.list {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.item:hover {
+    background: #f8fafc;
+}
+
+.itemUnread {
+    background: #eff6ff;
+}
+
+.itemMain {
+    flex: 1;
+    min-width: 0;
+}
+
+.itemText {
+    font-size: 13px;
+    color: #0f172a;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.itemMeta {
+    margin-top: 2px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3b82f6;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.state {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+}

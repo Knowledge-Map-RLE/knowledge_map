@@ -1,0 +1,88 @@
+.card {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: default;
+}
+
+button.main {
+    cursor: pointer;
+}
+
+button.main:hover {
+    background: #f8fafc;
+}
+
+.icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #eef2ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.meta {
+    font-size: 11px;
+    color: #64748b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.uid {
+    color: #94a3b8;
+    font-family: monospace;
+}
+
+.remove {
+    flex-shrink: 0;
+    width: 30px;
+    border: none;
+    border-left: 1px solid #e2e8f0;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.remove:hover {
+    background: #fef2f2;
+    color: #dc2626;
+}

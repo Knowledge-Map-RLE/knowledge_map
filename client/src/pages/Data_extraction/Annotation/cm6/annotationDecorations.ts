@@ -3,7 +3,8 @@
  * Поддерживает перекрывающиеся аннотации через RangeSet.of() с sort:true.
  * Используется как fallback когда CSS Custom Highlight API недоступен.
  */
-import { ViewPlugin, Decoration, DecorationSet } from '@codemirror/view';
+import { ViewPlugin, Decoration } from '@codemirror/view';
+import type { DecorationSet } from '@codemirror/view';
 import { RangeSet } from '@codemirror/state';
 import type { ViewUpdate, EditorView } from '@codemirror/view';
 import { annotationField, queryAnnotationsInRange } from './annotationStateField';

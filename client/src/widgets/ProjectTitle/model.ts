@@ -19,6 +19,7 @@ export const LINKS: readonly ProjectTitleLink[] = [
     { to: '/science_articles', label: 'Карта научных статей' },
     { to: '/pattern_analysis', label: 'Анализ паттернов' },
     { to: '/article_editor', label: 'Редактор статей' },
+    { to: '/social_network', label: 'Социальная сеть' },
 ] as const;
 
 export interface ProjectTitleProps {

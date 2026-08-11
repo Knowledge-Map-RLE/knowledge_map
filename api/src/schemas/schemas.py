@@ -16,11 +16,17 @@ class UserLoginRequest(BaseModel):
     captcha: str
     device_info: Optional[str] = None
     ip_address: Optional[str] = None
+    remember_me: Optional[bool] = None
 
 
 class UserRecoveryRequest(BaseModel):
     recovery_key: str
     captcha: str
+
+
+class UserLogoutRequest(BaseModel):
+    token: str
+    logout_all: bool = False
 
 
 class UserPasswordResetRequest(BaseModel):

@@ -1,5 +1,6 @@
 import { Graphics, Text } from 'pixi.js';
 import { extend } from '@pixi/react';
+import { PixiText } from '../../../shared/pixi/PixiText';
 import { useCallback, useState } from 'react';
 import { Block } from './Block';
 import type { BlockData, SublevelData, EditMode } from '../types';
@@ -53,7 +54,7 @@ export function Sublevel({
         }}
         onMouseDown={() => onSublevelClick?.(sublevelData.id, ((min_x ?? 0) + (max_x ?? 0)) / 2, min_y ?? 0)}
       />
-      <pixiText
+      <PixiText
         text={`Подуровень: ${id}`}
         x={(min_x ?? 0) + 10}
         y={(min_y ?? 0) + 10}

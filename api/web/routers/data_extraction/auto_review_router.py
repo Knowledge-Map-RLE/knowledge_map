@@ -10,8 +10,10 @@ import logging
 import os
 import sys
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+
+from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class AutoReviewResponse(BaseModel):
 
 
 @router.post("/auto-review", response_model=AutoReviewResponse)
-async def auto_review_document(doc_id: str, dry_run: bool = False):
+async def auto_review_document(doc_id: str, dry_run: bool = False, _user: dict = Depends(get_current_user)):
     """
     Автоматически подтверждает/отклоняет рёбра LEADS_TO для документа.
 

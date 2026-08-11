@@ -1,11 +1,14 @@
 import { ModeIndicator, EditingPanel, BlockContextMenu } from '../../../widgets/KnowledgeMap';
-import type { BlockData, EditMode } from '../../../widgets/KnowledgeMap';
+import type { BlockData, EditMode, LinkCreationStep } from '../../../widgets/KnowledgeMap';
 
 interface ArticlesControlsProps {
   currentMode: EditMode;
-  linkCreationStep: string;
-  editingBlock: string | null;
-  creatingBlock: any;
+  linkCreationStep: LinkCreationStep;
+  editingBlock: BlockData | null;
+  creatingBlock: {
+    sourceBlock: BlockData | null;
+    targetLevel: number;
+  } | null;
   editingText: string;
   contextMenu: any;
   blocks: BlockData[];

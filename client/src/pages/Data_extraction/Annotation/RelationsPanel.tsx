@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { AnnotationRelation } from '../../../services/api';
+import type { AnnotationRelation } from '../../../services/api';
 import './RelationsPanel.css';
 
 interface RelationsPanelProps {

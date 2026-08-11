@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { DataSourceStatus, WebSocketMessage, DownloadAction } from "../model";
+import type { DataSourceStatus, WebSocketMessage, DownloadAction } from "../model";
 
 const API_BASE = "/api/data_download";
 const WS_URL = `ws://${window.location.host}/api/data_download/ws`;
@@ -21,7 +21,7 @@ export function useDataDownload(): UseDataDownloadReturn {
     const [error, setError] = useState<string | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const wsRef = useRef<WebSocket | null>(null);
-    const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isConnectingRef = useRef(false);
     const isFirstConnectionRef = useRef(true);
 
@@ -104,7 +104,7 @@ export function useDataDownload(): UseDataDownloadReturn {
                                   downloaded_files: "downloaded" in message ? message.downloaded : src.downloaded_files,
                                   total_files: "total" in message ? message.total : src.total_files,
                                   progress_percent: "percent" in message ? message.percent : src.progress_percent,
-                                  status: message.status,
+                                  status: "status" in message ? message.status : "error",
                               }
                             : src
                     )

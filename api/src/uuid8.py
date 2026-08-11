@@ -24,3 +24,20 @@ def uuid8() -> uuid.UUID:
 
 def uuid8_str() -> str:
     return str(uuid8())
+
+
+def uuid8_timestamp(uuid_str: str) -> float:
+    """Извлекает unix-время (секунды) из UUIDv8.
+
+    Первые 8 байт UUIDv8 содержат 64-битный timestamp в микросекундах; старшая
+    полубайтовая часть байта 6 заменена версией (0x8), поэтому точность
+    ограничена ~4 мс — для отображения времени этого достаточно.
+    """
+    try:
+        raw = uuid.UUID(uuid_str).bytes
+    except (ValueError, TypeError, AttributeError):
+        return 0.0
+    ts_us = 0
+    for i in range(8):
+        ts_us = (ts_us << 8) | raw[i]
+    return ts_us / 1_000_000.0

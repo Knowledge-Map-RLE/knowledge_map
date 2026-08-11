@@ -2,7 +2,7 @@
  * Hook для валидации markdown через API
  */
 import { useState, useCallback } from 'react';
-import type { ValidationResponse } from './components/ValidationErrorAlert';
+import type { ValidationResponse } from '../components/ValidationErrorAlert';
 
 interface UseMarkdownValidationOptions {
   apiUrl?: string;

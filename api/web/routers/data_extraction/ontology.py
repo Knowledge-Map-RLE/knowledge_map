@@ -5,9 +5,10 @@ Endpoints for generating and managing ontologies from NLP annotations.
 Ontologies are semantic networks combining syntactic dependencies and semantic relations.
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from services.ontology_service import OntologyService
+from web.dependencies import get_current_user
 import json
 import logging
 
@@ -23,7 +24,7 @@ class GenerateOntologiesRequest:
 
 
 @router.post("/generate")
-async def generate_ontologies(request: dict = None):
+async def generate_ontologies(request: dict = None, _user: dict = Depends(get_current_user)):
     """
     Generate ontologies from multilevel NLP annotations.
 
@@ -113,7 +114,7 @@ async def get_ontology_statistics():
 
 
 @router.delete("/clear")
-async def clear_ontologies():
+async def clear_ontologies(_user: dict = Depends(get_current_user)):
     """
     Clear all existing ontologies and their properties.
 

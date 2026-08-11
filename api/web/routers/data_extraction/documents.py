@@ -40,6 +40,7 @@ from web.dependencies import (
     get_s3,
     get_annotation_repository,
     get_linguistic_pattern_repository,
+    get_current_user,
 )
 
 from utils.hash_utils import _compute_md5
@@ -55,6 +56,7 @@ async def data_extraction_upload(
     file: UploadFile = File(...),
     doc_repo=Depends(get_document_repository),
     storage=Depends(get_s3),
+    _user: dict = Depends(get_current_user),
 ):
     """Загружает PDF, выполняет MD5-дедупликацию и запускает конвертацию в Markdown."""
     from services.data_extraction_service import DataExtractionService  # TRANSITIONAL
@@ -85,6 +87,7 @@ async def delete_document_route(
     doc_id: str,
     doc_repo=Depends(get_document_repository),
     storage=Depends(get_s3),
+    _user: dict = Depends(get_current_user),
 ):
     """Удаляет документ и все его файлы из S3."""
     await delete_document(document_repo=doc_repo, storage=storage, doc_id=doc_id)
@@ -164,6 +167,7 @@ async def update_document_markdown(
     request_body: UpdateMarkdownRequest,
     doc_repo=Depends(get_document_repository),
     storage=Depends(get_s3),
+    _user: dict = Depends(get_current_user),
 ):
     """Обновляет markdown документа с опциональной валидацией."""
     validation_result = None
@@ -263,6 +267,7 @@ async def analyze_patterns_endpoint(
     ann_repo=Depends(get_annotation_repository),
     doc_repo=Depends(get_document_repository),
     pattern_repo=Depends(get_linguistic_pattern_repository),
+    _user: dict = Depends(get_current_user),
 ):
     from application.patterns.analyze_document_patterns import analyze_document_patterns
     from services.nlp_grpc_client import get_nlp_grpc_client
@@ -379,7 +384,9 @@ async def check_document_data_availability(doc_id: str):
 
 
 @router.post("/documents/{doc_id}/save-for-tests", response_model=SaveForTestsResponse)
-async def save_document_for_tests(doc_id: str, request: SaveForTestsRequest):
+async def save_document_for_tests(
+    doc_id: str, request: SaveForTestsRequest, _user: dict = Depends(get_current_user)
+):
     """Экспортирует документ с аннотациями, связями и графом действий в тестовый датасет."""
     from fastapi import HTTPException
     from services.data_extraction_service import DataExtractionService

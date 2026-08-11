@@ -45,6 +45,7 @@ export const useActions = ({
       // Создаем локальный объект с координатами для UI
       const newBlockData: BlockData = {
         id: response.block.id,
+        title: response.block.content,
         text: response.block.content,
         x: Math.round(x / 50) * 50,
         y: sublevel.min_y ?? 0,
@@ -111,6 +112,7 @@ export const useActions = ({
       // Создаем локальный объект с координатами для UI
       const newBlockData: BlockData = {
         id: response.block.id,
+        title: response.block.content,
         text: response.block.content,
         x: Math.round(x / 50) * 50,
         y: Math.round(y / 50) * 50,

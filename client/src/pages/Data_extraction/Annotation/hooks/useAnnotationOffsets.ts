@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
-import { Annotation, batchUpdateAnnotationOffsets, AnnotationOffsetUpdate, deleteAnnotation } from '../../../../services/api';
+import type { Annotation, AnnotationOffsetUpdate } from '../../../../services/api';
+import { batchUpdateAnnotationOffsets, deleteAnnotation } from '../../../../services/api';
 
 interface OffsetCalculationResult {
   changeStart: number;
@@ -145,7 +146,7 @@ export const useAnnotationOffsets = () => {
   const saveAnnotationOffsets = useCallback(async (
     currentText: string,
     annotations: Annotation[],
-    onReload: () => Promise<void>
+    onReload: () => void | Promise<void>
   ) => {
     if (!hasUnsavedOffsets && annotationsToDelete.size === 0) {
       console.log('Нет несохраненных изменений offset');
