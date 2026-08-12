@@ -1470,6 +1470,72 @@
     overflow: hidden;
 }
 
+.agentChatGate {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.agentChatGateIcon {
+    color: #9ca3af;
+}
+
+.agentChatGateTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.agentChatGateText {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 260px;
+}
+
+.agentChatGateActions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.agentChatGateBtnPrimary {
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #ffffff;
+    background: #6366f1;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.agentChatGateBtnPrimary:hover {
+    background: #4f46e5;
+}
+
+.agentChatGateBtnSecondary {
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4f46e5;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.agentChatGateBtnSecondary:hover {
+    background: #e0e7ff;
+}
+
 .agentChatToolbar {
     display: flex;
     align-items: center;

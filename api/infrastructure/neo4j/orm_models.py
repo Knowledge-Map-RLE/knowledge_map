@@ -88,6 +88,7 @@ class ArticleBlock(StructuredNode):
     block_type = IntegerProperty(required=True, index=True)
     data = StringProperty(default="{}")             # JSON-строка
     order = IntegerProperty(default=0, index=True)
+    created_by_uid = StringProperty()
 
     document = RelationshipFrom("Document", "HAS_BLOCK")
 

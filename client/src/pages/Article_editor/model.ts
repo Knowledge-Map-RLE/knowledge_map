@@ -11,6 +11,12 @@ export interface ArticleBlock {
   order: number;
 }
 
+export interface AuthorInfo {
+    uid: string;
+    login: string;
+    nickname: string;
+}
+
 export interface KnowledgeArticle {
     uid: string;
     title?: string;
@@ -21,6 +27,7 @@ export interface KnowledgeArticle {
     is_processed?: boolean;
     created_at?: string;
     updated_at?: string;
+    author?: AuthorInfo;
 }
 
 export interface KnowledgeStatement {
@@ -35,6 +42,7 @@ export interface KnowledgeStatement {
     subject_type?: string;
     object_type?: string;
     sourceBlockId?: string;
+    author?: AuthorInfo;
 }
 
 export interface StatementSelection {
@@ -95,6 +103,7 @@ export interface ArticleBlockData {
     blockType: number;
     data: Record<string, BlockDataValue>;
     order: number;
+    author?: AuthorInfo;
 }
 
 export interface DerivedTriplet {

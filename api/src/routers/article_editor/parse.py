@@ -39,7 +39,7 @@ async def parse_text(req: ParseRequest, user: dict = Depends(get_current_user)):
         return {"success": False, "statements": [], "concepts": [], "total_statements": 0, "total_concepts": 0, "message": result.get("message", "Parsing failed"), "doc_id": req.doc_id}
     # Save in background (sync Neo4j is slow for many statements)
     if req.save and req.doc_id:
-        _background_save(service.save_statements(req.doc_id, result.get("statements", [])))
+        _background_save(service.save_statements(req.doc_id, result.get("statements", []), user_uid=user["uid"]))
         _background_save(service.save_article_text(req.doc_id, req.text))
     return result
 
@@ -64,7 +64,7 @@ async def parse_text_stream(req: ParseRequest, user: dict = Depends(get_current_
 
         # Save in background — fire-and-forget
         if req.save and req.doc_id:
-            _background_save(service.save_statements(req.doc_id, result.get("statements", [])))
+            _background_save(service.save_statements(req.doc_id, result.get("statements", []), user_uid=user["uid"]))
             _background_save(service.save_article_text(req.doc_id, req.text))
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

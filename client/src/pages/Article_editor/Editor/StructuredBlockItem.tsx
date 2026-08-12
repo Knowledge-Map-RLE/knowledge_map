@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import type { ArticleBlockData, BlockDataValue } from '../model';
 import { getBlockTypeDef } from './blockTypes';
 import FieldInput, { type UuidRef } from './FieldInput';
+import AuthorBadge from './AuthorBadge';
 import styles from '../Article_editor.module.css';
 
 interface StructuredBlockItemProps {
@@ -99,6 +100,7 @@ const StructuredBlockItem: React.FC<StructuredBlockItemProps> = ({
                         {block.instanceId}
                     </span>
                     <div style={{ flex: 1 }} />
+                    <AuthorBadge author={block.author} label="Автор блока" />
                     {typeDef.description && (
                         <span className={styles.sbHelpIcon} title={typeDef.description}>?</span>
                     )}

@@ -139,7 +139,7 @@ async def llm_extract_blocks(
             blocks: List[Dict[str, Any]] = result.get("blocks", [])
             if req.save:
                 try:
-                    saved = await service.save_blocks(doc_id, blocks)
+                    saved = await service.save_blocks(doc_id, blocks, user_uid=user["uid"])
                     if not saved.get("success"):
                         logger.warning("save_blocks failed for %s: %s", doc_id, saved.get("message", ""))
                         result["save_error"] = saved.get("message", "Не удалось сохранить блоки")

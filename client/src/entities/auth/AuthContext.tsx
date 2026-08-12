@@ -19,6 +19,7 @@ interface AuthContextType {
     logout: () => Promise<void>;
     refresh: () => Promise<void>;
     requestLogin: () => void;
+    requestRegister: () => void;
     getToken: () => string | null;
 }
 
@@ -56,7 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const requestLogin = useCallback(() => {
-        window.dispatchEvent(new CustomEvent(AUTH_LOGIN_EVENT));
+        window.dispatchEvent(new CustomEvent(AUTH_LOGIN_EVENT, { detail: { modal: 'login' } }));
+    }, []);
+
+    const requestRegister = useCallback(() => {
+        window.dispatchEvent(new CustomEvent(AUTH_LOGIN_EVENT, { detail: { modal: 'register' } }));
     }, []);
 
     const getToken = useCallback(() => authService.getToken(), []);
@@ -70,9 +75,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             logout,
             refresh,
             requestLogin,
+            requestRegister,
             getToken,
         }),
-        [user, isAuthLoading, logout, refresh, requestLogin, getToken],
+        [user, isAuthLoading, logout, refresh, requestLogin, requestRegister, getToken],
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

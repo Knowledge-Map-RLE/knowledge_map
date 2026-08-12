@@ -41,8 +41,24 @@ def _chunks(lst: list, n: int):
         yield lst[i : i + n]
 
 
+def _author_from_user_node(node: Any) -> dict[str, str] | None:
+    """Собирает компактную информацию об авторе из User-ноды (или None).
+
+    Используется для created_by_uid на Document/KnowledgeStatement/ArticleBlock.
+    Нода приходит из OPTIONAL MATCH и может быть None.
+    """
+    if not node:
+        return None
+    login = node.get("login") or node.get("nickname") or ""
+    return {
+        "uid": node.get("uid", ""),
+        "login": login,
+        "nickname": node.get("nickname") or login,
+    }
+
+
 class ArticleEditorService:
-    async def create_article(self, title: str = "New Article") -> dict[str, Any]:
+    async def create_article(self, user_uid: str, title: str = "New Article") -> dict[str, Any]:
         article_uid = uuid8_str()
         doc = Document(
             uid=article_uid,
@@ -52,6 +68,7 @@ class ArticleEditorService:
             title=title or "New Article",
             processing_status="ready_for_annotation",
             is_processed=False,
+            created_by_uid=user_uid or None,
         ).save()
         return {
             "uid": doc.uid,
@@ -66,6 +83,13 @@ class ArticleEditorService:
         doc = Document.nodes.get_or_none(uid=doc_id)
         if not doc:
             return None
+        author: dict[str, str] | None = None
+        if getattr(doc, "created_by_uid", None):
+            author_rows, _ = db.cypher_query(
+                "MATCH (u:User {uid: $uid}) RETURN u",
+                {"uid": doc.created_by_uid},
+            )
+            author = _author_from_user_node(author_rows[0][0]) if author_rows else None
         article: dict[str, Any] = {
             "uid": doc.uid,
             "title": doc.title or doc.original_filename,
@@ -74,11 +98,13 @@ class ArticleEditorService:
             "is_processed": doc.is_processed or False,
             "created_at": doc.upload_date.isoformat() if doc.upload_date else "",
             "updated_at": doc.edit_date.isoformat() if getattr(doc, 'edit_date', None) else "",
+            "author": author,
         }
 
         statements, _ = db.cypher_query(
             "MATCH (d:Document {uid: $uid})-[:HAS_STATEMENT]->(s:KnowledgeStatement) "
-            "RETURN s ORDER BY s.sort_order",
+            "OPTIONAL MATCH (u:User {uid: s.created_by_uid}) "
+            "RETURN s, u ORDER BY s.sort_order",
             {"uid": doc_id},
         )
         article["statements"] = [
@@ -93,6 +119,7 @@ class ArticleEditorService:
                 "confidence": s[0].get("confidence", 1.0),
                 "sentence_text": s[0].get("sentence_text", ""),
                 "sort_order": s[0].get("sort_order", 0),
+                "author": _author_from_user_node(s[1]),
             }
             for s in statements
         ] if statements else []
@@ -161,7 +188,7 @@ class ArticleEditorService:
         return {"text": text or ""}
 
     async def save_statements(
-        self, doc_id: str, statements: list[dict[str, Any]]
+        self, doc_id: str, statements: list[dict[str, Any]], user_uid: str | None = None
     ) -> dict[str, Any]:
         status = await self.get_document_status(doc_id)
         if not self._is_editable_status(status):
@@ -187,6 +214,7 @@ class ArticleEditorService:
                 "conf": stmt.get("confidence", 1.0),
                 "sent": stmt.get("sentence_text", ""),
                 "order": i,
+                "creator": user_uid,
             })
         for chunk in _chunks(batch, 500):
             db.cypher_query(
@@ -194,7 +222,8 @@ class ArticleEditorService:
                 "UNWIND $batch AS item "
                 "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: item.subj, predicate: item.pred, "
                 "object_text: item.obj, subject_type: item.subj_type, object_type: item.obj_type, "
-                "type: item.type, confidence: item.conf, sentence_text: item.sent, sort_order: item.order}) "
+                "type: item.type, confidence: item.conf, sentence_text: item.sent, sort_order: item.order, "
+                "created_by_uid: item.creator}) "
                 "CREATE (d)-[:HAS_STATEMENT]->(s)",
                 {"batch": chunk, "doc_id": doc_id},
             )
@@ -203,9 +232,10 @@ class ArticleEditorService:
         db.cypher_query(
             "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $doc_id, predicate: 'является', "
             "object_text: 'научная статья', subject_type: 'concept', object_type: 'concept', "
-            "type: 'META', confidence: 1.0, sentence_text: '', sort_order: $order}) "
+            "type: 'META', confidence: 1.0, sentence_text: '', sort_order: $order, "
+            "created_by_uid: $creator}) "
             "WITH s MATCH (d:Document {uid: $doc_id}) CREATE (d)-[:HAS_STATEMENT]->(s)",
-            {"uid": article_uid, "doc_id": doc_id, "order": len(content_uuids)},
+            {"uid": article_uid, "doc_id": doc_id, "order": len(content_uuids), "creator": user_uid},
         )
 
         meta_batch: list[dict[str, Any]] = []
@@ -214,6 +244,7 @@ class ArticleEditorService:
                 "uid": uuid8_str(),
                 "obj": stmt_uuid,
                 "order": len(content_uuids) + 1 + idx,
+                "creator": user_uid,
             })
         for chunk in _chunks(meta_batch, 500):
             db.cypher_query(
@@ -221,7 +252,8 @@ class ArticleEditorService:
                 "UNWIND $batch AS item "
                 "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: $doc_id, predicate: 'содержит', "
                 "object_text: item.obj, subject_type: 'concept', object_type: 'concept', "
-                "type: 'META', confidence: 1.0, sentence_text: '', sort_order: item.order}) "
+                "type: 'META', confidence: 1.0, sentence_text: '', sort_order: item.order, "
+                "created_by_uid: item.creator}) "
                 "CREATE (d)-[:HAS_STATEMENT]->(s)",
                 {"batch": chunk, "doc_id": doc_id},
             )
@@ -231,8 +263,10 @@ class ArticleEditorService:
 
     async def list_articles(self, skip: int = 0, limit: int = 200) -> list[dict[str, Any]]:
         results, meta = db.cypher_query(
-            "MATCH (d:Document) RETURN d.uid, d.title, d.original_filename, "
-            "d.processing_status, d.upload_date, d.user_md_s3_key "
+            "MATCH (d:Document) "
+            "OPTIONAL MATCH (u:User {uid: d.created_by_uid}) "
+            "RETURN d.uid, d.title, d.original_filename, "
+            "d.processing_status, d.upload_date, d.user_md_s3_key, u "
             "ORDER BY d.upload_date DESC SKIP $skip LIMIT $limit",
             {"skip": skip, "limit": limit},
         )
@@ -246,6 +280,7 @@ class ArticleEditorService:
                 "processing_status": row[3],
                 "created_at": ts.isoformat() if ts else "",
                 "has_text": bool(row[5]),
+                "author": _author_from_user_node(row[6]),
             })
         return articles
 
@@ -294,7 +329,7 @@ class ArticleEditorService:
         all_statements = [s for s in all_statements if s["uid"] in connected_ids]
         return {"statements": all_statements, "edges": edges}
 
-    async def save_blocks(self, doc_id: str, blocks: list[dict[str, Any]]) -> dict[str, Any]:
+    async def save_blocks(self, doc_id: str, blocks: list[dict[str, Any]], user_uid: str | None = None) -> dict[str, Any]:
         status = await self.get_document_status(doc_id)
         if not self._is_editable_status(status):
             return {"success": False, "error": "not_annotated",
@@ -311,12 +346,14 @@ class ArticleEditorService:
                 "bt": int(block.get("blockType", 0)),
                 "data": json.dumps(block.get("data", {}), ensure_ascii=False),
                 "order": int(block.get("order", i)),
+                "creator": user_uid,
             })
         for chunk in _chunks(batch, 500):
             db.cypher_query(
                 "MATCH (d:Document {uid: $doc_id}) "
                 "UNWIND $batch AS item "
-                "CREATE (b:ArticleBlock {uid: item.uid, block_type: item.bt, data: item.data, order: item.order}) "
+                "CREATE (b:ArticleBlock {uid: item.uid, block_type: item.bt, data: item.data, order: item.order, "
+                "created_by_uid: item.creator}) "
                 "CREATE (d)-[:HAS_BLOCK]->(b)",
                 {"batch": chunk, "doc_id": doc_id},
             )
@@ -339,7 +376,8 @@ class ArticleEditorService:
     async def get_blocks(self, doc_id: str) -> dict[str, Any]:
         results, _ = db.cypher_query(
             "MATCH (d:Document {uid: $uid})-[:HAS_BLOCK]->(b:ArticleBlock) "
-            "RETURN b.uid, b.block_type, b.data, b.order ORDER BY b.order",
+            "OPTIONAL MATCH (u:User {uid: b.created_by_uid}) "
+            "RETURN b.uid, b.block_type, b.data, b.order, u ORDER BY b.order",
             {"uid": doc_id},
         )
         blocks = []
@@ -353,6 +391,7 @@ class ArticleEditorService:
                 "blockType": row[1],
                 "data": data,
                 "order": row[3],
+                "author": _author_from_user_node(row[4]),
             })
         return {"blocks": blocks, "success": True}
 

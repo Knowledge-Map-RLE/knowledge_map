@@ -33,7 +33,7 @@ class UpdateTitleRequest(BaseModel):
 
 @router.post("/article_editor/articles")
 async def create_article(req: CreateArticleRequest, user: dict = Depends(get_current_user)):
-    return await service.create_article(title=req.title)
+    return await service.create_article(user_uid=user["uid"], title=req.title)
 
 
 @router.get("/article_editor/articles")
@@ -68,7 +68,7 @@ async def get_article_text(doc_id: str):
 
 
 @router.get("/article_editor/articles/{doc_id}/agent-text")
-async def get_agent_article_text(doc_id: str, doi: str = ""):
+async def get_agent_article_text(doc_id: str, doi: str = "", user: dict = Depends(get_current_user)):
     """Текст статьи для прикрепления к запросу AI-агента.
 
     Returns:
@@ -84,7 +84,7 @@ async def get_agent_article_text(doc_id: str, doi: str = ""):
 
 @router.put("/article_editor/articles/{doc_id}/statements")
 async def save_statements(doc_id: str, req: SaveStatementsRequest, user: dict = Depends(get_current_user)):
-    result = await service.save_statements(doc_id, req.statements)
+    result = await service.save_statements(doc_id, req.statements, user_uid=user["uid"])
     if not result.get("success"):
         if result.get("error") == "not_annotated":
             raise HTTPException(status_code=403, detail=result.get("message"))
@@ -93,7 +93,7 @@ async def save_statements(doc_id: str, req: SaveStatementsRequest, user: dict = 
 
 @router.put("/article_editor/articles/{doc_id}/blocks")
 async def save_blocks(doc_id: str, req: SaveBlocksRequest, user: dict = Depends(get_current_user)):
-    result = await service.save_blocks(doc_id, req.blocks)
+    result = await service.save_blocks(doc_id, req.blocks, user_uid=user["uid"])
     if not result.get("success"):
         if result.get("error") == "not_annotated":
             raise HTTPException(status_code=403, detail=result.get("message"))

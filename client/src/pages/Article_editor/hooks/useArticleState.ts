@@ -6,10 +6,16 @@ import {
 } from '../../../services/api/article_editor';
 import { blocksToStatements, statementsToBlocks, blocksToText, statementsToResolvedText, uuid8Str } from '../Editor/blockConverter';
 import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
-import type { KnowledgeArticle, KnowledgeStatement, SaveStatus, ArticleBlockData, BlockDataValue } from '../model';
+import { useAuth } from '../../../entities/auth';
+import type { KnowledgeArticle, KnowledgeStatement, SaveStatus, ArticleBlockData, BlockDataValue, AuthorInfo } from '../model';
 
 function newBlockId(): string {
     return uuid8Str();
+}
+
+function authorFromUser(user: { uid: string; login: string; nickname: string } | null): AuthorInfo | undefined {
+    if (!user) return undefined;
+    return { uid: user.uid, login: user.login, nickname: user.nickname };
 }
 
 interface UseArticleStateResult {
@@ -38,6 +44,7 @@ interface UseArticleStateResult {
 
 export function useArticleState(): UseArticleStateResult {
     const requireAuth = useRequireAuth();
+    const { user } = useAuth();
     const [article, setArticle] = useState<KnowledgeArticle | null>(null);
     const [text, setTextState] = useState<string>('');
     const [blocks, setBlocks] = useState<ArticleBlockData[]>([]);
@@ -168,13 +175,17 @@ export function useArticleState(): UseArticleStateResult {
      *  и markdown без перезагрузки статьи и без потери текущего текста. */
     const applyExtractedBlocks = useCallback(async (docId: string, newBlocks: ArticleBlockData[]) => {
         skipBlocksSyncRef.current = true;
+        const author = authorFromUser(user);
+        const withAuthor = author
+            ? newBlocks.map((b) => (b.author ? b : { ...b, author }))
+            : newBlocks;
         const existing = statementsRef.current;
-        const derived = blocksToStatements(newBlocks, docId, existing);
+        const derived = blocksToStatements(withAuthor, docId, existing);
         statementsCountRef.current = derived.length;
-        setBlocks(newBlocks);
+        setBlocks(withAuthor);
         setStatements(derived);
-        setTextState(statementsToResolvedText(derived, newBlocks, docId, existing));
-    }, []);
+        setTextState(statementsToResolvedText(derived, withAuthor, docId, existing));
+    }, [user]);
 
     // Blocks → statements + text sync
     const articleUuidRef = useRef(articleUuid);
@@ -216,6 +227,7 @@ export function useArticleState(): UseArticleStateResult {
 
     const addBlock = useCallback((typeNumber: number, initialData?: Record<string, BlockDataValue>) => {
         if (!requireAuth()) return;
+        const author = authorFromUser(user);
         setBlocks((prev) => {
             const maxOrder = prev.length > 0 ? Math.max(...prev.map((b) => b.order)) : -1;
             const newBlock: ArticleBlockData = {
@@ -223,10 +235,11 @@ export function useArticleState(): UseArticleStateResult {
                 blockType: typeNumber,
                 data: initialData || {},
                 order: maxOrder + 1,
+                author,
             };
             return [...prev, newBlock];
         });
-    }, [requireAuth]);
+    }, [requireAuth, user]);
 
     const updateBlock = useCallback((instanceId: string, fieldKey: string, value: BlockDataValue) => {
         setBlocks((prev) =>

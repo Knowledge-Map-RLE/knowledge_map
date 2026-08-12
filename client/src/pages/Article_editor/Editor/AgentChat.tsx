@@ -10,6 +10,7 @@ import {
 import { getAgentArticleText, extractBlocksStream } from '../../../services/api/article_editor';
 import { statementsToResolvedText } from './blockConverter';
 import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
+import { useAuth, AUTH_GATE_MESSAGE } from '../../../entities/auth';
 import type { KnowledgeStatement, ArticleBlockData } from '../model';
 import styles from '../Article_editor.module.css';
 
@@ -31,6 +32,7 @@ interface AgentChatProps {
 
 const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, text: editorText, onExtracted }) => {
     const requireAuth = useRequireAuth();
+    const { isAuthenticated, requestLogin, requestRegister } = useAuth();
     const [messages, setMessages] = useState<ChatEntry[]>([]);
     const [input, setInput] = useState('');
     const [models, setModels] = useState<AgentModel[]>([]);
@@ -75,8 +77,9 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     }, []);
 
     useEffect(() => {
+        if (!isAuthenticated) return;
         void loadModels();
-    }, [loadModels]);
+    }, [loadModels, isAuthenticated]);
 
     useEffect(() => {
         const el = scrollRef.current;
@@ -340,6 +343,41 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
             )}
         </label>
     );
+
+    if (!isAuthenticated) {
+        return (
+            <div className={styles.agentChat}>
+                <div className={styles.agentChatGate}>
+                    <svg
+                        className={styles.agentChatGateIcon}
+                        width="40"
+                        height="40"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    <div className={styles.agentChatGateTitle}>
+                        {'\u0414\u043E\u0441\u0442\u0443\u043F \u043A AI-\u0430\u0433\u0435\u043D\u0442\u0443 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u0438'}
+                    </div>
+                    <p className={styles.agentChatGateText}>{AUTH_GATE_MESSAGE}</p>
+                    <div className={styles.agentChatGateActions}>
+                        <button className={styles.agentChatGateBtnPrimary} onClick={requestLogin}>
+                            {'\u0412\u043E\u0439\u0442\u0438'}
+                        </button>
+                        <button className={styles.agentChatGateBtnSecondary} onClick={requestRegister}>
+                            {'\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.agentChat}>

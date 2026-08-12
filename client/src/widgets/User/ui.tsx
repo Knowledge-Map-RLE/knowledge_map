@@ -62,9 +62,13 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
     }, [refreshUnread]);
 
     useEffect(() => {
-        const openLogin = () => setActiveModal('login');
-        window.addEventListener(AUTH_LOGIN_EVENT, openLogin);
-        return () => window.removeEventListener(AUTH_LOGIN_EVENT, openLogin);
+        const openAuth = (e: Event) => {
+            const detail = (e as CustomEvent).detail as { modal?: string } | undefined;
+            const modal = detail?.modal === 'register' ? 'register' : 'login';
+            setActiveModal(modal);
+        };
+        window.addEventListener(AUTH_LOGIN_EVENT, openAuth);
+        return () => window.removeEventListener(AUTH_LOGIN_EVENT, openAuth);
     }, []);
 
     useEffect(() => {

@@ -65,7 +65,7 @@ async def _unavailable(exc: Exception) -> JSONResponse:
 
 
 @router.get("/v1/models", response_model=None)
-async def list_models(request: Request) -> JSONResponse:
+async def list_models(request: Request, user: dict = Depends(get_current_user)) -> JSONResponse:
     client = get_client()
     try:
         response = await client.get(

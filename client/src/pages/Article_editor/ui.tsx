@@ -44,7 +44,7 @@ const ArticleEditorUI: React.FC = () => {
     }, [selectedDocId, selectedDocument]);
 
     const {
-        text, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
+        article, text, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
         loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, updateBlock, deleteBlock, reorderBlocks, triggerParse, save, uploadImage,
     } = useArticleState();
 
@@ -190,6 +190,7 @@ const ArticleEditorUI: React.FC = () => {
                                     saveStatus={saveStatus}
                                     docId={selectedDocId ?? undefined}
                                     articleUuid={articleUuid ?? undefined}
+                                    articleAuthor={article?.author ?? null}
                                     onUploadImage={uploadImage}
                                     onExtracted={handleExtracted}
                                 />

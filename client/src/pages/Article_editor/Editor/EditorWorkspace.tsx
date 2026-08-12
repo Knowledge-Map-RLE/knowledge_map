@@ -3,8 +3,9 @@ import StructuredBlockEditor from './StructuredBlockEditor';
 import StatementsPanel from './StatementsPanel';
 import MarkdownPreview from './MarkdownPreview';
 import AgentChat from './AgentChat';
+import AuthorBadge from './AuthorBadge';
 import { blocksToStatementsRaw } from './blockConverter';
-import type { KnowledgeStatement, ArticleBlockData } from '../model';
+import type { KnowledgeStatement, ArticleBlockData, AuthorInfo } from '../model';
 import styles from '../Article_editor.module.css';
 
 interface EditorWorkspaceProps {
@@ -22,6 +23,7 @@ interface EditorWorkspaceProps {
     saveStatus: string;
     docId?: string;
     articleUuid?: string;
+    articleAuthor?: AuthorInfo | null;
     onUploadImage?: (key: string, file: File) => Promise<string>;
     onExtracted?: (docId: string, blocks: ArticleBlockData[]) => Promise<void>;
 }
@@ -30,7 +32,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     text, statements, blocks,
     isParsing, parseProgress, parseError,
     onAddBlock, onDeleteBlock, onUpdateBlock, onReorderBlocks,
-    onSave, saveStatus, docId, articleUuid, onUploadImage, onExtracted,
+    onSave, saveStatus, docId, articleUuid, articleAuthor, onUploadImage, onExtracted,
 }) => {
     const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
     const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
@@ -139,6 +141,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                             <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
                         {'\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u043D\u044B\u0435 \u0431\u043B\u043E\u043A\u0438'}
+                        <AuthorBadge author={articleAuthor ?? null} label="Автор статьи" />
                         <div style={{ flex: 1 }} />
                         <button
                             className={styles.sbeTripletsBtn}
