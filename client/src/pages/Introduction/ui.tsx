@@ -4,8 +4,8 @@ import styles from './Introduction.module.css';
 const IntroductionUI: React.FC = () => {
     return (
         <div className={styles.container}>
-            <Header showSearch={false} className={styles.header} />
-            <main>
+            <Header showSearch={true} className={styles.header} />
+            <main className={styles.main}>
                 <div className={styles.start_text}>
                     Карта Знаний — инструмент (в разработке) для решения задачи радикального продления жизни
                     <br />

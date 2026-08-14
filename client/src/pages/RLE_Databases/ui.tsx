@@ -5,8 +5,8 @@ import styles from './RLE_Databases.module.css';
 const RLE_DatabasesUI: React.FC = () => {
     return (
         <div className={styles.container}>
-            <Header showSearch={false} className={styles.header} />
-            <main>
+            <Header showSearch={true} className={styles.header} />
+            <main className={styles.main}>
                 <div className={styles.start_text}>
                     Подпроект Карты Знаний "Базы данных РПЖ" — базы данных релевантные задаче радикального продления жизни.
                 </div>

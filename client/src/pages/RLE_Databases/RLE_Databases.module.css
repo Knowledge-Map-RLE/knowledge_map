@@ -1,18 +1,24 @@
 @import "tailwindcss";
 
 .header {
-  display: flex;
-  position: relative;
-  height: 50px;
-  width: 1020px;
-  padding: 0 10px;
-  left: -10px;
-  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  width: 100%;
 }
 
 .container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.main {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   width: 1020px;
   padding: 20px 10px 0 10px;

@@ -112,7 +112,7 @@ const DataDownloadUI: React.FC = () => {
     if (loading) {
         return (
             <div className={styles.container}>
-                <Header showSearch={false} />
+                <Header showSearch={true} className={styles.header} />
                 <div className={styles.loading}>Загрузка...</div>
             </div>
         );
@@ -121,7 +121,7 @@ const DataDownloadUI: React.FC = () => {
     if (error) {
         return (
             <div className={styles.container}>
-                <Header showSearch={false} />
+                <Header showSearch={true} className={styles.header} />
                 <div className={styles.error}>Ошибка: {error}</div>
             </div>
         );
@@ -129,7 +129,7 @@ const DataDownloadUI: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <Header showSearch={false} />
+            <Header showSearch={true} className={styles.header} />
             <main className={styles.main}>
                 <div className={styles.titleRow}>
                     <h1 className={styles.title}>Загрузка данных</h1>

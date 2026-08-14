@@ -25,6 +25,9 @@
     grid-area: header;
     gap: 8px;
     border-radius: 0 !important;
+    margin: -10px -10px 0 -10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .left {
