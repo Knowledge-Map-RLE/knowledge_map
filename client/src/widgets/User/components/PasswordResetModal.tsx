@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import s from './Modal.module.css';
+import { ModalPortal } from '../../../shared/ui/ModalPortal';
 
 interface PasswordResetModalProps {
     onClose: () => void;
@@ -48,6 +49,7 @@ export const PasswordResetModal: React.FC<PasswordResetModalProps> = ({ onClose,
     const isFormValid = formData.newPassword && formData.newPasswordConfirm;
 
     return (
+        <ModalPortal>
         <div className={s.overlay} onClick={onClose}>
             <div className={s.modal} onClick={e => e.stopPropagation()}>
                 <div className={s.header}>
@@ -101,5 +103,6 @@ export const PasswordResetModal: React.FC<PasswordResetModalProps> = ({ onClose,
                 </form>
             </div>
         </div>
+        </ModalPortal>
     );
 };

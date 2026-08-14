@@ -395,3 +395,64 @@ class Pattern(StructuredNode):
     # Конкретные вхождения паттерна (Pattern → Pattern через FOUND_AS)
     # Каждое вхождение — отдельный Pattern с is_instance=True
     found_as = RelationshipTo("Pattern", "FOUND_AS")
+
+
+# =============================================================================
+# AI Chat — персистентные диалоги с ассистентом (учёт токенов и стоимости)
+# =============================================================================
+
+
+class AIChat(StructuredNode):
+    """ORM-модель AI-чата пользователя."""
+    uid = UniqueIdProperty(primary_key=True)
+    user_uid = StringProperty(required=True, index=True)
+    title = StringProperty(default="")
+    model = StringProperty(default="")
+    created_at = DateTimeProperty(default=datetime.utcnow)
+    updated_at = DateTimeProperty(default=datetime.utcnow)
+
+    messages = RelationshipTo("AIMessage", "HAS_MESSAGE")
+
+
+class AIMessage(StructuredNode):
+    """ORM-модель сообщения в AI-чате."""
+    uid = UniqueIdProperty(primary_key=True)
+    role = StringProperty(required=True)  # user | assistant | system
+    content = StringProperty(required=True)
+    order = IntegerProperty(default=0, index=True)
+    created_at = DateTimeProperty(default=datetime.utcnow)
+
+    chat = RelationshipFrom("AIChat", "HAS_MESSAGE")
+    usage = RelationshipTo("AIUsage", "HAS_USAGE")
+
+
+class AIUsage(StructuredNode):
+    """ORM-модель учёта токенов и стоимости одного AI-запроса.
+
+    Стоимости хранятся строками — точное Decimal-представление (8 знаков),
+    без float. ``provider_request_id`` — id ответа провайдера для
+    идемпотентного списания кредитов через billing.
+    """
+    uid = UniqueIdProperty(primary_key=True)
+    message_uid = StringProperty(required=True, index=True)
+    chat_uid = StringProperty(required=True, index=True)
+    user_uid = StringProperty(required=True, index=True)
+    model = StringProperty(default="")
+    provider_request_id = StringProperty(required=True, unique_index=True)
+
+    estimated_input_tokens = IntegerProperty(default=0)
+    estimated_output_tokens = IntegerProperty(default=0)
+    estimated_cached_tokens = IntegerProperty()
+    estimated_cost = StringProperty(default="0")
+    estimated_currency = StringProperty(default="RUB")
+
+    actual_input_tokens = IntegerProperty(default=0)
+    actual_cached_tokens = IntegerProperty(default=0)
+    actual_output_tokens = IntegerProperty(default=0)
+    actual_tool_tokens = IntegerProperty(default=0)
+    actual_cost = StringProperty(default="0")
+    actual_currency = StringProperty(default="RUB")
+
+    created_at = DateTimeProperty(default=datetime.utcnow)
+
+    message = RelationshipFrom("AIMessage", "HAS_USAGE")

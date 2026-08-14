@@ -2,6 +2,7 @@ import { useState } from 'react';
 import s from './Modal.module.css';
 import { authService } from '../../../services/auth';
 import type { User } from '../../../entities/user';
+import { ModalPortal } from '../../../shared/ui/ModalPortal';
 
 interface RegisterModalProps {
     onClose: () => void;
@@ -78,6 +79,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onSuccess
                         formData.passwordConfirm && formData.displayName && formData.captcha;
 
     return (
+        <ModalPortal>
         <div className={s.overlay} onClick={onClose}>
             <div className={s.modal} onClick={e => e.stopPropagation()}>
                 <div className={s.header}>
@@ -168,5 +170,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onSuccess
                 </form>
             </div>
         </div>
+        </ModalPortal>
     );
 };

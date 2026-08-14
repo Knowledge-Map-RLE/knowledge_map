@@ -1,6 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MdPerson } from 'react-icons/md';
 import s from './Modal.module.css';
+import {
+    cancelSubscription,
+    fetchSubscription,
+    type SubscriptionState,
+} from '../../../services/api/billing';
+import {
+    getAIUsageSummary,
+    type AIUsageSummary,
+} from '../../../services/api/aiChats';
 import {
     createCommunity,
     decodeContacts,
@@ -17,13 +27,14 @@ import {
     type SocialUserProfile,
 } from '../../../services/api/social';
 import { useToast } from '../../../shared/ui/Toast';
+import { ModalPortal } from '../../../shared/ui/ModalPortal';
 
 interface AccountModalProps {
     myUid: string;
     onClose: () => void;
 }
 
-type Tab = 'profile' | 'communities';
+type Tab = 'profile' | 'communities' | 'subscription';
 
 const CONTACT_FIELDS: Array<{ key: keyof SocialContacts; label: string; placeholder: string }> = [
     { key: 'email', label: 'Email', placeholder: 'user@example.com' },
@@ -37,10 +48,22 @@ const btnTab = (active: boolean) =>
         active ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'
     }`;
 
+const formatRubles = (cost: string): string => {
+    const value = Number(cost || '0');
+    if (!Number.isFinite(value)) return '0,00 ₽';
+    return `${value.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ₽`;
+};
+
 export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
     const { error: toastError, success: toastSuccess } = useToast();
+    const navigate = useNavigate();
     const fileRef = useRef<HTMLInputElement>(null);
     const [tab, setTab] = useState<Tab>('profile');
+    const [subscription, setSubscription] = useState<SubscriptionState | null>(null);
+    const [loadingSub, setLoadingSub] = useState(false);
+    const [cancelling, setCancelling] = useState(false);
+    const [aiUsage, setAiUsage] = useState<{ current: AIUsageSummary | null; previous: AIUsageSummary | null }>({ current: null, previous: null });
+    const [loadingAI, setLoadingAI] = useState(false);
     const [profile, setProfile] = useState<SocialUserProfile | null>(null);
     const [bio, setBio] = useState('');
     const [avatarKey, setAvatarKey] = useState('');
@@ -80,10 +103,65 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
         }
     }, [toastError]);
 
+    const loadSubscription = useCallback(async () => {
+        setLoadingSub(true);
+        try {
+            const state = await fetchSubscription();
+            setSubscription(state);
+        } catch (e) {
+            const message = e instanceof Error ? e.message : 'Ошибка загрузки подписки';
+            if (!/401/.test(message)) {
+                toastError(message);
+            }
+            setSubscription(null);
+        } finally {
+            setLoadingSub(false);
+        }
+    }, [toastError]);
+
+    const loadAIUsage = useCallback(async () => {
+        setLoadingAI(true);
+        try {
+            const [current, previous] = await Promise.all([
+                getAIUsageSummary('current'),
+                getAIUsageSummary('previous'),
+            ]);
+            setAiUsage({ current, previous });
+        } catch (e) {
+            const message = e instanceof Error ? e.message : 'Ошибка загрузки AI-расхода';
+            if (!/401/.test(message)) {
+                toastError(message);
+            }
+            setAiUsage({ current: null, previous: null });
+        } finally {
+            setLoadingAI(false);
+        }
+    }, [toastError]);
+
+    const handleCancelSubscription = useCallback(async () => {
+        setCancelling(true);
+        try {
+            await cancelSubscription();
+            toastSuccess('Подписка отменена — действует до конца периода');
+            await loadSubscription();
+        } catch (e) {
+            toastError(e instanceof Error ? e.message : 'Не удалось отменить подписку');
+        } finally {
+            setCancelling(false);
+        }
+    }, [loadSubscription, toastSuccess, toastError]);
+
     useEffect(() => {
         loadProfile();
         loadCommunities();
     }, [loadProfile, loadCommunities]);
+
+    useEffect(() => {
+        if (tab === 'subscription') {
+            void loadSubscription();
+            void loadAIUsage();
+        }
+    }, [tab, loadSubscription, loadAIUsage]);
 
     const handleUploadAvatar = async (file: File | undefined) => {
         if (!file) return;
@@ -192,6 +270,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
     };
 
     return (
+        <ModalPortal>
         <div className={s.overlay} onClick={onClose}>
             <div
                 className={s.modal}
@@ -202,10 +281,13 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
                     <h2>Личный кабинет</h2>
                     <button onClick={onClose} className={s.close_button}>×</button>
                 </div>
-                <div className="px-6 pt-4 flex gap-2">
+                <div className="px-6 pt-4 flex gap-2 flex-wrap">
                     <button className={btnTab(tab === 'profile')} onClick={() => setTab('profile')}>Профиль</button>
                     <button className={btnTab(tab === 'communities')} onClick={() => setTab('communities')}>
                         Мои сообщества
+                    </button>
+                    <button className={btnTab(tab === 'subscription')} onClick={() => setTab('subscription')}>
+                        Подписка
                     </button>
                 </div>
 
@@ -296,6 +378,97 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
                                 {savingProfile ? 'Сохранение…' : 'Сохранить'}
                             </button>
                         </div>
+                    </div>
+                ) : tab === 'subscription' ? (
+                    <div className="p-6 space-y-4">
+                        {loadingSub ? (
+                            <div className="text-sm text-gray-500">Загрузка…</div>
+                        ) : !subscription ? (
+                            <div className="text-sm text-gray-400">Не удалось получить данные о подписке</div>
+                        ) : (
+                            <>
+                                <div className={s.field}>
+                                    <label>Текущий тариф</label>
+                                    <div className="text-xl font-semibold text-gray-900">
+                                        {subscription.plan_code}
+                                        {subscription.plan_code === 'FREE' && (
+                                            <span className="ml-2 text-xs font-normal text-gray-500">
+                                                бесплатный
+                                            </span>
+                                        )}
+                                    </div>
+                                    {subscription.cancel_at_period_end && (
+                                        <div className={s.hint}>
+                                            Подписка отменена и действует до конца оплаченного периода
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={s.field}>
+                                    <label>Кредиты</label>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-lg font-semibold text-gray-900">
+                                            {subscription.credits.balance.toLocaleString('ru-RU')}
+                                        </span>
+                                        <span className="text-sm text-gray-500">
+                                            доступно из лимита {subscription.credits.limit.toLocaleString('ru-RU')}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className={s.field}>
+                                    <label>AI-расход</label>
+                                    {loadingAI ? (
+                                        <div className="text-sm text-gray-500">Загрузка…</div>
+                                    ) : aiUsage.current || aiUsage.previous ? (
+                                        <div className="space-y-2">
+                                            {aiUsage.current && aiUsage.current.request_count > 0 && (
+                                                <div>
+                                                    <div className="flex items-baseline gap-2">
+                                                        <span className="text-lg font-semibold text-gray-900">
+                                                            {formatRubles(aiUsage.current.cost)}
+                                                        </span>
+                                                        <span className="text-sm text-gray-500">в этом месяце</span>
+                                                    </div>
+                                                    <div className="text-xs text-gray-400">
+                                                        {aiUsage.current.request_count} запросов · {aiUsage.current.total_tokens.toLocaleString('ru-RU')} ток. ({aiUsage.current.input_tokens.toLocaleString('ru-RU')} вх. + {aiUsage.current.cached_tokens.toLocaleString('ru-RU')} кэш + {aiUsage.current.output_tokens.toLocaleString('ru-RU')} вых.)
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {aiUsage.previous && aiUsage.previous.request_count > 0 && (
+                                                <div className="text-xs text-gray-400">
+                                                    Прошлый месяц: {formatRubles(aiUsage.previous.cost)} · {aiUsage.previous.request_count} запросов · {aiUsage.previous.total_tokens.toLocaleString('ru-RU')} ток.
+                                                </div>
+                                            )}
+                                            {(!aiUsage.current || aiUsage.current.request_count === 0) &&
+                                                (!aiUsage.previous || aiUsage.previous.request_count === 0) && (
+                                                    <div className="text-sm text-gray-400">AI-запросов пока не было</div>
+                                                )}
+                                        </div>
+                                    ) : (
+                                        <div className="text-sm text-gray-400">Не удалось получить данные об AI-расходе</div>
+                                    )}
+                                </div>
+                                <div className="pt-2 space-y-2">
+                                    {subscription.active && !subscription.cancel_at_period_end && (
+                                        <button
+                                            className="w-full bg-red-50 text-red-600 py-2 px-4 rounded-md hover:bg-red-100 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                                            onClick={handleCancelSubscription}
+                                            disabled={cancelling}
+                                        >
+                                            {cancelling ? 'Отменяем…' : 'Отменить подписку'}
+                                        </button>
+                                    )}
+                                    <button
+                                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+                                        onClick={() => {
+                                            onClose();
+                                            navigate('/subscription');
+                                        }}
+                                    >
+                                        {subscription.plan_code === 'FREE' ? 'Оформить подписку' : 'Изменить тариф'}
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 ) : (
                     <div className="p-6 space-y-4">
@@ -410,5 +583,6 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
                 )}
             </div>
         </div>
+        </ModalPortal>
     );
 };

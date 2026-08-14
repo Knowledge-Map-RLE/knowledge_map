@@ -17,6 +17,7 @@ api/.env
 auth/.env
 ai/.env
 nlp/.env
+billing/.env
 .venv/
 worker_distributed_layering_rust/tests/artifacts/
 *.log

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles/App.css'
 import Landing from './pages/Landing'
 import Introduction from './pages/Introduction'
@@ -15,6 +15,7 @@ import RLE_Databases from './pages/RLE_databases';
 import Data_download from './pages/Data_download';
 import Social_network from './pages/Social_network';
 import SocialProfilePage from './pages/Social_network/ProfilePage';
+import Subscription from './pages/Subscription';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
               <Route path="/article_editor" element={<Article_editor />} />
               <Route path="/social_network" element={<Social_network />} />
               <Route path="/social_network/profile/:uid" element={<SocialProfilePage />} />
+              <Route path="/subscription" element={<Subscription />} />
             </Routes>
           </Router>
         </ToastProvider>

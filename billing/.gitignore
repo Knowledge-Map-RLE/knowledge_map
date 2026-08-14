@@ -1,0 +1,27 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Poetry
+poetry.lock
+
+# Logs
+*.log
+logs/
+
+# Tests / caches
+.pytest_cache/
+.coverage
+.cache
+
+# IDE
+.vscode/
+.idea/

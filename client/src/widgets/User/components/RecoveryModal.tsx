@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MdArrowBack } from 'react-icons/md';
 import s from './Modal.module.css';
+import { ModalPortal } from '../../../shared/ui/ModalPortal';
 
 interface RecoveryModalProps {
     onClose: () => void;
@@ -38,6 +39,7 @@ export const RecoveryModal: React.FC<RecoveryModalProps> = ({ onClose, onSwitchT
     const isFormValid = formData.recoveryKey && formData.captcha;
 
     return (
+        <ModalPortal>
         <div className={s.overlay} onClick={onClose}>
             <div className={s.modal} onClick={e => e.stopPropagation()}>
                 <div className={s.header}>
@@ -106,5 +108,6 @@ export const RecoveryModal: React.FC<RecoveryModalProps> = ({ onClose, onSwitchT
                 </form>
             </div>
         </div>
+        </ModalPortal>
     );
 };

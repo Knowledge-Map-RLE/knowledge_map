@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getNotifications, markNotificationsRead, type NotificationItem } from '../../../services/api/social';
 import { useToast } from '../../../shared/ui/Toast';
+import { ModalPortal } from '../../../shared/ui/ModalPortal';
 import s from './NotificationsPopup.module.css';
 
 type TargetType = 'article' | 'statement' | 'user' | 'community';
@@ -87,6 +88,7 @@ export function NotificationsPopup({ onClose }: { onClose: () => void }) {
     const unreadCount = notifications.filter((n) => !n.is_read).length;
 
     return (
+        <ModalPortal>
         <>
             <div className={s.backdrop} onClick={onClose} />
             <div className={s.popup} role="dialog" aria-label="Уведомления">
@@ -124,5 +126,6 @@ export function NotificationsPopup({ onClose }: { onClose: () => void }) {
                 </div>
             </div>
         </>
+        </ModalPortal>
     );
 }

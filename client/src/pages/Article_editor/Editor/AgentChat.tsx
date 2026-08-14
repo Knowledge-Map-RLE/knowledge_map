@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { estimateTokens } from '../../../services/api/agent';
 import {
-    getAgentModels,
-    streamAgentChat,
-    estimateTokens,
-    type AgentMessage,
-    type AgentModel,
-    type AgentUsage,
-} from '../../../services/api/agent';
+    listAIChats,
+    createAIChat,
+    getAIChatMessages,
+    estimateAIChatMessage,
+    streamAIChatMessage,
+    type AIChatCostBreakdown,
+    type AIChatMessage,
+    type AIChatStreamUsage,
+    type AIChatSummary,
+} from '../../../services/api/aiChats';
 import { getAgentArticleText, extractBlocksStream } from '../../../services/api/article_editor';
 import { statementsToResolvedText } from './blockConverter';
 import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
@@ -14,12 +18,21 @@ import { useAuth, AUTH_GATE_MESSAGE } from '../../../entities/auth';
 import type { KnowledgeStatement, ArticleBlockData } from '../model';
 import styles from '../Article_editor.module.css';
 
-interface ChatEntry {
-    id: number;
+interface ChatEntry extends AIChatMessage {
+    id: string;
     role: 'user' | 'assistant';
     content: string;
     error?: boolean;
+    estimatedCost?: string;
+    actualCost?: string;
     tokens?: number;
+    inputTokens?: number;
+    cachedTokens?: number;
+    toolTokens?: number;
+    totalTokens?: number;
+    costBreakdown?: AIChatCostBreakdown | null;
+    cacheUsed?: boolean;
+    pending?: boolean;
 }
 
 interface AgentChatProps {
@@ -30,14 +43,29 @@ interface AgentChatProps {
     onExtracted?: (docId: string, blocks: ArticleBlockData[]) => Promise<void>;
 }
 
+const ESTIMATE_DEBOUNCE_MS = 400;
+const DEFAULT_CONTEXT_LENGTH = 128000;
+
+function formatCost(cost: string): string {
+    const value = Number(cost || '0');
+    if (!Number.isFinite(value)) return '0,00 ₽';
+    return `${value.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ₽`;
+}
+
+function sumCost(...parts: (string | undefined)[]): string {
+    const total = parts.reduce((acc, p) => acc + (Number(p || '0') || 0), 0);
+    return total.toFixed(4);
+}
+
 const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, text: editorText, onExtracted }) => {
     const requireAuth = useRequireAuth();
     const { isAuthenticated, requestLogin, requestRegister } = useAuth();
     const [messages, setMessages] = useState<ChatEntry[]>([]);
+    const [chats, setChats] = useState<AIChatSummary[]>([]);
+    const [chat, setChat] = useState<AIChatSummary | null>(null);
     const [input, setInput] = useState('');
-    const [models, setModels] = useState<AgentModel[]>([]);
-    const [model, setModel] = useState('');
     const [sending, setSending] = useState(false);
+    const [initializing, setInitializing] = useState(false);
     const [extracting, setExtracting] = useState(false);
     const [extractProgress, setExtractProgress] = useState<{ processed: number; total: number } | null>(null);
     const [extractError, setExtractError] = useState<string | null>(null);
@@ -45,7 +73,13 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     const [attachSource, setAttachSource] = useState<string | null>(null);
     const [attachError, setAttachError] = useState<string | null>(null);
     const [serviceError, setServiceError] = useState<string | null>(null);
-    const [loadError, setLoadError] = useState<string | null>(null);
+    const [estimate, setEstimate] = useState<{
+        input: number;
+        output: number;
+        cost: string;
+        breakdown?: AIChatCostBreakdown | null;
+    } | null>(null);
+    const [estimatePending, setEstimatePending] = useState(false);
 
     const controllerRef = useRef<AbortController | null>(null);
     const extractControllerRef = useRef<AbortController | null>(null);
@@ -53,33 +87,86 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const attachTextRef = useRef<string>('');
     const copyTimerRef = useRef<number | null>(null);
-    const [copiedId, setCopiedId] = useState<number | null>(null);
+    const estimateTimerRef = useRef<number | null>(null);
+    const estimateSeqRef = useRef(0);
+    const [copiedId, setCopiedId] = useState<string | null>(null);
 
-    const contextLength = useMemo(() => {
-        const entry = models.find((m) => m.id === model);
-        return entry?.context_length || 32000;
-    }, [models, model]);
+    const contextLength = DEFAULT_CONTEXT_LENGTH;
 
-    const loadModels = useCallback(async () => {
-        setLoadError(null);
-        try {
-            const list = await getAgentModels();
-            setModels(list);
-            setModel((prev) => {
-                if (prev) return prev;
-                const configured = list.find((m) => m.configured);
-                return (configured ?? list[0])?.id ?? '';
-            });
-        } catch (error) {
-            setLoadError(error instanceof Error ? error.message : String(error));
-            setModels([]);
-        }
+    const refreshChats = useCallback(async (): Promise<AIChatSummary[]> => {
+        const list = await listAIChats(50);
+        setChats(list);
+        return list;
     }, []);
+
+    const loadChatHistory = useCallback(
+        async (current: AIChatSummary): Promise<void> => {
+            const history = await getAIChatMessages(current.id, 100);
+            setMessages(
+                history.map((m) => ({
+                    ...m,
+                    id: m.id,
+                    content: m.content,
+                    tokens: m.tokens ?? undefined,
+                    actualCost: m.cost ?? undefined,
+                    inputTokens: m.input_tokens ?? undefined,
+                    cachedTokens: m.cached_tokens ?? undefined,
+                    toolTokens: m.tool_tokens ?? undefined,
+                    totalTokens: m.total_tokens ?? undefined,
+                    costBreakdown: m.cost_breakdown ?? null,
+                    cacheUsed: m.cache_used ?? false,
+                })),
+            );
+            nextIdRef.current = history.length + 1;
+        },
+        [],
+    );
+
+    const selectChat = useCallback(
+        async (chatId: string): Promise<void> => {
+            if (chat && chat.id === chatId) return;
+            const current = chats.find((c) => c.id === chatId) ?? null;
+            setChat(current);
+            if (current) {
+                await loadChatHistory(current);
+            } else {
+                setMessages([]);
+                nextIdRef.current = 1;
+            }
+        },
+        [chat, chats, loadChatHistory],
+    );
+
+    const ensureChat = useCallback(async (): Promise<AIChatSummary> => {
+        if (chat) return chat;
+        const created = await createAIChat('AI-чат');
+        setChat(created);
+        setChats((prev) => [created, ...prev]);
+        return created;
+    }, [chat]);
+
+    const initChat = useCallback(async () => {
+        if (!isAuthenticated) return;
+        setInitializing(true);
+        try {
+            const chats = await listAIChats(50);
+            setChats(chats);
+            if (chats.length > 0) {
+                const current = chats[0];
+                setChat(current);
+                await loadChatHistory(current);
+            }
+        } catch (error) {
+            setServiceError(error instanceof Error ? error.message : String(error));
+        } finally {
+            setInitializing(false);
+        }
+    }, [isAuthenticated, loadChatHistory]);
 
     useEffect(() => {
         if (!isAuthenticated) return;
-        void loadModels();
-    }, [loadModels, isAuthenticated]);
+        void initChat();
+    }, [initChat, isAuthenticated]);
 
     useEffect(() => {
         const el = scrollRef.current;
@@ -89,6 +176,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     useEffect(() => () => {
         controllerRef.current?.abort();
         extractControllerRef.current?.abort();
+        if (estimateTimerRef.current) window.clearTimeout(estimateTimerRef.current);
     }, []);
 
     const loadArticleText = useCallback(async (): Promise<string> => {
@@ -104,6 +192,67 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
         }
         return '';
     }, [articleUuid, blocks, statements]);
+
+    const buildContextMessages = useCallback(
+        (userContent: string): { role: string; content: string }[] => {
+            return [
+                ...messages.map((m) => ({ role: m.role, content: m.content })),
+                { role: 'user', content: userContent },
+            ];
+        },
+        [messages],
+    );
+
+    const buildUserContent = useCallback(
+        (text: string): string => {
+            if (attachEnabled && attachTextRef.current) {
+                return (
+                    `[Прикреплённая статья]\n${attachTextRef.current}\n\n` +
+                    `[Вопрос по статье]\n${text}`
+                );
+            }
+            return text;
+        },
+        [attachEnabled],
+    );
+
+    const scheduleEstimate = useCallback(
+        (userContent: string) => {
+            if (estimateTimerRef.current) window.clearTimeout(estimateTimerRef.current);
+            if (!chat) return;
+            if (!userContent.trim() && messages.length === 0 && !attachEnabled) {
+                setEstimate(null);
+                return;
+            }
+            estimateTimerRef.current = window.setTimeout(() => {
+                const seq = ++estimateSeqRef.current;
+                setEstimatePending(true);
+                const fullContent = buildUserContent(userContent);
+                const context = buildContextMessages(fullContent);
+                estimateAIChatMessage(chat.id, context)
+                    .then((result) => {
+                        if (seq !== estimateSeqRef.current) return;
+                        setEstimate({
+                            input: result.estimated_input_tokens,
+                            output: result.estimated_output_tokens,
+                            cost: result.estimated_cost,
+                            breakdown: result.cost_breakdown ?? null,
+                        });
+                    })
+                    .catch(() => {
+                        if (seq === estimateSeqRef.current) setEstimate(null);
+                    })
+                    .finally(() => {
+                        if (seq === estimateSeqRef.current) setEstimatePending(false);
+                    });
+            }, ESTIMATE_DEBOUNCE_MS);
+        },
+        [chat, messages, buildContextMessages, buildUserContent, attachEnabled],
+    );
+
+    useEffect(() => {
+        scheduleEstimate(input.trim());
+    }, [input, chat, scheduleEstimate]);
 
     const handleExtract = useCallback(async () => {
         if (!requireAuth()) return;
@@ -129,7 +278,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
             const controller = new AbortController();
             extractControllerRef.current = controller;
             await extractBlocksStream(
-                { text, docId: articleUuid, lang, model: model || undefined, save: true },
+                { text, docId: articleUuid, lang, save: true },
                 {
                     signal: controller.signal,
                     onStart: (total) => setExtractProgress({ processed: 0, total }),
@@ -156,7 +305,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
             setExtractProgress(null);
             extractControllerRef.current = null;
         }
-    }, [articleUuid, extracting, sending, loadArticleText, editorText, model, onExtracted, requireAuth]);
+    }, [articleUuid, extracting, sending, loadArticleText, editorText, onExtracted, requireAuth]);
 
     const handleStopExtract = useCallback(() => {
         extractControllerRef.current?.abort();
@@ -211,74 +360,131 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
 
         setInput('');
         setServiceError(null);
-        let userContent = text;
-        if (attachEnabled && attachTextRef.current) {
-            userContent =
-                `[Прикреплённая статья]\n${attachTextRef.current}\n\n` +
-                `[Вопрос по статье]\n${text}`;
-        }
+        setEstimate(null);
+        const userContent = buildUserContent(text);
 
-        const userEntry: ChatEntry = { id: nextIdRef.current++, role: 'user', content: userContent, tokens: estimateTokens(userContent) };
-        const assistantEntry: ChatEntry = { id: nextIdRef.current++, role: 'assistant', content: '' };
+        const userEntry: ChatEntry = {
+            id: `local-${nextIdRef.current++}`,
+            role: 'user',
+            content: userContent,
+        };
+        const assistantEntry: ChatEntry = {
+            id: `local-${nextIdRef.current++}`,
+            role: 'assistant',
+            content: '',
+            pending: true,
+        };
         setMessages((prev) => [...prev, userEntry, assistantEntry]);
         setSending(true);
 
-        // Контекст статьи уже включён в сообщение и передан модели — снимаем галочку,
-        // чтобы при следующих запросах статья не грузилась повторно.
         if (attachEnabled) {
             setAttachEnabled(false);
             attachTextRef.current = '';
             setAttachSource(null);
         }
 
-        const history: AgentMessage[] = messages
-            .filter((m) => m.role === 'user' || m.role === 'assistant')
-            .map((m) => ({ role: m.role, content: m.content }));
-        history.push({ role: 'user', content: userContent });
-
         const controller = new AbortController();
         controllerRef.current = controller;
 
-        await streamAgentChat({
-            messages: history,
-            model: model || undefined,
-            signal: controller.signal,
-            onChunk: (chunk) => {
-                setMessages((prev) =>
-                    prev.map((m) =>
-                        m.id === assistantEntry.id
-                            ? { ...m, content: (m.content + chunk).replace(/^\s+/, '') }
-                            : m,
-                    ),
-                );
-            },
-            onUsage: (usage: AgentUsage) => {
-                setMessages((prev) =>
-                    prev.map((m) =>
-                        m.id === assistantEntry.id
-                            ? { ...m, tokens: usage.completion_tokens || usage.total_tokens }
-                            : m,
-                    ),
-                );
-            },
-            onError: (error) => {
-                setServiceError(error.message);
-                setMessages((prev) =>
-                    prev.map((m) =>
-                        m.id === assistantEntry.id ? { ...m, error: true } : m,
-                    ),
-                );
-            },
-            onDone: () => {
-                setMessages((prev) =>
-                    prev.map((m) =>
-                        m.id === assistantEntry.id ? { ...m, content: m.content.trim() } : m,
-                    ),
-                );
-                setSending(false);
-            },
-        });
-    }, [input, sending, messages, model, attachEnabled, extracting, requireAuth]);
+        try {
+            const currentChat = await ensureChat();
+            await streamAIChatMessage(currentChat.id, {
+                content: userContent,
+                signal: controller.signal,
+                onChunk: (chunk) => {
+                    setMessages((prev) =>
+                        prev.map((m) =>
+                            m.id === assistantEntry.id
+                                ? { ...m, content: (m.content + chunk).replace(/^\s+/, '') }
+                                : m,
+                        ),
+                    );
+                },
+                onUsage: (usage: AIChatStreamUsage) => {
+                    const bd = usage.cost_breakdown ?? null;
+                    setMessages((prev) =>
+                        prev.map((m) => {
+                            if (m.id === userEntry.id) {
+                                return {
+                                    ...m,
+                                    tokens: usage.prompt_tokens ?? usage.total_tokens,
+                                    actualCost: bd
+                                        ? sumCost(bd.input, bd.cached)
+                                        : usage.cost,
+                                    inputTokens: usage.prompt_tokens,
+                                    cachedTokens: usage.cached_tokens,
+                                    toolTokens: 0,
+                                    totalTokens: usage.prompt_tokens,
+                                    costBreakdown: bd
+                                        ? {
+                                              input: bd.input,
+                                              cached: bd.cached,
+                                              output: '0',
+                                              tool: '0',
+                                          }
+                                        : null,
+                                    cacheUsed: (usage.cached_tokens ?? 0) > 0,
+                                };
+                            }
+                            if (m.id === assistantEntry.id) {
+                                return {
+                                    ...m,
+                                    tokens:
+                                        usage.completion_tokens || usage.total_tokens,
+                                    actualCost: bd
+                                        ? sumCost(bd.output, bd.tool)
+                                        : usage.cost,
+                                    inputTokens: 0,
+                                    cachedTokens: 0,
+                                    toolTokens: usage.tool_tokens,
+                                    totalTokens:
+                                        (usage.completion_tokens || 0) +
+                                        (usage.tool_tokens || 0),
+                                    costBreakdown: bd
+                                        ? {
+                                              input: '0',
+                                              cached: '0',
+                                              output: bd.output,
+                                              tool: bd.tool,
+                                          }
+                                        : null,
+                                    cacheUsed: false,
+                                };
+                            }
+                            return m;
+                        }),
+                    );
+                },
+                onError: (error) => {
+                    setServiceError(error.message);
+                    setMessages((prev) =>
+                        prev.map((m) =>
+                            m.id === assistantEntry.id ? { ...m, error: true, pending: false } : m,
+                        ),
+                    );
+                },
+                onDone: () => {
+                    setMessages((prev) =>
+                        prev.map((m) =>
+                            m.id === assistantEntry.id
+                                ? { ...m, content: m.content.trim(), pending: false }
+                                : m,
+                        ),
+                    );
+                    setSending(false);
+                    void refreshChats();
+                },
+            });
+        } catch (error) {
+            setServiceError(error instanceof Error ? error.message : String(error));
+            setMessages((prev) =>
+                prev.map((m) =>
+                    m.id === assistantEntry.id ? { ...m, error: true, pending: false } : m,
+                ),
+            );
+            setSending(false);
+        }
+    }, [input, sending, messages, attachEnabled, extracting, requireAuth, ensureChat, refreshChats, buildUserContent]);
 
     const handleStop = useCallback(() => {
         controllerRef.current?.abort();
@@ -304,16 +510,18 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     const handleClear = useCallback(() => {
         controllerRef.current?.abort();
         setMessages([]);
+        setChat(null);
         setInput('');
         setServiceError(null);
-        setLoadError(null);
         setSending(false);
+        setEstimate(null);
         setCopiedId(null);
         setAttachEnabled(false);
         attachTextRef.current = '';
         setAttachSource(null);
         setAttachError(null);
     }, []);
+
     const handleKeyDown = useCallback(
         (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
             if (event.key === 'Enter' && !event.shiftKey) {
@@ -371,7 +579,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                             {'\u0412\u043E\u0439\u0442\u0438'}
                         </button>
                         <button className={styles.agentChatGateBtnSecondary} onClick={requestRegister}>
-                            {'\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F'}
+                            {'\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F'}
                         </button>
                     </div>
                 </div>
@@ -384,26 +592,26 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
             <div className={styles.agentChatToolbar}>
                 <select
                     className={styles.agentChatModelSelect}
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                    title="Модель AI"
+                    value={chat?.id ?? ''}
+                    onChange={(e) => {
+                        if (!e.target.value) {
+                            handleClear();
+                        } else {
+                            void selectChat(e.target.value);
+                        }
+                    }}
+                    title="Выбрать чат"
                     disabled={sending || extracting}
                 >
-                    {models.length === 0 && <option value="">по умолчанию</option>}
-                    {models.map((m) => (
-                        <option key={m.id} value={m.id}>
-                            {m.id}
+                    <option value="">
+                        {'\u041D\u043E\u0432\u044B\u0439 \u0447\u0430\u0442'}
+                    </option>
+                    {chats.map((c) => (
+                        <option key={c.id} value={c.id}>
+                            {c.title || c.id}
                         </option>
                     ))}
                 </select>
-                <button
-                    className={styles.agentChatClearBtn}
-                    onClick={handleClear}
-                    disabled={(messages.length === 0 && !sending) || extracting}
-                    title="Очистить чат"
-                >
-                    {'\u0421\u0431\u0440\u043E\u0441'}
-                </button>
             </div>
 
             <div className={styles.agentChatExtractRow}>
@@ -454,18 +662,11 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                 </div>
             </div>
 
-            {loadError && (
+            {initializing && (
                 <div className={styles.agentChatErrorBanner}>
-                    <span className={styles.agentChatErrorText} title={loadError}>
-                        {'\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u0438: '}
-                        {loadError}
+                    <span className={styles.agentChatErrorText}>
+                        {'\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0447\u0430\u0442\u0430...'}
                     </span>
-                    <button
-                        className={styles.agentChatRetryBtn}
-                        onClick={() => void loadModels()}
-                    >
-                        {'\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C'}
-                    </button>
                 </div>
             )}
 
@@ -504,7 +705,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
             )}
 
             <div className={styles.agentChatMessages} ref={scrollRef}>
-                {messages.length === 0 && !sending && !extracting && (
+                {messages.length === 0 && !sending && !extracting && !initializing && (
                     <div className={styles.agentChatEmpty}>
                         {'\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u0432\u043E\u043F\u0440\u043E\u0441 AI-\u0430\u0433\u0435\u043D\u0442\u0443 \u043E\u0431 \u0441\u0442\u0430\u0442\u044C\u0435'}
                     </div>
@@ -546,8 +747,37 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                         {entry.content && (
                             <div className={styles.agentChatBubbleFoot}>
                                 {typeof entry.tokens === 'number' && entry.tokens >= 0 && (
-                                    <span className={styles.agentChatBubbleTokens}>
-                                        {entry.tokens.toLocaleString('ru-RU')} ток.
+                                    <span
+                                        className={styles.agentChatBubbleTokens}
+                                        title={
+                                            entry.role === 'user'
+                                                ? `вход: ${entry.tokens.toLocaleString('ru-RU')}${(entry.cachedTokens ?? 0) > 0 ? ` · кэш: ${(entry.cachedTokens ?? 0).toLocaleString('ru-RU')}` : ''}`
+                                                : `выход: ${entry.tokens.toLocaleString('ru-RU')}${(entry.toolTokens ?? 0) > 0 ? ` · инструменты: ${(entry.toolTokens ?? 0).toLocaleString('ru-RU')}` : ''}`
+                                        }
+                                    >
+                                        {entry.role === 'user' ? '\u0432\u0445\u043E\u0434: ' : '\u0432\u044B\u0445\u043E\u0434: '}
+                                        {entry.tokens.toLocaleString('ru-RU')}{' \u0442\u043E\u043A.'}
+                                    </span>
+                                )}
+                                {typeof entry.actualCost === 'string' && entry.actualCost && (
+                                    <span
+                                        className={styles.agentChatBubbleTokens}
+                                        title={
+                                            entry.costBreakdown
+                                                ? entry.role === 'user'
+                                                    ? `вход: ${formatCost(entry.costBreakdown.input)}${entry.costBreakdown.cached !== '0' ? ` · кэш: ${formatCost(entry.costBreakdown.cached)}` : ''}`
+                                                    : `выход: ${formatCost(entry.costBreakdown.output)}${entry.costBreakdown.tool !== '0' ? ` · инструменты: ${formatCost(entry.costBreakdown.tool)}` : ''}`
+                                                : undefined
+                                        }
+                                    >
+                                        {'\u0440\u0430\u0441\u0445\u043E\u0434: '}
+                                        {formatCost(entry.actualCost)}
+                                    </span>
+                                )}
+                                {entry.role === 'user' && entry.cacheUsed && (entry.cachedTokens ?? 0) > 0 && (
+                                    <span className={styles.agentChatBubbleCache} title="Использован кэш входных токенов">
+                                        {'\u043A\u044D\u0448: '}
+                                        {(entry.cachedTokens ?? 0).toLocaleString('ru-RU')}
                                     </span>
                                 )}
                                 <button
@@ -571,6 +801,28 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                     </div>
                 ))}
             </div>
+
+            {estimate && !sending && (
+                <div className={styles.agentChatEstimate}>
+                    <span className={styles.agentChatEstimateLabel}>
+                        {'\u041E\u0446\u0435\u043D\u043A\u0430 \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438: '}
+                        {formatCost(estimate.cost)}
+                        <span
+                            className={styles.agentChatEstimateDetail}
+                            title={
+                                estimate.breakdown
+                                    ? `вход: ${formatCost(estimate.breakdown.input)} · выход: ${formatCost(estimate.breakdown.output)}`
+                                    : undefined
+                            }
+                        >
+                            {` (~${estimate.input.toLocaleString('ru-RU')} \u0432\u0445. + ${estimate.output.toLocaleString('ru-RU')} \u0432\u044B\u0445. \u0442\u043E\u043A.)`}
+                        </span>
+                    </span>
+                    {estimatePending && (
+                        <span className={styles.agentChatEstimatePending}>{'\u2026'}</span>
+                    )}
+                </div>
+            )}
 
             <div className={styles.agentChatInputRow}>
                 <textarea

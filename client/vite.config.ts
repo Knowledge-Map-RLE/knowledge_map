@@ -31,6 +31,10 @@ export default defineConfig({
         target: 'http://localhost:50054',
         ws: true,
       },
+      '/billing': {
+        target: 'http://localhost:50058',
+        ws: false,
+      },
     },
   },
   worker: {

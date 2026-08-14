@@ -39,6 +39,12 @@ class Settings(BaseSettings):
     AUTH_SERVICE_HOST: str = "localhost"
     AUTH_SERVICE_PORT: int = 50057
 
+    # Billing сервис
+    BILLING_SERVICE_URL: str = "http://localhost:50058"
+
+    # Внутренний токен для межсервисных вызовов api -> billing
+    INTERNAL_TOKEN: str = ""
+
     # PDF to Markdown сервис
     PDF_TO_MD_SERVICE_URL: str = "http://localhost:8002"
 

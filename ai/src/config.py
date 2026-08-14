@@ -61,6 +61,15 @@ class Settings(BaseSettings):
     #   "api_key":"lm-studio","models":["qwen/qwen3-4b"]}]
     providers_json: str | None = Field(default=None, alias="AI_PROVIDERS")
 
+    # Yandex AI Studio / Yandex Cloud Foundation Models provider.
+    # Configured via these constants; a "yandex-ai" provider is registered
+    # automatically when YANDEX_CLOUD_API_KEY is set.
+    yandex_cloud_folder: str = Field(default="", alias="YANDEX_CLOUD_FOLDER")
+    yandex_cloud_api_key: str = Field(default="", alias="YANDEX_CLOUD_API_KEY")
+    yandex_cloud_model: str = Field(
+        default="deepseek-v4-flash/latest", alias="YANDEX_CLOUD_MODEL"
+    )
+
     request_timeout: float = Field(default=300.0, alias="AI_REQUEST_TIMEOUT")
     connect_timeout: float = Field(default=15.0, alias="AI_CONNECT_TIMEOUT")
     models_cache_ttl: float = Field(default=60.0, alias="AI_MODELS_CACHE_TTL")
@@ -75,18 +84,56 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
+def _yandex_provider() -> Provider | None:
+    """Build the Yandex AI Studio / Cloud provider from YANDEX_CLOUD_* constants."""
+    if not settings.yandex_cloud_api_key or not settings.yandex_cloud_folder:
+        return None
+    model_uri = (
+        f"gpt://{settings.yandex_cloud_folder.rstrip('/')}/"
+        f"{settings.yandex_cloud_model.lstrip('/')}"
+    )
+    return Provider(
+        name="yandex-ai",
+        base_url="https://ai.api.cloud.yandex.net/v1",
+        api_key=settings.yandex_cloud_api_key,
+        models=[model_uri],
+        default_model=model_uri,
+        context_length=128000,
+    )
+
+
 def load_providers() -> list[Provider]:
-    """Build the provider list from ``AI_PROVIDERS`` or the LM Studio defaults."""
+    """Build the provider list from ``AI_PROVIDERS``, the LM Studio defaults,
+    or the Yandex provider configured via ``YANDEX_CLOUD_*`` constants."""
+    providers: list[Provider]
     if settings.providers_json:
         data = json.loads(settings.providers_json)
-        return [Provider(**item) for item in data]
+        providers = [Provider(**item) for item in data]
+    elif not settings.yandex_cloud_api_key:
+        providers = [
+            Provider(
+                name=settings.default_provider,
+                base_url=settings.lm_studio_base_url,
+                api_key=settings.lm_studio_api_key,
+                models=[settings.default_model],
+                default_model=settings.default_model,
+            )
+        ]
+    else:
+        providers = []
 
-    return [
-        Provider(
-            name=settings.default_provider,
-            base_url=settings.lm_studio_base_url,
-            api_key=settings.lm_studio_api_key,
-            models=[settings.default_model],
-            default_model=settings.default_model,
-        )
-    ]
+    yandex = _yandex_provider()
+    if yandex and not any(p.name == "yandex-ai" for p in providers):
+        providers.append(yandex)
+
+    if not providers:
+        providers = [
+            Provider(
+                name="lm-studio",
+                base_url=settings.lm_studio_base_url,
+                api_key=settings.lm_studio_api_key,
+                models=["qwen/qwen3-4b"],
+                default_model="qwen/qwen3-4b",
+            )
+        ]
+    return providers

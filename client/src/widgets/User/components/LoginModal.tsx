@@ -2,6 +2,7 @@ import { useState } from 'react';
 import s from './Modal.module.css';
 import { authService } from '../../../services/auth';
 import type { User } from '../../../services/auth';
+import { ModalPortal } from '../../../shared/ui/ModalPortal';
 
 interface LoginModalProps {
     onClose: () => void;
@@ -51,6 +52,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSwitchToRecov
     const isFormValid = formData.username && formData.password && formData.captcha;
 
     return (
+        <ModalPortal>
         <div className={s.overlay} onClick={onClose}>
             <div className={s.modal} onClick={e => e.stopPropagation()}>
                 <div className={s.header}>
@@ -136,5 +138,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSwitchToRecov
                 </form>
             </div>
         </div>
+        </ModalPortal>
     );
 };

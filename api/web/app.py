@@ -48,6 +48,9 @@ from src.routers import static
 # Прокси /ai/* -> AI Agent микросервис (OpenAI-совместимый, порт 50054)
 from src.routers import ai_proxy as ai_proxy_router
 
+# Персистентные AI-чаты (учёт токенов и стоимости)
+from src.routers import ai_chats as ai_chats_router
+
 # Редактор статей (article_editor + parse + graph)
 from src.routers import article_editor as article_editor_router
 
@@ -153,6 +156,9 @@ app.include_router(article_editor_router.router, prefix="/api")
 
 # Прокси AI Agent микросервиса (фронтенд -> API -> ai:50054)
 app.include_router(ai_proxy_router.router)
+
+# Персистентные AI-чаты (учёт токенов/стоимости, ownership, списание)
+app.include_router(ai_chats_router.router)
 
 # Социальная сеть (чат, друзья, сообщества, уведомления)
 app.include_router(social_network_router.router, prefix="/api")

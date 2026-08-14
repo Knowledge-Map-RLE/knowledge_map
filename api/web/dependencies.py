@@ -20,10 +20,18 @@ from adapters.repositories.link_repository import LinkRepository
 from adapters.repositories.document_repository import DocumentRepository
 from adapters.repositories.annotation_repository import AnnotationRepository
 from adapters.repositories.action_repository import ActionRepository
+from adapters.repositories.ai_chat_repository import AIChatRepository
 from adapters.repositories.linguistic_pattern_repository import LinguisticPatternRepository
 from adapters.repositories.pattern_graph_repository import PatternGraphRepository
 from infrastructure.s3.s3_storage import get_s3_client, AsyncS3Client
 from infrastructure.grpc_clients.auth_grpc_client import auth_client, AuthClient
+from infrastructure.ai_gateway.ai_gateway_client import AIGatewayClient
+from infrastructure.billing_client.billing_client import BillingClient, billing_client
+from infrastructure.tokenization.deepseek_tokenizer import (
+    count_tokens,
+    count_messages_tokens,
+    estimate_messages_usage,
+)
 from infrastructure.config import settings
 
 from application.auth.verify_token import verify_token
@@ -46,6 +54,7 @@ def get_document_repository() -> DocumentRepository:
 
 def get_annotation_repository() -> AnnotationRepository:
     return AnnotationRepository()
+
 
 
 
@@ -127,3 +136,39 @@ def get_optional_user(
         return None
     user = result.get("user")
     return user or None
+
+
+# ── AI чаты ─────────────────────────────────────────────────────────────────────
+
+def get_ai_chat_repository() -> AIChatRepository:
+    return AIChatRepository()
+
+
+def get_ai_gateway() -> AIGatewayClient:
+    return AIGatewayClient()
+
+
+def get_billing_client() -> BillingClient:
+    return billing_client
+
+
+def get_deepseek_tokenizer():
+    """Токенизатор DeepSeek V4 — утилиты для оценки токенов.
+
+    Возвращается как модуль-объект: use cases вызывают
+    ``tokenizer.estimate_messages_usage`` / ``count_tokens``.
+    """
+    return _DeepSeekTokenizerFacade()
+
+
+class _DeepSeekTokenizerFacade:
+    """Тонкая обёртка над функциями токенизатора для DI."""
+
+    def estimate_messages_usage(self, messages, max_output_tokens=None):
+        return estimate_messages_usage(messages, max_output_tokens=max_output_tokens)
+
+    def count_tokens(self, text: str) -> int:
+        return count_tokens(text)
+
+    def count_messages_tokens(self, messages) -> int:
+        return count_messages_tokens(messages)

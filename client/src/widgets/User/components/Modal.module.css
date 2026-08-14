@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
 .overlay {
-    @apply fixed inset-0 bg-black bg-white/50 flex items-center justify-center z-50;
+    @apply fixed inset-0 bg-black/50 z-[5000];
+    display: flex;
+    overflow-y: auto;
+    padding: 24px 16px;
 }
 
 .modal {
-    @apply bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto;
+    @apply bg-white rounded-lg shadow-xl max-w-md w-full;
+    margin: auto;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .header {
