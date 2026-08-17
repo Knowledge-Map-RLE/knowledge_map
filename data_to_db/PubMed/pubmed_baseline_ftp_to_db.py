@@ -6,9 +6,10 @@ import json
 from pathlib import Path
 from queue import Queue
 from threading import Thread
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from lxml import etree as LET  # type: ignore
-from typing import Dict, Tuple, List, Any
+from typing import Callable, Dict, Tuple, List, Any, Optional
 from neo4j import exceptions as neo4j_exceptions  # type: ignore[attr-defined]
 import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from common import get_driver, load_checkpoint, append_checkpoint, setup_logging
@@ -19,7 +20,7 @@ from s3_client import get_s3_client
 LOADER_DISABLED = False
 
 # ========== КОНФИГУРАЦИЯ ==========
-DATA_DIR        = Path(r"D:/Данные/PubMed")
+DATA_DIR        = Path("..") / "data" / "PubMed"
 LOG_FILE        = Path("./logs/article_to_neo4j.log")
 CHECKPOINT_FILE = Path("./logs/parse_checkpoint.txt")
 
@@ -30,6 +31,7 @@ WRITE_BACKOFF     = 2
 BATCH_SIZE        = 500      # увеличен для сокращения оверхеда транзакций
 POOL_SIZE         = 3
 QUEUE_SIZE        = MAX_WORKERS * 2
+DEFAULT_ARTICLES_PER_FILE = 30000  # стартовая оценка статей в одном файле baseline
 # ==================================
 
 # ========== ЛОГИРОВАНИЕ ==========
@@ -37,6 +39,57 @@ logger = setup_logging(LOG_FILE)
 
 # ========== NEO4J ==========
 driver = get_driver(pool_size=POOL_SIZE)
+
+# ========== ПРОГРЕСС ОБРАБОТКИ ==========
+class _ProgressTracker:
+    """Совокупный прогресс обработки в статьях (общий для всех файлов).
+
+    Парсеры сообщают кол-во принятых статей через batch(); процессор
+    сообщает о завершении файла через file_done() для калибровки оценки.
+    Единицы измерения — статьи, поэтому полоса движется плавно.
+    """
+
+    def __init__(self, total_files: int, on_progress: Optional[Callable[[int, int, str], None]]):
+        self.total_files = total_files
+        self.on_progress = on_progress
+        self.lock = threading.Lock()
+        self.articles_done = 0          # суммарно принято статей (записано в очередь)
+        self.last_count: Dict[str, int] = {}  # файл -> принято статей на текущий момент
+        self.file_counts: List[int] = []      # финальные счётчики завершённых файлов
+        self.estimate = DEFAULT_ARTICLES_PER_FILE
+
+    def batch(self, path_name: str, count: int):
+        """Вызывается из потока парсинга после каждой порции (батча) статей."""
+        with self.lock:
+            prev = self.last_count.get(path_name, 0)
+            self.articles_done += count - prev
+            self.last_count[path_name] = count
+            processed = self.articles_done
+            total = self._estimated_total()
+        self._report(processed, total, path_name, count)
+
+    def file_done(self, path_name: str, count: int):
+        """Вызывается из главного потока, когда файл полностью распарсен."""
+        with self.lock:
+            self.last_count.pop(path_name, None)
+            self.file_counts.append(count)
+            self.estimate = round(sum(self.file_counts) / len(self.file_counts))
+            processed = self.articles_done
+            total = self._estimated_total()
+        self._report(processed, total, path_name, count)
+
+    def _estimated_total(self) -> int:
+        return max(self.estimate * self.total_files, self.articles_done)
+
+    def _report(self, processed: int, total: int, path_name: str, count: int):
+        if self.on_progress is None:
+            return
+        try:
+            self.on_progress(processed, total, f"{path_name} ({count} статей)")
+        except Exception:
+            logger.exception(f"Не удалось сообщить прогресс по {path_name}")
+
+_progress_tracker: Optional[_ProgressTracker] = None
 
 # ========== СХЕМА ==========
 def check_existing_constraints():
@@ -71,6 +124,20 @@ def ensure_schema():
         session.run("""
             CREATE INDEX IF NOT EXISTS
             FOR (n:Article) ON (n.layer, n.level)
+        """)
+        # Индексы для быстрого поиска существующих документов при дедупликации по pmid/doi
+        # и быстрого MERGE по uid (без них каждый батч сканирует все Document)
+        session.run("""
+            CREATE INDEX IF NOT EXISTS
+            FOR (n:Document) ON (n.uid)
+        """)
+        session.run("""
+            CREATE INDEX IF NOT EXISTS
+            FOR (n:Document) ON (n.pubmed_id)
+        """)
+        session.run("""
+            CREATE INDEX IF NOT EXISTS
+            FOR (n:Document) ON (n.doi)
         """)
     logger.info("Schema constraints and indexes ensured")
 
@@ -243,7 +310,23 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                 })
             tx.run("""
                 UNWIND $nodes AS row
-                  MERGE (n:Document {uid: row.uid})
+                  WITH row
+                  OPTIONAL MATCH (existing1:Document)
+                    WHERE existing1.pubmed_id = row.pmid
+                      AND row.pmid IS NOT NULL AND row.pmid <> ''
+                  WITH row, existing1
+                  OPTIONAL MATCH (existing2:Document)
+                    WHERE existing1 IS NULL
+                      AND existing2.doi = row.doi
+                      AND row.doi IS NOT NULL AND row.doi <> ''
+                  WITH row,
+                       CASE
+                         WHEN existing1 IS NOT NULL THEN existing1
+                         WHEN existing2 IS NOT NULL THEN existing2
+                         ELSE null
+                       END AS existing
+                  WITH row, CASE WHEN existing IS NOT NULL THEN existing.uid ELSE row.uid END AS uid
+                  MERGE (n:Document {uid: uid})
                   ON CREATE SET 
                       n.original_filename = row.original_filename,
                       n.md5_hash = row.md5_hash,
@@ -261,8 +344,19 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.is_processed = row.is_processed,
                       n.processing_status = row.processing_status
                   ON MATCH SET 
-                      n.title = coalesce(row.title, n.title),
-                      n.s3_key = coalesce(row.s3_key, n.s3_key),
+                      n.original_filename = coalesce(n.original_filename, row.original_filename),
+                      n.md5_hash = coalesce(n.md5_hash, row.md5_hash),
+                      n.s3_key = coalesce(n.s3_key, row.s3_key),
+                      n.title = coalesce(n.title, row.title),
+                      n.authors = coalesce(n.authors, row.authors),
+                      n.abstract = coalesce(n.abstract, row.abstract),
+                      n.keywords = coalesce(n.keywords, row.keywords),
+                      n.journal = coalesce(n.journal, row.journal),
+                      n.doi = coalesce(n.doi, row.doi),
+                      n.pubmed_id = coalesce(n.pubmed_id, row.pubmed_id),
+                      n.pmc_id = coalesce(n.pmc_id, row.pmc_id),
+                      n.source = coalesce(n.source, row.source),
+                      n.is_open_access = coalesce(n.is_open_access, row.is_open_access),
                       n.is_processed = row.is_processed,
                       n.processing_status = row.processing_status
             """, nodes=doc_nodes)
@@ -290,7 +384,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
     for attempt in range(1, MAX_WRITE_RETRIES + 1):
         try:
             with driver.session() as session:
-                session.execute_write(tx_work)
+                session.execute_write(tx_work, timeout=120_000)
             logger.info(f"[WRITE-OK] {path_name}")
             # Увеличенная пауза для освобождения памяти
             time.sleep(0.2)
@@ -298,6 +392,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
         except (neo4j_exceptions.ServiceUnavailable,
                 neo4j_exceptions.SessionExpired,
                 neo4j_exceptions.TransientError,
+                neo4j_exceptions.ClientError,
                 neo4j_exceptions.ConstraintError,
                 neo4j_exceptions.CypherSyntaxError,
                 OSError) as e:
@@ -313,6 +408,17 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
 
 # ========== ОЧЕРЕДЬ И ПИСАТЕЛИ ==========
 write_queue: "Queue[Any]" = Queue(maxsize=QUEUE_SIZE)
+writer_threads: list = []
+failed_write_files: set = set()  # файлы, у которых не удалось записать хотя бы один батч
+
+def ensure_writers():
+    """Проверяет и перезапускает пул потоков-писателей."""
+    global writer_threads
+    writer_threads = [t for t in writer_threads if t.is_alive()]
+    for i in range(len(writer_threads), WRITER_COUNT):
+        t = Thread(target=writer_loop, args=(i + 1,), daemon=True)
+        t.start()
+        writer_threads.append(t)
 
 def writer_loop(id: int):
     logger.info(f"Writer-{id} started")
@@ -323,15 +429,13 @@ def writer_loop(id: int):
             logger.info(f"Writer-{id} stopping")
             break
         path_name, nodes, rels = item
-        if write_to_neo4j(path_name, nodes, rels):
-            append_checkpoint(CHECKPOINT_FILE, path_name)
-            logger.info(f"[CHKPT] {path_name}")
+        try:
+            if not write_to_neo4j(path_name, nodes, rels):
+                failed_write_files.add(path_name)
+        except Exception as e:
+            logger.error(f"Writer-{id} unexpected error for {path_name}: {e}")
+            failed_write_files.add(path_name)
         write_queue.task_done()
-
-# запускаем WRITER_COUNT потоков
-for i in range(WRITER_COUNT):
-    t = Thread(target=writer_loop, args=(i+1,), daemon=True)
-    t.start()
 
 # ========== ПАРСИНГ ОДНОГО ФАЙЛА ==========
 MANDATORY_FIELDS = ['pmid', 'title', 'journal']  # publication_time сделано необязательным
@@ -462,6 +566,8 @@ def parse_one_file(path: Path):
                 if count % BATCH_SIZE == 0:
                     logger.info(f"{path.name}: enqueue batch #{count//BATCH_SIZE}")
                     write_queue.put((path.name, nodes.copy(), rels.copy()))
+                    if _progress_tracker is not None:
+                        _progress_tracker.batch(path.name, count)
                     nodes.clear()
                     rels.clear()
                     # Принудительная очистка памяти каждые 5 батчей
@@ -474,6 +580,8 @@ def parse_one_file(path: Path):
     if nodes or rels:
         logger.info(f"{path.name}: enqueue final batch")
         write_queue.put((path.name, nodes, rels))
+        if _progress_tracker is not None:
+            _progress_tracker.batch(path.name, count)
 
     # Выводим статистику
     logger.info(f"{path.name}: Обработано статей: {total_articles}")
@@ -528,15 +636,24 @@ def process_xml_gz(s3_key: str) -> bool:
             local_path.unlink()
 
 
-def process_all_files():
+def process_all_files(
+    data_dir: Optional[Path] = None,
+    max_files: int = 0,
+    reset_db: bool = False,
+    on_progress: Optional[Callable[[int, int, str], None]] = None,
+):
     """Главная функция обработки - вызывается из worker.py.
-    
-    Обходит LOADER_DISABLED проверку.
+
+    Аргументы:
+        data_dir: папка с .xml.gz архивами (по умолчанию DATA_DIR).
+        max_files: ограничение количества обрабатываемых файлов (0 — все).
+        reset_db: очистить базу данных перед загрузкой.
+        on_progress: колбэк (обработано, всего, текущий файл) для прогресса обработки.
     """
     if LOADER_DISABLED:
         logger.info("PubMed loader is disabled by config, skipping")
         return
-    
+
     ensure_schema()
 
     # проверка соединения
@@ -548,50 +665,58 @@ def process_all_files():
         logger.error(f"Cannot connect to Neo4j: {e}")
         return
 
-    files = sorted(DATA_DIR.glob("*.xml.gz"))
+    data_dir = Path(data_dir) if data_dir else DATA_DIR
+    files = sorted(data_dir.rglob("*.xml.gz"))
     if not files:
-        logger.error("Не найдено файлов для обработки")
+        logger.error(f"Не найдено файлов для обработки в {data_dir}")
         return
-    
-    # Показываем все доступные файлы
-    logger.info(f"Найдено файлов: {len(files)}")
-    for i, file in enumerate(files):
-        logger.info(f"  {i+1}. {file.name}")
-    
-    # Берём последние 3 файла
-    latest_files = files[-3:]  # Последние 3 файла
-    logger.info(f"Обрабатываем последние 3 файла:")
-    for i, file in enumerate(latest_files, 1):
+
+    processed = load_checkpoint(CHECKPOINT_FILE)
+    if processed:
+        files = [f for f in files if f.name not in processed]
+        logger.info(
+            f"Пропуск уже обработанных файлов, осталось к обработке: {len(files)}"
+        )
+
+    if max_files > 0:
+        files = files[:max_files]
+
+    logger.info(f"Найдено файлов: {len(files)} в {data_dir}")
+    for i, file in enumerate(files, 1):
         logger.info(f"  {i}. {file.name}")
-    
-    # Показываем информацию о файлах
-    total_size = 0
-    for file in latest_files:
-        mod_time = datetime.datetime.fromtimestamp(file.stat().st_mtime)
-        file_size_mb = file.stat().st_size / (1024 * 1024)
-        total_size += file_size_mb
-        logger.info(f"  {file.name}: {file_size_mb:.1f} MB, модифицирован: {mod_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    logger.info(f"Общий размер файлов: {total_size:.1f} MB")
-    
-    # Временная настройка: обрабатываем только один предпоследний файл (или последний, если файлов < 2)
-    files_to_process = files[-2:-1] if len(files) >= 2 else files[-1:]
-    logger.info(f"Временная настройка: обрабатываем файл: {[f.name for f in files_to_process]}")
-    
-    # Очищаем базу данных перед загрузкой нового файла
-    reset_database_full()
+
+    if reset_db:
+        logger.info("Очистка базы данных перед загрузкой")
+        reset_database_full()
 
     try:
         # Параллельная обработка файлов парсером
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            future_to_file = {executor.submit(parse_one_file, f): f for f in files_to_process}
-            for future in as_completed(future_to_file):
-                file_to_process = future_to_file[future]
-                try:
-                    res = future.result()
-                    logger.info(f"[OK] {res} обработан успешно")
-                except Exception as e:
-                    logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")
+        ensure_writers()
+        total_files = len(files)
+        tracker = _ProgressTracker(total_files, on_progress)
+        global _progress_tracker
+        _progress_tracker = tracker
+        if on_progress is not None:
+            on_progress(0, tracker._estimated_total(), "Начало обработки")
+        completed = 0
+        completed_files: List[str] = []
+        try:
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                future_to_file = {executor.submit(parse_one_file, f): f for f in files}
+                for future in as_completed(future_to_file):
+                    file_to_process = future_to_file[future]
+                    try:
+                        res = future.result()
+                        logger.info(f"[OK] {res} обработан успешно")
+                        completed_files.append(file_to_process.name)
+                    except Exception as e:
+                        logger.error(f"[PARSE-ERR] {file_to_process.name}: {e}")
+                    finally:
+                        completed += 1
+                        count = tracker.last_count.get(file_to_process.name, 0)
+                        tracker.file_done(file_to_process.name, count)
+        finally:
+            _progress_tracker = None
         # Принудительная очистка памяти после партии файлов
         import gc
         gc.collect()
@@ -605,13 +730,19 @@ def process_all_files():
     for _ in range(WRITER_COUNT):
         write_queue.put(None)
 
+    # Помечаем чекпойнтом только файлы, чьи батчи полностью записаны успешно
+    for fname in completed_files:
+        if fname not in failed_write_files:
+            append_checkpoint(CHECKPOINT_FILE, fname)
+            logger.info(f"[CHKPT] {fname}")
+
     # Показываем итоговую статистику
     try:
         with driver.session() as s:
             result = s.run("MATCH (n:Article) RETURN count(n) as total_nodes")
             total_nodes = result.single()["total_nodes"]
             logger.info(f"ИТОГО загружено узлов в базу: {total_nodes}")
-            
+
             result = s.run("MATCH ()-[r:BIBLIOGRAPHIC_LINK]->() RETURN count(r) as total_rels")
             total_rels = result.single()["total_rels"]
             logger.info(f"ИТОГО загружено связей в базу: {total_rels}")

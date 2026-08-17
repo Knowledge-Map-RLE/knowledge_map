@@ -1,6 +1,7 @@
 import asyncio
 import sys
-sys.path.insert(0, 'D:\\Knowledge_Map\\knowledge_map_core')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from src.services.pipeline import Pipeline
 

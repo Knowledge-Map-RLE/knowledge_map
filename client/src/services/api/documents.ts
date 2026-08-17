@@ -114,14 +114,14 @@ export async function searchDocuments(q: string, skip: number = 0, limit: number
   return fetchJson(`/api/data_extraction/documents/search?${params}`, { signal });
 }
 
-export async function searchPubMed(query: string, limit: number = 10): Promise<PubMedSearchResponse> {
+export async function searchPubMed(query: string, limit: number = 10, signal?: AbortSignal): Promise<PubMedSearchResponse> {
   const params = new URLSearchParams({ query, limit: String(limit) });
-  return fetchJson(`/api/data_extraction/pubmed/search?${params}`);
+  return fetchJson(`/api/data_extraction/pubmed/search?${params}`, { signal });
 }
 
-export async function getByPubMedId(id: string): Promise<PubMedSearchResponse> {
+export async function getByPubMedId(id: string, signal?: AbortSignal): Promise<PubMedSearchResponse> {
   const params = new URLSearchParams({ id });
-  return fetchJson(`/api/data_extraction/pubmed/by-id?${params}`);
+  return fetchJson(`/api/data_extraction/pubmed/by-id?${params}`, { signal });
 }
 
 export async function ingestPubMedArticle(pmid?: string, pmcid?: string, source: string = 'pubmed'): Promise<PubMedIngestResponse> {

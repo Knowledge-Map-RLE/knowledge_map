@@ -7,6 +7,7 @@ PubMed Central data loader module.
 
 from .pmc_oa_bulk_to_db import (
     process_all as process_all_files,
+    process_all_local_articles,
     parse_one_file_optimized,
     get_driver,
     ensure_schema,
@@ -14,6 +15,7 @@ from .pmc_oa_bulk_to_db import (
 
 __all__ = [
     "process_all_files",
+    "process_all_local_articles",
     "parse_one_file_optimized",
     "get_driver",
     "ensure_schema",

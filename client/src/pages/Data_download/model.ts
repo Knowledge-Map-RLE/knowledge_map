@@ -1,10 +1,15 @@
 export interface DataSourceStatus {
     name: string;
     ftp_url: string;
+    source_type: string;
     description?: string;
     total_files: number;
     downloaded_files: number;
     progress_percent: number;
+    processed_files: number;
+    processing_total: number;
+    processing_percent: number;
+    processing_current_file?: string;
     status: DataSourceState;
     current_file?: string;
     error_message?: string;
@@ -16,6 +21,8 @@ export type DataSourceState =
     | "starting"
     | "downloading"
     | "paused"
+    | "stopped"
+    | "processing"
     | "completed"
     | "error";
 
@@ -26,10 +33,15 @@ export interface DownloadAction {
 export interface ProgressMessage {
     type: "progress";
     source: string;
-    downloaded: number;
-    total: number;
-    percent: number;
-    status: DataSourceState;
+    downloaded?: number;
+    total?: number;
+    percent?: number;
+    status?: DataSourceState;
+    current_file?: string;
+    processed_files?: number;
+    processing_total?: number;
+    processing_percent?: number;
+    processing_current_file?: string;
 }
 
 export interface StatusChangeMessage {

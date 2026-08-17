@@ -21,7 +21,7 @@ class AIModelClient:
     def __init__(self):
         """Initialize the AI Agent client."""
         self.host = os.getenv("AI_MODEL_SERVICE_HOST", "127.0.0.1")
-        self.port = os.getenv("AI_MODEL_SERVICE_PORT", "50054")
+        self.port = os.getenv("AI_MODEL_SERVICE_PORT", "50059")
         self.root_url = f"http://{self.host}:{self.port}"
         self.base_url = f"{self.root_url}/v1"
 

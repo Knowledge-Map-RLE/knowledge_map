@@ -45,7 +45,7 @@ from web.routers.data_extraction import (
 # Статик роутер — оставляем из src (TRANSITIONAL)
 from src.routers import static
 
-# Прокси /ai/* -> AI Agent микросервис (OpenAI-совместимый, порт 50054)
+# Прокси /ai/* -> AI Agent микросервис (OpenAI-совместимый, порт 50059)
 from src.routers import ai_proxy as ai_proxy_router
 
 # Персистентные AI-чаты (учёт токенов и стоимости)
@@ -154,7 +154,7 @@ app.include_router(pattern_graph_router.router)
 # Редактор статей (article_editor)
 app.include_router(article_editor_router.router, prefix="/api")
 
-# Прокси AI Agent микросервиса (фронтенд -> API -> ai:50054)
+# Прокси AI Agent микросервиса (фронтенд -> API -> ai:50059)
 app.include_router(ai_proxy_router.router)
 
 # Персистентные AI-чаты (учёт токенов/стоимости, ownership, списание)
@@ -206,11 +206,15 @@ async def _reset_stuck_documents():
 async def _ensure_document_indexes():
     """Создаёт индексы Neo4j для быстрого поиска документов."""
     INDEXES = [
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.uid)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.md5_hash)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.upload_date)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.processing_status)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.is_processed)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source)",
-        "CREATE TEXT INDEX IF NOT EXISTS FOR (d:Document) ON (d.title)",
-        "CREATE TEXT INDEX IF NOT EXISTS FOR (d:Document) ON (d.original_filename)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.pubmed_id)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.pmc_id)",
+        "CREATE FULLTEXT INDEX doc_fulltext IF NOT EXISTS FOR (d:Document) ON EACH [d.title, d.original_filename]",
     ]
     try:
         from neomodel import db

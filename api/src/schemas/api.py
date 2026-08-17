@@ -66,6 +66,7 @@ class PubMedSearchResult(BaseModel):
     abstract: str = ""
     doi: Optional[str] = None
     is_open_access: bool = False
+    is_loaded: bool = False
     source: str  # "pubmed" | "pmc"
 
 

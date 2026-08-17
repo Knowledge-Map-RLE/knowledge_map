@@ -60,7 +60,7 @@ def convert_with_docling(input_pdf: Path) -> str:
 def main() -> None:
     """Main function to convert PDF to Markdown using Docling."""
     # Input PDF file path
-    input_pdf = Path(r"D:\Knowledge_Map\knowledge_map\personal_folder\The FEBS Journal - 2013 - Antony - The hallmarks of Parkinson s disease.pdf")
+    input_pdf = Path(__file__).resolve().parents[1] / "personal_folder" / "The FEBS Journal - 2013 - Antony - The hallmarks of Parkinson s disease.pdf"
     
     # Output directory and file path
     output_dir = Path(__file__).resolve().parent / "markdown_output"

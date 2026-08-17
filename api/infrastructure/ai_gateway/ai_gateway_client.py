@@ -40,9 +40,9 @@ class AIGatewayError(Exception):
 
 
 class AIGatewayClient:
-    """Тонкий клиент к OpenAI-совместимому шлюзу (порт 50054)."""
+    """Тонкий клиент к OpenAI-совместимому шлюзу (порт 50059)."""
 
-    def __init__(self, base_url: str = "http://127.0.0.1:50054", timeout: float = 300.0):
+    def __init__(self, base_url: str = "http://127.0.0.1:50059", timeout: float = 300.0):
         self._base_url = base_url.rstrip("/")
         self._timeout = httpx.Timeout(timeout, connect=15.0, read=timeout)
 

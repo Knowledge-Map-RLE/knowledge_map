@@ -176,3 +176,142 @@ class TestAddUuidrefs:
         other = _b(4, {"subject": "мышь", "predicate": "проходила", "object": "тест"})
         out = LLMTripletExtractionService._add_uuidrefs([defining, other])
         assert out[1]["data"]["subject"] == "мышь"
+
+
+class TestParseStructureJson:
+    """Тесты парсинга Stage 1 через Pydantic-схему StructureResponse."""
+
+    def test_valid_json_with_tag(self):
+        text = json.dumps({
+            "blocks": [
+                {"blockType": 22, "data": {"subject": "A", "predicate": "B", "object": "C"}, "tag": "{B1}"},
+                {"blockType": 7, "data": {"name": "intro"}, "tag": "{B2}"},
+            ]
+        })
+        out = LLMTripletExtractionService._parse_structure_json(text)
+        assert len(out) == 2
+        assert out[0]["tag"] == "{B1}"
+        assert out[0]["blockType"] == 22
+        assert out[1]["tag"] == "{B2}"
+
+    def test_filters_block_type_4(self):
+        text = json.dumps({
+            "blocks": [
+                {"blockType": 22, "data": {"x": 1}, "tag": "{B1}"},
+                {"blockType": 4, "data": {"subject": "A", "predicate": "B", "object": "C"}, "tag": "{B2}"},
+            ]
+        })
+        out = LLMTripletExtractionService._parse_structure_json(text)
+        assert len(out) == 1
+        assert out[0]["blockType"] == 22
+
+    def test_json_with_code_fence(self):
+        text = '```json\n{"blocks": [{"blockType": 16, "data": {"name": "X"}, "tag": "{B3}"}]}\n```'
+        out = LLMTripletExtractionService._parse_structure_json(text)
+        assert len(out) == 1
+        assert out[0]["tag"] == "{B3}"
+
+    def test_empty_blocks(self):
+        text = json.dumps({"blocks": []})
+        out = LLMTripletExtractionService._parse_structure_json(text)
+        assert out == []
+
+    def test_invalid_json(self):
+        out = LLMTripletExtractionService._parse_structure_json("not json at all")
+        assert out == []
+
+    def test_missing_blocks_key(self):
+        text = json.dumps({"data": [1, 2, 3]})
+        out = LLMTripletExtractionService._parse_structure_json(text)
+        assert out == []
+
+    def test_non_dict_block_skipped(self):
+        text = json.dumps({"blocks": ["not a dict", 42]})
+        out = LLMTripletExtractionService._parse_structure_json(text)
+        assert out == []
+
+    def test_missing_tag_defaults_to_empty(self):
+        text = json.dumps({"blocks": [{"blockType": 23, "data": {"k": "v"}}]})
+        out = LLMTripletExtractionService._parse_structure_json(text)
+        assert out[0]["tag"] == ""
+
+    def test_empty_string_input(self):
+        out = LLMTripletExtractionService._parse_structure_json("")
+        assert out == []
+
+    def test_none_input(self):
+        out = LLMTripletExtractionService._parse_structure_json(None)
+        assert out == []
+
+
+class TestParseAtomizeJson:
+    """Тесты парсинга Stage 2 через Pydantic-схему AtomizeResponse."""
+
+    def test_old_format_with_sequences(self):
+        text = json.dumps({
+            "blocks": [
+                {"blockType": 4, "data": {"subject": "A", "predicate": "p", "object": "B"}, "container": "{B1}"},
+            ],
+            "sequences": {"{B1}": ["{SEQ1}", "{SEQ2}"]},
+        })
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
+        assert len(blocks) == 1
+        assert blocks[0]["blockType"] == 4
+        assert blocks[0]["container"] == "{B1}"
+        assert seqs["{B1}"] == ["{SEQ1}", "{SEQ2}"]
+
+    def test_new_format_container_tag(self):
+        text = json.dumps({
+            "blocks": [
+                {"blockType": 4, "data": {"subject": "X", "predicate": "y", "object": "Z"}, "container": "{B1}"},
+            ],
+        })
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
+        assert len(blocks) == 1
+        assert "{B1}" in seqs
+        # Новый формат: seqs содержит list с фейковыми номерами
+        assert isinstance(seqs["{B1}"], list)
+
+    def test_filters_non_t4_blocks(self):
+        text = json.dumps({
+            "blocks": [
+                {"blockType": 22, "data": {"x": 1}, "container": "{B1}"},
+                {"blockType": 4, "data": {"y": 2}, "container": "{B2}"},
+            ],
+        })
+        blocks, _ = LLMTripletExtractionService._parse_atomize_json(text)
+        assert len(blocks) == 1
+        assert blocks[0]["blockType"] == 4
+
+    def test_multiple_fragments(self):
+        text = (
+            '{"blocks": [{"blockType": 4, "data": {"a": 1}, "container": "{B1}"}]}'
+            '{"blocks": [{"blockType": 4, "data": {"b": 2}, "container": "{B2}"}]}'
+        )
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
+        assert len(blocks) == 2
+
+    def test_empty_input(self):
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json("")
+        assert blocks == []
+        assert seqs == {}
+
+    def test_invalid_json(self):
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json("garbage")
+        assert blocks == []
+        assert seqs == {}
+
+    def test_missing_blocks_key(self):
+        text = json.dumps({"sequences": {"{B1}": ["{SEQ1}"]}})
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
+        assert blocks == []
+
+    def test_non_dict_block_skipped(self):
+        text = json.dumps({"blocks": ["bad", 123, None]})
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
+        assert blocks == []
+
+    def test_container_default_empty(self):
+        text = json.dumps({"blocks": [{"blockType": 4, "data": {"s": "v"}}]})
+        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
+        assert blocks[0]["container"] == ""

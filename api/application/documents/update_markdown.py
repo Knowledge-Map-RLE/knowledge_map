@@ -65,6 +65,7 @@ async def update_markdown(
     # Обновляем запись
     if annotate:
         doc.processing_status = "annotated"
+        doc.is_processed = True
     doc.user_md_s3_key = user_key
     new_title = _extract_title(markdown)
     if new_title:

@@ -3,7 +3,7 @@
 Requires the following services running:
   - knowledge_map_core:50056  (required)
   - nlp:50055                 (required)
-  - ai:50054                  (required only for use_llm=True tests)
+  - ai:50059                  (required only for use_llm=True tests)
 """
 
 from __future__ import annotations

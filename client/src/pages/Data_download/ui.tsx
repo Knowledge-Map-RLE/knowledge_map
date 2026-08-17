@@ -8,6 +8,8 @@ const stateLabels: Record<DataSourceState, string> = {
     starting: "Запуск...",
     downloading: "Загрузка",
     paused: "Приостановлено",
+    stopped: "Остановлено",
+    processing: "Обработка",
     completed: "Завершено",
     error: "Ошибка",
 };
@@ -17,6 +19,8 @@ const stateIcons: Record<DataSourceState, string> = {
     starting: "🔄",
     downloading: "📥",
     paused: "⏸",
+    stopped: "⏹",
+    processing: "⚙️",
     completed: "✅",
     error: "❌",
 };
@@ -28,46 +32,85 @@ interface SourceCardProps {
     onReset: () => void;
 }
 
+interface ProgressBarProps {
+    label: string;
+    percent: number;
+    done: number;
+    total: number;
+    currentFile?: string;
+    accent?: boolean;
+}
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ label, percent, done, total, currentFile, accent }) => {
+    const clamped = Math.min(100, Math.max(0, percent));
+
+    return (
+        <div className={styles.progressContainer}>
+            <div className={styles.progressRow}>
+                <span className={styles.progressLabel}>{label}</span>
+                <span className={styles.progressText}>
+                    {clamped.toFixed(1)}% ({done} / {total})
+                </span>
+            </div>
+            <div className={styles.progressBar}>
+                <div
+                    className={`${styles.progressFill} ${accent ? styles.progressFillAccent : ""}`}
+                    style={{ width: `${clamped}%` }}
+                />
+            </div>
+            {currentFile && <span className={styles.currentFile}>📄 {currentFile}</span>}
+        </div>
+    );
+};
+
 const SourceCard: React.FC<SourceCardProps> = ({ source, onStart, onPause, onReset }) => {
-    const isRunning = source.status === "downloading" || source.status === "starting";
-    const isCompleted = source.status === "completed";
+    const isRunning =
+        source.status === "downloading" || source.status === "starting" || source.status === "processing";
     const isIdle = source.status === "idle";
 
     return (
         <div className={styles.card}>
             <div className={styles.cardHeader}>
                 <h3 className={styles.sourceName}>{source.name}</h3>
+                <span className={styles.sourceType}>
+                    {source.source_type === "s3" ? "🪣 S3 (Open Data)" : "📡 FTP"}
+                </span>
                 <span className={styles.stateBadge}>
                     {stateIcons[source.status]} {stateLabels[source.status]}
                 </span>
             </div>
 
-            <div className={styles.progressContainer}>
-                <div className={styles.progressBar}>
-                    <div
-                        className={styles.progressFill}
-                        style={{ width: `${source.progress_percent}%` }}
-                    />
-                </div>
-                <span className={styles.progressText}>
-                    {source.progress_percent.toFixed(1)}% ({source.downloaded_files} / {source.total_files})
-                </span>
-                {source.current_file && (
-                    <span className={styles.currentFile}>
-                        📄 {source.current_file}
-                    </span>
-                )}
+            <div className={styles.progressArea}>
+                <ProgressBar
+                    label="Загрузка"
+                    percent={source.progress_percent}
+                    done={source.downloaded_files}
+                    total={source.total_files}
+                    currentFile={source.status === "downloading" ? source.current_file : undefined}
+                />
+                <ProgressBar
+                    label="Обработка"
+                    percent={source.processing_percent}
+                    done={source.processed_files}
+                    total={source.processing_total}
+                    currentFile={source.processing_current_file}
+                    accent
+                />
             </div>
 
             <div className={styles.ftpUrl}>
-                <a
-                    href={`https://${source.ftp_url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.ftpLink}
-                >
-                    {source.ftp_url}
-                </a>
+                {source.source_type === "s3" ? (
+                    <span className={styles.ftpLink}>{source.ftp_url}</span>
+                ) : (
+                    <a
+                        href={`https://${source.ftp_url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.ftpLink}
+                    >
+                        {source.ftp_url}
+                    </a>
+                )}
             </div>
 
             {source.error_message && (
@@ -85,7 +128,10 @@ const SourceCard: React.FC<SourceCardProps> = ({ source, onStart, onPause, onRes
                         ⏸ Пауза
                     </button>
                 )}
-                {(source.status === "paused" || source.status === "completed" || source.status === "error") && (
+                {(source.status === "paused" ||
+                    source.status === "stopped" ||
+                    source.status === "completed" ||
+                    source.status === "error") && (
                     <button className={styles.startBtn} onClick={onStart}>
                         ▶ Старт
                     </button>

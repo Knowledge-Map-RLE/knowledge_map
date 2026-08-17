@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
-$port = 50054
+$port = 50059
 
 Write-Host "Starting AI Agent microservice on port $port..."
 

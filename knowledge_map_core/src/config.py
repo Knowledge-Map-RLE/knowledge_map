@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     nlp_grpc_port: int = Field(default=50055, alias="NLP_GRPC_PORT")
 
     ai_service_host: str = Field(default="localhost", alias="AI_MODEL_SERVICE_HOST")
-    ai_service_port: int = Field(default=50054, alias="AI_MODEL_SERVICE_PORT")
+    ai_service_port: int = Field(default=50059, alias="AI_MODEL_SERVICE_PORT")
 
     neo4j_uri: str = Field(default="bolt://localhost:7687", alias="NEO4J_URI")
     neo4j_user: str = Field(default="neo4j", alias="NEO4J_USER")

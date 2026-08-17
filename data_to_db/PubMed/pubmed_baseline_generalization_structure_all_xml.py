@@ -12,7 +12,7 @@ import time
 
 # ================== Конфигурация ==================
 
-LOCAL_DIR = Path("D:/Данные/PubMed")
+LOCAL_DIR = Path(__file__).resolve().parents[2] / "data" / "PubMed"
 OUTPUT_FILE = Path("./logs/pubmed_baseline_generalization_structure_all_xml.log")
 LOG_FILE = Path("./logs/pubmed_baseline_generalization_structure_all_xml_processing.log")
 MAX_WORKERS = min(cpu_count(), 4)  # Ограничиваем количество процессов

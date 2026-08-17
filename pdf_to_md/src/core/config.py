@@ -54,7 +54,7 @@ class Settings(BaseSettings):
 
     # AI Model Service settings
     ai_model_service_host: str = Field(default="127.0.0.1", env="AI_MODEL_SERVICE_HOST")
-    ai_model_service_port: int = Field(default=50054, env="AI_MODEL_SERVICE_PORT")
+    ai_model_service_port: int = Field(default=50059, env="AI_MODEL_SERVICE_PORT")
     ai_model_id: str = Field(default="Qwen/Qwen2.5-0.5B-Instruct", env="AI_MODEL_ID")
     ai_max_chunk_tokens: int = Field(default=18000, env="AI_MAX_CHUNK_TOKENS")
     ai_overlap_tokens: int = Field(default=1000, env="AI_OVERLAP_TOKENS")

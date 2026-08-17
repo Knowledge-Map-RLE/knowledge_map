@@ -54,10 +54,6 @@ def create_annotation(
     )
     annotation = annotation_repo.create(annotation, doc_id)
 
-    # При первой аннотации переводим документ в статус 'annotated'
-    doc = document_repo.get_by_id(doc_id)
-    if doc and doc.processing_status == 'ready_for_annotation':
-        import dataclasses
-        document_repo.save(dataclasses.replace(doc, processing_status='annotated'))
-
+    # Статус 'annotated' НЕ присваивается здесь: он назначается только при
+    # сохранении валидного markdown через PUT /documents/{id}/markdown.
     return annotation

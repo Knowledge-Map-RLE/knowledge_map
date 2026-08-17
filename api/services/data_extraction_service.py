@@ -783,9 +783,7 @@ class DataExtractionService:
             from adapters.repositories.document_repository import DocumentRepository
 
             repo = DocumentRepository()
-            docs, total = await asyncio.to_thread(
-                list_docs_usecase, repo=repo, skip=skip, limit=limit,
-            )
+            docs, total = list_docs_usecase(repo=repo, skip=skip, limit=limit)
 
             return {
                 "success": True,

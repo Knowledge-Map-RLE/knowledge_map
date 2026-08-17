@@ -28,7 +28,7 @@ export default defineConfig({
         ws: true,
       },
       '/ai': {
-        target: 'http://localhost:50054',
+        target: 'http://localhost:50059',
         ws: true,
       },
       '/billing': {

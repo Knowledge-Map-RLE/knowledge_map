@@ -59,6 +59,17 @@ class Settings(BaseSettings):
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
 
+    # LLM Extraction (triplet extraction from articles)
+    LLM_EXTRACT_MODEL: str = "qwen/qwen3-4b"
+    LLM_MAX_CHUNK_CHARS: int = 7000
+    LLM_MAX_TOKENS: int = 20000
+    LLM_TIMEOUT: int = 900
+    LLM_TEMPERATURE: float = 0.2
+    LLM_MAX_RETRIES: int = 2
+    LLM_SEQ_REF_RATIO: float = 0.7788
+    LLM_UUIDREF_MAX_WORDS: int = 1
+    LLM_UUIDREF_MIN_FREQ: int = 3
+
     # Debug режим
     DEBUG: bool = False
 

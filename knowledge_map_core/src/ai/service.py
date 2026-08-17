@@ -39,9 +39,9 @@ def _extract_json(text: str) -> list[dict[str, str]]:
 
 
 class LocalAIExtractor:
-    """Extract triplets via the local AI gRPC service (port 50054)."""
+    """Extract triplets via the local AI gRPC service (port 50059)."""
 
-    def __init__(self, host: str = "localhost", port: int = 50054):
+    def __init__(self, host: str = "localhost", port: int = 50059):
         self._host = host
         self._port = port
         self._default_model = settings.local_llm_model

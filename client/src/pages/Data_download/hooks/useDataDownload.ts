@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import type { DataSourceStatus, WebSocketMessage, DownloadAction } from "../model";
+import type { DataSourceStatus, WebSocketMessage } from "../model";
 
 const API_BASE = "/api/data_download";
 const WS_URL = `ws://${window.location.host}/api/data_download/ws`;
@@ -38,6 +38,52 @@ export function useDataDownload(): UseDataDownloadReturn {
             setError(err instanceof Error ? err.message : "Failed to fetch sources");
         } finally {
             setLoading(false);
+        }
+    }, []);
+
+    const handleWebSocketMessage = useCallback((message: WebSocketMessage) => {
+        switch (message.type) {
+            case "progress":
+                setSources((prev) =>
+                    prev.map((src) =>
+                        src.name === message.source
+                            ? {
+                                  ...src,
+                                  downloaded_files: message.downloaded ?? src.downloaded_files,
+                                  total_files: message.total ?? src.total_files,
+                                  progress_percent: message.percent ?? src.progress_percent,
+                                  status: message.status ?? src.status,
+                                  current_file: message.current_file ?? src.current_file,
+                                  processed_files: message.processed_files ?? src.processed_files,
+                                  processing_total: message.processing_total ?? src.processing_total,
+                                  processing_percent: message.processing_percent ?? src.processing_percent,
+                                  processing_current_file: message.processing_current_file ?? src.processing_current_file,
+                              }
+                            : src
+                    )
+                );
+                break;
+            case "status_change":
+                setSources((prev) =>
+                    prev.map((src) =>
+                        src.name === message.source
+                            ? { ...src, status: message.status }
+                            : src
+                    )
+                );
+                break;
+            case "error":
+                setSources((prev) =>
+                    prev.map((src) =>
+                        src.name === message.source
+                            ? { ...src, status: "error", error_message: message.error }
+                            : src
+                    )
+                );
+                break;
+            case "connected":
+                console.log("Received connected message");
+                break;
         }
     }, []);
 
@@ -89,32 +135,7 @@ export function useDataDownload(): UseDataDownloadReturn {
         } else {
             doConnect();
         }
-    }, []);
-
-    const handleWebSocketMessage = useCallback((message: WebSocketMessage) => {
-        switch (message.type) {
-            case "progress":
-            case "status_change":
-            case "error":
-                setSources((prev) =>
-                    prev.map((src) =>
-                        src.name === message.source
-                            ? {
-                                  ...src,
-                                  downloaded_files: "downloaded" in message ? message.downloaded : src.downloaded_files,
-                                  total_files: "total" in message ? message.total : src.total_files,
-                                  progress_percent: "percent" in message ? message.percent : src.progress_percent,
-                                  status: "status" in message ? message.status : "error",
-                              }
-                            : src
-                    )
-                );
-                break;
-            case "connected":
-                console.log("Received connected message");
-                break;
-        }
-    }, []);
+    }, [handleWebSocketMessage]);
 
     const sendAction = useCallback(async (action: string, source: string) => {
         try {
@@ -160,7 +181,12 @@ export function useDataDownload(): UseDataDownloadReturn {
         fetchSources();
         connectWebSocket();
 
+        const pollInterval = setInterval(() => {
+            fetchSources();
+        }, 15000);
+
         return () => {
+            clearInterval(pollInterval);
             if (reconnectTimeoutRef.current) {
                 clearTimeout(reconnectTimeoutRef.current);
             }

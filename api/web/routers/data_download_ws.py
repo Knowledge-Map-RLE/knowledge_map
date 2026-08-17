@@ -9,7 +9,7 @@ Forbidden imports: application (напрямую)
 import asyncio
 import logging
 import json
-from typing import Set
+from typing import Optional, Set
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import PlainTextResponse
@@ -84,10 +84,15 @@ async def websocket_endpoint(websocket: WebSocket):
 
 async def notify_progress(
     source: str,
-    downloaded: int,
-    total: int,
-    percent: float,
-    status: str,
+    downloaded: Optional[int] = None,
+    total: Optional[int] = None,
+    percent: Optional[float] = None,
+    status: Optional[str] = None,
+    current_file: str = "",
+    processed_files: Optional[int] = None,
+    processing_total: Optional[int] = None,
+    processing_percent: Optional[float] = None,
+    processing_current_file: str = "",
 ):
     """Уведомляет всех подключенных клиентов о прогрессе."""
     await manager.broadcast({
@@ -97,6 +102,11 @@ async def notify_progress(
         "total": total,
         "percent": percent,
         "status": status,
+        "current_file": current_file,
+        "processed_files": processed_files,
+        "processing_total": processing_total,
+        "processing_percent": processing_percent,
+        "processing_current_file": processing_current_file,
     })
 
 

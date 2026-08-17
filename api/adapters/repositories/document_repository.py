@@ -9,7 +9,7 @@ Forbidden imports: fastapi, web, grpc, aioboto3
 from __future__ import annotations
 
 import logging
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from neomodel import DoesNotExist, db
 
@@ -160,14 +160,18 @@ class DocumentRepository:
         skip: int = 0,
         limit: Optional[int] = None,
     ) -> List[Document]:
+        import time
+        t0 = time.monotonic()
         try:
             if limit is not None and limit <= 0:
                 return []
 
-            # Cypher-запрос с пагинацией — выбираем только нужные поля
-            # (избегаем загрузки abstract, keywords и других тяжёлых полей)
+            # Только user-uploaded документы.
+            # PubMed-ноды (миллионы) не должны показываться в списке загрузок.
+            # Equality-фильтр по source использует range index — мгновенно.
             cypher = """
                 MATCH (d:Document)
+                WHERE d.source = 'upload'
                 RETURN d.uid as uid,
                        d.original_filename as original_filename,
                        d.title as title,
@@ -186,28 +190,52 @@ class DocumentRepository:
                        d.is_open_access as is_open_access,
                        d.error_message as error_message,
                        d.md5_hash as md5_hash
-                ORDER BY d.upload_date DESC
+                ORDER BY coalesce(d.upload_date, 0.0) DESC
                 SKIP $skip
                 LIMIT $limit
             """
             params: dict = {"skip": skip, "limit": limit or 1000}
 
             results, _ = db.cypher_query(cypher, params)
+            elapsed = time.monotonic() - t0
+            if elapsed > 2:
+                logger.warning(f"list_all took {elapsed:.1f}s for {len(results)} docs (skip={skip}, limit={limit})")
 
             return [_row_to_domain(row) for row in results]
         except Exception as e:
-            logger.error(f"list_all failed: {e}")
+            elapsed = time.monotonic() - t0
+            logger.error(f"list_all failed after {elapsed:.1f}s: {e}")
             return []
 
     def count_all(self) -> int:
+        import time
+        t0 = time.monotonic()
         try:
             results, _ = db.cypher_query(
-                "MATCH (d:Document) RETURN count(d) as total"
+                "MATCH (d:Document) WHERE d.source = 'upload' RETURN count(d) as total"
             )
+            elapsed = time.monotonic() - t0
+            if elapsed > 2:
+                logger.warning(f"count_all took {elapsed:.1f}s")
             return results[0][0] if results else 0
         except Exception as e:
-            logger.error(f"count_all failed: {e}")
+            elapsed = time.monotonic() - t0
+            logger.error(f"count_all failed after {elapsed:.1f}s: {e}")
             return 0
+
+    def list_all_with_count(
+        self,
+        skip: int = 0,
+        limit: Optional[int] = None,
+    ) -> Tuple[List[Document], int]:
+        """Документы + общее количество за два запроса (оба используют индексы)."""
+        try:
+            docs = self.list_all(skip=skip, limit=limit)
+            total = self.count_all()
+            return docs, total
+        except Exception as e:
+            logger.error(f"list_all_with_count failed: {e}")
+            return [], 0
 
     def search(
         self,
@@ -216,30 +244,23 @@ class DocumentRepository:
         limit: int = 100,
     ) -> Tuple[List[Document], int]:
         """
-        Нечёткий поиск по title и original_filename.
-        Использует APOC levenshteinSimilarity + CONTAINS для ранжирования.
+        Полнотекстовый поиск по title и original_filename через Neo4j fulltext index.
+        Ищет по ВСЕМ документам (включая PubMed), ранжирует по score + аннотированность.
         """
         try:
             if not q.strip():
                 return self.list_all(skip=skip, limit=limit), self.count_all()
 
-            query = q.strip().lower()
+            query = q.strip()
 
             cypher = """
-                MATCH (d:Document)
-                WHERE (d.title IS NOT NULL AND toLower(d.title) CONTAINS $q)
-                   OR (d.original_filename IS NOT NULL AND toLower(d.original_filename) CONTAINS $q)
-                WITH d,
-                     CASE
-                       WHEN d.title IS NOT NULL
-                         THEN apoc.text.levenshteinSimilarity(toLower(d.title), $q)
-                       ELSE 0
-                     END +
-                     CASE
-                       WHEN d.original_filename IS NOT NULL
-                         THEN apoc.text.levenshteinSimilarity(toLower(d.original_filename), $q) * 0.8
-                       ELSE 0
-                     END AS score
+                CALL db.index.fulltext.queryNodes('doc_fulltext', $q)
+                YIELD node as d, score
+                WITH d, score,
+                     CASE WHEN d.source = 'upload' THEN 1000 ELSE 0 END AS upload_bonus
+                ORDER BY upload_bonus DESC, score DESC
+                SKIP $skip
+                LIMIT $limit
                 RETURN d.uid as uid,
                        d.original_filename as original_filename,
                        d.title as title,
@@ -258,22 +279,10 @@ class DocumentRepository:
                        d.is_open_access as is_open_access,
                        d.error_message as error_message,
                        d.md5_hash as md5_hash
-                ORDER BY score DESC, d.upload_date DESC
-                SKIP $skip
-                LIMIT $limit
-            """
-            count_cypher = """
-                MATCH (d:Document)
-                WHERE (d.title IS NOT NULL AND toLower(d.title) CONTAINS $q)
-                   OR (d.original_filename IS NOT NULL AND toLower(d.original_filename) CONTAINS $q)
-                RETURN count(d)
             """
             params = {"q": query, "skip": skip, "limit": limit}
-
-            count_results, _ = db.cypher_query(count_cypher, {"q": query})
-            total = count_results[0][0] if count_results else 0
-
             results, _ = db.cypher_query(cypher, params)
+            total = len(results)
             return [_row_to_domain(row) for row in results], total
         except Exception as e:
             logger.error(f"search failed: {e}")

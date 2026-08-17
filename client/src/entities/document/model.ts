@@ -80,6 +80,8 @@ export interface MultiLevelAnalysisResponse {
 export interface Document {
     doc_id: string;
     has_markdown: boolean;
+    processing_status: string;
+    is_processed: boolean;
     title?: string;
     pubmed_id?: string;
     pmc_id?: string;
@@ -264,6 +266,7 @@ export interface PubMedSearchResult {
     abstract: string;
     doi?: string;
     is_open_access: boolean;
+    is_loaded?: boolean;
     source: string;
 }
 

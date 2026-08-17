@@ -267,7 +267,7 @@ class ArticleEditorService:
             "OPTIONAL MATCH (u:User {uid: d.created_by_uid}) "
             "RETURN d.uid, d.title, d.original_filename, "
             "d.processing_status, d.upload_date, d.user_md_s3_key, u "
-            "ORDER BY d.upload_date DESC SKIP $skip LIMIT $limit",
+            "ORDER BY coalesce(d.upload_date, 0.0) DESC SKIP $skip LIMIT $limit",
             {"skip": skip, "limit": limit},
         )
         articles = []
@@ -330,14 +330,23 @@ class ArticleEditorService:
         return {"statements": all_statements, "edges": edges}
 
     async def save_blocks(self, doc_id: str, blocks: list[dict[str, Any]], user_uid: str | None = None) -> dict[str, Any]:
+        """Сохраняет блоки, выводит и сохраняет стейтменты (канонический источник)."""
         status = await self.get_document_status(doc_id)
         if not self._is_editable_status(status):
             return {"success": False, "error": "not_annotated",
                     "message": "Редактирование доступно только для аннотированных документов."}
+
+        old_statements = self._load_statements_for_doc(doc_id)
+
         db.cypher_query(
             "MATCH (d:Document {uid: $uid}) OPTIONAL MATCH (d)-[r:HAS_BLOCK]->(b:ArticleBlock) DELETE r, b",
             {"uid": doc_id},
         )
+        db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) OPTIONAL MATCH (d)-[r:HAS_STATEMENT]->(s:KnowledgeStatement) DELETE r, s",
+            {"uid": doc_id},
+        )
+
         batch: list[dict[str, Any]] = []
         for i, block in enumerate(blocks):
             block_uid = block.get("instanceId") or uuid8_str()
@@ -357,12 +366,131 @@ class ArticleEditorService:
                 "CREATE (d)-[:HAS_BLOCK]->(b)",
                 {"batch": chunk, "doc_id": doc_id},
             )
+
         db.cypher_query(
             "MATCH (d:Document {uid: $uid}) "
             "SET d.edit_date = datetime($now)",
             {"uid": doc_id, "now": datetime.now(timezone.utc).isoformat()},
         )
-        return {"success": True, "uid": doc_id, "blocks_count": len(blocks)}
+
+        derived = self._derive_and_persist_statements(doc_id, blocks, old_statements, user_uid)
+
+        return {
+            "success": True,
+            "uid": doc_id,
+            "blocks_count": len(blocks),
+            "statements": derived,
+            "statements_count": len(derived),
+        }
+
+    def _load_statements_for_doc(self, doc_id: str) -> list[dict[str, Any]]:
+        """Загружает все стейтменты статьи из БД (для id-стабильности при пере-выводе)."""
+        results, _ = db.cypher_query(
+            "MATCH (d:Document {uid: $uid})-[:HAS_STATEMENT]->(s:KnowledgeStatement) "
+            "RETURN s ORDER BY s.sort_order",
+            {"uid": doc_id},
+        )
+        out: list[dict[str, Any]] = []
+        for row in results:
+            s = row[0]
+            out.append({
+                "id": s.get("uid", ""),
+                "subject_text": s.get("subject_text", ""),
+                "predicate": s.get("predicate", ""),
+                "object_text": s.get("object_text", ""),
+                "subject_type": s.get("subject_type", "concept"),
+                "object_type": s.get("object_type", "concept"),
+                "type": s.get("type", "FACT"),
+                "confidence": s.get("confidence", 1.0),
+                "sentence_text": s.get("sentence_text", ""),
+                "sort_order": s.get("sort_order", 0),
+                "sourceBlockId": s.get("sourceBlockId", ""),
+            })
+        return out
+
+    def _derive_and_persist_statements(
+        self,
+        doc_id: str,
+        blocks: list[dict[str, Any]],
+        existing_statements: list[dict[str, Any]],
+        user_uid: str | None,
+    ) -> list[dict[str, Any]]:
+        """Выводит стейтменты из блоков, сохраняет в БД и возвращает.
+
+        Сохраняет META-стейтменты ``является``/``содержит`` для совместимости
+        с graph data и annotation-путём.
+        """
+        from services.block_converter import blocks_to_statements
+
+        filtered_existing = [
+            s for s in existing_statements
+            if not (s.get("predicate") == "содержит"
+                    or (s.get("predicate") == "является" and s.get("object_text") == "научная статья"))
+        ]
+
+        derived = blocks_to_statements(blocks, article_uuid=doc_id, existing_statements=filtered_existing)
+
+        if derived:
+            batch: list[dict[str, Any]] = []
+            for i, stmt in enumerate(derived):
+                batch.append({
+                    "uid": stmt.get("id", uuid8_str()),
+                    "subj": stmt.get("subject_text", ""),
+                    "pred": stmt.get("predicate", ""),
+                    "obj": stmt.get("object_text", ""),
+                    "subj_type": stmt.get("subject_type", "concept"),
+                    "obj_type": stmt.get("object_type", "concept"),
+                    "type": stmt.get("type", "FACT"),
+                    "conf": stmt.get("confidence", 1.0),
+                    "sent": stmt.get("sentence_text", ""),
+                    "order": i,
+                    "source_block": stmt.get("sourceBlockId", ""),
+                    "creator": user_uid,
+                })
+            for chunk in _chunks(batch, 500):
+                db.cypher_query(
+                    "MATCH (d:Document {uid: $doc_id}) "
+                    "UNWIND $batch AS item "
+                    "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: item.subj, predicate: item.pred, "
+                    "object_text: item.obj, subject_type: item.subj_type, object_type: item.obj_type, "
+                    "type: item.type, confidence: item.conf, sentence_text: item.sent, sort_order: item.order, "
+                    "sourceBlockId: item.source_block, created_by_uid: item.creator}) "
+                    "CREATE (d)-[:HAS_STATEMENT]->(s)",
+                    {"batch": chunk, "doc_id": doc_id},
+                )
+
+        db.cypher_query(
+            "MATCH (d:Document {uid: $doc_id}) "
+            "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $doc_id, predicate: 'является', "
+            "object_text: 'научная статья', subject_type: 'concept', object_type: 'concept', "
+            "type: 'META', confidence: 1.0, sentence_text: '', sort_order: $order, "
+            "created_by_uid: $creator}) "
+            "WITH s MATCH (d:Document {uid: $doc_id}) CREATE (d)-[:HAS_STATEMENT]->(s)",
+            {"uid": uuid8_str(), "doc_id": doc_id, "order": len(derived), "creator": user_uid},
+        )
+
+        stmt_uuids = [s.get("id", "") for s in derived]
+        meta_batch: list[dict[str, Any]] = []
+        for idx, stmt_uuid in enumerate(stmt_uuids):
+            meta_batch.append({
+                "uid": uuid8_str(),
+                "obj": stmt_uuid,
+                "order": len(derived) + 1 + idx,
+                "creator": user_uid,
+            })
+        for chunk in _chunks(meta_batch, 500):
+            db.cypher_query(
+                "MATCH (d:Document {uid: $doc_id}) "
+                "UNWIND $batch AS item "
+                "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: $doc_id, predicate: 'содержит', "
+                "object_text: item.obj, subject_type: 'concept', object_type: 'concept', "
+                "type: 'META', confidence: 1.0, sentence_text: '', sort_order: item.order, "
+                "created_by_uid: item.creator}) "
+                "CREATE (d)-[:HAS_STATEMENT]->(s)",
+                {"batch": chunk, "doc_id": doc_id},
+            )
+
+        return derived
 
     async def update_article_title(self, doc_id: str, title: str) -> dict[str, Any]:
         now = datetime.now(timezone.utc).isoformat()

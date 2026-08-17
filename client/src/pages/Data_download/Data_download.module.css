@@ -96,8 +96,38 @@
     color: var(--text-secondary, #666);
 }
 
-.progressContainer {
+.sourceType {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    background: #e3f2fd;
+    color: #1565c0;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.progressArea {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     margin-bottom: 12px;
+}
+
+.progressContainer {
+    margin-bottom: 0;
+}
+
+.progressRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.progressLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
 }
 
 .progressBar {
@@ -113,6 +143,10 @@
     background: linear-gradient(90deg, #4caf50, #66bb6a);
     border-radius: 12px;
     transition: width 0.3s ease;
+}
+
+.progressFillAccent {
+    background: linear-gradient(90deg, #1976d2, #42a5f5);
 }
 
 .progressText {

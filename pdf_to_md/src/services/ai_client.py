@@ -23,10 +23,10 @@ class AIModelClient:
 
         Args:
             host: AI service host (default from env or 127.0.0.1)
-            port: AI service port (default from env or 50054)
+            port: AI service port (default from env or 50059)
         """
         self.host = host or os.getenv("AI_MODEL_SERVICE_HOST", "127.0.0.1")
-        self.port = port or int(os.getenv("AI_MODEL_SERVICE_PORT", "50054"))
+        self.port = port or int(os.getenv("AI_MODEL_SERVICE_PORT", "50059"))
         self.root_url = f"http://{self.host}:{self.port}"
         self.base_url = f"{self.root_url}/v1"
 

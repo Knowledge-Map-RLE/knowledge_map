@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 from xml.etree import ElementTree as ET
 
 import httpx
+from neomodel import db
 
 from src.models import Document
 from src.schemas.api import PubMedSearchResult
@@ -143,30 +144,71 @@ def _metadata_to_markdown(meta: Dict[str, Any]) -> str:
 class PubMedService:
     """Сервис для поиска и загрузки статей PubMed/PMC"""
 
+    _shared_client: Optional[httpx.AsyncClient] = None
+
     def __init__(self):
         self.s3_client = get_s3_client()
         self.bucket = settings.S3_BUCKET_NAME
 
+    @classmethod
+    async def _get_client(cls) -> httpx.AsyncClient:
+        """Возвращает переиспользуемый httpx.AsyncClient (connection pooling)."""
+        if cls._shared_client is None or cls._shared_client.is_closed:
+            cls._shared_client = httpx.AsyncClient(
+                timeout=httpx.Timeout(connect=10, read=30, write=10, pool=10),
+                limits=httpx.Limits(max_connections=10, max_keepalive_connections=5),
+            )
+        return cls._shared_client
+
+    @staticmethod
+    async def _request_with_retry(
+        client: httpx.AsyncClient, method: str, url: str, **kwargs
+    ) -> httpx.Response:
+        """HTTP-запрос с retry при 429 (exponential backoff, до 3 попыток)."""
+        import random
+
+        max_attempts = 3
+        for attempt in range(max_attempts):
+            resp = await client.request(method, url, **kwargs)
+            if resp.status_code != 429:
+                resp.raise_for_status()
+                return resp
+            retry_after = resp.headers.get("Retry-After")
+            if retry_after:
+                try:
+                    wait = float(retry_after)
+                except ValueError:
+                    wait = 2 ** attempt + random.uniform(0, 1)
+            else:
+                wait = 2 ** attempt + random.uniform(0, 1)
+            if attempt < max_attempts - 1:
+                logger.warning(
+                    "[pubmed] 429 Too Many Requests — повтор через %.1fс (попытка %d/%d)",
+                    wait, attempt + 1, max_attempts,
+                )
+                await asyncio.sleep(wait)
+        resp.raise_for_status()
+        return resp
+
     async def _search_in_db(self, db: str, query: str, retmax: int) -> List[PubMedSearchResult]:
         """Поиск в одной базе (pubmed или pmc). Возвращает пустой список при ошибке."""
         try:
-            async with httpx.AsyncClient(timeout=30) as client:
-                search_params = _ncbi_params(
-                    db=db,
-                    term=query,
-                    retmax=str(retmax),
-                    retmode="json",
-                    sort="relevance",
-                )
-                resp = await client.get(f"{EUTILS_BASE}/esearch.fcgi", params=search_params)
-                resp.raise_for_status()
-                id_list = resp.json().get("esearchresult", {}).get("idlist", [])
-                if not id_list:
-                    return []
-                if db == "pubmed":
-                    return await self._fetch_pubmed_metadata(client, id_list)
-                else:
-                    return await self._fetch_pmc_metadata(client, id_list)
+            client = await self._get_client()
+            search_params = _ncbi_params(
+                db=db,
+                term=query,
+                retmax=str(retmax),
+                retmode="json",
+                sort="relevance",
+            )
+            resp = await self._request_with_retry(client, "GET", f"{EUTILS_BASE}/esearch.fcgi", params=search_params)
+            id_list = resp.json().get("esearchresult", {}).get("idlist", [])
+            if not id_list:
+                return []
+            if db == "pubmed":
+                return await self._fetch_pubmed_metadata(client, id_list)
+            else:
+                return await self._fetch_pmc_metadata(client, id_list)
         except Exception as e:
             logger.warning(f"[pubmed] Ошибка поиска в {db}: {e}")
             return []
@@ -221,7 +263,48 @@ class PubMedService:
 
         # Сортировка: OA-статьи (с полным текстом) первыми, остальное — как есть
         results = sorted(merged.values(), key=lambda r: (not r.is_open_access,))
-        return results[:retmax]
+        results = results[:retmax]
+        return await self._annotate_loaded(results)
+
+    async def _annotate_loaded(self, results: List[PubMedSearchResult]) -> List[PubMedSearchResult]:
+        """Помечает результаты, которые уже загружены в систему (is_loaded=True).
+
+        Проверка выполняется по pubmed_id, pmc_id и doc_id (md5 от id) — чтобы
+        уже добавленные статьи не показывались повторно и не перезагружались.
+        """
+        if not results:
+            return results
+
+        pmids = list({r.pmid for r in results if r.pmid})
+        pmcids = list({r.pmcid for r in results if r.pmcid})
+        if not pmids and not pmcids:
+            return results
+
+        pmc_bare = [p.lstrip("PMC") for p in pmcids]
+        uid_candidates = [hashlib.md5(i.encode()).hexdigest() for i in pmids + pmcids]
+
+        rows, _ = db.cypher_query(
+            """MATCH (d:Document)
+               WHERE d.pubmed_id IN $pmids
+                  OR d.pmc_id IN $pmcids
+                  OR d.pmc_id IN $pmc_bare
+                  OR substring(d.pmc_id, 3) IN $pmc_bare
+                  OR d.uid IN $uids
+               RETURN d.uid, d.pubmed_id, d.pmc_id""",
+            {"pmids": pmids, "pmcids": pmcids, "pmc_bare": pmc_bare, "uids": uid_candidates},
+        )
+        if not rows:
+            return results
+
+        loaded_uids = {row[0] for row in rows}
+        loaded_pmids = {row[1] for row in rows if row[1]}
+        loaded_pmcids = {row[2] for row in rows if row[2]}
+
+        for r in results:
+            if (r.pmid and (r.pmid in loaded_pmids or hashlib.md5(r.pmid.encode()).hexdigest() in loaded_uids)) or \
+               (r.pmcid and (r.pmcid in loaded_pmcids or hashlib.md5(r.pmcid.encode()).hexdigest() in loaded_uids)):
+                r.is_loaded = True
+        return results
 
     async def _fetch_pubmed_metadata(self, client: httpx.AsyncClient, pmids: List[str]) -> List[PubMedSearchResult]:
         """Получает метаданные PubMed статей по PMID списку, сохраняя порядок релевантности."""
@@ -230,8 +313,7 @@ class PubMedService:
             id=",".join(pmids),
             retmode="xml",
         )
-        resp = await client.get(f"{EUTILS_BASE}/efetch.fcgi", params=fetch_params)
-        resp.raise_for_status()
+        resp = await self._request_with_retry(client, "GET", f"{EUTILS_BASE}/efetch.fcgi", params=fetch_params)
 
         root = ET.fromstring(resp.content)
         # Сначала собираем результаты в словарь по PMID
@@ -270,8 +352,7 @@ class PubMedService:
             id=",".join(pmcids),
             retmode="xml",
         )
-        resp = await client.get(f"{EUTILS_BASE}/efetch.fcgi", params=fetch_params)
-        resp.raise_for_status()
+        resp = await self._request_with_retry(client, "GET", f"{EUTILS_BASE}/efetch.fcgi", params=fetch_params)
 
         root = ET.fromstring(resp.content)
         # Сначала собираем результаты в словарь по числовому PMC ID (без префикса)
@@ -338,27 +419,27 @@ class PubMedService:
         - Начинается с 'PMC' → запрос в PMC
         - Иначе → запрос в PubMed как PMID, затем обогащение PMCID через ID Converter
         """
-        async with httpx.AsyncClient(timeout=30) as client:
-            if article_id.upper().startswith("PMC"):
-                # Прямой запрос в PMC по PMCID
-                raw_id = article_id.lstrip("PMCpmc")
-                results = await self._fetch_pmc_metadata(client, [raw_id])
-                return results[0] if results else None
-            else:
-                # Прямой запрос в PubMed по PMID
-                results = await self._fetch_pubmed_metadata(client, [article_id])
-                if not results:
-                    return None
-                result = results[0]
-                # Обогащаем: если PMCID не нашёлся в PubMed XML — проверяем через ID Converter
-                # (некоторые OA-статьи не имеют ArticleId[@IdType='pmc'] в PubMed API)
-                if not result.is_open_access and not result.pmcid:
-                    pmcid = await self._get_pmcid_for_pmid(client, article_id)
-                    if pmcid:
-                        result.pmcid = pmcid
-                        result.is_open_access = True
-                        logger.info(f"[pubmed] fetch_by_id: обогащён PMCID={pmcid} для PMID={article_id} через ID Converter")
-                return result
+        client = await self._get_client()
+        if article_id.upper().startswith("PMC"):
+            # Прямой запрос в PMC по PMCID
+            raw_id = article_id.lstrip("PMCpmc")
+            results = await self._fetch_pmc_metadata(client, [raw_id])
+            return (await self._annotate_loaded([results[0]]))[0] if results else None
+        else:
+            # Прямой запрос в PubMed по PMID
+            results = await self._fetch_pubmed_metadata(client, [article_id])
+            if not results:
+                return None
+            result = results[0]
+            # Обогащаем: если PMCID не нашёлся в PubMed XML — проверяем через ID Converter
+            # (некоторые OA-статьи не имеют ArticleId[@IdType='pmc'] в PubMed API)
+            if not result.is_open_access and not result.pmcid:
+                pmcid = await self._get_pmcid_for_pmid(client, article_id)
+                if pmcid:
+                    result.pmcid = pmcid
+                    result.is_open_access = True
+                    logger.info(f"[pubmed] fetch_by_id: обогащён PMCID={pmcid} для PMID={article_id} через ID Converter")
+            return (await self._annotate_loaded([result]))[0]
 
     async def _get_pmcid_for_pmid(self, client: httpx.AsyncClient, pmid: str) -> Optional[str]:
         """Конвертирует PMID в PMCID через ID Converter API"""
@@ -391,24 +472,24 @@ class PubMedService:
         if not doi:
             return None, None
         try:
-            async with httpx.AsyncClient(timeout=30) as client:
-                params = {
-                    "ids": doi,
-                    "idtype": "doi",
-                    "format": "json",
-                    "tool": NCBI_TOOL,
-                    "email": NCBI_EMAIL,
-                }
-                resp = await client.get(f"{ID_CONV_BASE}/", params=params, timeout=15)
-                if resp.status_code != 200:
-                    logger.warning(f"[pubmed] ID Converter для DOI {doi} вернул {resp.status_code}")
-                    return None, None
-                records = resp.json().get("records", [])
-                if not records:
-                    logger.info(f"[pubmed] DOI {doi} не найден в ID Converter")
-                    return None, None
-                rec = records[0]
-                return rec.get("pmid"), rec.get("pmcid")
+            client = await self._get_client()
+            params = {
+                "ids": doi,
+                "idtype": "doi",
+                "format": "json",
+                "tool": NCBI_TOOL,
+                "email": NCBI_EMAIL,
+            }
+            resp = await client.get(f"{ID_CONV_BASE}/", params=params, timeout=15)
+            if resp.status_code != 200:
+                logger.warning(f"[pubmed] ID Converter для DOI {doi} вернул {resp.status_code}")
+                return None, None
+            records = resp.json().get("records", [])
+            if not records:
+                logger.info(f"[pubmed] DOI {doi} не найден в ID Converter")
+                return None, None
+            rec = records[0]
+            return rec.get("pmid"), rec.get("pmcid")
         except Exception as e:
             logger.warning(f"[pubmed] Ошибка конвертации DOI→PMID/PMCID для {doi}: {e}")
             return None, None
@@ -854,7 +935,7 @@ class PubMedService:
                 "success": True,
                 "doc_id": doc_id,
                 "message": "PDF успешно обработан",
-                "processing_status": "annotated",
+                "processing_status": "ready_for_annotation",
             }
 
     async def _run_docling_pipeline(self, pdf_bytes: bytes, doc_id: str, meta: Dict[str, Any]):

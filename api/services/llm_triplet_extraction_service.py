@@ -24,6 +24,13 @@ import threading
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from src.uuid8 import uuid8_str
+from src.schemas.llm_extract import (
+    AtomizeBlock,
+    AtomizeResponse,
+    StructureBlock,
+    StructureResponse,
+)
+from . import settings
 from .ai_model_client import get_ai_model_client
 from .llm_triplet_extraction_prompt import (
     build_atomize_prompt,
@@ -37,12 +44,12 @@ from .llm_triplet_extraction_prompt_en import (
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = "qwen/qwen3-4b"
-DEFAULT_MAX_CHUNK_CHARS = 7000
-DEFAULT_MAX_TOKENS = 20000
-DEFAULT_TIMEOUT = 900
-DEFAULT_TEMPERATURE = 0.2
-MAX_RETRIES = 2
+DEFAULT_MODEL = settings.LLM_EXTRACT_MODEL
+DEFAULT_MAX_CHUNK_CHARS = settings.LLM_MAX_CHUNK_CHARS
+DEFAULT_MAX_TOKENS = settings.LLM_MAX_TOKENS
+DEFAULT_TIMEOUT = settings.LLM_TIMEOUT
+DEFAULT_TEMPERATURE = settings.LLM_TEMPERATURE
+MAX_RETRIES = settings.LLM_MAX_RETRIES
 
 # Типы, у которых есть sequence (для summary).
 CONTAINER_TYPES = {7, 16, 22, 23, 37, 38, 39, 40, 44, 46, 47, 56, 57}
@@ -326,33 +333,37 @@ class LLMTripletExtractionService:
 
     @staticmethod
     def _parse_structure_json(generated_text: str) -> List[Dict[str, Any]]:
-        """Извлекает контейнерные блоки ответа Stage 1 (с тегами {Bn})."""
+        """Извлекает контейнерные блоки ответа Stage 1 (с тегами {Bn}).
+
+        JSON-ремонт (``_extract_json``) остаётся как нормализация перед
+        парсингом через Pydantic-схему ``StructureResponse``.
+        """
         data = LLMTripletExtractionService._extract_json(generated_text or "")
         if data is None:
             return []
-        blocks = data.get("blocks")
-        if not isinstance(blocks, list):
-            return []
+        try:
+            resp = StructureResponse.model_validate(data)
+        except Exception:
+            blocks_raw = data.get("blocks") if isinstance(data, dict) else None
+            if not isinstance(blocks_raw, list):
+                return []
+            resp = StructureResponse(blocks=[
+                StructureBlock.model_validate(b)
+                for b in blocks_raw
+                if isinstance(b, dict)
+            ])
         out: List[Dict[str, Any]] = []
-        for b in blocks:
-            if not isinstance(b, dict):
-                continue
-            try:
-                bt = int(b.get("blockType", b.get("type", 0)))
-            except (TypeError, ValueError):
-                bt = 0
-            if bt == 4:
+        for sb in resp.blocks:
+            if sb.blockType == 4:
                 continue  # T4 выводит только Stage 2
-            d = b.get("data")
-            if not isinstance(d, dict):
-                d = {k: v for k, v in b.items() if k not in ("blockType", "type", "tag")}
-            out.append(
-                {
-                    "blockType": bt,
-                    "data": d,
-                    "tag": str(b.get("tag", "") or "").strip(),
-                }
-            )
+            d = dict(sb.data)
+            if not d:
+                d = {}
+            out.append({
+                "blockType": sb.blockType,
+                "data": d,
+                "tag": sb.tag.strip(),
+            })
         return out
 
     @staticmethod
@@ -362,6 +373,9 @@ class LLMTripletExtractionService:
         Модель может вернуть либо ``sequences``-мапу (старый формат), либо
         ``container``-тег на каждом T4 (новый формат). ``container``-тег
         конвертируется в sequences-мапу {B-тег: [порядковые номера]}.
+
+        JSON-ремонт (``_extract_json``/``_extract_json_fragments``) остаётся
+        как нормализация перед парсингом через Pydantic-схему ``AtomizeResponse``.
         """
         data = LLMTripletExtractionService._extract_json(generated_text or "")
         fragments: List[Dict[str, Any]] = []
@@ -375,8 +389,22 @@ class LLMTripletExtractionService:
         blocks: List[Dict[str, Any]] = []
         sequences: Dict[str, Any] = {}
         for frag in fragments:
-            blocks_raw = frag.get("blocks")
-            if isinstance(blocks_raw, list):
+            try:
+                resp = AtomizeResponse.model_validate(frag)
+                for ab in resp.blocks:
+                    if ab.blockType != 4:
+                        continue
+                    blocks.append({
+                        "blockType": 4,
+                        "data": dict(ab.data),
+                        "container": ab.container.strip(),
+                    })
+                if resp.sequences:
+                    sequences.update(resp.sequences)
+            except Exception:
+                blocks_raw = frag.get("blocks") if isinstance(frag, dict) else None
+                if not isinstance(blocks_raw, list):
+                    continue
                 for b in blocks_raw:
                     if not isinstance(b, dict):
                         continue
@@ -391,9 +419,9 @@ class LLMTripletExtractionService:
                         d = {k: v for k, v in b.items() if k not in ("blockType", "type", "container")}
                     container = str(b.get("container", "") or "").strip()
                     blocks.append({"blockType": 4, "data": d, "container": container})
-            seqs = frag.get("sequences")
-            if isinstance(seqs, dict):
-                sequences.update(seqs)
+                seqs = frag.get("sequences")
+                if isinstance(seqs, dict):
+                    sequences.update(seqs)
 
         # Новый формат: container-тег на каждом T4 → sequences-мапа.
         by_container: Dict[str, List[int]] = {}
@@ -727,7 +755,7 @@ class LLMTripletExtractionService:
 
     @classmethod
     def _trim_sequence_overfill(
-        cls, blocks: List[Dict[str, Any]], ref_ratio: float = 0.7788
+        cls, blocks: List[Dict[str, Any]], ref_ratio: float = settings.LLM_SEQ_REF_RATIO
     ) -> List[Dict[str, Any]]:
         """Срезает избыточное sequence-покрытие до эталонной доли.
 
@@ -764,8 +792,8 @@ class LLMTripletExtractionService:
     @staticmethod
     def _add_uuidrefs(
         blocks: List[Dict[str, Any]],
-        max_words: int = 1,
-        min_freq: int = 3,
+        max_words: int = settings.LLM_UUIDREF_MAX_WORDS,
+        min_freq: int = settings.LLM_UUIDREF_MIN_FREQ,
     ) -> List[Dict[str, Any]]:
         """Заменяет повторяющиеся термины на UUID определяющего T4-триплета.
 
@@ -840,7 +868,7 @@ class LLMTripletExtractionService:
 
     @classmethod
     def _attach_sequence_from_t4(
-        cls, blocks: List[Dict[str, Any]], ref_ratio: float = 0.7788
+        cls, blocks: List[Dict[str, Any]], ref_ratio: float = settings.LLM_SEQ_REF_RATIO
     ) -> List[Dict[str, Any]]:
         """Привязывает существующие T4 к контейнерам без sequence.
 

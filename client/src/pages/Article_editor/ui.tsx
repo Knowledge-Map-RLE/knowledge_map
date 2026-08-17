@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Header from '../../widgets/Header';
 import Document_downloader_ui, { type DocumentListHandle } from '../Data_extraction/Document_downloader_ui';
 import EditorWorkspace from './Editor/EditorWorkspace';
+import AgentChat from './Editor/AgentChat';
 import ArticleMap from './Editor/ArticleMap';
 import EvidencePatterns from './Editor/EvidencePatterns';
 import { ChatPanel } from '../Social_network/components/ChatPanel';
@@ -110,18 +111,6 @@ const ArticleEditorUI: React.FC = () => {
                         error={null}
                         setError={noopSetError.current}
                     />
-                    <div style={{ padding: '8px 0', borderTop: '1px solid #e5e7eb', marginTop: 8 }}>
-                        <button
-                            onClick={handleCreateNew}
-                            style={{
-                                width: '100%', padding: '8px 12px', fontSize: 13, fontWeight: 500,
-                                background: '#6366f1', color: 'white', border: 'none', borderRadius: 6,
-                                cursor: 'pointer',
-                            }}
-                        >
-                            + Новая статья
-                        </button>
-                    </div>
                 </div>
 
                 <div className={styles.rightPanel}>
@@ -192,7 +181,7 @@ const ArticleEditorUI: React.FC = () => {
                                     articleUuid={articleUuid ?? undefined}
                                     articleAuthor={article?.author ?? null}
                                     onUploadImage={uploadImage}
-                                    onExtracted={handleExtracted}
+                                    onCreateNew={handleCreateNew}
                                 />
                             )
                         )}
@@ -236,6 +225,23 @@ const ArticleEditorUI: React.FC = () => {
                             </div>
                         )}
                     </div>
+                </div>
+
+                <div className={styles.aiColumn}>
+                    <div className={styles.editorColumnHeader}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        {'AI \u0410\u0433\u0435\u043D\u0442'}
+                    </div>
+                    <AgentChat
+                        articleUuid={articleUuid}
+                        blocks={blocks}
+                        statements={statements}
+                        text={text}
+                        onExtracted={handleExtracted}
+                    />
                 </div>
             </div>
         </main>

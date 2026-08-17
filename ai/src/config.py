@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     )
 
     host: str = Field(default="0.0.0.0", alias="AI_HOST")
-    port: int = Field(default=50054, alias="AI_PORT")
+    port: int = Field(default=50059, alias="AI_PORT")
 
     # Provider/model used when the client does not specify one.
     default_provider: str = Field(default="lm-studio", alias="DEFAULT_PROVIDER")

@@ -14,7 +14,7 @@ from collections import defaultdict
 
 # ================== Конфигурация ==================
 
-LOCAL_DIR = Path("D:/Data/PubMed_Central")
+LOCAL_DIR = Path(__file__).resolve().parents[2] / "data" / "PubMed_Central"
 OUTPUT_FILE = Path("./logs/pmc_oa_bulk_generalization_structure_all_xml.log")
 LOG_FILE = Path("./logs/pmc_oa_bulk_generalization_structure_all_xml_processing.log")
 MAX_WORKERS = min(cpu_count(), 8)  # Увеличиваем количество процессов для ускорения

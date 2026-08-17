@@ -338,24 +338,9 @@ export function useArticleState(): UseArticleStateResult {
             if (currentBlocks.length > 0) {
                 const t1Block = currentBlocks.find((b) => b.blockType === 1);
                 const titleFromBlock = t1Block?.data?.title;
-                const derivedStatements = blocksToStatements(currentBlocks, currentArticleUuid ?? undefined, statementsRef.current);
-                const stmtPayload = derivedStatements.map((s) => ({
-                    uid: s.id,
-                    subject_text: s.subject_text,
-                    predicate: s.predicate,
-                    object_text: s.object_text,
-                    subject_type: s.subject_type,
-                    object_type: s.object_type,
-                    type: s.type,
-                    confidence: s.confidence,
-                    sentence_text: '',
-                    sort_order: 0,
-                    sourceBlockId: s.sourceBlockId,
-                }));
                 const promises: Promise<any>[] = [
                     saveArticleText(docId, currentText),
                     saveBlocks(docId, currentBlocks),
-                    saveStatements(docId, stmtPayload),
                 ];
                 if (titleFromBlock) {
                     promises.push(updateArticleTitle(docId, String(titleFromBlock)));
@@ -365,13 +350,9 @@ export function useArticleState(): UseArticleStateResult {
                     setSaveStatus('error');
                     return;
                 }
-                const saveResult = results[2];
-                if (saveResult?.statement_ids) {
-                    const ids: string[] = saveResult.statement_ids;
-                    setStatements((prev) => prev.map((s, i) => ({
-                        ...s,
-                        id: ids[i] ?? s.id,
-                    })));
+                const blocksResult = results[1];
+                if (blocksResult?.statements) {
+                    setStatements(blocksResult.statements);
                 }
             } else {
                 const textResult = await saveArticleText(docId, currentText);

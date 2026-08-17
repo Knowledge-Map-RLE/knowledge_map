@@ -14,7 +14,7 @@
 poetry install
 ```
 
-3) Загрузка одного XML.gz файла (предпоследнего в каталоге `D:/Данные/PubMed`):
+3) Загрузка одного XML.gz файла (предпоследнего в каталоге `data/PubMed` относительно корня репозитория):
 
 ```
 poetry run python pubmed_baseline_ftp_to_db.py

@@ -64,8 +64,7 @@ async def _handle_load(
         else None
     )
 
-    anns, total = await asyncio.to_thread(
-        get_annotations,
+    anns, total = get_annotations(
         annotation_repo=ann_repo,
         document_repo=None,
         doc_id=doc_id,

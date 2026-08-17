@@ -24,8 +24,11 @@ from services.llm_triplet_extraction_service import (  # noqa: E402
 )
 from tools.llm_extract import metrics as m  # noqa: E402
 
-ARTICLE_DIR = Path(
-    r"D:\Knowledge_Map\data\articles\Immunometabolic resistors of aging in long-lived golden spiny mice"
+ARTICLE_DIR = (
+    Path(__file__).resolve().parents[3]
+    / "data"
+    / "articles"
+    / "Immunometabolic resistors of aging in long-lived golden spiny mice"
 )
 RU_MD = ARTICLE_DIR / "Immunometabolic resistors of aging in long-lived golden spiny mice.ru.md"
 EN_MD = ARTICLE_DIR / "Immunometabolic resistors of aging in long-lived golden spiny mice.md"

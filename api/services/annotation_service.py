@@ -799,14 +799,8 @@ class AnnotationService:
                 f"{created_relations} связей для документа {doc_id}"
             )
 
-            # Обновляем processing_status → annotated чтобы воркер мог отследить готовность
-            # Обновляем напрямую через Cypher чтобы избежать stale neomodel объекта
-            from neomodel import db as _neo4j_db
-            _neo4j_db.cypher_query(
-                "MATCH (d:Document {uid: $uid}) SET d.processing_status = 'annotated'",
-                {"uid": doc_id}
-            )
-            logger.info(f"Документ {doc_id}: processing_status → annotated (Cypher)")
+            # Статус 'annotated' НЕ присваивается здесь: он назначается только при
+            # сохранении валидного markdown через PUT /documents/{id}/markdown.
 
             return {
                 "success": True,

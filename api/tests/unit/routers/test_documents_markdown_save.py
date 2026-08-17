@@ -148,3 +148,71 @@ class TestUpdateMarkdownAnnotate:
 
         assert exc_info.value.status_code == 400
         assert "Валидация" in exc_info.value.detail["error"]
+
+    def test_annotate_rejects_when_nlp_unavailable(self):
+        """annotate=true + NLP сервис недоступен → 503, документ не сохраняется."""
+        from web.routers.data_extraction.documents import update_document_markdown
+        from src.schemas.api import UpdateMarkdownRequest
+
+        request = UpdateMarkdownRequest(markdown="# Test\n\nfoo", annotate=True)
+
+        def failing_client():
+            client = MagicMock()
+            client.validate_markdown = AsyncMock(side_effect=RuntimeError("NLP service down"))
+            return client
+
+        mock_update = AsyncMock()
+
+        async def scenario():
+            with patch(
+                "web.routers.data_extraction.documents.update_markdown",
+                new=mock_update,
+            ), patch(
+                "services.nlp_grpc_client.get_nlp_grpc_client",
+                return_value=failing_client(),
+            ):
+                await update_document_markdown(
+                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock()
+                )
+
+        with pytest.raises(HTTPException) as exc_info:
+            asyncio.run(scenario())
+
+        assert exc_info.value.status_code == 503
+        assert "недоступен" in exc_info.value.detail
+        mock_update.assert_not_awaited()
+
+    def test_auto_validate_without_annotate_saves_when_nlp_unavailable(self):
+        """auto_validate=true без annotate при недоступном NLP → сохранение без статуса."""
+        from web.routers.data_extraction.documents import update_document_markdown
+        from src.schemas.api import UpdateMarkdownRequest
+
+        request = UpdateMarkdownRequest(markdown="# Test\n\nfoo", annotate=False, auto_validate=True)
+
+        def failing_client():
+            client = MagicMock()
+            client.validate_markdown = AsyncMock(side_effect=RuntimeError("NLP service down"))
+            return client
+
+        mock_update = AsyncMock(
+            return_value={"s3_key": "documents/doc_1/doc_1_user.md", "title": "Test"}
+        )
+
+        async def scenario():
+            with patch(
+                "web.routers.data_extraction.documents.update_markdown",
+                new=mock_update,
+            ), patch(
+                "services.nlp_grpc_client.get_nlp_grpc_client",
+                return_value=failing_client(),
+            ):
+                return await update_document_markdown(
+                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock()
+                )
+
+        result = asyncio.run(scenario())
+
+        assert result.success is True
+        assert result.validation is None
+        mock_update.assert_awaited_once()
+        assert mock_update.call_args.kwargs["annotate"] is False

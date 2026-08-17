@@ -3,7 +3,7 @@
 Фронтенд обращается к микросервису через единую точку входа API (порт 8000),
 а не напрямую: ``VITE_API_BASE_URL`` указывает на API. Этот роутер пробрасывает
 ``GET /ai/v1/models`` и ``POST /ai/v1/chat/completions`` на микросервис
-(``ai/``, порт 50054), сохраняя SSE-стриминг для chat completions.
+(``ai/``, порт 50059), сохраняя SSE-стриминг для chat completions.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/ai", tags=["AI Proxy"])
 
-MICROSERVICE_ROOT = "http://127.0.0.1:50054"
+MICROSERVICE_ROOT = "http://127.0.0.1:50059"
 
 _TIMEOUT = httpx.Timeout(300.0, connect=5.0, read=300.0)
 

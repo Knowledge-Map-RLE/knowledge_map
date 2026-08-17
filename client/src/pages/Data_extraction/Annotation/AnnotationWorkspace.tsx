@@ -535,17 +535,18 @@ const AnnotationWorkspace: React.FC<AnnotationWorkspaceProps> = ({
             if (progressIntervalRef.current) { clearInterval(progressIntervalRef.current); progressIntervalRef.current = null; }
           };
 
-          if (status === 'done') {
-            stopPolling();
-            setAnalysisProgress(100);
-            await loadAnnotations();
-            await loadRelations();
-            setIsAutoAnnotating(false);
-            setAnalysisProgress(null);
-            if (onNlpProcessingChange) onNlpProcessingChange(false);
-            if (onUpdateDocumentStatus) onUpdateDocumentStatus(docId, 'annotated');
-            return;
-          }
+            if (status === 'done') {
+                stopPolling();
+                setAnalysisProgress(100);
+                await loadAnnotations();
+                await loadRelations();
+                setIsAutoAnnotating(false);
+                setAnalysisProgress(null);
+                if (onNlpProcessingChange) onNlpProcessingChange(false);
+                // Статус 'annotated' НЕ проставляется здесь: он назначается только
+                // после сохранения валидного markdown (PUT /documents/{id}/markdown).
+                return;
+            }
 
           if (status === 'error') {
             stopPolling();

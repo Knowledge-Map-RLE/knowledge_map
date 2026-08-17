@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import s from './Document_downloader_ui.module.css';
 import {
     uploadPdfForExtraction, listDocuments, searchDocuments as apiSearchDocuments,
@@ -29,6 +29,10 @@ export interface DocumentListHandle {
     reloadDocuments: () => Promise<void>;
 }
 
+type UnifiedListItem =
+    | { kind: 'local'; doc: PDFDocument }
+    | { kind: 'pubmed'; result: PubMedSearchResult };
+
 interface DocumentDownloaderUIProps {
     selectedDocument: PDFDocument | null;
     onSelectDocument: (document: PDFDocument | null) => void;
@@ -51,29 +55,26 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
     const [progressMessageMap, setProgressMessageMap] = useState<Record<string, string>>({});
     const [contextMenu, setContextMenu] = useState<{ x: number; y: number; documentId: string } | null>(null);
 
-    // PubMed unified search
-    const [pubmedQuery, setPubmedQuery] = useState('');
+    // Unified search: документы, PubMed текст, PMID/PMCID
+    const [searchQuery, setSearchQuery] = useState('');
     const [pubmedResults, setPubmedResults] = useState<PubMedSearchResult[]>([]);
     const [isPubMedSearching, setIsPubMedSearching] = useState(false);
     const pubmedDebounceRef = useRef<number | null>(null);
 
     // PubMed direct ID search
-    const [pubmedIdQuery, setPubmedIdQuery] = useState('');
     const [pubmedIdResult, setPubmedIdResult] = useState<PubMedSearchResult | null>(null);
     const [isPubMedIdSearching, setIsPubMedIdSearching] = useState(false);
     const pubmedIdDebounceRef = useRef<number | null>(null);
-
-    // Expanded abstract
-    const [expandedAbstract, setExpandedAbstract] = useState<string | null>(null);
 
     // Toast
     const [toast, setToast] = useState<string | null>(null);
 
     const [ingestingId, setIngestingId] = useState<string | null>(null);
-    const [localQuery, setLocalQuery] = useState('');
     const [searchResults, setSearchResults] = useState<PDFDocument[] | null>(null);
     const searchDebounceRef = useRef<number | null>(null);
     const searchAbortRef = useRef<AbortController | null>(null);
+    const pubmedAbortRef = useRef<AbortController | null>(null);
+    const pubmedIdAbortRef = useRef<AbortController | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const showToast = (msg: string) => {
@@ -103,7 +104,9 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             const total = data.total_count ?? data.documents.length;
             const mapped = data.documents.map((d) => {
                 try {
-                    const status = d.has_markdown ? 'annotated' : 'ready_for_annotation';
+                    // Статус берём с сервера: 'annotated' присваивается только
+                    // валидному markdown, has_markdown для этого не индикатор.
+                    const status = d.processing_status || 'ready_for_annotation';
                     const base = (import.meta as any).env?.VITE_API_BASE_URL || '';
                     const pdf_url = d.files?.pdf ? `${base}${d.files.pdf}` : '';
                     const filename = d.files?.pdf ? d.files.pdf.split('/').pop() || d.doc_id + '.pdf' : d.doc_id + '.pdf';
@@ -114,7 +117,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                         title: d.title || undefined,
                         upload_date: new Date().toISOString(),
                         processing_status: status,
-                        is_processed: status === 'annotated',
+                        is_processed: d.is_processed,
                         pdf_url,
                         pubmed_id: d.pubmed_id,
                         pmc_id: d.pmc_id,
@@ -148,62 +151,6 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
         loadDocuments();
     }, [loadDocuments]);
 
-    // Надёжная проверка "уже загружено" по pubmed_id/pmc_id из Neo4j
-    const isAlreadyLoaded = (r: PubMedSearchResult): boolean => {
-        return documents.some(doc => {
-            if (r.pmid && doc.pubmed_id && doc.pubmed_id === r.pmid) return true;
-            if (r.pmcid && doc.pmc_id && doc.pmc_id === r.pmcid) return true;
-            return false;
-        });
-    };
-
-    // --- PubMed text search ---
-    const handlePubMedQueryChange = (value: string) => {
-        setPubmedQuery(value);
-        if (pubmedDebounceRef.current) window.clearTimeout(pubmedDebounceRef.current);
-        if (value.length < 3) { setPubmedResults([]); return; }
-        pubmedDebounceRef.current = window.setTimeout(async () => {
-            setIsPubMedSearching(true);
-            try {
-                const resp = await searchPubMed(value, 10);
-                setPubmedResults(resp.results || []);
-            } catch (err) {
-                console.error('PubMed search error:', err);
-                setPubmedResults([]);
-            } finally {
-                setIsPubMedSearching(false);
-            }
-        }, 500);
-    };
-
-    // --- PubMed direct ID search ---
-    const handlePubMedIdChange = (value: string) => {
-        setPubmedIdQuery(value);
-        setPubmedIdResult(null);
-        // Очищаем текстовые результаты, чтобы не было дублей
-        if (value.trim()) {
-            setPubmedResults([]);
-            setPubmedQuery('');
-        }
-        if (pubmedIdDebounceRef.current) window.clearTimeout(pubmedIdDebounceRef.current);
-        const trimmed = value.trim();
-        if (!trimmed) return;
-        const isPmid = /^\d+$/.test(trimmed);
-        const isPmcid = /^PMC\d+$/i.test(trimmed);
-        if (!isPmid && !isPmcid) return;
-        pubmedIdDebounceRef.current = window.setTimeout(async () => {
-            setIsPubMedIdSearching(true);
-            try {
-                const resp = await getByPubMedId(trimmed);
-                setPubmedIdResult(resp.results?.[0] || null);
-            } catch (err) {
-                console.error('PubMed ID search error:', err);
-            } finally {
-                setIsPubMedIdSearching(false);
-            }
-        }, 400);
-    };
-
     // --- Ingest article ---
     const handleIngestArticle = async (result: PubMedSearchResult) => {
         const key = result.pmid || result.pmcid || '';
@@ -228,17 +175,56 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                     setDocuments(prev => prev.some(d => d.uid === resp.doc_id) ? prev : [tempDoc, ...prev]);
                     onSelectDocument(tempDoc);
                     showToast(`⏳ PDF загружается: ${result.title.slice(0, 50)}...`);
-                    // Перезагружаем через 5 сек и обновляем выбранный документ
-                    setTimeout(async () => {
-                        const freshDocs = await loadDocuments();
-                        const updated = freshDocs.find(d => d.uid === resp.doc_id);
-                        if (updated) onSelectDocument(updated);
-                    }, 5000);
+                    // Поллинг обработки; после завершения — открываем статью автоматически
+                    const pollIngest = async (docId: string) => {
+                        try {
+                            const prog = await getDocumentProgress(docId);
+                            setProgressMap(prev => ({ ...prev, [docId]: prog.percent }));
+                            if (prog.message) {
+                                setProgressMessageMap(prev => ({ ...prev, [docId]: prog.message }));
+                            }
+                            setDocuments(prev => prev.map(doc =>
+                                doc.uid === docId ? { ...doc, processing_status: prog.processing_status } : doc
+                            ));
+                            if (prog.processing_status === 'pdf_to_markdown' || prog.processing_status === 'uploading') {
+                                setTimeout(() => pollIngest(docId), 2000);
+                            } else {
+                                setProgressMap(prev => { const u = { ...prev }; delete u[docId]; return u; });
+                                setProgressMessageMap(prev => { const u = { ...prev }; delete u[docId]; return u; });
+                                loadDocuments();
+                                onSelectDocument({
+                                    uid: docId,
+                                    original_filename: result.pmcid || `PMID${result.pmid}` || docId,
+                                    md5_hash: docId,
+                                    title: result.title,
+                                    upload_date: new Date().toISOString(),
+                                    processing_status: prog.processing_status,
+                                    is_processed: prog.processing_status === 'annotated',
+                                    pubmed_id: result.pmid,
+                                    pmc_id: result.pmcid,
+                                } as PDFDocument);
+                                onDocumentsChange();
+                            }
+                        } catch {
+                            setTimeout(() => pollIngest(docId), 3000);
+                        }
+                    };
+                    setTimeout(() => pollIngest(resp.doc_id), 2000);
                 } else {
-                    // Синхронная загрузка (tar.gz → MD или metadata) — перезагружаем список
-                    const freshDocs = await loadDocuments();
-                    const added = freshDocs.find(d => d.uid === resp.doc_id);
-                    if (added) onSelectDocument(added);
+                    // Синхронная загрузка (tar.gz → MD или metadata) — открываем сразу по doc_id,
+                    // не дожидаясь попадания документа в топ-200 списка
+                    loadDocuments();
+                    onSelectDocument({
+                        uid: resp.doc_id,
+                        original_filename: result.pmcid || `PMID${result.pmid}` || resp.doc_id,
+                        md5_hash: resp.doc_id,
+                        title: result.title,
+                        upload_date: new Date().toISOString(),
+                        processing_status: resp.processing_status,
+                        is_processed: false,
+                        pubmed_id: result.pmid,
+                        pmc_id: result.pmcid,
+                    } as PDFDocument);
                     const isFullText = result.is_open_access;
                     showToast(isFullText
                         ? `✓ Добавлен полный текст: ${result.title.slice(0, 50)}...`
@@ -277,61 +263,137 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
         }
     };
 
-    // --- Server-side fuzzy search (APOC Levenshtein) ---
+    // --- Unified search: документы (fuzzy APOC), PubMed текст, PMID/PMCID ---
     useEffect(() => {
         if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        if (pubmedDebounceRef.current) clearTimeout(pubmedDebounceRef.current);
+        if (pubmedIdDebounceRef.current) clearTimeout(pubmedIdDebounceRef.current);
         if (searchAbortRef.current) searchAbortRef.current.abort();
+        if (pubmedAbortRef.current) pubmedAbortRef.current.abort();
+        if (pubmedIdAbortRef.current) pubmedIdAbortRef.current.abort();
 
-        const q = localQuery.trim();
+        const q = searchQuery.trim();
         if (q.length < 3) {
             setSearchResults(null);
+            setPubmedResults([]);
+            setPubmedIdResult(null);
             return;
         }
 
-        searchDebounceRef.current = window.setTimeout(async () => {
-            const controller = new AbortController();
-            searchAbortRef.current = controller;
+        const isId = /^\d+$/.test(q) || /^PMC\d+$/i.test(q);
 
-            try {
-                const data = await apiSearchDocuments(q, 0, 100, controller.signal);
-                if (!data?.success || !Array.isArray(data.documents)) {
-                    setSearchResults([]);
-                    return;
+        if (isId) {
+            // PMID / PMCID — прямой поиск по ID
+            setPubmedResults([]);
+            pubmedIdDebounceRef.current = window.setTimeout(async () => {
+                const controller = new AbortController();
+                pubmedIdAbortRef.current = controller;
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                setIsPubMedIdSearching(true);
+                try {
+                    const resp = await getByPubMedId(q, controller.signal);
+                    setPubmedIdResult(resp.results?.[0] || null);
+                } catch (err: any) {
+                    if (err.name === 'AbortError') return;
+                    console.error('PubMed ID search error:', err);
+                    setPubmedIdResult(null);
+                } finally {
+                    clearTimeout(timeoutId);
+                    setIsPubMedIdSearching(false);
                 }
-                const mapped = data.documents.map((d: any) => ({
-                    uid: d.doc_id,
-                    original_filename: d.original_filename || d.doc_id + '.pdf',
-                    md5_hash: d.doc_id,
-                    title: d.title || undefined,
-                    upload_date: new Date().toISOString(),
-                    processing_status: d.has_markdown ? 'annotated' : 'ready_for_annotation',
-                    is_processed: !!d.has_markdown,
-                    pdf_url: d.files?.pdf ? `${(import.meta as any).env?.VITE_API_BASE_URL || ''}${d.files.pdf}` : '',
-                    pubmed_id: d.pubmed_id,
-                    pmc_id: d.pmc_id,
-                } as PDFDocument));
-                setSearchResults(mapped);
-            } catch (err: any) {
-                if (err.name === 'AbortError') return;
-                console.warn('Ошибка поиска документов:', err);
-                setSearchResults([]);
-            }
-        }, 300);
+            }, 400);
+        } else {
+            // Текстовый запрос — параллельно ищем по документам и в PubMed
+            setPubmedIdResult(null);
+            searchDebounceRef.current = window.setTimeout(async () => {
+                const controller = new AbortController();
+                searchAbortRef.current = controller;
+                try {
+                    const data = await apiSearchDocuments(q, 0, 100, controller.signal);
+                    if (!data?.success || !Array.isArray(data.documents)) {
+                        setSearchResults([]);
+                        return;
+                    }
+                    const mapped = data.documents.map((d: any) => ({
+                        uid: d.doc_id,
+                        original_filename: d.original_filename || d.doc_id + '.pdf',
+                        md5_hash: d.doc_id,
+                        title: d.title || undefined,
+                        upload_date: new Date().toISOString(),
+                        processing_status: d.has_markdown ? 'annotated' : 'ready_for_annotation',
+                        is_processed: !!d.has_markdown,
+                        pdf_url: d.files?.pdf ? `${(import.meta as any).env?.VITE_API_BASE_URL || ''}${d.files.pdf}` : '',
+                        pubmed_id: d.pubmed_id,
+                        pmc_id: d.pmc_id,
+                    } as PDFDocument));
+                    setSearchResults(mapped);
+                } catch (err: any) {
+                    if (err.name === 'AbortError') return;
+                    console.warn('Ошибка поиска документов:', err);
+                    setSearchResults([]);
+                }
+            }, 300);
+
+            pubmedDebounceRef.current = window.setTimeout(async () => {
+                const controller = new AbortController();
+                pubmedAbortRef.current = controller;
+                const timeoutId = setTimeout(() => controller.abort(), 20000);
+                setIsPubMedSearching(true);
+                try {
+                    const resp = await searchPubMed(q, 10, controller.signal);
+                    setPubmedResults(resp.results || []);
+                } catch (err: any) {
+                    if (err.name === 'AbortError') return;
+                    console.error('PubMed search error:', err);
+                    setPubmedResults([]);
+                } finally {
+                    clearTimeout(timeoutId);
+                    setIsPubMedSearching(false);
+                }
+            }, 500);
+        }
 
         return () => {
             if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+            if (pubmedDebounceRef.current) clearTimeout(pubmedDebounceRef.current);
+            if (pubmedIdDebounceRef.current) clearTimeout(pubmedIdDebounceRef.current);
+            if (searchAbortRef.current) searchAbortRef.current.abort();
+            if (pubmedAbortRef.current) pubmedAbortRef.current.abort();
+            if (pubmedIdAbortRef.current) pubmedIdAbortRef.current.abort();
         };
-    }, [localQuery]);
+    }, [searchQuery]);
 
     // --- Document list: search results if query >=3, else full list ---
-    const filteredDocuments = localQuery.trim().length >= 3
+    const filteredDocuments = searchQuery.trim().length >= 3
         ? (searchResults ?? documents)
         : documents.slice(0, 100);
     const sortedDocuments = [...filteredDocuments].sort((a, b) => {
         if (a.is_processed === b.is_processed) return 0;
         return a.is_processed ? -1 : 1;
     });
-    const hasMoreDocuments = localQuery.trim().length < 3 && documents.length > 100;
+    const hasMoreDocuments = searchQuery.trim().length < 3 && documents.length > 100;
+
+    // --- Дедупликация: уже загруженные статьи не показываем в результатах PubMed ---
+    const loadedArticleKeys = useMemo(() => {
+        const ids = new Set<string>();
+        const titles = new Set<string>();
+        documents.forEach(d => {
+            if (d.uid) ids.add(`uid:${d.uid}`);
+            if (d.pubmed_id) ids.add(`pmid:${d.pubmed_id}`);
+            if (d.pmc_id) ids.add(`pmcid:${d.pmc_id}`);
+            const title = (d.title || d.original_filename || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            if (title) titles.add(title);
+        });
+        return { ids, titles };
+    }, [documents]);
+
+    const isPubmedResultLoaded = useCallback((r: PubMedSearchResult): boolean => {
+        if (r.is_loaded) return true;
+        if (r.pmid && loadedArticleKeys.ids.has(`pmid:${r.pmid}`)) return true;
+        if (r.pmcid && loadedArticleKeys.ids.has(`pmcid:${r.pmcid}`)) return true;
+        const title = (r.title || '').trim().toLowerCase().replace(/\s+/g, ' ');
+        return title.length > 0 && loadedArticleKeys.titles.has(title);
+    }, [loadedArticleKeys]);
 
     // --- PDF upload ---
     const handleFileUpload = async (file: File) => {
@@ -354,10 +416,8 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 onSelectDocument(newDoc);
 
                 if (isDuplicate) {
-                    // Дубликат — сразу загружаем актуальные данные
-                    const freshDocs = await loadDocuments();
-                    const updated = freshDocs.find(d => d.uid === result.doc_id);
-                    if (updated) onSelectDocument(updated);
+                    // Дубликат — документ уже открыт, список обновляем в фоне
+                    loadDocuments();
                     onDocumentsChange();
                 } else {
                     setProgressMap(prev => ({ ...prev, [newDoc.uid]: 0 }));
@@ -378,9 +438,15 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                             } else {
                                 setProgressMap(prev => { const u = { ...prev }; delete u[docId]; return u; });
                                 setProgressMessageMap(prev => { const u = { ...prev }; delete u[docId]; return u; });
-                                const freshDocs = await loadDocuments();
-                                const updated = freshDocs.find(d => d.uid === docId);
-                                if (updated) onSelectDocument(updated);
+                                loadDocuments();
+                                onSelectDocument({
+                                    uid: docId,
+                                    original_filename: file.name,
+                                    md5_hash: docId,
+                                    upload_date: new Date().toISOString(),
+                                    processing_status: prog.processing_status,
+                                    is_processed: prog.processing_status === 'annotated',
+                                } as PDFDocument);
                                 onDocumentsChange();
                             }
                         } catch {
@@ -437,54 +503,80 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
         return null;
     };
 
-    const PubMedResultItem = ({ r }: { r: PubMedSearchResult }) => {
-        const key = r.pmid || r.pmcid || '';
-        const isIngesting = ingestingId === key;
-        const alreadyLoaded = isAlreadyLoaded(r);
-        const abstractKey = r.pmid || r.pmcid || r.title;
-        const isExpanded = expandedAbstract === abstractKey;
+    const handlePubMedClick = (r: PubMedSearchResult) => {
+        if (ingestingId) return;
+        const loadedDoc = documents.find(doc =>
+            (r.pmid && doc.pubmed_id === r.pmid) || (r.pmcid && doc.pmc_id === r.pmcid)
+        );
+        if (loadedDoc) {
+            onSelectDocument(loadedDoc);
+            return;
+        }
+        handleIngestArticle(r);
+    };
 
-        return (
-            <div className={s.pubmedResultItem}>
-                <div className={s.pubmedResultHeader}>
-                    <div className={s.pubmedResultTitle} title={r.title}>{r.title}</div>
-                    <div className={s.pubmedResultBadges}>
-                        {r.is_open_access
-                            ? <span className={s.oaBadgeFull} title="Полный текст доступен">📖 OA</span>
-                            : <span className={s.oaBadgeAbstract} title="Только абстракт">📄</span>
-                        }
+    const DocumentListItem = ({ item }: { item: UnifiedListItem }) => {
+        if (item.kind === 'local') {
+            const doc = item.doc;
+            const displayName = doc.title || doc.original_filename || doc.uid;
+            const progressText = getProgressText(doc.processing_status, doc.uid);
+            return (
+                <div
+                    className={`${s.docItem} ${selectedDocument?.uid === doc.uid ? s.docItemSelected : ''}`}
+                    onClick={() => onSelectDocument(doc)}
+                    onContextMenu={(e) => {
+                        e.preventDefault();
+                        setContextMenu({ x: e.clientX, y: e.clientY, documentId: doc.uid });
+                    }}
+                >
+                    <span className={getStatusClass(doc.processing_status)} title={getStatusText(doc.processing_status)}></span>
+                    <div className={s.docItemContent}>
+                        <p className={s.docItemTitle} title={displayName}>{displayName}</p>
+                        <p className={s.docItemMeta}>
+                            {getStatusText(doc.processing_status)}
+                            {progressText && <span className="text-blue-600 font-semibold"> {progressText}</span>}
+                        </p>
                     </div>
                 </div>
-                <div className={s.pubmedResultMeta}>
-                    {r.authors.length > 0 && <span>{r.authors.slice(0, 2).join(', ')}{r.authors.length > 2 ? ' et al.' : ''}</span>}
-                    {r.journal && <span>{r.journal}</span>}
-                    {r.pub_date && <span>{r.pub_date}</span>}
-                    {r.pmid && <span>PMID: {r.pmid}</span>}
-                    {r.pmcid && <span>{r.pmcid}</span>}
+            );
+        }
+
+        const r = item.result;
+        const isIngesting = ingestingId === (r.pmid || r.pmcid || '');
+
+        return (
+            <div
+                className={s.docItem}
+                onClick={() => handlePubMedClick(r)}
+                title={isIngesting ? 'Загрузка статьи...' : 'Нажмите, чтобы загрузить и открыть'}
+            >
+                <span className={`${s.statusIndicator} ${s.uploaded}`} title="Внешний источник (PubMed)"></span>
+                <div className={s.docItemContent}>
+                    <p className={s.docItemTitle} title={r.title}>{r.title}</p>
                 </div>
-                {r.abstract && (
-                    <button className={s.abstractToggle} onClick={() => setExpandedAbstract(isExpanded ? null : abstractKey)}>
-                        {isExpanded ? '▲ Скрыть' : '▼ Абстракт'}
-                    </button>
+                {isIngesting && (
+                    <div className={s.docItemAction}>
+                        <span className={s.loadingSpinner} style={{ width: 14, height: 14 }}></span>
+                    </div>
                 )}
-                {isExpanded && r.abstract && (
-                    <div className={s.abstractText}>{r.abstract}</div>
-                )}
-                <div className={s.pubmedResultFooter}>
-                    {alreadyLoaded ? (
-                        <span className={s.alreadyLoaded}>✓ В списке</span>
-                    ) : (
-                        <button className={s.pubmedAddBtn} onClick={() => handleIngestArticle(r)} disabled={isIngesting}>
-                            {isIngesting ? 'Загрузка...' : '+ Добавить'}
-                        </button>
-                    )}
-                </div>
             </div>
         );
     };
 
     const isSearching = isPubMedSearching || isPubMedIdSearching;
-    const hasResults = pubmedIdResult !== null || pubmedResults.length > 0;
+    const combinedList: UnifiedListItem[] = [
+        ...sortedDocuments.map(d => ({ kind: 'local' as const, doc: d })),
+        ...(pubmedIdResult && !isPubmedResultLoaded(pubmedIdResult)
+            ? [{ kind: 'pubmed' as const, result: pubmedIdResult }]
+            : []),
+        ...pubmedResults
+            .filter(r => !isPubmedResultLoaded(r))
+            .filter(r => !pubmedIdResult || (
+                r.pmid !== pubmedIdResult.pmid &&
+                r.pmcid !== pubmedIdResult.pmcid
+            ))
+            .map(r => ({ kind: 'pubmed' as const, result: r })),
+    ];
 
     return (
         <div className={s.columnLayout}>
@@ -492,7 +584,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
 
             {/* Верхний блок: загруженные документы */}
             <div className={s.topBlock}>
-                <h2 className="text-base font-bold mb-2">Загруженные документы</h2>
+                <h2 className="text-base font-bold mb-2">Документы</h2>
 
                 <div
                     className={`${s.uploadArea} ${dragOver ? s.dragover : ''}`}
@@ -521,95 +613,43 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 <input
                     type="text"
                     className={`${s.searchInput} mt-2`}
-                    placeholder="Поиск по документам (мин. 3 символа)..."
-                    value={localQuery}
-                    onChange={e => setLocalQuery(e.target.value)}
+                    placeholder="Поиск по документам и PubMed (запрос, PMID или PMCID)..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
                 />
 
-                <div className={s.fileList}>
-                    {sortedDocuments.map((doc) => {
-                        const displayName = doc.title || doc.original_filename || doc.uid;
-                        const progressText = getProgressText(doc.processing_status, doc.uid);
-                        return (
-                            <div
-                                key={doc.uid}
-                                className={`${s.fileItem} ${selectedDocument?.uid === doc.uid ? 'bg-blue-100' : ''}`}
-                                onClick={() => onSelectDocument(doc)}
-                                onContextMenu={(e) => {
-                                    e.preventDefault();
-                                    setContextMenu({ x: e.clientX, y: e.clientY, documentId: doc.uid });
-                                }}
-                            >
-                                <div className="flex items-center gap-2 min-w-0">
-                                    <span className={getStatusClass(doc.processing_status)}></span>
-                                    <div className="min-w-0">
-                                        <p className="font-medium truncate text-sm" title={displayName}>{displayName}</p>
-                                        <p className="text-xs text-gray-500">
-                                            {getStatusText(doc.processing_status)}
-                                            {progressText && <span className="text-blue-600 font-semibold"> {progressText}</span>}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
+                <div className={s.docListWrap}>
+                    {isSearching && (
+                        <div className={s.searchOverlay}>
+                            <div className={s.loadingSpinner} style={{ width: 20, height: 20 }}></div>
+                        </div>
+                    )}
+                    <div className={s.fileList}>
+                        {combinedList.length === 0 ? (
+                            <p className="text-xs text-gray-300 p-2">
+                                {searchQuery.trim().length >= 3 ? 'Ничего не найдено' : 'Введите запрос или ID статьи'}
+                            </p>
+                        ) : (
+                            combinedList.map(item => (
+                                <DocumentListItem
+                                    key={item.kind === 'local'
+                                        ? `local-${item.doc.uid}`
+                                        : `pubmed-${item.result.pmid || item.result.pmcid || item.result.title}`}
+                                    item={item}
+                                />
+                            ))
+                        )}
+                    </div>
                 </div>
-                {localQuery.trim().length >= 3 ? (
+                {searchQuery.trim().length >= 3 ? (
                     <p className={s.docListHint}>
-                        Найдено {sortedDocuments.length} документов по запросу «{localQuery}».
+                        Найдено {sortedDocuments.length} документов по запросу «{searchQuery}».
                     </p>
                 ) : (hasMoreDocuments || (window as any).__documents_total > 100) && (
                     <p className={s.docListHint}>
                         Показано {Math.min(100, documents.length)} из {(window as any).__documents_total || documents.length}. Введите запрос для поиска.
                     </p>
                 )}
-            </div>
-
-            {/* Нижний блок: поиск PubMed + PMC */}
-            <div className={s.bottomBlock}>
-                <p className="text-sm font-semibold text-gray-700 mb-1.5">Поиск в PubMed и PMC</p>
-
-                <input
-                    type="text"
-                    className={`${s.searchInput} mb-1.5`}
-                    placeholder="Запрос (мин. 3 символа)..."
-                    value={pubmedQuery}
-                    onChange={e => handlePubMedQueryChange(e.target.value)}
-                />
-
-                <input
-                    type="text"
-                    className={`${s.searchInput} mb-1.5`}
-                    placeholder="PMID или PMCID (напр. PMC3836174)..."
-                    value={pubmedIdQuery}
-                    onChange={e => handlePubMedIdChange(e.target.value)}
-                />
-
-                {/* Результаты с оверлей-спиннером */}
-                <div className={s.pubmedResultsWrap}>
-                    {isSearching && (
-                        <div className={s.searchOverlay}>
-                            <div className={s.loadingSpinner} style={{ width: 20, height: 20 }}></div>
-                        </div>
-                    )}
-                    <div className={s.pubmedResults}>
-                        {pubmedIdResult && <PubMedResultItem r={pubmedIdResult} />}
-                        {pubmedResults
-                            .filter(r => !pubmedIdResult || (
-                                r.pmid !== pubmedIdResult.pmid &&
-                                r.pmcid !== pubmedIdResult.pmcid
-                            ))
-                            .map(r => (
-                                <PubMedResultItem key={r.pmid || r.pmcid || r.title} r={r} />
-                            ))}
-                        {!isSearching && pubmedQuery.length >= 3 && !hasResults && (
-                            <p className="text-xs text-gray-400 p-2">Ничего не найдено</p>
-                        )}
-                        {!isSearching && !pubmedQuery && !pubmedIdQuery && (
-                            <p className="text-xs text-gray-300 p-2">Введите запрос или ID статьи</p>
-                        )}
-                    </div>
-                </div>
             </div>
 
             {contextMenu && (

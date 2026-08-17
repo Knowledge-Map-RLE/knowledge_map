@@ -30,15 +30,15 @@ RUN useradd --create-home --shell /bin/bash app \
 USER app
 
 # Expose the HTTP port
-EXPOSE 50054
+EXPOSE 50059
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -fsS http://localhost:50054/health || exit 1
+    CMD curl -fsS http://localhost:50059/health || exit 1
 
 ENV PYTHONUNBUFFERED=1
 ENV AI_HOST=0.0.0.0
-ENV AI_PORT=50054
+ENV AI_PORT=50059
 
 # Run the uvicorn entry point
 CMD ["python", "src/main.py"]

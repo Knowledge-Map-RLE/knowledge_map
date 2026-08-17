@@ -16,7 +16,7 @@ router = APIRouter(tags=["markdown-validation"])
     summary="Валидация канонического формата markdown",
     description="""
 Валидирует markdown документ на соответствие каноническому формату:
-- YAML frontmatter (опционально)
+- YAML frontmatter с полем doi (обязательны)
 - Ровно один заголовок H1
 - HTML таблицы (не markdown)
 - HTML изображения (не markdown)
@@ -32,7 +32,7 @@ async def validate_markdown(request: ValidateMarkdownRequest):
     Валидация канонического формата markdown.
 
     Проверяет соответствие следующим правилам:
-    1. YAML Frontmatter: опционально, но если есть - должен быть валидным
+    1. YAML Frontmatter с полем doi (обязательны)
     2. H1 heading: ровно один заголовок первого уровня
     3. Tables: только HTML, не markdown таблицы
     4. Images: только HTML, не markdown изображения

@@ -35,10 +35,12 @@ const renderPage = async () => {
     });
 };
 
-const docWithFiles = (uid: string, title: string, hasMarkdown: boolean, pdf = `/files/${uid}.pdf`) => ({
+const docWithFiles = (uid: string, title: string, status: string, isProcessed?: boolean, pdf = `/files/${uid}.pdf`) => ({
     doc_id: uid,
     files: { pdf },
-    has_markdown: hasMarkdown,
+    has_markdown: status === 'annotated',
+    processing_status: status,
+    is_processed: isProcessed ?? status === 'annotated',
     title,
 });
 
@@ -79,7 +81,7 @@ describe('Data_extraction Component', () => {
         await renderPage();
 
         expect(screen.getByText('КАРТА ЗНАНИЙ')).toBeInTheDocument();
-        expect(screen.getByText('Загруженные документы')).toBeInTheDocument();
+        expect(screen.getByText('Документы')).toBeInTheDocument();
         expect(screen.getByText('Перетащите PDF или нажмите для выбора')).toBeInTheDocument();
         expect(screen.getByText('Аннотатор')).toBeInTheDocument();
         expect(screen.getByText('Исходный PDF')).toBeInTheDocument();
@@ -97,8 +99,8 @@ describe('Data_extraction Component', () => {
     test('загружает список документов', async () => {
         (fetch as Mock).mockResolvedValueOnce(
             okJson(listResponse([
-                docWithFiles('doc1', 'Test Paper', false),
-                docWithFiles('doc2', 'Second Paper', true),
+                docWithFiles('doc1', 'Test Paper', 'ready_for_annotation'),
+                docWithFiles('doc2', 'Second Paper', 'annotated'),
             ])),
         );
 
@@ -110,26 +112,29 @@ describe('Data_extraction Component', () => {
         });
     });
 
-    test('показывает статус документов', async () => {
+    test('показывает статусы из сервера', async () => {
         (fetch as Mock).mockResolvedValueOnce(
             okJson(listResponse([
-                docWithFiles('doc1', 'Annotated Doc', true),
-                docWithFiles('doc2', 'Ready Doc', false),
+                docWithFiles('doc1', 'Annotated Doc', 'annotated'),
+                docWithFiles('doc2', 'Ready Doc', 'ready_for_annotation'),
+                docWithFiles('doc3', 'Saved But Invalid', 'ready_for_annotation', false),
             ])),
         );
 
         await renderPage();
 
         await waitFor(() => {
+            // Статус берётся с сервера, а не вычисляется из has_markdown:
+            // документ с сохранённым (но невалидным) markdown не «Аннотирован».
             expect(screen.getByText('Аннотирован')).toBeInTheDocument();
-            expect(screen.getByText('Готов к аннотированию')).toBeInTheDocument();
+            expect(screen.getAllByText('Готов к аннотированию')).toHaveLength(2);
         });
     });
 
     test('позволяет выбрать документ и показывает PDF', async () => {
         (fetch as Mock)
             .mockResolvedValueOnce(
-                okJson(listResponse([docWithFiles('doc1', 'Test Paper', true)])),
+                okJson(listResponse([docWithFiles('doc1', 'Test Paper', 'annotated')])),
             )
             .mockResolvedValueOnce(okJson({ pdf_url: '/files/doc1.pdf' }));
 

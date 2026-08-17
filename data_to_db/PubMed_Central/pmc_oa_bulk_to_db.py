@@ -10,12 +10,13 @@ import datetime
 import re
 import json
 import tarfile
+import hashlib
 from pathlib import Path
 from queue import Queue
 from threading import Thread
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from lxml import etree as LET
-from typing import Dict, Tuple, List, Any
+from typing import Any, Callable, Dict, List, Optional, Tuple
 from neo4j import GraphDatabase, exceptions as neo4j_exceptions
 from tqdm import tqdm
 import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -24,7 +25,7 @@ from xml_to_md_grpc_client import get_xml_to_md_client
 from s3_client import get_s3_client, S3_BUCKET_NAME
 
 # ========== КОНФИГУРАЦИЯ ==========
-DATA_DIR        = Path("D:/Data/PubMed_Central")
+DATA_DIR        = Path("..") / "data" / "PubMed_Central"
 LOG_FILE        = Path("./logs/pmc_oa_bulk_to_db.log")
 CHECKPOINT_FILE = Path("./logs/pmc_parse_checkpoint.txt")
 
@@ -274,12 +275,17 @@ def parse_article_optimized(article, total_articles):
     if pmid_el is not None and pmid_el.text:
         pmid = pmid_el.text.strip()
     
-    pmcid_el = article.find('.//article-id[@pub-id-type="pmc"]')
+    pmcid_el = article.find('.//article-id[@pub-id-type="pmcid"]')
+    if pmcid_el is None:
+        pmcid_el = article.find('.//article-id[@pub-id-type="pmc"]')
     if pmcid_el is not None and pmcid_el.text:
         pmcid = pmcid_el.text.strip()
     
     if not pmid and not pmcid:
-        primary_id = f"temp_id_{total_articles}"
+        # Нет устойчивых идентификаторов — генерируем детерминированный UID
+        # из содержимого статьи, чтобы он не менялся от имени архива/файла.
+        fingerprint = LET.tostring(article, encoding='unicode')
+        primary_id = "id_" + hashlib.sha256(fingerprint.encode("utf-8")).hexdigest()[:20]
         pmid = primary_id
     else:
         primary_id = pmcid or pmid
@@ -355,20 +361,22 @@ def parse_article_optimized(article, total_articles):
     
     body_s3_key = None
     try:
-        # Конвертируем полный article XML в Markdown
-        from xml_to_md_grpc_client import get_xml_to_md_client
-        xml_client = get_xml_to_md_client()
-        if xml_client:
-            article_xml = LET.tostring(article, encoding='unicode')
-            xml_bytes = article_xml.encode('utf-8')
-            result = xml_client.convert_pmc_xml(xml_bytes)
-            if result and result.get('success'):
-                markdown_content = result.get('markdown_content', '')
-                if markdown_content:
-                    from s3_client import get_s3_client
-                    s3 = get_s3_client()
-                    if s3.save_markdown(primary_id, markdown_content):
+        from s3_client import get_s3_client
+        s3 = get_s3_client()
+        # Не перезаписываем уже загруженный Markdown (стабильный UUID статьи).
+        if not s3.article_exists(primary_id):
+            from xml_to_md_grpc_client import get_xml_to_md_client
+            xml_client = get_xml_to_md_client()
+            if xml_client:
+                article_xml = LET.tostring(article, encoding='unicode')
+                xml_bytes = article_xml.encode('utf-8')
+                result = xml_client.convert_pmc_xml(xml_bytes)
+                if result and result.get('success'):
+                    markdown_content = result.get('markdown_content', '')
+                    if markdown_content and s3.save_markdown(primary_id, markdown_content):
                         body_s3_key = f"documents/{primary_id}/{primary_id}.md"
+        else:
+            body_s3_key = f"documents/{primary_id}/{primary_id}.md"
     except Exception as e:
         logger.debug(f"[{primary_id}] Error converting body: {e}")
     
@@ -622,6 +630,9 @@ def ensure_schema():
         session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Article) REQUIRE n.uid IS UNIQUE")
         session.run("CREATE INDEX IF NOT EXISTS FOR (n:Article) ON (n.layout_status)")
         session.run("CREATE INDEX IF NOT EXISTS FOR (n:Article) ON (n.layer, n.level)")
+        session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.uid)")
+        session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.pubmed_id)")
+        session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.doi)")
     logger.info("Schema constraints and indexes ensured")
 
 def reset_database_full():
@@ -665,11 +676,20 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                 })
             tx.run("""
                 UNWIND $nodes AS row
-                  MERGE (n:Document {uid: row.uid})
-                  ON CREATE SET 
+                  WITH row
+                  OPTIONAL MATCH (existing:Document)
+                    WHERE (row.pmid IS NOT NULL AND row.pmid <> '' AND existing.pubmed_id = row.pmid)
+                       OR (row.pmcid IS NOT NULL AND row.pmcid <> '' AND existing.pmc_id = row.pmcid)
+                       OR (row.doi IS NOT NULL AND row.doi <> '' AND existing.doi = row.doi)
+                  WITH row, collect(existing)[0] AS existing
+                  WITH row, CASE WHEN existing IS NOT NULL THEN existing.uid ELSE row.uid END AS uid
+                  MERGE (n:Document {uid: uid})
+                  ON CREATE SET
                       n.original_filename = row.original_filename,
                       n.md5_hash = row.md5_hash,
                       n.s3_key = row.s3_key,
+                      n.docling_raw_md_s3_key = row.docling_raw_md_s3_key,
+                      n.formatted_md_s3_key = row.formatted_md_s3_key,
                       n.title = row.title,
                       n.authors = row.authors,
                       n.abstract = row.abstract,
@@ -682,9 +702,22 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.is_open_access = row.is_open_access,
                       n.is_processed = row.is_processed,
                       n.processing_status = row.processing_status
-                  ON MATCH SET 
-                      n.title = coalesce(row.title, n.title),
-                      n.s3_key = coalesce(row.s3_key, n.s3_key),
+                  ON MATCH SET
+                      n.original_filename = coalesce(n.original_filename, row.original_filename),
+                      n.md5_hash = coalesce(n.md5_hash, row.md5_hash),
+                      n.s3_key = coalesce(n.s3_key, row.s3_key),
+                      n.docling_raw_md_s3_key = coalesce(n.docling_raw_md_s3_key, row.docling_raw_md_s3_key),
+                      n.formatted_md_s3_key = coalesce(n.formatted_md_s3_key, row.formatted_md_s3_key),
+                      n.title = coalesce(n.title, row.title),
+                      n.authors = coalesce(n.authors, row.authors),
+                      n.abstract = coalesce(n.abstract, row.abstract),
+                      n.keywords = coalesce(n.keywords, row.keywords),
+                      n.journal = coalesce(n.journal, row.journal),
+                      n.doi = coalesce(n.doi, row.doi),
+                      n.pubmed_id = coalesce(n.pubmed_id, row.pubmed_id),
+                      n.pmc_id = coalesce(n.pmc_id, row.pmc_id),
+                      n.source = coalesce(n.source, row.source),
+                      n.is_open_access = coalesce(n.is_open_access, row.is_open_access),
                       n.is_processed = row.is_processed,
                       n.processing_status = row.processing_status
             """, nodes=doc_nodes)
@@ -770,10 +803,19 @@ def writer_loop(id: int):
             if item is not None:
                 write_queue.task_done()
 
-# Запускаем писателей
-for i in range(WRITER_COUNT):
-    t = Thread(target=writer_loop, args=(i+1,), daemon=True)
-    t.start()
+# Запускаем писателей лениво (только при вызове функции обработки),
+# чтобы импорт модуля не порождал потоки в долгоживущих процессах (worker.py).
+writer_threads: list = []
+
+
+def ensure_writers():
+    """Проверяет и перезапускает пул потоков-писателей."""
+    global writer_threads
+    writer_threads = [t for t in writer_threads if t.is_alive()]
+    for i in range(len(writer_threads), WRITER_COUNT):
+        t = Thread(target=writer_loop, args=(i + 1,), daemon=True)
+        t.start()
+        writer_threads.append(t)
 
 def run_pre_load_tests() -> bool:
     """
@@ -866,20 +908,9 @@ def process_all():
     logger.info(f"Found {len(files)} archives in S3")
     
     if not files:
-        logger.warning("No archives in S3, downloading from FTP...")
-        try:
-            from .pmc_oa_bulk_ftp_downloader import download_all_files
-            if download_all_files():
-                archives = s3.s3.list_objects(Bucket=ARCHIVE_BUCKET, Prefix=ARCHIVE_PREFIX)
-                files = [obj['Key'] for obj in archives.get('Contents', []) if obj['Key'].endswith('.tar.gz')]
-                files = sorted(files)
-                logger.info(f"Downloaded {len(files)} archives from FTP")
-            else:
-                logger.error("Failed to download from FTP")
-                return
-        except Exception as e:
-            logger.error(f"Error downloading archives: {e}")
-            return
+        logger.warning("No PMC archives in S3 (legacy ftp source is removed). "
+                       "Use new source pmc-oa-opendata via worker.py")
+        return
     
     if not files:
         logger.error("No archives found in S3")
@@ -908,6 +939,7 @@ def process_all():
     # Создаём глобальный прогресс-бар для записи
     global write_progress_bar
     write_progress_bar = tqdm(total=len(files), desc="Writing to Neo4j", unit="file", position=1, leave=True)
+    ensure_writers()
 
     try:
         # Параллельная обработка архивов из S3
@@ -959,6 +991,144 @@ def process_all():
         logger.error(f"Error getting statistics: {e}")
     
     logger.info("Processing completed.")
+
+def _parse_local_xml(path: Path):
+    """Парсит один локальный XML статьи PMC, возвращает (data, rels) или None."""
+    try:
+        with open(path, 'rb') as f:
+            root = LET.parse(f).getroot()
+        if LET.QName(root).localname != 'article':
+            return None
+
+        data, cited_list, _ = parse_article_optimized(root, 1)
+
+        rels = []
+        for cited in cited_list:
+            link_id = cited.get('pmcid') or cited.get('pmid')
+            if link_id:
+                rels.append({
+                    'source_pmid': link_id,
+                    'source_title': cited.get('title'),
+                    'target_pmid': data['uid'],
+                    'target_title': data['title']
+                })
+        return data, rels
+    except Exception as e:
+        logger.error(f"Error processing XML {path.name}: {e}")
+        return None
+
+
+def process_all_local_articles(max_articles: int = 0, on_progress: Optional[Callable[[int, int, str], None]] = None):
+    """Обрабатывает локально скачанные статьи PMC (XML из pmc-oa-opendata) в Neo4j."""
+    global write_progress_bar
+
+    ensure_schema()
+
+    try:
+        with driver.session() as s:
+            s.run("RETURN 1")
+        logger.info("Neo4j connection OK")
+    except Exception as e:
+        logger.error(f"Cannot connect to Neo4j: {e}")
+        return
+
+    articles_dir = DATA_DIR
+    if not articles_dir.exists():
+        logger.error(f"Articles dir not found: {articles_dir}")
+        return
+
+    # Из локальных папок обрабатываем только самую свежую версию статьи.
+    # Имя папки вида PMCxxxx.N, где N — версия пакета; версии могут накапливаться на диске.
+    latest_version_dirs: Dict[str, str] = {}
+    for d in articles_dir.iterdir():
+        if not d.is_dir():
+            continue
+        name = d.name
+        if "." in name:
+            base, ver = name.rsplit(".", 1)
+            if ver.isdigit():
+                cur = latest_version_dirs.get(base)
+                if cur is None or int(ver) > int(cur.rsplit(".", 1)[1]):
+                    latest_version_dirs[base] = name
+        else:
+            latest_version_dirs[name] = name
+
+    latest_dirs = set(latest_version_dirs.values())
+    xml_files = sorted(
+        f for f in articles_dir.glob("*/*.xml") if f.parent.name in latest_dirs
+    )
+    if max_articles > 0:
+        xml_files = xml_files[:max_articles]
+    if not xml_files:
+        logger.warning(f"No XML files found in {articles_dir}")
+        return
+
+    logger.info(f"Found {len(xml_files)} article XML files")
+
+    write_progress_bar = tqdm(total=len(xml_files), desc="Writing to Neo4j", unit="file", position=1, leave=True)
+    ensure_writers()
+
+    nodes, rels = [], []
+    count = 0
+    done = 0
+    total_files = len(xml_files)
+    if on_progress is not None:
+        on_progress(0, total_files, "")
+
+    try:
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            future_to_file = {executor.submit(_parse_local_xml, f): f for f in xml_files}
+            with tqdm(total=total_files, desc="Parsing article XML", unit="article", position=0, leave=True) as pbar:
+                for future in as_completed(future_to_file):
+                    file_key = future_to_file[future]
+                    try:
+                        res = future.result()
+                        if res is not None:
+                            data, article_rels = res
+                            nodes.append(data)
+                            rels.extend(article_rels)
+                            count += 1
+
+                            if count % BATCH_SIZE == 0 and (nodes or rels):
+                                write_queue.put(("local_articles", nodes.copy(), rels.copy()))
+                                nodes.clear()
+                                rels.clear()
+                                import gc
+                                gc.collect()
+                                time.sleep(0.1)
+                    except Exception as e:
+                        logger.error(f"[PARSE-ERR] {file_key}: {e}")
+                    finally:
+                        pbar.update(1)
+                        done += 1
+                        if on_progress is not None:
+                            on_progress(done, total_files, file_key.name)
+    except Exception as e:
+        logger.error(f"[PARSE-ERR] Global processing error: {e}")
+
+    if nodes or rels:
+        write_queue.put(("local_articles", nodes, rels))
+
+    import gc
+    gc.collect()
+    time.sleep(1)
+
+    write_queue.join()
+    for _ in range(WRITER_COUNT):
+        write_queue.put(None)
+
+    if write_progress_bar:
+        write_progress_bar.close()
+
+    try:
+        with driver.session() as s:
+            result = s.run("MATCH (n:Article) RETURN count(n) as total_nodes")
+            logger.info(f"TOTAL nodes loaded to database: {result.single()['total_nodes']}")
+    except Exception as e:
+        logger.error(f"Error getting statistics: {e}")
+
+    logger.info("Processing completed.")
+
 
 if __name__ == "__main__":
     logger.info("Starting optimized PMC OA bulk files processing...")

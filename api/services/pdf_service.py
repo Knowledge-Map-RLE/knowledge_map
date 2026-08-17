@@ -323,8 +323,10 @@ class PDFService:
                                             # Связываем с документом
                                             doc.annotations.connect(annotation)
                                         
-                                        # Обновляем статус документа
-                                        doc.processing_status = "annotated"
+                                        # Статус 'annotated' НЕ присваивается здесь: он назначается
+                                        # только при сохранении валидного markdown через
+                                        # PUT /documents/{id}/markdown.
+                                        doc.processing_status = "ready_for_annotation"
                                         doc.is_processed = True
                                         doc.save()
                                         

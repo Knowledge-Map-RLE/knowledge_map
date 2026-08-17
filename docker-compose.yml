@@ -31,10 +31,10 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - D:/Data/Data_Knowledge_Map/neo4j_data:/data
-      - D:/Data/Data_Knowledge_Map/neo4j_logs:/logs
-      - D:/Data/Data_Knowledge_Map/neo4j_import:/var/lib/neo4j/import
-      - D:/Data/Data_Knowledge_Map/neo4j_plugins:/plugins
+      - ./data/neo4j_data:/data
+      - ./data/neo4j_logs:/logs
+      - ./data/neo4j_import:/var/lib/neo4j/import
+      - ./data/neo4j_plugins:/plugins
     networks:
       - knowledge_map_network
     healthcheck:
@@ -99,7 +99,7 @@ services:
       - AUTH_SERVICE_HOST=auth
       - AUTH_SERVICE_PORT=50057
       - AI_MODEL_SERVICE_HOST=ai
-      - AI_MODEL_SERVICE_PORT=50054
+      - AI_MODEL_SERVICE_PORT=50059
       - NLP_SERVICE_HOST=nlp
       - NLP_SERVICE_PORT=50055
       - S3_ENDPOINT_URL=http://s3:9000
@@ -188,10 +188,10 @@ services:
     container_name: knowledge_map_ai
     restart: unless-stopped
     ports:
-      - "50054:50054"  # gRPC port for AI service
+      - "50059:50059"  # gRPC port for AI service
     environment:
       - GRPC_HOST=0.0.0.0
-      - GRPC_PORT=50054
+      - GRPC_PORT=50059
       - MODEL_CACHE_DIR=/app/models
       - DEFAULT_MODEL=Qwen/Qwen2.5-0.5B-Instruct
       - MODEL_DEVICE=auto
@@ -205,7 +205,7 @@ services:
     networks:
       - knowledge_map_network
     volumes:
-      - D:/Data/Data_Knowledge_Map/ai_models:/app/models
+      - ./data/ai_models:/app/models
     deploy:
       resources:
         limits:
@@ -217,7 +217,7 @@ services:
     # Enable GPU support if available
     runtime: nvidia
     healthcheck:
-      test: ["CMD", "python", "-c", "import grpc; channel = grpc.insecure_channel('localhost:50054'); channel.close()"]
+      test: ["CMD", "python", "-c", "import grpc; channel = grpc.insecure_channel('localhost:50059'); channel.close()"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -250,7 +250,7 @@ services:
     networks:
       - knowledge_map_network
     volumes:
-      - D:/Data/Data_Knowledge_Map/nlp_models:/app/models
+      - ./data/nlp_models:/app/models
       - ./nlp:/app
       - /app/__pycache__
     deploy:
@@ -300,7 +300,7 @@ services:
       MINIO_ROOT_PASSWORD: minio123456
     command: server /s3_data --console-address ":9001"
     volumes:
-      - D:/Data/Data_Knowledge_Map/s3_data:/s3_data
+      - ./data/s3_data:/s3_data
     networks:
       - knowledge_map_network
     healthcheck:

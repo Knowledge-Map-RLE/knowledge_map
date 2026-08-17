@@ -24,7 +24,7 @@ ai/
 ├── tests/unit/test_chat.py # Endpoint tests with a fake provider
 ├── Dockerfile              # Python 3.12, stateless
 ├── pyproject.toml
-└── start.ps1               # Local start (port 50054, stale-process cleanup)
+└── start.ps1               # Local start (port 50059, stale-process cleanup)
 ```
 
 ## Running
@@ -35,17 +35,17 @@ poetry install
 .\start.ps1
 ```
 
-Service listens on **port 50054**. OpenAPI docs: `http://localhost:50054/docs`.
+Service listens on **port 50059**. OpenAPI docs: `http://localhost:50059/docs`.
 
 ### Quick check
 
 ```powershell
-curl http://localhost:50054/health
-curl http://localhost:50054/v1/models
+curl http://localhost:50059/health
+curl http://localhost:50059/v1/models
 ```
 
 ```powershell
-curl -X POST http://localhost:50054/v1/chat/completions `
+curl -X POST http://localhost:50059/v1/chat/completions `
   -H "Content-Type: application/json" `
   -d '{"model":"qwen/qwen3-4b","messages":[{"role":"user","content":"Hello"}],"stream":false}'
 ```
@@ -54,7 +54,7 @@ curl -X POST http://localhost:50054/v1/chat/completions `
 
 | Variable | Description | Default |
 |---|---|---|
-| `AI_HOST` / `AI_PORT` | Bind address of the gateway | `0.0.0.0` / `50054` |
+| `AI_HOST` / `AI_PORT` | Bind address of the gateway | `0.0.0.0` / `50059` |
 | `DEFAULT_PROVIDER` | Provider used when no model is given | `lm-studio` |
 | `DEFAULT_MODEL` | Default model | `qwen/qwen3-4b` |
 | `AI_BASE_URL` | LM Studio base URL (provider shorthand) | `http://localhost:1234/v1` |

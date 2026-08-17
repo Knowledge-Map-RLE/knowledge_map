@@ -101,8 +101,7 @@ async def list_documents_route(
     doc_repo=Depends(get_document_repository),
 ):
     """Список документов из Neo4j с пагинацией."""
-    import asyncio
-    docs, total = await asyncio.to_thread(list_documents, repo=doc_repo, skip=skip, limit=limit)
+    docs, total = list_documents(repo=doc_repo, skip=skip, limit=limit)
     return {
         "success": True,
         "total_count": total,
@@ -134,9 +133,8 @@ async def search_documents_route(
     doc_repo=Depends(get_document_repository),
 ):
     """Нечёткий поиск документов по названию через APOC Levenshtein."""
-    import asyncio
     use_case = SearchDocumentsUseCase(repo=doc_repo)
-    docs, total = await asyncio.to_thread(use_case.execute, q=q, skip=skip, limit=limit)
+    docs, total = use_case.execute(q=q, skip=skip, limit=limit)
     return {
         "success": True,
         "total_count": total,
@@ -170,6 +168,8 @@ async def update_document_markdown(
     _user: dict = Depends(get_current_user),
 ):
     """Обновляет markdown документа с опциональной валидацией."""
+    from fastapi import HTTPException
+
     validation_result = None
 
     # Валидация через NLP сервис
@@ -183,7 +183,6 @@ async def update_document_markdown(
                 strict_mode=strict,
             )
             if strict and not validation_result.get("is_valid"):
-                from fastapi import HTTPException
                 raise HTTPException(
                     status_code=400,
                     detail={
@@ -194,6 +193,17 @@ async def update_document_markdown(
         except HTTPException:
             raise
         except Exception as e:
+            # При явном запросе аннотирования нельзя молча сохранить без валидации:
+            # статус 'annotated' присваивается только валидному markdown.
+            if request_body.annotate:
+                logger.error(f"[documents] Сервис валидации markdown недоступен для doc_id={doc_id}: {e}")
+                raise HTTPException(
+                    status_code=503,
+                    detail=(
+                        "Сервис валидации markdown недоступен. "
+                        "Документ не сохранён и статус не изменён. Повторите попытку позже."
+                    ),
+                )
             logger.warning(f"[documents] Валидация markdown не удалась: {e}")
 
     # Статус 'annotated' присваивается только для валидного markdown:

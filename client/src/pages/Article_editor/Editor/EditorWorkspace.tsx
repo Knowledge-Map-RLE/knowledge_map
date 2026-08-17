@@ -2,7 +2,6 @@ import React, { useState, useCallback, useRef, useMemo } from 'react';
 import StructuredBlockEditor from './StructuredBlockEditor';
 import StatementsPanel from './StatementsPanel';
 import MarkdownPreview from './MarkdownPreview';
-import AgentChat from './AgentChat';
 import AuthorBadge from './AuthorBadge';
 import { blocksToStatementsRaw } from './blockConverter';
 import type { KnowledgeStatement, ArticleBlockData, AuthorInfo } from '../model';
@@ -25,14 +24,14 @@ interface EditorWorkspaceProps {
     articleUuid?: string;
     articleAuthor?: AuthorInfo | null;
     onUploadImage?: (key: string, file: File) => Promise<string>;
-    onExtracted?: (docId: string, blocks: ArticleBlockData[]) => Promise<void>;
+    onCreateNew?: () => void;
 }
 
 const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     text, statements, blocks,
     isParsing, parseProgress, parseError,
     onAddBlock, onDeleteBlock, onUpdateBlock, onReorderBlocks,
-    onSave, saveStatus, docId, articleUuid, articleAuthor, onUploadImage, onExtracted,
+    onSave, saveStatus, docId, articleUuid, articleAuthor, onUploadImage, onCreateNew,
 }) => {
     const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
     const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
@@ -116,6 +115,16 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                 padding: '8px 12px', borderBottom: '1px solid #e5e7eb',
                 background: '#f9fafb', flexShrink: 0,
             }}>
+                <button
+                    onClick={onCreateNew}
+                    style={{
+                        padding: '4px 12px', fontSize: 12, fontWeight: 500,
+                        background: '#6366f1', color: 'white',
+                        border: 'none', borderRadius: 4, cursor: 'pointer',
+                    }}
+                >
+                    + Новая статья
+                </button>
                 <div style={{ flex: 1 }} />
                 <button
                     onClick={onSave}
@@ -185,22 +194,6 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                     />
                 </div>
 
-                <div className={styles.editorColumnSm}>
-                    <div className={styles.editorColumnHeader}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
-                        {'AI \u0410\u0433\u0435\u043D\u0442'}
-                    </div>
-                    <AgentChat
-                        articleUuid={articleUuid}
-                        blocks={blocks}
-                        statements={statements}
-                        text={text}
-                        onExtracted={onExtracted}
-                    />
-                </div>
             </div>
 
             {showTriplets && (

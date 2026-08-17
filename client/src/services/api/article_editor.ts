@@ -21,6 +21,15 @@ export interface SaveTextResponse {
     message?: string;
 }
 
+export interface SaveBlocksResponse {
+    success: boolean;
+    message?: string;
+    uid?: string;
+    blocks_count?: number;
+    statements?: KnowledgeStatement[];
+    statements_count?: number;
+}
+
 export interface SaveStatementsResponse {
     success: boolean;
     statement_ids?: string[];
@@ -109,7 +118,7 @@ export async function saveStatements(docId: string, statements: SaveStatementPay
     });
 }
 
-export async function saveBlocks(docId: string, blocks: ArticleBlockData[]): Promise<SaveTextResponse> {
+export async function saveBlocks(docId: string, blocks: ArticleBlockData[]): Promise<SaveBlocksResponse> {
     return fetchJson(`/api/article_editor/articles/${encodeURIComponent(docId)}/blocks`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
