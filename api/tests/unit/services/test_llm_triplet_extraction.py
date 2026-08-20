@@ -3,8 +3,7 @@
 Проверяют детерминированные правки поверх LLM-выхода:
 - `_dedupe_t27` — схлопывание дублей T27 по значению pValue;
 - `_add_deterministic_sections` — добавление T51/T47, если модель их не выдала;
-- `_attach_sequence_from_t4` — привязка существующих T4 к контейнерам без
-  sequence (по полному вхождению имени контейнера в текст T4).
+- `_add_uuidrefs` — замена повторяющихся терминов на UUID определяющего T4.
 """
 
 import json
@@ -12,9 +11,7 @@ import json
 import pytest
 
 from services.llm_triplet_extraction_service import (
-    CONTAINER_TYPES,
     LLMTripletExtractionService,
-    _sequence_items,
 )
 
 
@@ -88,60 +85,8 @@ class TestAddDeterministicSections:
         assert json.loads(t47["data"]["sequence"]) == [blocks[0]["uuid"]]
 
 
-class TestAttachSequenceFromT4:
-    def _blocks(self):
-        t4_body = _b(4, {"subject": "body mass", "predicate": "измеряли", "object": "еженедельно"})
-        t4_unrelated = _b(4, {"subject": "A", "predicate": "B", "object": "C"})
-        t57 = _b(57, {"parameter": "body mass", "direction": "повышено"})
-        t22 = _b(22, {"subject": "Acomys", "predicate": "является", "object": "моделью"})
-        return [t4_body, t4_unrelated, t57, t22]
-
-    def test_attaches_existing_t4_to_container_without_seq(self):
-        blocks = self._blocks()
-        out = LLMTripletExtractionService._attach_sequence_from_t4(blocks)
-        t57 = next(b for b in out if b["blockType"] == 57)
-        seq = json.loads(t57["data"]["sequence"])
-        assert seq == [blocks[0]["uuid"]]
-
-    def test_respects_target_ratio(self):
-        # 4 контейнера, эталонная доля 0.7788 -> target = round(0.7788*4) = 3.
-        # Привязка идёт только пока не набрано 3 контейнера с sequence.
-        blocks = self._blocks() + [
-            _b(56, {"stepName": "body mass"}),   # ещё один контейнер с матчем
-            _b(57, {"parameter": "body mass"}),
-        ]
-        out = LLMTripletExtractionService._attach_sequence_from_t4(blocks)
-        with_seq = sum(
-            1
-            for b in out
-            if int(b["blockType"]) in CONTAINER_TYPES and any(_sequence_items(b))
-        )
-        assert with_seq <= 3
-
-    def test_single_word_name_not_attached(self):
-        t4 = _b(4, {"subject": "Acomys", "predicate": "B", "object": "C"})
-        t57 = _b(57, {"parameter": "Acomys"})
-        out = LLMTripletExtractionService._attach_sequence_from_t4([t4, t57])
-        t57_out = next(b for b in out if b["blockType"] == 57)
-        assert "sequence" not in t57_out["data"]
-
-    def test_no_t4_no_change(self):
-        t57 = _b(57, {"parameter": "body mass"})
-        out = LLMTripletExtractionService._attach_sequence_from_t4([t57])
-        assert out == [t57]
-
-    def test_never_exceeds_reference_ratio_much(self):
-        # Много кандидатов: привязка ограничена target-долей.
-        t4 = _b(4, {"subject": "body mass", "predicate": "измеряли", "object": "еженедельно"})
-        containers = [_b(57, {"parameter": "body mass"}) for _ in range(10)]
-        out = LLMTripletExtractionService._attach_sequence_from_t4([t4] + containers)
-        with_seq = sum(1 for b in out if int(b["blockType"]) in CONTAINER_TYPES and "sequence" in b["data"])
-        assert with_seq <= 8
-
-
 class TestAddUuidrefs:
     def test_replaces_frequent_short_term_with_defining_uuid(self):
-        # «мышь» — SUBJECT определяющего T4, повторяется 3+ раз в S/O других T4.
         defining = _b(4, {"subject": "мышь", "predicate": "помещали на", "object": "балку"})
         t4a = _b(4, {"subject": "мышь", "predicate": "проходила", "object": "тест"})
         t4b = _b(4, {"subject": "оценка", "predicate": "активности", "object": "мышь"})
@@ -152,166 +97,22 @@ class TestAddUuidrefs:
         refs = {b["uuid"]: b["data"] for b in out if b["blockType"] == 4}
         assert refs[t4a["uuid"]]["subject"] == defining["uuid"]
         assert refs[t4b["uuid"]]["object"] == defining["uuid"]
-        # определяющий триплет сохраняет текст
         assert refs[defining["uuid"]]["subject"] == "мышь"
-        # не-повторяющийся короткий термин не трогается
         assert refs[t4c["uuid"]]["object"] == "C"
 
     def test_defining_own_subject_kept(self):
-        # Сам определяющий T4 не заменяет собственный SUBJECT на свой же UUID.
         defining = _b(4, {"subject": "мышь", "predicate": "помещали на", "object": "балку"})
         out = LLMTripletExtractionService._add_uuidrefs([defining])
         assert out[0]["data"]["subject"] == "мышь"
 
     def test_multiword_term_not_replaced(self):
-        # Многословный объект «у стареющих a. russatus» не заменяется (как в эталоне).
         defining = _b(4, {"subject": "кластерин", "predicate": "ингибирует", "object": "воспаление"})
         other = _b(4, {"subject": "накопление", "predicate": "кластерина", "object": "у стареющих a. russatus"})
         out = LLMTripletExtractionService._add_uuidrefs([defining, other])
         assert out[1]["data"]["object"] == "у стареющих a. russatus"
 
     def test_rare_term_not_replaced(self):
-        # Частота ниже min_freq=3 — без замены.
         defining = _b(4, {"subject": "мышь", "predicate": "помещали на", "object": "балку"})
         other = _b(4, {"subject": "мышь", "predicate": "проходила", "object": "тест"})
         out = LLMTripletExtractionService._add_uuidrefs([defining, other])
         assert out[1]["data"]["subject"] == "мышь"
-
-
-class TestParseStructureJson:
-    """Тесты парсинга Stage 1 через Pydantic-схему StructureResponse."""
-
-    def test_valid_json_with_tag(self):
-        text = json.dumps({
-            "blocks": [
-                {"blockType": 22, "data": {"subject": "A", "predicate": "B", "object": "C"}, "tag": "{B1}"},
-                {"blockType": 7, "data": {"name": "intro"}, "tag": "{B2}"},
-            ]
-        })
-        out = LLMTripletExtractionService._parse_structure_json(text)
-        assert len(out) == 2
-        assert out[0]["tag"] == "{B1}"
-        assert out[0]["blockType"] == 22
-        assert out[1]["tag"] == "{B2}"
-
-    def test_filters_block_type_4(self):
-        text = json.dumps({
-            "blocks": [
-                {"blockType": 22, "data": {"x": 1}, "tag": "{B1}"},
-                {"blockType": 4, "data": {"subject": "A", "predicate": "B", "object": "C"}, "tag": "{B2}"},
-            ]
-        })
-        out = LLMTripletExtractionService._parse_structure_json(text)
-        assert len(out) == 1
-        assert out[0]["blockType"] == 22
-
-    def test_json_with_code_fence(self):
-        text = '```json\n{"blocks": [{"blockType": 16, "data": {"name": "X"}, "tag": "{B3}"}]}\n```'
-        out = LLMTripletExtractionService._parse_structure_json(text)
-        assert len(out) == 1
-        assert out[0]["tag"] == "{B3}"
-
-    def test_empty_blocks(self):
-        text = json.dumps({"blocks": []})
-        out = LLMTripletExtractionService._parse_structure_json(text)
-        assert out == []
-
-    def test_invalid_json(self):
-        out = LLMTripletExtractionService._parse_structure_json("not json at all")
-        assert out == []
-
-    def test_missing_blocks_key(self):
-        text = json.dumps({"data": [1, 2, 3]})
-        out = LLMTripletExtractionService._parse_structure_json(text)
-        assert out == []
-
-    def test_non_dict_block_skipped(self):
-        text = json.dumps({"blocks": ["not a dict", 42]})
-        out = LLMTripletExtractionService._parse_structure_json(text)
-        assert out == []
-
-    def test_missing_tag_defaults_to_empty(self):
-        text = json.dumps({"blocks": [{"blockType": 23, "data": {"k": "v"}}]})
-        out = LLMTripletExtractionService._parse_structure_json(text)
-        assert out[0]["tag"] == ""
-
-    def test_empty_string_input(self):
-        out = LLMTripletExtractionService._parse_structure_json("")
-        assert out == []
-
-    def test_none_input(self):
-        out = LLMTripletExtractionService._parse_structure_json(None)
-        assert out == []
-
-
-class TestParseAtomizeJson:
-    """Тесты парсинга Stage 2 через Pydantic-схему AtomizeResponse."""
-
-    def test_old_format_with_sequences(self):
-        text = json.dumps({
-            "blocks": [
-                {"blockType": 4, "data": {"subject": "A", "predicate": "p", "object": "B"}, "container": "{B1}"},
-            ],
-            "sequences": {"{B1}": ["{SEQ1}", "{SEQ2}"]},
-        })
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
-        assert len(blocks) == 1
-        assert blocks[0]["blockType"] == 4
-        assert blocks[0]["container"] == "{B1}"
-        assert seqs["{B1}"] == ["{SEQ1}", "{SEQ2}"]
-
-    def test_new_format_container_tag(self):
-        text = json.dumps({
-            "blocks": [
-                {"blockType": 4, "data": {"subject": "X", "predicate": "y", "object": "Z"}, "container": "{B1}"},
-            ],
-        })
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
-        assert len(blocks) == 1
-        assert "{B1}" in seqs
-        # Новый формат: seqs содержит list с фейковыми номерами
-        assert isinstance(seqs["{B1}"], list)
-
-    def test_filters_non_t4_blocks(self):
-        text = json.dumps({
-            "blocks": [
-                {"blockType": 22, "data": {"x": 1}, "container": "{B1}"},
-                {"blockType": 4, "data": {"y": 2}, "container": "{B2}"},
-            ],
-        })
-        blocks, _ = LLMTripletExtractionService._parse_atomize_json(text)
-        assert len(blocks) == 1
-        assert blocks[0]["blockType"] == 4
-
-    def test_multiple_fragments(self):
-        text = (
-            '{"blocks": [{"blockType": 4, "data": {"a": 1}, "container": "{B1}"}]}'
-            '{"blocks": [{"blockType": 4, "data": {"b": 2}, "container": "{B2}"}]}'
-        )
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
-        assert len(blocks) == 2
-
-    def test_empty_input(self):
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json("")
-        assert blocks == []
-        assert seqs == {}
-
-    def test_invalid_json(self):
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json("garbage")
-        assert blocks == []
-        assert seqs == {}
-
-    def test_missing_blocks_key(self):
-        text = json.dumps({"sequences": {"{B1}": ["{SEQ1}"]}})
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
-        assert blocks == []
-
-    def test_non_dict_block_skipped(self):
-        text = json.dumps({"blocks": ["bad", 123, None]})
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
-        assert blocks == []
-
-    def test_container_default_empty(self):
-        text = json.dumps({"blocks": [{"blockType": 4, "data": {"s": "v"}}]})
-        blocks, seqs = LLMTripletExtractionService._parse_atomize_json(text)
-        assert blocks[0]["container"] == ""

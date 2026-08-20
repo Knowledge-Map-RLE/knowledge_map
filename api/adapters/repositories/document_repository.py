@@ -9,6 +9,7 @@ Forbidden imports: fastapi, web, grpc, aioboto3
 from __future__ import annotations
 
 import logging
+import re
 from typing import Optional, List, Tuple
 
 from neomodel import DoesNotExist, db
@@ -18,6 +19,23 @@ from domain.models.document import Document
 from domain.exceptions import NotFoundError
 
 logger = logging.getLogger(__name__)
+
+_STOP_WORDS = frozenset({
+    "a", "an", "the", "of", "and", "or", "in", "on", "at", "to", "for",
+    "is", "are", "was", "were", "be", "been", "being",
+    "by", "with", "from", "as", "into", "that", "this", "it",
+    "not", "but", "if", "than", "then", "so", "no", "nor",
+    "its", "their", "our", "your", "his", "her",
+    "also", "may", "can", "will", "would", "could", "should",
+    "has", "have", "had", "do", "does", "did",
+    "about", "between", "through", "during", "before", "after",
+})
+
+
+def _strip_stop_words(q: str) -> str:
+    words = q.split()
+    stripped = [w for w in words if w.lower() not in _STOP_WORDS]
+    return " ".join(stripped) if stripped else q
 
 
 def _orm_to_domain(orm_doc: OrmDocument) -> Document:
@@ -166,13 +184,14 @@ class DocumentRepository:
             if limit is not None and limit <= 0:
                 return []
 
-            # Только user-uploaded документы.
-            # PubMed-ноды (миллионы) не должны показываться в списке загрузок.
-            # Equality-фильтр по source использует range index — мгновенно.
-            cypher = """
-                MATCH (d:Document)
-                WHERE d.source = 'upload'
-                RETURN d.uid as uid,
+            eff_limit = limit or 100
+
+            # Два быстрых запроса вместо одного медленного ORDER BY CASE:
+            # 1) upload-документы (range index по source — мгновенно)
+            # 2) не-upload документы с LIMIT (без сортировки по source — full scan)
+            # UNION ALL сохраняет приоритет: upload наверху.
+            _FIELDS = """
+                       d.uid as uid,
                        d.original_filename as original_filename,
                        d.title as title,
                        d.processing_status as processing_status,
@@ -190,18 +209,39 @@ class DocumentRepository:
                        d.is_open_access as is_open_access,
                        d.error_message as error_message,
                        d.md5_hash as md5_hash
-                ORDER BY coalesce(d.upload_date, 0.0) DESC
+            """
+            cypher = f"""
+                MATCH (d:Document) WHERE d.source = 'upload'
+                RETURN {_FIELDS}
+                ORDER BY d.uid ASC
+                SKIP $skip
+                LIMIT $limit
+                UNION ALL
+                MATCH (d:Document) WHERE d.source IN ['pubmed', 'pmc']
+                RETURN {_FIELDS}
                 SKIP $skip
                 LIMIT $limit
             """
-            params: dict = {"skip": skip, "limit": limit or 1000}
+            params: dict = {"skip": skip, "limit": eff_limit}
 
             results, _ = db.cypher_query(cypher, params)
             elapsed = time.monotonic() - t0
             if elapsed > 2:
                 logger.warning(f"list_all took {elapsed:.1f}s for {len(results)} docs (skip={skip}, limit={limit})")
 
-            return [_row_to_domain(row) for row in results]
+            # Убираем дубли (на случай пересечения) и обрезаем до limit
+            seen = set()
+            docs: List[Document] = []
+            for row in results:
+                uid = row[0]
+                if uid in seen:
+                    continue
+                seen.add(uid)
+                docs.append(_row_to_domain(row))
+                if len(docs) >= eff_limit:
+                    break
+
+            return docs
         except Exception as e:
             elapsed = time.monotonic() - t0
             logger.error(f"list_all failed after {elapsed:.1f}s: {e}")
@@ -212,7 +252,7 @@ class DocumentRepository:
         t0 = time.monotonic()
         try:
             results, _ = db.cypher_query(
-                "MATCH (d:Document) WHERE d.source = 'upload' RETURN count(d) as total"
+                "MATCH (d:Document) RETURN count(d) as total"
             )
             elapsed = time.monotonic() - t0
             if elapsed > 2:
@@ -237,53 +277,124 @@ class DocumentRepository:
             logger.error(f"list_all_with_count failed: {e}")
             return [], 0
 
+    _SEARCH_FIELDS = """
+        d.uid as uid,
+        d.original_filename as original_filename,
+        d.title as title,
+        d.processing_status as processing_status,
+        d.is_processed as is_processed,
+        d.source as source,
+        d.s3_key as s3_key,
+        d.s3_bucket as s3_bucket,
+        d.file_size as file_size,
+        d.upload_date as upload_date,
+        d.docling_raw_md_s3_key as docling_raw_md_s3_key,
+        d.formatted_md_s3_key as formatted_md_s3_key,
+        d.user_md_s3_key as user_md_s3_key,
+        d.pubmed_id as pubmed_id,
+        d.pmc_id as pmc_id,
+        d.is_open_access as is_open_access,
+        d.error_message as error_message,
+        d.md5_hash as md5_hash
+    """
+
+    @staticmethod
+    def _is_doi(q: str) -> bool:
+        stripped = q.strip()
+        return stripped.startswith("10.") and "/" in stripped
+
+    def _search_by_exact_field(
+        self,
+        field: str,
+        value: str,
+        skip: int,
+        limit: int,
+    ) -> Tuple[List[Document], int]:
+        cypher = f"""
+            MATCH (d:Document) WHERE d.{field} = $val
+            RETURN {self._SEARCH_FIELDS}
+            SKIP $skip LIMIT $limit
+        """
+        results, _ = db.cypher_query(cypher, {"val": value, "skip": skip, "limit": limit})
+        if results:
+            count_cypher = f"MATCH (d:Document) WHERE d.{field} = $val RETURN count(d)"
+            cnt, _ = db.cypher_query(count_cypher, {"val": value})
+            total = cnt[0][0] if cnt else len(results)
+            return [_row_to_domain(row) for row in results], total
+        return [], 0
+
     def search(
         self,
         q: str,
         skip: int = 0,
         limit: int = 100,
     ) -> Tuple[List[Document], int]:
-        """
-        Полнотекстовый поиск по title и original_filename через Neo4j fulltext index.
-        Ищет по ВСЕМ документам (включая PubMed), ранжирует по score + аннотированность.
-        """
+        import time
+        t0 = time.monotonic()
         try:
             if not q.strip():
                 return self.list_all(skip=skip, limit=limit), self.count_all()
 
             query = q.strip()
 
-            cypher = """
+            if self._is_doi(query):
+                results, total = self._search_by_exact_field("doi", query, skip, limit)
+                elapsed = time.monotonic() - t0
+                if elapsed > 3:
+                    logger.warning(f"DOI search took {elapsed:.1f}s for doi={query}")
+                return results, total
+
+            if query.isdigit():
+                results, total = self._search_by_exact_field("pubmed_id", query, skip, limit)
+                elapsed = time.monotonic() - t0
+                if elapsed > 3:
+                    logger.warning(f"PMID search took {elapsed:.1f}s for pmid={query}")
+                return results, total
+
+            if query.upper().startswith("PMC") and query[3:].isdigit():
+                results, total = self._search_by_exact_field("pmc_id", query.upper(), skip, limit)
+                elapsed = time.monotonic() - t0
+                if elapsed > 3:
+                    logger.warning(f"PMCID search took {elapsed:.1f}s for pmcid={query}")
+                return results, total
+
+            ft_query = _strip_stop_words(query)
+
+            uid_cypher = """
                 CALL db.index.fulltext.queryNodes('doc_fulltext', $q)
                 YIELD node as d, score
-                WITH d, score,
-                     CASE WHEN d.source = 'upload' THEN 1000 ELSE 0 END AS upload_bonus
+                WITH d.uid AS uid, d.source AS source, score
+                WHERE score > 0.1
+                WITH uid, source, score,
+                     CASE WHEN source = 'upload' THEN 1000 ELSE 0 END AS upload_bonus
                 ORDER BY upload_bonus DESC, score DESC
                 SKIP $skip
                 LIMIT $limit
-                RETURN d.uid as uid,
-                       d.original_filename as original_filename,
-                       d.title as title,
-                       d.processing_status as processing_status,
-                       d.is_processed as is_processed,
-                       d.source as source,
-                       d.s3_key as s3_key,
-                       d.s3_bucket as s3_bucket,
-                       d.file_size as file_size,
-                       d.upload_date as upload_date,
-                       d.docling_raw_md_s3_key as docling_raw_md_s3_key,
-                       d.formatted_md_s3_key as formatted_md_s3_key,
-                       d.user_md_s3_key as user_md_s3_key,
-                       d.pubmed_id as pubmed_id,
-                       d.pmc_id as pmc_id,
-                       d.is_open_access as is_open_access,
-                       d.error_message as error_message,
-                       d.md5_hash as md5_hash
+                RETURN uid
             """
-            params = {"q": query, "skip": skip, "limit": limit}
-            results, _ = db.cypher_query(cypher, params)
-            total = len(results)
-            return [_row_to_domain(row) for row in results], total
+            uid_results, _ = db.cypher_query(uid_cypher, {"q": ft_query, "skip": skip, "limit": limit})
+            uids = [row[0] for row in uid_results if row[0]]
+            elapsed_ft = time.monotonic() - t0
+            if elapsed_ft > 2:
+                logger.warning(f"fulltext UIDs phase took {elapsed_ft:.1f}s for q={query!r}, uids={len(uids)}")
+
+            if not uids:
+                return [], 0
+
+            fetch_cypher = f"""
+                MATCH (d:Document) WHERE d.uid IN $uids
+                RETURN {self._SEARCH_FIELDS}
+            """
+            fetch_results, _ = db.cypher_query(fetch_cypher, {"uids": uids})
+            uid_order = {uid: i for i, uid in enumerate(uids)}
+            sorted_rows = sorted(fetch_results, key=lambda row: uid_order.get(row[0], 999))
+
+            total = len(uid_results) if len(uid_results) < limit else len(uid_results) + skip
+            elapsed = time.monotonic() - t0
+            if elapsed > 3:
+                logger.warning(f"fulltext search took {elapsed:.1f}s for q={query!r}, rows={len(sorted_rows)}")
+            return [_row_to_domain(row) for row in sorted_rows], total
         except Exception as e:
-            logger.error(f"search failed: {e}")
+            elapsed = time.monotonic() - t0
+            logger.error(f"search failed after {elapsed:.1f}s: {e}")
             return [], 0

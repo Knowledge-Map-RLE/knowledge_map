@@ -118,7 +118,8 @@ async def list_documents_route(
                 "has_markdown": d.get_active_markdown_key() is not None,
                 "pubmed_id": d.pubmed_id,
                 "pmc_id": d.pmc_id,
-                "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key else {},
+                "doi": d.doi,
+                "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key and d.source == "upload" else {},
             }
             for d in docs
         ],
@@ -132,7 +133,7 @@ async def search_documents_route(
     limit: int = Query(100, ge=1, le=1000),
     doc_repo=Depends(get_document_repository),
 ):
-    """Нечёткий поиск документов по названию через APOC Levenshtein."""
+    """Нечёткий поиск документов по названию через Neo4j fulltext index."""
     use_case = SearchDocumentsUseCase(repo=doc_repo)
     docs, total = use_case.execute(q=q, skip=skip, limit=limit)
     return {
@@ -152,7 +153,8 @@ async def search_documents_route(
                 "has_markdown": d.get_active_markdown_key() is not None,
                 "pubmed_id": d.pubmed_id,
                 "pmc_id": d.pmc_id,
-                "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key else {},
+                "doi": d.doi,
+                "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key and d.source == "upload" else {},
             }
             for d in docs
         ],

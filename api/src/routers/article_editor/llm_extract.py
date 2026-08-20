@@ -26,7 +26,6 @@ service = ArticleEditorService()
 class LlmExtractRequest(BaseModel):
     text: str = ""
     doc_id: str = ""
-    lang: str = "ru"
     model: str = DEFAULT_MODEL
     save: bool = True
 
@@ -41,16 +40,14 @@ async def llm_extract_blocks(
 ):
     """Извлекает структурные блоки из текста статьи через LLM (SSE-поток).
 
+    Unified one-stage извлечение: вся статья за один LLM-вызов.
+
     События:
-        {type: "start", total}
-        {type: "progress", processed, total}
+        {type: "start", total: 1}
         {type: "result", data: {success, blocks, summary, chunks}}
         {type: "error", message}
         {type: "cancelled"}
         data: [DONE]
-
-    Запуск выполняется в отдельном потоке (LLM-вызовы блокирующие),
-    сохранение блоков — после успешного извлечения, если req.save.
     """
     text = (req.text or "").strip()
     if not text:
@@ -66,20 +63,6 @@ async def llm_extract_blocks(
     article_title = (article or {}).get("title", "") or ""
 
     extractor = LLMTripletExtractionService()
-    try:
-        chunks = extractor.split_into_chunks(text)
-    except Exception as exc:  # pragma: no cover - защита от изменения API
-        logger.warning("split_into_chunks failed: %s", exc)
-        chunks = [text]
-    total = len(chunks)
-    if total == 0:
-        return StreamingResponse(
-            iter([
-                _event({"type": "error", "message": "Не удалось разбить текст на чанки"}),
-                "data: [DONE]\n\n",
-            ]),
-            media_type="text/event-stream",
-        )
 
     q: "queue.Queue[Optional[Dict[str, Any]]]" = queue.Queue()
     result_holder: Dict[str, Any] = {}
@@ -92,14 +75,9 @@ async def llm_extract_blocks(
                 text=text,
                 article_title=article_title,
                 model_id=req.model,
-                lang=req.lang,
-                progress_cb=lambda idx, reports: q.put(
-                    {"type": "progress", "processed": idx + 1, "total": total}
-                ),
-                cancel_event=cancel_event,
             )
             result_holder["result"] = result
-        except Exception as exc:  # pragma: no cover - внешние ошибки LLM/клиента
+        except Exception as exc:
             logger.exception("LLM extraction failed for %s", doc_id)
             result_holder["error"] = str(exc)
         finally:
@@ -110,7 +88,7 @@ async def llm_extract_blocks(
 
     async def event_generator():
         try:
-            yield _event({"type": "start", "total": total})
+            yield _event({"type": "start", "total": 1})
             while True:
                 try:
                     evt = q.get_nowait()
@@ -143,7 +121,7 @@ async def llm_extract_blocks(
                     if not saved.get("success"):
                         logger.warning("save_blocks failed for %s: %s", doc_id, saved.get("message", ""))
                         result["save_error"] = saved.get("message", "Не удалось сохранить блоки")
-                except Exception as exc:  # pragma: no cover - защита от сбоя Neo4j
+                except Exception as exc:
                     logger.exception("save_blocks failed for %s", doc_id)
                     result["save_error"] = str(exc)
             yield _event({"type": "result", "data": result})

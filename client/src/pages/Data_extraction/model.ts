@@ -11,6 +11,10 @@ export interface PDFDocument {
     processing_status: string;
     is_processed: boolean;
     pdf_url?: string;
+    source?: string;
+    pubmed_id?: string;
+    pmc_id?: string;
+    doi?: string;
 }
 
 export type DataExtractionTab = 'pdf' | 'markdown' | 'annotator' | 'patterns' | 'linguistic-graph' | 'graph' | 'chat';

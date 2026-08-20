@@ -54,6 +54,7 @@ function sval(data: Record<string, BlockDataValue>, key: string): string {
     const v = data[key];
     if (typeof v === 'string') return v;
     if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+    if (Array.isArray(v)) return JSON.stringify(v);
     return '';
 }
 

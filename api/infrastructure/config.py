@@ -60,15 +60,16 @@ class Settings(BaseSettings):
     API_PORT: int = 8000
 
     # LLM Extraction (triplet extraction from articles)
-    LLM_EXTRACT_MODEL: str = "qwen/qwen3-4b"
+    LLM_EXTRACT_MODEL: str = "gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest"
     LLM_MAX_CHUNK_CHARS: int = 7000
-    LLM_MAX_TOKENS: int = 20000
-    LLM_TIMEOUT: int = 900
-    LLM_TEMPERATURE: float = 0.2
+    LLM_MAX_TOKENS: int = 80000
+    LLM_TIMEOUT: int = 600
+    LLM_TEMPERATURE: float = 0.1
     LLM_MAX_RETRIES: int = 2
     LLM_SEQ_REF_RATIO: float = 0.7788
     LLM_UUIDREF_MAX_WORDS: int = 1
     LLM_UUIDREF_MIN_FREQ: int = 3
+    LLM_WHOLE_ARTICLE_MAX_CHARS: int = 100000
 
     # Debug режим
     DEBUG: bool = False

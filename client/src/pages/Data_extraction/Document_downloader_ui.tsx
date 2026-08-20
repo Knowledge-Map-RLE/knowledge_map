@@ -23,6 +23,8 @@ interface PDFDocument {
     pdf_url?: string;
     pubmed_id?: string;
     pmc_id?: string;
+    doi?: string;
+    source?: string;
 }
 
 export interface DocumentListHandle {
@@ -94,7 +96,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             const timeoutMs = 60000;
             const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-            const data = await listDocuments(0, 200, controller.signal);
+            const data = await listDocuments(0, 100, controller.signal);
             clearTimeout(timeoutId);
 
             if (!data?.success || !Array.isArray(data.documents)) {
@@ -121,6 +123,8 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                         pdf_url,
                         pubmed_id: d.pubmed_id,
                         pmc_id: d.pmc_id,
+                        doi: d.doi,
+                        source: d.source,
                     } as PDFDocument;
                 } catch {
                     return {
@@ -281,6 +285,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
         }
 
         const isId = /^\d+$/.test(q) || /^PMC\d+$/i.test(q);
+        const isDoi = /^10\.\d{4,}\/\S+$/i.test(q.trim());
 
         if (isId) {
             // PMID / PMCID — прямой поиск по ID
@@ -303,8 +308,9 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 }
             }, 400);
         } else {
-            // Текстовый запрос — параллельно ищем по документам и в PubMed
+            // Текстовый запрос — ищем по локальным документам (Neo4j fulltext)
             setPubmedIdResult(null);
+            setPubmedResults([]);
             searchDebounceRef.current = window.setTimeout(async () => {
                 const controller = new AbortController();
                 searchAbortRef.current = controller;
@@ -325,6 +331,8 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                         pdf_url: d.files?.pdf ? `${(import.meta as any).env?.VITE_API_BASE_URL || ''}${d.files.pdf}` : '',
                         pubmed_id: d.pubmed_id,
                         pmc_id: d.pmc_id,
+                        doi: d.doi,
+                        source: d.source,
                     } as PDFDocument));
                     setSearchResults(mapped);
                 } catch (err: any) {
@@ -333,24 +341,6 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                     setSearchResults([]);
                 }
             }, 300);
-
-            pubmedDebounceRef.current = window.setTimeout(async () => {
-                const controller = new AbortController();
-                pubmedAbortRef.current = controller;
-                const timeoutId = setTimeout(() => controller.abort(), 20000);
-                setIsPubMedSearching(true);
-                try {
-                    const resp = await searchPubMed(q, 10, controller.signal);
-                    setPubmedResults(resp.results || []);
-                } catch (err: any) {
-                    if (err.name === 'AbortError') return;
-                    console.error('PubMed search error:', err);
-                    setPubmedResults([]);
-                } finally {
-                    clearTimeout(timeoutId);
-                    setIsPubMedSearching(false);
-                }
-            }, 500);
         }
 
         return () => {
@@ -520,6 +510,12 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             const doc = item.doc;
             const displayName = doc.title || doc.original_filename || doc.uid;
             const progressText = getProgressText(doc.processing_status, doc.uid);
+            const sourceTag = doc.source && doc.source !== 'upload'
+                ? <span className="text-gray-400 text-[10px] ml-1">[{doc.source}]</span>
+                : null;
+            const doiTag = doc.doi
+                ? <span className="text-gray-500 text-[10px] ml-1" title={doc.doi}>DOI</span>
+                : null;
             return (
                 <div
                     className={`${s.docItem} ${selectedDocument?.uid === doc.uid ? s.docItemSelected : ''}`}
@@ -534,6 +530,8 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                         <p className={s.docItemTitle} title={displayName}>{displayName}</p>
                         <p className={s.docItemMeta}>
                             {getStatusText(doc.processing_status)}
+                            {sourceTag}
+                            {doiTag}
                             {progressText && <span className="text-blue-600 font-semibold"> {progressText}</span>}
                         </p>
                     </div>
@@ -613,7 +611,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 <input
                     type="text"
                     className={`${s.searchInput} mt-2`}
-                    placeholder="Поиск по документам и PubMed (запрос, PMID или PMCID)..."
+                    placeholder="Поиск: название, DOI, PMID или PMCID..."
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                 />

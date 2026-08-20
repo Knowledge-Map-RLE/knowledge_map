@@ -1,4 +1,5 @@
 /models
+/tools/llm_extract/*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

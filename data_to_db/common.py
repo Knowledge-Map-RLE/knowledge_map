@@ -21,11 +21,20 @@ def get_driver(pool_size: int = 2):
 
 def load_checkpoint(checkpoint_file: Path) -> set[str]:
     if not checkpoint_file.exists():
-        return set()
+        # Fallback: try backup file
+        bak = checkpoint_file.with_suffix(".bak.txt")
+        if bak.exists():
+            checkpoint_file = bak
+        else:
+            return set()
     return set(line.strip() for line in checkpoint_file.read_text().splitlines() if line.strip())
 
 
 def append_checkpoint(checkpoint_file: Path, fname: str) -> None:
+    # Дедупликация: не дописываем если имя уже есть в файле
+    existing = load_checkpoint(checkpoint_file)
+    if fname in existing:
+        return
     with checkpoint_file.open("a", encoding="utf-8") as f:
         f.write(fname + "\n")
 

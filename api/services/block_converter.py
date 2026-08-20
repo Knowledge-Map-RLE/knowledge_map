@@ -141,6 +141,8 @@ def _str(val: Dict[str, Any], key: str) -> str:
         return v.strip()
     if isinstance(v, (int, float)) and not isinstance(v, bool):
         return str(v)
+    if isinstance(v, list):
+        return json.dumps(v, ensure_ascii=False)
     return ""
 
 

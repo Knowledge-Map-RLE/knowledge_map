@@ -641,6 +641,7 @@ def process_all_files(
     max_files: int = 0,
     reset_db: bool = False,
     on_progress: Optional[Callable[[int, int, str], None]] = None,
+    checkpoint_file: Optional[Path] = None,
 ):
     """Главная функция обработки - вызывается из worker.py.
 
@@ -649,10 +650,13 @@ def process_all_files(
         max_files: ограничение количества обрабатываемых файлов (0 — все).
         reset_db: очистить базу данных перед загрузкой.
         on_progress: колбэк (обработано, всего, текущий файл) для прогресса обработки.
+        checkpoint_file: путь к файлу чекпоинта (по умолчанию CHECKPOINT_FILE).
     """
     if LOADER_DISABLED:
         logger.info("PubMed loader is disabled by config, skipping")
         return
+
+    ckpt = checkpoint_file if checkpoint_file else CHECKPOINT_FILE
 
     ensure_schema()
 
@@ -671,7 +675,7 @@ def process_all_files(
         logger.error(f"Не найдено файлов для обработки в {data_dir}")
         return
 
-    processed = load_checkpoint(CHECKPOINT_FILE)
+    processed = load_checkpoint(ckpt)
     if processed:
         files = [f for f in files if f.name not in processed]
         logger.info(
@@ -733,7 +737,7 @@ def process_all_files(
     # Помечаем чекпойнтом только файлы, чьи батчи полностью записаны успешно
     for fname in completed_files:
         if fname not in failed_write_files:
-            append_checkpoint(CHECKPOINT_FILE, fname)
+            append_checkpoint(ckpt, fname)
             logger.info(f"[CHKPT] {fname}")
 
     # Показываем итоговую статистику

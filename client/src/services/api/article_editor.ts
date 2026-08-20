@@ -241,7 +241,6 @@ export async function parseTextStream(
 export interface ExtractBlocksRequest {
     text: string;
     docId: string;
-    lang?: 'ru' | 'en';
     model?: string;
     save?: boolean;
 }
@@ -272,7 +271,6 @@ export async function extractBlocksStream(
         body: JSON.stringify({
             text: req.text,
             doc_id: req.docId,
-            lang: req.lang || 'ru',
             model: req.model,
             save: req.save !== false,
         }),

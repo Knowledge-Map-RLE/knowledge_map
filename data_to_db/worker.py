@@ -459,17 +459,20 @@ class DataDownloadWorker:
         update_downloader = PubMedDownloader("PubMed Update", "/pubmed/updatefiles/", update_dir)
         pmc_downloader = PmcOaOpendataDownloader()
 
+        baseline_ckpt = Path("./logs/parse_checkpoint_baseline.txt")
+        update_ckpt = Path("./logs/parse_checkpoint_update.txt")
+
         self.runners["PubMed Baseline"] = SourceDownloadRunner(
             name="PubMed Baseline",
             downloader=baseline_downloader,
-            process_callable=lambda on_progress: pubmed_process(data_dir=baseline_dir, on_progress=on_progress),
+            process_callable=lambda on_progress: pubmed_process(data_dir=baseline_dir, on_progress=on_progress, checkpoint_file=baseline_ckpt),
             neo4j_driver=self.driver,
             api_url=API_BASE_URL,
         )
         self.runners["PubMed Update"] = SourceDownloadRunner(
             name="PubMed Update",
             downloader=update_downloader,
-            process_callable=lambda on_progress: pubmed_process(data_dir=update_dir, on_progress=on_progress),
+            process_callable=lambda on_progress: pubmed_process(data_dir=update_dir, on_progress=on_progress, checkpoint_file=update_ckpt),
             neo4j_driver=self.driver,
             api_url=API_BASE_URL,
         )

@@ -214,7 +214,6 @@ async def _ensure_document_indexes():
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.pubmed_id)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.pmc_id)",
-        "CREATE FULLTEXT INDEX doc_fulltext IF NOT EXISTS FOR (d:Document) ON EACH [d.title, d.original_filename]",
     ]
     try:
         from neomodel import db
@@ -223,7 +222,43 @@ async def _ensure_document_indexes():
                 db.cypher_query(cypher)
             except Exception as e:
                 logger.warning(f"[startup] INDEX FAIL: {cypher[:60]}... {e}")
-        logger.info("[startup] Индексы Document созданы/подтверждены")
+
+        # Fulltext-индекс: проверяем текущий состав полей и пересоздаём только если нужно
+        _DESIRED_FT_FIELDS = {"title", "original_filename", "doi", "pubmed_id", "pmc_id"}
+        try:
+            r, _ = db.cypher_query(
+                "SHOW FULLTEXT INDEXES YIELD name, properties, state, populationPercent "
+                "WHERE name = 'doc_fulltext' RETURN properties, state, populationPercent"
+            )
+            if r and r[0]:
+                raw_fields = r[0][0] or []
+                current_fields = {f.replace("d.", "") for f in raw_fields}
+                idx_state = r[0][1]
+                pop_pct = r[0][2]
+            else:
+                current_fields = set()
+                idx_state = "MISSING"
+                pop_pct = 0
+            logger.info(f"[startup] Fulltext index state={idx_state} pop={pop_pct}% fields={current_fields}")
+        except Exception:
+            current_fields = set()
+            idx_state = "MISSING"
+            pop_pct = 0
+
+        if current_fields != _DESIRED_FT_FIELDS:
+            logger.info(f"[startup] Fulltext index fields changed: {current_fields} → {_DESIRED_FT_FIELDS}, recreating...")
+            try:
+                db.cypher_query("DROP INDEX doc_fulltext IF EXISTS")
+            except Exception:
+                pass
+            db.cypher_query(
+                "CREATE FULLTEXT INDEX doc_fulltext "
+                "FOR (d:Document) "
+                "ON EACH [d.title, d.original_filename, d.doi, d.pubmed_id, d.pmc_id]"
+            )
+            logger.info("[startup] Fulltext index recreated (background population may take minutes)")
+        else:
+            logger.info("[startup] Fulltext index already up to date, skipping")
     except Exception as e:
         logger.warning(f"[startup] Не удалось создать индексы: {e}")
 

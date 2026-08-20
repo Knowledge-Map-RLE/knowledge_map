@@ -1696,6 +1696,16 @@
     transition: width 0.3s ease;
 }
 
+.agentChatExtractFillIndeterminate {
+    width: 40%;
+    animation: agentChatExtractSlide 1.4s ease-in-out infinite;
+}
+
+@keyframes agentChatExtractSlide {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+}
+
 .agentChatExtractLabel {
     font-size: 10px;
     color: #6b7280;

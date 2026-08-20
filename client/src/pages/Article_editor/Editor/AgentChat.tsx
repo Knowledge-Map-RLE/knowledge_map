@@ -67,7 +67,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     const [sending, setSending] = useState(false);
     const [initializing, setInitializing] = useState(false);
     const [extracting, setExtracting] = useState(false);
-    const [extractProgress, setExtractProgress] = useState<{ processed: number; total: number } | null>(null);
+    const [extractElapsed, setExtractElapsed] = useState(0);
     const [extractError, setExtractError] = useState<string | null>(null);
     const [attachEnabled, setAttachEnabled] = useState(false);
     const [attachSource, setAttachSource] = useState<string | null>(null);
@@ -88,6 +88,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     const attachTextRef = useRef<string>('');
     const copyTimerRef = useRef<number | null>(null);
     const estimateTimerRef = useRef<number | null>(null);
+    const extractTimerRef = useRef<number | null>(null);
     const estimateSeqRef = useRef(0);
     const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -254,6 +255,23 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
         scheduleEstimate(input.trim());
     }, [input, chat, scheduleEstimate]);
 
+    useEffect(() => {
+        if (extracting) {
+            setExtractElapsed(0);
+            const started = Date.now();
+            extractTimerRef.current = window.setInterval(() => {
+                setExtractElapsed(Math.floor((Date.now() - started) / 1000));
+            }, 1000);
+            return () => {
+                if (extractTimerRef.current != null) {
+                    clearInterval(extractTimerRef.current);
+                    extractTimerRef.current = null;
+                }
+            };
+        }
+        return undefined;
+    }, [extracting]);
+
     const handleExtract = useCallback(async () => {
         if (!requireAuth()) return;
         if (!articleUuid) {
@@ -262,7 +280,6 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
         }
         if (extracting || sending) return;
         setExtractError(null);
-        setExtractProgress(null);
         setExtracting(true);
         try {
             let text = '';
@@ -274,15 +291,14 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                 setExtractError('\u041D\u0435\u0442 \u0442\u0435\u043A\u0441\u0442\u0430 \u0441\u0442\u0430\u0442\u044C\u0438 \u0434\u043B\u044F \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u044F');
                 return;
             }
-            const lang = /\p{Script=Cyrillic}/u.test(text) ? 'ru' : 'en';
             const controller = new AbortController();
             extractControllerRef.current = controller;
             await extractBlocksStream(
-                { text, docId: articleUuid, lang, save: true },
+                { text, docId: articleUuid, save: true },
                 {
                     signal: controller.signal,
-                    onStart: (total) => setExtractProgress({ processed: 0, total }),
-                    onProgress: (p) => setExtractProgress(p),
+                    onStart: () => {},
+                    onProgress: () => {},
                     onResult: async (data) => {
                         if (data?.success && Array.isArray(data.blocks)) {
                             await onExtracted?.(articleUuid, data.blocks);
@@ -302,7 +318,6 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
             }
         } finally {
             setExtracting(false);
-            setExtractProgress(null);
             extractControllerRef.current = null;
         }
     }, [articleUuid, extracting, sending, loadArticleText, editorText, onExtracted, requireAuth]);
@@ -624,21 +639,14 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                         >
                             {'\u2B15 \u041F\u0440\u0435\u0440\u0432\u0430\u0442\u044C'}
                         </button>
-                        {extractProgress && extractProgress.total > 0 && (
-                            <div className={styles.agentChatExtractProgress}>
-                                <div className={styles.agentChatExtractBar}>
-                                    <div
-                                        className={styles.agentChatExtractFill}
-                                        style={{
-                                            width: `${Math.min(100, (extractProgress.processed / extractProgress.total) * 100)}%`,
-                                        }}
-                                    />
-                                </div>
-                                <span className={styles.agentChatExtractLabel}>
-                                    {`\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E \u0447\u0430\u043D\u043A\u043E\u0432: ${extractProgress.processed}/${extractProgress.total}`}
-                                </span>
+                        <div className={styles.agentChatExtractProgress}>
+                            <div className={styles.agentChatExtractBar}>
+                                <div className={`${styles.agentChatExtractFill} ${styles.agentChatExtractFillIndeterminate}`} />
                             </div>
-                        )}
+                            <span className={styles.agentChatExtractLabel}>
+                                {`\u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F... ${extractElapsed}\u00a0\u0441\u0435\u043A`}
+                            </span>
+                        </div>
                     </>
                 ) : (
                     <button

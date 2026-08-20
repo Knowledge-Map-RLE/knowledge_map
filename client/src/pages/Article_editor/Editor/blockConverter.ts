@@ -80,6 +80,7 @@ function str(val: Record<string, BlockDataValue>, key: string): string {
     const v = val[key];
     if (typeof v === 'string') return v.trim();
     if (typeof v === 'number' && !Number.isNaN(v)) return String(v);
+    if (Array.isArray(v)) return JSON.stringify(v);
     return '';
 }
 

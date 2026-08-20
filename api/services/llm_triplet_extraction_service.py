@@ -1,17 +1,14 @@
 """LLM-извлечение структуры блоков из научной статьи.
 
-Сервис разбивает текст статьи (русский перевод) на чанки, для каждого чанка
-вызывает AI-микросервис (`ai_model_client.generate_text`) с промптом
-`llm_triplet_extraction_prompt`, собирает JSON-ответы, присваивает UUIDv8
-каждому блоку и резолвит плейсхолдеры ``{SEQn}`` → реальные UUID.
+Сервис вызывает AI-микросервис (`ai_model_client.generate_text`) с unified
+промптом для полной статьи, присваивает UUIDv8 каждому блоку и резолвит
+плейсхолдеры ``{Bn}``/``{SEQn}`` → реальные UUID.
 
-Выход: полная структура блоков `[{instanceId, blockType, data, order}]` —
-контейнеры (T14/T19/T22/T38/T56/T57 и др.) + атомарные T4-триплеты,
-связанные через поле ``data.sequence``.
+Выход: полная структура блоков `[{instanceId, blockType, data, order}]`.
 
 Пример:
     service = LLMTripletExtractionService()
-    result = service.extract(doc_id="...", text="...русский текст...")
+    result = service.extract(doc_id="...", text="...")
     result["blocks"]  # list[dict] готово к PUT /blocks
 """
 
@@ -24,22 +21,10 @@ import threading
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from src.uuid8 import uuid8_str
-from src.schemas.llm_extract import (
-    AtomizeBlock,
-    AtomizeResponse,
-    StructureBlock,
-    StructureResponse,
-)
 from . import settings
 from .ai_model_client import get_ai_model_client
-from .llm_triplet_extraction_prompt import (
-    build_atomize_prompt,
-    build_prompt,
-    build_structure_prompt,
-)
 from .llm_triplet_extraction_prompt_en import (
-    build_atomize_prompt_en,
-    build_structure_prompt_en,
+    build_unified_prompt_en,
 )
 
 logger = logging.getLogger(__name__)
@@ -141,83 +126,6 @@ class LLMTripletExtractionService:
         return out
 
     # ── LLM ──────────────────────────────────────────────────────────────────
-    def call_llm(
-        self,
-        chunk: str,
-        article_title: str,
-        *,
-        model_id: str = DEFAULT_MODEL,
-        temperature: float = DEFAULT_TEMPERATURE,
-        max_tokens: int = DEFAULT_MAX_TOKENS,
-        timeout: int = DEFAULT_TIMEOUT,
-    ) -> Dict[str, Any]:
-        prompt = build_prompt(article_title=article_title, chunk_text=chunk)
-        result = self.client.generate_text(
-            model_id=model_id,
-            prompt=prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            enable_chunking=True,
-            timeout=timeout,
-        )
-        return result
-
-    def call_llm_structure(
-        self,
-        chunk: str,
-        article_title: str,
-        *,
-        model_id: str = DEFAULT_MODEL,
-        temperature: float = DEFAULT_TEMPERATURE,
-        max_tokens: int = DEFAULT_MAX_TOKENS,
-        timeout: int = DEFAULT_TIMEOUT,
-        lang: str = "ru",
-    ) -> Dict[str, Any]:
-        """Stage 1: извлечение контейнерных блоков (без T4)."""
-        if lang == "en":
-            prompt = build_structure_prompt_en(article_title=article_title, chunk_text=chunk)
-        else:
-            prompt = build_structure_prompt(article_title=article_title, chunk_text=chunk)
-        result = self.client.generate_text(
-            model_id=model_id,
-            prompt=prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            enable_chunking=True,
-            timeout=timeout,
-        )
-        return result
-
-    def call_llm_atomize(
-        self,
-        chunk: str,
-        article_title: str,
-        containers_json: str,
-        *,
-        model_id: str = DEFAULT_MODEL,
-        temperature: float = DEFAULT_TEMPERATURE,
-        max_tokens: int = DEFAULT_MAX_TOKENS,
-        timeout: int = DEFAULT_TIMEOUT,
-        lang: str = "ru",
-    ) -> Dict[str, Any]:
-        """Stage 2: разложение контейнеров чанка на атомарные T4-триплеты."""
-        if lang == "en":
-            prompt = build_atomize_prompt_en(
-                article_title=article_title, chunk_text=chunk, containers_json=containers_json
-            )
-        else:
-            prompt = build_atomize_prompt(
-                article_title=article_title, chunk_text=chunk, containers_json=containers_json
-            )
-        result = self.client.generate_text(
-            model_id=model_id,
-            prompt=prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            enable_chunking=True,
-            timeout=timeout,
-        )
-        return result
 
     @staticmethod
     def _repair_common_json(text: str) -> str:
@@ -331,110 +239,6 @@ class LLMTripletExtractionService:
             out.append({"blockType": bt, "data": d})
         return out
 
-    @staticmethod
-    def _parse_structure_json(generated_text: str) -> List[Dict[str, Any]]:
-        """Извлекает контейнерные блоки ответа Stage 1 (с тегами {Bn}).
-
-        JSON-ремонт (``_extract_json``) остаётся как нормализация перед
-        парсингом через Pydantic-схему ``StructureResponse``.
-        """
-        data = LLMTripletExtractionService._extract_json(generated_text or "")
-        if data is None:
-            return []
-        try:
-            resp = StructureResponse.model_validate(data)
-        except Exception:
-            blocks_raw = data.get("blocks") if isinstance(data, dict) else None
-            if not isinstance(blocks_raw, list):
-                return []
-            resp = StructureResponse(blocks=[
-                StructureBlock.model_validate(b)
-                for b in blocks_raw
-                if isinstance(b, dict)
-            ])
-        out: List[Dict[str, Any]] = []
-        for sb in resp.blocks:
-            if sb.blockType == 4:
-                continue  # T4 выводит только Stage 2
-            d = dict(sb.data)
-            if not d:
-                d = {}
-            out.append({
-                "blockType": sb.blockType,
-                "data": d,
-                "tag": sb.tag.strip(),
-            })
-        return out
-
-    @staticmethod
-    def _parse_atomize_json(generated_text: str) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-        """Извлекает (T4-блоки, sequences-маппинг) из ответа Stage 2.
-
-        Модель может вернуть либо ``sequences``-мапу (старый формат), либо
-        ``container``-тег на каждом T4 (новый формат). ``container``-тег
-        конвертируется в sequences-мапу {B-тег: [порядковые номера]}.
-
-        JSON-ремонт (``_extract_json``/``_extract_json_fragments``) остаётся
-        как нормализация перед парсингом через Pydantic-схему ``AtomizeResponse``.
-        """
-        data = LLMTripletExtractionService._extract_json(generated_text or "")
-        fragments: List[Dict[str, Any]] = []
-        if data is not None:
-            fragments.append(data)
-        else:
-            fragments = LLMTripletExtractionService._extract_json_fragments(generated_text or "")
-        if not fragments:
-            return [], {}
-
-        blocks: List[Dict[str, Any]] = []
-        sequences: Dict[str, Any] = {}
-        for frag in fragments:
-            try:
-                resp = AtomizeResponse.model_validate(frag)
-                for ab in resp.blocks:
-                    if ab.blockType != 4:
-                        continue
-                    blocks.append({
-                        "blockType": 4,
-                        "data": dict(ab.data),
-                        "container": ab.container.strip(),
-                    })
-                if resp.sequences:
-                    sequences.update(resp.sequences)
-            except Exception:
-                blocks_raw = frag.get("blocks") if isinstance(frag, dict) else None
-                if not isinstance(blocks_raw, list):
-                    continue
-                for b in blocks_raw:
-                    if not isinstance(b, dict):
-                        continue
-                    try:
-                        bt = int(b.get("blockType", b.get("type", 0)))
-                    except (TypeError, ValueError):
-                        bt = 0
-                    if bt != 4:
-                        continue
-                    d = b.get("data")
-                    if not isinstance(d, dict):
-                        d = {k: v for k, v in b.items() if k not in ("blockType", "type", "container")}
-                    container = str(b.get("container", "") or "").strip()
-                    blocks.append({"blockType": 4, "data": d, "container": container})
-                seqs = frag.get("sequences")
-                if isinstance(seqs, dict):
-                    sequences.update(seqs)
-
-        # Новый формат: container-тег на каждом T4 → sequences-мапа.
-        by_container: Dict[str, List[int]] = {}
-        for i, b in enumerate(blocks, start=1):
-            ctag = b.get("container", "")
-            if ctag and ctag in sequences:
-                continue  # старый формат уже дал мапу — не перетирать
-            if ctag:
-                by_container.setdefault(ctag, []).append(i)
-        if by_container and not sequences:
-            sequences = {tag: [f"{{SEQ{n}}}" for n in nums] for tag, nums in by_container.items()}
-        return blocks, sequences
-
     # ── Post-processing ──────────────────────────────────────────────────────
     @staticmethod
     def _resolve_tags(
@@ -451,129 +255,6 @@ class LLMTripletExtractionService:
                 for k, v in value.items()
             }
         return value
-
-    @staticmethod
-    def _compact_containers(containers: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Сжимает контейнеры до {tag, blockType, name} для Stage 2.
-
-        Полные data передавать не нужно — текст разбирается из чанка. Имя
-        контейнера берётся из ключевого поля (напр. stepName для T56).
-        """
-        name_keys = {
-            1: "title", 2: "subject", 7: "hypothesis", 14: "experimentName",
-            16: "mechanism", 18: "intervention", 19: "species", 20: "conclusions",
-            22: "subject", 23: "term", 37: "statProcessing", 38: "claimSubject",
-            39: "limitations", 40: "sideFindings", 44: "novelty", 46: "futureResearch",
-            47: "references", 51: "funding", 54: "subject", 55: "groupName",
-            56: "stepName", 57: "parameter",
-        }
-        out: List[Dict[str, Any]] = []
-        for c in containers:
-            bt = int(c.get("blockType", 0))
-            data = c.get("data") or {}
-            name = ""
-            key = name_keys.get(bt)
-            if key:
-                v = data.get(key)
-                if isinstance(v, str):
-                    name = v
-            out.append({"tag": c.get("tag", ""), "blockType": bt, "name": name})
-        return out
-
-    def _merge_chunk(
-        self,
-        containers: Sequence[Dict[str, Any]],
-        t4s: Sequence[Dict[str, Any]],
-        sequences: Dict[str, Any],
-    ) -> List[Dict[str, Any]]:
-        """Собирает блоки одного чанка двухстадийного извлечения.
-
-        Контейнерам присваиваются UUID (мапа тегов {Bn}), T4-триплетам — UUID
-        (мапа {SEQn}). ``{Bn}`` внутри data контейнеров (steps/findings/pValue)
-        и ``{SEQn}`` внутри T4 резолвятся в UUID. Поле ``sequence`` контейнера
-        сериализуется в JSON-строку (как в эталоне). Порядок: контейнеры в
-        порядке появления, затем все T4.
-        """
-        tag_to_uuid: Dict[str, str] = {}
-        tag_num_to_uuid: Dict[int, str] = {}
-        container_blocks: List[Dict[str, Any]] = []
-        for c in containers:
-            uid = uuid8_str()
-            tag = str(c.get("tag", "") or "").strip()
-            if tag:
-                tag_to_uuid[tag] = uid
-                mt = _BTAG_RE.match(tag)
-                if mt:
-                    tag_num_to_uuid[int(mt.group(1))] = uid
-            container_blocks.append(
-                {
-                    "blockType": int(c.get("blockType", 0)),
-                    "data": dict(c.get("data") or {}),
-                    "uuid": uid,
-                    "tag": tag,
-                }
-            )
-
-        seq_to_uuid: Dict[int, str] = {}
-        t4_blocks: List[Dict[str, Any]] = []
-        for i, t in enumerate(t4s, start=1):
-            uid = uuid8_str()
-            seq_to_uuid[i] = uid
-            t4_blocks.append(
-                {"blockType": 4, "data": dict(t.get("data") or {}), "uuid": uid}
-            )
-
-        for b in container_blocks:
-            b["data"] = self._resolve_tags(b["data"], _BTAG_RE, tag_num_to_uuid)
-
-        for b in container_blocks:
-            refs = sequences.get(b["tag"], [])
-            if not isinstance(refs, list):
-                continue
-            uuids: List[str] = []
-            for ref in refs:
-                m = _PLACEHOLDER_RE.search(str(ref))
-                if m and int(m.group(1)) in seq_to_uuid:
-                    uuids.append(seq_to_uuid[int(m.group(1))])
-            if uuids:
-                b["data"]["sequence"] = json.dumps(uuids)
-
-        for b in t4_blocks:
-            b["data"] = self._resolve_tags(b["data"], _PLACEHOLDER_RE, seq_to_uuid)
-
-        return container_blocks + t4_blocks
-
-    def postprocess_two_stage(
-        self,
-        chunk_results: Sequence[Tuple[List[Dict[str, Any]], List[Dict[str, Any]], Dict[str, Any]]],
-        article_text: Optional[str] = None,
-    ) -> List[Dict[str, Any]]:
-        """Объединяет результаты всех чанков двухстадийного извлечения.
-
-        После объединения добавляет детерминированные секции, которые модель
-        4B надёжно не выдаёт даже при наличии в чанке: T51 «Финансирование»
-        (раздел ``## Финансирование`` чётко отделён в тексте) и T47 «Связи с
-        предыдущими исследованиями» (обёртка над prior-work T4-триплетами).
-        """
-        merged: List[Dict[str, Any]] = []
-        for containers, t4s, sequences in chunk_results:
-            merged.extend(self._merge_chunk(containers, t4s, sequences))
-        merged = self._dedupe_t27(merged)
-        merged = self._add_deterministic_sections(merged, article_text)
-        merged = self._dedupe_t1(merged)
-        merged = self._drop_t54_credits(merged)
-        merged = self._attach_sequence_from_t4(merged)
-        merged = self._trim_sequence_overfill(merged)
-        merged = self._add_uuidrefs(merged)
-        return [
-            {
-                "instanceId": b["uuid"],
-                "blockType": b["blockType"],
-                "data": b["data"],
-                "order": i,
-            }
-            for i, b in enumerate(merged)
-        ]
 
     _PRIOR_WORK_RE = re.compile(
         r"предыдущ|ранее описан|описанных метод|предыдущей литератур|"
@@ -753,42 +434,6 @@ class LLMTripletExtractionService:
             )
         ]
 
-    @classmethod
-    def _trim_sequence_overfill(
-        cls, blocks: List[Dict[str, Any]], ref_ratio: float = settings.LLM_SEQ_REF_RATIO
-    ) -> List[Dict[str, Any]]:
-        """Срезает избыточное sequence-покрытие до эталонной доли.
-
-        Модель перепривязывает контейнеры (EN: 0.9685 против 0.7788 в эталоне).
-        Удаляем ``sequence`` у контейнеров с самыми короткими списками, пока
-        доля контейнеров с sequence не опустится до ``ref_ratio``. Зеркально
-        ``_attach_sequence_from_t4``: тот повышает недобор, этот срезает перебор.
-        """
-        containers = [b for b in blocks if int(b.get("blockType", 0)) in CONTAINER_TYPES]
-        if not containers:
-            return blocks
-        target = int(round(ref_ratio * len(containers)))
-        with_seq = [
-            b for b in containers
-            if any(isinstance(x, str) and x.strip() for x in _sequence_items(b))
-        ]
-        if len(with_seq) <= target:
-            return blocks
-        excess = len(with_seq) - target
-        by_len = sorted(
-            with_seq, key=lambda b: (len([x for x in _sequence_items(b) if x]), b.get("order", 0))
-        )
-        strip_ids = {str(b.get("uuid", "")) for b in by_len[:excess]}
-        out: List[Dict[str, Any]] = []
-        for b in blocks:
-            if str(b.get("uuid", "")) in strip_ids:
-                data = dict(b.get("data") or {})
-                data.pop("sequence", None)
-                out.append({**b, "data": data})
-            else:
-                out.append(b)
-        return out
-
     @staticmethod
     def _add_uuidrefs(
         blocks: List[Dict[str, Any]],
@@ -848,92 +493,6 @@ class LLMTripletExtractionService:
                 out.append(b)
         return out
 
-    # Имена-поля контейнеров, по которым ищется атомизация (для seq-привязки).
-    _CONTAINER_NAME_KEYS = {
-        7: "hypothesis",
-        16: "mechanism",
-        22: "subject",
-        23: "term",
-        37: "statProcessing",
-        38: "claimSubject",
-        39: "limitations",
-        40: "sideFindings",
-        44: "novelty",
-        46: "futureResearch",
-        47: "references",
-        56: "stepName",
-        57: "parameter",
-    }
-    _NORM_KEEP = re.compile(r"[^0-9a-zа-яё]+")
-
-    @classmethod
-    def _attach_sequence_from_t4(
-        cls, blocks: List[Dict[str, Any]], ref_ratio: float = settings.LLM_SEQ_REF_RATIO
-    ) -> List[Dict[str, Any]]:
-        """Привязывает существующие T4 к контейнерам без sequence.
-
-        Модель 4B иногда забывает заполнить ``data.sequence`` у контейнеров,
-        даже если атомизация для них уже создана (T4 с текстом, содержащим
-        имя контейнера). Метод находит такие контейнеры и восстанавливает
-        связь, но не более чем до доли ``ref_ratio`` (доля контейнеров с
-        sequence в эталоне) — перелет штрафуется метрикой seq симметрично.
-
-        Кандидаты сортируются по числу слов в имени контейнера (больше слов
-        = более специфичное совпадение), чтобы привязки были надёжными.
-        """
-        containers = [b for b in blocks if int(b.get("blockType", 0)) in CONTAINER_TYPES]
-        if not containers:
-            return blocks
-        target = int(round(ref_ratio * len(containers)))
-        with_seq = {
-            b.get("uuid")
-            for b in containers
-            if any(isinstance(x, str) and x.strip() for x in _sequence_items(b))
-        }
-        if len(with_seq) >= target:
-            return blocks
-
-        t4_index: List[tuple] = []
-        for b in blocks:
-            if int(b.get("blockType", 0)) == 4:
-                d = b.get("data") or {}
-                text = cls._NORM_KEEP.sub(
-                    " ", " ".join(str(d.get(k, "")) for k in ("subject", "predicate", "object"))
-                ).strip().lower()
-                t4_index.append((b.get("uuid"), text))
-
-        candidates: List[tuple] = []
-        for c in containers:
-            if c.get("uuid") in with_seq:
-                continue
-            bt = int(c.get("blockType", 0))
-            key = cls._CONTAINER_NAME_KEYS.get(bt)
-            raw_name = str((c.get("data") or {}).get(key, "")) if key else ""
-            name = cls._NORM_KEEP.sub(" ", raw_name).strip().lower()
-            words = name.split()
-            if len(words) < 2:
-                continue
-            matches = [uid for uid, text in t4_index if name in text]
-            if matches:
-                candidates.append((len(words), bt, c.get("uuid"), name, matches))
-
-        candidates.sort(key=lambda x: (-x[0], x[1]))
-        attach = blocks
-        for n_words, bt, uid, name, matches in candidates:
-            if len(with_seq) >= target:
-                break
-            if uid in with_seq:
-                continue
-            seq = json.dumps(matches[:3])
-            attach = [
-                {**b, "data": {**(b.get("data") or {}), "sequence": seq}}
-                if b.get("uuid") == uid
-                else b
-                for b in attach
-            ]
-            with_seq.add(uid)
-        return attach
-
     @staticmethod
     def _hoist_inline_blocks(
         raw_blocks: Sequence[Dict[str, Any]],
@@ -976,7 +535,11 @@ class LLMTripletExtractionService:
             seq_counter = counter[0]
             # out накапливает поднятые вложенные блоки глобально (в порядке
             # встречи), поэтому они оказываются перед текущим контейнером.
-            out.append({"blockType": int(block.get("blockType", 0)), "data": new_data})
+            out.append({
+                "blockType": int(block.get("blockType", 0)),
+                "data": new_data,
+                "tag": block.get("tag", ""),
+            })
         return out
 
     def _map_placeholders(self, blocks: Sequence[Dict[str, Any]]) -> Tuple[Dict[int, str], List[Dict[str, Any]]]:
@@ -1064,6 +627,343 @@ class LLMTripletExtractionService:
             "containers_with_sequence": with_seq,
         }
 
+    # ── Unified (one-stage) extraction ───────────────────────────────────────
+    def call_llm_unified(
+        self,
+        article_text: str,
+        article_title: str,
+        *,
+        model_id: str = DEFAULT_MODEL,
+        temperature: float = DEFAULT_TEMPERATURE,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
+        timeout: int = DEFAULT_TIMEOUT,
+    ) -> Dict[str, Any]:
+        """Unified one-stage call: full article → all blocks (any language)."""
+        prompt = build_unified_prompt_en(
+            article_title=article_title, article_text=article_text
+        )
+        result = self.client.generate_text(
+            model_id=model_id,
+            prompt=prompt,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            enable_chunking=True,
+            timeout=timeout,
+        )
+        return result
+
+    @staticmethod
+    def _parse_unified_json(generated_text: str) -> List[Dict[str, Any]]:
+        """Парсит unified-ответ (все блоки в одном JSON)."""
+        data = LLMTripletExtractionService._extract_json(generated_text or "")
+        if data is None:
+            return []
+        try:
+            from src.schemas.llm_extract import UnifiedResponse
+            resp = UnifiedResponse.model_validate(data)
+        except Exception:
+            blocks_raw = data.get("blocks") if isinstance(data, dict) else None
+            if not isinstance(blocks_raw, list):
+                return []
+            resp = None
+        if resp is not None:
+            raw_blocks = []
+            for ub in resp.blocks:
+                d = dict(ub.data)
+                raw_blocks.append({
+                    "blockType": ub.blockType,
+                    "data": d,
+                    "tag": ub.tag.strip() if ub.tag else "",
+                })
+        else:
+            raw_blocks = []
+            for b in blocks_raw:
+                if not isinstance(b, dict):
+                    continue
+                try:
+                    bt = int(b.get("blockType", b.get("type", 0)))
+                except (TypeError, ValueError):
+                    bt = 0
+                d = b.get("data")
+                if not isinstance(d, dict):
+                    d = {k: v for k, v in b.items() if k not in ("blockType", "type", "tag")}
+                raw_blocks.append({
+                    "blockType": bt,
+                    "data": d,
+                    "tag": str(b.get("tag", "") or "").strip(),
+                })
+        return raw_blocks
+
+    def _assign_uuids_unified(
+        self, raw_blocks: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Присваивает UUIDv8 каждому блоку, резолвит {Bn} и {SEQn}."""
+        tag_to_uuid: Dict[str, str] = {}
+        tag_num_to_uuid: Dict[int, str] = {}
+        seq_to_uuid: Dict[int, str] = {}
+
+        for b in raw_blocks:
+            uid = uuid8_str()
+            tag = str(b.get("tag", "") or "").strip()
+            if tag:
+                tag_to_uuid[tag] = uid
+                mt = _BTAG_RE.match(tag)
+                if mt:
+                    tag_num_to_uuid[int(mt.group(1))] = uid
+            b["uuid"] = uid
+
+        seq_counter = 0
+        for b in raw_blocks:
+            if int(b.get("blockType", 0)) == 4:
+                seq_counter += 1
+                seq_to_uuid[seq_counter] = b["uuid"]
+
+        for b in raw_blocks:
+            b["data"] = self._resolve_tags(b["data"], _BTAG_RE, tag_num_to_uuid)
+            b["data"] = self._resolve_tags(b["data"], _PLACEHOLDER_RE, seq_to_uuid)
+
+        raw_blocks = self._cleanup_unresolved_btags(raw_blocks)
+        raw_blocks = self._normalize_pairs(raw_blocks)
+        return raw_blocks
+
+    @staticmethod
+    def _normalize_pairs(
+        raw_blocks: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Конвертирует flat UUID-массивы и сериализует array-поля T14 в JSON-строки.
+
+        Клиент ожидает experimentalPairs/controlPairs в формате JSON-строки:
+            '[{"groupRef": "uuid", "interventionRef": "uuid"}]'
+       .steps/findings тоже ожидает как JSON-строки: '["uuid1", "uuid2"]'
+        ЛLM генерирует нативные Python-списки, которые json.dumps сериализует
+        в строки при сохранении в Neo4j, но клиент получает обратно массив.
+        str() клиента возвращает '' для массивов — триплеты не создаются.
+        """
+        _ARRAY_KEYS = ("steps", "findings", "experimentalPairs", "controlPairs")
+        for b in raw_blocks:
+            if int(b.get("blockType", 0)) != 14:
+                continue
+            d = b.get("data") or {}
+            for key in ("experimentalPairs", "controlPairs"):
+                val = d.get(key)
+                if isinstance(val, list) and val:
+                    if isinstance(val[0], str):
+                        d[key] = [{"groupRef": uid, "interventionRef": ""} for uid in val]
+            # Сериализуем array-поля в JSON-строки (клиент ожидает строки)
+            for key in _ARRAY_KEYS:
+                val = d.get(key)
+                if isinstance(val, list):
+                    d[key] = json.dumps(val, ensure_ascii=False)
+            b["data"] = d
+        return raw_blocks
+
+    @staticmethod
+    def _normalize_t1_authors(
+        raw_blocks: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Конвертирует authors из массива в строку через запятую.
+
+        LLM генерирует authors как массив строк: ["Author One", "Author Two"]
+        Блок-конвертер (block_converter.py t1) ожидает строку и сплитит по запятым.
+        """
+        for b in raw_blocks:
+            if int(b.get("blockType", 0)) != 1:
+                continue
+            d = b.get("data") or {}
+            authors = d.get("authors")
+            if isinstance(authors, list):
+                d["authors"] = ", ".join(str(a) for a in authors if a)
+            b["data"] = d
+        return raw_blocks
+
+    @staticmethod
+    def _cleanup_unresolved_btags(
+        raw_blocks: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Удаляет нерезолвленные {Bn} и {SEQn} теги из data полей.
+
+        Модель иногда генерирует {Bn} ссылки на блоки, которые не были
+        выведены (T4 используют {SEQn}, не {Bn}; T56/T57 могут отсутствовать
+        в review-статьях). Нерезолвленные теги заменяются на пустую строку.
+        """
+        def _strip_tags(value: Any) -> Any:
+            if isinstance(value, str):
+                cleaned = _BTAG_RE.sub("", value)
+                cleaned = _PLACEHOLDER_RE.sub("", cleaned)
+                cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+                return cleaned
+            if isinstance(value, list):
+                return [_strip_tags(v) for v in value]
+            if isinstance(value, dict):
+                return {k: _strip_tags(v) for k, v in value.items()}
+            return value
+
+        out: List[Dict[str, Any]] = []
+        for b in raw_blocks:
+            d = b.get("data") or {}
+            b["data"] = _strip_tags(d)
+            out.append(b)
+        return out
+
+    def _strip_uuids_from_t4(
+        self, raw_blocks: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Заменяет UUIDv8 в субъектах/объектах T4 на текст из uuid_to_text карты."""
+        import re as _re
+        uuid_re = _re.compile(
+            r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            _re.IGNORECASE,
+        )
+        # Строим карту uuid → text (берём данные T1/T2/T7/T16/T22/T38/T54/T58)
+        uuid_to_text: Dict[str, str] = {}
+        for b in raw_blocks:
+            uid = b.get("uuid", "")
+            bt = int(b.get("blockType", 0))
+            d = b.get("data") or {}
+            if bt == 1:
+                uuid_to_text[uid] = d.get("title", "") or ", ".join(d.get("authors", []))
+            elif bt == 2:
+                uuid_to_text[uid] = f"{d.get('subject', '')} {d.get('object', '')}".strip()
+            elif bt == 7:
+                uuid_to_text[uid] = d.get("hypothesis", "")[:60]
+            elif bt == 16:
+                uuid_to_text[uid] = d.get("mechanism", "")[:60]
+            elif bt == 22:
+                uuid_to_text[uid] = f"{d.get('subject', '')} {d.get('predicate', '')} {d.get('object', '')}".strip()
+            elif bt == 38:
+                uuid_to_text[uid] = f"{d.get('claimSubject', '')} {d.get('claimObject', '')}".strip()
+            elif bt == 54:
+                uuid_to_text[uid] = f"{d.get('subject', '')} {d.get('predicate', '')} {d.get('object', '')}".strip()
+            elif bt == 58:
+                uuid_to_text[uid] = f"{d.get('source', '')} {d.get('target', '')}".strip()
+
+        # Заменяем UUID в T4 блоках
+        for b in raw_blocks:
+            if int(b.get("blockType", 0)) != 4:
+                continue
+            d = b.get("data") or {}
+            for key in ("subject", "object", "predicate"):
+                val = str(d.get(key, ""))
+                if uuid_re.match(val):
+                    text = uuid_to_text.get(val, "")
+                    if text:
+                        d[key] = text[:80]
+                    else:
+                        d[key] = ""
+        return raw_blocks
+
+    def postprocess_unified(
+        self,
+        raw_blocks: List[Dict[str, Any]],
+        article_text: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """Постпроцессинг для unified (one-stage) извлечения."""
+        raw_blocks = self._hoist_inline_blocks(raw_blocks)
+        raw_blocks = self._assign_uuids_unified(raw_blocks)
+        raw_blocks = self._strip_uuids_from_t4(raw_blocks)
+        raw_blocks = self._dedupe_t27(raw_blocks)
+        raw_blocks = self._dedupe_t1(raw_blocks)
+        raw_blocks = self._normalize_t1_authors(raw_blocks)
+        raw_blocks = self._drop_t54_credits(raw_blocks)
+        raw_blocks = self._add_deterministic_sections(raw_blocks, article_text)
+        raw_blocks = self._add_uuidrefs(raw_blocks)
+        return [
+            {
+                "instanceId": b["uuid"],
+                "blockType": b["blockType"],
+                "data": b["data"],
+                "order": i,
+            }
+            for i, b in enumerate(raw_blocks)
+        ]
+
+    def extract_whole_article(
+        self,
+        doc_id: str,
+        text: str,
+        article_title: str = "",
+        *,
+        model_id: str = DEFAULT_MODEL,
+        temperature: float = DEFAULT_TEMPERATURE,
+        max_tokens: int = 80000,
+        timeout: int = 600,
+        progress_cb=None,
+    ) -> Dict[str, Any]:
+        """Обрабатывает статью целиком (без чанкинга) — один LLM-вызов.
+
+        Оптимизировано для DeepSeek V4 Flash (1M контекст).
+        Статья ~40K символов = ~15K токенов, легко умещается.
+
+        Args:
+            progress_cb: reserved for future use (currently unused).
+        """
+        if not text:
+            return {"success": False, "message": "Текст статьи пуст", "blocks": []}
+
+        logger.info(
+            "Whole-article extraction for %s: %d chars, model=%s",
+            doc_id, len(text), model_id,
+        )
+
+        for attempt in range(1 + MAX_RETRIES):
+            res = self.call_llm_unified(
+                text,
+                article_title,
+                model_id=model_id,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                timeout=timeout,
+            )
+            if not res.get("success"):
+                if attempt < MAX_RETRIES:
+                    logger.warning(
+                        "Whole-article attempt %d failed: %s",
+                        attempt, res.get("message"),
+                    )
+                    continue
+                return {
+                    "success": False,
+                    "doc_id": doc_id,
+                    "message": res.get("message", "LLM call failed"),
+                    "blocks": [],
+                }
+
+            raw_blocks = self._parse_unified_json(res.get("generated_text", ""))
+            if raw_blocks:
+                break
+            logger.warning(
+                "Whole-article attempt %d returned 0 blocks", attempt
+            )
+
+        if not raw_blocks:
+            return {
+                "success": False,
+                "doc_id": doc_id,
+                "message": "LLM returned empty/invalid JSON",
+                "blocks": [],
+            }
+
+        blocks = self.postprocess_unified(raw_blocks, article_text=text)
+        summary = self._summary(blocks)
+        summary["tokens"] = {
+            "input": res.get("input_tokens", 0),
+            "output": res.get("output_tokens", 0),
+        }
+        summary["attempts"] = attempt + 1
+
+        logger.info(
+            "Whole-article extraction done: %d blocks, %s tokens",
+            len(blocks), summary["tokens"],
+        )
+        return {
+            "success": True,
+            "doc_id": doc_id,
+            "blocks": blocks,
+            "summary": summary,
+            "chunks": [{"index": 0, "chars": len(text), "containers": len(blocks)}],
+            "raw_count": len(raw_blocks),
+        }
+
     # ── Оркестрация ──────────────────────────────────────────────────────────
     def extract(
         self,
@@ -1079,143 +979,26 @@ class LLMTripletExtractionService:
         chunk_offset: int = 0,
         max_chunks: Optional[int] = None,
         progress_cb=None,
-        lang: str = "ru",
         cancel_event: Optional["threading.Event"] = None,
     ) -> Dict[str, Any]:
-        """Извлекает структуру блоков из текста статьи.
+        """Извлекает структуру блоков из текста статьи (unified one-stage).
+
+        Всегда использует unified one-stage извлечение (вся статья за один
+        LLM-вызов). Оптимизировано для DeepSeek V4 Flash (1M контекст).
 
         Возвращает:
-            {"success", "blocks", "summary", "chunks": [{index, chars, tokens,
-             raw_blocks, parsed_blocks, error?}]}
-
-        Если cancel_event установлен, извлечение прерывается между чанками
-        и возвращается {"success": False, "cancelled": True}.
+            {"success", "blocks", "summary", "chunks": [{index, chars, containers}]}
         """
         if not text:
             return {"success": False, "message": "Текст статьи пуст", "blocks": []}
 
-        chunks = self.split_into_chunks(text, max_chars=max_chunk_chars)
-        if chunk_offset > 0:
-            chunks = chunks[chunk_offset:]
-        if max_chunks is not None:
-            chunks = chunks[:max_chunks]
-        logger.info(
-            "Extraction for %s: %d chunks (offset=%d), model=%s, lang=%s",
-            doc_id, len(chunks), chunk_offset, model_id, lang,
+        return self.extract_whole_article(
+            doc_id,
+            text,
+            article_title,
+            model_id=model_id,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            timeout=timeout,
+            progress_cb=progress_cb,
         )
-
-        chunk_results: List[Tuple[List[Dict[str, Any]], List[Dict[str, Any]], Dict[str, Any]]] = []
-        chunk_reports: List[Dict[str, Any]] = []
-        total_input = 0
-        total_output = 0
-        for i, chunk in enumerate(chunks):
-            abs_idx = chunk_offset + i
-            if cancel_event is not None and cancel_event.is_set():
-                logger.info("Extraction cancelled for %s (chunk %d)", doc_id, abs_idx)
-                return {
-                    "success": False,
-                    "cancelled": True,
-                    "doc_id": doc_id,
-                    "blocks": [],
-                    "message": "Извлечение отменено",
-                    "chunks": chunk_reports,
-                }
-            containers: List[Dict[str, Any]] = []
-            res_s: Dict[str, Any] = {}
-            for attempt in range(1 + MAX_RETRIES):
-                res_s = self.call_llm_structure(
-                    chunk,
-                    article_title,
-                    model_id=model_id,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
-                    timeout=timeout,
-                    lang=lang,
-                )
-                report: Dict[str, Any] = {
-                    "index": abs_idx,
-                    "chars": len(chunk),
-                    "tokens_in": res_s.get("input_tokens", 0),
-                    "tokens_out": res_s.get("output_tokens", 0),
-                }
-                total_input += report["tokens_in"]
-                total_output += report["tokens_out"]
-                if not res_s.get("success"):
-                    report["error"] = res_s.get("message", "Ошибка LLM (structure)")
-                    break
-                containers = self._parse_structure_json(res_s.get("generated_text", ""))
-                report["containers"] = len(containers)
-                if containers:
-                    break
-                logger.warning("Chunk %d structure empty (attempt %d)", i, attempt)
-            if not containers:
-                if "error" not in report:
-                    report["error"] = "Stage 1 вернул невалидный/пустой JSON"
-                chunk_reports.append(report)
-                continue
-
-            t4s: List[Dict[str, Any]] = []
-            sequences: Dict[str, Any] = {}
-            batch_err: Optional[str] = None
-            for attempt in range(1 + MAX_RETRIES):
-                containers_json = json.dumps(self._compact_containers(containers), ensure_ascii=False)
-                res_a = self.call_llm_atomize(
-                    chunk,
-                    article_title,
-                    containers_json,
-                    model_id=model_id,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
-                    timeout=timeout,
-                    lang=lang,
-                )
-                report["tokens_in"] += res_a.get("input_tokens", 0)
-                report["tokens_out"] += res_a.get("output_tokens", 0)
-                total_input += res_a.get("input_tokens", 0)
-                total_output += res_a.get("output_tokens", 0)
-                if not res_a.get("success"):
-                    batch_err = res_a.get("message", "Ошибка LLM (atomize)")
-                    break
-                t4s, sequences = self._parse_atomize_json(res_a.get("generated_text", ""))
-                report["t4_blocks"] = len(t4s)
-                if t4s:
-                    batch_err = None
-                    break
-                batch_err = "Stage 2 вернул 0 T4-триплетов"
-                logger.warning("Chunk %d atomize empty T4 (attempt %d)", i, attempt)
-            report["sequence_keys"] = len(sequences)
-            if batch_err:
-                report["error"] = batch_err
-                chunk_reports.append(report)
-                continue
-
-            chunk_results.append((containers, t4s, sequences))
-            chunk_reports.append(report)
-            logger.info(
-                "Chunk %d: %d chars, %d containers, %d T4, %d seq-keys, "
-                "%d tokens in / %d out",
-                i, len(chunk), len(containers), len(t4s), len(sequences),
-                report["tokens_in"], report["tokens_out"],
-            )
-            if progress_cb is not None:
-                try:
-                    progress_cb(i, chunk_reports)
-                except Exception as exc:  # pragma: no cover - защита оркестрации
-                    logger.warning("progress_cb failed on chunk %d: %s", i, exc)
-
-        blocks = self.postprocess_two_stage(chunk_results, article_text=text)
-        summary = self._summary(blocks)
-        summary["chunks"] = len(chunks)
-        summary["tokens"] = {"input": total_input, "output": total_output}
-        return {
-            "success": True,
-            "doc_id": doc_id,
-            "blocks": blocks,
-            "summary": summary,
-            "chunks": chunk_reports,
-            "raw_chunks": chunk_results,
-            "raw_count": sum(
-                r.get("containers", 0) + r.get("t4_blocks", 0)
-                for r in chunk_reports
-            ),
-        }
