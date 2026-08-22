@@ -231,6 +231,21 @@ class PmcOaOpendataDownloader:
 
         return {h for h in hrefs if Path(h).suffix.lower() in IMAGE_EXTENSIONS}
 
+    def _list_existing_image_keys(self, article_id: str) -> Set[str]:
+        """Возвращает имена файлов, реально существующих в S3 для статьи."""
+        try:
+            paginator = self.s3.get_paginator("list_objects_v2")
+            existing: Set[str] = set()
+            for page in paginator.paginate(Bucket=BUCKET_NAME, Prefix=f"{article_id}/"):
+                for obj in page.get("Contents", []):
+                    name = Path(obj["Key"]).name
+                    if name and name != f"{article_id}.xml":
+                        existing.add(name)
+            return existing
+        except Exception as e:
+            logger.warning(f"[PMC] list_objects failed for {article_id}: {e}")
+            return set()
+
     def _remove_other_versions(self, prefix: str):
         """Удаляет локальные папки старых версий той же статьи (PMCxxxx.N).
 
@@ -269,18 +284,24 @@ class PmcOaOpendataDownloader:
 
         image_hrefs = self.extract_image_hrefs(xml_path)
         if image_hrefs:
-            keys = [(f"{article_id}/{href}", article_dir / href) for href in sorted(image_hrefs)]
-            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                futures = {
-                    executor.submit(self._resumable_download_key, key, dest): (key, dest)
-                    for key, dest in keys
-                }
-                for future in as_completed(futures):
-                    key, _ = futures[future]
-                    try:
-                        future.result()
-                    except Exception as e:
-                        logger.warning(f"[PMC] Failed to download {key}: {e}")
+            existing = self._list_existing_image_keys(article_id)
+            available = image_hrefs & existing
+            missing = image_hrefs - existing
+            if missing:
+                logger.debug(f"[PMC] {article_id}: {len(missing)} image(s) not in OA bucket, skipping")
+            keys = [(f"{article_id}/{href}", article_dir / href) for href in sorted(available)]
+            if keys:
+                with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                    futures = {
+                        executor.submit(self._resumable_download_key, key, dest): (key, dest)
+                        for key, dest in keys
+                    }
+                    for future in as_completed(futures):
+                        key, _ = futures[future]
+                        try:
+                            future.result()
+                        except Exception as e:
+                            logger.warning(f"[PMC] Failed to download {key}: {e}")
 
         done_marker.write_text(prefix + "\n", encoding="utf-8")
         return True

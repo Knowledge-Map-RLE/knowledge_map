@@ -980,8 +980,10 @@ class PubMedService:
                         doc.title = extracted_title
                 if docling_raw_key:
                     doc.docling_raw_md_s3_key = docling_raw_key
+                    doc.has_full_text = True
                 if formatted_key:
                     doc.formatted_md_s3_key = formatted_key
+                    doc.has_full_text = True
                 doc.processing_status = "ready_for_annotation"
                 doc.is_processed = True
                 doc.save()
@@ -1080,6 +1082,7 @@ class PubMedService:
             if existing:
                 if markdown and md_key:
                     existing.docling_raw_md_s3_key = md_key
+                    existing.has_full_text = True
                 existing.processing_status = processing_status
                 existing.is_processed = processing_status == "annotated"
                 existing.title = title
@@ -1108,6 +1111,7 @@ class PubMedService:
                     is_processed=processing_status == "annotated",
                     processing_status=processing_status,
                     docling_raw_md_s3_key=md_key,
+                    has_full_text=bool(md_key),
                 )
                 doc.save()
                 logger.info(f"[pubmed] Neo4j запись создана: doc_id={doc_id}, title={title}, md_key={md_key}")

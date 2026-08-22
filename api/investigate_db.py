@@ -50,7 +50,7 @@ for rec in r:
     print(dict(rec))
 
 # Article count
-r = s.run("MATCH (a:Article) RETURN count(a) as cnt")
+r = s.run("MATCH (a:Document) RETURN count(a) as cnt")
 print("\n=== Article count: %d ===" % r.single()["cnt"])
 
 # BIBLIOGRAPHIC_LINK count

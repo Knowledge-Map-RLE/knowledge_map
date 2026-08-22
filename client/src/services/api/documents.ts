@@ -26,6 +26,11 @@ export interface DocumentsListResponse {
     total_count: number;
 }
 
+export interface DocumentStatsResponse {
+    success: boolean;
+    full_text_count: number;
+}
+
 export interface DeleteDocumentResponse {
     success: boolean;
     message: string;
@@ -104,13 +109,19 @@ export async function deleteDocument(docId: string): Promise<DeleteDocumentRespo
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}`, { method: 'DELETE' });
 }
 
-export async function listDocuments(skip: number = 0, limit: number = 200, signal?: AbortSignal): Promise<DocumentsListResponse> {
+export async function listDocuments(skip: number = 0, limit: number = 200, signal?: AbortSignal, fullTextOnly: boolean = false): Promise<DocumentsListResponse> {
   const params = new URLSearchParams({ skip: String(skip), limit: String(limit) });
+  if (fullTextOnly) params.set('full_text_only', 'true');
   return fetchJson(`/api/data_extraction/documents?${params}`, { signal });
 }
 
-export async function searchDocuments(q: string, skip: number = 0, limit: number = 100, signal?: AbortSignal): Promise<DocumentsListResponse> {
+export async function getDocumentStats(): Promise<DocumentStatsResponse> {
+  return fetchJson(`/api/data_extraction/documents/stats`);
+}
+
+export async function searchDocuments(q: string, skip: number = 0, limit: number = 100, signal?: AbortSignal, fullTextOnly: boolean = false): Promise<DocumentsListResponse> {
   const params = new URLSearchParams({ q, skip: String(skip), limit: String(limit) });
+  if (fullTextOnly) params.set('full_text_only', 'true');
   return fetchJson(`/api/data_extraction/documents/search?${params}`, { signal });
 }
 

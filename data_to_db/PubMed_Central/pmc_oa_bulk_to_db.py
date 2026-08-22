@@ -264,6 +264,54 @@ def extract_bibliographic_links_optimized(root, primary_id):
 
     return links
 
+def _build_pmc_markdown(metadata: dict) -> str:
+    """Генерирует markdown-представление PMC-статьи из метаданных.
+
+    Используется как fallback, когда gRPC-конвертация全文 недоступна.
+    """
+    parts: list[str] = []
+
+    title = metadata.get('title', '')
+    if title:
+        parts.append(f"# {title}\n")
+
+    authors = metadata.get('authors', [])
+    if authors:
+        if isinstance(authors, list):
+            parts.append(f"**Authors:** {', '.join(authors)}\n")
+        else:
+            parts.append(f"**Authors:** {authors}\n")
+
+    meta_parts: list[str] = []
+    journal = metadata.get('journal', '')
+    if journal:
+        meta_parts.append(f"**Journal:** {journal}")
+    doi = metadata.get('doi', '')
+    if doi:
+        meta_parts.append(f"**DOI:** {doi}")
+    pmid = metadata.get('pmid', '')
+    if pmid:
+        meta_parts.append(f"**PMID:** {pmid}")
+    pmcid = metadata.get('pmcid', '')
+    if pmcid:
+        meta_parts.append(f"**PMCID:** {pmcid}")
+    if meta_parts:
+        parts.append(" | ".join(meta_parts) + "\n")
+
+    abstract = metadata.get('abstract', '')
+    if abstract:
+        parts.append(f"## Abstract\n\n{abstract}\n")
+
+    keywords = metadata.get('keywords', [])
+    if keywords:
+        if isinstance(keywords, list):
+            parts.append(f"**Keywords:** {', '.join(keywords)}\n")
+        else:
+            parts.append(f"**Keywords:** {keywords}\n")
+
+    return "\n".join(parts) if parts else ""
+
+
 def parse_article_optimized(article, total_articles):
     """Оптимизированный парсинг статьи O(log R)"""
     
@@ -326,59 +374,46 @@ def parse_article_optimized(article, total_articles):
     for kw in article.findall('.//kwd')[:15]:
         if kw.text:
             keywords.append(kw.text.strip())
-    else:
-        primary_id = pmcid or pmid
-    
-    doi_el = article.find('.//article-id[@pub-id-type="doi"]')
-    doi = doi_el.text.strip() if doi_el is not None and doi_el.text else None
-    
-    title_el = article.find('.//article-title')
-    title = ''.join(title_el.itertext()).strip() if title_el is not None else ''
-    
-    journal_el = article.find('.//journal-title')
-    journal = journal_el.text.strip() if journal_el is not None else ''
-    
-    year_elem = article.find('.//pub-date/year')
-    publication_time = year_elem.text.strip() if year_elem is not None and year_elem.text else None
-    
-    abstract_el = article.find('.//abstract')
-    abstract = ''.join(abstract_el.itertext()).strip() if abstract_el is not None else ''
-    
-    authors = []
-    for author in article.findall('.//contrib[@contrib-type="author"]')[:20]:
-        surname = author.find('.//surname')
-        given_names = author.find('.//given-names')
-        if surname is not None:
-            name = (surname.text or '').strip()
-            if given_names is not None:
-                name = (given_names.text or '') + ' ' + name
-            authors.append(name.strip())
-    
-    keywords = []
-    for kw in article.findall('.//kwd')[:15]:
-        if kw.text:
-            keywords.append(kw.text.strip())
+
+    metadata = {
+        'title': title,
+        'authors': authors,
+        'abstract': abstract,
+        'keywords': keywords,
+        'journal': journal,
+        'doi': doi,
+        'pmid': pmid,
+        'pmcid': pmcid,
+    }
     
     body_s3_key = None
     try:
         from s3_client import get_s3_client
         s3 = get_s3_client()
-        # Не перезаписываем уже загруженный Markdown (стабильный UUID статьи).
         if not s3.article_exists(primary_id):
-            from xml_to_md_grpc_client import get_xml_to_md_client
-            xml_client = get_xml_to_md_client()
-            if xml_client:
-                article_xml = LET.tostring(article, encoding='unicode')
-                xml_bytes = article_xml.encode('utf-8')
-                result = xml_client.convert_pmc_xml(xml_bytes)
-                if result and result.get('success'):
-                    markdown_content = result.get('markdown_content', '')
-                    if markdown_content and s3.save_markdown(primary_id, markdown_content):
-                        body_s3_key = f"documents/{primary_id}/{primary_id}.md"
+            try:
+                from xml_to_md_grpc_client import get_xml_to_md_client
+                xml_client = get_xml_to_md_client()
+                if xml_client:
+                    article_xml = LET.tostring(article, encoding='unicode')
+                    xml_bytes = article_xml.encode('utf-8')
+                    result = xml_client.convert_pmc_xml(xml_bytes)
+                    if result and result.get('success'):
+                        markdown_content = result.get('markdown_content', '')
+                        if markdown_content and s3.save_markdown(primary_id, markdown_content):
+                            body_s3_key = f"documents/{primary_id}/{primary_id}.md"
+            except Exception as grpc_err:
+                logger.warning(f"[{primary_id}] gRPC conversion failed: {grpc_err}")
+
+            if not body_s3_key:
+                md_content = _build_pmc_markdown(metadata)
+                if md_content and s3.save_markdown(primary_id, md_content):
+                    body_s3_key = f"documents/{primary_id}/{primary_id}.md"
+                    logger.info(f"[{primary_id}] Fallback: uploaded abstract-based markdown to S3")
         else:
             body_s3_key = f"documents/{primary_id}/{primary_id}.md"
     except Exception as e:
-        logger.debug(f"[{primary_id}] Error converting body: {e}")
+        logger.warning(f"[{primary_id}] Error in S3/markdown pipeline: {e}")
     
     data = {
         'uid': primary_id,
@@ -627,9 +662,9 @@ def parse_one_file_optimized(path_or_key):
 
 def ensure_schema():
     with driver.session() as session:
-        session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Article) REQUIRE n.uid IS UNIQUE")
-        session.run("CREATE INDEX IF NOT EXISTS FOR (n:Article) ON (n.layout_status)")
-        session.run("CREATE INDEX IF NOT EXISTS FOR (n:Article) ON (n.layer, n.level)")
+        session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Document) REQUIRE n.uid IS UNIQUE")
+        session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.layout_status)")
+        session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.layer, n.level)")
         session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.uid)")
         session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.pubmed_id)")
         session.run("CREATE INDEX IF NOT EXISTS FOR (n:Document) ON (n.doi)")
@@ -673,6 +708,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                     'is_open_access': True,
                     'is_processed': bool(body_s3_key),
                     'processing_status': 'processed' if body_s3_key else 'pending',
+                    'has_full_text': bool(body_s3_key),
                 })
             tx.run("""
                 UNWIND $nodes AS row
@@ -701,7 +737,8 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.source = row.source,
                       n.is_open_access = row.is_open_access,
                       n.is_processed = row.is_processed,
-                      n.processing_status = row.processing_status
+                      n.processing_status = row.processing_status,
+                      n.has_full_text = row.has_full_text
                   ON MATCH SET
                       n.original_filename = coalesce(n.original_filename, row.original_filename),
                       n.md5_hash = coalesce(n.md5_hash, row.md5_hash),
@@ -719,17 +756,18 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.source = coalesce(n.source, row.source),
                       n.is_open_access = coalesce(n.is_open_access, row.is_open_access),
                       n.is_processed = row.is_processed,
-                      n.processing_status = row.processing_status
+                      n.processing_status = row.processing_status,
+                      n.has_full_text = (row.has_full_text OR coalesce(n.has_full_text, false))
             """, nodes=doc_nodes)
         if rels:
             # УНИФИЦИРОВАННАЯ СЕМАНТИКА SOURCE/TARGET:
             # Направление: SOURCE (cited, старая) -> TARGET (citing, новая)
             tx.run("""
                 UNWIND $rels AS r
-                  MERGE (source:Article {uid: r.source_pmid})
+                  MERGE (source:Document {uid: r.source_pmid})
                     ON CREATE SET source.title = coalesce(r.source_title, source.title)
                     ON MATCH SET source.title = coalesce(source.title, r.source_title)
-                  MERGE (target:Article {uid: r.target_pmid})
+                  MERGE (target:Document {uid: r.target_pmid})
                     ON CREATE SET target.title = coalesce(r.target_title, target.title)
                     ON MATCH SET target.title = coalesce(target.title, r.target_title)
                   WITH source, target
@@ -980,7 +1018,7 @@ def process_all():
     # Финальная статистика
     try:
         with driver.session() as s:
-            result = s.run("MATCH (n:Article) RETURN count(n) as total_nodes")
+            result = s.run("MATCH (n:Document) RETURN count(n) as total_nodes")
             total_nodes = result.single()["total_nodes"]
             logger.info(f"TOTAL nodes loaded to database: {total_nodes}")
             
@@ -1122,7 +1160,7 @@ def process_all_local_articles(max_articles: int = 0, on_progress: Optional[Call
 
     try:
         with driver.session() as s:
-            result = s.run("MATCH (n:Article) RETURN count(n) as total_nodes")
+            result = s.run("MATCH (n:Document) RETURN count(n) as total_nodes")
             logger.info(f"TOTAL nodes loaded to database: {result.single()['total_nodes']}")
     except Exception as e:
         logger.error(f"Error getting statistics: {e}")

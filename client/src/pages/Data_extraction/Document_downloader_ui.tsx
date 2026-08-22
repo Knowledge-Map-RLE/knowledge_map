@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, useEffect, useMemo, forwardRef, u
 import s from './Document_downloader_ui.module.css';
 import {
     uploadPdfForExtraction, listDocuments, searchDocuments as apiSearchDocuments,
-    deleteDocument as apiDeleteDocument,
+    deleteDocument as apiDeleteDocument, getDocumentStats,
     searchPubMed, getByPubMedId, ingestPubMedArticle, getDocumentProgress,
     type PubMedSearchResult
 } from '../../services/api';
@@ -51,6 +51,8 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
     setError
 }, ref) {
     const [documents, setDocuments] = useState<PDFDocument[]>([]);
+    const [fullTextCount, setFullTextCount] = useState(0);
+    const [fullTextOnly, setFullTextOnly] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
     const [progressMap, setProgressMap] = useState<Record<string, number>>({});
@@ -96,7 +98,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             const timeoutMs = 60000;
             const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-            const data = await listDocuments(0, 100, controller.signal);
+            const data = await listDocuments(0, 100, controller.signal, fullTextOnly);
             clearTimeout(timeoutId);
 
             if (!data?.success || !Array.isArray(data.documents)) {
@@ -148,12 +150,18 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             setError(`Ошибка загрузки документов: ${err instanceof Error ? err.message : String(err)}`);
             return [];
         }
-    }, [setError]);
+    }, [setError, fullTextOnly]);
 
     useImperativeHandle(ref, () => ({ reloadDocuments: () => loadDocuments().then(() => {}) }));
     useEffect(() => {
         loadDocuments();
     }, [loadDocuments]);
+
+    useEffect(() => {
+        getDocumentStats().then(data => {
+            if (data?.success) setFullTextCount(data.full_text_count ?? 0);
+        }).catch(() => {});
+    }, []);
 
     // --- Ingest article ---
     const handleIngestArticle = async (result: PubMedSearchResult) => {
@@ -315,7 +323,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 const controller = new AbortController();
                 searchAbortRef.current = controller;
                 try {
-                    const data = await apiSearchDocuments(q, 0, 100, controller.signal);
+                    const data = await apiSearchDocuments(q, 0, 100, controller.signal, fullTextOnly);
                     if (!data?.success || !Array.isArray(data.documents)) {
                         setSearchResults([]);
                         return;
@@ -351,7 +359,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             if (pubmedAbortRef.current) pubmedAbortRef.current.abort();
             if (pubmedIdAbortRef.current) pubmedIdAbortRef.current.abort();
         };
-    }, [searchQuery]);
+    }, [searchQuery, fullTextOnly]);
 
     // --- Document list: search results if query >=3, else full list ---
     const filteredDocuments = searchQuery.trim().length >= 3
@@ -616,6 +624,16 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                     onChange={e => setSearchQuery(e.target.value)}
                 />
 
+                <label className="flex items-center gap-2 mt-2 text-xs text-gray-500 cursor-pointer select-none">
+                    <input
+                        type="checkbox"
+                        checked={fullTextOnly}
+                        onChange={e => setFullTextOnly(e.target.checked)}
+                        className="accent-blue-600"
+                    />
+                    Только с полными текстами
+                </label>
+
                 <div className={s.docListWrap}>
                     {isSearching && (
                         <div className={s.searchOverlay}>
@@ -642,10 +660,13 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 {searchQuery.trim().length >= 3 ? (
                     <p className={s.docListHint}>
                         Найдено {sortedDocuments.length} документов по запросу «{searchQuery}».
+                        {fullTextCount > 0 && <> С полным текстом: {fullTextCount}.</>}
                     </p>
                 ) : (hasMoreDocuments || (window as any).__documents_total > 100) && (
                     <p className={s.docListHint}>
-                        Показано {Math.min(100, documents.length)} из {(window as any).__documents_total || documents.length}. Введите запрос для поиска.
+                        Показано {Math.min(100, documents.length)} из {(window as any).__documents_total || documents.length}.
+                        {fullTextCount > 0 && <> С полным текстом: {fullTextCount}.</>}
+                        Введите запрос для поиска.
                     </p>
                 )}
             </div>

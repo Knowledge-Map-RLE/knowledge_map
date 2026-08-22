@@ -223,7 +223,7 @@ async def _ensure_document_indexes():
             except Exception as e:
                 logger.warning(f"[startup] INDEX FAIL: {cypher[:60]}... {e}")
 
-        # Fulltext-индекс: проверяем текущий состав полей и пересоздаём только если нужно
+        # Fulltext-индекс: пересоздаём только если изменились поля ИЛИ индекс stale
         _DESIRED_FT_FIELDS = {"title", "original_filename", "doi", "pubmed_id", "pmc_id"}
         try:
             r, _ = db.cypher_query(
@@ -245,8 +245,16 @@ async def _ensure_document_indexes():
             idx_state = "MISSING"
             pop_pct = 0
 
+        needs_rebuild = False
         if current_fields != _DESIRED_FT_FIELDS:
-            logger.info(f"[startup] Fulltext index fields changed: {current_fields} → {_DESIRED_FT_FIELDS}, recreating...")
+            logger.info(f"[startup] Fulltext index fields changed: {current_fields} -> {_DESIRED_FT_FIELDS}")
+            needs_rebuild = True
+        elif idx_state in ("MISSING", "FAILED"):
+            logger.info(f"[startup] Fulltext index state={idx_state}, needs rebuild")
+            needs_rebuild = True
+
+        if needs_rebuild:
+            logger.info("[startup] Recreating fulltext index...")
             try:
                 db.cypher_query("DROP INDEX doc_fulltext IF EXISTS")
             except Exception:
@@ -258,9 +266,34 @@ async def _ensure_document_indexes():
             )
             logger.info("[startup] Fulltext index recreated (background population may take minutes)")
         else:
-            logger.info("[startup] Fulltext index already up to date, skipping")
+            logger.info("[startup] Fulltext index OK, skipping rebuild")
     except Exception as e:
         logger.warning(f"[startup] Не удалось создать индексы: {e}")
+
+
+@app.on_event("startup")
+async def _warm_counts_cache():
+    """Прогревает кэши count_all/count_full_text при старте, чтобы первый запрос не висал 30+ сек."""
+    import threading, time as _time
+    def _warm():
+        try:
+            from adapters.repositories.document_repository import DocumentRepository
+            repo = DocumentRepository()
+            t0 = _time.monotonic()
+            total = repo.count_all()
+            dt = _time.monotonic() - t0
+            logger.info(f"[startup] count_all warmed: {total} ({dt:.1f}s)")
+            t0 = _time.monotonic()
+            ft = repo.count_full_text()
+            dt = _time.monotonic() - t0
+            logger.info(f"[startup] count_full_text warmed: {ft} ({dt:.1f}s)")
+            t0 = _time.monotonic()
+            bs = repo.count_by_sources()
+            dt = _time.monotonic() - t0
+            logger.info(f"[startup] count_by_sources warmed: {bs} ({dt:.1f}s)")
+        except Exception as e:
+            logger.warning(f"[startup] Cache warmup failed: {e}")
+    threading.Thread(target=_warm, daemon=True).start()
 
 
 @app.on_event("shutdown")

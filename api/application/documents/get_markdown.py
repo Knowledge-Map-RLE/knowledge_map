@@ -12,10 +12,50 @@ import logging
 from typing import Optional
 
 from domain.exceptions import NotFoundError
+from domain.models.document import Document
 from application.ports.repositories import DocumentRepositoryProtocol
 from application.ports.object_storage import ObjectStorageProtocol
 
 logger = logging.getLogger(__name__)
+
+
+def _build_abstract_markdown(doc: Document) -> str:
+    """Генерирует markdown из метаданных документа как fallback."""
+    parts: list[str] = []
+
+    if doc.title:
+        parts.append(f"# {doc.title}\n")
+
+    if doc.authors:
+        if isinstance(doc.authors, list):
+            authors_str = ", ".join(doc.authors)
+        else:
+            authors_str = str(doc.authors)
+        parts.append(f"**Authors:** {authors_str}\n")
+
+    meta_parts: list[str] = []
+    if doc.journal:
+        meta_parts.append(f"**Journal:** {doc.journal}")
+    if doc.doi:
+        meta_parts.append(f"**DOI:** {doc.doi}")
+    if doc.pubmed_id:
+        meta_parts.append(f"**PMID:** {doc.pubmed_id}")
+    if doc.pmc_id:
+        meta_parts.append(f"**PMCID:** {doc.pmc_id}")
+    if meta_parts:
+        parts.append(" | ".join(meta_parts) + "\n")
+
+    if doc.abstract:
+        parts.append(f"## Abstract\n\n{doc.abstract}\n")
+
+    if doc.keywords:
+        if isinstance(doc.keywords, list):
+            kw_str = ", ".join(doc.keywords)
+        else:
+            kw_str = str(doc.keywords)
+        parts.append(f"**Keywords:** {kw_str}\n")
+
+    return "\n".join(parts) if parts else ""
 
 
 async def get_markdown(
@@ -50,6 +90,23 @@ async def get_markdown(
         key = doc.get_active_markdown_key()
 
     if not key:
+        if version == "active":
+            fallback = _build_abstract_markdown(doc)
+            if fallback:
+                logger.info(
+                    f"[get_markdown] Active markdown key отсутствует для doc_id={doc_id} "
+                    f"(source={doc.source}), используется fallback из abstract"
+                )
+                return fallback
         return None
 
-    return await storage.download_text(bucket, key)
+    content = await storage.download_text(bucket, key)
+    if not content and version == "active":
+        fallback = _build_abstract_markdown(doc)
+        if fallback:
+            logger.info(
+                f"[get_markdown] Markdown не найден в S3 по ключу {key} для doc_id={doc_id} "
+                f"(source={doc.source}), используется fallback из abstract"
+            )
+            return fallback
+    return content

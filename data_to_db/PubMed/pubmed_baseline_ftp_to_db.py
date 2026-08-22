@@ -115,15 +115,15 @@ def ensure_schema():
         # Создаём схему для нашего алгоритма укладки
         session.run("""
             CREATE CONSTRAINT IF NOT EXISTS
-            FOR (n:Article) REQUIRE n.uid IS UNIQUE
+            FOR (n:Document) REQUIRE n.uid IS UNIQUE
         """)
         session.run("""
             CREATE INDEX IF NOT EXISTS
-            FOR (n:Article) ON (n.layout_status)
+            FOR (n:Document) ON (n.layout_status)
         """)
         session.run("""
             CREATE INDEX IF NOT EXISTS
-            FOR (n:Article) ON (n.layer, n.level)
+            FOR (n:Document) ON (n.layer, n.level)
         """)
         # Индексы для быстрого поиска существующих документов при дедупликации по pmid/doi
         # и быстрого MERGE по uid (без них каждый батч сканирует все Document)
@@ -183,7 +183,7 @@ def apoc_purge_database(session):
     session.run(
         """
         CALL apoc.periodic.iterate(
-          'MATCH (n:Article) RETURN n',
+          'MATCH (n:Document) RETURN n',
           'DELETE n',
           {batchSize: 50000, parallel: false}
         )
@@ -280,6 +280,48 @@ def extract_bibliographic_links_improved(elem, pmid):
 
 # ========== ЗАПИСЬ ==========
 
+def _build_pubmed_markdown(node: dict) -> str:
+    """Генерирует markdown-представление PubMed-статьи из метаданных."""
+    parts: list[str] = []
+
+    title = node.get('title', '')
+    if title:
+        parts.append(f"# {title}\n")
+
+    authors = node.get('authors', [])
+    if authors:
+        if isinstance(authors, list):
+            parts.append(f"**Authors:** {', '.join(authors)}\n")
+        else:
+            parts.append(f"**Authors:** {authors}\n")
+
+    meta: list[str] = []
+    journal = node.get('journal', '')
+    if journal:
+        meta.append(f"**Journal:** {journal}")
+    doi = node.get('doi', '')
+    if doi:
+        meta.append(f"**DOI:** {doi}")
+    pmid = node.get('pmid', '')
+    if pmid:
+        meta.append(f"**PMID:** {pmid}")
+    if meta:
+        parts.append(" | ".join(meta) + "\n")
+
+    abstract = node.get('abstract', '')
+    if abstract:
+        parts.append(f"## Abstract\n\n{abstract}\n")
+
+    keywords = node.get('keywords', [])
+    if keywords:
+        if isinstance(keywords, list):
+            parts.append(f"**Keywords:** {', '.join(keywords)}\n")
+        else:
+            parts.append(f"**Keywords:** {keywords}\n")
+
+    return "\n".join(parts) if parts else ""
+
+
 def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
     global driver
 
@@ -307,6 +349,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                     'is_open_access': True,
                     'is_processed': True,
                     'processing_status': 'processed',
+                    'has_full_text': False,
                 })
             tx.run("""
                 UNWIND $nodes AS row
@@ -331,6 +374,8 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.original_filename = row.original_filename,
                       n.md5_hash = row.md5_hash,
                       n.s3_key = row.s3_key,
+                      n.docling_raw_md_s3_key = row.docling_raw_md_s3_key,
+                      n.formatted_md_s3_key = row.formatted_md_s3_key,
                       n.title = row.title,
                       n.authors = row.authors,
                       n.abstract = row.abstract,
@@ -342,11 +387,14 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.source = row.source,
                       n.is_open_access = row.is_open_access,
                       n.is_processed = row.is_processed,
-                      n.processing_status = row.processing_status
+                      n.processing_status = row.processing_status,
+                      n.has_full_text = row.has_full_text
                   ON MATCH SET 
                       n.original_filename = coalesce(n.original_filename, row.original_filename),
                       n.md5_hash = coalesce(n.md5_hash, row.md5_hash),
                       n.s3_key = coalesce(n.s3_key, row.s3_key),
+                      n.docling_raw_md_s3_key = coalesce(n.docling_raw_md_s3_key, row.docling_raw_md_s3_key),
+                      n.formatted_md_s3_key = coalesce(n.formatted_md_s3_key, row.formatted_md_s3_key),
                       n.title = coalesce(n.title, row.title),
                       n.authors = coalesce(n.authors, row.authors),
                       n.abstract = coalesce(n.abstract, row.abstract),
@@ -358,19 +406,20 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.source = coalesce(n.source, row.source),
                       n.is_open_access = coalesce(n.is_open_access, row.is_open_access),
                       n.is_processed = row.is_processed,
-                      n.processing_status = row.processing_status
+                      n.processing_status = row.processing_status,
+                      n.has_full_text = row.has_full_text
             """, nodes=doc_nodes)
         if rels:
             # УНИФИЦИРОВАННАЯ СЕМАНТИКА SOURCE/TARGET:
             # Направление: SOURCE (cited, старая) -> TARGET (citing, новая)
             tx.run("""
                 UNWIND $rels AS r
-                  MERGE (source:Article {uid: r.source_pmid})
+                  MERGE (source:Document {uid: r.source_pmid})
                     ON CREATE SET
                       source.title = coalesce(r.source_title, source.title)
                     ON MATCH SET
                       source.title = coalesce(source.title, r.source_title)
-                  MERGE (target:Article {uid: r.target_pmid})
+                  MERGE (target:Document {uid: r.target_pmid})
                     ON CREATE SET
                       target.title = coalesce(r.target_title, target.title)
                     ON MATCH SET
@@ -386,6 +435,27 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
             with driver.session() as session:
                 session.execute_write(tx_work, timeout=120_000)
             logger.info(f"[WRITE-OK] {path_name}")
+
+            # Загружаем сгенерированный markdown в S3 для каждой статьи.
+            # Это обеспечивает наличие markdown-файла для Аннотатора.
+            if nodes:
+                try:
+                    s3 = get_s3_client()
+                    uploaded = 0
+                    for node in nodes:
+                        pmid = node.get('pmid', '')
+                        if not pmid:
+                            continue
+                        if s3.article_exists(pmid):
+                            continue
+                        md_content = _build_pubmed_markdown(node)
+                        if md_content and s3.save_markdown(pmid, md_content):
+                            uploaded += 1
+                    if uploaded:
+                        logger.info(f"[WRITE-S3] {path_name}: загружено {uploaded}/{len(nodes)} markdown файлов в S3")
+                except Exception as s3_err:
+                    logger.warning(f"[WRITE-S3] {path_name}: ошибка загрузки markdown в S3: {s3_err}")
+
             # Увеличенная пауза для освобождения памяти
             time.sleep(0.2)
             return True
@@ -743,7 +813,7 @@ def process_all_files(
     # Показываем итоговую статистику
     try:
         with driver.session() as s:
-            result = s.run("MATCH (n:Article) RETURN count(n) as total_nodes")
+            result = s.run("MATCH (n:Document) RETURN count(n) as total_nodes")
             total_nodes = result.single()["total_nodes"]
             logger.info(f"ИТОГО загружено узлов в базу: {total_nodes}")
 

@@ -80,11 +80,13 @@ export interface MultiLevelAnalysisResponse {
 export interface Document {
     doc_id: string;
     has_markdown: boolean;
+    has_full_text: boolean;
     processing_status: string;
     is_processed: boolean;
     title?: string;
     pubmed_id?: string;
     pmc_id?: string;
+    source?: string;
     files: Record<string, string>;
 }
 

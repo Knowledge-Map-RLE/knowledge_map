@@ -9,6 +9,7 @@ Responsibility: HTTP route handlers для загрузки и управлен�
 Allowed imports: fastapi, application.documents.*, web.dependencies, src.schemas.api
 Forbidden imports: neomodel (напрямую), services (напрямую), infrastructure (напрямую)
 """
+import asyncio
 import logging
 from typing import Optional
 
@@ -94,14 +95,29 @@ async def delete_document_route(
     return {"success": True, "message": f"Document {doc_id} deleted"}
 
 
+@router.get("/documents/stats")
+async def document_stats_route(
+    doc_repo=Depends(get_document_repository),
+):
+    """Быстрые статистики по документам (кэшируется на 5 минут)."""
+    ft_count = await asyncio.to_thread(doc_repo.count_full_text)
+    return {
+        "success": True,
+        "full_text_count": ft_count,
+    }
+
+
 @router.get("/documents")
 async def list_documents_route(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    full_text_only: bool = Query(True, description="Только документы с полным текстом"),
     doc_repo=Depends(get_document_repository),
 ):
     """Список документов из Neo4j с пагинацией."""
-    docs, total = list_documents(repo=doc_repo, skip=skip, limit=limit)
+    docs, total = await asyncio.to_thread(
+        list_documents, repo=doc_repo, skip=skip, limit=limit, full_text_only=full_text_only
+    )
     return {
         "success": True,
         "total_count": total,
@@ -116,6 +132,7 @@ async def list_documents_route(
                 "is_processed": d.is_processed,
                 "source": d.source,
                 "has_markdown": d.get_active_markdown_key() is not None,
+                "has_full_text": d.has_full_text,
                 "pubmed_id": d.pubmed_id,
                 "pmc_id": d.pmc_id,
                 "doi": d.doi,
@@ -131,11 +148,14 @@ async def search_documents_route(
     q: str = Query(..., min_length=1, description="Поисковый запрос"),
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    full_text_only: bool = Query(True, description="Только документы с полным текстом"),
     doc_repo=Depends(get_document_repository),
 ):
     """Нечёткий поиск документов по названию через Neo4j fulltext index."""
     use_case = SearchDocumentsUseCase(repo=doc_repo)
-    docs, total = use_case.execute(q=q, skip=skip, limit=limit)
+    docs, total = await asyncio.to_thread(
+        use_case.execute, q=q, skip=skip, limit=limit, full_text_only=full_text_only
+    )
     return {
         "success": True,
         "total_count": total,
@@ -151,6 +171,7 @@ async def search_documents_route(
                 "is_processed": d.is_processed,
                 "source": d.source,
                 "has_markdown": d.get_active_markdown_key() is not None,
+                "has_full_text": d.has_full_text,
                 "pubmed_id": d.pubmed_id,
                 "pmc_id": d.pmc_id,
                 "doi": d.doi,

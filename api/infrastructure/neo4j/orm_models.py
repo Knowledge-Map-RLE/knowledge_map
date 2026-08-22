@@ -124,6 +124,8 @@ class Document(StructuredNode):
     processing_status = StringProperty(default="uploaded")
     error_message = StringProperty()
 
+    has_full_text = BooleanProperty(default=False, index=True)
+
     created_by_uid = StringProperty()
     annotations = RelationshipTo("PDFAnnotation", "HAS_ANNOTATION")
     markdown_annotations = RelationshipTo("MarkdownAnnotation", "HAS_MARKDOWN_ANNOTATION")

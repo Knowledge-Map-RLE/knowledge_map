@@ -13,10 +13,55 @@ import re
 from typing import Dict, Any, Optional
 
 from domain.exceptions import NotFoundError
+from domain.models.document import Document
 from application.ports.repositories import DocumentRepositoryProtocol
 from application.ports.object_storage import ObjectStorageProtocol
 
 logger = logging.getLogger(__name__)
+
+
+def _build_abstract_markdown(doc: Document) -> str:
+    """
+    Генерирует markdown из метаданных документа для случаев,
+    когда полный текст статьи отсутствует в S3 (PubMed-only и т.д.).
+    """
+    parts: list[str] = []
+
+    if doc.title:
+        parts.append(f"# {doc.title}\n")
+
+    if doc.authors:
+        if isinstance(doc.authors, list):
+            authors_str = ", ".join(doc.authors)
+        else:
+            authors_str = str(doc.authors)
+        parts.append(f"**Authors:** {authors_str}\n")
+
+    meta_parts: list[str] = []
+    if doc.journal:
+        meta_parts.append(f"**Journal:** {doc.journal}")
+    if doc.publication_date:
+        meta_parts.append(f"**Published:** {doc.publication_date.strftime('%Y-%m-%d') if hasattr(doc.publication_date, 'strftime') else doc.publication_date}")
+    if doc.doi:
+        meta_parts.append(f"**DOI:** {doc.doi}")
+    if doc.pubmed_id:
+        meta_parts.append(f"**PMID:** {doc.pubmed_id}")
+    if doc.pmc_id:
+        meta_parts.append(f"**PMCID:** {doc.pmc_id}")
+    if meta_parts:
+        parts.append(" | ".join(meta_parts) + "\n")
+
+    if doc.abstract:
+        parts.append(f"## Abstract\n\n{doc.abstract}\n")
+
+    if doc.keywords:
+        if isinstance(doc.keywords, list):
+            kw_str = ", ".join(doc.keywords)
+        else:
+            kw_str = str(doc.keywords)
+        parts.append(f"**Keywords:** {kw_str}\n")
+
+    return "\n".join(parts) if parts else ""
 
 
 async def get_document_assets(
@@ -54,6 +99,18 @@ async def get_document_assets(
     markdown = None
     if markdown_raw:
         markdown = _convert_image_paths(markdown_raw, doc_id)
+
+    # Fallback: если markdown отсутствует в S3, генерируем из метаданных документа.
+    # Это обеспечивает отображение текста для PubMed-only статей, у которых
+    # есть abstract/title/authors в Neo4j, но нет markdown-файла в S3.
+    if not markdown:
+        fallback_md = _build_abstract_markdown(doc)
+        if fallback_md:
+            markdown = fallback_md
+            logger.info(
+                f"[get_document_assets] Markdown отсутствует в S3 для doc_id={doc_id} "
+                f"(source={doc.source}), используется fallback из abstract ({len(fallback_md)} chars)"
+            )
 
     image_names = []
     image_urls: Dict[str, str] = {}

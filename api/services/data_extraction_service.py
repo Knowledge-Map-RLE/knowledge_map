@@ -222,7 +222,8 @@ class DataExtractionService:
                             is_processed=True,
                             title=extracted_title,
                             docling_raw_md_s3_key=docling_raw_s3_key,
-                            formatted_md_s3_key=formatted_s3_key
+                            formatted_md_s3_key=formatted_s3_key,
+                            has_full_text=bool(docling_raw_s3_key or formatted_s3_key),
                         ).save()
                         logger.info(f"[pdf_to_md] Документ {doc_id} сохранён в Neo4j")
                     else:
@@ -232,10 +233,12 @@ class DataExtractionService:
                             existing_doc.title = extracted_title
                         if docling_raw_s3_key:
                             existing_doc.docling_raw_md_s3_key = docling_raw_s3_key
+                            existing_doc.has_full_text = True
                             if existing_doc.user_md_s3_key:
                                 existing_doc.user_md_s3_key = None
                         if formatted_s3_key:
                             existing_doc.formatted_md_s3_key = formatted_s3_key
+                            existing_doc.has_full_text = True
                         existing_doc.save()
                         logger.info(f"[pdf_to_md] Документ {doc_id} обновлён в Neo4j")
                     _conversion_progress.pop(doc_id, None)

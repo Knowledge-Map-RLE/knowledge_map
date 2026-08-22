@@ -25,12 +25,12 @@ class LayoutService:
             # Читаем граф из Neo4j: узлы помечены как Article, связи - BIBLIOGRAPHIC_LINK
             logger.info("Querying articles from Neo4j")
             blocks_query = """
-            MATCH (n:Article)
+            MATCH (n:Document)
             WHERE n.layer IS NOT NULL AND n.level IS NOT NULL
               AND n.x IS NOT NULL AND n.y IS NOT NULL
               AND (
-                EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR
-                EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
+                EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Document)) OR
+                EXISTS((:Document)-[:BIBLIOGRAPHIC_LINK]->(n))
               )
             RETURN n.uid as id,
                    n.content as content,
@@ -50,7 +50,7 @@ class LayoutService:
                 raise HTTPException(status_code=404, detail="В базе данных нет статей Article. Загрузите данные.")
             
             links_query = """
-            MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
+            MATCH (s:Document)-[r:BIBLIOGRAPHIC_LINK]->(t:Document)
             RETURN s.uid as source_id, t.uid as target_id
             """
             links_result, _ = db.cypher_query(links_query)
@@ -161,7 +161,7 @@ class LayoutService:
             if only_with_layout:
                 # Только узлы с реальными координатами (x, y) - самый быстрый вариант
                 nodes_query = (
-                    "MATCH (n:Article) "
+                    "MATCH (n:Document) "
                     "WHERE n.x IS NOT NULL AND n.y IS NOT NULL "
                     "  AND n.x >= $left AND n.x <= $right "
                     "  AND n.y >= $top AND n.y <= $bottom "
@@ -176,7 +176,7 @@ class LayoutService:
             else:
                 # Fallback на layer/level если x, y не заданы (медленнее из-за coalesce)
                 nodes_query = (
-                    "MATCH (n:Article) "
+                    "MATCH (n:Document) "
                     "WHERE coalesce(n.x, toFloat(coalesce(n.layer,0))*$LAYER_SPACING) >= $left "
                     "  AND coalesce(n.x, toFloat(coalesce(n.layer,0))*$LAYER_SPACING) <= $right "
                     "  AND coalesce(n.y, toFloat(coalesce(n.level,0))*$LEVEL_SPACING) >= $top "
@@ -198,13 +198,13 @@ class LayoutService:
             # Рёбра, где хотя бы один конец в окне, с ограничением fan-out
             edges_query = (
                 "UNWIND $ids AS vid "
-                "MATCH (s:Article {uid: vid})-[:BIBLIOGRAPHIC_LINK]->(t:Article) "
+                "MATCH (s:Document {uid: vid})-[:BIBLIOGRAPHIC_LINK]->(t:Document) "
                 "WITH s, t ORDER BY t.uid LIMIT $limit_per_node "
                 "RETURN s.uid as sid, s.layer as sl, s.level as sv, s.x as sx, s.y as sy, "
                 "       t.uid as tid, t.layer as tl, t.level as tv, t.x as tx, t.y as ty "
                 "UNION "
                 "UNWIND $ids AS vid "
-                "MATCH (s:Article)-[:BIBLIOGRAPHIC_LINK]->(t:Article {uid: vid}) "
+                "MATCH (s:Document)-[:BIBLIOGRAPHIC_LINK]->(t:Document {uid: vid}) "
                 "WITH s, t ORDER BY s.uid LIMIT $limit_per_node "
                 "RETURN s.uid as sid, s.layer as sl, s.level as sv, s.x as sx, s.y as sy, "
                 "       t.uid as tid, t.layer as tl, t.level as tv, t.x as tx, t.y as ty"
@@ -256,12 +256,12 @@ class LayoutService:
 
             # Запрос всех статей - только со связями
             nodes_query = """
-            MATCH (n:Article)
+            MATCH (n:Document)
             WHERE n.layer IS NOT NULL AND n.level IS NOT NULL
               AND n.x IS NOT NULL AND n.y IS NOT NULL
               AND (
-                EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Article)) OR
-                EXISTS((:Article)-[:BIBLIOGRAPHIC_LINK]->(n))
+                EXISTS((n)-[:BIBLIOGRAPHIC_LINK]->(:Document)) OR
+                EXISTS((:Document)-[:BIBLIOGRAPHIC_LINK]->(n))
               )
             RETURN n.uid as id,
                    coalesce(n.title, n.name, n.content, toString(n.uid)) as title,
@@ -305,7 +305,7 @@ class LayoutService:
 
             # Запрос всех связей
             links_query = """
-            MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
+            MATCH (s:Document)-[r:BIBLIOGRAPHIC_LINK]->(t:Document)
             RETURN s.uid as source_id, t.uid as target_id
             """
             links_result, _ = db.cypher_query(links_query)
@@ -350,7 +350,7 @@ class LayoutService:
             # Просто считаем статьи с назначенными координатами (layer, level)
             # Если нужен точный подсчёт со связями, лучше кешировать это значение
             total_query = (
-                "MATCH (n:Article) "
+                "MATCH (n:Document) "
                 "WHERE n.layer IS NOT NULL AND n.level IS NOT NULL "
                 "  AND n.x IS NOT NULL AND n.y IS NOT NULL "
                 "RETURN count(n) as total"
@@ -364,7 +364,7 @@ class LayoutService:
             # Предполагаем что статьи с координатами уже прошли укладку и имеют связи
             # Фильтрация по связям (если нужна) должна выполняться на этапе укладки
             nodes_query = (
-                "MATCH (n:Article) "
+                "MATCH (n:Document) "
                 "WHERE n.layer IS NOT NULL AND n.level IS NOT NULL "
                 "  AND n.x IS NOT NULL AND n.y IS NOT NULL "
                 "RETURN n.uid as id, "
@@ -426,7 +426,7 @@ class LayoutService:
 
             # Загружаем ВСЕ связи для выбранных статей, включая целевые статьи
             links_query = """
-            MATCH (s:Article)-[r:BIBLIOGRAPHIC_LINK]->(t:Article)
+            MATCH (s:Document)-[r:BIBLIOGRAPHIC_LINK]->(t:Document)
             WHERE s.uid IN $ids OR t.uid IN $ids
             RETURN s.uid as source_id, t.uid as target_id
             """
@@ -454,7 +454,7 @@ class LayoutService:
             if missing_target_ids:
                 # Загружаем недостающие целевые статьи
                 missing_targets_query = """
-                MATCH (n:Article)
+                MATCH (n:Document)
                 WHERE n.uid IN $missing_ids
                   AND n.layer IS NOT NULL AND n.level IS NOT NULL
                 RETURN n.uid as id,

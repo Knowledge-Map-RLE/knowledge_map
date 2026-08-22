@@ -66,10 +66,19 @@ class DocumentRepositoryProtocol(Protocol):
         self,
         skip: int = 0,
         limit: Optional[int] = None,
+        full_text_only: bool = False,
     ) -> List[Document]: ...
 
     def count_all(self) -> int:
         """Общее количество документов — для пагинации."""
+        ...
+
+    def count_full_text(self) -> int:
+        """Количество документов с полным текстом (не только abstract)."""
+        ...
+
+    def count_by_sources(self) -> int:
+        """Количество документов из основных source (upload, pubmed, pmc)."""
         ...
 
     def search(
@@ -77,6 +86,7 @@ class DocumentRepositoryProtocol(Protocol):
         q: str,
         skip: int = 0,
         limit: int = 100,
+        full_text_only: bool = False,
     ) -> Tuple[List[Document], int]:
         """Нечёткий поиск по названию. Возвращает (документы, всего_найдено)."""
         ...

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import logging
 import re
+import time
 from typing import Optional, List, Tuple
 
 from neomodel import DoesNotExist, db
@@ -100,6 +101,7 @@ def _domain_to_orm(doc: Document, orm_doc: Optional[OrmDocument] = None) -> OrmD
     orm_doc.is_processed = doc.is_processed
     orm_doc.processing_status = doc.processing_status
     orm_doc.error_message = doc.error_message
+    orm_doc.has_full_text = doc.has_full_text
     return orm_doc
 
 
@@ -109,8 +111,8 @@ def _row_to_domain(row) -> Document:
     Порядок полей (0-based):
     0=uid, 1=original_filename, 2=title, 3=processing_status, 4=is_processed,
     5=source, 6=s3_key, 7=s3_bucket, 8=file_size, 9=upload_date,
-    10=docling_raw_md_s3_key, 11=formatted_md_s3_key, 12=user_md_s3_key,
-    13=pubmed_id, 14=pmc_id, 15=is_open_access, 16=error_message, 17=md5_hash
+    10=docling_raw_md_s3_key, 11=user_md_s3_key,
+    12=pubmed_id, 13=pmc_id, 14=is_open_access, 15=error_message, 16=md5_hash
     """
     def _val(v):
         return v if v is not None else None
@@ -127,13 +129,12 @@ def _row_to_domain(row) -> Document:
         file_size=_val(row[8]),
         upload_date=_val(row[9]),
         docling_raw_md_s3_key=_val(row[10]),
-        formatted_md_s3_key=_val(row[11]),
-        user_md_s3_key=_val(row[12]),
-        pubmed_id=_val(row[13]),
-        pmc_id=_val(row[14]),
-        is_open_access=bool(_val(row[15])) if _val(row[15]) is not None else False,
-        error_message=_val(row[16]),
-        md5_hash=_val(row[17]),
+        user_md_s3_key=_val(row[11]),
+        pubmed_id=_val(row[12]),
+        pmc_id=_val(row[13]),
+        is_open_access=bool(_val(row[14])) if _val(row[14]) is not None else False,
+        error_message=_val(row[15]),
+        md5_hash=_val(row[16]),
     )
 
 
@@ -141,6 +142,34 @@ class DocumentRepository:
     """
     neomodel-реализация репозитория документов.
     Удовлетворяет DocumentRepositoryProtocol (structural subtyping).
+    """
+
+    _full_text_count_cache: Optional[Tuple[int, float]] = None
+    _all_count_cache: Optional[Tuple[int, float]] = None
+    _sources_count_cache: Optional[Tuple[int, float]] = None
+    _CACHE_TTL = 300.0
+
+    def __init__(self) -> None:
+        pass
+
+    _LIST_FIELDS = """
+               d.uid as uid,
+               d.original_filename as original_filename,
+               d.title as title,
+               d.processing_status as processing_status,
+               d.is_processed as is_processed,
+               d.source as source,
+               d.s3_key as s3_key,
+               d.s3_bucket as s3_bucket,
+               d.file_size as file_size,
+               d.upload_date as upload_date,
+               d.docling_raw_md_s3_key as docling_raw_md_s3_key,
+               d.user_md_s3_key as user_md_s3_key,
+               d.pubmed_id as pubmed_id,
+               d.pmc_id as pmc_id,
+               d.is_open_access as is_open_access,
+               d.error_message as error_message,
+               d.md5_hash as md5_hash
     """
 
     def get_by_id(self, uid: str) -> Optional[Document]:
@@ -177,6 +206,7 @@ class DocumentRepository:
         self,
         skip: int = 0,
         limit: Optional[int] = None,
+        full_text_only: bool = False,
     ) -> List[Document]:
         import time
         t0 = time.monotonic()
@@ -186,50 +216,35 @@ class DocumentRepository:
 
             eff_limit = limit or 100
 
-            # Два быстрых запроса вместо одного медленного ORDER BY CASE:
-            # 1) upload-документы (range index по source — мгновенно)
-            # 2) не-upload документы с LIMIT (без сортировки по source — full scan)
-            # UNION ALL сохраняет приоритет: upload наверху.
-            _FIELDS = """
-                       d.uid as uid,
-                       d.original_filename as original_filename,
-                       d.title as title,
-                       d.processing_status as processing_status,
-                       d.is_processed as is_processed,
-                       d.source as source,
-                       d.s3_key as s3_key,
-                       d.s3_bucket as s3_bucket,
-                       d.file_size as file_size,
-                       d.upload_date as upload_date,
-                       d.docling_raw_md_s3_key as docling_raw_md_s3_key,
-                       d.formatted_md_s3_key as formatted_md_s3_key,
-                       d.user_md_s3_key as user_md_s3_key,
-                       d.pubmed_id as pubmed_id,
-                       d.pmc_id as pmc_id,
-                       d.is_open_access as is_open_access,
-                       d.error_message as error_message,
-                       d.md5_hash as md5_hash
-            """
-            cypher = f"""
-                MATCH (d:Document) WHERE d.source = 'upload'
-                RETURN {_FIELDS}
-                ORDER BY d.uid ASC
-                SKIP $skip
-                LIMIT $limit
-                UNION ALL
-                MATCH (d:Document) WHERE d.source IN ['pubmed', 'pmc']
-                RETURN {_FIELDS}
-                SKIP $skip
-                LIMIT $limit
-            """
+            if full_text_only:
+                cypher = f"""
+                    MATCH (d:Document) WHERE d.has_full_text = true
+                    RETURN {self._LIST_FIELDS}
+                    ORDER BY d.uid ASC
+                    SKIP $skip
+                    LIMIT $limit
+                """
+            else:
+                cypher = f"""
+                    MATCH (d:Document) WHERE d.source = 'upload'
+                    RETURN {self._LIST_FIELDS}
+                    ORDER BY d.uid ASC
+                    SKIP $skip
+                    LIMIT $limit
+                    UNION ALL
+                    MATCH (d:Document) WHERE d.source IN ['pubmed', 'pmc']
+                    RETURN {self._LIST_FIELDS}
+                    ORDER BY d.uid ASC
+                    SKIP $skip
+                    LIMIT $limit
+                """
             params: dict = {"skip": skip, "limit": eff_limit}
 
             results, _ = db.cypher_query(cypher, params)
             elapsed = time.monotonic() - t0
             if elapsed > 2:
-                logger.warning(f"list_all took {elapsed:.1f}s for {len(results)} docs (skip={skip}, limit={limit})")
+                logger.warning(f"list_all took {elapsed:.1f}s for {len(results)} docs (skip={skip}, limit={limit}, full_text_only={full_text_only})")
 
-            # Убираем дубли (на случай пересечения) и обрезаем до limit
             seen = set()
             docs: List[Document] = []
             for row in results:
@@ -248,8 +263,13 @@ class DocumentRepository:
             return []
 
     def count_all(self) -> int:
-        import time
-        t0 = time.monotonic()
+        """Общее количество документов. Кэшируется на 5 минут."""
+        now = time.monotonic()
+        if self._all_count_cache is not None:
+            cached_count, cached_at = self._all_count_cache
+            if now - cached_at < self._CACHE_TTL:
+                return cached_count
+        t0 = now
         try:
             results, _ = db.cypher_query(
                 "MATCH (d:Document) RETURN count(d) as total"
@@ -257,21 +277,76 @@ class DocumentRepository:
             elapsed = time.monotonic() - t0
             if elapsed > 2:
                 logger.warning(f"count_all took {elapsed:.1f}s")
-            return results[0][0] if results else 0
+            count = results[0][0] if results else 0
+            self._all_count_cache = (count, time.monotonic())
+            return count
         except Exception as e:
             elapsed = time.monotonic() - t0
             logger.error(f"count_all failed after {elapsed:.1f}s: {e}")
+            return 0
+
+    def count_full_text(self) -> int:
+        """Количество документов с полным текстом. Кэшируется на 5 минут."""
+        now = time.monotonic()
+        if self._full_text_count_cache is not None:
+            cached_count, cached_at = self._full_text_count_cache
+            if now - cached_at < self._CACHE_TTL:
+                return cached_count
+        t0 = now
+        try:
+            results, _ = db.cypher_query(
+                "MATCH (d:Document) WHERE d.has_full_text = true "
+                "RETURN count(d) AS cnt"
+            )
+            elapsed = time.monotonic() - t0
+            if elapsed > 2:
+                logger.warning(f"count_full_text took {elapsed:.1f}s")
+            count = results[0][0] if results else 0
+            self._full_text_count_cache = (count, time.monotonic())
+            return count
+        except Exception as e:
+            elapsed = time.monotonic() - t0
+            logger.error(f"count_full_text failed after {elapsed:.1f}s: {e}")
+            if self._full_text_count_cache is not None:
+                return self._full_text_count_cache[0]
+            return 0
+
+    def count_by_sources(self) -> int:
+        """Количество документов из основных source (upload, pubmed, pmc). Кэшируется."""
+        now = time.monotonic()
+        if self._sources_count_cache is not None:
+            cached_count, cached_at = self._sources_count_cache
+            if now - cached_at < self._CACHE_TTL:
+                return cached_count
+        t0 = now
+        try:
+            results, _ = db.cypher_query(
+                "MATCH (d:Document) WHERE d.source IN ['upload', 'pubmed', 'pmc'] "
+                "RETURN count(d) AS cnt"
+            )
+            elapsed = time.monotonic() - t0
+            if elapsed > 2:
+                logger.warning(f"count_by_sources took {elapsed:.1f}s")
+            count = results[0][0] if results else 0
+            DocumentRepository._sources_count_cache = (count, time.monotonic())
+            return count
+        except Exception as e:
+            elapsed = time.monotonic() - t0
+            logger.error(f"count_by_sources failed after {elapsed:.1f}s: {e}")
+            if self._sources_count_cache is not None:
+                return self._sources_count_cache[0]
             return 0
 
     def list_all_with_count(
         self,
         skip: int = 0,
         limit: Optional[int] = None,
+        full_text_only: bool = False,
     ) -> Tuple[List[Document], int]:
-        """Документы + общее количество за два запроса (оба используют индексы)."""
+        """Документы + общее количество за два запроса."""
         try:
-            docs = self.list_all(skip=skip, limit=limit)
-            total = self.count_all()
+            docs = self.list_all(skip=skip, limit=limit, full_text_only=full_text_only)
+            total = self.count_full_text() if full_text_only else self.count_by_sources()
             return docs, total
         except Exception as e:
             logger.error(f"list_all_with_count failed: {e}")
@@ -289,7 +364,6 @@ class DocumentRepository:
         d.file_size as file_size,
         d.upload_date as upload_date,
         d.docling_raw_md_s3_key as docling_raw_md_s3_key,
-        d.formatted_md_s3_key as formatted_md_s3_key,
         d.user_md_s3_key as user_md_s3_key,
         d.pubmed_id as pubmed_id,
         d.pmc_id as pmc_id,
@@ -309,15 +383,20 @@ class DocumentRepository:
         value: str,
         skip: int,
         limit: int,
+        full_text_only: bool = False,
     ) -> Tuple[List[Document], int]:
+        ft_filter = (
+            "AND d.has_full_text = true"
+            if full_text_only else ""
+        )
         cypher = f"""
-            MATCH (d:Document) WHERE d.{field} = $val
+            MATCH (d:Document) WHERE d.{field} = $val {ft_filter}
             RETURN {self._SEARCH_FIELDS}
             SKIP $skip LIMIT $limit
         """
         results, _ = db.cypher_query(cypher, {"val": value, "skip": skip, "limit": limit})
         if results:
-            count_cypher = f"MATCH (d:Document) WHERE d.{field} = $val RETURN count(d)"
+            count_cypher = f"MATCH (d:Document) WHERE d.{field} = $val {ft_filter} RETURN count(d)"
             cnt, _ = db.cypher_query(count_cypher, {"val": value})
             total = cnt[0][0] if cnt else len(results)
             return [_row_to_domain(row) for row in results], total
@@ -328,31 +407,35 @@ class DocumentRepository:
         q: str,
         skip: int = 0,
         limit: int = 100,
+        full_text_only: bool = False,
     ) -> Tuple[List[Document], int]:
         import time
         t0 = time.monotonic()
         try:
             if not q.strip():
-                return self.list_all(skip=skip, limit=limit), self.count_all()
+                return (
+                    self.list_all(skip=skip, limit=limit, full_text_only=full_text_only),
+                    self.count_full_text() if full_text_only else self.count_by_sources(),
+                )
 
             query = q.strip()
 
             if self._is_doi(query):
-                results, total = self._search_by_exact_field("doi", query, skip, limit)
+                results, total = self._search_by_exact_field("doi", query, skip, limit, full_text_only)
                 elapsed = time.monotonic() - t0
                 if elapsed > 3:
                     logger.warning(f"DOI search took {elapsed:.1f}s for doi={query}")
                 return results, total
 
             if query.isdigit():
-                results, total = self._search_by_exact_field("pubmed_id", query, skip, limit)
+                results, total = self._search_by_exact_field("pubmed_id", query, skip, limit, full_text_only)
                 elapsed = time.monotonic() - t0
                 if elapsed > 3:
                     logger.warning(f"PMID search took {elapsed:.1f}s for pmid={query}")
                 return results, total
 
             if query.upper().startswith("PMC") and query[3:].isdigit():
-                results, total = self._search_by_exact_field("pmc_id", query.upper(), skip, limit)
+                results, total = self._search_by_exact_field("pmc_id", query.upper(), skip, limit, full_text_only)
                 elapsed = time.monotonic() - t0
                 if elapsed > 3:
                     logger.warning(f"PMCID search took {elapsed:.1f}s for pmcid={query}")
@@ -360,18 +443,28 @@ class DocumentRepository:
 
             ft_query = _strip_stop_words(query)
 
-            uid_cypher = """
-                CALL db.index.fulltext.queryNodes('doc_fulltext', $q)
-                YIELD node as d, score
-                WITH d.uid AS uid, d.source AS source, score
-                WHERE score > 0.1
-                WITH uid, source, score,
-                     CASE WHEN source = 'upload' THEN 1000 ELSE 0 END AS upload_bonus
-                ORDER BY upload_bonus DESC, score DESC
-                SKIP $skip
-                LIMIT $limit
-                RETURN uid
-            """
+            if full_text_only:
+                uid_cypher = """
+                    CALL db.index.fulltext.queryNodes('doc_fulltext', $q)
+                    YIELD node as d, score
+                    WHERE score > 0.1 AND d.has_full_text = true
+                    WITH d.uid AS uid, score
+                    ORDER BY score DESC
+                    SKIP $skip
+                    LIMIT $limit
+                    RETURN uid
+                """
+            else:
+                uid_cypher = """
+                    CALL db.index.fulltext.queryNodes('doc_fulltext', $q)
+                    YIELD node as d, score
+                    WHERE score > 0.1
+                    WITH d.uid AS uid, score
+                    ORDER BY score DESC
+                    SKIP $skip
+                    LIMIT $limit
+                    RETURN uid
+                """
             uid_results, _ = db.cypher_query(uid_cypher, {"q": ft_query, "skip": skip, "limit": limit})
             uids = [row[0] for row in uid_results if row[0]]
             elapsed_ft = time.monotonic() - t0
@@ -386,10 +479,11 @@ class DocumentRepository:
                 RETURN {self._SEARCH_FIELDS}
             """
             fetch_results, _ = db.cypher_query(fetch_cypher, {"uids": uids})
+
             uid_order = {uid: i for i, uid in enumerate(uids)}
             sorted_rows = sorted(fetch_results, key=lambda row: uid_order.get(row[0], 999))
+            total = len(uid_results)
 
-            total = len(uid_results) if len(uid_results) < limit else len(uid_results) + skip
             elapsed = time.monotonic() - t0
             if elapsed > 3:
                 logger.warning(f"fulltext search took {elapsed:.1f}s for q={query!r}, rows={len(sorted_rows)}")

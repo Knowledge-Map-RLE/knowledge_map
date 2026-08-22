@@ -18,7 +18,11 @@ def list_documents(
     repo: DocumentRepositoryProtocol,
     skip: int = 0,
     limit: Optional[int] = None,
+    full_text_only: bool = False,
 ) -> Tuple[List[Document], int]:
-    docs = repo.list_all(skip=skip, limit=limit)
-    total = repo.count_all()
+    docs = repo.list_all(skip=skip, limit=limit, full_text_only=full_text_only)
+    if full_text_only:
+        total = repo.count_full_text()
+    else:
+        total = repo.count_by_sources()
     return docs, total

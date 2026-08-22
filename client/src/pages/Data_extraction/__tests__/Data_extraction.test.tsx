@@ -19,6 +19,7 @@ const listResponse = (documents: unknown[]) => ({
     success: true,
     documents,
     total_count: documents.length,
+    full_text_count: 0,
 });
 
 const renderPage = async () => {
@@ -39,6 +40,7 @@ const docWithFiles = (uid: string, title: string, status: string, isProcessed?: 
     doc_id: uid,
     files: { pdf },
     has_markdown: status === 'annotated',
+    has_full_text: status === 'annotated',
     processing_status: status,
     is_processed: isProcessed ?? status === 'annotated',
     title,
