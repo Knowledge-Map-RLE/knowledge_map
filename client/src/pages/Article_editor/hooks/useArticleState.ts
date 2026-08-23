@@ -37,6 +37,7 @@ interface UseArticleStateResult {
     updateBlock: (instanceId: string, fieldKey: string, value: BlockDataValue) => void;
     deleteBlock: (instanceId: string) => void;
     reorderBlocks: (fromIndex: number, toIndex: number) => void;
+    applyBlocks: (next: ArticleBlockData[]) => void;
     triggerParse: (docId: string) => Promise<void>;
     save: (docId: string) => Promise<void>;
     uploadImage: (key: string, file: File) => Promise<string>;
@@ -268,6 +269,10 @@ export function useArticleState(): UseArticleStateResult {
         });
     }, []);
 
+    const applyBlocks = useCallback((next: ArticleBlockData[]) => {
+        setBlocks(next);
+    }, []);
+
     const textRef = useRef(text);
     textRef.current = text;
     const statementsRef = useRef(statements);
@@ -386,7 +391,7 @@ export function useArticleState(): UseArticleStateResult {
     return {
         article, text, statements, blocks, articleUuid,
         isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
-        loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, updateBlock, deleteBlock, reorderBlocks,
+        loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, updateBlock, deleteBlock, reorderBlocks, applyBlocks,
         triggerParse, save, uploadImage,
     };
 }

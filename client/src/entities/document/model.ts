@@ -86,6 +86,7 @@ export interface Document {
     title?: string;
     pubmed_id?: string;
     pmc_id?: string;
+    doi?: string;
     source?: string;
     files: Record<string, string>;
 }

@@ -46,7 +46,7 @@ const ArticleEditorUI: React.FC = () => {
 
     const {
         article, text, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
-        loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, updateBlock, deleteBlock, reorderBlocks, triggerParse, save, uploadImage,
+        loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, applyBlocks, triggerParse, save, uploadImage,
     } = useArticleState();
 
     const handleSelectDocument = useCallback(async (doc: any | null) => {
@@ -171,13 +171,9 @@ const ArticleEditorUI: React.FC = () => {
                                     isParsing={isParsing}
                                     parseProgress={parseProgress}
                                     parseError={parseError}
-                                    onAddBlock={addBlock}
-                                    onDeleteBlock={deleteBlock}
-                                    onUpdateBlock={updateBlock}
-                                    onReorderBlocks={reorderBlocks}
+                                    onApplyBlocks={applyBlocks}
                                     onSave={handleSave}
                                     saveStatus={saveStatus}
-                                    docId={selectedDocId ?? undefined}
                                     articleUuid={articleUuid ?? undefined}
                                     articleAuthor={article?.author ?? null}
                                     onUploadImage={uploadImage}

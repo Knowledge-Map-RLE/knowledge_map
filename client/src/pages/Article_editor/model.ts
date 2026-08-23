@@ -65,6 +65,7 @@ export type FieldInputType =
     | 'select'
     | 'key-value-list'
     | 'tag-list'
+    | 'text-list'
     | 'uuid-ref'
     | 'pair-list'
     | 'uuid-list'
@@ -93,7 +94,7 @@ export interface BlockTypeDef {
     fields: BlockFieldDef[];
     canAddMultiple: boolean;
     description?: string;
-    layout?: 'row' | 'column';
+    layout?: 'row' | 'column' | 'yaml';
 }
 
 export type BlockDataValue = string | boolean | number | Record<string, string> | null;

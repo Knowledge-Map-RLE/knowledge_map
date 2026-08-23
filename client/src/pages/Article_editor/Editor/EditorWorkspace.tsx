@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
-import StructuredBlockEditor from './StructuredBlockEditor';
 import StatementsPanel from './StatementsPanel';
-import MarkdownPreview from './MarkdownPreview';
 import AuthorBadge from './AuthorBadge';
+import WysiwygEditor from './wysiwyg/WysiwygEditor';
 import { blocksToStatementsRaw } from './blockConverter';
 import type { KnowledgeStatement, ArticleBlockData, AuthorInfo } from '../model';
 import styles from '../Article_editor.module.css';
@@ -14,13 +13,9 @@ interface EditorWorkspaceProps {
     isParsing: boolean;
     parseProgress: { processed: number; total: number } | null;
     parseError: string | null;
-    onAddBlock: (typeNumber: number) => void;
-    onDeleteBlock: (instanceId: string) => void;
-    onUpdateBlock: (instanceId: string, fieldKey: string, value: string | boolean) => void;
-    onReorderBlocks: (fromIndex: number, toIndex: number) => void;
+    onApplyBlocks: (next: ArticleBlockData[]) => void;
     onSave: () => void;
     saveStatus: string;
-    docId?: string;
     articleUuid?: string;
     articleAuthor?: AuthorInfo | null;
     onUploadImage?: (key: string, file: File) => Promise<string>;
@@ -30,17 +25,17 @@ interface EditorWorkspaceProps {
 const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     text, statements, blocks,
     isParsing, parseProgress, parseError,
-    onAddBlock, onDeleteBlock, onUpdateBlock, onReorderBlocks,
-    onSave, saveStatus, docId, articleUuid, articleAuthor, onUploadImage, onCreateNew,
+    onApplyBlocks,
+    onSave, saveStatus, articleUuid, articleAuthor, onUploadImage, onCreateNew,
 }) => {
     const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
     const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
-    const [highlightStart, setHighlightStart] = useState<number | null>(null);
-    const [highlightEnd, setHighlightEnd] = useState<number | null>(null);
     const [highlightIndex, setHighlightIndex] = useState<number | null>(null);
     const [showTriplets, setShowTriplets] = useState(false);
     const [copiedAll, setCopiedAll] = useState(false);
+    const [copiedMarkdown, setCopiedMarkdown] = useState(false);
     const copyTimerRef = useRef<number | null>(null);
+    const copyMdTimerRef = useRef<number | null>(null);
 
     // «Сырые» триплеты без резолва UUID-ссылок — показываем и копируем UUID как есть.
     const rawStatements = useMemo(
@@ -48,38 +43,12 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         [blocks, articleUuid, statements],
     );
 
-    const textRef = useRef(text);
-    textRef.current = text;
-
     const selectedStatement = useMemo(() =>
         selectedStatementIdx !== null && selectedStatementStmt
             ? { index: selectedStatementIdx, stmt: selectedStatementStmt }
             : null,
         [selectedStatementIdx, selectedStatementStmt],
     );
-
-    const highlightRange = useMemo(() =>
-        highlightStart !== null && highlightEnd !== null
-            ? { start: highlightStart, end: highlightEnd }
-            : null,
-        [highlightStart, highlightEnd],
-    );
-
-    const handleSelectStatement = useCallback((index: number, stmt: KnowledgeStatement) => {
-        setSelectedStatementIdx(index);
-        setSelectedStatementStmt(stmt);
-        setHighlightIndex(index);
-        const sentenceText = stmt.sentence_text || stmt.subject_text + ' \u2192 ' + stmt.predicate + ' \u2192 ' + stmt.object_text;
-        const currentText = textRef.current;
-        const idx = currentText.indexOf(sentenceText);
-        if (idx >= 0) {
-            setHighlightStart(idx);
-            setHighlightEnd(idx + sentenceText.length);
-        } else {
-            setHighlightStart(null);
-            setHighlightEnd(null);
-        }
-    }, []);
 
     const saveLabel = saveStatus === 'saving' ? '\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435...'
         : saveStatus === 'saved' ? '\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E'
@@ -91,22 +60,34 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
 
     const handleCopyAll = useCallback(async () => {
         if (rawStatements.length === 0) return;
-        const text = rawStatements
+        const content = rawStatements
             .map((s) => `${s.id}: ${s.subject_text} \u2192 ${s.predicate} \u2192 ${s.object_text}`)
             .join('\n');
         try {
-            await navigator.clipboard.writeText(text);
+            await navigator.clipboard.writeText(content);
             setCopiedAll(true);
             if (copyTimerRef.current !== null) window.clearTimeout(copyTimerRef.current);
             copyTimerRef.current = window.setTimeout(() => setCopiedAll(false), 1500);
         } catch { /* ignore */ }
     }, [rawStatements]);
 
+    /** Markdown статьи — тот же, что рендерился в колонке «Markdown»:
+     *  генерируется из структурных строк с резолвом UUID (useArticleState). */
+    const handleCopyMarkdown = useCallback(async () => {
+        if (!text.trim()) return;
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedMarkdown(true);
+            if (copyMdTimerRef.current !== null) window.clearTimeout(copyMdTimerRef.current);
+            copyMdTimerRef.current = window.setTimeout(() => setCopiedMarkdown(false), 1500);
+        } catch { /* ignore */ }
+    }, [text]);
+
     const handleClickStatement = useCallback((index: number, stmt: KnowledgeStatement) => {
-        // Отображаем «сырой» триплет, но для подсветки в Markdown используем
-        // резолвнутый вариант (тот же порядок/индекс).
-        handleSelectStatement(index, statements[index] ?? stmt);
-    }, [handleSelectStatement, statements]);
+        setSelectedStatementIdx(index);
+        setSelectedStatementStmt(stmt);
+        setHighlightIndex(index);
+    }, []);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
@@ -143,15 +124,35 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
             </div>
 
             <div className={styles.editorColumns}>
-                <div className={styles.editorColumn}>
+                <div className={styles.editorColumnWysiwyg}>
                     <div className={styles.editorColumnHeader}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            <line x1="4" y1="6" x2="20" y2="6" />
+                            <line x1="4" y1="12" x2="14" y2="12" />
+                            <line x1="4" y1="18" x2="17" y2="18" />
                         </svg>
-                        {'\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u043D\u044B\u0435 \u0431\u043B\u043E\u043A\u0438'}
+                        WYSIWYG
                         <AuthorBadge author={articleAuthor ?? null} label="Автор статьи" />
-                        <div style={{ flex: 1 }} />
+                        <span className={styles.editorColumnHint}>
+                            {'/\u2014 \u043A\u043E\u043C\u0430\u043D\u0434\u044B, Tab \u2014 \u043F\u043E\u043B\u044F, Ctrl+Z'}
+                        </span>
+                        <button
+                            className={styles.editorHeaderIconBtn}
+                            onClick={handleCopyMarkdown}
+                            disabled={!text.trim()}
+                            title="Скопировать Markdown в буфер обмена"
+                        >
+                            {copiedMarkdown ? (
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            ) : (
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" />
+                                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                                </svg>
+                            )}
+                        </button>
                         <button
                             className={styles.sbeTripletsBtn}
                             onClick={handleOpenTriplets}
@@ -163,34 +164,12 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                             )}
                         </button>
                     </div>
-                    <StructuredBlockEditor
+                    <WysiwygEditor
                         blocks={blocks}
-                        onAddBlock={onAddBlock}
-                        onDeleteBlock={onDeleteBlock}
-                        onUpdateBlock={onUpdateBlock}
-                        onReorderBlocks={onReorderBlocks}
-                        articleUuid={articleUuid}
                         statements={statements}
-                        onBlurSave={onSave}
+                        articleUuid={articleUuid}
+                        onApply={onApplyBlocks}
                         onUploadImage={onUploadImage}
-                    />
-                </div>
-
-                <div className={styles.editorColumnMd}>
-                    <div className={styles.editorColumnHeader}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <line x1="16" y1="13" x2="8" y2="13" />
-                            <line x1="16" y1="17" x2="8" y2="17" />
-                            <polyline points="10 9 9 9 8 9" />
-                        </svg>
-                        Markdown
-                    </div>
-                    <MarkdownPreview
-                        text={text}
-                        docId={docId}
-                        highlightRange={highlightRange}
                     />
                 </div>
 

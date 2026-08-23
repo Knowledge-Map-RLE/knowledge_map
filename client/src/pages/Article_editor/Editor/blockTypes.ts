@@ -38,11 +38,12 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         icon: icon(MdDescription),
         color: '#6366f1',
         canAddMultiple: false,
+        layout: 'yaml',
         description: 'DOI, название, авторы статьи',
         fields: [
             { key: 'doi', label: 'DOI', inputType: 'text', placeholder: '10.xxxx/xxxxx' },
-            { key: 'title', label: 'Название статьи', inputType: 'text', placeholder: 'Title of the article' },
-            { key: 'authors', label: 'Авторы', inputType: 'tag-list', placeholder: 'Фамилия И.' },
+            { key: 'title', label: 'Название статьи', inputType: 'textarea', placeholder: 'Title of the article' },
+            { key: 'authors', label: 'Авторы', inputType: 'text-list', placeholder: 'Фамилия И.' },
         ],
     },
     {
