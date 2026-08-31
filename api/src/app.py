@@ -74,6 +74,8 @@ app.include_router(static.router)
 app.include_router(ai_models.router, prefix="/api")
 app.include_router(image_proxy.router)
 app.include_router(article_editor.router, prefix="/api")
+from src.routers import user as user_router
+app.include_router(user_router.router, prefix="/api")
 
 
 

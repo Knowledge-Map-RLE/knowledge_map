@@ -10,6 +10,7 @@ import type { ChatTarget } from '../Social_network/model';
 import { useArticleState } from './hooks/useArticleState';
 import { useAuth } from '../../entities/auth';
 import { useRequireAuth } from '../../shared/hooks/useRequireAuth';
+import { listGoldCases, createGoldCase, updateGoldCase } from '../../services/api/gold';
 import type { ArticleEditorTab } from './model';
 import styles from './Article_editor.module.css';
 
@@ -23,6 +24,20 @@ const ArticleEditorUI: React.FC = () => {
     const docListRef = useRef<DocumentListHandle>(null);
     const requireAuth = useRequireAuth();
     const { isAuthenticated, user } = useAuth();
+    const [goldByDocId, setGoldByDocId] = useState<Record<string, string>>({});
+
+    const reloadGoldIndex = useCallback(async () => {
+        try {
+            const res = await listGoldCases();
+            setGoldByDocId(res.by_doc_id || {});
+        } catch {
+            setGoldByDocId({});
+        }
+    }, []);
+
+    useEffect(() => {
+        void reloadGoldIndex();
+    }, [reloadGoldIndex]);
 
     const openArticleChat = useCallback(() => {
         if (!selectedDocId) return;
@@ -72,6 +87,27 @@ const ArticleEditorUI: React.FC = () => {
         }
     }, [selectedDocId, save, notAnnotatedMessage]);
 
+    /** Фиксирует текущие строки статьи как золотой эталон.
+     *  Возвращает текст ошибки или null при успехе. */
+    const handleFixGold = useCallback(async (): Promise<string | null> => {
+        if (!selectedDocId) return 'Сначала откройте статью';
+        if (blocks.length === 0) return 'Нет структурных строк для фиксации';
+        try {
+            await save(selectedDocId);
+            const slug = goldByDocId[selectedDocId];
+            if (slug) {
+                await updateGoldCase(slug, blocks);
+            } else {
+                const res = await createGoldCase(selectedDocId, blocks);
+                setGoldByDocId((prev) => ({ ...prev, [selectedDocId]: res.slug }));
+            }
+            void reloadGoldIndex();
+            return null;
+        } catch (err) {
+            return err instanceof Error ? err.message : String(err);
+        }
+    }, [selectedDocId, blocks, save, goldByDocId, reloadGoldIndex]);
+
     const handleExtracted = useCallback(async (docId: string, extractedBlocks: any[]) => {
         await applyExtractedBlocks(docId, extractedBlocks);
     }, [applyExtractedBlocks]);
@@ -110,6 +146,7 @@ const ArticleEditorUI: React.FC = () => {
                         onDocumentsChange={noopRef.current}
                         error={null}
                         setError={noopSetError.current}
+                        goldSlugsByUid={goldByDocId}
                     />
                 </div>
 
@@ -178,6 +215,8 @@ const ArticleEditorUI: React.FC = () => {
                                     articleAuthor={article?.author ?? null}
                                     onUploadImage={uploadImage}
                                     onCreateNew={handleCreateNew}
+                                    isGold={!!selectedDocId && !!goldByDocId[selectedDocId]}
+                                    onFixGold={handleFixGold}
                                 />
                             )
                         )}

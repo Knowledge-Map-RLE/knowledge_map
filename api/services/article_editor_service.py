@@ -230,8 +230,8 @@ class ArticleEditorService:
 
         article_uid = uuid8_str()
         db.cypher_query(
-            "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $doc_id, predicate: 'является', "
-            "object_text: 'научная статья', subject_type: 'concept', object_type: 'concept', "
+            "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $doc_id, predicate: 'is_a', "
+            "object_text: 'scientific article', subject_type: 'concept', object_type: 'concept', "
             "type: 'META', confidence: 1.0, sentence_text: '', sort_order: $order, "
             "created_by_uid: $creator}) "
             "WITH s MATCH (d:Document {uid: $doc_id}) CREATE (d)-[:HAS_STATEMENT]->(s)",
@@ -250,7 +250,7 @@ class ArticleEditorService:
             db.cypher_query(
                 "MATCH (d:Document {uid: $doc_id}) "
                 "UNWIND $batch AS item "
-                "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: $doc_id, predicate: 'содержит', "
+                "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: $doc_id, predicate: 'contains', "
                 "object_text: item.obj, subject_type: 'concept', object_type: 'concept', "
                 "type: 'META', confidence: 1.0, sentence_text: '', sort_order: item.order, "
                 "created_by_uid: item.creator}) "
@@ -373,6 +373,22 @@ class ArticleEditorService:
             {"uid": doc_id, "now": datetime.now(timezone.utc).isoformat()},
         )
 
+        # Редактор — канонический источник метаданных после аннотирования:
+        # DOI документа синхронизируется с T1 (как title в update_article_title).
+        t1_doi = next(
+            (
+                str(block.get("data", {}).get("doi", "") or "").strip()
+                for block in blocks
+                if int(block.get("blockType", 0)) == 1
+            ),
+            "",
+        )
+        db.cypher_query(
+            "MATCH (d:Document {uid: $uid}) "
+            "SET d.doi = $doi",
+            {"uid": doc_id, "doi": t1_doi or None},
+        )
+
         derived = self._derive_and_persist_statements(doc_id, blocks, old_statements, user_uid)
 
         return {
@@ -417,15 +433,15 @@ class ArticleEditorService:
     ) -> list[dict[str, Any]]:
         """Выводит стейтменты из блоков, сохраняет в БД и возвращает.
 
-        Сохраняет META-стейтменты ``является``/``содержит`` для совместимости
+        Сохраняет META-стейтменты ``is_a``/``contains`` для совместимости
         с graph data и annotation-путём.
         """
         from services.block_converter import blocks_to_statements
 
         filtered_existing = [
             s for s in existing_statements
-            if not (s.get("predicate") == "содержит"
-                    or (s.get("predicate") == "является" and s.get("object_text") == "научная статья"))
+            if not (s.get("predicate") == "contains"
+                    or (s.get("predicate") == "is_a" and s.get("object_text") == "scientific article"))
         ]
 
         derived = blocks_to_statements(blocks, article_uuid=doc_id, existing_statements=filtered_existing)
@@ -461,8 +477,8 @@ class ArticleEditorService:
 
         db.cypher_query(
             "MATCH (d:Document {uid: $doc_id}) "
-            "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $doc_id, predicate: 'является', "
-            "object_text: 'научная статья', subject_type: 'concept', object_type: 'concept', "
+            "CREATE (s:KnowledgeStatement {uid: $uid, subject_text: $doc_id, predicate: 'is_a', "
+            "object_text: 'scientific article', subject_type: 'concept', object_type: 'concept', "
             "type: 'META', confidence: 1.0, sentence_text: '', sort_order: $order, "
             "created_by_uid: $creator}) "
             "WITH s MATCH (d:Document {uid: $doc_id}) CREATE (d)-[:HAS_STATEMENT]->(s)",
@@ -482,7 +498,7 @@ class ArticleEditorService:
             db.cypher_query(
                 "MATCH (d:Document {uid: $doc_id}) "
                 "UNWIND $batch AS item "
-                "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: $doc_id, predicate: 'содержит', "
+                "CREATE (s:KnowledgeStatement {uid: item.uid, subject_text: $doc_id, predicate: 'contains', "
                 "object_text: item.obj, subject_type: 'concept', object_type: 'concept', "
                 "type: 'META', confidence: 1.0, sentence_text: '', sort_order: item.order, "
                 "created_by_uid: item.creator}) "

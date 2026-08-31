@@ -122,7 +122,7 @@ export function useArticleState(): UseArticleStateResult {
                 setBlocks(loaded);
                 skipBlocksSyncRef.current = true;
                 const existing = loadedArticle?.statements?.filter(
-                    (s) => !(s.predicate === 'содержит' || (s.predicate === 'является' && s.object_text === 'научная статья')),
+                    (s) => !(s.predicate === 'contains' || (s.predicate === 'is_a' && s.object_text === 'scientific article')),
                 );
                 const derived = blocksToStatements(loaded, docId, existing);
                 statementsCountRef.current = derived.length;

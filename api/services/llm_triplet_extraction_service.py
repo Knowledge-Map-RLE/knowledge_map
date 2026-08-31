@@ -48,6 +48,50 @@ _UUID_RE_SIMPLE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-
 
 _HEADING_RE = re.compile(r"^#{1,3}\s+\S")
 
+_UNIFIED_BLOCK_TYPE_MAP: Dict[str, int] = {
+    "article": 1,
+    "objective": 2,
+    "hypothesis": 7,
+    "study": 4,
+    "experiment": 14,
+    "entity": 22,
+    "definition": 23,
+    "intervention": 18,
+    "model": 19,
+    "group": 55,
+    "procedure_step": 56,
+    "result": 57,
+    "statistic": 37,
+    "claim": 38,
+    "mechanism": 16,
+    "action": 54,
+    "relation": 58,
+    "action_relation": 58,
+    "temporal_relation": 59,
+    "limitation": 39,
+    "novelty": 44,
+    "future_proposal": 46,
+    "reference": 47,
+    "funding": 51,
+    "side_finding": 40,
+    "atomic_statement": 4,
+    "direct_triplet": 4,
+    "p_value": 27,
+    "side_finding": 40,
+    "conclusions": 20,
+    "animal_group": 55,
+    "animal_model": 19,
+    "biological_mechanism": 16,
+    "experiment_step": 56,
+    "result_finding": 57,
+    "statistical_processing": 37,
+    "study_limitations": 39,
+    "concept_definition": 23,
+    "research_goal": 2,
+    "links_to_previous_research": 47,
+    "funding_sources": 51,
+}
+
 
 def _sequence_items(block: Dict[str, Any]) -> List[str]:
     """Возвращает элементы поля data.sequence (list или JSON-строка)."""
@@ -229,13 +273,17 @@ class LLMTripletExtractionService:
         for b in blocks:
             if not isinstance(b, dict):
                 continue
-            try:
-                bt = int(b.get("blockType", b.get("type", 0)))
-            except (TypeError, ValueError):
-                bt = 0
+            bt_raw = b.get("blockType", b.get("type", 0))
+            if isinstance(bt_raw, str):
+                bt = _UNIFIED_BLOCK_TYPE_MAP.get(bt_raw, 0)
+            else:
+                try:
+                    bt = int(bt_raw)
+                except (TypeError, ValueError):
+                    bt = 0
             d = b.get("data")
             if not isinstance(d, dict):
-                d = {k: v for k, v in b.items() if k not in ("blockType", "type")}
+                d = {k: v for k, v in b.items() if k not in ("blockType", "type", "tag", "container")}
             out.append({"blockType": bt, "data": d})
         return out
 
@@ -680,10 +728,14 @@ class LLMTripletExtractionService:
             for b in blocks_raw:
                 if not isinstance(b, dict):
                     continue
-                try:
-                    bt = int(b.get("blockType", b.get("type", 0)))
-                except (TypeError, ValueError):
-                    bt = 0
+                bt_raw = b.get("blockType", b.get("type", 0))
+                if isinstance(bt_raw, str):
+                    bt = _UNIFIED_BLOCK_TYPE_MAP.get(bt_raw, 0)
+                else:
+                    try:
+                        bt = int(bt_raw)
+                    except (TypeError, ValueError):
+                        bt = 0
                 d = b.get("data")
                 if not isinstance(d, dict):
                     d = {k: v for k, v in b.items() if k not in ("blockType", "type", "tag")}
@@ -777,6 +829,48 @@ class LLMTripletExtractionService:
         return raw_blocks
 
     @staticmethod
+    def _normalize_t58_source_target(
+        raw_blocks: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Конвертирует sourceRef/targetRef → source/target для T58/T59.
+
+        Модель иногда генерирует sourceRef/targetRef (UUID) вместо
+        source/target (имена). Метрика ожидает source/target.
+        Резолв UUID → текст выполняется универсальным резолвером из metrics
+        (block_to_text + BLOCK_TEXT_FIELDS) — единый алгоритм для всех типов.
+        """
+        # Нормализуем ссылочные поля в единый source/target.
+        for b in raw_blocks:
+            bt = int(b.get("blockType", 0) or 0)
+            if bt not in (58, 59):
+                continue
+            d = b.get("data") or {}
+
+            if "sourceRef" in d and "source" not in d:
+                d["source"] = d.pop("sourceRef", "")
+            if "targetRef" in d and "target" not in d:
+                d["target"] = d.pop("targetRef", "")
+            if "earlierRef" in d and "source" not in d:
+                d["source"] = d.pop("earlierRef", "")
+            if "laterRef" in d and "target" not in d:
+                d["target"] = d.pop("laterRef", "")
+            b["data"] = d
+
+        # Универсальный резолвер UUID → текст (тот же, что в metrics.compute_metrics).
+        from tools.llm_extract.metrics import build_uuid_map, resolve_uuid_text
+
+        uuid_map = build_uuid_map(raw_blocks)
+        for b in raw_blocks:
+            bt = int(b.get("blockType", 0) or 0)
+            if bt not in (58, 59):
+                continue
+            d = b.get("data") or {}
+            for key in ("source", "target"):
+                d[key] = resolve_uuid_text(d.get(key, ""), uuid_map)
+            b["data"] = d
+        return raw_blocks
+
+    @staticmethod
     def _cleanup_unresolved_btags(
         raw_blocks: List[Dict[str, Any]],
     ) -> List[Dict[str, Any]]:
@@ -865,6 +959,7 @@ class LLMTripletExtractionService:
         raw_blocks = self._dedupe_t1(raw_blocks)
         raw_blocks = self._normalize_t1_authors(raw_blocks)
         raw_blocks = self._drop_t54_credits(raw_blocks)
+        raw_blocks = self._normalize_t58_source_target(raw_blocks)
         raw_blocks = self._add_deterministic_sections(raw_blocks, article_text)
         raw_blocks = self._add_uuidrefs(raw_blocks)
         return [
@@ -983,8 +1078,8 @@ class LLMTripletExtractionService:
     ) -> Dict[str, Any]:
         """Извлекает структуру блоков из текста статьи (unified one-stage).
 
-        Всегда использует unified one-stage извлечение (вся статья за один
-        LLM-вызов). Оптимизировано для DeepSeek V4 Flash (1M контекст).
+        Вся статья обрабатывается за один LLM-вызов.
+        Оптимизировано для DeepSeek V4 Flash (1M контекст).
 
         Возвращает:
             {"success", "blocks", "summary", "chunks": [{index, chars, containers}]}
@@ -1002,3 +1097,4 @@ class LLMTripletExtractionService:
             timeout=timeout,
             progress_cb=progress_cb,
         )
+

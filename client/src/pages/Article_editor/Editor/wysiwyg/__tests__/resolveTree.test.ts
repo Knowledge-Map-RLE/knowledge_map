@@ -141,3 +141,54 @@ describe('buildRefIndex / resolveChainText', () => {
         expect(index.get(META)?.chainText).toBe('Эксперимент');
     });
 });
+
+describe('buildRefIndex / резолв UUID в subject/object (T4/T2)', () => {
+    const A = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const B = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+    const X = '11111111-1111-4111-8111-111111111111';
+    const Y = '22222222-2222-4222-8222-222222222222';
+
+    test('T4-триплет с UUID в subject/object резолвится в человекочитаемую метку', () => {
+        // B — целевой блок «Метформин»; A — T4 «{B} снижает массу».
+        const blocks: ArticleBlockData[] = [
+            mk(B, 4, { subject: 'Метформин', predicate: 'является', object: 'лекарством' }, 0),
+            mk(A, 4, { subject: B, predicate: 'снижает', object: 'массу' }, 1),
+        ];
+        const tree = buildBlockTree(blocks);
+        const index = buildRefIndex(blocks, tree);
+        expect(index.get(B)?.label).toBe('Метформин → является → лекарством');
+        expect(index.get(A)?.label).toBe('Метформин → является → лекарством → снижает → массу');
+    });
+
+    test('T2 «Цель исследования» с uuid-ref субъектом/объектом резолвится', () => {
+        const blocks: ArticleBlockData[] = [
+            mk(X, 17, { cell: 'гепатоцит' }, 0),
+            mk(Y, 18, { intervention: 'рапамицин' }, 1),
+            mk(A, 2, { subject: X, predicate: 'цель — изучить', object: Y }, 2),
+        ];
+        const tree = buildBlockTree(blocks);
+        const index = buildRefIndex(blocks, tree);
+        expect(index.get(A)?.label).toBe('гепатоцит → цель — изучить → рапамицин');
+    });
+
+    test('защита от циклов: A↔B не зацикливается и завершается', () => {
+        const blocks: ArticleBlockData[] = [
+            mk(A, 4, { subject: B, predicate: 'влияет', object: 'сам' }, 0),
+            mk(B, 4, { subject: A, predicate: 'отвечает', object: 'второму' }, 1),
+        ];
+        const tree = buildBlockTree(blocks);
+        const index = buildRefIndex(blocks, tree);
+        // Метки вычислены без бесконечной рекурсии.
+        expect(index.get(A)?.label).toBeTruthy();
+        expect(index.get(B)?.label).toBeTruthy();
+    });
+
+    test('не-UUID значения не трогаются', () => {
+        const blocks: ArticleBlockData[] = [
+            mk(A, 4, { subject: 'глюкоза', predicate: 'повышает', object: 'инсулин' }, 0),
+        ];
+        const tree = buildBlockTree(blocks);
+        const index = buildRefIndex(blocks, tree);
+        expect(index.get(A)?.label).toBe('глюкоза → повышает → инсулин');
+    });
+});

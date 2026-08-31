@@ -81,7 +81,11 @@ class Document:
     @property
     def has_full_text(self) -> bool:
         """Есть ли полный текст статьи (не только abstract)."""
-        return bool(self.docling_raw_md_s3_key or self.formatted_md_s3_key)
+        return bool(
+            self.docling_raw_md_s3_key
+            or self.formatted_md_s3_key
+            or self.user_md_s3_key
+        )
 
 
 @dataclass

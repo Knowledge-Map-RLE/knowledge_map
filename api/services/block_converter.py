@@ -193,7 +193,7 @@ def sequence_triplets(
     """Связующий триплет «{блок} → последовательность → {триплет-блок}»."""
     for uid in sequence_uuids(block):
         triplets.append(
-            fact(block["instanceId"], "последовательность", uid,
+            fact(block["instanceId"], "sequence", uid,
                  block["instanceId"], block["blockType"])
         )
 
@@ -233,14 +233,14 @@ def _converters() -> Dict[int, ConverterFn]:
         title = _str(data, "title")
         authors = _str(data, "authors")
         if doi:
-            out.append(fact("Статья", "DOI", doi, b["instanceId"], b["blockType"]))
+            out.append(fact("Article", "DOI", doi, b["instanceId"], b["blockType"]))
         if title:
-            out.append(fact("Статья", "название статьи", title, b["instanceId"], b["blockType"]))
+            out.append(fact("Article", "title", title, b["instanceId"], b["blockType"]))
         if authors:
             for author in re.split(r"[\n,;]", authors):
                 author = author.strip()
                 if author:
-                    out.append(fact("Статья", "авторы", author, b["instanceId"], b["blockType"]))
+                    out.append(fact("Article", "author", author, b["instanceId"], b["blockType"]))
         return out
 
     # T2: Цель исследования (s/p/o)
@@ -249,7 +249,7 @@ def _converters() -> Dict[int, ConverterFn]:
         s, p, o = _str(data, "subject"), _str(data, "predicate"), _str(data, "object")
         if not s and not p and not o:
             legacy = _str(data, "objective")
-            return [fact("Исследование", "цель", legacy, b["instanceId"], b["blockType"])] if legacy else []
+            return [fact("Study", "objective", legacy, b["instanceId"], b["blockType"])] if legacy else []
         return [fact(s, p, o, b["instanceId"], b["blockType"])] if s and p and o else []
 
     # T3: Свободный текст → 0 триплетов
@@ -264,11 +264,11 @@ def _converters() -> Dict[int, ConverterFn]:
     # T5: Первичная конечная точка
     def t5(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "endpoint")
-        return [fact("Исследование", "первая конечная точка", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "primary endpoint", v, b["instanceId"], b["blockType"])] if v else []
 
     # T6: Вторичные конечные точки
     def t6(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Исследование", "вторичная конечная точка", ep, b["instanceId"], b["blockType"])
+        return [fact("Study", "secondary endpoint", ep, b["instanceId"], b["blockType"])
                 for ep in split_lines(b["data"].get("endpoints"))]
 
     # T7: Гипотеза
@@ -276,27 +276,27 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         h = _str(b["data"], "hypothesis")
         if h:
-            out.append(fact("Исследование", "гипотеза", h, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "hypothesis", h, b["instanceId"], b["blockType"]))
             reason = _str(b["data"], "disproofExplanation")
             if reason:
-                out.append(meta("Гипотеза: " + h, "требует опровежения потому что", reason,
+                out.append(meta("Hypothesis: " + h, "is refuted because", reason,
                                 b["instanceId"], b["blockType"]))
         sequence_triplets(b, out)
         return out
 
     # T8: Предпосылки
     def t8(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact(p, "предпосылка", "Исследование", b["instanceId"], b["blockType"])
+        return [fact(p, "prerequisite", "Study", b["instanceId"], b["blockType"])
                 for p in split_lines(b["data"].get("prerequisites"))]
 
     # T9: Ожидания
     def t9(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "expectations")
-        return [fact("Исследование", "ожидает", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "expects", v, b["instanceId"], b["blockType"])] if v else []
 
     # T10: Знания-зависимости
     def t10(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Исследование", "опирается на", dep, b["instanceId"], b["blockType"])
+        return [fact("Study", "relies on", dep, b["instanceId"], b["blockType"])
                 for dep in split_lines(b["data"].get("knowledgeDeps"))]
 
     # T11: Дизайн исследования
@@ -304,27 +304,27 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         study_type = _str(b["data"], "studyType")
         if study_type:
-            out.append(fact("Исследование", "тип", study_type, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "type", study_type, b["instanceId"], b["blockType"]))
         if _bool(b["data"], "randomization"):
-            out.append(fact("Исследование", "рандомизировано", "да", b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "randomized", "yes", b["instanceId"], b["blockType"]))
         if _bool(b["data"], "blinding"):
-            out.append(fact("Исследование", "ослеплено", "да", b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "blinded", "yes", b["instanceId"], b["blockType"]))
         return out
 
     # T12: Материалы
     def t12(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "materials")
-        return [fact("Исследование", "материалы", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "materials", v, b["instanceId"], b["blockType"])] if v else []
 
     # T13: Методы
     def t13(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
         methods = _str(b["data"], "methods")
         if methods:
-            out.append(fact("Исследование", "методы", methods, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "methods", methods, b["instanceId"], b["blockType"]))
         meas = _str(b["data"], "measurementMethods")
         if meas:
-            out.append(fact("Исследование", "методы измерения", meas, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "measurement methods", meas, b["instanceId"], b["blockType"]))
         return out
 
     # T14: Эксперимент
@@ -337,17 +337,17 @@ def _converters() -> Dict[int, ConverterFn]:
         steps = _str(data, "steps")
         findings = _str(data, "findings")
         duration = _str(data, "duration")
-        exp_key = name or f"Эксперимент ({exp_type or 'без названия'})"
+        exp_key = name or f"Experiment ({exp_type or 'untitled'})"
 
         if name:
-            out.append(fact("Исследование", "эксперимент", name, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "experiment", name, b["instanceId"], b["blockType"]))
         if exp_type:
-            out.append(fact(exp_key, "тип", exp_type, b["instanceId"], b["blockType"]))
+            out.append(fact(exp_key, "type", exp_type, b["instanceId"], b["blockType"]))
         if outcomes:
             for outcome in re.split(r"[\n,;]", outcomes):
                 outcome = outcome.strip()
                 if outcome:
-                    out.append(fact(exp_key, "измеряемые показатели", outcome, b["instanceId"], b["blockType"]))
+                    out.append(fact(exp_key, "measured outcome", outcome, b["instanceId"], b["blockType"]))
         if steps:
             try:
                 step_list = json.loads(steps)
@@ -357,7 +357,7 @@ def _converters() -> Dict[int, ConverterFn]:
                             continue
                         step_uuid = su.strip()
                         if step_uuid:
-                            out.append(fact(b["instanceId"], "шаг", step_uuid, b["instanceId"], b["blockType"]))
+                            out.append(fact(b["instanceId"], "step", step_uuid, b["instanceId"], b["blockType"]))
             except (ValueError, TypeError):
                 pass
         if findings:
@@ -369,11 +369,11 @@ def _converters() -> Dict[int, ConverterFn]:
                             continue
                         finding_uuid = f.strip()
                         if finding_uuid:
-                            out.append(fact(b["instanceId"], "результат", finding_uuid, b["instanceId"], b["blockType"]))
+                            out.append(fact(b["instanceId"], "result", finding_uuid, b["instanceId"], b["blockType"]))
             except (ValueError, TypeError):
                 pass
         if duration:
-            out.append(fact(exp_key, "длительность", duration, b["instanceId"], b["blockType"]))
+            out.append(fact(exp_key, "duration", duration, b["instanceId"], b["blockType"]))
 
         def make_pairs(raw: str, role: str) -> None:
             try:
@@ -390,12 +390,12 @@ def _converters() -> Dict[int, ConverterFn]:
                     if g:
                         out.append(fact(b["instanceId"], role, g, b["instanceId"], b["blockType"]))
                         if iv:
-                            out.append(fact(g, "получает", iv, b["instanceId"], b["blockType"]))
+                            out.append(fact(g, "receives", iv, b["instanceId"], b["blockType"]))
             except (ValueError, TypeError):
                 pass
 
-        make_pairs(_str(data, "experimentalPairs"), "экспериментальная группа")
-        make_pairs(_str(data, "controlPairs"), "контрольная группа")
+        make_pairs(_str(data, "experimentalPairs"), "experimental group")
+        make_pairs(_str(data, "controlPairs"), "control group")
         return out
 
     # T15: Критерии включения/исключения
@@ -403,27 +403,27 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         inc = _str(b["data"], "inclusionCriteria")
         if inc:
-            out.append(fact("Исследование", "критерии включения", inc, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "inclusion criterion", inc, b["instanceId"], b["blockType"]))
         exc = _str(b["data"], "exclusionCriteria")
         if exc:
-            out.append(fact("Исследование", "критерии исключения", exc, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "exclusion criterion", exc, b["instanceId"], b["blockType"]))
         return out
 
     # T16: Биологический механизм
     def t16(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "mechanism")
-        out = [fact("Исследование", "биологический механизм", v, b["instanceId"], b["blockType"])] if v else []
+        out = [fact("Study", "biological mechanism", v, b["instanceId"], b["blockType"])] if v else []
         sequence_triplets(b, out)
         return out
 
     # T17: Объект воздействия
     def t17(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
-        for key, label in (("cell", "клетка"), ("tissue", "ткань"), ("organ", "орган"),
-                           ("pathway", "биологический путь"), ("substanceLevel", "уровень вещества")):
+        for key, label in (("cell", "cell"), ("tissue", "tissue"), ("organ", "organ"),
+                           ("pathway", "biological pathway"), ("substanceLevel", "substance level")):
             v = _str(b["data"], key)
             if v:
-                out.append(fact("Исследование", "объект воздействия: " + label, v,
+                out.append(fact("Study", "target: " + label, v,
                                 b["instanceId"], b["blockType"]))
         return out
 
@@ -432,13 +432,13 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         intervention = _str(b["data"], "intervention")
         if intervention:
-            out.append(fact("Исследование", "интервенция", intervention, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "intervention", intervention, b["instanceId"], b["blockType"]))
         dosage = _str(b["data"], "dosage")
         if dosage:
-            out.append(fact("Исследование", "дозировка", dosage, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "dosage", dosage, b["instanceId"], b["blockType"]))
         regimen = _str(b["data"], "dosageRegimen")
         if regimen:
-            out.append(fact("Исследование", "режим дозировки", regimen, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "dosage regimen", regimen, b["instanceId"], b["blockType"]))
         return out
 
     # T19: Животная модель
@@ -446,19 +446,19 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         species = _str(b["data"], "species")
         if species:
-            out.append(fact("Исследование", "вид животного", species, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "animal species", species, b["instanceId"], b["blockType"]))
         timeline = _str(b["data"], "timeline")
         if timeline:
-            out.append(fact("Исследование", "временная шкала модели", timeline, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "model timeline", timeline, b["instanceId"], b["blockType"]))
         conditions = _str(b["data"], "conditions")
         if conditions:
-            out.append(fact("Исследование", "условия содержания модели", conditions, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "model housing conditions", conditions, b["instanceId"], b["blockType"]))
         return out
 
     # T21: Логика исследователя
     def t21(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "logic")
-        return [fact("Исследование", "логика", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "logic", v, b["instanceId"], b["blockType"])] if v else []
 
     # T22: Сущность (s/p/o)
     def t22(b: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -474,34 +474,34 @@ def _converters() -> Dict[int, ConverterFn]:
         term = _str(b["data"], "term")
         definition = _str(b["data"], "definition")
         if term and definition:
-            out.append(fact(term, "определяется как", definition, b["instanceId"], b["blockType"]))
+            out.append(fact(term, "is defined as", definition, b["instanceId"], b["blockType"]))
         sequence_triplets(b, out)
         return out
 
     # T24: Предположения
     def t24(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Исследование", "предполагает", a, b["instanceId"], b["blockType"])
+        return [fact("Study", "assumes", a, b["instanceId"], b["blockType"])
                 for a in split_lines(b["data"].get("assumptions"))]
 
     # T25: Размер выборки
     def t25(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "sampleSize")
-        return [fact("Исследование", "размер выборки", "n=" + v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "sample size", "n=" + v, b["instanceId"], b["blockType"])] if v else []
 
     # T26: Источники данных
     def t26(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Исследование", "источник данных", ds, b["instanceId"], b["blockType"])
+        return [fact("Study", "data source", ds, b["instanceId"], b["blockType"])
                 for ds in split_lines(b["data"].get("dataSources"))]
 
     # T27: p-value
     def t27(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "pValue")
-        return [fact("Исследование", "p-value", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "p-value", v, b["instanceId"], b["blockType"])] if v else []
 
     # T28: Дисперсия
     def t28(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "variance")
-        return [fact("Исследование", "дисперсия", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "variance", v, b["instanceId"], b["blockType"])] if v else []
 
     # T29: Размер эффекта
     def t29(b: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -509,13 +509,13 @@ def _converters() -> Dict[int, ConverterFn]:
         if not v:
             return []
         effect_type = _str(b["data"], "effectType")
-        label = f"размер эффекта ({effect_type})" if effect_type else "размер эффекта"
-        return [fact("Исследование", label, v, b["instanceId"], b["blockType"])]
+        label = f"effect size ({effect_type})" if effect_type else "effect size"
+        return [fact("Study", label, v, b["instanceId"], b["blockType"])]
 
     # T30: Мощность исследования
     def t30(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "power")
-        return [fact("Исследование", "мощность", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "power", v, b["instanceId"], b["blockType"])] if v else []
 
     # T31: Доверительный интервал
     def t31(b: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -524,12 +524,12 @@ def _converters() -> Dict[int, ConverterFn]:
         if not lower and not upper:
             return []
         level = _str(b["data"], "ciLevel") or "95%"
-        return [fact("Исследование", f"доверительный интервал {level}",
+        return [fact("Study", f"confidence interval {level}",
                      f"[{lower}, {upper}]", b["instanceId"], b["blockType"])]
 
     # T32: Числа с названиями
     def t32(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact(key, "величина", value, b["instanceId"], b["blockType"])
+        return [fact(key, "magnitude", value, b["instanceId"], b["blockType"])
                 for key, value in kv_pairs(b["data"].get("namedNumbers"))]
 
     # T33: Формулы
@@ -538,32 +538,32 @@ def _converters() -> Dict[int, ConverterFn]:
         name = _str(b["data"], "formulaName")
         latex = _str(b["data"], "formulaLatex")
         if latex:
-            label = name or "Формула"
-            out.append(meta(label, "определяет", latex, b["instanceId"], b["blockType"]))
+            label = name or "Formula"
+            out.append(meta(label, "defines", latex, b["instanceId"], b["blockType"]))
         for key, value in kv_pairs(b["data"].get("formulaVariables")):
-            out.append(meta(name or "Формула", "переменная", f"{key} = {value}",
+            out.append(meta(name or "Formula", "variable", f"{key} = {value}",
                             b["instanceId"], b["blockType"]))
         return out
 
     # T34: Каузальные графы (DAG)
     def t34(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         desc = _str(b["data"], "dagDescription")
-        return [meta("Каузальный граф", "описывает", desc, b["instanceId"], b["blockType"])] if desc else []
+        return [meta("Causal graph", "describes", desc, b["instanceId"], b["blockType"])] if desc else []
 
     # T35: Критерии идентифицируемости Дж.Перла
     def t35(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "criteria")
-        return [fact("Исследование", "критерии идентифицируемости", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "identifiability criterion", v, b["instanceId"], b["blockType"])] if v else []
 
     # T36: Результаты
     def t36(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
         results = _str(b["data"], "results")
         if results:
-            out.append(fact("Исследование", "результаты", results, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "results", results, b["instanceId"], b["blockType"]))
         summary = _str(b["data"], "resultsSummary")
         if summary:
-            out.append(fact("Исследование", "краткое описание результатов", summary,
+            out.append(fact("Study", "results summary", summary,
                             b["instanceId"], b["blockType"]))
         return out
 
@@ -572,10 +572,10 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         p = _str(b["data"], "statProcessing")
         if p:
-            out.append(fact("Исследование", "статистическая обработка", p, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "statistical processing", p, b["instanceId"], b["blockType"]))
         comp = _str(b["data"], "expectationsComparison")
         if comp:
-            out.append(fact("Исследование", "сопоставление с ожиданиями", comp, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "comparison with expectations", comp, b["instanceId"], b["blockType"]))
         sequence_triplets(b, out)
         return out
 
@@ -588,33 +588,33 @@ def _converters() -> Dict[int, ConverterFn]:
         if not s or not p or not o:
             return []
         negated = _bool(data, "isNegated")
-        predicate = f"не {p}" if negated else p
+        predicate = f"not {p}" if negated else p
         notes = _str(data, "confidenceNotes")
         confidence = 0.8 if notes else 1.0
         out = [fact(s, predicate, o, b["instanceId"], b["blockType"], confidence)]
         if notes:
-            out.append(meta(s, "уверенность", notes, b["instanceId"], b["blockType"]))
+            out.append(meta(s, "confidence", notes, b["instanceId"], b["blockType"]))
         sequence_triplets(b, out)
         return out
 
     # T39: Ограничения исследования
     def t39(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "limitations")
-        out = [fact("Исследование", "ограничения", v, b["instanceId"], b["blockType"])] if v else []
+        out = [fact("Study", "limitations", v, b["instanceId"], b["blockType"])] if v else []
         sequence_triplets(b, out)
         return out
 
     # T40: Побочные выводы/гипотезы
     def t40(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "sideFindings")
-        out = [fact("Исследование", "побочные выводы", v, b["instanceId"], b["blockType"])] if v else []
+        out = [fact("Study", "side findings", v, b["instanceId"], b["blockType"])] if v else []
         sequence_triplets(b, out)
         return out
 
     # T41: Сопутствующие эффекты
     def t41(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "sideEffects")
-        return [fact("Исследование", "побочные эффекты", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "side effects", v, b["instanceId"], b["blockType"])] if v else []
 
     # T42: Утверждения после исследования
     def t42(b: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -622,33 +622,33 @@ def _converters() -> Dict[int, ConverterFn]:
         claims = _str(b["data"], "postClaims")
         if claims:
             for line in split_lines(claims):
-                out.append(fact("После исследования", "утверждает", line, b["instanceId"], b["blockType"]))
+                out.append(fact("Post-study", "asserts", line, b["instanceId"], b["blockType"]))
         comp = _str(b["data"], "comparisonWithExpectations")
         if comp:
-            out.append(fact("Исследование", "сравнение результатов с ожиданиями", comp,
+            out.append(fact("Study", "comparison of results with expectations", comp,
                             b["instanceId"], b["blockType"]))
         return out
 
     # T43: Оставшиеся вопросы
     def t43(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "openQuestions")
-        return [fact("Исследование", "открытые вопросы", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "open questions", v, b["instanceId"], b["blockType"])] if v else []
 
     # T44: Новизна
     def t44(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "novelty")
-        out = [fact("Исследование", "новизна", v, b["instanceId"], b["blockType"])] if v else []
+        out = [fact("Study", "novelty", v, b["instanceId"], b["blockType"])] if v else []
         sequence_triplets(b, out)
         return out
 
     # T45: Версии
     def t45(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Исследование", f"версия: {key}", value, b["instanceId"], b["blockType"])
+        return [fact("Study", f"version: {key}", value, b["instanceId"], b["blockType"])
                 for key, value in kv_pairs(b["data"].get("versions"))]
 
     # T46: Предложения для будущих исследований
     def t46(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        out = [fact("Исследование", "предложение для будущих исследований", r,
+        out = [fact("Study", "future research proposal", r,
                     b["instanceId"], b["blockType"])
                for r in split_lines(b["data"].get("futureResearch"))]
         sequence_triplets(b, out)
@@ -656,7 +656,7 @@ def _converters() -> Dict[int, ConverterFn]:
 
     # T47: Связи с предыдущими исследованиями
     def t47(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        out = [fact("Исследование", "ссылается на", ref, b["instanceId"], b["blockType"])
+        out = [fact("Study", "references", ref, b["instanceId"], b["blockType"])
                for ref in split_lines(b["data"].get("references"))]
         sequence_triplets(b, out)
         return out
@@ -664,19 +664,19 @@ def _converters() -> Dict[int, ConverterFn]:
     # T48: Связь со старением
     def t48(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "agingConnection")
-        return [fact("Исследование", "связь со старением", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "aging connection", v, b["instanceId"], b["blockType"])] if v else []
 
     # T49: Изображение
     def t49(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
         image_key = _str(b["data"], "imageKey")
         if image_key:
-            out.append(fact("Исследование", "изображение", image_key, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "image", image_key, b["instanceId"], b["blockType"]))
         caption = _str(b["data"], "caption")
         if caption and image_key:
-            out.append(fact(image_key, "подпись", caption, b["instanceId"], b["blockType"]))
+            out.append(fact(image_key, "caption", caption, b["instanceId"], b["blockType"]))
         for ref in split_lines(b["data"].get("imageRefs")):
-            out.append(fact("Исследование", "изображение", ref, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "image", ref, b["instanceId"], b["blockType"]))
         return out
 
     # T50: Код
@@ -685,30 +685,30 @@ def _converters() -> Dict[int, ConverterFn]:
         code = _str(b["data"], "code")
         if not code:
             return []
-        return [fact("Исследование", f"код ({lang or 'неизвестный язык'})", code,
+        return [fact("Study", f"code ({lang or 'unknown language'})", code,
                      b["instanceId"], b["blockType"])]
 
     # T51: Источники финансирования
     def t51(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Исследование", "источник финансирования", f, b["instanceId"], b["blockType"])
+        return [fact("Study", "funding source", f, b["instanceId"], b["blockType"])
                 for f in split_lines(b["data"].get("funding"))]
 
     # T52: Конфликт интересов
     def t52(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         v = _str(b["data"], "conflictOfInterest")
-        return [fact("Исследование", "конфликт интересов", v, b["instanceId"], b["blockType"])] if v else []
+        return [fact("Study", "conflict of interest", v, b["instanceId"], b["blockType"])] if v else []
 
     # T53: Информационная ценность
     def t53(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
-        for key, label in (("uncertaintyReduced", "уменьшило неопределённость"),
-                           ("hypothesesExcluded", "исключило гипотезы"),
-                           ("hypothesesProbabilized", "сделало гипотезы вероятнее"),
-                           ("newHypotheses", "породило новые гипотезы"),
-                           ("nextExperiment", "следующий оптимальный эксперимент")):
+        for key, label in (("uncertaintyReduced", "reduced uncertainty"),
+                           ("hypothesesExcluded", "excluded hypotheses"),
+                           ("hypothesesProbabilized", "made hypotheses more likely"),
+                           ("newHypotheses", "generated new hypotheses"),
+                           ("nextExperiment", "next optimal experiment")):
             v = _str(b["data"], key)
             if v:
-                out.append(fact("Исследование", label, v, b["instanceId"], b["blockType"]))
+                out.append(fact("Study", label, v, b["instanceId"], b["blockType"]))
         return out
 
     # T54: Действие (s/p/o)
@@ -724,13 +724,13 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         name = _str(b["data"], "groupName")
         if name:
-            out.append(fact("Исследование", "группа животных", name, b["instanceId"], b["blockType"]))
+            out.append(fact("Study", "animal group", name, b["instanceId"], b["blockType"]))
         n = _str(b["data"], "n")
         if n:
-            out.append(fact(name or "Группа", "размер выборки", n, b["instanceId"], b["blockType"]))
+            out.append(fact(name or "Group", "sample size", n, b["instanceId"], b["blockType"]))
         purpose = _str(b["data"], "purpose")
         if purpose:
-            out.append(fact(name or "Группа", "назначение", purpose, b["instanceId"], b["blockType"]))
+            out.append(fact(name or "Group", "purpose", purpose, b["instanceId"], b["blockType"]))
         return out
 
     # T56: Шаг эксперимента
@@ -738,13 +738,13 @@ def _converters() -> Dict[int, ConverterFn]:
         out: List[Dict[str, Any]] = []
         step_name = _str(b["data"], "stepName")
         if step_name:
-            out.append(fact(b["instanceId"], "шаг", step_name, b["instanceId"], b["blockType"]))
+            out.append(fact(b["instanceId"], "step", step_name, b["instanceId"], b["blockType"]))
         details = _str(b["data"], "details")
         if details:
-            out.append(fact(step_name or "Шаг", "детали", details, b["instanceId"], b["blockType"]))
+            out.append(fact(step_name or "Step", "details", details, b["instanceId"], b["blockType"]))
         duration = _str(b["data"], "duration")
         if duration:
-            out.append(fact(step_name or "Шаг", "длительность шага", duration, b["instanceId"], b["blockType"]))
+            out.append(fact(step_name or "Step", "step duration", duration, b["instanceId"], b["blockType"]))
         sequence_triplets(b, out)
         return out
 
@@ -764,24 +764,24 @@ def _converters() -> Dict[int, ConverterFn]:
         detail = _str(data, "detail")
 
         dir_map = {
-            "повышено": "повышено в",
-            "понижено": "понижено в",
-            "без изменений": "без изменений в",
-            "тренд": "тренд в",
+            "increased": "increased in",
+            "decreased": "decreased in",
+            "unchanged": "unchanged in",
+            "trend": "trend in",
         }
-        predicate = dir_map.get(direction, "изменено в")
-        target = subject_ref or "исследовании"
+        predicate = dir_map.get(direction, "changed in")
+        target = subject_ref or "study"
         out.append(fact(parameter, predicate, target, b["instanceId"], b["blockType"]))
         if comparison_ref:
-            out.append(meta(parameter, "по сравнению с", comparison_ref, b["instanceId"], b["blockType"]))
+            out.append(meta(parameter, "compared to", comparison_ref, b["instanceId"], b["blockType"]))
         if significance:
-            out.append(meta(parameter, "значимость", significance, b["instanceId"], b["blockType"]))
+            out.append(meta(parameter, "significance", significance, b["instanceId"], b["blockType"]))
         if p_value:
             out.append(meta(parameter, "p-value", p_value, b["instanceId"], b["blockType"]))
         if figure_ref:
-            out.append(meta(parameter, "рисунок", figure_ref, b["instanceId"], b["blockType"]))
+            out.append(meta(parameter, "figure", figure_ref, b["instanceId"], b["blockType"]))
         if detail:
-            out.append(meta(parameter, "детали", detail, b["instanceId"], b["blockType"]))
+            out.append(meta(parameter, "details", detail, b["instanceId"], b["blockType"]))
         sequence_triplets(b, out)
         return out
 
@@ -915,14 +915,14 @@ def blocks_to_statements(
             s_res = ref_map.get(t["subject_text"])
             if s_res:
                 t["subject_text"] = s_res
-            if t["predicate"] not in ("результат", "шаг"):
+            if t["predicate"] not in ("result", "step"):
                 o_res = ref_map.get(t["object_text"])
                 if o_res:
                     t["object_text"] = o_res
 
     if article_uuid:
         for t in all_triplets:
-            if t["subject_text"] == "Статья":
+            if t["subject_text"] == "Article":
                 t["subject_text"] = article_uuid
 
     if existing_statements:

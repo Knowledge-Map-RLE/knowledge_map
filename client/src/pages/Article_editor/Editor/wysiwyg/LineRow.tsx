@@ -59,6 +59,26 @@ const UuidCopyButton: React.FC<{ instanceId: string; chainText?: string }> = ({ 
     );
 };
 
+/** Кнопка удаления строки: видна при наведении на строку, слева от копирования UUID. */
+const DeleteLineButton: React.FC<{ instanceId: string }> = ({ instanceId }) => {
+    const api = useWysiwygApi();
+    return (
+        <button
+            type="button"
+            className={styles.wyDeleteLine}
+            title={`Удалить строку\nUUID: ${instanceId}`}
+            aria-label="Удалить строку"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => api.removeLine(instanceId)}
+        >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+        </button>
+    );
+};
+
 const LineRowInner: React.FC<LineRowProps> = ({
     block,
     depth,
@@ -112,7 +132,7 @@ const LineRowInner: React.FC<LineRowProps> = ({
         );
     }
 
-    const typeTitle = `${def.name}${def.description ? ` — ${def.description}` : ''}\nUUID: ${block.instanceId}\nКлик — сменить тип (/)`;
+    const typeTitle = `T${def.typeNumber} · ${def.name}${def.description ? ` — ${def.description}` : ''}\nUUID: ${block.instanceId}\nКлик — сменить тип (/)`;
 
     return (
         <div
@@ -144,6 +164,7 @@ const LineRowInner: React.FC<LineRowProps> = ({
                 >
                     ⠿
                 </button>
+                <DeleteLineButton instanceId={block.instanceId} />
                 <UuidCopyButton instanceId={block.instanceId} chainText={chainText} />
             </div>
             {Array.from({ length: depth }).map((_, i) => (
@@ -154,7 +175,7 @@ const LineRowInner: React.FC<LineRowProps> = ({
                 className={styles.wyTypeBarBtn}
                 onClick={handleTypeBarClick}
                 title={typeTitle}
-                aria-label={`Тип: ${def.name}`}
+                aria-label={`Тип T${def.typeNumber}: ${def.name}`}
             />
             {def.layout === 'yaml' ? (
                 <div className={styles.wyYamlWrap}>

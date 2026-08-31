@@ -7,12 +7,10 @@ against this service directly.
 
 from __future__ import annotations
 
-import json
 import logging
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse, StreamingResponse
-from starlette.background import BackgroundTask
 
 from src.config import settings
 from src.providers import ProviderError, catalog
@@ -55,29 +53,28 @@ async def chat_completions(body: ChatCompletionRequest):
         client, resolved_model = catalog.resolve(body.model)
     except ProviderError as exc:
         return _error_response(400, str(exc))
-    payload["model"] = resolved_model
 
-    try:
-        response, _ = await client.chat_completions(resolved_model, payload)
-    except ProviderError as exc:
-        logger.error("Upstream chat failed: %s", exc)
-        return _error_response(502, str(exc))
+    stream_requested = bool(payload.get("stream"))
 
-    if body.stream:
-        return StreamingResponse(
-            response.aiter_bytes(),
-            media_type="text/event-stream",
-            headers={
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "X-Accel-Buffering": "no",
-            },
-            background=BackgroundTask(response.aclose),
-        )
+    if not stream_requested:
+        try:
+            data = await client.generate(resolved_model, payload)
+        except ProviderError as exc:
+            logger.error("Upstream chat failed: %s", exc)
+            return _error_response(502, str(exc))
+        return JSONResponse(content=data)
 
-    content = await response.aread()
-    await response.aclose()
-    try:
-        return JSONResponse(content=json.loads(content))
-    except json.JSONDecodeError:
-        return _error_response(502, "Upstream provider returned a non-JSON response")
+    async def _stream():
+        async for frame in client.stream(resolved_model, payload):
+            yield frame
+        yield b"data: [DONE]\n\n"
+
+    return StreamingResponse(
+        _stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )

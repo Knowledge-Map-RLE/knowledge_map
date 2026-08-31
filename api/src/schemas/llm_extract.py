@@ -8,6 +8,50 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+_UNIFIED_BLOCK_TYPE_MAP: Dict[str, int] = {
+    "article": 1,
+    "objective": 2,
+    "hypothesis": 7,
+    "study": 4,
+    "experiment": 14,
+    "entity": 22,
+    "definition": 23,
+    "intervention": 18,
+    "model": 19,
+    "group": 55,
+    "procedure_step": 56,
+    "result": 57,
+    "statistic": 37,
+    "claim": 38,
+    "mechanism": 16,
+    "action": 54,
+    "relation": 58,
+    "action_relation": 58,
+    "temporal_relation": 59,
+    "limitation": 39,
+    "novelty": 44,
+    "future_proposal": 46,
+    "reference": 47,
+    "funding": 51,
+    "side_finding": 40,
+    "atomic_statement": 4,
+    "direct_triplet": 4,
+    "p_value": 27,
+    "side_finding": 40,
+    "conclusions": 20,
+    "animal_group": 55,
+    "animal_model": 19,
+    "biological_mechanism": 16,
+    "experiment_step": 56,
+    "result_finding": 57,
+    "statistical_processing": 37,
+    "study_limitations": 39,
+    "concept_definition": 23,
+    "research_goal": 2,
+    "links_to_previous_research": 47,
+    "funding_sources": 51,
+}
+
 
 class StructureBlock(BaseModel):
     """Один контейнерный блок из ответа Stage 1 (two-stage) или unified."""
@@ -53,6 +97,16 @@ class UnifiedBlock(BaseModel):
     blockType: int = Field(alias="blockType")
     data: Dict[str, Any] = Field(default_factory=dict)
     tag: str = ""
+
+    @field_validator("blockType", mode="before")
+    @classmethod
+    def coerce_block_type(cls, v: Any) -> int:
+        if isinstance(v, str):
+            return _UNIFIED_BLOCK_TYPE_MAP.get(v, 0)
+        try:
+            return int(v)
+        except (TypeError, ValueError):
+            return 0
 
     @field_validator("data", mode="before")
     @classmethod

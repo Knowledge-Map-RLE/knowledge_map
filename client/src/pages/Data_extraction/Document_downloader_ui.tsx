@@ -41,6 +41,8 @@ interface DocumentDownloaderUIProps {
     onDocumentsChange: () => void;
     error: string | null;
     setError: (error: string | null) => void;
+    /** Индекс doc_id -> slug золотых эталонов (для бейджа «эталон»). */
+    goldSlugsByUid?: Record<string, string>;
 }
 
 const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, DocumentDownloaderUIProps>(function Document_downloader_ui({
@@ -48,7 +50,8 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
     onSelectDocument,
     onDocumentsChange,
     error,
-    setError
+    setError,
+    goldSlugsByUid
 }, ref) {
     const [documents, setDocuments] = useState<PDFDocument[]>([]);
     const [fullTextCount, setFullTextCount] = useState(0);
@@ -524,6 +527,13 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             const doiTag = doc.doi
                 ? <span className="text-gray-500 text-[10px] ml-1" title={doc.doi}>DOI</span>
                 : null;
+            const goldSlug = goldSlugsByUid?.[doc.uid];
+            const goldTag = goldSlug
+                ? <span
+                    className="text-emerald-700 text-[10px] font-semibold ml-1"
+                    title={`Золотой эталон: eval/gold/${goldSlug}`}
+                  >эталон</span>
+                : null;
             return (
                 <div
                     className={`${s.docItem} ${selectedDocument?.uid === doc.uid ? s.docItemSelected : ''}`}
@@ -540,6 +550,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                             {getStatusText(doc.processing_status)}
                             {sourceTag}
                             {doiTag}
+                            {goldTag}
                             {progressText && <span className="text-blue-600 font-semibold"> {progressText}</span>}
                         </p>
                     </div>

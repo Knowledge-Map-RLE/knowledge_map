@@ -3,6 +3,7 @@ import type { BlockDataValue, BlockFieldDef } from '../../model';
 import { withBase } from '../../../../services/api/http';
 import { useWysiwygApi } from './WysiwygContext';
 import RefChip from './RefChip';
+import { isUuid } from './resolveTree';
 import { useAutoWidth } from './useAutoWidth';
 import styles from '../../Article_editor.module.css';
 
@@ -74,7 +75,24 @@ const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value }) => {
     };
 
     switch (field.inputType) {
-        case 'text':
+        case 'text': {
+            // UUID-ссылка на другой блок (после LLM-резолва {Bn}/{SEQn}):
+            // показываем человекочитаемую метку через чип вместо голого UUID.
+            if (isUuid(str)) {
+                return (
+                    <span className={styles.wyWord}>
+                        <RefChip
+                            lineId={lineId}
+                            fieldKey={field.key}
+                            value={str}
+                            field={field}
+                            refs={api.refs}
+                            onChange={onChange}
+                            onJumpTo={api.jumpToLine}
+                        />
+                    </span>
+                );
+            }
             return (
                 <span className={styles.wyWord}>
                     <input
@@ -89,6 +107,7 @@ const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value }) => {
                     />
                 </span>
             );
+        }
 
         case 'textarea':
             return (

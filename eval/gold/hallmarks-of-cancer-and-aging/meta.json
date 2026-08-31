@@ -1,0 +1,15 @@
+{
+  "slug": "hallmarks-of-cancer-and-aging",
+  "schema_version": 1,
+  "article_title": "Hallmarks of cancer and hallmarks of aging",
+  "doi": "10.18632/aging.204082",
+  "lang": "en",
+  "doc_id": "f075b5a1c6a5a9f7f8d7913012db5301",
+  "source_article": "data/articles/Hallmarks of cancer and hallmarks of aging/Hallmarks of cancer and hallmarks of aging.md",
+  "annotator": null,
+  "annotated_at": null,
+  "migrated_from": "api/tools/llm_extract/reference_blocks.json",
+  "migrated_at": "2026-08-24",
+  "needs_review": true,
+  "notes": "LLM-черновик, перенесённый без ручной выверки: структура и содержание неполны и не полностью соответствуют исходному тексту. Требуется переразметка человеком."
+}

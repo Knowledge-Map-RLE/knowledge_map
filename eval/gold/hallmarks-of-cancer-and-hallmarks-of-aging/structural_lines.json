@@ -1,0 +1,1126 @@
+{
+  "schema_version": 1,
+  "blocks": [
+    {
+      "instanceId": "00065966-a6a0-8f23-96d6-c40df455e82e",
+      "blockType": 1,
+      "data": {
+        "doi": "10.18632/aging.204082",
+        "title": "Hallmarks of cancer and hallmarks of aging",
+        "authors": "Blagosklonny Mikhail V."
+      },
+      "order": 0,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-a9e9-185d59db540d",
+      "blockType": 2,
+      "data": {
+        "subject": "we",
+        "predicate": "goal",
+        "object": "reexamine hallmarks of cancer"
+      },
+      "order": 1,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-ab2b-c22cdcb7d8b1",
+      "blockType": 2,
+      "data": {
+        "subject": "we",
+        "predicate": "goal",
+        "object": "propose hierarchical model of cancer hallmarks",
+        "dependsOn": [
+          "00065966-a6a0-8f23-a9e9-185d59db540d"
+        ]
+      },
+      "order": 2,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-90d0-6942cab37ae4",
+      "blockType": 2,
+      "data": {
+        "subject": "we",
+        "predicate": "goal",
+        "object": "propose hallmarks of aging based on hyperfunction theory",
+        "dependsOn": [
+          "00065966-a6a0-8f23-a9e9-185d59db540d"
+        ]
+      },
+      "order": 3,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-a4e4-36ba7bee68fd",
+      "blockType": 2,
+      "data": {
+        "subject": "we",
+        "predicate": "goal",
+        "object": "distinguish life-limiting vs non-life-limiting hallmarks",
+        "dependsOn": [
+          "00065966-a6a0-8f23-90d0-6942cab37ae4"
+        ]
+      },
+      "order": 4,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-a666-b9067b78a405",
+      "blockType": 2,
+      "data": {
+        "subject": "we",
+        "predicate": "goal",
+        "object": "apply hierarchical principle to aging",
+        "dependsOn": [
+          "00065966-a6a0-8f23-90d0-6942cab37ae4"
+        ]
+      },
+      "order": 5,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-8383-c85d0a41c3e1",
+      "blockType": 2,
+      "data": {
+        "subject": "we",
+        "predicate": "goal",
+        "object": "identify common hallmarks of cancer, aging, and senescence",
+        "dependsOn": [
+          "00065966-a6a0-8f23-90d0-6942cab37ae4"
+        ]
+      },
+      "order": 6,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-b575-3ccd8f5d4c09",
+      "blockType": 7,
+      "data": {
+        "hypothesis": "Aging is caused by hyperfunctional signaling pathways (e.g., mTOR) that continue developmental programs, leading to age-related diseases; hallmarks of aging should be arranged hierarchically with age-related diseases as the key organismal hallmark.",
+        "disproofExplanation": "If aging were caused by molecular damage accumulation, then reducing damage would extend lifespan, but interventions that reduce damage do not consistently extend lifespan; instead, inhibiting mTOR extends lifespan."
+      },
+      "order": 7,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-9797-12317aecd5db",
+      "blockType": 19,
+      "data": {
+        "species": "C. elegans",
+        "timeline": "lifespan",
+        "conditions": "normal aging"
+      },
+      "order": 8,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-9d5d-869aa2efdd15",
+      "blockType": 19,
+      "data": {
+        "species": "Mus musculus",
+        "timeline": "lifespan",
+        "conditions": "normal aging and interventions"
+      },
+      "order": 9,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-aaea-93ebccfa3a67",
+      "blockType": 19,
+      "data": {
+        "species": "Homo sapiens",
+        "timeline": "lifespan",
+        "conditions": "normal aging and age-related diseases"
+      },
+      "order": 10,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-9e1e-fea894171abf",
+      "blockType": 19,
+      "data": {
+        "species": "Canis familiaris",
+        "timeline": "lifespan",
+        "conditions": "transmissible venereal tumor"
+      },
+      "order": 11,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-bcbc-a6938bc7122c",
+      "blockType": 19,
+      "data": {
+        "species": "Sarcophilus harrisii",
+        "timeline": "lifespan",
+        "conditions": "devil facial tumor disease"
+      },
+      "order": 12,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-bb3b-8b3c142710cc",
+      "blockType": 19,
+      "data": {
+        "species": "Bivalvia",
+        "timeline": "lifespan",
+        "conditions": "transmissible leukemia-like cancer"
+      },
+      "order": 13,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-8f0f-55f7eb6c5d43",
+      "blockType": 56,
+      "data": {
+        "stepName": "Reexamine hallmarks of cancer",
+        "details": "Analyze the six hallmarks proposed by Hanahan and Weinberg in 2000 and their hierarchical arrangement."
+      },
+      "order": 14,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-8989-37aecd8f23cd",
+      "blockType": 56,
+      "data": {
+        "stepName": "Propose hierarchical model of cancer hallmarks",
+        "details": "Arrange hallmarks from molecular to organismal levels, including molecular alterations, intracellular signaling, cellular resistance, tissue invasion, metastasis, and immortality."
+      },
+      "order": 15,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-bd3d-d48e0199aa70",
+      "blockType": 56,
+      "data": {
+        "stepName": "Analyze hallmarks of aging",
+        "details": "Evaluate the hallmarks of aging proposed by López-Otín et al. and identify shortcomings."
+      },
+      "order": 16,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-a727-75ded4bdbbd9",
+      "blockType": 56,
+      "data": {
+        "stepName": "Propose hierarchical hallmarks of aging",
+        "details": "Based on hyperfunction theory, arrange hallmarks from intracellular signaling to organismal age-related diseases."
+      },
+      "order": 17,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-aaea-f04dc86c2e12",
+      "blockType": 56,
+      "data": {
+        "stepName": "Distinguish life-limiting vs non-life-limiting hallmarks",
+        "details": "Apply criteria to identify which hallmarks are life-limiting and which are not."
+      },
+      "order": 18,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-8444-dda2a738983a",
+      "blockType": 56,
+      "data": {
+        "stepName": "Discuss aging as selective force for cancer",
+        "details": "Explain how aging microenvironment selects for oncogenic mutations."
+      },
+      "order": 19,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-a2a2-2453e5a08829",
+      "blockType": 56,
+      "data": {
+        "stepName": "Identify common hallmarks of cancer, aging, and senescence",
+        "details": "Highlight shared signaling pathways such as mTOR."
+      },
+      "order": 20,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-b676-cba273684ba6",
+      "blockType": 57,
+      "data": {
+        "parameter": "hallmarks of cancer hierarchy",
+        "direction": "no change",
+        "significance": "significant",
+        "detail": "Six hallmarks are genuine but not hierarchically arranged.",
+        "outcomeClass": "neutral"
+      },
+      "order": 21,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-90d0-980cc8be4b5c",
+      "blockType": 57,
+      "data": {
+        "parameter": "hierarchical model of cancer hallmarks",
+        "direction": "no change",
+        "significance": "significant",
+        "detail": "Hallmarks can be arranged from molecular to organismal levels.",
+        "outcomeClass": "neutral"
+      },
+      "order": 22,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-b8f8-d84773386912",
+      "blockType": 57,
+      "data": {
+        "parameter": "hallmarks of aging",
+        "direction": "no change",
+        "significance": "significant",
+        "detail": "López-Otín hallmarks lack organismal level and include genetic instability based on refuted damage theory.",
+        "outcomeClass": "neutral"
+      },
+      "order": 23,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-b9f9-3572cb0f81fa",
+      "blockType": 57,
+      "data": {
+        "parameter": "hierarchical hallmarks of aging",
+        "direction": "no change",
+        "significance": "significant",
+        "detail": "Hyperfunction theory provides hierarchical hallmarks with age-related diseases as key organismal hallmark.",
+        "outcomeClass": "neutral"
+      },
+      "order": 24,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-b2f2-90496452a451",
+      "blockType": 57,
+      "data": {
+        "parameter": "life-limiting hallmarks",
+        "direction": "no change",
+        "significance": "significant",
+        "detail": "Only a few processes are life-limiting; non-limiting hallmarks are excluded.",
+        "outcomeClass": "neutral"
+      },
+      "order": 25,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-a262-6c1ade40f033",
+      "blockType": 57,
+      "data": {
+        "parameter": "aging as selective force",
+        "direction": "no change",
+        "significance": "significant",
+        "detail": "Aging microenvironment selects for oncogenic mutations.",
+        "outcomeClass": "neutral"
+      },
+      "order": 26,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-a525-6d49cdd37475",
+      "blockType": 57,
+      "data": {
+        "parameter": "common hallmarks",
+        "direction": "no change",
+        "significance": "significant",
+        "detail": "mTOR pathway is common to cancer, aging, and senescence.",
+        "outcomeClass": "neutral"
+      },
+      "order": 27,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-b232-2be6e72594b5",
+      "blockType": 14,
+      "data": {
+        "experimentName": "Review synthesis of hallmarks of cancer and aging",
+        "experimentType": "Review synthesis",
+        "steps": "[\"00065966-a6a0-8f23-8f0f-55f7eb6c5d43\", \"00065966-a6a0-8f23-8989-37aecd8f23cd\", \"00065966-a6a0-8f23-bd3d-d48e0199aa70\", \"00065966-a6a0-8f23-a727-75ded4bdbbd9\", \"00065966-a6a0-8f23-aaea-f04dc86c2e12\", \"00065966-a6a0-8f23-8444-dda2a738983a\", \"00065966-a6a0-8f23-a2a2-2453e5a08829\"]",
+        "findings": "[\"00065966-a6a0-8f23-b676-cba273684ba6\", \"00065966-a6a0-8f23-90d0-980cc8be4b5c\", \"00065966-a6a0-8f23-b8f8-d84773386912\", \"00065966-a6a0-8f23-b9f9-3572cb0f81fa\", \"00065966-a6a0-8f23-b2f2-90496452a451\", \"00065966-a6a0-8f23-a262-6c1ade40f033\", \"00065966-a6a0-8f23-a525-6d49cdd37475\"]"
+      },
+      "order": 28,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-8f23-8d0d-b9e5706d4405",
+      "blockType": 54,
+      "data": {
+        "subject": "mTOR hyperfunction",
+        "predicate": "drives",
+        "object": "aging"
+      },
+      "order": 29,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9f9f-a5b0e3e81d77",
+      "blockType": 54,
+      "data": {
+        "subject": "rapamycin",
+        "predicate": "inhibits",
+        "object": "mTOR"
+      },
+      "order": 30,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-baba-b107bde383b3",
+      "blockType": 54,
+      "data": {
+        "subject": "aging",
+        "predicate": "selects for",
+        "object": "oncogenic mutations"
+      },
+      "order": 31,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a9a9-d017e1fb0099",
+      "blockType": 54,
+      "data": {
+        "subject": "cellular senescence",
+        "predicate": "shares",
+        "object": "mTOR pathway"
+      },
+      "order": 32,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-91d1-c7de08fac2fc",
+      "blockType": 58,
+      "data": {
+        "source": "mTOR hyperfunction",
+        "target": "age-related diseases",
+        "relationType": "causes",
+        "confidence": "high",
+        "evidence": "mTOR drives pathologies"
+      },
+      "order": 33,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9696-b862121a22cf",
+      "blockType": 58,
+      "data": {
+        "source": "hyperfunction",
+        "target": "organ damage",
+        "relationType": "causes",
+        "confidence": "high",
+        "evidence": "hyperfunction leads to damage"
+      },
+      "order": 34,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-92d2-eead3a83cf6c",
+      "blockType": 58,
+      "data": {
+        "source": "hyperfunction",
+        "target": "functional decline",
+        "relationType": "causes",
+        "confidence": "high",
+        "evidence": "hyperfunction causes decline"
+      },
+      "order": 35,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-95d5-dcf6c8c176c0",
+      "blockType": 58,
+      "data": {
+        "source": "developmental growth",
+        "target": "aging",
+        "relationType": "leads_to",
+        "confidence": "high",
+        "evidence": "continuation of development"
+      },
+      "order": 36,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b939-624c5183a690",
+      "blockType": 58,
+      "data": {
+        "source": "mTOR",
+        "target": "cellular senescence",
+        "relationType": "drives",
+        "confidence": "high",
+        "evidence": "mTOR drives geroconversion"
+      },
+      "order": 37,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b131-fea0c38f42a5",
+      "blockType": 58,
+      "data": {
+        "source": "rapamycin",
+        "target": "geroconversion",
+        "relationType": "suppresses",
+        "confidence": "high",
+        "evidence": "rapamycin inhibits senescence"
+      },
+      "order": 38,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9393-f6c3e5f02149",
+      "blockType": 58,
+      "data": {
+        "source": "aging",
+        "target": "cancer",
+        "relationType": "selects for",
+        "confidence": "medium",
+        "evidence": "aging microenvironment selects"
+      },
+      "order": 39,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-98d8-5169dae12966",
+      "blockType": 58,
+      "data": {
+        "source": "chronic inflammation",
+        "target": "oncogenic mutations",
+        "relationType": "selects for",
+        "confidence": "medium",
+        "evidence": "inflammation selects mutations"
+      },
+      "order": 40,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b4b4-fa3c69bacf7e",
+      "blockType": 58,
+      "data": {
+        "source": "growth-limiting conditions",
+        "target": "resistance",
+        "relationType": "selects for",
+        "confidence": "high",
+        "evidence": "conditions select resistance"
+      },
+      "order": 41,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9cdc-2074d2b5ad62",
+      "blockType": 58,
+      "data": {
+        "source": "resistance to growth-limiting conditions",
+        "target": "cancer hallmarks",
+        "relationType": "enables",
+        "confidence": "high",
+        "evidence": "resistance drives hallmarks"
+      },
+      "order": 42,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-94d4-1ae6bc698e01",
+      "blockType": 58,
+      "data": {
+        "source": "mutations",
+        "target": "cancer hallmarks",
+        "relationType": "enable",
+        "confidence": "high",
+        "evidence": "mutations enable hallmarks"
+      },
+      "order": 43,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a767-fb522173df21",
+      "blockType": 58,
+      "data": {
+        "source": "mTOR",
+        "target": "aging",
+        "relationType": "drives",
+        "confidence": "high",
+        "evidence": "mTOR drives aging"
+      },
+      "order": 44,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-ba3a-2b0160bb6d07",
+      "blockType": 59,
+      "data": {
+        "earlier": "00065966-a6a0-8f23-8f0f-55f7eb6c5d43",
+        "later": "00065966-a6a0-8f23-8989-37aecd8f23cd",
+        "relationType": "precedes"
+      },
+      "order": 45,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9616-45ddae712d7b",
+      "blockType": 59,
+      "data": {
+        "earlier": "00065966-a6a0-8f23-8989-37aecd8f23cd",
+        "later": "00065966-a6a0-8f23-a727-75ded4bdbbd9",
+        "relationType": "precedes"
+      },
+      "order": 46,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-ac6c-c1c5afa85068",
+      "blockType": 59,
+      "data": {
+        "earlier": "00065966-a6a0-8f23-a727-75ded4bdbbd9",
+        "later": "00065966-a6a0-8f23-aaea-f04dc86c2e12",
+        "relationType": "precedes"
+      },
+      "order": 47,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8d0d-1084b133abb9",
+      "blockType": 22,
+      "data": {
+        "subject": "mTOR",
+        "predicate": "is",
+        "object": "signaling pathway"
+      },
+      "order": 48,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a727-ba52818fbc27",
+      "blockType": 22,
+      "data": {
+        "subject": "aging",
+        "predicate": "is",
+        "object": "sum of age-related diseases"
+      },
+      "order": 49,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a9e9-da999ecb503b",
+      "blockType": 22,
+      "data": {
+        "subject": "cancer",
+        "predicate": "is",
+        "object": "age-related disease"
+      },
+      "order": 50,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-82c2-7cac6e7cb3dc",
+      "blockType": 22,
+      "data": {
+        "subject": "cellular senescence",
+        "predicate": "is",
+        "object": "two-step process"
+      },
+      "order": 51,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9ada-5392b1f2f7a4",
+      "blockType": 22,
+      "data": {
+        "subject": "hyperfunction",
+        "predicate": "is",
+        "object": "excessive signaling activity"
+      },
+      "order": 52,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8545-b4c218f5e801",
+      "blockType": 22,
+      "data": {
+        "subject": "hallmarks of aging",
+        "predicate": "include",
+        "object": "age-related diseases"
+      },
+      "order": 53,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8181-dbc3dd006180",
+      "blockType": 23,
+      "data": {
+        "term": "hyperfunction theory",
+        "definition": "Aging is a continuation of developmental and reproductive programs that were not turned off, leading to hyperfunctional signaling."
+      },
+      "order": 54,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-ba3a-4532ba959126",
+      "blockType": 23,
+      "data": {
+        "term": "geroconversion",
+        "definition": "The process by which cell cycle arrest is followed by hypertrophic and hyperfunctional changes, leading to senescence."
+      },
+      "order": 55,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8404-cc16a2dba5bd",
+      "blockType": 23,
+      "data": {
+        "term": "life-limiting hallmark",
+        "definition": "A process that actually limits lifespan in a particular individual, as opposed to non-life-limiting processes."
+      },
+      "order": 56,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-81c1-9269ffdb8b89",
+      "blockType": 38,
+      "data": {
+        "claimSubject": "six hallmarks of cancer",
+        "claimPredicate": "are",
+        "claimObject": "genuine but not hierarchically arranged",
+        "confidenceNotes": "Based on analysis",
+        "isNegated": false
+      },
+      "order": 57,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a727-ea0e07270a99",
+      "blockType": 38,
+      "data": {
+        "claimSubject": "aging",
+        "claimPredicate": "is",
+        "claimObject": "not a molecular disease",
+        "confidenceNotes": "Based on hyperfunction theory",
+        "isNegated": false
+      },
+      "order": 58,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-baba-82ff0af39fea",
+      "blockType": 38,
+      "data": {
+        "claimSubject": "mTOR",
+        "claimPredicate": "drives",
+        "claimObject": "aging",
+        "confidenceNotes": "Evidence from rapamycin studies",
+        "isNegated": false
+      },
+      "order": 59,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8b4b-63789d993cc7",
+      "blockType": 38,
+      "data": {
+        "claimSubject": "telomere shortening",
+        "claimPredicate": "is",
+        "claimObject": "not life-limiting in normal aging",
+        "confidenceNotes": "DKC patients die from bone marrow failure",
+        "isNegated": false
+      },
+      "order": 60,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a0e0-258743795599",
+      "blockType": 38,
+      "data": {
+        "claimSubject": "cancer",
+        "claimPredicate": "requires",
+        "claimObject": "selective force",
+        "confidenceNotes": "Mutations necessary but not sufficient",
+        "isNegated": false
+      },
+      "order": 61,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b030-c67c8e061a9d",
+      "blockType": 38,
+      "data": {
+        "claimSubject": "rapamycin",
+        "claimPredicate": "suppresses",
+        "claimObject": "geroconversion",
+        "confidenceNotes": "Experimental evidence",
+        "isNegated": false
+      },
+      "order": 62,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-83c3-8ec7583f7bad",
+      "blockType": 16,
+      "data": {
+        "mechanism": "Hyperfunction theory: Continuously active signaling pathways (e.g., mTOR) that drive development become hyperfunctional after growth completion, causing age-related diseases and aging."
+      },
+      "order": 63,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-af6f-aa263365d64f",
+      "blockType": 18,
+      "data": {
+        "intervention": "Rapamycin",
+        "dosage": "not specified",
+        "dosageRegimen": "not specified"
+      },
+      "order": 64,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b2f2-c0ca76aea784",
+      "blockType": 18,
+      "data": {
+        "intervention": "Calorie restriction",
+        "dosage": "not specified",
+        "dosageRegimen": "not specified"
+      },
+      "order": 65,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8747-756307328f05",
+      "blockType": 39,
+      "data": {
+        "limitations": "The article is a perspective piece and does not provide experimental data; it relies on existing literature."
+      },
+      "order": 66,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a6e6-3af91c26fb42",
+      "blockType": 40,
+      "data": {
+        "sideFindings": "Transmissible cancers in dogs, Tasmanian devils, and bivalves illustrate extra-organismal level of cancer hallmarks."
+      },
+      "order": 67,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-89c9-38512949d0e3",
+      "blockType": 44,
+      "data": {
+        "novelty": "Proposes a hierarchical arrangement of hallmarks of cancer and aging, and distinguishes life-limiting from non-life-limiting hallmarks."
+      },
+      "order": 68,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-95d5-9d662e648745",
+      "blockType": 46,
+      "data": {
+        "futureResearch": "Further experimental validation of hyperfunction theory and identification of life-limiting hallmarks in different species."
+      },
+      "order": 69,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-aded-65a1d77a6784",
+      "blockType": 47,
+      "data": {
+        "references": "Hanahan D, Weinberg RA. Cell. 2000;100:57-70; López-Otín C et al. Cell. 2013;153:1194-1217; etc."
+      },
+      "order": 70,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8686-d70a44eb023f",
+      "blockType": 4,
+      "data": {
+        "subject": "Hanahan and Weinberg",
+        "predicate": "proposed",
+        "object": "six hallmarks of cancer"
+      },
+      "order": 71,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-ab6b-48a3facaa999",
+      "blockType": 4,
+      "data": {
+        "subject": "limitless replicative potential",
+        "predicate": "is",
+        "object": "extra-organismal"
+      },
+      "order": 72,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9999-0852b7fb1a2b",
+      "blockType": 4,
+      "data": {
+        "subject": "angiogenesis",
+        "predicate": "is",
+        "object": "tissue-level"
+      },
+      "order": 73,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8686-d3f3ae027386",
+      "blockType": 4,
+      "data": {
+        "subject": "resistance to growth-limiting conditions",
+        "predicate": "is",
+        "object": "super-hallmark"
+      },
+      "order": 74,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8ccc-34d623ad9535",
+      "blockType": 4,
+      "data": {
+        "subject": "cellular immortality",
+        "predicate": "is",
+        "object": "derived hallmark"
+      },
+      "order": 75,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8101-1bdbc019cc25",
+      "blockType": 4,
+      "data": {
+        "subject": "molecular alterations",
+        "predicate": "are",
+        "object": "enabling hallmark"
+      },
+      "order": 76,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-ab6b-28f76cf13d28",
+      "blockType": 4,
+      "data": {
+        "subject": "genome instability",
+        "predicate": "enables",
+        "object": "mutations"
+      },
+      "order": 77,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b8f8-482fcf07dcc3",
+      "blockType": 4,
+      "data": {
+        "subject": "oncogenic mutations",
+        "predicate": "rewire",
+        "object": "signaling"
+      },
+      "order": 78,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9818-34ce46e5dc33",
+      "blockType": 4,
+      "data": {
+        "subject": "TGF-beta",
+        "predicate": "can induce",
+        "object": "proliferation in cancer"
+      },
+      "order": 79,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9f9f-46b01c6ad2d5",
+      "blockType": 4,
+      "data": {
+        "subject": "cancer cells",
+        "predicate": "are",
+        "object": "unicellular organisms in Darwinian sense"
+      },
+      "order": 80,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b7b7-d3268cf2d67c",
+      "blockType": 4,
+      "data": {
+        "subject": "metastasis",
+        "predicate": "is",
+        "object": "deadliest hallmark"
+      },
+      "order": 81,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8e0e-1d051d9321b1",
+      "blockType": 4,
+      "data": {
+        "subject": "no direct selection",
+        "predicate": "for",
+        "object": "metastasis"
+      },
+      "order": 82,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b9b9-eb27c11c7dd4",
+      "blockType": 4,
+      "data": {
+        "subject": "transmissible cancers",
+        "predicate": "exist",
+        "object": "in dogs, devils, bivalves"
+      },
+      "order": 83,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-bb7b-52e31022b89b",
+      "blockType": 4,
+      "data": {
+        "subject": "aging",
+        "predicate": "is",
+        "object": "sum of age-related diseases"
+      },
+      "order": 84,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8b0b-b61463c6c788",
+      "blockType": 4,
+      "data": {
+        "subject": "molecular damage theory",
+        "predicate": "was",
+        "object": "refuted"
+      },
+      "order": 85,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-82c2-51844f46c3ff",
+      "blockType": 4,
+      "data": {
+        "subject": "hyperfunction",
+        "predicate": "causes",
+        "object": "organ damage"
+      },
+      "order": 86,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8989-7aa49d34a888",
+      "blockType": 4,
+      "data": {
+        "subject": "rapamycin",
+        "predicate": "extends",
+        "object": "lifespan"
+      },
+      "order": 87,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8c4c-9ad650ac8747",
+      "blockType": 4,
+      "data": {
+        "subject": "mTOR",
+        "predicate": "is not altered by",
+        "object": "mutations"
+      },
+      "order": 88,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-a3e3-43741f72b8db",
+      "blockType": 4,
+      "data": {
+        "subject": "00065966-a6a0-830c-bb7b-52e31022b89b",
+        "predicate": "is not",
+        "object": "molecular disease"
+      },
+      "order": 89,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-9454-c56deefc459e",
+      "blockType": 4,
+      "data": {
+        "subject": "life-limiting hallmark",
+        "predicate": "is",
+        "object": "one that kills"
+      },
+      "order": 90,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-b373-72236d2aeaa2",
+      "blockType": 4,
+      "data": {
+        "subject": "telomere shortening",
+        "predicate": "is not",
+        "object": "life-limiting"
+      },
+      "order": 91,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8787-ff9b4b4b2ad5",
+      "blockType": 4,
+      "data": {
+        "subject": "00065966-a6a0-830c-bb7b-52e31022b89b",
+        "predicate": "selects for",
+        "object": "cancer"
+      },
+      "order": 92,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8c0c-45e9faea3c85",
+      "blockType": 4,
+      "data": {
+        "subject": "chronic inflammation",
+        "predicate": "selects for",
+        "object": "oncogenic mutations"
+      },
+      "order": 93,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8808-99f1ce9d2f3b",
+      "blockType": 4,
+      "data": {
+        "subject": "cellular senescence",
+        "predicate": "is",
+        "object": "two-step process"
+      },
+      "order": 94,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8949-3bc47fbe024b",
+      "blockType": 4,
+      "data": {
+        "subject": "geroconversion",
+        "predicate": "is",
+        "object": "continuation of growth"
+      },
+      "order": 95,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-8808-dc90c4d8ca3f",
+      "blockType": 4,
+      "data": {
+        "subject": "rapamycin",
+        "predicate": "suppresses",
+        "object": "geroconversion"
+      },
+      "order": 96,
+      "author": null
+    },
+    {
+      "instanceId": "00065966-a6a0-830c-bcfc-f513940e913e",
+      "blockType": 4,
+      "data": {
+        "subject": "cancer cells",
+        "predicate": "are",
+        "object": "proliferating senescent cells"
+      },
+      "order": 97,
+      "author": null
+    }
+  ]
+}

@@ -12,7 +12,8 @@ Allowed imports: pydantic-settings, os, стандартная библиоте�
 Forbidden imports: fastapi, neomodel, grpc, aioboto3, application, domain, adapters, web
 """
 import os
-from typing import Optional
+from pathlib import Path
+from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -61,9 +62,9 @@ class Settings(BaseSettings):
 
     # LLM Extraction (triplet extraction from articles)
     LLM_EXTRACT_MODEL: str = "gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest"
-    LLM_MAX_CHUNK_CHARS: int = 7000
+    LLM_MAX_CHUNK_CHARS: int = 3500
     LLM_MAX_TOKENS: int = 80000
-    LLM_TIMEOUT: int = 600
+    LLM_TIMEOUT: int = 1800
     LLM_TEMPERATURE: float = 0.1
     LLM_MAX_RETRIES: int = 2
     LLM_SEQ_REF_RATIO: float = 0.7788
@@ -71,8 +72,35 @@ class Settings(BaseSettings):
     LLM_UUIDREF_MIN_FREQ: int = 3
     LLM_WHOLE_ARTICLE_MAX_CHARS: int = 100000
 
+    # Золотые эталоны LLM-экстракции (eval/gold)
+    # Каталог золотых эталонов (eval/gold).
+    # Пусто -> eval/gold в корне репозитория. Относительный путь
+    # отсчитывается от корня репозитория (не от рабочей директории процесса);
+    # в production обычно абсолютный путь к примонтированному тому.
+    GOLD_DIR: str = ""
+
+    # Администраторы эталонов: uid через запятую.
+    # Временная схема до появления ролей в auth-сервисе; проверка —
+    # единственная точка web.dependencies.get_current_admin.
+    ADMIN_UIDS: str = ""
+
     # Debug режим
     DEBUG: bool = False
+
+    @property
+    def admin_uids(self) -> List[str]:
+        return [uid.strip() for uid in self.ADMIN_UIDS.split(",") if uid.strip()]
+
+    @property
+    def resolved_gold_dir(self) -> Path:
+        """Каталог эталонов: относительные пути — от корня репозитория."""
+        repo_root = Path(__file__).resolve().parents[2]
+        if not self.GOLD_DIR:
+            return repo_root / "eval" / "gold"
+        path = Path(self.GOLD_DIR)
+        if not path.is_absolute():
+            path = repo_root / path
+        return path.resolve()
 
     def get_database_url(self) -> str:
         """Формирует DATABASE_URL для neomodel."""

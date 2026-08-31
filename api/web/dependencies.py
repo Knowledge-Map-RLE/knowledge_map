@@ -35,7 +35,7 @@ from infrastructure.tokenization.deepseek_tokenizer import (
 from infrastructure.config import settings
 
 from application.auth.verify_token import verify_token
-from domain.exceptions import AuthenticationFailed, ExternalServiceError
+from domain.exceptions import AuthenticationFailed, AuthorizationFailed, ExternalServiceError
 
 
 # ── Репозитории ────────────────────────────────────────────────────────────────
@@ -116,6 +116,27 @@ def get_current_user(
     user = result.get("user")
     if not user:
         raise AuthenticationFailed("Токен недействителен")
+    return user
+
+
+def is_admin_user(user: dict) -> bool:
+    """Является ли пользователь администратором эталонов (список ADMIN_UIDS)."""
+    uid = user.get("uid")
+    return bool(uid) and uid in settings.admin_uids
+
+
+def get_current_admin(
+    user: dict = Depends(get_current_user),
+) -> dict:
+    """FastAPI-зависимость: текущий пользователь должен быть администратором.
+
+    Ролей в auth-сервисе пока нет — админ определяется списком uid в
+    настройке ADMIN_UIDS (через запятую). При появлении ролей в auth
+    проверка меняется только здесь.
+    Бросает AuthorizationFailed (403), если uid нет в списке.
+    """
+    if not is_admin_user(user):
+        raise AuthorizationFailed("Требуются права администратора")
     return user
 
 

@@ -7,6 +7,9 @@
     python tools/llm_extract/run.py metrics extracted.json
     python tools/llm_extract/run.py full --out extracted.json   # extract + metrics
 
+    # Сравнение готовых извлечений с эталонами из eval/gold:
+    python tools/llm_extract/run.py gold-eval --pairs slug::extracted.json ...
+
     # С явным указанием статьи:
     python tools/llm_extract/run.py full --out hallmarks.json --lang en \\
         --article-dir "D:\\...\\Hallmarks of cancer and hallmarks of aging" \\
@@ -20,6 +23,7 @@ import hashlib
 import json
 import sys
 from pathlib import Path
+from typing import List, Optional, Sequence, Tuple
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
@@ -143,18 +147,16 @@ def cmd_metrics(args: argparse.Namespace) -> None:
     sys.exit(0 if report["passed"] else 1)
 
 
-def cmd_multi_metrics(args: argparse.Namespace) -> None:
+def _run_multi_report(entries: Sequence[Tuple[str, Path, Path, Optional[Path]]]) -> None:
+    """Печатает отчёт по каждому сравнению и взвешенную сводку; exit по порогу.
+
+    entries: (label, путь к извлечённым блокам, путь к эталону, путь к тексту).
+    """
     pairs = []
-    text_files = args.text or []
-    for i, item in enumerate(args.articles):
-        parts = item.split("::")
-        if len(parts) != 3:
-            sys.exit(f"Неверный формат: {item} (ожидается extracted.json::reference.json::label)")
-        ext_path, ref_path, label = parts
-        ext = m.load_blocks(Path(ext_path))
-        ref = m.load_blocks(Path(ref_path))
-        text_path = text_files[i] if i < len(text_files) else None
-        original_text = Path(text_path).read_text(encoding="utf-8-sig") if text_path else None
+    for label, ext_path, ref_path, text_path in entries:
+        ext = m.load_blocks(ext_path)
+        ref = m.load_blocks(ref_path)
+        original_text = text_path.read_text(encoding="utf-8-sig") if text_path else None
         report = m.compute_metrics(ref, ext, original_text)
         pairs.append({"label": label, "report": report, "ext_count": len(ext), "ref_count": len(ref)})
         print(f"\n=== {label} ({len(ext)} ext / {len(ref)} ref) ===", file=sys.stderr)
@@ -182,6 +184,38 @@ def cmd_multi_metrics(args: argparse.Namespace) -> None:
     print("\n=== КОМБИНИРОВАННАЯ МЕТРИКА ===")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     sys.exit(0 if summary["passed"] else 1)
+
+
+def cmd_multi_metrics(args: argparse.Namespace) -> None:
+    entries: List[Tuple[str, Path, Path, Optional[Path]]] = []
+    text_files = args.text or []
+    for i, item in enumerate(args.articles):
+        parts = item.split("::")
+        if len(parts) != 3:
+            sys.exit(f"Неверный формат: {item} (ожидается extracted.json::reference.json::label)")
+        ext_path, ref_path, label = parts
+        text_path = Path(text_files[i]) if i < len(text_files) else None
+        entries.append((label, Path(ext_path), Path(ref_path), text_path))
+    _run_multi_report(entries)
+
+
+def cmd_gold_eval(args: argparse.Namespace) -> None:
+    """Сравнение готовых извлечений с эталонами из eval/gold без ручных путей."""
+    root = Path(args.gold_dir) if args.gold_dir else None
+    known = set(m.gold_case_slugs(root))
+    if not known:
+        sys.exit("eval/gold пуст: нет ни одного кейса в manifest.json")
+
+    entries: List[Tuple[str, Path, Path, Optional[Path]]] = []
+    for item in args.pairs:
+        slug, sep, extracted = item.partition("::")
+        if not sep:
+            sys.exit(f"Неверный формат: '{item}' (ожидается slug::extracted.json)")
+        if slug not in known:
+            sys.exit(f"Кейс '{slug}' не объявлен в manifest.json (доступны: {', '.join(sorted(known))})")
+        paths = m.gold_case_paths(slug, root)
+        entries.append((slug, Path(extracted), paths["reference"], paths["article"]))
+    _run_multi_report(entries)
 
 
 def cmd_full(args: argparse.Namespace) -> None:
@@ -234,6 +268,16 @@ def main() -> None:
     )
     p_multi.add_argument("--text", nargs="+", default=None, help="Пути к .md файлам оригиналов (в том же порядке)")
     p_multi.set_defaults(func=cmd_multi_metrics)
+
+    p_gold = sub.add_parser("gold-eval", help="Метрика извлечений против эталонов eval/gold")
+    p_gold.add_argument(
+        "--pairs",
+        nargs="+",
+        required=True,
+        help="slug::extracted.json — сравнение с кейсом эталона по manifest.json",
+    )
+    p_gold.add_argument("--gold-dir", default=None, help="Каталог эталонов (по умолчанию ../eval/gold)")
+    p_gold.set_defaults(func=cmd_gold_eval)
 
     p_full = sub.add_parser("full", help="Извлечь + посчитать метрику")
     p_full.add_argument("--out", default=str(DEFAULT_OUT))

@@ -28,6 +28,7 @@ import {
 } from '../../../services/api/social';
 import { useToast } from '../../../shared/ui/Toast';
 import { ModalPortal } from '../../../shared/ui/ModalPortal';
+import { fetchUserMe, type UserRole } from '../../../services/api/user';
 
 interface AccountModalProps {
     myUid: string;
@@ -54,7 +55,7 @@ const formatRubles = (cost: string): string => {
     return `${value.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ₽`;
 };
 
-export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
+export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) => {
     const { error: toastError, success: toastSuccess } = useToast();
     const navigate = useNavigate();
     const fileRef = useRef<HTMLInputElement>(null);
@@ -65,6 +66,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
     const [aiUsage, setAiUsage] = useState<{ current: AIUsageSummary | null; previous: AIUsageSummary | null }>({ current: null, previous: null });
     const [loadingAI, setLoadingAI] = useState(false);
     const [profile, setProfile] = useState<SocialUserProfile | null>(null);
+    const [role, setRole] = useState<UserRole>('user');
     const [bio, setBio] = useState('');
     const [avatarKey, setAvatarKey] = useState('');
     const [contacts, setContacts] = useState<SocialContacts>({});
@@ -138,6 +140,25 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
         }
     }, [toastError]);
 
+    const loadRole = useCallback(async () => {
+        try {
+            const res = await fetchUserMe();
+            if (res.success) setRole(res.role);
+        } catch {
+            // Роль не критична: остаётся 'user'
+        }
+    }, []);
+
+    const handleCopyUid = useCallback(async () => {
+        if (!myUid) return;
+        try {
+            await navigator.clipboard.writeText(myUid);
+            toastSuccess('UID скопирован');
+        } catch {
+            toastError('Не удалось скопировать UID');
+        }
+    }, [myUid, toastSuccess, toastError]);
+
     const handleCancelSubscription = useCallback(async () => {
         setCancelling(true);
         try {
@@ -154,7 +175,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
     useEffect(() => {
         loadProfile();
         loadCommunities();
-    }, [loadProfile, loadCommunities]);
+        void loadRole();
+    }, [loadProfile, loadCommunities, loadRole]);
 
     useEffect(() => {
         if (tab === 'subscription') {
@@ -301,6 +323,35 @@ export const AccountModal: React.FC<AccountModalProps> = ({ onClose }) => {
                         <div className={s.field}>
                             <label>Логин</label>
                             <input type="text" value={`@${profile?.login ?? ''}`} disabled className={s.input} />
+                        </div>
+                        <div className={s.field}>
+                            <label>Роль</label>
+                            <input
+                                type="text"
+                                value={role === 'admin' ? 'Администратор' : 'Пользователь'}
+                                disabled
+                                readOnly
+                                className={s.input}
+                            />
+                            <div className={s.hint}>
+                                Роль задаётся списком ADMIN_UIDS в настройках api-сервиса
+                            </div>
+                        </div>
+                        <div className={s.field}>
+                            <label>UID</label>
+                            <div className="flex items-center gap-2">
+                                <input type="text" value={myUid ?? ''} disabled readOnly className={s.input} />
+                                <button
+                                    type="button"
+                                    className="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-md hover:bg-gray-200 whitespace-nowrap"
+                                    onClick={() => void handleCopyUid()}
+                                >
+                                    Копировать
+                                </button>
+                            </div>
+                            <div className={s.hint}>
+                                Идентификатор пользователя (например, для списка ADMIN_UIDS в настройках api)
+                            </div>
                         </div>
                         <div className={s.field}>
                             <label>Аватар</label>

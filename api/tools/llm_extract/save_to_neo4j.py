@@ -25,9 +25,9 @@ EXTRACTIONS = [
         "label": "Hallmarks of cancer and hallmarks of aging",
     },
     {
-        "file": Path(__file__).parent / "extracted_immuno_v7.json",
+        "file": Path(__file__).parent / "extracted_immuno_en_v4.json",
         "doc_id": "000657ba-aec6-8a11-9c5c-986526539651",
-        "label": "Immunometabolic resistors of aging in long-lived golden spiny mice",
+        "label": "Immunometabolic resistors of aging in long-lived golden spiny mice (EN v4)",
     },
 ]
 

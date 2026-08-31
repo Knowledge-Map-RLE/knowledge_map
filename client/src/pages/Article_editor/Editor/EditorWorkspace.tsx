@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import StatementsPanel from './StatementsPanel';
 import AuthorBadge from './AuthorBadge';
 import WysiwygEditor from './wysiwyg/WysiwygEditor';
@@ -20,13 +20,20 @@ interface EditorWorkspaceProps {
     articleAuthor?: AuthorInfo | null;
     onUploadImage?: (key: string, file: File) => Promise<string>;
     onCreateNew?: () => void;
+    /** Текущая статья уже является золотым эталоном. */
+    isGold?: boolean;
+    /** Фиксирует текущие строки как эталон; возвращает текст ошибки или null. */
+    onFixGold?: () => Promise<string | null>;
 }
+
+type FixStatus = 'idle' | 'busy' | 'ok' | 'error';
 
 const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     text, statements, blocks,
     isParsing, parseProgress, parseError,
     onApplyBlocks,
     onSave, saveStatus, articleUuid, articleAuthor, onUploadImage, onCreateNew,
+    isGold = false, onFixGold,
 }) => {
     const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
     const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
@@ -36,6 +43,14 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     const [copiedMarkdown, setCopiedMarkdown] = useState(false);
     const copyTimerRef = useRef<number | null>(null);
     const copyMdTimerRef = useRef<number | null>(null);
+    const [fixStatus, setFixStatus] = useState<FixStatus>('idle');
+    const [fixMessage, setFixMessage] = useState('');
+    const fixTimerRef = useRef<number | null>(null);
+    const autosaveTimerRef = useRef<number | null>(null);
+
+    useEffect(() => () => {
+        if (autosaveTimerRef.current !== null) window.clearTimeout(autosaveTimerRef.current);
+    }, []);
 
     // «Сырые» триплеты без резолва UUID-ссылок — показываем и копируем UUID как есть.
     const rawStatements = useMemo(
@@ -57,6 +72,37 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
 
     const handleOpenTriplets = useCallback(() => setShowTriplets(true), []);
     const handleCloseTriplets = useCallback(() => setShowTriplets(false), []);
+
+    /** Автосохранение: любое поле структурной строки потеряло фокус.
+     *  Debounce нужен, т.к. capture-фаза blur родителя срабатывает раньше
+     *  внутреннего onBlur поля (list-поля коммитят значение именно там),
+     *  а также объединяет быстрые переходы между полями в один запрос. */
+    const handleEditorBlurCapture = useCallback(() => {
+        if (!onSave) return;
+        if (autosaveTimerRef.current !== null) window.clearTimeout(autosaveTimerRef.current);
+        autosaveTimerRef.current = window.setTimeout(() => {
+            autosaveTimerRef.current = null;
+            if (blocks.length === 0) return;
+            void onSave();
+        }, 600);
+    }, [onSave, blocks.length]);
+
+    const handleFixGold = useCallback(async () => {
+        if (!onFixGold || fixStatus === 'busy') return;
+        setFixStatus('busy');
+        setFixMessage('');
+        const error = await onFixGold();
+        setFixStatus(error ? 'error' : 'ok');
+        setFixMessage(error || 'Эталон сохранён в eval/gold — закоммитьте изменения');
+        if (fixTimerRef.current !== null) window.clearTimeout(fixTimerRef.current);
+        fixTimerRef.current = window.setTimeout(() => setFixStatus('idle'), 6000);
+    }, [onFixGold, fixStatus]);
+
+    const fixLabel = fixStatus === 'busy' ? '\u0424\u0438\u043A\u0441\u0430\u0446\u0438\u044F...'
+        : fixStatus === 'ok' ? '\u042D\u0442\u0430\u043B\u043E\u043D \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D'
+        : fixStatus === 'error' ? '\u041E\u0448\u0438\u0431\u043A\u0430 \u0444\u0438\u043A\u0441\u0430\u0446\u0438\u0438'
+        : isGold ? '\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u044D\u0442\u0430\u043B\u043E\u043D'
+        : '\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043A\u0430\u043A \u044D\u0442\u0430\u043B\u043E\u043D';
 
     const handleCopyAll = useCallback(async () => {
         if (rawStatements.length === 0) return;
@@ -121,10 +167,50 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                 >
                     {saveLabel}
                 </button>
+                {onFixGold && (
+                    <>
+                        <button
+                            onClick={handleFixGold}
+                            disabled={fixStatus === 'busy' || blocks.length === 0}
+                            title="Сохранить текущие строки как золотой эталон (только администраторы)"
+                            style={{
+                                padding: '4px 12px', fontSize: 12, fontWeight: 500,
+                                background: fixStatus === 'busy' ? '#d1d5db'
+                                    : fixStatus === 'ok' ? '#d1fae5'
+                                    : fixStatus === 'error' ? '#fee2e2'
+                                    : isGold ? '#059669' : '#0ea5e9',
+                                color: fixStatus === 'busy' || fixStatus === 'idle' ? 'white' : '#374151',
+                                border: 'none', borderRadius: 4, cursor: 'pointer',
+                            }}
+                        >
+                            {fixLabel}
+                        </button>
+                        {isGold && (
+                            <span
+                                title="Статья является золотым эталоном (eval/gold)"
+                                style={{
+                                    padding: '2px 8px', fontSize: 11, fontWeight: 600,
+                                    background: '#ecfdf5', color: '#047857',
+                                    border: '1px solid #a7f3d0', borderRadius: 10,
+                                }}
+                            >
+                                эталон
+                            </span>
+                        )}
+                        {fixMessage && (
+                            <span
+                                style={{ fontSize: 11, maxWidth: 320, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                title={fixMessage}
+                            >
+                                {fixMessage}
+                            </span>
+                        )}
+                    </>
+                )}
             </div>
 
             <div className={styles.editorColumns}>
-                <div className={styles.editorColumnWysiwyg}>
+                <div className={styles.editorColumnWysiwyg} onBlurCapture={handleEditorBlurCapture}>
                     <div className={styles.editorColumnHeader}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="4" y1="6" x2="20" y2="6" />

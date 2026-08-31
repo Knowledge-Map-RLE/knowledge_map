@@ -154,6 +154,10 @@ app.include_router(pattern_graph_router.router)
 # Редактор статей (article_editor)
 app.include_router(article_editor_router.router, prefix="/api")
 
+# Текущий пользователь (роль из ADMIN_UIDS)
+from src.routers import user as user_router
+app.include_router(user_router.router, prefix="/api")
+
 # Прокси AI Agent микросервиса (фронтенд -> API -> ai:50059)
 app.include_router(ai_proxy_router.router)
 

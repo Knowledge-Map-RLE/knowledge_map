@@ -1,0 +1,1856 @@
+{
+ "doc_id": "7ce8965204758825f88bb90eb1cf2df0",
+ "model": "gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest",
+ "article_title": "Immunometabolic resistors of aging in long-lived golden spiny mice",
+ "summary": {
+  "total": 100,
+  "histogram": {
+   "1": 1,
+   "2": 2,
+   "4": 35,
+   "7": 1,
+   "14": 7,
+   "16": 1,
+   "18": 3,
+   "19": 3,
+   "22": 4,
+   "37": 1,
+   "38": 3,
+   "39": 1,
+   "44": 1,
+   "46": 1,
+   "47": 1,
+   "51": 1,
+   "55": 8,
+   "56": 4,
+   "57": 18,
+   "58": 4
+  },
+  "containers": 36,
+  "containers_with_sequence": 0,
+  "tokens": {
+   "input": 33996,
+   "output": 15246
+  },
+  "attempts": 2
+ },
+ "chunks": [
+  {
+   "index": 0,
+   "chars": 86706,
+   "containers": 100
+  }
+ ],
+ "blocks": [
+  {
+   "instanceId": "00065a51-5948-88ed-8646-2f89455bd6e9",
+   "blockType": 1,
+   "data": {
+    "doi": "10.1126/sciadv.aec9991",
+    "title": "Immunometabolic resistors of aging in long-lived golden spiny mice",
+    "authors": "Hee-Hoon Kim, Tali Sagiv-Zangi, Yun-Hee Youm, Hagar Vardi-Naim, Tamara Dlugos, Francesco Strino, Mila Kazavchinsky-Bar, Lian Egulsky, Monica Bodogai, Arya Biragyn, Yuval Kluger, Noga Kronfeld-Schor, Vishwa Deep Dixit",
+    "source": {
+     "section": "Title",
+     "text": "Immunometabolic resistors of aging in long-lived golden spiny mice"
+    }
+   },
+   "order": 0
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a0e0-908e481d6893",
+   "blockType": 2,
+   "data": {
+    "subject": "study",
+    "predicate": "objective",
+    "object": "identify mechanisms of aging resistance in Acomys russatus",
+    "source": {
+     "section": "Introduction",
+     "text": "we aimed to gain a comprehensive understanding of the biology of aging using A. russatus as a model organism to identify and test the causality of specific potential aging-resistance mechanisms under controlled conditions in laboratory mice"
+    }
+   },
+   "order": 1
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a828-41ee08fb04a9",
+   "blockType": 2,
+   "data": {
+    "subject": "study",
+    "predicate": "objective",
+    "object": "test causality of potential aging-resistance mechanisms in laboratory mice",
+    "source": {
+     "section": "Introduction",
+     "text": "we aimed to gain a comprehensive understanding of the biology of aging using A. russatus as a model organism to identify and test the causality of specific potential aging-resistance mechanisms under controlled conditions in laboratory mice"
+    }
+   },
+   "order": 2
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9a1a-a4a02305aecb",
+   "blockType": 19,
+   "data": {
+    "species": "Acomys russatus",
+    "timeline": "0.5 to >3.5 years",
+    "conditions": "non-pathogen-free, outdoor housing with running wheels, 29°C indoors"
+   },
+   "order": 3
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8c0c-be62f5f84041",
+   "blockType": 19,
+   "data": {
+    "species": "Acomys dimidiatus",
+    "timeline": "0.5 to >2.5 years",
+    "conditions": "non-pathogen-free, outdoor housing, 25°C indoors"
+   },
+   "order": 4
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9fdf-bfe6003b2f00",
+   "blockType": 19,
+   "data": {
+    "species": "Mus musculus (C57BL/6N)",
+    "timeline": "0.5 to 2.5 years",
+    "conditions": "specific pathogen-free, ventilated cage racks"
+   },
+   "order": 5
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a626-ae7587c95dae",
+   "blockType": 55,
+   "data": {
+    "groupName": "Young A. russatus",
+    "n": 23,
+    "conditions": "0.5 years, non-pathogen-free",
+    "purpose": "comparison for aging studies"
+   },
+   "order": 6
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a6a6-120f6b7a3045",
+   "blockType": 55,
+   "data": {
+    "groupName": "Aged A. russatus",
+    "n": 10,
+    "conditions": ">3.5 years, non-pathogen-free",
+    "purpose": "comparison for aging studies"
+   },
+   "order": 7
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9212-85d3012fd91f",
+   "blockType": 55,
+   "data": {
+    "groupName": "Young A. dimidiatus",
+    "n": 13,
+    "conditions": "0.5 years, non-pathogen-free",
+    "purpose": "comparison for aging studies"
+   },
+   "order": 8
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8c8c-ae0a1f77e022",
+   "blockType": 55,
+   "data": {
+    "groupName": "Aged A. dimidiatus",
+    "n": 9,
+    "conditions": ">2.5 years, non-pathogen-free",
+    "purpose": "comparison for aging studies"
+   },
+   "order": 9
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9c5c-47c942c17c56",
+   "blockType": 55,
+   "data": {
+    "groupName": "Young M. musculus",
+    "n": 3,
+    "conditions": "0.5 years, SPF",
+    "purpose": "comparison for aging studies"
+   },
+   "order": 10
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-bb3b-eab923442a27",
+   "blockType": 55,
+   "data": {
+    "groupName": "Aged M. musculus",
+    "n": 3,
+    "conditions": "2.5 years, SPF",
+    "purpose": "comparison for aging studies"
+   },
+   "order": 11
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a525-da65b606ea0e",
+   "blockType": 55,
+   "data": {
+    "groupName": "Clusterin-treated aged mice",
+    "n": 13,
+    "conditions": "18-month-old male C57BL/6N, recombinant mouse clusterin 50 μg/kg i.p. daily for 2 weeks",
+    "purpose": "test clusterin effects"
+   },
+   "order": 12
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b070-a9d359fa19f8",
+   "blockType": 55,
+   "data": {
+    "groupName": "Vehicle-treated aged mice",
+    "n": 13,
+    "conditions": "18-month-old male C57BL/6N, saline i.p. daily for 2 weeks",
+    "purpose": "control for clusterin treatment"
+   },
+   "order": 13
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8484-c675c1030903",
+   "blockType": 7,
+   "data": {
+    "hypothesis": "Clusterin is an adaptokine that is up-regulated as an adaptive response against cellular and organismal perturbations to maintain immunometabolic homeostasis",
+    "disproofExplanation": "If clusterin elevation does not confer health span benefits or is not adaptive, the hypothesis would be weakened"
+   },
+   "order": 14
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8101-6853bea165ae",
+   "blockType": 22,
+   "data": {
+    "subject": "AABs",
+    "predicate": "are",
+    "object": "aged adipose B cells"
+   },
+   "order": 15
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b373-beb7a6805f92",
+   "blockType": 22,
+   "data": {
+    "subject": "VAT",
+    "predicate": "is",
+    "object": "visceral adipose tissue"
+   },
+   "order": 16
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b6b6-4087cb0887e7",
+   "blockType": 22,
+   "data": {
+    "subject": "CMA",
+    "predicate": "is",
+    "object": "chaperone-mediated autophagy"
+   },
+   "order": 17
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8c8c-8d41b3dbe362",
+   "blockType": 22,
+   "data": {
+    "subject": "SASP",
+    "predicate": "is",
+    "object": "senescence-associated secretory phenotype"
+   },
+   "order": 18
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8989-062f1b7edc7f",
+   "blockType": 18,
+   "data": {
+    "interventionType": "drug",
+    "target": "inflammaging",
+    "dosage": "50 μg/kg",
+    "dosageRegimen": "daily intraperitoneal for 2 weeks",
+    "route": "intraperitoneal",
+    "duration": "2 weeks",
+    "purpose": "test effects of recombinant mouse clusterin on health span in aged mice",
+    "source": {
+     "section": "Results",
+     "text": "Eighteen-month-old male C57BL/6N mice were intraperitoneally injected with vehicle (saline) or recombinant mouse clusterin (50 μg/kg) for 2 weeks"
+    }
+   },
+   "order": 19
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b7f7-e3e8e1eee4d2",
+   "blockType": 18,
+   "data": {
+    "interventionType": "in_vitro",
+    "target": "splenocytes",
+    "dosage": "5 μg/ml",
+    "dosageRegimen": "ConA for 24 or 48 hours",
+    "route": "in vitro",
+    "duration": "24-48 hours",
+    "purpose": "test T cell mitogen response",
+    "source": {
+     "section": "Results",
+     "text": "The cells were treated either with VEH (saline) or 5 μg/ml of ConA for 24 or 48 hours before analysis"
+    }
+   },
+   "order": 20
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8545-86b64320a79e",
+   "blockType": 18,
+   "data": {
+    "interventionType": "in_vitro",
+    "target": "human monocytes",
+    "dosage": "0-10 μg/ml recombinant human clusterin",
+    "dosageRegimen": "pretreatment for 1 hour then LPS 1 μg/ml",
+    "route": "in vitro",
+    "duration": "24 hours",
+    "purpose": "test anti-inflammatory effects of clusterin on human monocytes",
+    "source": {
+     "section": "Results",
+     "text": "Peripheral blood monocytes were isolated from healthy donors and treated with indicated doses of recombinant human clusterin for 1 hour, followed by an indicated duration of lipopolysaccharide (LPS; 1 μg/ml)"
+    }
+   },
+   "order": 21
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9252-442195844ac0",
+   "blockType": 56,
+   "data": {
+    "stepName": "Ear punch regeneration assay",
+    "details": "4-mm ear punch, area measured weekly for 5 weeks",
+    "duration": "5 weeks",
+    "source": {
+     "section": "Methods",
+     "text": "A 4-mm ear punch was made using a caliper. Every 7 days, the ear punch area was measured under anesthesia"
+    }
+   },
+   "order": 22
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a020-9c9b341fc84f",
+   "blockType": 56,
+   "data": {
+    "stepName": "Behavioral tests",
+    "details": "Open field, wire hanging, beam walking, novel object, T-maze",
+    "duration": "2022",
+    "source": {
+     "section": "Methods",
+     "text": "In 2022, Acomys of varying ages (0.5 to more than 3.5 years) underwent a series of behavioral tests"
+    }
+   },
+   "order": 23
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9393-1a6e5ea2e285",
+   "blockType": 56,
+   "data": {
+    "stepName": "Bulk RNA-seq of liver",
+    "details": "Whole liver tissues from 0.5- or 2.5-year-old mice, sequenced on HiSeq 2500",
+    "duration": "not specified",
+    "source": {
+     "section": "Methods",
+     "text": "Whole liver tissues were collected from three individual male M. musculus and A. russatus, aged either 0.5 or 2.5 years, and immediately snap frozen. Total RNA was isolated using QIAGEN RNeasy Mini kits and sequenced on a HiSeq 2500"
+    }
+   },
+   "order": 24
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-95d5-ebe558420ecf",
+   "blockType": 56,
+   "data": {
+    "stepName": "Single-nucleus RNA-seq of VAT",
+    "details": "Epididymal white adipose tissue from 0.5- or 2.5-year-old M. musculus and 0.5- or 3.5-year-old A. russatus, pooled, nuclei isolated, 10x Genomics",
+    "duration": "not specified",
+    "source": {
+     "section": "Methods",
+     "text": "Snap-frozen epididymal white adipose tissues from 0.5- or 2.5-year-old M. musculus and 0.5- or 3.5-year-old A. russatus (n=3 per group) were pooled, and nuclei were isolated"
+    }
+   },
+   "order": 25
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8040-d04702a1d787",
+   "blockType": 14,
+   "data": {
+    "experimentName": "Behavioral and functional aging tests",
+    "experimentType": "behavioral",
+    "experimentalPairs": "[{\"groupRef\": \"00065a51-5948-88ed-a626-ae7587c95dae\"}, {\"groupRef\": \"00065a51-5948-88ed-a6a6-120f6b7a3045\"}, {\"groupRef\": \"00065a51-5948-88ed-9212-85d3012fd91f\"}, {\"groupRef\": \"00065a51-5948-88ed-8c8c-ae0a1f77e022\"}]",
+    "controlPairs": "[]",
+    "steps": "[\"00065a51-5948-88ed-a020-9c9b341fc84f\"]",
+    "findings": "[\"00065a51-5948-88ed-b2b2-9256f9d7cf6e\", \"00065a51-5948-88ed-87c7-7ceb6ddc77d2\", \"00065a51-5948-88ed-a626-4731bd95d2a4\"]",
+    "duration": "2022",
+    "source": {
+     "section": "Results",
+     "text": "In the open field test, A. dimidiatus exhibited age-related decline in rearing behaviors... In contrast, A. russatus maintained all these parameters"
+    }
+   },
+   "order": 26
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-afef-2dada7b3b765",
+   "blockType": 14,
+   "data": {
+    "experimentName": "Ear punch regeneration experiment",
+    "experimentType": "in_vivo",
+    "experimentalPairs": "[{\"groupRef\": \"00065a51-5948-88ed-a626-ae7587c95dae\"}, {\"groupRef\": \"00065a51-5948-88ed-a6a6-120f6b7a3045\"}, {\"groupRef\": \"00065a51-5948-88ed-9212-85d3012fd91f\"}, {\"groupRef\": \"00065a51-5948-88ed-8c8c-ae0a1f77e022\"}]",
+    "controlPairs": "[]",
+    "steps": "[\"00065a51-5948-88ed-9252-442195844ac0\"]",
+    "findings": "[\"00065a51-5948-88ed-ab2b-517aad36924d\", \"00065a51-5948-88ed-8a4a-044a16430b8a\"]",
+    "duration": "5 weeks",
+    "source": {
+     "section": "Results",
+     "text": "Five weeks after ear punches, both adult 0.5-year-old A. dimidiatus and A. russatus exhibited almost completely closed earholes, while regeneration capacity declined with age in both species"
+    }
+   },
+   "order": 27
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-bebe-f442e66332db",
+   "blockType": 14,
+   "data": {
+    "experimentName": "Histological analysis of thymus, spleen, liver, adipose tissues",
+    "experimentType": "histology",
+    "experimentalPairs": "[{\"groupRef\": \"00065a51-5948-88ed-9c5c-47c942c17c56\"}, {\"groupRef\": \"00065a51-5948-88ed-bb3b-eab923442a27\"}, {\"groupRef\": \"00065a51-5948-88ed-a626-ae7587c95dae\"}, {\"groupRef\": \"00065a51-5948-88ed-a6a6-120f6b7a3045\"}]",
+    "controlPairs": "[]",
+    "steps": "[]",
+    "findings": "[\"00065a51-5948-88ed-9a9a-e855ee46eafe\", \"00065a51-5948-88ed-85c5-767fcf3ef592\", \"00065a51-5948-88ed-a424-1e1247ff0c5e\"]",
+    "duration": "not specified",
+    "source": {
+     "section": "Results",
+     "text": "Compared to laboratory mice, lipid accumulation and fibrosis, key features of thymic involution, were substantially lower in the thymi of age-matched 2.5-year-old A. russatus"
+    }
+   },
+   "order": 28
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8343-cf12548b2422",
+   "blockType": 14,
+   "data": {
+    "experimentName": "Bulk RNA-seq of liver",
+    "experimentType": "sequencing",
+    "experimentalPairs": "[{\"groupRef\": \"00065a51-5948-88ed-9c5c-47c942c17c56\"}, {\"groupRef\": \"00065a51-5948-88ed-bb3b-eab923442a27\"}, {\"groupRef\": \"00065a51-5948-88ed-a626-ae7587c95dae\"}, {\"groupRef\": \"00065a51-5948-88ed-a6a6-120f6b7a3045\"}]",
+    "controlPairs": "[]",
+    "steps": "[\"00065a51-5948-88ed-9393-1a6e5ea2e285\"]",
+    "findings": "[\"00065a51-5948-88ed-9191-4276acae0ac7\", \"00065a51-5948-88ed-8aca-24ee8fac0557\", \"00065a51-5948-88ed-9cdc-dc05dc7906aa\"]",
+    "duration": "not specified",
+    "source": {
+     "section": "Results",
+     "text": "We found fewer differentially expressed genes (DEGs) during aging in the liver of A. russatus compared to M. musculus"
+    }
+   },
+   "order": 29
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a828-53f4f800e44b",
+   "blockType": 14,
+   "data": {
+    "experimentName": "Single-nucleus RNA-seq of VAT",
+    "experimentType": "sequencing",
+    "experimentalPairs": "[{\"groupRef\": \"00065a51-5948-88ed-9c5c-47c942c17c56\"}, {\"groupRef\": \"00065a51-5948-88ed-bb3b-eab923442a27\"}, {\"groupRef\": \"00065a51-5948-88ed-a626-ae7587c95dae\"}, {\"groupRef\": \"00065a51-5948-88ed-a6a6-120f6b7a3045\"}]",
+    "controlPairs": "[]",
+    "steps": "[\"00065a51-5948-88ed-95d5-ebe558420ecf\"]",
+    "findings": "[\"00065a51-5948-88ed-ae2e-695c4bc41e3a\", \"00065a51-5948-88ed-bb7b-2f15fe68e7d7\", \"00065a51-5948-88ed-ae6e-20673c3e6375\"]",
+    "duration": "not specified",
+    "source": {
+     "section": "Results",
+     "text": "We performed single-nucleus RNA-seq (snRNA-seq)... in the VAT of M. musculus and A. russatus"
+    }
+   },
+   "order": 30
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-86c6-50d08067270c",
+   "blockType": 14,
+   "data": {
+    "experimentName": "Clusterin administration in aged mice",
+    "experimentType": "in_vivo",
+    "experimentalPairs": "[{\"groupRef\": \"00065a51-5948-88ed-a525-da65b606ea0e\"}, {\"groupRef\": \"00065a51-5948-88ed-b070-a9d359fa19f8\"}]",
+    "controlPairs": "[{\"groupRef\": \"00065a51-5948-88ed-b070-a9d359fa19f8\"}]",
+    "steps": "[]",
+    "findings": "[\"00065a51-5948-88ed-9ede-7b0667a7db71\", \"00065a51-5948-88ed-a8e8-4300bfdb11ee\", \"00065a51-5948-88ed-ae2e-df8b9b5741a1\"]",
+    "duration": "2 weeks",
+    "source": {
+     "section": "Results",
+     "text": "Clusterin administration enhanced measures of health span in aged mice, such as grip strength and latency to fall in rotarod tests, compared to VEH controls"
+    }
+   },
+   "order": 31
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a868-6dade6a2e730",
+   "blockType": 14,
+   "data": {
+    "experimentName": "Human monocyte LPS experiment",
+    "experimentType": "in_vitro",
+    "experimentalPairs": "[]",
+    "controlPairs": "[]",
+    "steps": "[]",
+    "findings": "[\"00065a51-5948-88ed-bc3c-81b85c0b7ec9\"]",
+    "duration": "24 hours",
+    "source": {
+     "section": "Results",
+     "text": "We observed significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-1β and IL-18 production by clusterin treatment in human monocytes"
+    }
+   },
+   "order": 32
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b2b2-9256f9d7cf6e",
+   "blockType": 57,
+   "data": {
+    "parameter": "rearing behavior in open field",
+    "direction": "no_change",
+    "significance": "not_reported",
+    "detail": "A. russatus maintained all parameters across age groups; A. dimidiatus declined",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 1F",
+    "experimentRef": "00065a51-5948-88ed-8040-d04702a1d787",
+    "groupRefs": [
+     "00065a51-5948-88ed-a626-ae7587c95dae",
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-9212-85d3012fd91f",
+     "00065a51-5948-88ed-8c8c-ae0a1f77e022"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "In contrast, A. russatus maintained all these parameters at comparable levels across age groups and did not demonstrate age-related decline or alteration"
+    }
+   },
+   "order": 33
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-87c7-7ceb6ddc77d2",
+   "blockType": 57,
+   "data": {
+    "parameter": "wire hanging latency",
+    "direction": "increased",
+    "significance": "significant",
+    "detail": "Aged A. russatus exhibited significantly increased latency and freezing time in the wire hanging test compared to young",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 1G",
+    "experimentRef": "00065a51-5948-88ed-8040-d04702a1d787",
+    "groupRefs": [
+     "00065a51-5948-88ed-a626-ae7587c95dae",
+     "00065a51-5948-88ed-a6a6-120f6b7a3045"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "aged A. russatus exhibited significantly increased latency and freezing time in the wire hanging test and reduced arrival time in the beam walking test compared to their young counterparts"
+    }
+   },
+   "order": 34
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a626-4731bd95d2a4",
+   "blockType": 57,
+   "data": {
+    "parameter": "daily activity pattern",
+    "direction": "no_change",
+    "significance": "not_reported",
+    "detail": "A. russatus did not show disrupted activity patterns during aging; A. dimidiatus did",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 1I-J",
+    "experimentRef": "00065a51-5948-88ed-8040-d04702a1d787",
+    "groupRefs": [
+     "00065a51-5948-88ed-a626-ae7587c95dae",
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-9212-85d3012fd91f",
+     "00065a51-5948-88ed-8c8c-ae0a1f77e022"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "these disruptions were not observed in either sex of A. russatus during aging"
+    }
+   },
+   "order": 35
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ab2b-517aad36924d",
+   "blockType": 57,
+   "data": {
+    "parameter": "earhole closure area",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "Regeneration capacity declined with age in both species; aged A. russatus showed improved closure compared to aged A. dimidiatus",
+    "outcomeClass": "mixed",
+    "figureRef": "Fig. 1K-M",
+    "experimentRef": "00065a51-5948-88ed-afef-2dada7b3b765",
+    "groupRefs": [
+     "00065a51-5948-88ed-a626-ae7587c95dae",
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-9212-85d3012fd91f",
+     "00065a51-5948-88ed-8c8c-ae0a1f77e022"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "aged A. russatus showed improved earhole closure compared to age-matched A. dimidiatus"
+    }
+   },
+   "order": 36
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8a4a-044a16430b8a",
+   "blockType": 57,
+   "data": {
+    "parameter": "p16 expression in VAT",
+    "direction": "no_change",
+    "significance": "significant",
+    "detail": "p16 elevated in aged A. dimidiatus but not in A. russatus",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 1N",
+    "experimentRef": "00065a51-5948-88ed-afef-2dada7b3b765",
+    "groupRefs": [
+     "00065a51-5948-88ed-a626-ae7587c95dae",
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-9212-85d3012fd91f",
+     "00065a51-5948-88ed-8c8c-ae0a1f77e022"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "we found significantly elevated p16 expression in the visceral adipose tissues (VAT) of aged A. dimidiatus but not in A. russatus"
+    }
+   },
+   "order": 37
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9a9a-e855ee46eafe",
+   "blockType": 57,
+   "data": {
+    "parameter": "thymic fibrosis and lipoatrophy",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "Substantially lower in aged A. russatus compared to aged M. musculus",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 2A-B",
+    "experimentRef": "00065a51-5948-88ed-bebe-f442e66332db",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "Compared to laboratory mice, lipid accumulation and fibrosis, key features of thymic involution, were substantially lower in the thymi of age-matched 2.5-year-old A. russatus"
+    }
+   },
+   "order": 38
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-85c5-767fcf3ef592",
+   "blockType": 57,
+   "data": {
+    "parameter": "splenic fibrosis and senescent cells",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "A. russatus spleens showed less fibrosis and fewer Sudan Black B-positive cells than M. musculus",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 2C-E",
+    "experimentRef": "00065a51-5948-88ed-bebe-f442e66332db",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "Sudan Black B–positive senescent-like cells were notably increased in the spleens of 2.5-year-old M. musculus. However, in A. russatus, senescent-like cells were rarely observed in the spleens of 2.5-year-old animals"
+    }
+   },
+   "order": 39
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a424-1e1247ff0c5e",
+   "blockType": 57,
+   "data": {
+    "parameter": "hepatic fibrosis and senescence",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "A. russatus livers showed no age-related increase in ballooning, inflammation, fibrosis; fewer senescent cells",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 3A, J",
+    "experimentRef": "00065a51-5948-88ed-bebe-f442e66332db",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "the livers of A. russatus did not show age-related increases in hepatic ballooning, inflammation, and fibrosis"
+    }
+   },
+   "order": 40
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9191-4276acae0ac7",
+   "blockType": 57,
+   "data": {
+    "parameter": "number of differentially expressed genes in liver",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "Fewer DEGs in A. russatus compared to M. musculus during aging",
+    "outcomeClass": "positive",
+    "figureRef": "fig. S4D-E",
+    "experimentRef": "00065a51-5948-88ed-8343-cf12548b2422",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "we found fewer differentially expressed genes (DEGs) during aging in the liver of A. russatus compared to M. musculus"
+    }
+   },
+   "order": 41
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8aca-24ee8fac0557",
+   "blockType": 57,
+   "data": {
+    "parameter": "aging atlas pathway scores",
+    "direction": "no_change",
+    "significance": "significant",
+    "detail": "SASP and NF-κB clusters unchanged in A. russatus; up-regulated in M. musculus",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 3D",
+    "experimentRef": "00065a51-5948-88ed-8343-cf12548b2422",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "The expression levels of SASP and NF-κB gene clusters remained unchanged till 2.5 years of age in A. russatus"
+    }
+   },
+   "order": 42
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9cdc-dc05dc7906aa",
+   "blockType": 57,
+   "data": {
+    "parameter": "iAge index",
+    "direction": "no_change",
+    "significance": "significant",
+    "detail": "A. russatus did not show significant differences in iAge during aging; M. musculus increased",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 3G",
+    "experimentRef": "00065a51-5948-88ed-8343-cf12548b2422",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "A. russatus did not show significant differences in gene sets indicative of biological aging and risk of mortality during aging"
+    }
+   },
+   "order": 43
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ae2e-695c4bc41e3a",
+   "blockType": 57,
+   "data": {
+    "parameter": "SASP score in VAT cells",
+    "direction": "no_change",
+    "significance": "significant",
+    "detail": "Aged A. russatus maintained comparable SASP score except modest increase in ASPCs; M. musculus increased in almost all cell types",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 4E-F",
+    "experimentRef": "00065a51-5948-88ed-a828-53f4f800e44b",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "cells in the VAT of aged A. russatus maintained a comparable SASP or IASP score except for a modest increase in ASPCs"
+    }
+   },
+   "order": 44
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-bb7b-2f15fe68e7d7",
+   "blockType": 57,
+   "data": {
+    "parameter": "clusterin expression in VAT macrophages",
+    "direction": "increased",
+    "significance": "significant",
+    "detail": "Macrophages in aged A. russatus highly expressed clusterin; up-regulated across cell types in aged A. russatus but not in older M. musculus",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 4J-L",
+    "experimentRef": "00065a51-5948-88ed-a828-53f4f800e44b",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "In the VAT of aged A. russatus, the macrophages highly expressed clusterin (Clu). Notably, compared to young animals, the gene expression of clusterin was up-regulated across cell types in aged A. russatus but not in older M. musculus"
+    }
+   },
+   "order": 45
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ae6e-20673c3e6375",
+   "blockType": 57,
+   "data": {
+    "parameter": "Cdkn1a expression in VAT",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "Cdkn1a expression lower in A. russatus across clusters; slightly reduced in macrophages with age",
+    "outcomeClass": "positive",
+    "figureRef": "fig. S5H-I",
+    "experimentRef": "00065a51-5948-88ed-a828-53f4f800e44b",
+    "groupRefs": [
+     "00065a51-5948-88ed-a6a6-120f6b7a3045",
+     "00065a51-5948-88ed-bb3b-eab923442a27"
+    ],
+    "interventionRef": "",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "in both young and aged A. russatus, Cdkn1a expression was lower across clusters; notably, its expression was slightly reduced in macrophages with age"
+    }
+   },
+   "order": 46
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9ede-7b0667a7db71",
+   "blockType": 57,
+   "data": {
+    "parameter": "forelimb grip strength",
+    "direction": "increased",
+    "significance": "significant",
+    "detail": "Clusterin administration enhanced grip strength compared to vehicle",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 5D",
+    "experimentRef": "00065a51-5948-88ed-86c6-50d08067270c",
+    "groupRefs": [
+     "00065a51-5948-88ed-a525-da65b606ea0e",
+     "00065a51-5948-88ed-b070-a9d359fa19f8"
+    ],
+    "interventionRef": "00065a51-5948-88ed-8989-062f1b7edc7f",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "Clusterin administration enhanced measures of health span in aged mice, such as grip strength and latency to fall in rotarod tests, compared to VEH controls"
+    }
+   },
+   "order": 47
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a8e8-4300bfdb11ee",
+   "blockType": 57,
+   "data": {
+    "parameter": "fibrosis in multiple organs",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "Clusterin reduced fibrosis in gastrocnemius muscle, SAT, spleen, and liver",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 5F-I",
+    "experimentRef": "00065a51-5948-88ed-86c6-50d08067270c",
+    "groupRefs": [
+     "00065a51-5948-88ed-a525-da65b606ea0e",
+     "00065a51-5948-88ed-b070-a9d359fa19f8"
+    ],
+    "interventionRef": "00065a51-5948-88ed-8989-062f1b7edc7f",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "elevation of clusterin in aged C57BL/6 mice reduced fibrosis in the gastrocnemius muscle, SAT, spleen, and liver"
+    }
+   },
+   "order": 48
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ae2e-df8b9b5741a1",
+   "blockType": 57,
+   "data": {
+    "parameter": "serum proinflammatory cytokines",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "Clusterin reduced IL-1β, IL-6, TNF-α, and MCP-1",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 5J-K",
+    "experimentRef": "00065a51-5948-88ed-86c6-50d08067270c",
+    "groupRefs": [
+     "00065a51-5948-88ed-a525-da65b606ea0e",
+     "00065a51-5948-88ed-b070-a9d359fa19f8"
+    ],
+    "interventionRef": "00065a51-5948-88ed-8989-062f1b7edc7f",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "we found that elevation of clusterin in old mice suppressed the soluble MAC concentration, along with the reduction in circulating proinflammatory cytokines IL-1β, IL-6, and tumor necrosis factor–α (TNF-α)"
+    }
+   },
+   "order": 49
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-bc3c-81b85c0b7ec9",
+   "blockType": 57,
+   "data": {
+    "parameter": "IL-1β and IL-18 production in human monocytes",
+    "direction": "decreased",
+    "significance": "significant",
+    "detail": "Clusterin reduced IL-1β and IL-18 in a time- and dose-dependent manner",
+    "outcomeClass": "positive",
+    "figureRef": "Fig. 5Q",
+    "experimentRef": "00065a51-5948-88ed-a868-6dade6a2e730",
+    "groupRefs": [],
+    "interventionRef": "00065a51-5948-88ed-8545-86b64320a79e",
+    "statisticRefs": [],
+    "source": {
+     "section": "Results",
+     "text": "We observed significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-1β and IL-18 production by clusterin treatment in human monocytes"
+    }
+   },
+   "order": 50
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ba3a-a95d609957c4",
+   "blockType": 37,
+   "data": {
+    "statProcessing": "Two-tailed Student t-test",
+    "expectationsComparison": "Significant difference between aged A. russatus and A. dimidiatus in earhole closure",
+    "pValue": null,
+    "effectSize": null,
+    "confidenceInterval": null,
+    "sampleSize": null,
+    "source": {
+     "section": "Results",
+     "text": "Two-tailed student t test (M) or one-way analysis of variance (ANOVA) with Tukey’s multiple comparisons test (D to L) was performed"
+    }
+   },
+   "order": 51
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a262-0cb31506f964",
+   "blockType": 38,
+   "data": {
+    "claimSubject": "Acomys russatus",
+    "claimPredicate": "is protected from",
+    "claimObject": "age-related functional decline",
+    "confidenceNotes": "Based on multiple behavioral and physiological measures",
+    "isNegated": false,
+    "source": {
+     "section": "Abstract",
+     "text": "aged golden spiny mice (Acomys russatus) ... resist functional decline"
+    }
+   },
+   "order": 52
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8b0b-32c9737e87db",
+   "blockType": 38,
+   "data": {
+    "claimSubject": "clusterin",
+    "claimPredicate": "restrains",
+    "claimObject": "inflammaging",
+    "confidenceNotes": "Supported by in vivo and in vitro experiments",
+    "isNegated": false,
+    "source": {
+     "section": "Abstract",
+     "text": "elevated levels of clusterin in A. russatus macrophages restrain inflammaging and enhance health span in aged mice"
+    }
+   },
+   "order": 53
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-aaaa-c3db54bf7602",
+   "blockType": 38,
+   "data": {
+    "claimSubject": "A. russatus",
+    "claimPredicate": "maintains",
+    "claimObject": "transcriptional integrity akin to young mice",
+    "confidenceNotes": "Based on RNA-seq analyses",
+    "isNegated": false,
+    "source": {
+     "section": "Abstract",
+     "text": "Aged A. russatus maintains transcriptional integrity akin to young mice"
+    }
+   },
+   "order": 54
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9111-83c1835023fd",
+   "blockType": 16,
+   "data": {
+    "mechanism": "Clusterin inhibits inflammaging by reducing proinflammatory cytokines and increasing anti-inflammatory macrophages",
+    "explains": "Health span extension in aged mice",
+    "supportedBy": [
+     "00065a51-5948-88ed-9ede-7b0667a7db71",
+     "00065a51-5948-88ed-a8e8-4300bfdb11ee",
+     "00065a51-5948-88ed-ae2e-df8b9b5741a1",
+     "00065a51-5948-88ed-bc3c-81b85c0b7ec9"
+    ],
+    "source": {
+     "section": "Discussion",
+     "text": "The elevation of clusterin in aged A. russatus and supplementation of clusterin in aged mice revealed inhibition of inflammaging as one of the major mechanisms that may drive health span"
+    }
+   },
+   "order": 55
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ac6c-ea0405970954",
+   "blockType": 58,
+   "data": {
+    "source": "clusterin",
+    "target": "inflammaging",
+    "relationType": "inhibits",
+    "confidence": "high",
+    "evidence": "elevation of clusterin in old mice suppressed the soluble MAC concentration, along with the reduction in circulating proinflammatory cytokines IL-1β, IL-6, and tumor necrosis factor–α (TNF-α)"
+   },
+   "order": 56
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a3a3-e855382b56ef",
+   "blockType": 58,
+   "data": {
+    "source": "clusterin",
+    "target": "health span",
+    "relationType": "enhances",
+    "confidence": "high",
+    "evidence": "Clusterin administration enhanced measures of health span in aged mice, such as grip strength and latency to fall in rotarod tests"
+   },
+   "order": 57
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8101-a47ef7996b02",
+   "blockType": 58,
+   "data": {
+    "source": "Acomys russatus",
+    "target": "aging resistance",
+    "relationType": "associated_with",
+    "confidence": "medium",
+    "evidence": "A. russatus is protected from age-related functional decline"
+   },
+   "order": 58
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ba3a-c7982c81ff04",
+   "blockType": 58,
+   "data": {
+    "source": "clusterin",
+    "target": "senescence",
+    "relationType": "suppresses",
+    "confidence": "medium",
+    "evidence": "elevation of clusterin in aged mice reversed the age-related increase of hepatic p16, p21, and γ-H2AX"
+   },
+   "order": 59
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-aa2a-5c86fbab423d",
+   "blockType": 39,
+   "data": {
+    "limitations": "Maximal life span of A. russatus remains unclear; husbandry and diet differences between Acomys and M. musculus; limited sample sizes for sex-specific analysis",
+    "type": "study limitation",
+    "source": {
+     "section": "Discussion",
+     "text": "A limitation of the current study is that, although we endeavored to analyze the health span of A. russatus comprehensively and reported an individual that lived in the wild for more than 3 years and in captivity for more than 4 years, the maximal life span of this species remains unclear"
+    }
+   },
+   "order": 60
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-bfbf-0c9959a08550",
+   "blockType": 44,
+   "data": {
+    "novelty": "First report of aging resilience in Acomys russatus and identification of clusterin as an immunometabolic resistor of inflammaging",
+    "source": {
+     "section": "Abstract",
+     "text": "Here, we report that aged golden spiny mice (Acomys russatus) ... resist functional decline ... We identified that elevated levels of clusterin in A. russatus macrophages restrain inflammaging"
+    }
+   },
+   "order": 61
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9454-8d77762d7637",
+   "blockType": 46,
+   "data": {
+    "futureResearch": "Future studies should explore maximal life span of A. russatus, characterize microbiome, and define molecular mechanisms of secreted clusterin on inflammaging",
+    "source": {
+     "section": "Discussion",
+     "text": "A future well-controlled study to explore the maximal life span of A. russatus would be important ... A future comparative analysis of microbial species in these rodent models might help identify potential beneficial microbes ... Further studies defining the exact molecular mechanisms underlying the protective functions of secreted clusterin on inflammaging could provide insights"
+    }
+   },
+   "order": 62
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-88c8-a9e2d2aca4c3",
+   "blockType": 47,
+   "data": {
+    "references": "Previous studies on Acomys regeneration (8,9,11), aging hallmarks (33), clusterin in Alzheimer's disease (68), and longevity in Drosophila (72)",
+    "source": {
+     "section": "Introduction",
+     "text": "Previous studies have identified that three species of spiny mice ... are resistant to poisons and can regenerate their skin"
+    }
+   },
+   "order": 63
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9f5f-69cb3f559e80",
+   "blockType": 51,
+   "data": {
+    "funding": "National Research Foundation of Korea Grant RS-2024-00412002; Israel Science Foundation grant 2129/20; Yale University School of Medicine intramural funding; Yale University Waldemar Von Zedtwitz endowed chair; Yale murine-TMC U54AG079759; NIA intramural research program",
+    "source": {
+     "section": "Funding",
+     "text": "This work was funded by the National Research Foundation of Korea grant RS-2024-00412002 (H.-H.K.), the Yale University Waldemar Von Zedtwitz endowed chair (V.D.D.), the Yale University School of Medicine’s intramural funding (V.D.D.), and the Israel Science Foundation grant 2129/20 (N.K.-S.)"
+    }
+   },
+   "order": 64
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-bd7d-572838440576",
+   "blockType": 4,
+   "data": {
+    "subject": "Acomys russatus",
+    "predicate": "is",
+    "object": "golden spiny mouse",
+    "epistemicStatus": "direct_statement",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Abstract",
+     "text": "golden spiny mice (Acomys russatus)"
+    }
+   },
+   "order": 65
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9414-9289dafb3934",
+   "blockType": 4,
+   "data": {
+    "subject": "Acomys dimidiatus",
+    "predicate": "is",
+    "object": "eastern spiny mouse",
+    "epistemicStatus": "direct_statement",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Abstract",
+     "text": "eastern spiny mice (Acomys dimidiatus)"
+    }
+   },
+   "order": 66
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b3f3-eabf20458001",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "resists",
+    "object": "functional decline",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-a262-0cb31506f964"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Abstract",
+     "text": "aged golden spiny mice (Acomys russatus) ... resist functional decline"
+    }
+   },
+   "order": 67
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9696-322fe0b00560",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "has",
+    "object": "greater repair capacity",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-a262-0cb31506f964"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Abstract",
+     "text": "have a greater repair capacity with reduced senescence in immune-metabolic organs compared to their sister species"
+    }
+   },
+   "order": 68
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a262-8d27d139df1f",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "maintains",
+    "object": "transcriptional integrity",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-aaaa-c3db54bf7602"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Abstract",
+     "text": "Aged A. russatus maintains transcriptional integrity akin to young mice"
+    }
+   },
+   "order": 69
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b0b0-b887ba142887",
+   "blockType": 4,
+   "data": {
+    "subject": "clusterin",
+    "predicate": "is elevated in",
+    "object": "A. russatus macrophages",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-bb7b-2f15fe68e7d7"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "VAT",
+     "cellType": "macrophage"
+    },
+    "source": {
+     "section": "Results",
+     "text": "In the VAT of aged A. russatus, the macrophages highly expressed clusterin (Clu)"
+    }
+   },
+   "order": 70
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8909-361c079d7014",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "restrains",
+    "object": "inflammaging",
+    "epistemicStatus": "author_interpretation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8b0b-32c9737e87db"
+    ],
+    "context": {},
+    "source": {
+     "section": "Abstract",
+     "text": "elevated levels of clusterin in A. russatus macrophages restrain inflammaging"
+    }
+   },
+   "order": 71
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-81c1-29b649af3289",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "enhances",
+    "object": "health span",
+    "epistemicStatus": "experimental_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-9ede-7b0667a7db71",
+     "00065a51-5948-88ed-a3a3-e855382b56ef"
+    ],
+    "context": {
+     "species": "Mus musculus",
+     "age": "18 months",
+     "dose": "50 μg/kg",
+     "duration": "2 weeks"
+    },
+    "source": {
+     "section": "Results",
+     "text": "Clusterin administration enhanced measures of health span in aged mice, such as grip strength and latency to fall in rotarod tests"
+    }
+   },
+   "order": 72
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-befe-a690a71e8e3f",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "is protected from",
+    "object": "cellular senescence",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8a4a-044a16430b8a",
+     "00065a51-5948-88ed-a424-1e1247ff0c5e"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Results",
+     "text": "A. russatus is protected from cellular senescence"
+    }
+   },
+   "order": 73
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8dcd-5e1e59566946",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "maintains",
+    "object": "thymic architecture",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-9a9a-e855ee46eafe"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "thymus"
+    },
+    "source": {
+     "section": "Results",
+     "text": "A. russatus with longer average life span maintains youthful thymic architecture till advanced age"
+    }
+   },
+   "order": 74
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8505-bd60677cb887",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "shows",
+    "object": "lower immune senescence",
+    "epistemicStatus": "author_interpretation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-9a9a-e855ee46eafe"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Results",
+     "text": "indicative of lower immune senescence"
+    }
+   },
+   "order": 75
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-af6f-8cb4d52d3d5d",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "withstands",
+    "object": "hepatic inflammaging",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-a424-1e1247ff0c5e"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "liver"
+    },
+    "source": {
+     "section": "Results",
+     "text": "A. russatus withstands hepatic inflammaging and senescence"
+    }
+   },
+   "order": 76
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a6e6-8f4a8caeda30",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "has",
+    "object": "elevated clusterin",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-bb7b-2f15fe68e7d7"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "VAT"
+    },
+    "source": {
+     "section": "Results",
+     "text": "the gene expression of clusterin was up-regulated across cell types in aged A. russatus"
+    }
+   },
+   "order": 77
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8343-53c4a8436853",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "reduces",
+    "object": "proinflammatory cytokines",
+    "epistemicStatus": "experimental_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-ae2e-df8b9b5741a1"
+    ],
+    "context": {
+     "species": "Mus musculus",
+     "age": "18 months",
+     "dose": "50 μg/kg"
+    },
+    "source": {
+     "section": "Results",
+     "text": "reduction in circulating proinflammatory cytokines IL-1β, IL-6, and tumor necrosis factor–α (TNF-α)"
+    }
+   },
+   "order": 78
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9656-bf443b040288",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "reduces",
+    "object": "fibrosis",
+    "epistemicStatus": "experimental_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-a8e8-4300bfdb11ee"
+    ],
+    "context": {
+     "species": "Mus musculus",
+     "tissue": "gastrocnemius muscle, SAT, spleen, liver"
+    },
+    "source": {
+     "section": "Results",
+     "text": "elevation of clusterin in aged C57BL/6 mice reduced fibrosis in the gastrocnemius muscle, SAT, spleen, and liver"
+    }
+   },
+   "order": 79
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9292-7ee39524d731",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "increases",
+    "object": "M2-like macrophages",
+    "epistemicStatus": "experimental_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-ae2e-df8b9b5741a1"
+    ],
+    "context": {
+     "species": "Mus musculus",
+     "tissue": "VAT"
+    },
+    "source": {
+     "section": "Results",
+     "text": "increasing the numbers and frequencies of VAT M2-like macrophages"
+    }
+   },
+   "order": 80
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8141-810e3e1d5942",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "reduces",
+    "object": "age-associated B cells",
+    "epistemicStatus": "experimental_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-ae2e-df8b9b5741a1"
+    ],
+    "context": {
+     "species": "Mus musculus",
+     "tissue": "spleen and VAT"
+    },
+    "source": {
+     "section": "Results",
+     "text": "recombinant clusterin treatment significantly reduced the numbers and frequencies of spleen ABCs and VAT AABs"
+    }
+   },
+   "order": 81
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9959-90def36b2afb",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "reduces",
+    "object": "IL-1β and IL-18 in human monocytes",
+    "epistemicStatus": "experimental_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-bc3c-81b85c0b7ec9"
+    ],
+    "context": {
+     "species": "Homo sapiens",
+     "cellType": "monocyte"
+    },
+    "source": {
+     "section": "Results",
+     "text": "significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-1β and IL-18 production by clusterin treatment in human monocytes"
+    }
+   },
+   "order": 82
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b474-a7f64feb896d",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "is closely related to",
+    "object": "M. musculus",
+    "epistemicStatus": "background_claim",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Introduction",
+     "text": "A. russatus is closely related to M. musculus"
+    }
+   },
+   "order": 83
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a060-4e26f02a179b",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "lives",
+    "object": "up to 4 years in wild",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Results",
+     "text": "capture, tagging, and recapture of these mice in the wild (the rocky desert of Israel) identified healthy A. russatus in the wild up to 4 years old"
+    }
+   },
+   "order": 84
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-befe-d8fad799e9ce",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "has",
+    "object": "higher clusterin expression in adipose tissue",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-bb7b-2f15fe68e7d7"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "adipose"
+    },
+    "source": {
+     "section": "Results",
+     "text": "the gene expression of clusterin was up-regulated across cell types in aged A. russatus"
+    }
+   },
+   "order": 85
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b4f4-dd74090d72bd",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "is",
+    "object": "an adaptokine",
+    "epistemicStatus": "hypothesis",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8484-c675c1030903"
+    ],
+    "context": {},
+    "source": {
+     "section": "Discussion",
+     "text": "We posit that clusterin is an “adaptokine”"
+    }
+   },
+   "order": 86
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8f4f-5d8df8f00283",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "is protected from",
+    "object": "age-related circadian disruption",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-a626-4731bd95d2a4"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Results",
+     "text": "these disruptions were not observed in either sex of A. russatus during aging"
+    }
+   },
+   "order": 87
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-acec-7e66f6fa1701",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "shows",
+    "object": "improved motor function with age",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-87c7-7ceb6ddc77d2"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Results",
+     "text": "aged A. russatus exhibited significantly increased latency and freezing time in the wire hanging test and reduced arrival time in the beam walking test compared to their young counterparts"
+    }
+   },
+   "order": 88
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b0b0-2fa1426f9dc3",
+   "blockType": 4,
+   "data": {
+    "subject": "A. dimidiatus",
+    "predicate": "shows",
+    "object": "age-related decline in rearing behavior",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-b2b2-9256f9d7cf6e"
+    ],
+    "context": {
+     "species": "Acomys dimidiatus"
+    },
+    "source": {
+     "section": "Results",
+     "text": "A. dimidiatus exhibited age-related decline in rearing behaviors"
+    }
+   },
+   "order": 89
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ac2c-fde1349b045b",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "maintains",
+    "object": "splenic germinal centers",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-85c5-767fcf3ef592"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "spleen"
+    },
+    "source": {
+     "section": "Results",
+     "text": "maintenance of splenic germinal centers in aged A. russatus"
+    }
+   },
+   "order": 90
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9f5f-3ccaccf83d2f",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "has",
+    "object": "lower senescence in immune-metabolic organs",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-befe-a690a71e8e3f"
+    ],
+    "context": {
+     "species": "Acomys russatus"
+    },
+    "source": {
+     "section": "Abstract",
+     "text": "reduced senescence in immune-metabolic organs"
+    }
+   },
+   "order": 91
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b9b9-a55c9cf96004",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "is",
+    "object": "a heterodimeric glycoprotein",
+    "epistemicStatus": "background_claim",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Results",
+     "text": "Clusterin, also known as apolipoprotein J, is a heterodimeric glycoprotein that has chaperone-like activity"
+    }
+   },
+   "order": 92
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-ac6c-4a8edc13b370",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "binds",
+    "object": "complement and membrane attack complex",
+    "epistemicStatus": "background_claim",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Results",
+     "text": "it binds and inhibits complement and membrane attack complex (MAC; C5b-9)"
+    }
+   },
+   "order": 93
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-b5f5-a74894b39470",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "reduces",
+    "object": "neuroinflammation",
+    "epistemicStatus": "background_claim",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Results",
+     "text": "prevents neuroinflammation and associated synapse loss"
+    }
+   },
+   "order": 94
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8747-21561fef006d",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "is",
+    "object": "a model organism for aging research",
+    "epistemicStatus": "author_interpretation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Discussion",
+     "text": "our findings introduce A. russatus as a model organism for the investigation and identification of targets"
+    }
+   },
+   "order": 95
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9898-e2bdc35020cb",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "is positively associated with",
+    "object": "maximum life span in mammals",
+    "epistemicStatus": "statistical_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {},
+    "source": {
+     "section": "Results",
+     "text": "the gene expression levels of clusterin in the liver, brain, and kidney were positively associated with the maximum life span of multiple orders of mammals"
+    }
+   },
+   "order": 96
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-8747-a9e775accb32",
+   "blockType": 4,
+   "data": {
+    "subject": "00065a51-5948-88ed-b0b0-b887ba142887",
+    "predicate": "is increased in",
+    "object": "centenarians",
+    "epistemicStatus": "statistical_result",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {
+     "species": "Homo sapiens"
+    },
+    "source": {
+     "section": "Results",
+     "text": "clusterin concentrations are significantly increased in centenarians compared to younger and older adults"
+    }
+   },
+   "order": 97
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-a060-f037279640d0",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "has",
+    "object": "higher CMA score",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-8646-2f89455bd6e9"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "liver"
+    },
+    "source": {
+     "section": "Results",
+     "text": "Aged A. russatus maintained their CMA score, which was significantly suppressed in M. musculus with age"
+    }
+   },
+   "order": 98
+  },
+  {
+   "instanceId": "00065a51-5948-88ed-9656-ed4e3766001d",
+   "blockType": 4,
+   "data": {
+    "subject": "A. russatus",
+    "predicate": "has",
+    "object": "lower Cdkn1a expression",
+    "epistemicStatus": "observation",
+    "sourceRefs": [
+     "00065a51-5948-88ed-ae6e-20673c3e6375"
+    ],
+    "context": {
+     "species": "Acomys russatus",
+     "tissue": "VAT"
+    },
+    "source": {
+     "section": "Results",
+     "text": "in both young and aged A. russatus, Cdkn1a expression was lower across clusters"
+    }
+   },
+   "order": 99
+  }
+ ]
+}

@@ -497,9 +497,9 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             {
                 key: 'claimPredicate', label: 'Предикат', inputType: 'select',
                 options: [
-                    'является', 'вызывает', 'ингибирует', 'активирует',
-                    'коррелирует с', 'влияет на', 'связано с', 'определяет',
-                    'содержит', 'участвует в', 'модулирует', 'нейтрализует',
+                    'is_a', 'causes', 'inhibits', 'activates',
+                    'correlates with', 'affects', 'associated with', 'defines',
+                    'contains', 'participates in', 'modulates', 'neutralizes',
                 ],
                 required: true,
             },

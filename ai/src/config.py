@@ -15,7 +15,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Provider(BaseModel):
-    """An OpenAI-compatible upstream provider (LM Studio, DeepSeek, ...)."""
+    """An upstream provider (LM Studio, DeepSeek, ...).
+
+    ``use_sdk`` marks a provider whose upstream calls are made through the
+    official ``yandex-ai-studio-sdk`` instead of the raw HTTP client. For such
+    providers ``base_url``/``api_key`` are still stored for model-listing and
+    compatibility, but generation/streaming go through the SDK.
+    """
 
     name: str
     base_url: str
@@ -23,6 +29,7 @@ class Provider(BaseModel):
     models: list[str] = Field(default_factory=list)
     default_model: str | None = None
     context_length: int | None = None
+    use_sdk: bool = False
 
 
 class Settings(BaseSettings):
@@ -94,11 +101,12 @@ def _yandex_provider() -> Provider | None:
     )
     return Provider(
         name="yandex-ai",
-        base_url="https://ai.api.cloud.yandex.net/v1",
+        base_url="https://llm.api.cloud.yandex.net/v1",
         api_key=settings.yandex_cloud_api_key,
         models=[model_uri],
         default_model=model_uri,
         context_length=128000,
+        use_sdk=True,
     )
 
 

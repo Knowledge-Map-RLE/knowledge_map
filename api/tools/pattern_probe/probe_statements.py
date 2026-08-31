@@ -49,7 +49,7 @@ def main():
     dump(
         "CLAIM-like (T38 predicates)",
         "MATCH (d:Document {uid:$u})-[:HAS_STATEMENT]->(s:KnowledgeStatement) "
-        "WHERE s.predicate IN ['является','ингибирует','связано с','определяет','уверенность'] "
+        "WHERE s.predicate IN ['is_a','inhibits','associated with','defines','confidence'] "
         "AND s.type='FACT' RETURN s.subject_text, s.predicate, s.object_text LIMIT 30",
         u=TARGET,
     )

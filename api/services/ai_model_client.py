@@ -6,6 +6,7 @@ This client keeps the previous gRPC interface so callers (``src/routers/ai_model
 stay unchanged.
 """
 
+import json
 import logging
 import os
 from typing import Optional
@@ -83,6 +84,8 @@ class AIModelClient:
             payload["top_k"] = top_k
         if repetition_penalty is not None:
             payload["repetition_penalty"] = repetition_penalty
+        if timeout is not None:
+            payload["timeout"] = timeout
 
         try:
             logger.info(f"Sending generation request for model: {model_id}")
@@ -115,6 +118,109 @@ class AIModelClient:
         except Exception as exc:
             logger.error(f"Error calling AI Agent service: {exc}", exc_info=True)
             return self._failure(model_id, f"Error: {str(exc)}")
+
+    def generate_text_stream(
+        self,
+        model_id: str,
+        prompt: str,
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
+        top_k: Optional[int] = None,
+        repetition_penalty: Optional[float] = None,
+        timeout: int = 1800,
+    ) -> dict:
+        """Streaming version of generate_text — accumulates SSE chunks.
+
+        The gateway forwards ``stream: true`` to the Yandex SDK ``run_stream``,
+        which keeps the TCP connection alive by sending chunks continuously,
+        avoiding the server-side disconnect that plagues long non-streaming calls.
+        """
+        payload = {
+            "model": model_id,
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": True,
+        }
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
+        if temperature is not None:
+            payload["temperature"] = temperature
+        if top_p is not None:
+            payload["top_p"] = top_p
+        if top_k is not None:
+            payload["top_k"] = top_k
+        if repetition_penalty is not None:
+            payload["repetition_penalty"] = repetition_penalty
+        if timeout is not None:
+            payload["timeout"] = timeout
+
+        url = f"{self.base_url}/chat/completions"
+        httpx_timeout = httpx.Timeout(timeout, connect=15.0, read=timeout)
+        last_exc: Exception | None = None
+        for attempt in range(1, 4):
+            try:
+                logger.info(
+                    "Sending STREAMING generation request for model: %s (attempt %d)",
+                    model_id, attempt,
+                )
+                content_parts: list[str] = []
+                usage: dict = {}
+                model_used = model_id
+                with httpx.Client(timeout=httpx_timeout) as client:
+                    with client.stream("POST", url, json=payload) as resp:
+                        resp.raise_for_status()
+                        for raw_line in resp.iter_lines():
+                            line = raw_line.strip()
+                            if not line or not line.startswith("data: "):
+                                continue
+                            data_str = line[len("data: "):]
+                            if data_str.strip() == "[DONE]":
+                                break
+                            try:
+                                chunk = json.loads(data_str)
+                            except json.JSONDecodeError:
+                                continue
+                            model_used = chunk.get("model", model_used)
+                            for choice in chunk.get("choices", []):
+                                delta = choice.get("delta") or {}
+                                if delta.get("content"):
+                                    content_parts.append(delta["content"])
+                            if chunk.get("usage"):
+                                usage = chunk["usage"]
+
+                generated_text = "".join(content_parts)
+                logger.info(
+                    "Streaming complete: model=%s chars=%d usage=%s",
+                    model_used, len(generated_text), usage,
+                )
+                return {
+                    "success": True,
+                    "generated_text": generated_text,
+                    "message": "Text generated successfully (streaming)",
+                    "model_used": model_used,
+                    "input_tokens": usage.get("prompt_tokens", 0),
+                    "output_tokens": usage.get("completion_tokens", 0),
+                    "chunked": False,
+                    "num_chunks": 0,
+                }
+            except httpx.HTTPStatusError as exc:
+                detail = exc.response.text[:500]
+                logger.error(
+                    "AI Agent stream error: HTTP %s - %s", exc.status_code, detail
+                )
+                return self._failure(model_id, f"AI Agent stream error: {detail}")
+            except (httpx.HTTPError, Exception) as exc:
+                last_exc = exc
+                if attempt == 3:
+                    break
+                logger.warning(
+                    "Stream attempt %d failed (%s: %s); retrying...",
+                    attempt, type(exc).__name__, exc,
+                )
+                import time
+                time.sleep(15)
+
+        return self._failure(model_id, f"AI Agent stream unavailable: {last_exc}")
 
     def get_models(self, filter_text: Optional[str] = None) -> dict:
         """

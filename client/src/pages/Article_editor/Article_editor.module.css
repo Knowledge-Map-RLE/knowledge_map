@@ -2238,7 +2238,10 @@
     padding-right: 24px;
     z-index: 2;
     pointer-events: none;
-    overflow: hidden;
+    /* overflow: visible — кнопки (удаление/копирование UUID) всегда у правого
+       края, а имя типа и handle при нехватке ширины уходят влево за gutter,
+       а не обрезаются/перекрываются содержимым строки поверх. */
+    overflow: visible;
 }
 
 .wyGutter > * {
@@ -2320,6 +2323,35 @@
 .wyUidsOn .wyUuidCopy {
     opacity: 1 !important;
     color: #10b981;
+}
+
+.wyDeleteLine {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 2px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 100ms ease, color 100ms ease;
+    flex-shrink: 0;
+}
+
+.wyLine:hover .wyDeleteLine,
+.wyDeleteLine:focus {
+    opacity: 0.75;
+}
+
+.wyDeleteLine:hover {
+    opacity: 1 !important;
+    color: #dc2626;
+}
+
+.wyUidsOn .wyDeleteLine {
+    opacity: 1 !important;
 }
 
 .wyGuide {

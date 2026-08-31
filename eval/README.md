@@ -38,6 +38,37 @@ NRC и ERC отображаются прямо в интерфейсе: числ
 
 ---
 
+## Золотые эталоны (eval/gold/)
+
+Единственный источник эталонов разбора статей на структурные строки. Хранятся в git
+вне БД/S3 — стирание инфраструктуры на них не влияет; изменения проходят только через
+PR с апрувом владельца (`CODEOWNERS` → `/eval/gold/`) в защищённую ветку.
+
+```
+eval/gold/
+  manifest.json                     # реестр кейсов
+  checksums.sha256                  # целостность всех файлов набора
+  <slug>/
+    article.md                      # замороженный снапшот исходного текста
+    structural_lines.json           # эталонные структурные строки
+    meta.json                       # schema_version, DOI, автор, статус выверки
+```
+
+Добавление/правка эталона:
+
+```
+poetry run python ..\eval\validate_gold.py --update-checksums   # пересобрать чексуммы
+poetry run python ..\eval\validate_gold.py                      # полная проверка
+```
+
+Прогон метрик извлечения по эталонам:
+
+```
+poetry run python tools/llm_extract/run.py gold-eval --pairs <slug>::extracted.json ...
+```
+
+---
+
 ## Скрипты
 
 ### `quality_check.py` — основная проверка качества

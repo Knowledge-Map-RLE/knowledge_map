@@ -1,0 +1,591 @@
+{
+  "article": {
+    "tag": "{B1}"
+  },
+  "blocks": [
+    {
+      "blockType": "article",
+      "tag": "{B1}",
+      "data": {
+        "doi": "10.1126/sciadv.aec9991",
+        "title": "Immunometabolic resistors of aging in long-lived golden spiny mice",
+        "authors": [
+          "Hee-Hoon Kim",
+          "Tali Sagiv-Zangi",
+          "Yun-Hee Youm",
+          "Hagar Vardi-Naim",
+          "Tamara Dlugos",
+          "Francesco Strino",
+          "Mila Kazavchinsky-Bar",
+          "Lian Egulsky",
+          "Monica Bodogai",
+          "Arya Biragyn",
+          "Yuval Kluger",
+          "Noga Kronfeld-Schor",
+          "Vishwa Deep Dixit"
+        ],
+        "journal": "Science Advances",
+        "year": 2026,
+        "publicationType": "original_research",
+        "source": {
+          "section": "Title",
+          "text": "Immunometabolic resistors of aging in long-lived golden spiny mice"
+        }
+      }
+    },
+    {
+      "blockType": "objective",
+      "tag": "{B2}",
+      "data": {
+        "subject": "study",
+        "predicate": "objective",
+        "object": "identify dormant pathways that resist aging in long-lived wild rodents",
+        "source": {
+          "section": "Abstract",
+          "text": "Long-lived wild rodents closely related to laboratory mice on the evolutionary scale may allow identification of dormant pathways that resist aging."
+        }
+      }
+    },
+    {
+      "blockType": "study",
+      "tag": "{B3}",
+      "data": {
+        "name": "Immunometabolic resistors of aging in long-lived golden spiny mice",
+        "type": "comparative study",
+        "purpose": "To investigate aging resilience in golden spiny mice (Acomys russatus) compared to eastern spiny mice (Acomys dimidiatus)",
+        "conclusions": [
+          "Aged A. russatus resist functional decline, have greater repair capacity, and reduced senescence in immune-metabolic organs compared to A. dimidiatus.",
+          "Aged A. russatus maintains transcriptional integrity akin to young mice.",
+          "Elevated clusterin in A. russatus macrophages restrains inflammaging and enhances health span."
+        ],
+        "source": {
+          "section": "Abstract",
+          "text": "Here, we report that aged golden spiny mice (Acomys russatus), reared in a non–pathogen-free environment, resist functional decline, have a greater repair capacity with reduced senescence in immune-metabolic organs compared to their sister species, eastern spiny mice (Acomys dimidiatus)."
+        }
+      }
+    },
+    {
+      "blockType": "model",
+      "tag": "{B4}",
+      "data": {
+        "species": "Acomys russatus and Acomys dimidiatus",
+        "strain": "golden spiny mice and eastern spiny mice",
+        "sex": "not specified",
+        "age": "aged",
+        "conditions": "non-pathogen-free environment",
+        "source": {
+          "section": "Abstract",
+          "text": "aged golden spiny mice (Acomys russatus), reared in a non–pathogen-free environment"
+        }
+      }
+    },
+    {
+      "blockType": "group",
+      "tag": "{B5}",
+      "data": {
+        "groupName": "Aged golden spiny mice (Acomys russatus)",
+        "n": null,
+        "condition": "non-pathogen-free environment",
+        "control": false,
+        "purpose": "Experimental group to assess aging resilience",
+        "source": {
+          "section": "Abstract",
+          "text": "aged golden spiny mice (Acomys russatus)"
+        }
+      }
+    },
+    {
+      "blockType": "group",
+      "tag": "{B6}",
+      "data": {
+        "groupName": "Aged eastern spiny mice (Acomys dimidiatus)",
+        "n": null,
+        "condition": "non-pathogen-free environment",
+        "control": true,
+        "purpose": "Comparison group to assess aging resilience",
+        "source": {
+          "section": "Abstract",
+          "text": "eastern spiny mice (Acomys dimidiatus)"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B7}",
+      "data": {
+        "name": "Acomys russatus",
+        "entityType": "species",
+        "description": "Golden spiny mouse",
+        "source": {
+          "section": "Abstract",
+          "text": "golden spiny mice (Acomys russatus)"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B8}",
+      "data": {
+        "name": "Acomys dimidiatus",
+        "entityType": "species",
+        "description": "Eastern spiny mouse",
+        "source": {
+          "section": "Abstract",
+          "text": "eastern spiny mice (Acomys dimidiatus)"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B9}",
+      "data": {
+        "name": "clusterin",
+        "entityType": "protein",
+        "description": "Protein elevated in Acomys russatus macrophages",
+        "source": {
+          "section": "Abstract",
+          "text": "elevated levels of clusterin in A. russatus macrophages"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B10}",
+      "data": {
+        "name": "macrophages",
+        "entityType": "cell",
+        "description": "Immune cells in which clusterin is elevated",
+        "source": {
+          "section": "Abstract",
+          "text": "in A. russatus macrophages"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B11}",
+      "data": {
+        "name": "inflammaging",
+        "entityType": "process",
+        "description": "Chronic sterile inflammation associated with aging",
+        "source": {
+          "section": "Abstract",
+          "text": "restrain inflammaging"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B12}",
+      "data": {
+        "name": "health span",
+        "entityType": "phenotype",
+        "description": "Period of life free from disease and disability",
+        "source": {
+          "section": "Abstract",
+          "text": "enhance health span"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B13}",
+      "data": {
+        "name": "senescence",
+        "entityType": "process",
+        "description": "Cellular senescence",
+        "source": {
+          "section": "Abstract",
+          "text": "reduced senescence in immune-metabolic organs"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B14}",
+      "data": {
+        "name": "immune-metabolic organs",
+        "entityType": "tissue",
+        "description": "Organs involved in immune and metabolic functions",
+        "source": {
+          "section": "Abstract",
+          "text": "immune-metabolic organs"
+        }
+      }
+    },
+    {
+      "blockType": "entity",
+      "tag": "{B15}",
+      "data": {
+        "name": "transcriptional integrity",
+        "entityType": "phenotype",
+        "description": "Maintenance of gene expression patterns akin to young mice",
+        "source": {
+          "section": "Abstract",
+          "text": "maintains transcriptional integrity akin to young mice"
+        }
+      }
+    },
+    {
+      "blockType": "result",
+      "tag": "{B16}",
+      "data": {
+        "parameter": "functional decline",
+        "direction": "decreased",
+        "significance": "not_reported",
+        "detail": "Aged Acomys russatus resist functional decline compared to Acomys dimidiatus",
+        "outcomeClass": "positive",
+        "groupRefs": ["{B5}", "{B6}"],
+        "source": {
+          "section": "Abstract",
+          "text": "aged golden spiny mice (Acomys russatus) ... resist functional decline"
+        }
+      }
+    },
+    {
+      "blockType": "result",
+      "tag": "{B17}",
+      "data": {
+        "parameter": "repair capacity",
+        "direction": "increased",
+        "significance": "not_reported",
+        "detail": "Aged Acomys russatus have greater repair capacity compared to Acomys dimidiatus",
+        "outcomeClass": "positive",
+        "groupRefs": ["{B5}", "{B6}"],
+        "source": {
+          "section": "Abstract",
+          "text": "have a greater repair capacity"
+        }
+      }
+    },
+    {
+      "blockType": "result",
+      "tag": "{B18}",
+      "data": {
+        "parameter": "senescence in immune-metabolic organs",
+        "direction": "decreased",
+        "significance": "not_reported",
+        "detail": "Aged Acomys russatus have reduced senescence in immune-metabolic organs compared to Acomys dimidiatus",
+        "outcomeClass": "positive",
+        "groupRefs": ["{B5}", "{B6}"],
+        "source": {
+          "section": "Abstract",
+          "text": "with reduced senescence in immune-metabolic organs"
+        }
+      }
+    },
+    {
+      "blockType": "result",
+      "tag": "{B19}",
+      "data": {
+        "parameter": "transcriptional integrity",
+        "direction": "no_change",
+        "significance": "not_reported",
+        "detail": "Aged Acomys russatus maintains transcriptional integrity akin to young mice",
+        "outcomeClass": "positive",
+        "groupRefs": ["{B5}"],
+        "source": {
+          "section": "Abstract",
+          "text": "Aged A. russatus maintains transcriptional integrity akin to young mice"
+        }
+      }
+    },
+    {
+      "blockType": "result",
+      "tag": "{B20}",
+      "data": {
+        "parameter": "clusterin levels in macrophages",
+        "direction": "increased",
+        "significance": "not_reported",
+        "detail": "Elevated levels of clusterin in Acomys russatus macrophages",
+        "outcomeClass": "positive",
+        "groupRefs": ["{B5}"],
+        "source": {
+          "section": "Abstract",
+          "text": "elevated levels of clusterin in A. russatus macrophages"
+        }
+      }
+    },
+    {
+      "blockType": "result",
+      "tag": "{B21}",
+      "data": {
+        "parameter": "inflammaging",
+        "direction": "decreased",
+        "significance": "not_reported",
+        "detail": "Clusterin restrains inflammaging",
+        "outcomeClass": "positive",
+        "source": {
+          "section": "Abstract",
+          "text": "restrain inflammaging"
+        }
+      }
+    },
+    {
+      "blockType": "result",
+      "tag": "{B22}",
+      "data": {
+        "parameter": "health span",
+        "direction": "increased",
+        "significance": "not_reported",
+        "detail": "Clusterin enhances health span in aged mice",
+        "outcomeClass": "positive",
+        "source": {
+          "section": "Abstract",
+          "text": "enhance health span in aged mice"
+        }
+      }
+    },
+    {
+      "blockType": "claim",
+      "tag": "{B23}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "resists",
+        "object": "functional decline",
+        "epistemicStatus": "asserted",
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment",
+          "comparison": "Acomys dimidiatus"
+        },
+        "evidenceRefs": ["{B16}"],
+        "source": {
+          "section": "Abstract",
+          "text": "aged golden spiny mice (Acomys russatus) ... resist functional decline"
+        }
+      }
+    },
+    {
+      "blockType": "claim",
+      "tag": "{B24}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "has",
+        "object": "greater repair capacity",
+        "epistemicStatus": "asserted",
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment",
+          "comparison": "Acomys dimidiatus"
+        },
+        "evidenceRefs": ["{B17}"],
+        "source": {
+          "section": "Abstract",
+          "text": "have a greater repair capacity"
+        }
+      }
+    },
+    {
+      "blockType": "claim",
+      "tag": "{B25}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "has",
+        "object": "reduced senescence in immune-metabolic organs",
+        "epistemicStatus": "asserted",
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment",
+          "comparison": "Acomys dimidiatus"
+        },
+        "evidenceRefs": ["{B18}"],
+        "source": {
+          "section": "Abstract",
+          "text": "with reduced senescence in immune-metabolic organs"
+        }
+      }
+    },
+    {
+      "blockType": "claim",
+      "tag": "{B26}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "maintains",
+        "object": "transcriptional integrity akin to young mice",
+        "epistemicStatus": "asserted",
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment"
+        },
+        "evidenceRefs": ["{B19}"],
+        "source": {
+          "section": "Abstract",
+          "text": "Aged A. russatus maintains transcriptional integrity akin to young mice"
+        }
+      }
+    },
+    {
+      "blockType": "claim",
+      "tag": "{B27}",
+      "data": {
+        "subject": "clusterin",
+        "predicate": "restrains",
+        "object": "inflammaging",
+        "epistemicStatus": "asserted",
+        "context": {
+          "species": "Acomys russatus",
+          "cellType": "macrophages"
+        },
+        "evidenceRefs": ["{B20}", "{B21}"],
+        "source": {
+          "section": "Abstract",
+          "text": "elevated levels of clusterin in A. russatus macrophages restrain inflammaging"
+        }
+      }
+    },
+    {
+      "blockType": "claim",
+      "tag": "{B28}",
+      "data": {
+        "subject": "clusterin",
+        "predicate": "enhances",
+        "object": "health span",
+        "epistemicStatus": "asserted",
+        "context": {
+          "species": "Acomys russatus",
+          "cellType": "macrophages",
+          "age": "aged"
+        },
+        "evidenceRefs": ["{B20}", "{B22}"],
+        "source": {
+          "section": "Abstract",
+          "text": "elevated levels of clusterin in A. russatus macrophages ... enhance health span in aged mice"
+        }
+      }
+    },
+    {
+      "blockType": "claim",
+      "tag": "{B29}",
+      "data": {
+        "subject": "Acomys russatus biology",
+        "predicate": "reveals",
+        "object": "therapeutically actionable targets",
+        "epistemicStatus": "asserted",
+        "source": {
+          "section": "Abstract",
+          "text": "A. russatus biology reveals therapeutically actionable targets"
+        }
+      }
+    },
+    {
+      "blockType": "mechanism",
+      "tag": "{B30}",
+      "data": {
+        "mechanism": "Clusterin restrains inflammaging",
+        "explains": "How elevated clusterin in Acomys russatus macrophages contributes to health span",
+        "supportedBy": ["{B27}", "{B28}"],
+        "source": {
+          "section": "Abstract",
+          "text": "elevated levels of clusterin in A. russatus macrophages restrain inflammaging and enhance health span"
+        }
+      }
+    },
+    {
+      "blockType": "atomic_statement",
+      "tag": "{B31}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "resists",
+        "object": "functional decline",
+        "epistemicStatus": "asserted",
+        "sourceRefs": ["{B23}"],
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment",
+          "comparison": "Acomys dimidiatus"
+        }
+      }
+    },
+    {
+      "blockType": "atomic_statement",
+      "tag": "{B32}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "has",
+        "object": "greater repair capacity",
+        "epistemicStatus": "asserted",
+        "sourceRefs": ["{B24}"],
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment",
+          "comparison": "Acomys dimidiatus"
+        }
+      }
+    },
+    {
+      "blockType": "atomic_statement",
+      "tag": "{B33}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "has",
+        "object": "reduced senescence in immune-metabolic organs",
+        "epistemicStatus": "asserted",
+        "sourceRefs": ["{B25}"],
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment",
+          "comparison": "Acomys dimidiatus"
+        }
+      }
+    },
+    {
+      "blockType": "atomic_statement",
+      "tag": "{B34}",
+      "data": {
+        "subject": "Acomys russatus",
+        "predicate": "maintains",
+        "object": "transcriptional integrity akin to young mice",
+        "epistemicStatus": "asserted",
+        "sourceRefs": ["{B26}"],
+        "context": {
+          "species": "Acomys russatus",
+          "condition": "non-pathogen-free environment"
+        }
+      }
+    },
+    {
+      "blockType": "atomic_statement",
+      "tag": "{B35}",
+      "data": {
+        "subject": "clusterin",
+        "predicate": "restrains",
+        "object": "inflammaging",
+        "epistemicStatus": "asserted",
+        "sourceRefs": ["{B27}"],
+        "context": {
+          "species": "Acomys russatus",
+          "cellType": "macrophages"
+        }
+      }
+    },
+    {
+      "blockType": "atomic_statement",
+      "tag": "{B36}",
+      "data": {
+        "subject": "clusterin",
+        "predicate": "enhances",
+        "object": "health span",
+        "epistemicStatus": "asserted",
+        "sourceRefs": ["{B28}"],
+        "context": {
+          "species": "Acomys russatus",
+          "cellType": "macrophages",
+          "age": "aged"
+        }
+      }
+    },
+    {
+      "blockType": "atomic_statement",
+      "tag": "{B37}",
+      "data": {
+        "subject": "Acomys russatus biology",
+        "predicate": "reveals",
+        "object": "therapeutically actionable targets",
+        "epistemicStatus": "asserted",
+        "sourceRefs": ["{B29}"]
+      }
+    },
+    {
+      "blockType": "relation",
+     
