@@ -226,6 +226,18 @@ export function useArticleState(): UseArticleStateResult {
         }, 250);
     }, [blocks]);
 
+    // Re-resolve text when statements change (e.g. from server save response).
+    useEffect(() => {
+        if (statements.length === 0) return;
+        const currentBlocks = blocksRef.current;
+        if (currentBlocks.length === 0) return;
+        const currentArticleUuid = articleUuidRef.current;
+        const derivedText = statementsToResolvedText(
+            statements, currentBlocks, currentArticleUuid ?? undefined, statements,
+        );
+        setTextState(derivedText);
+    }, [statements]);
+
     const addBlock = useCallback((typeNumber: number, initialData?: Record<string, BlockDataValue>) => {
         if (!requireAuth()) return;
         const author = authorFromUser(user);
@@ -336,7 +348,6 @@ export function useArticleState(): UseArticleStateResult {
         if (!requireAuth()) return;
         const currentBlocks = blocksRef.current;
         const currentText = textRef.current;
-        const currentArticleUuid = articleUuidRef.current;
         if (currentBlocks.length === 0 && !currentText) return;
         setSaveStatus('saving');
         try {
@@ -344,18 +355,17 @@ export function useArticleState(): UseArticleStateResult {
                 const t1Block = currentBlocks.find((b) => b.blockType === 1);
                 const titleFromBlock = t1Block?.data?.title;
                 const promises: Promise<any>[] = [
-                    saveArticleText(docId, currentText),
                     saveBlocks(docId, currentBlocks),
                 ];
                 if (titleFromBlock) {
                     promises.push(updateArticleTitle(docId, String(titleFromBlock)));
                 }
                 const results = await Promise.all(promises);
-                if (!results[0]?.success) {
+                const blocksResult = results[0];
+                if (!blocksResult?.success) {
                     setSaveStatus('error');
                     return;
                 }
-                const blocksResult = results[1];
                 if (blocksResult?.statements) {
                     setStatements(blocksResult.statements);
                 }

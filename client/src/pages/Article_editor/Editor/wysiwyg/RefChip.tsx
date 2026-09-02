@@ -63,8 +63,8 @@ const RefChip: React.FC<RefChipProps> = ({ lineId, fieldKey, value, field, refs,
         setSelectedIdx(0);
     }, [query]);
 
-    const openDropdown = useCallback(() => {
-        setQuery('');
+    const openDropdown = useCallback((initialQuery?: string) => {
+        setQuery(initialQuery ?? '');
         const el = wrapRef.current;
         if (el) {
             const r = el.getBoundingClientRect();
@@ -114,13 +114,12 @@ const RefChip: React.FC<RefChipProps> = ({ lineId, fieldKey, value, field, refs,
                         : undefined}
                 onChange={(e) => {
                     setQuery(e.target.value);
-                    if (query === null) openDropdown();
-                    if (resolved) onChange('');
-                    else onChange(e.target.value);
+                    if (query === null) openDropdown(e.target.value);
+                    onChange(e.target.value);
                 }}
-                onFocus={() => { if (rect === null) openDropdown(); }}
+                onFocus={() => { if (rect === null) openDropdown(displayValue); }}
                 onBlur={() => {
-                    if (query !== null && query.trim() && !resolved) onChange(query.trim());
+                    if (query !== null && query.trim() && query.trim() !== displayValue) onChange(query.trim());
                     closeDropdown();
                 }}
                 onKeyDown={(e) => {

@@ -328,7 +328,12 @@
         "predicate": "to",
         "object": "aging"
       },
-      "order": 21
+      "order": 21,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-1714-804b-abab-9eac8f6d81d1",
@@ -338,7 +343,12 @@
         "predicate": "property",
         "object": "functional"
       },
-      "order": 22
+      "order": 22,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-17a1-8a40-a2e2-7e945d0a9ca7",
@@ -348,7 +358,12 @@
         "predicate": "property",
         "object": "organismal"
       },
-      "order": 23
+      "order": 23,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-178c-8152-8aca-4ed932955614",
@@ -358,7 +373,12 @@
         "predicate": "of",
         "object": "00065a31-1798-880c-8b8b-d0de457de7e6"
       },
-      "order": 24
+      "order": 24,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-1783-8d0a-97d7-bcf2c82da42c",
@@ -368,7 +388,12 @@
         "predicate": "property",
         "object": "specific"
       },
-      "order": 25
+      "order": 25,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-177a-8344-80c0-0ce914b65b06",
@@ -378,17 +403,27 @@
         "predicate": "property",
         "object": "potential"
       },
-      "order": 26
+      "order": 26,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-1770-8b0d-b939-59b8ef78c4f7",
-      "blockType": 4,
+      "blockType": 2,
       "data": {
         "subject": "research",
         "predicate": "reveal",
         "object": "00065a31-178c-8152-8aca-4ed932955614"
       },
-      "order": 27
+      "order": 27,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-1766-8a27-b2f2-484879c620d5",
@@ -398,7 +433,12 @@
         "predicate": "is",
         "object": "organism"
       },
-      "order": 28
+      "order": 28,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-175d-82b6-8404-2dba9a1c1b4d",
@@ -408,7 +448,12 @@
         "predicate": "is",
         "object": "organism"
       },
-      "order": 29
+      "order": 29,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-1752-8fc2-8888-4e2394c10910",
@@ -418,7 +463,12 @@
         "predicate": "is",
         "object": "organism"
       },
-      "order": 30
+      "order": 30,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-1707-8945-8303-2d78699d42e4",
@@ -428,7 +478,12 @@
         "predicate": "contain",
         "object": "00065a31-1766-8a27-b2f2-484879c620d5"
       },
-      "order": 31
+      "order": 31,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-38a4-81ec-a9e9-8710d4be844b",
@@ -438,7 +493,12 @@
         "predicate": "contain",
         "object": "00065a31-175d-82b6-8404-2dba9a1c1b4d"
       },
-      "order": 32
+      "order": 32,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-389b-8751-9c5c-46e6a4e95f93",
@@ -448,7 +508,12 @@
         "predicate": "build",
         "object": "00065a31-1707-8945-8303-2d78699d42e4"
       },
-      "order": 33
+      "order": 33,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-3893-8ab6-bbfb-e782106f20b4",
@@ -458,7 +523,12 @@
         "predicate": "build",
         "object": "00065a31-38a4-81ec-a9e9-8710d4be844b"
       },
-      "order": 34
+      "order": 34,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-388a-811d-ad2d-f342ce802ab6",
@@ -468,7 +538,12 @@
         "predicate": "compared to",
         "object": "00065a31-1752-8fc2-8888-4e2394c10910"
       },
-      "order": 35
+      "order": 35,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-3880-8437-bf7f-cb89dcbdbdc5",
@@ -478,7 +553,12 @@
         "subject": "00065a31-175d-82b6-8404-2dba9a1c1b4d",
         "object": "00065a31-1752-8fc2-8888-4e2394c10910"
       },
-      "order": 36
+      "order": 36,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-16f8-857f-95d5-41f9be112ed8",
@@ -488,7 +568,12 @@
         "predicate": "spanning",
         "object": "life spans"
       },
-      "order": 37
+      "order": 37,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-1633-82d6-9b5b-c82de81afe32",
@@ -498,7 +583,12 @@
         "predicate": "span",
         "object": "00065a31-16f8-857f-95d5-41f9be112ed8"
       },
-      "order": 38
+      "order": 38,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "00065a31-4aba-8774-bd7d-568a3e769a1b",
@@ -508,7 +598,12 @@
         "predicate": "span",
         "object": "00065a31-16f8-857f-95d5-41f9be112ed8"
       },
-      "order": 39
+      "order": 39,
+      "author": {
+        "uid": "035f7f97a1b84bb99088af5200f997c6",
+        "login": "Dimka",
+        "nickname": "Димка"
+      }
     },
     {
       "instanceId": "000659f4-b20a-8fe7-b5b5-7d7e74296a7e",

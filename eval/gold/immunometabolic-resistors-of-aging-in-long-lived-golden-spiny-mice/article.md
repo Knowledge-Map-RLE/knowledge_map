@@ -1,360 +1,478 @@
 ---
-doi: "10.1126/sciadv.aec9991"
+doi: "https://doi.org/10.1126/sciadv.aec9991"
 authors: "Hee-Hoon Kim, Tali Sagiv-Zangi, Yun-Hee Youm, Hagar Vardi-Naim, Tamara Dlugos, Francesco Strino, Mila Kazavchinsky-Bar, Lian Egulsky, Monica Bodogai, Arya Biragyn, Yuval Kluger, Noga Kronfeld-Schor, Vishwa Deep Dixit"
 ---
 
 # Immunometabolic resistors of aging in long-lived golden spiny mice
 
-## Эксперимент: Behavioral phenotyping
-**Тип:** Behavioral  
+**Authors:** Hee-Hoon Kim, Tali Sagiv-Zangi, Yun-Hee Youm, Hagar Vardi-Naim, Tamara Dlugos, Francesco Strino, Mila Kazavchinsky-Bar, Lian Egulsky, Monica Bodogai, Arya Biragyn, Yuval Kluger, Noga Kronfeld-Schor, Vishwa Deep Dixit
 
-**Экспериментальные группы:**
-- A. russatus young — интервенций нет, наблюдательное исследование
-- A. russatus middle — интервенций нет, наблюдательное исследование
-- A. russatus aged — интервенций нет, наблюдательное исследование
-- A. russatus extreme aged — интервенций нет, наблюдательное исследование
 
-**Контрольные группы:**
-- A. dimidiatus young — интервенций нет, наблюдательное исследование
-- A. dimidiatus middle — интервенций нет, наблюдательное исследование
-- A. dimidiatus aged — интервенций нет, наблюдательное исследование
+**1** Department of Pathology, Yale School of Medicine, New Haven, CT 06520, USA.
+**2** Department of Comparative Medicine, Yale School of Medicine, New Haven, CT 06520, USA.
+**3** Department of Immunobiology, Yale School of Medicine, New Haven, CT 06520, USA.
+**4** School of Zoology, Tel Aviv University, Tel Aviv 69978, Israel.
+**5** PCMGF Limited, Watford WD17 1HP, UK.
+**6** Immunoregulation Section, Laboratory of Molecular Biology and Immunology, National Institute on Aging, NIH, Baltimore, MD 21224, USA.
+**7** Program in Applied Mathematics, Yale University, New Haven, CT 06520, USA.
+**8** Yale Center for Research on Aging, Yale School of Medicine, New Haven, CT 06520, USA.
 
-**Последовательность:**
+**Correspondence:**
+- *Corresponding author. Email: [nogaks@tauex.tau.ac.il](mailto:nogaks@tauex.tau.ac.il) (N.K.-S.);
+- *Corresponding author. Email: [vishwa.dixit@yale.edu](mailto:vishwa.dixit@yale.edu) (V.D.D.)
 
-1. Behavioral tests
-   - Open field, wire hanging, beam walking, novel object, T-maze on Acomys of varying ages
+_†These authors contributed equally to this work._
 
+**DOI:** 10.1126/sciadv.aec9991
 
-**Результаты (находки):**
-- rearing behavior — Fig. 1F
-- motor function (wire hanging) — Fig. 1G
+**Published:** February 27, 2026
 
+**License:** https://creativecommons.org/licenses/by-nc/4.0/This is an open-access article distributed under the terms of the Creative Commons Attribution-NonCommercial license, which permits use, distribution, and reproduction in any medium, so long as the resultant use is not for commercial advantage and provided the original work is properly cited.
 
-## Эксперимент: Ear punch regeneration
-**Тип:** Behavioral  
+## Abstract
 
-**Экспериментальные группы:**
-- A. russatus young — интервенций нет, наблюдательное исследование
-- A. russatus aged — интервенций нет, наблюдательное исследование
-- A. russatus extreme aged — интервенций нет, наблюдательное исследование
+Long-lived wild rodents closely related to laboratory mice on the evolutionary scale may allow identification of dormant pathways that resist aging. Spiny mice (*Acomys*) are known for their exceptional regenerative capacity, but their resilience to aging is unknown. Here, we report that aged golden spiny mice (*Acomys russatus*), reared in a non–pathogen-free environment, resist functional decline, have a greater repair capacity with reduced senescence in immune-metabolic organs compared to their sister species, eastern spiny mice (*Acomys dimidiatus*). Aged *A. russatus* maintains transcriptional integrity akin to young mice, highlighting experimental checkpoints for inflammation and mortality. We identified that elevated levels of clusterin in *A. russatus* macrophages restrain inflammaging and enhance health span in aged mice. Thus, *A. russatus* biology reveals therapeutically actionable targets that may enhance or maintain function during aging.
 
-**Контрольные группы:**
-- A. dimidiatus young — интервенций нет, наблюдательное исследование
-- A. dimidiatus aged — интервенций нет, наблюдательное исследование
 
-**Последовательность:**
+---
 
-1. Ear punch regeneration assay
-   - 4-mm ear punch, measured weekly for 5 weeks
+## Body
 
 
-**Результаты (находки):**
-- p16 expression in VAT — Fig. 1N
+## INTRODUCTION
 
 
-## Эксперимент: Histological analysis
-**Тип:** Histology  
+One of the key manifestations of aging is a loss of biological resilience, including a slowdown in cell and tissue repair processes due to chronic sterile inflammation and metabolic stress (1, 2). Given the availability of advanced molecular and genetic tools, the study of the underlying mechanisms of aging has relied on laboratory inbred strains of *Mus* and *Rattus*. These species alone, however, do not capture the diversity of physiological adaptive traits in rodents, which comprises >40% of all mammalian species. The relevance of studies from short-lived, genetically modified animal models, including the claims of “negligible senescence” of some species, to the future of harnessing mechanisms relevant to human physiology and medicine is debated (3). This raises the question of whether the evolution of extreme traits in wild rodents offers an opportunity to mimic protective mechanisms or identify checkpoints of aging that are obfuscated in traditional laboratory animal models. Thus, one underlying rationale for the investigation of the aging process using a comparative biology approach is to maximize the chances of identifying mechanisms that resist senescence through the ability to clear the accumulation of damage-associated molecular patterns and promote tissue repair (4, 5).
 
-**Экспериментальные группы:**
-- A. russatus young — интервенций нет, наблюдательное исследование
-- A. russatus aged — интервенций нет, наблюдательное исследование
-- A. russatus extreme aged — интервенций нет, наблюдательное исследование
 
-**Контрольные группы:**
-- M. musculus young — интервенций нет, наблюдательное исследование
-- M. musculus aged — интервенций нет, наблюдательное исследование
+As posited by Hamilton (6), senescence is unavoidable because the force of natural selection wanes post–early reproductive age. However, organisms acquire specific adaptive traits to enhance fitness to cope with their environment and hence are the targets of natural selection (7). The genus *Acomys* (spiny mice) is one such example in nature where organisms have acquired evolutionarily conserved adaptive features, such as high regenerative capacity, which are relevant to aging and tissue repair (8, 9). There are 18 species of spiny mice that belong to the subfamily Deomyinae. *Acomys* inhabits dry arid regions, including rocky deserts in the Middle East, Saudi Arabia, Israel, and parts of Africa (10). Previous studies have identified that three species of spiny mice, *Acomys kempi*, *Acomys dimidiatus* (previously misidentified as *Acomys cahirinus* in the Jordan and Sinai regions), and *Acomys percivali*, are resistant to poisons and can regenerate their skin from full-thickness injuries, and *A. dimidiatus* can completely close 4-mm earholes, indicating the acquisition of an adaptive trait of exceptional tissue repair (8, 9, 11). Furthermore, *Acomys russatus*, *A. dimidiatus*, and *Acomys subspinosus* exhibit loss of tail sheath or false autotomy, possibly as an antipredatory adaptation (12, 13). *A. russatus* (golden spiny mouse) that shares habitat with *A. dimidiatus* was excluded from the more thermally favorable nocturnal niche to the diurnal niche and has developed several unique adaptations to diurnality, such as dark skin pigmentation, higher concentration of ascorbic acid in eyes, and greater urine concentration ability (14–17). Furthermore, *A. russatus* is metabolically unique, as it is resilient to long periods of starvation due to its ability to lower energy expenditure using torpor, even at warm ambient temperatures, in response to negative energy balance and other environmental stressors (16–22). This adaptability, combined with efficient evaporation rate and ability to conserve water and produce concentrated urine (16, 17, 20–22), allows *A. russatus* to coexist with its congener, *A. dimidiatus*.
 
-**Последовательность:**
 
-1. Histological analysis
-   - H&E, Sirius Red, Sudan Black B staining of tissues
+For most mammals, there is negligible evidence that senescence or aging contributes to mortality in the wild (23). It has been hypothesized that for mammals in the wild, adult mortality is driven by extrinsic hazards, such as exposure to toxins or poisons, predation, aberrant immune response to infections and injuries, starvation, and thermogenic failure to maintain core body temperature upon extended exposure to cold environments (24). In addition, parental care of neonates is an additional force that protects against extrinsic mortality, allowing certain species to survive the vulnerable developmental period to reach older ages for potential natural selection that may rely on mechanisms driving successful senescence (25). Consistent with their reduced extrinsic mortality, *A. russatus*, in addition to the above traits, produces newborns that are fully developed at birth, and multiple females engage in group fostering of pups, enhancing chances of survival (26). Moreover, *Acomys* are the only known rodents reported to have an 11-day menstrual cycle and form a functional corpus luteum after ovulation, suggesting an endocrine physiology that better models some aspects of human physiological aging (27). However, despite these extraordinarily resilient and distinct adaptive characteristics, the evidence for the existence of molecular and functional mechanisms that may confer healthy aging to *A. russatus* is scant. Given its close clade relationship to *Mus musculus*, we aimed to gain a comprehensive understanding of the biology of aging using *A. russatus* as a model organism to identify and test the causality of specific potential aging-resistance mechanisms under controlled conditions in laboratory mice. To reveal mechanisms of functional and organismal resilience to aging, we built cohorts of *A. russatus* and *A. dimidiatus* and compared them to *M. musculus* spanning their life spans. We report that *A. russatus*, or golden spiny mouse, is protected from age-related functional decline, and we identified elevated clusterin as one of the targets that promotes health span by integrating immunological and metabolic responses to inhibit inflammaging.
 
 
-**Результаты (находки):**
-- thymic fibrosis — Fig. 2B
-- splenic senescence — Fig. 2E
+## RESULTS
 
 
-## Эксперимент: Splenocyte proliferation assay
-**Тип:** In vitro  
+### A. russatus is resilient against age-associated functional decline
 
-**Экспериментальные группы:**
-- A. russatus young — интервенций нет, наблюдательное исследование
-- A. russatus aged — интервенций нет, наблюдательное исследование
 
-**Контрольные группы:**
-- M. musculus young — интервенций нет, наблюдательное исследование
-- M. musculus aged — интервенций нет, наблюдательное исследование
+To analyze the evolutionary relationship between *A. russatus* and other mammals, we compared the phylogenetic tree based on TimeTree 5 (28). Notably, *A. russatus* is closely related to *M. musculus*, compared to other unique animal models of exceptional healthy aging, such as *Heterocephalus glaber*, the naked mole rat (Fig. 1A). Although the median and maximal life span of *A. russatus* remains unknown, the capture, tagging, and recapture of these mice in the wild (the rocky desert of Israel) identified healthy *A. russatus* in the wild up to 4 years old (Fig. 1B). Thus, compared to the average life span of mice in the wild, *A. russatus* may live at least fourfold longer where they successfully evade extrinsic mortality (Fig. 1B).
 
-**Последовательность:**
 
-1. Splenocyte proliferation assay
-   - ConA stimulation of splenocytes from young and aged mice
+**Fig. 1.**
 
+*(**A**) A phylogenetic tree for several mammals. M, million years; *H. sapiens*, *Homo sapiens*; *M. mulatta*, *Macaca mulatta*; *P. leucopus*, *Peromyscus leucopus*; *M. unguiculatus*, *Meriones unguiculatus*; *R. norvegicus*, *Rattus norvegicus*. (**B**) Record of the three male mice of adult *A. russatus* trapped in the wild and both sexes in captivity. Avg, average. (**C**) Representative images of *A. dimidiatus* and *A. russatus.* An image of an aged (2.5 years) *A. russatus* is also used in the schematic of Fig. 6 as a representative. (**D**) Body weight changes during aging of *A. dimidiatus* and *A. russatus*. y, years. (**E** and **F**) An open field test was performed. (E) Representative tracking plots for open field tests. Black dotted lines indicate the center area. (F) The number of rearing behaviors was measured. (**G**) The wire hanging test was performed. The total time spent on the wire was measured. (**H**) Beam working test was performed. (**I** and **J**) The average activity of *A. dimidiatus* and *A. russatus* during resting (I) and active (J) phase was measured. (**K** to **M**) A 4-mm earhole punch regeneration experiment was performed. Earhole area of *A. dimidiatus* (K) and *A. russatus* (L) was measured weekly for 5 weeks. For (L), ** corresponds to the comparison between 0.5 years and 1.5 years, and * corresponds to the comparison between 0.5 years and >3.5 years. (M) Comparison of earhole closure of >2.5-year *A. dimidiatus* and *A. russatus*. (**N**) Visceral adipose tissues (VAT) of male *A. dimidiatus* and *A. russatus* were subjected to Western blot analysis (*n* = 3 per group). Data are presented as mean ± SEM (K to M) or min to max (D to J). Two-tailed student *t* test (M) or one-way analysis of variance (ANOVA) with Tukey’s multiple comparisons test (D to L) was performed. Gray areas in (D) to (J) indicate the mean value of 0.5-year *A. dimidiatus*. **P* < 0.05, ***P* < 0.01, and ****P* < 0.001.*
 
-**Результаты (находки):**
-- splenocyte proliferation — Fig. 2I
 
+To examine the uniqueness of *A. russatus*, we established outbred colonies of *A. russatus* and *A. dimidiatus*, comprising diverse age groups and both sexes (Fig. 1C). Maintaining sufficient numbers of *A. dimidiatus* beyond 3.5 years of age proved challenging, whereas *A. russatus* was sustained for 4.5 years in our colony. The body weights of *A. dimidiatus* and *A. russatus* were comparable across age groups (Fig. 1D). However, while *A. dimidiatus* exhibited a continuous increase in body weight with age, the body weight of *A. russatus* peaked at 1.5 years and was maintained for more than 3.5 to 4.5 years (Fig. 1D).
 
-## Эксперимент: Liver bulk RNA-seq
-**Тип:** RNA-seq  
 
-**Экспериментальные группы:**
-- A. russatus young — интервенций нет, наблюдательное исследование
-- A. russatus aged — интервенций нет, наблюдательное исследование
+Using this cohort, we explored age-related changes in various functional and behavioral outcomes. In the open field test, *A. dimidiatus* exhibited age-related decline in rearing behaviors, average speed, traveled distance, and number of entries into the center area, which are indicators of increased anxiety and reduced locomotor activity, although the time spent in the center area remained unchanged in both sexes (Fig. 1, E and F, and fig. S1, A to M). In contrast, *A. russatus* maintained all these parameters at comparable levels across age groups and did not demonstrate age-related decline or alteration (Fig. 1, E and F, and fig. S1, A to M). Moreover, aged *A. russatus* exhibited significantly increased latency and freezing time in the wire hanging test and reduced arrival time in the beam walking test compared to their young counterparts in both sexes, indicating improved motor and muscular functions with age (Fig. 1, G and H, and fig. S1, N to R). In contrast, aged *A. dimidiatus* had reduced latency in the wire hanging test, while other parameters remained unchanged during aging (Fig. 1, G and H, and fig. S1, N to R). In addition to motor function, learning and memory abilities are known to decline with age (29). To investigate this in both *Acomys* species, we performed novel object recognition and T-maze tests. In the novel object recognition test, the discrimination ratio was significantly reduced in 1.5-year-old *A. dimidiatus*, but rebounded in those older than 2.5 years; on the other hand, *A. russatus* exhibited no significant differences among the age groups in both sexes (fig. S2, A to D). In the T-maze test, no changes were observed in the first- and second-choice latencies across the life span for either species or sex (fig. S2, E to H). These results suggest that although both species preserve cognitive functions well into advanced age, *A. russatus*, unlike *A. dimidiatus*, overcame age-associated decline in motor and muscular functions.
 
-**Контрольные группы:**
-- M. musculus young — интервенций нет, наблюдательное исследование
-- M. musculus aged — интервенций нет, наблюдательное исследование
 
-**Последовательность:**
+Aging accompanies disruption in circadian rhythm with fragmented and reduced sleep patterns, which are associated with multiple diseases, including reduced metabolic and immune function and increased risk of neurodegenerative diseases (30). To assess these parameters in *Acomys* during aging, we measured the activity frequencies in the resting and active phases. We found that *A. dimidiatus* exhibited significantly disrupted daily activity patterns during aging, including increased activity in the resting phase and reduced activity in the active phase (Fig. 1, I and J, and fig. S2I). In contrast, these disruptions were not observed in either sex of *A. russatus* during aging (Fig. 1, I and J, and fig. S2, J to N). Notably, in *A. dimidiatus,* these age-associated disruptions in daily activity patterns were more pronounced in females than males (fig. S2, K to N).
 
-1. Liver bulk RNA-seq
-   - RNA-seq of liver from young and aged M. musculus and A. russatus
 
+It has been shown that wound healing and repair are impaired in the aged (31). Previous studies have also demonstrated that the exceptional regenerative capacity in the skin or ears of *A. kempi* and *A. cahirinus* declines with age (8, 9, 32). To investigate this in our congeneric *Acomys* cohorts, we examined the age-related changes in regeneration capacity using a 4-mm ear punch assay. Five weeks after ear punches, both adult 0.5-year-old *A. dimidiatus* and *A. russatus* exhibited almost completely closed earholes, while regeneration capacity declined with age in both species (Fig. 1, K and L, and fig. S2, O to R), consistent with previous observations in other *Acomys* species (32). Male *A. russatus* showed protection against age-associated decline in regeneration capacity (fig. S2Q). Moreover, aged *A. russatus* showed improved earhole closure compared to age-matched *A. dimidiatus* (Fig. 1M). Together, these results indicate the superior repair and wound healing performance of *A. russatus* over *A. dimidiatus* during aging.
 
-**Результаты (находки):**
-- liver DEGs — Fig. S4D
-- SASP score in liver — Fig. 3D
 
+Cellular senescence is considered one of the major hallmarks of aging (33). A key feature of this phenomenon is the up-regulation of p16 and p21, which are thought to mediate permanent cell cycle arrest by suppressing cyclin-dependent kinases and transcriptional activators (33). The close evolutionary relationship between *M. musculus* and *Acomys* (Fig. 1A) allows the use of several commercially available anti-mouse antibodies, including p16, in *Acomys* specimens. Using this antibody, we found significantly elevated p16 expression in the visceral adipose tissues (VAT) of aged *A. dimidiatus* but not in *A. russatus* (Fig. 1N and fig. S2S), suggesting that *A. russatus* is protected from cellular senescence.
 
-## Эксперимент: VAT snRNA-seq
-**Тип:** RNA-seq  
 
-**Экспериментальные группы:**
-- A. russatus young — интервенций нет, наблюдательное исследование
-- A. russatus extreme aged — интервенций нет, наблюдательное исследование
+### A. russatus is protected from senescence in the lymphoid organ
 
-**Контрольные группы:**
-- M. musculus young — интервенций нет, наблюдательное исследование
-- M. musculus aged — интервенций нет, наблюдательное исследование
 
-**Последовательность:**
+After establishing that *A. russatus* displays reduced functional decline compared to *A. dimidiatus*, we next investigated the organismal aging of *A. russatus* in more detail in comparison to traditional C57BL/6 mice reared under laboratory conditions. This approach was chosen to test whether the close evolutionary relationship between *M. musculus* and *A. russatus* (Fig. 1A) can be translated into the identification and testing of differentially expressed drivers of health span and disease mechanisms. Among all organs, the aging of the thymus is fastest and precedes the aging of other organs. Thymic aging is characterized by the emergence of fibroadipogenic cells and the eventual cessation of naïve T cell production (34). As expected, we observed prominent thymic lipoatrophy and fibrosis in a 2.5-year-old *M. musculus* (Fig. 2, A and B). The overall size of the thymi of *A. russatus* was smaller than *M. musculus*, which is likely a reflection of their non–pathogen-free husbandry (fig. S3, A and B). Notably, compared to laboratory mice, lipid accumulation and fibrosis, key features of thymic involution, were substantially lower in the thymi of age-matched 2.5-year-old *A. russatus* (Fig. 2, A and B). In *A. russatus*, the thymi could be identified in even extreme ages (>3.5 years) and displayed notable maintenance of cortical and medullary cellularity, preservation of corticomedullary junctions, and absence of adipogenic cells in lymphopoietic zones of thymus (Fig. 2A). In addition, the thymi of aged *A. russatus* exhibited spatial maintenance of medullary thymic epithelial cells (mTECs), while those of the aged *M. musculus* displayed classical epithelial cysts and loss of mTEC integrity (Fig. 2A). These data demonstrate that in comparison to C57BL/6 mice, *A. russatus* with longer average life span maintains youthful thymic architecture till advanced age, indicative of lower immune senescence.
 
-1. VAT snRNA-seq
-   - Single-nucleus RNA-seq of visceral adipose tissue
 
+**Fig. 2.**
 
-**Результаты (находки):**
-- senescent cells in liver — Fig. 3J
+*(**A**) Representative images of hematoxylin and eosin (H&E), Sirius Red, and keratin 14 (K14; mTEC marker) staining of the thymus. Black arrows indicated the medulla. c, cortex; m, medulla; sz, subcapsular zone. (**B**) Sirius Red–positive area of the thymus was measured (*n* = 5 per group). (**C**) Representative images of H&E, Sirius Red, and Sudan Black B staining of the spleen. w, white pulp; r, red pulp. (**D** and **E**) Sirius Red–positive area (D) and the number of Sudan Black B–positive cells in the hyperfield (HPF) (E) were measured (*n* = 5 per group). (**F** to **I**) Splenocytes were isolated from the spleen of 0.5- or 2.5-year-old mice and treated with a vehicle (saline; Veh) or 5 μg/ml of concanavalin A (ConA) for 24 or 48 hours (*n* = 3 per group). (F and G) Proliferation assay of splenocytes isolated from *M. musculus* (F) or *A. russatus* (G) following ConA treatment. (H and I) Comparison of ConA-induced proliferation rate between 0.5-year-old (H) or 2.5-year-old (I) *M. musculus* and *A. russatus* splenocytes. h, hours. (**J** and **K**) Quantitative real-time polymerase chain reaction (qRT-PCR) analysis for genes related to T cell proliferation, such as *Il2* (J) and *Il4* (K). a.u., arbitrary units. Scale bars, 100 μm. *Mus*, *M*. *musculus*. *Russ*, *A*. *russatus*. Data are presented as mean ± SEM. One-way ANOVA with Tukey’s multiple comparisons test was performed. **P* < 0.05, ***P* < 0.01, and ****P* < 0.001.*
 
 
-## Эксперимент: Clusterin in vivo intervention
-**Тип:** In vivo intervention  
+We next investigated the spleens to understand the comparative immune aging of C57BL/6 mice and *A. russatus*. All C57BL/6 mice were reared under a specific pathogen–free (SPF) condition, whereas *A. russatus* is maintained in a nonbarrier pathogen environment in nonventilated open cages in the Tel Aviv Zoological Research Garden. The spleens of 2.5-year-old *M. musculus* showed decompartmentalization, including loss of germinal centers, and developed fibrosis during aging, which was not observed in *A. russatus* (Fig. 2, C and D, and fig. S3C). Because the accumulation of senescent-like cells has been reported to induce dysfunction in the splenic microenvironment (35), we next explored aging-induced changes in the number of senescent-like cells in the spleen using Sudan Black B staining for lipofuscin, an aggregate of proteins and lipids that accumulate in aged cells (36). We found that Sudan Black B–positive senescent-like cells were notably increased in the spleens of 2.5-year-old *M. musculus* (Fig. 2, C and E). However, in *A. russatus*, senescent-like cells were rarely observed in the spleens of 2.5-year-old animals, and although they accumulated by 4.5 years of age, their numbers remained lower than those observed in 2.5-year-old *M. musculus* (Fig. 2, C and E).
 
-**Экспериментальные группы:**
-- Clusterin-treated aged mice — интервенций нет, наблюдательное исследование
 
-**Контрольные группы:**
-- Vehicle-treated aged mice — интервенций нет, наблюдательное исследование
+To gain functional insights into immune cell function in aging, we tested the ability of splenocytes to respond to mitogens, as it is known that with aging, the ability to produce interleukin-2 (IL-2) and proliferation declines in activated T cells (37–40). Because present reagents do not allow specific isolation of T cells and the T cell receptor (TCR) of *A. russatus* is undefined, we activated total splenocytes from young (0.5-year-old) or aged (2.5-year-old) animals with T cell mitogen concanavalin A (ConA). As expected, ConA treatment promoted the proliferation of splenocytes isolated from the young, but not aged, *M. musculus* (Fig. 2F). Splenocytes isolated from aged *A. russatus* showed a higher proliferation rate than those from young individuals, and aged splenocytes maintained ConA-induced mitogenic signals (Fig. 2G), suggesting protection from cellular senescence. When comparing age-matched samples, there were no significant differences in the proliferation rate of young splenocytes, with or without ConA stimulation, between the species (Fig. 2H). However, splenocytes from aged *A. russatus* showed a much higher proliferation rate under both conditions compared to those from aged *M. musculus* (Fig. 2I). In line with this, ConA treatment induced greater expression levels of *Il2* and *Il4* in splenocytes of *A. russatus* but not in age-matched *M. musculus* (Fig. 2, J and K). Collectively, these data suggest that *A. russatus* maintains homeostasis of lymphoid organs at both tissue and cellular levels till advanced age, suggesting protection from some of the examined features of immunological aging.
 
-**Последовательность:**
 
-1. Clusterin in vivo treatment
-   - 18-month-old mice injected with recombinant mouse clusterin (50 μg/kg) daily for 2 weeks
+### A. russatus withstands hepatic inflammaging and senescence
 
 
-**Результаты (находки):**
-- grip strength — Fig. 5D
-- fibrosis in tissues — Fig. 5F-I
-- serum IL-1β — Fig. 5J
-- age-associated B cells — Fig. 5M-N
-- M2 macrophages — Fig. 5O
-- p16/p21/γ-H2AX — Fig. 5P
+To investigate the mechanism that affects metabolic inflammaging, we analyzed the liver, a central metabolic hub in the body. Similar to the secondary lymphoid organs, the livers of *A. russatus* did not show age-related increases in hepatic ballooning, inflammation, and fibrosis, which are important phenotypes of aging observed in *M. musculus* (Fig. 3A and fig. S4, A to C). To further investigate the underlying molecular landscapes of these age-related pathologies, we performed bulk RNA sequencing (RNA-seq) of young (0.5-year-old) and aged (2.5-year-old) *M. musculus* and *A. russatus*. The total number of detected genes was comparable between the species: 13,971 genes for *M. musculus* and 12,022 genes for *A. russatus*, suggesting the reliability of the analysis pipeline. Notably, we found fewer differentially expressed genes (DEGs) during aging in the liver of *A. russatus* compared to *M. musculus* (fig. S4, D and E). Moreover, the top age-related up-regulated or down-regulated genes in the liver of *M. musculus* were not altered in *A. russatus* (Fig. 3, B and C), indicating that a unique adaptive hepatic transcriptional reprogramming occurred during aging between the species. Among the DEGs, aged *M. musculus* showed elevated expression levels of genes related to fibrosis (*Lcn2* and *Acta2*), inflammaging (*Il1b*, *Ccr2*, *Cxcl1*, and *Nos2*), and senescence (*Cdkn1a*), along with reduced levels of genes related to lipid metabolism (*Ppara*, *Mup1*, and *Acsl1*) (fig. S4F). Conversely, the liver of aged *A. russatus* exhibited up-regulation of genes such as *Bmal1* and *Tnfaip8l1*, which have been identified as important factors in maintaining homeostasis during aging and protecting against hepatic steatosis, inflammation, and fibrosis, respectively (fig. S4G) (41, 42). In addition, aged *A. russatus* also showed reduced expression levels of *Spp1* (fig. S4G), a gene encoding osteopontin, which plays a central role in the development of various chronic liver diseases (43).
 
 
-## Эксперимент: Macrophage polarization
-**Тип:** In vitro  
+**Fig. 3.**
 
-**Экспериментальные группы:**
-- Clusterin-treated aged mice — интервенций нет, наблюдательное исследование
+*(**A** to **K**) Liver tissues of 0.5- or 2.5-year-old *M. musculus* and *A. russatus* were subjected to bulk RNA-seq (*n* = 3 per group). (A) Representative high-magnification images of H&E and Sirius Red staining of the liver. Low-magnification images of the same mice can be found in fig. S4A. Black arrows indicate the inflammatory foci. CV, central vein. (B and C) The top 25 up-regulated (B) or down-regulated (C) genes in *M. musculus* during aging were unchanged in *A. russatus*. FC, fold change. *Mus*, *M. musculus*. *Russ*, *A. russatus*. (D) Scoring analysis of the mouse aging atlas pathways in both species. (E) The scores for the global aging trend genes were calculated. (F) Aging-induced expression changes in the genes associated with chronological age and mortality were analyzed. (G) An inflammatory aging clock (iAge) index was measured. (H) GSEA. Normalized enrichment score (NES) and false discovery rate (FDR). (I) Scoring of gene cluster related to CMA. (J) Representative Sudan Black B staining with the nuclear fast red counterstaining in liver tissues. Red arrows indicate Sudan Black B–positive senescent cells. The number of Sudan Black B–positive cells per HPF was measured (for *M. musculus*, *n* = 5 per group; for *A. russatus*, *n* = 15 for 0.5 years, *n* = 8 for 2.5 years, *n* = 4 for 3.5 years, and *n* = 3 for 4.5 years). (K) –Log<sub>10</sub>(FDR) values of gene sets involved in SenMayo during aging. (**L**) Representative Western blot analysis of p16 and γ-H2AX in liver tissues with quantification (*n* = 3 per group). Scale bars, 100 μm. Data are presented as mean ± SEM. Two-tailed student *t* test (E, G, I, and L) or one-way ANOVA with Tukey’s multiple comparisons test (J) was performed. **P* < 0.05, ***P* < 0.01, and ****P* < 0.001.*
 
-**Контрольные группы:**
-- Vehicle-treated aged mice — интервенций нет, наблюдательное исследование
 
-**Последовательность:**
+A recent study has generated “the Aging Atlas database,” which provides resources to explore age-related transcriptomic changes in hallmark pathways (44). We queried the gene lists from this database to examine the comprehensive picture of age-associated changes in the hepatic transcriptome in *M. musculus* and *A. russatus.* We observed that among the aging hallmarks, the inflammaging-related, “senescence-associated secretory phenotype (SASP),” and nuclear factor κB (NF-κB) gene clusters were significantly up-regulated, whereas the mitochondrial function– and nutrient sensing–related genes were down-regulated in the liver of *M. musculus* during aging (Fig. 3D). Notably, SASP response is not exclusive to senescent cells, as many SASP proteins are also secreted from activated tissue-resident immune cells to produce inflammaging (40, 45). The expression levels of SASP and NF-κB gene clusters remained unchanged till 2.5 years of age in *A. russatus* (Fig. 3D). Furthermore, nutrient sensing and proteostasis clusters were significantly up-regulated during aging in *A. russatus* (Fig. 3D). In accordance with these results, the analysis of the top up-regulated and down-regulated Gene Ontology biological process (GO_BP) identified that fibrosis- and inflammation-related pathways increased, while lipid catabolism– and mitochondrial gene expression–related pathways decreased with age in *M. musculus* (fig. S4, H to K). In addition, consistent with our data of enhanced repair capacity, in *A. russatus*, the actin assembly and wound healing processes were up-regulated, and circadian rhythm–related pathways were down-regulated with age (fig. S4, L and M). Moreover, when we analyzed gene sets that predict global aging trends (46), chronological age and mortality (47), and inflammatory aging clock (iAge) (48), we observed a significantly increased global aging trends gene (GATG) score, genes associated with chronological age and mortality (*Cdkn1a*, *Cd74*, *Lgals3*, *Gpnmb*, and *S100a6*), and the iAge index in aged *M. musculus* compared to young ones (Fig. 3, E to G). However, *A. russatus* did not show significant differences in gene sets indicative of biological aging and risk of mortality during aging (Fig. 3, E to G). The subsequent gene set enrichment analysis (GSEA) showed that the hepatic transcriptome of aged *M. musculus* was enriched with genes related to neutrophil chemotaxis and cellular response to type II interferon while showing diminished fatty acid β-oxidation and autophagy of mitochondria—none of which were altered in *A. russatus* during aging (Fig. 3H). On the basis of the impaired autophagy-related pathways in aged *M. musculus* but not in *A. russatus*, we further analyzed the gene expression pattern of chaperone-mediated autophagy (CMA), a process whose reduced activity is known to be involved in the development of aging-associated diseases (49–52). Aged *A. russatus* maintained their CMA score (53), which was significantly suppressed in *M. musculus* with age (Fig. 3I and fig. S4, N and O). Together, consistent with improved health span, these analyses revealed resilient aging responses in *A. russatus*.
 
-1. Macrophage polarization experiments
-   - BMDMs polarized to M1/M2 and treated with clusterin
 
+On the basis of the above results and the lack of age-related increase in *Cdkn1a* (encoding p21) expression in aged *A. russatus* (Fig. 3F), we hypothesized that *A. russatus* might not develop a cellular senescence–like phenotype in the liver with aging. To examine this, we stained senescent-like cells in the liver with Sudan Black B. We found that senescent-like cells were notably increased in 2.5-year-old *M. musculus* (Fig. 3J). However, in *A. russatus*, senescent-like cells were not observed until 3.5 years old, and even at 4.5 years of age, the number of senescent-like cells was significantly lower compared to 2.5-year-old *M. musculus* (Fig. 3J). To confirm this finding, we explored the changes in the expression levels of genes related to cellular senescence using the SenMayo gene set (54). By scoring the expression levels of genes in each gene set in SenMayo, we observed that genes involved in the overall SenMayo, cytokine/chemokine, (metallo-)proteases, transmembrane signal receptors, and protease inhibitor modules that indicate proinflammatory response were significantly elevated with age in *M. musculus* but not in *A. russatus* (Fig. 3K). Consistent with this finding, the hepatic p16 and γ-H2AX expression levels were significantly increased in *M. musculus* but not in *A. russatus* during aging (Fig. 3L). Together, these results demonstrate that protection from hepatic aging in *A. russatus* affects multiple hallmarks of aging, including inhibition of inflammaging and cellular senescence.
 
-**Результаты (находки):**
-- M2 macrophages — Fig. 5O
 
+### Health span convergent inflammaging mechanism of aged A. russatus cellular transcriptome
 
-## Эксперимент: Human monocyte LPS stimulation
-**Тип:** In vitro  
 
-**Экспериментальные группы:**
-- Clusterin-treated aged mice — интервенций нет, наблюдательное исследование
+Prompted by the above findings demonstrating the potential metabolic resilience of *A. russatus* against age-associated dysfunction, we next investigated age-related transcriptional changes in VAT, which expands with age and is a major source of immune cell–derived inflammation that leads to systemic metabolic impairment (55). We found that, unlike *M. musculus*, *A. russatus* was significantly protected from fibrosis in VAT, subcutaneous adipose tissue (SAT), and brown adipose tissue during aging (Fig. 4A and fig. S5, A to D). Previous analyses of long-lived species, such as the bowhead whale, Brandt’s bat, and naked mole-rat, have provided insights into their successful and unique adaptation programs, aiding in the discovery of target molecules and pathways that might extend health span and life span (56). Therefore, we next investigated the aging-related gene expression changes at the single-cell level in VAT, which is enriched in multiple resident immune cell populations that are the predominant source of inflammaging. To do this, we performed single-nucleus RNA-seq (snRNA-seq), an approach that allows examination of adipocytes and the heterogeneity of stromal vascular-immune fraction, in the VAT of *M. musculus* and *A. russatus*. Notably, we used 3.5-year-old *A. russatus* samples, which are 1 year older than the aged group for *M. musculus*, to better reflect the life stage–based comparison.
 
-**Контрольные группы:**
-- Vehicle-treated aged mice — интервенций нет, наблюдательное исследование
 
-**Последовательность:**
+**Fig. 4.**
 
-1. Human monocyte isolation and LPS stimulation
-   - CD14+CD16- monocytes from healthy donors treated with clusterin and LPS
+*(**A**) Representative high-magnification images of H&E and Sirius Red staining of VAT. Low-magnification images of the same mice can be found in fig. S5A. Scale bars, 100 μm. (**B** to **L**) VAT of 0.5- or 2.5-year-old *M. musculus* and 0.5- or 3.5-year-old *A. russatus* were subjected to snRNA-seq (each sample includes pooled VAT from three different mice). (B and C) Uniform manifold approximation and projection (UMAP) presentation of cell type annotation in *M. musculus* (B) and *A. russatus* (C). Abbreviations are adipose stem and progenitor cell (ASPC), lymphatic endothelial cell (LyEC), smooth muscle cell (SMC), dendritic cell (DC), and natural killer (NK) cell. (D) Changes in the frequencies of each cell type during aging. (E and F) Dot plots for SASP scoring across cell types in *M. musculus* (E) and *A. russatus* (F). (G and H) The top 20 up-regulated genes during aging in *M. musculus* macrophages (G) or B cells (H) were not changed in *A. russatus*. *Mus*, *M. musculus*. *Russ*, *A. russatus*. (I and J) Volcano plots indicate age-related transcriptomic changes in macrophages of *M. musculus* (I) and *A. russatus* (J). adj.*p*, adjusted *P*. (K and L) Dot plots for clusterin gene expression across cell types in *M. musculus* (K) and *A. russatus* (L).*
 
 
-**Результаты (находки):**
-- serum IL-1β — Fig. 5J
+Consistent with prior studies in mice (57), we successfully annotated diverse cell clusters in the VAT, including mature adipocytes, adipose stem and progenitor cells (ASPCs), mesothelial cells, epithelial cells, endothelial cells, macrophages, monocytes, dendritic cells (DCs), natural killer (NK) cells, T cells, B cells, smooth muscle cells (SMCs), and lymphatic endothelial cells (LyECs) in both species (Fig. 4, B and C, and fig. S5E). However, pericytes were only found in *M. musculus*, and mast cells were only detected in *A. russatus*, which may be due to the low abundance of pericytes and mast cells in VAT (Fig. 4, B and C, and fig. S5E). When we analyzed the age-associated proportional changes in each cell type, most exhibited similar patterns of expansion or reduction with age in both species (Fig. 4D). However, the transcripts defining lymphocytes (B cells, NK cells, and T cells) and epithelial cells increased in aged *M. musculus*, whereas aged *A. russatus* showed decreased frequencies of these populations (Fig. 4D). The difference was observed in B cells, where the IL-1 receptor (IL-1R) signaling–mediated expansion of aged adipose B cells (AABs) was associated with aging-related impairment in immune-metabolic homeostasis (58). The expression levels of T-box expressed in T cells (T-bet, encoded by *Tbx21* gene), a marker of AABs, and inflammatory genes (*Il1a*, *Il1b*, *Il6*, *Tnf*, and *Il11*) were notably induced with age in major cell types of *M. musculus* (fig. S5, F and G). In contrast, aged *A. russatus* showed lower or comparable expression levels of these genes relative to the young ones (fig. S5, F and G). These data demonstrate that *A. russatus* efficiently rewires the adipose microenvironment to limit inflammaging and metabolic dysfunction.
 
 
-## Гипотеза
+Because chronic low-grade inflammation and cellular senescence are interlinked (2), we analyzed the expression levels of genes related to these pathways in diverse cell types in the VAT. The scoring analysis of genes involved in SASP or inflammaging-associated secretory phenotype (IASP) showed increased SASP or IASP score with age in almost all of the cell types in *M. musculus* (Fig. 4E). In contrast, although we used 1-year older *A. russatus* (3.5 years) than *M. musculus* (2.5 years), cells in the VAT of aged *A. russatus* maintained a comparable SASP or IASP score except for a modest increase in ASPCs (Fig. 4F). Consistent with this, we found that *Cdkn1a* expression was higher, and more cells expressed it across cell types, except DCs, in aged *M. musculus* compared to young ones (fig. S5H). However, in both young and aged *A. russatus*, *Cdkn1a* expression was lower across clusters; notably, its expression was slightly reduced in macrophages with age (fig. S5I). Moreover, unlike *M. musculus*, T cells in *A. russatus* did not exhibit an age-associated increase in markers for regulatory T cells (T<sub>reg</sub> cells) (*Foxp3*) and exhaustion (*Ctla4*, *Lag3*, and *Tigit*) (fig. S5J). These results indicate a delayed inflammaging-associated senescence-like phenotype in the VAT of *A. russatus*.
 
-- **Гипотеза:** A. russatus resists age-related functional decline through elevated clusterin that restrains inflammaging and enhances health span.
-  - Обоснование: If clusterin elevation is not causal, supplementation would not improve health span.
 
+To identify and harness potential targets that drive enhanced function and resilience to aging in *A. russatus*, we first compared the differentially regulated pathways in each cell type during aging. In *M. musculus*, as expected, we observed reduced fatty acid metabolism in adipocytes and up-regulated response to inflammatory signals in monocytes (fig. S6, A and B). However, in *A. russatus*, pathways related to protein translation and small guanosine triphosphatase signaling were enriched in adipocytes or monocytes, respectively (fig. S6, A and B). Next, we analyzed the differential expression of the top 20 up-regulated genes in *M. musculus* during aging across major cell types. We found that most of the up-regulated genes in *M. musculus* remained unchanged or were not increased in diverse cell types in *A. russatus* (Fig. 4, G and H, and fig. S6, C to F). Considering the lower inflammatory and fibrotic signatures in *A. russatus* and the central role of tissue-resident macrophages in inflammaging, we further analyzed the DEGs in these cells in detail. We found that macrophages in aged *M. musculus* showed significantly elevated expression of genes related to the classical and lectin pathways of the complement system (*C6* and *C4b*), which is one of the hallmarks of inflammaging (40, 59), while the expression of genes associated with the alternative pathway of complement system (*Cfd*), mitochondria (*mt*-*Atp6* and *mt*-*Co2*), and *Retnla* was reduced in aged compared to the young controls (Fig. 4I). In contrast, the macrophages of aged *A. russatus* exhibited higher expression levels of genes related to the chondroitin sulfate metabolic process, β-hexosaminidase (*Hexb*), which is known to remodel extracellular matrix and extend life span in *Caenorhabditis elegans* and is associated with reduced mortality in older adults (60, 61). In addition, *A. russatus* macrophages expressed lower proinflammatory genes [*Fabp4* (62) and *Fth1* (63)] with age (Fig. 4J). In the VAT of aged *A. russatus*, the macrophages highly expressed clusterin (*Clu*) (Fig. 4J). Notably, compared to young animals, the gene expression of clusterin was up-regulated across cell types in aged *A. russatus* but not in older *M. musculus* (Fig. 4, K and L). In line with this, integrated proteomics analysis of various human tissues (64, 65) identified that adipose tissue has the highest clusterin expression (fig. S6G). Clusterin, also known as apolipoprotein J, is a heterodimeric glycoprotein that has chaperone-like activity, which aids the clearance of misfolded proteins (66). Clusterin is involved in lipid transport; it binds and inhibits complement and membrane attack complex (MAC; C5b-9), lowers airway inflammation by interfering with the recruitment of DCs, prevents neuroinflammation and associated synapse loss, and promotes cell survival (66–70), raising the possibility that the elevation of clusterin in adipose tissues of long-lived aged *A. russatus* drives mechanisms that promote health span.
 
-## Животная модель
 
-- **Acomys russatus**
-  - Временная шкала: up to 4.5 years in captivity
-  - Условия: non-SPF, outdoor housing
-- **Acomys dimidiatus**
-  - Временная шкала: up to 3.5 years
-  - Условия: non-SPF, outdoor housing
-- **Mus musculus (C57BL/6N)**
-  - Временная шкала: 2.5 years
-  - Условия: SPF, standard laboratory
+### Clusterin is an immunometabolic resistor of inflammaging and senescence
 
 
-## Действие
+Recent comprehensive transcriptomic analysis of mammals allows us to predict the relationship between maximum life span and the expression levels of genes of interest (56). Using this database, we found that the gene expression levels of clusterin in the liver, brain, and kidney were positively associated with the maximum life span of multiple orders of mammals and also include marsupials in Diprotodontia (Fig. 5A). Notably, the circulating concentration of clusterin is also found to be increased in patients with Alzheimer’s disease, while patients who have a single-nucleotide polymorphism that enhances clusterin expression or mice that have elevated clusterin through exercise or genetic overexpression exhibit reduced neuroinflammation (68, 69, 71). In support of the hypothesis that the increase in clusterin is an enantiostatic or hormetic response, overexpression of human clusterin in *Drosophila* extends life span (72). Consistent with the role of clusterin in longevity, the analysis of multicohorts unbiased plasma proteomics in humans (73) identified that clusterin concentrations are significantly increased in centenarians compared to younger (21 to 40 years old) and older adults (76 to 89 years old) (Fig. 5B). However, the gene expression levels of clusterin were not increased with age in multiple tissues of *M. musculus* (fig. S7A) (74). These results support the hypothesis that the elevation of clusterin in centenarians, long-lived species, and *A. russatus* could be an adaptive response that may limit the age-associated cellular or organismal damage.
 
-- clusterin → suppresses → inflammaging
-- aging → drives → inflammaging
-- clusterin → enhances → health span
 
+**Fig. 5.**
 
-## Блок 58
+*(**A**) The correlation between clusterin expression and maximum life span in various species was analyzed using phylogenetic regression. (**B**) Plasma proteomics of multicohorts of human participants (from 21 to >100 years old) were analyzed by the SomaScan assay. (**C** to **P**) Eighteen-month-old male C57BL/6N mice were intraperitoneally injected with vehicle (saline) or recombinant mouse clusterin (50 μg/kg) for 2 weeks (*n* = 13 per group). (C) Schematic summary for the experiments. (D and E) Health span analyses were conducted. Forelimb grip strength (D) and rotarod (E) tests. (F to I) The representative H&E and Sirius Red staining images with quantification in the gastrocnemius muscle (F), SAT (G), spleen (H), and liver (I). PT, portal vein. Scale bars, 100 μm. (J) Serum IL-1β, IL-6, and tumor necrosis factor–α (TNF-α) levels. (K) Serum monocyte chemoattractant protein-1 (MCP-1) levels. (L) qRT-PCR analysis for chronological age– and mortality-associated genes in the liver (*n* = 6 per group). (M to O) Flow cytometry analysis of spleen age-associated B cells (ABCs; M), VAT AABs (N), and VAT M1- or M2-like macrophages (O) (for spleen, *n* = 13 per group, and for VAT, *n* = 10 per group). (P) Representative Western blot analysis of liver tissues (*n* = 5 per group). (**Q**) Peripheral blood monocytes were isolated from healthy donors and treated with indicated doses of recombinant human clusterin for 1 hour, followed by an indicated duration of lipopolysaccharide (LPS; 1 μg/ml). IL-1β and IL-18 levels in culture supernatants were measured after 24 hours (*n* = 5 per group) of LPS treatment. gf, grams-force. FSC-A, forward scatter-A. Data are presented as mean ± SEM. Two-tailed student *t* test (D to O) or one-way ANOVA with Tukey’s multiple comparisons test (B and Q) was performed. **P* < 0.05, ***P* < 0.01, and ****P* < 0.001. (C): Created in BioRender. V. Dixit (2026); [https://BioRender.com/m2sdy6s](https://BioRender.com/m2sdy6s).*
 
-- aging | inflammaging | causes | high | aging increases inflammatory markers
-- clusterin | inflammaging | inhibits | high | clusterin reduces cytokines
-- clusterin | health span | enhances | high | clusterin improves grip strength
-- inflammaging | cellular senescence | causes | medium | inflammation drives senescence
-- A. russatus | aging resistance | enables | high | maintains youthful transcriptome
-- clusterin | MAC formation | inhibits | high | clusterin binds complement
-- clusterin | M2 macrophages | enhances | high | increases M2 frequency
-- clusterin | AABs | suppresses | high | reduces age-associated B cells
-- CMA | aging resistance | enables | medium | maintained CMA score
-- senescence | functional decline | causes | high | senescence impairs function
-- A. russatus | senescence | inhibits | high | reduced p16 and senescent cells
-- A. russatus | fibrosis | inhibits | high | reduced fibrosis in tissues
-- A. russatus | circadian disruption | inhibits | medium | maintains activity patterns
-- clusterin | IL-1β | suppresses | high | reduces IL-1β in serum
-- clusterin | IL-6 | suppresses | high | reduces IL-6 in serum
-- clusterin | TNF-α | suppresses | high | reduces TNF-α in serum
-- A. russatus | transcriptional integrity | enables | high | fewer DEGs with age
-- A. russatus | regenerative capacity | enhances | high | better earhole closure
-- A. russatus | thymic involution | inhibits | high | maintains thymic architecture
-- A. russatus | splenic senescence | inhibits | high | fewer Sudan Black B cells
-- A. russatus | hepatic senescence | inhibits | high | reduced p16 and γ-H2AX
 
+To test this hypothesis, we conducted in vivo experiments using aged (18-month-old) male C57BL/6 mice, which were randomized to receive either vehicle (VEH) or recombinant mouse clusterin (CLU) intraperitoneally for 2 weeks daily (Fig. 5C). At euthanasia, we confirmed that the serum clusterin concentration was significantly increased by the experimental clusterin treatment protocol (fig. S7B). Clusterin administration enhanced measures of health span in aged mice, such as grip strength and latency to fall in rotarod tests, compared to VEH controls, without affecting the body weight (Fig. 5, D and E, and fig. S7C). Furthermore, consistent with reduced fibrosis in *A. russatus*, elevation of clusterin in aged C57BL/6 mice reduced fibrosis in the gastrocnemius muscle, SAT, spleen, and liver (Fig. 5, F to I), demonstrating protective effects of clusterin against age-related functional decline and organ damage.
 
-## Блок 59
 
-- 00065966-ea98-83eb-b0f0-5e3fa66880a7 | 00065966-ea98-83eb-9cdc-4db6866abb27 | precedes
-- 00065966-ea98-83eb-9cdc-4db6866abb27 | 00065966-ea98-83eb-8545-b2d1ec93deee | precedes
-- 00065966-ea98-83eb-a8e8-534370670aaa | 00065966-ea98-83eb-8545-b2d1ec93deee | precedes
-- 00065966-ea98-83eb-befe-a3e62cfaa3cd | 00065966-ea98-83eb-8282-6d4ea95317d9 | precedes
-- 00065966-ea98-83eb-8dcd-6b623885c5a0 | 00065966-ea98-83eb-b9b9-37a9dc97a08b | precedes
+We next investigated the mechanism of the health span–promoting effects of clusterin. Consistent with the previous studies that demonstrated the inhibitory role of clusterin on MAC formation (69, 70), we found that elevation of clusterin in old mice suppressed the soluble MAC concentration, along with the reduction in circulating proinflammatory cytokines IL-1β, IL-6, and tumor necrosis factor–α (TNF-α) that are known to drive inflammaging (Fig. 5J and fig. S7, D to F) (40, 75). In addition, clusterin significantly reduced serum concentrations of monocyte chemoattractant protein-1 (MCP-1), but not growth-regulated oncogene-α/keratinocyte chemoattractant (GRO-α/KC), suggesting that clusterin may repress monocyte infiltration in tissues (Fig. 5K and fig. S7G). Consistent with this, compared to VEH-treated controls, the expression levels of proinflammatory genes (*Il1b* and *Tnf*) were reduced, but anti-inflammatory gene (*Il4*) was elevated in the liver, VAT, and SAT of clusterin-administered old mice (fig. S7, H to J). Moreover, clusterin administration in aged mice also decreased hepatic expression levels of genes previously associated with chronological age and mortality (Fig. 5L).
 
 
-## Сущность
+To investigate the effects of clusterin on the progression of inflammaging in detail, we analyzed AABs, T<sub>reg</sub> cells, proinflammatory (M1)–like or anti-inflammatory (M2)–like macrophages, splenic age-associated B cells (ABCs), and splenic naïve and effector/memory T cells, as their alterations represent hallmarks of inflammaging (fig. S8, A to D) (40, 58, 76–78). We found that recombinant clusterin treatment significantly reduced the numbers and frequencies of spleen ABCs and VAT AABs, and frequencies of VAT M1-like macrophages and VAT T<sub>reg</sub> cells, while increasing the numbers and frequencies of VAT M2-like macrophages in aged male mice (Fig. 5, M to O, and fig. S9, A to D). Meanwhile, in the spleen, the numbers and frequencies of naïve CD4 and CD8 T cells, effector/memory CD4 and CD8 T cells, M1- and M2-like macrophages, and T<sub>reg</sub> cells remained unchanged (fig. S9, E to H). Consistent with results from *A. russatus*, elevation of clusterin in aged mice reversed the age-related increase of hepatic p16, p21, and γ-H2AX, proteins implicated in controlling cellular senescence–driven organismal aging (Fig. 5P and fig. S9I).
 
-- clusterin → is → apolipoprotein J
-- inflammaging → is → chronic sterile inflammation
-- A. russatus → is → golden spiny mouse
-- A. dimidiatus → is → eastern spiny mouse
-- SASP → is → senescence-associated secretory phenotype
 
+Given these results from in vivo experiments, we further examined whether the anti-inflammaging effects of clusterin were cell autonomous in macrophages. To do this, we polarized the bone marrow–derived macrophages (BMDMs) with M1- or M2-like conditions. We found that clusterin showed a tendency to decrease *Il1b* expression in M1-like BMDMs but did not significantly regulate the expression levels of proinflammatory genes (*Nos2*, *Il1b*, and *Tnf*) (fig. S9J). In contrast, clusterin treatment significantly induced the expression levels of anti-inflammatory genes (*Retnla*, *Il4*, and *Il10*) that are implicated in enhanced tissue repair in both M1- and M2-polarized BMDMs (fig. S9K). Consistent with these results in BMDMs, clusterin treatment elevated the frequency of reparative M2-like macrophages without altering M1-like macrophages in the VAT (fig. S9L). We next asked whether this anti-inflammatory effect of clusterin can also be translated to human cells. To test this, we isolated peripheral blood monocytes from healthy donors and examined the effects of clusterin on lipopolysaccharide (LPS)–induced inflammatory responses. We observed significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-1β and IL-18 production by clusterin treatment in human monocytes (Fig. 5Q and fig. S9M). Given that the highest dose of clusterin (10 μg/ml) used was lower than the circulating concentration of healthy individuals (around 100 μg/ml) (71, 79), our findings indicate that clusterin could restrain inflammaging both in mice and in humans. Together, these data suggest that elevation of clusterin successfully extends health span and restrains inflammaging via reducing VAT AABs and increasing anti-inflammatory macrophages, similar to what was observed in the snRNA-seq of aged *A. russatus*.
 
-## Определение понятия
 
-- **inflammaging** — Chronic low-grade inflammation associated with aging
-- **adaptokine** — Secreted protein up-regulated as adaptive response to maintain homeostasis
-- **CMA** — Chaperone-mediated autophagy
+## DISCUSSION
 
 
-## Утверждение
+Here, we report unique hallmarks of resilient aging of *A. russatus*, the golden spiny mouse, across its life span at functional, organismal, and molecular levels. Our results revealed that compared to *A. dimidiatus*, *A. russatus* retained high tissue repair capacity, reduced frailty with lower inflammaging, fibrosis, cellular senescence, and youthful transcriptome even beyond 4 years (Fig. 6). Given that our *A. russatus* cohort was outbred and reared under non-SPF conditions, this model could be especially relevant for the identification of biomedically relevant mechanisms of health and longevity that are typically obscured in standard genetically identical laboratory mice.
 
-- **A. russatus** is **protected from age-related functional decline**
-  - Уверенность: Based on behavioral and molecular data
-- **clusterin** enhances **health span**
-  - Уверенность: In vivo supplementation in aged mice
-- **clusterin** inhibits **inflammaging**
-  - Уверенность: Reduces cytokines and MAC
-- **A. russatus** maintains **transcriptional integrity**
-  - Уверенность: Fewer DEGs with age
-- **A. russatus** has **elevated clusterin**
-  - Уверенность: snRNA-seq and proteomics
-- **A. russatus** resists **cellular senescence**
-  - Уверенность: Reduced p16 and senescent cells
-- **A. russatus** is **model for aging research**
-  - Уверенность: Close to Mus musculus
 
+**Fig. 6.**
 
-## Биологический механизм
+*Compared to congeneric *A. dimidiatus* or *M. musculus*, *A. russatus* (golden spiny mice) exhibits resistance to aging, including an extended life span in the wild, retained regenerative capacity, and preserved motor and muscular function, as well as reduced immunological aging and fibrosis. Mechanistically, aged *A. russatus* has high clusterin expression, CMA, and transcriptomic resilience, with lower age-associated disruption of the circadian rhythm, chronic inflammation, and cellular senescence compared to the other two rodent species. The same picture of a golden spiny mouse from the aged (2.5 years) group shown in Fig. 1C was used. Created in BioRender. V. Dixit (2026); [https://BioRender.com/693vuke](https://BioRender.com/693vuke).*
 
-- **Механизм:** Clusterin inhibits MAC formation, reduces proinflammatory cytokines, and promotes M2 macrophage polarization, thereby restraining inflammaging.
 
+How does *A. russatus* resist functional decline in advanced age? Although the exact mechanisms have not yet been fully elucidated and are likely multifactorial, one possible hypothesis is that competition with *A. dimidiatus* (a nocturnal species) for limited resources allows *A. russatus* to switch to diurnal or crepuscular activity, exposing it to extreme harsh desert conditions and resulting in unique adaptations (14–17, 20–22, 80). Daytime environments in deserts are harsher and have higher temperatures and radiation, which drives *A. russatus* to develop its unique metabolic and water economy features, enabling it to tolerate these conditions over an evolutionary timescale (14–17, 20–22, 81).
 
-## Статистическая обработка
 
-- **Статистическая обработка:** Two-tailed Student's t-test for two groups; one-way ANOVA with Tukey's multiple comparisons for >3 groups
-  - Сопоставление с ожиданиями: P<0.05 considered significant
+A finding of immune system adaptation of *A. russatus* was the maintenance of functional thymic architecture till 4 years of age. Notably, the thymi of *A. russatus* were protected from lipoatrophy and involution, similar to naked mole-rat and long-lived fibroblast growth factor 21 (FGF21) transgenic mice that maintain naïve T cell repertoire till advanced age (82–84). Consistent with these results, age-related loss of proliferation of splenocytes in response to T cell mitogens was mitigated in *A. russatus*, suggesting better T cell responses. However, the underlying mechanisms require further study. In addition, given the current lack of specific CD markers and validated reagents in *A. russatus*, the improvement of TCR repertoire and antigen-specific responses of this aging-resilient species remains to be established. Notably, maintenance of splenic germinal centers in aged *A. russatus* further supports delayed immunological aging. Unlike the naked mole-rat, which does not develop cancer till advanced age (85), the resistance to neoplasms in *A. russatus* is not substantiated. However, the naked mole-rat lacks NK cells (86), a critical arm of the immune system in humans. Notably, the snRNA-seq of *A. russatus* revealed the presence of all key immune cell subtypes, supporting investigation of mechanisms biomedically relevant to immune resilience in aging, including tissue regeneration.
 
 
-## Ограничения исследования
+The elevation of clusterin in aged *A. russatus* and supplementation of clusterin in aged mice revealed inhibition of inflammaging as one of the major mechanisms that may drive health span. Clusterin is a heterodimeric secreted glycoprotein that is highly conserved throughout species (87). It binds apolipoprotein E receptor 2 (ApoER2) and very-low–density lipoprotein receptor (VLDLR) and has chaperone-like activity, thus may regulate aging-related pathways in a pleiotropic manner (66, 88). Our data that clusterin enhances health span by lowering inflammaging are consistent with recent studies that demonstrate the protective effects of clusterin in Alzheimer’s disease (68). Therefore, the increase in *Clu* expression in aged *A. russatus* might be a hormetic response during aging, helping to maintain its health. We posit that clusterin is an “adaptokine,” one of several secreted proteins that are up-regulated as an adaptive response against cellular and organismal perturbations to maintain immunometabolic homeostasis. The growth differentiation factor 15 (89) and FGF21 (84, 90, 91) are additional proteins that may function as adaptokines in aging. Future studies to identify and characterize adaptokines may reveal mechanisms that drive interorgan communications and maintenance of homeostasis across the life span, thus allowing identification of potential therapeutic targets for age-associated diseases.
 
-- Maximal life span of A. russatus unknown; husbandry differences between Acomys and Mus; limited sample sizes for sex-specific analysis
 
+A recent study reports that the overexpression of endogenous clusterin in hematopoietic stem cells enhances mitochondrial fusion and drives myeloid bias, which potentially contributes to chronic inflammation in aged mice (92, 93). These findings indicate that the cytosolic clusterin has different mechanisms of action from the secreted form (94). In neuronal cells, the binding of clusterin to ApoER2 and VLDLR induces a reelin-like signaling cascade, including the phosphorylation of disabled-1 (Dab1) and its downstream effectors, such as Crk, C3G, and Rap1 (88). Further studies defining the exact molecular mechanisms underlying the protective functions of secreted clusterin on inflammaging could provide insights into the extended health span in *A. russatus*, and the elevation of clusterin bioavailability could be an important strategy against aging-related diseases that are driven by chronic inflammation.
 
-## Побочные выводы/гипотезы
 
-- A. russatus has unique adaptations to diurnality and starvation; clusterin expression correlates with maximum life span across mammals
+The difference in husbandry and diet between *Acomys* and *M. musculus* likely confers distinct microbiome compositions and changes, which may influence organismal immunometabolism and aging-related pathologies (95). A future comparative analysis of microbial species in these rodent models might help identify potential beneficial microbes or microbial metabolites in aging.
 
 
-## Новизна
+A limitation of the current study is that, although we endeavored to analyze the health span of *A. russatus* comprehensively and reported an individual that lived in the wild for more than 3 years and in captivity for more than 4 years, the maximal life span of this species remains unclear. A previous study reported that both sexes of *A. dimidiatus* live up to 5 years in captivity (96). However, that study was not conducted under pathogen-free and thermally regulated conditions; thus, the animals were exposed to seasonal temperature variations, resulting in the highest mortality rates during winter (96). Therefore, a future well-controlled study to explore the maximal life span of *A. russatus* would be important for the unique aging biology of this species. In addition, although we did our best to set up the aging cohort of *Acomys* and *Mus* and to comprehensively characterize them, it was challenging to have enough mice to perform sex-specific analysis, particularly for animals with advanced age. In addition, some analyses were performed in the age-matched samples because of the limited sample availability. Moreover, the *Mus* cohorts were maintained under standard laboratory conditions, which are vastly different from *Acomys*. However, despite differences in pathogen burden, multiple analyses showed that compared to 2.5-year-old laboratory mice, the 4.5-year-old *A. russatus* exhibited better protection against age-associated inflammaging, fibrosis, and cellular senescence. Together, our findings introduce *A. russatus* as a model organism for the investigation and identification of targets, such as clusterin, which drive resilience to organismal age-related functional decline.
 
-- **Новизна:** First comprehensive study of aging resilience in A. russatus, identifying clusterin as a key immunometabolic resistor
 
+## MATERIALS AND METHODS
 
-## Предложения для будущих исследований
 
-- Identify adaptokines; analyze microbiome; determine maximal life span; define molecular mechanisms of clusterin
+### Animals
 
 
-## Связи с предыдущими исследованиями
+Both *Acomys* species (*A. russatus* and *A. dimidiatus*) originated from a colony at Tel Aviv University Zoological Research Garden, descendants of animals trapped in the Judean Desert. Animals were housed in large cages (70 cm by 50 cm by 65 cm) outdoors with running wheels and shelters, under non–pathogen-free conditions from 2018 to 2023. Mice were grouped in cages by sex, species, and birth year (*n* = 10 to 12 per cage), with RFID pit tags implanted for identification. Once a year (for activity patterns) and 2 months before the behavioral experiments in 2022, all animals were transferred indoors to non–pathogen-free controlled conditions and housed individually, with a 12:12-hour light/dark cycle and an ambient temperature of 29°C for *A. russatus* and 25°C for *A. dimidiatus* (lower critical temperature). Each *Acomys* was held in a separate room. All *Acomys* were euthanized from February to March 2023 between 8:00 a.m. to 12:00 p.m. Number of mice in each group is as follows: for *A. dimidiatus*, *n* = 13 for 0.5 years, *n* = 18 for 1.5 years, and *n* = 9 for >2.5 years; and for *A. russatus*, *n* = 23 for 0.5 years, *n* = 23 for 1.5 years, *n* = 13 for 2.5 years, and *n* = 10 for >3.5 years. *M. musculus* (C57BL/6N) was supplied by the National Institute on Aging (NIA) and maintained under SPF conditions at Yale School of Medicine with ventilated cage racks. All animal use was approved by the Institutional Animal Care and Use Committee at Tel Aviv University (TAU-LS-IL-2303-121-4) or Yale University (11572). Mice were fed either standard rodent chow (*Acomys*) or standard vivarium chow (Harlan 2018s) (*M. musculus*) diet ad libitum with free access to water and housed under a 12-hour light/dark cycle. For clusterin in vivo experiments, 18-month-old male mice were randomly assigned to treatment groups on the first day of the experiment. The sample sizes were determined by prior experience. For *Acomys*, all available mice were used at the time of experiments, with none excluded from the study. All animal experiments followed ARRIVE guidelines 2.0 (97).
 
-- Hamilton (6), Aging Atlas (44), iAge (48), SenMayo (54), etc.
 
+### Behavioral tests
 
-## Источники финансирования
 
-- **Финансирование:** National Research Foundation of Korea (RS-2024-00412002), Israel Science Foundation (2129/20), Yale intramural, Yale Waldemar Von Zedtwitz chair, Yale murine-TMC (U54AG079759), NIA intramural
+In 2022, *Acomys* of varying ages (0.5 to more than 3.5 years) underwent a series of behavioral tests. Each *Acomys* in this study completed the behavioral assessments once in their lifetime, and all the mice were examined on the same week, following this sequence:
 
 
-## Прямой триплет
+1) Beam walking test: Before testing, mice were weighed and placed at one end of a waterproof-painted wooden beam (length: 33.45 cm; width: 4 cm; thickness: 0.5 cm; height: 36.5 cm) and had 60 s to reach the opposite end. Mice that fell off or failed to move were immediately retested, and the time to reach the platform was recorded. Number of mice analyzed is as follows: for *A. dimidiatus*, *n* = 7 and *n* = 5 for 0.5-year males and females, *n* = 8 and *n* = 6 for 1.5-year males and females, and *n* = 4 and *n* = 1 for >2.5-year males and females; and for *A. russatus*, *n* = 11 and *n* = 12 for 0.5-year males and females, *n* = 12 and *n* = 9 for 1.5-year males and females, *n* = 6 and *n* = 6 for 2.5-year males and females, and *n* = 5 and *n* = 4 for >3.5-year males and females.
 
-- A. russatus → is → golden spiny mouse
-- A. dimidiatus → is → eastern spiny mouse
-- clusterin → is → apolipoprotein J
-- inflammaging → is → chronic low-grade inflammation
-- A. russatus → has → elevated clusterin
-- clusterin → is → apolipoprotein J → inhibits → MAC formation
-- clusterin → is → apolipoprotein J → reduces → IL-1β
-- clusterin → is → apolipoprotein J → increases → M2 macrophages
-- A. russatus → maintains → thymic architecture
-- A. russatus → has → fewer senescent cells
-- A. russatus → shows → reduced fibrosis
-- A. russatus → preserves → motor function
-- A. russatus → resists → circadian disruption
-- A. russatus → has → higher CMA score
-- clusterin → is → apolipoprotein J → correlates with → maximum life span
-- A. russatus → is → closely related to Mus musculus
-- A. russatus → lives → up to 4 years in wild
-- A. russatus → has → regenerative capacity
-- clusterin → is → apolipoprotein J → suppresses → age-associated B cells
-- clusterin → is → apolipoprotein J → reduces → p16 expression
+
+2) Four-limb wire hanging test: Mice were placed on a wire grid (length: 44 cm; width: 30 cm; density: 0.5 cm × 0.5 cm) attached to a metal frame (length: 50 cm; width: 36 cm; thickness: 3 cm) and flipped onto two metal poles (height: 42 cm) for up to 2 min. Measurements included latency on the grid and freezing behavior, recorded by the ezTrack Freezing program (98). Mice that fell off were retested after a 5-min rest. Number of mice analyzed is as follows: for *A. dimidiatus*, *n* = 7 and *n* = 5 for 0.5-year males and females, *n* = 6 and *n* = 9 for 1.5-year males and females, and *n* = 4 and *n* = 3 for >2.5-year males and females; and for *A. russatus*, *n* = 11 and *n* = 12 for 0.5-year males and females, *n* = 11 and *n* = 11 for 1.5-year males and females, *n* = 6 and *n* = 6 for 2.5-year males and females, and *n* = 5 and *n* = 5 for >3.5-year males and females. The following parameters were used in the ezTrack Freezing program:
+
+
+For *A. russatus*: motion threshold (mt) cutoff = 60, FreezeThresh = 80, minFreeze = 15.
+
+
+For *A. dimidiatus*: mt cutoff = 45, FreezeThresh = 60, minFreeze = 30.
+
+
+3) T maze (spontaneous alternation test): Mice were placed in a T-shaped maze (height: 51 cm) with an open start arm and two closed choice arms (30 cm × 8 cm), each enclosed by walls (height: 20 cm; width: 0.2 cm). One choice arm had a black floor, while the other had a white coroplast floor. Mice were given up to 120 s to choose between black and white arms. Once the mouse entered one of the arms with all four paws, it was confined in that arm. After 30 s, mice were returned to the start arm for a second choice. Recorded metrics included the percentage of mice alternating choice and the time taken for the first and second decisions. Number of mice analyzed is as follows: for *A. dimidiatus*, *n* = 7 and *n* = 5 for 0.5-year males and females, *n* = 7 and *n* = 9 for 1.5-year males and females, and *n* = 3 and *n* = 4 for >2.5-year males and females; and for *A. russatus*, *n* = 11 and *n* = 12 for 0.5-year males and females, *n* = 11 and *n* = 11 for 1.5-year males and females, *n* = 6 and *n* = 5 for 2.5-year males and females, and *n* = 5 and *n* = 4 for >3.5-year males and females.
+
+
+4) Open field test: The mouse’s conflicting motivations to explore versus avoid the center of a circular arena (100 cm in diameter) over 10 min were evaluated. In addition, the distance traveled by the mice in the arena served as a measure of their motor skills. ezTrack analysis (98) recorded time spent in the center (15.5-cm diameter) versus periphery, total distance traveled, central distance ratio, frequency of center entries, and the number of rearing behaviors, where the mouse placed at least one paw on the wall without chewing it. Number of mice analyzed is as follows: for *A. dimidiatus*, *n* = 8 and *n* = 5 for 0.5-year males and females, *n* = 7 and *n* = 10 for 1.5-year males and females, and *n* = 4 and *n* = 4 for >2.5-year males and females; and for *A. russatus*, *n* = 11 and *n* = 12 for 0.5-year males and females, *n* = 12 and *n* = 11 for 1.5-year males and females, *n* = 6 and *n* = 7 for 2.5-year males and females, and *n* = 5 and *n* = 5 for >3.5-year males and females. The parameters used in the ezTrack program were as follows:
+
+
+loc_thresh: 99.5; use_window: True; window_size: 200; window_weight: 0.9; method: ‘dark’; rmv_wire: True; wire_krn: [value not provided].
+
+
+5) Novel object test: Mice were placed in a bedding-filled cage (height: 37 cm; width: 34.5 cm; length: 53 cm) with identical sand-filled bottles (height: 12 cm; length and width: 7 cm; sealed with black tape) for 5 min. After that, mice were moved to a different cage for 5 min and then returned to the original cage for another 5 min. During this second session, one of the sand bottles (a familiar object) remained, while a colorful, cubic Lego structure (a novel object; height: 11 cm, length and width: 6.5 cm) replaced the other bottle. The test was alternated between two mice from the same home cage. While one mouse rested in the holding cage, the other was tested. After each trial, all objects were cleaned with a 70% ethanol solution, and visible stools were removed. Every two mice, the cage was refreshed with new bedding and cleaned with ethanol. Mice did not share bedding with mice from different home cages. The objects (bottle and Lego) were randomly positioned to avoid any side bias in the mice’s investigation behavior. Mice were excluded from the analysis if they investigated the objects for less than 30 s in total, examined only one object, or stayed in the box for less than 4 min and 30 s. Time investigating each object was recorded, with exclusions for insufficient investigation time or one-sided examination. Number of mice analyzed is as follows: for *A. dimidiatus*, *n* = 8 and *n* = 4 for 0.5-year males and females, *n* = 8 and *n* = 9 for 1.5-year males and females, and *n* = 2 and *n* = 3 for >2.5-year males and females; and for *A. russatus*, *n* = 9 and *n* = 11 for 0.5-year males and females, *n* = 11 and *n* = 11 for 1.5-year males and females, *n* = 5 and *n* = 6 for 2.5-year males and females, and *n* = 5 and *n* = 5 for >3.5-year males and females.
+
+
+The following measurements were taken: (i) the ratio of time spent investigating the left sand bottle versus the right sand bottle during the first trial (a ratio of 1 indicated equal investigation of both objects, while a ratio less than 1 indicated a preference for the right bottle); (ii) the ratio of time spent investigating the novel object versus the familiar object (a ratio of 1 indicated equal investigation of both, while a ratio less than 1 indicated a preference for the familiar object). Mice were considered to be investigating an object when their nose was directed at the center of the object with no more than a 2-cm gap between the nose and the object. Behaviors not considered investigative include chewing, climbing on the object, having the nose parallel to the object, or remaining stationary for more than 3 s.
+
+
+Each behavioral test, except the first two, was conducted on separate days with at least a 24-hour rest period without training sessions or habituation. All tests were recorded from above and timed with a stopwatch. Before each test, the platform and equipment were cleaned with a 70% ethanol solution to eliminate residual odors. Two researchers observed the tests and carried them out between 8:00 a.m. and 5:00 p.m., ending an hour before sunset.
+
+
+For the activity pattern measurement, the animals were transferred indoors 1 week after the experiments every year. The daily activity was monitored continuously using infrared motion detectors (intrusion detector model MH10, Crow Electronic Engineering Ltd., Kiryat Teufa, Israel) connected to a computer to follow activity rhythms. Data were collected at 6-min intervals using software designed for this purpose (I.C.P.C., Netanya, Israel). For *A. dimidiatus*, *n* = 41 for 0.5 years, *n* = 37 for 1.5 years, and *n* = 41 for >2.5 years; and for *A. russatus*, *n* = 27 for 0.5 years, *n* = 30 for 1.5 years, *n* = 17 for 2.5 years, and *n* = 12 for >3.5 years.
+
+
+### Ear punch regeneration
+
+
+After completing the behavioral tests, mice were anesthetized with isoflurane in an airtight container (100% oxygen with 3 to 3.5% isoflurane initially and then reduced to 2.5%). A 4-mm ear punch was made using a caliper. Because of ear tearing, mice were individually housed starting in week 2. Every 7 days, the ear punch area was measured under anesthesia, and the average area was calculated for each age and sex group. For *A. dimidiatus*, *n* = 8 males and *n* = 16 females for 0.5 years, *n* = 8 for males and *n* = 9 for females for 1.5 years, and *n* = 3 males and *n* = 4 females for >2.5 years; and for *A. russatus*, *n* = 10 males and *n* = 11 females for 0.5 years, *n* = 11 for males and *n* = 11 for females for 1.5 years, *n* = 6 males and *n* = 6 females for 2.5 years, and *n* = 5 for males and *n* = 5 for females for >3.5 years.
+
+
+### Histological analysis
+
+
+Tissue samples were collected and fixed overnight in 10% neutral-buffered formalin. Postfixation, the tissues were embedded in paraffin and sectioned at 5-μm thickness. Sections were deparaffinized, washed, and stained for hematoxylin and eosin (H&E) and Sirius Red staining. For Sudan Black B staining, the SenTraGor reagent (Cayman Chemical) was used to target lipofuscin-containing senescent cells, following the manufacturer’s protocol, and sections were developed using a DAB substrate kit (Vector Laboratories). For immunofluorescence staining of keratin 14, a marker of mTECs, deparaffinized sections were submerged with citrate buffer (Sigma-Aldrich) and boiled for 1 min in the microwave, followed by cooling for 30 min at room temperature for antigen retrieval. After that, sections were blocked with a 10% normal goat serum, followed by anti–keratin 14 antibody (1:70 dilution; Thermo Fisher Scientific) incubation for 1 hour at room temperature and washing with saline. A phycoerythrin (PE)–conjugated secondary antibody (1:200 dilution; Jackson ImmunoResearch Inc.) was submerged and incubated for 1 hour at room temperature. After another washing with saline, nuclei were stained with 4′,6-diamidino-2-phenylindole (DAPI) (1:1000 dilution; Sigma-Aldrich), and sections were mounted on aqueous mounting solution (Dako). Images were captured with Keyence microscope. Each data point for the Sirius Red–positive area or the count of Sudan Black B–positive cells represents the average from 10 randomly captured images per mouse. The Sirius Red–positive area was quantified using ImageJ (99).
+
+
+### Splenocytes in vitro experiments
+
+
+Splenocytes were isolated from three individual male *M. musculus* or *A. russatus*, aged 0.5 or 2.5 years. A total of 5.0 × 10<sup>6</sup> cells was cryopreserved in 1 ml of preservation medium [10% dimethyl sulfoxide and 90% fetal bovine serum (FBS)] in an LN<sub>2</sub> tank. On the day of the experiment, cells were rapidly thawed in a 37°C water bath, washed with RPMI 1640 medium containing 10% FBS and 1% antibiotics, and then plated. The cells were treated either with VEH (saline) or 5 μg/ml of ConA for 24 or 48 hours before analysis. Cell proliferation was assessed using the WST-8 cell proliferation assay kit (Abcam) according to the manufacturer’s instructions.
+
+
+### Quantitative real-time polymerase chain reaction
+
+
+Total RNA was extracted using QIAGEN RNeasy Micro kits, following the manufacturer’s instructions, with a DNA binding column to eliminate genomic DNA. RNA concentration was measured, and 1 μg of RNA was used to synthesize cDNA using the iScript cDNA synthesis kit (Bio-Rad). Quantitative real-time polymerase chain reaction (qRT-PCR) was performed using the Power SYBR Green detection reagent (Thermo Fisher Scientific) on a Roche Light Cycler 480 II. The primers used for this study are listed in table S1.
+
+
+### Liver tissue bulk RNA-seq analysis
+
+
+Whole liver tissues were collected from three individual male *M. musculus* and *A. russatus*, aged either 0.5 or 2.5 years, and immediately snap frozen. Total RNA was isolated using QIAGEN RNeasy Mini kits and sequenced on a HiSeq 2500. Raw sequence fastq files were processed with the nf-core’s RNA-seq pipeline 3.14.0 (100) using reference genomes GRCm39 for *M. musculus* and mAcoRus1.1 for *A. russatus*. The pipeline was used to perform quality control, trimming, and pseudoalignment using STAR (101) and Salmon (102), resulting in gene expression matrices for each sample. These matrices were normalized using voom (103) and analyzed with limma 3.60 (104) for identifying DEGs, where DEGs were defined by an adjusted *P* < 0.01 with the Benjamini-Hochberg correction and log<sub>2</sub> fold change > 0.5. The results of the differential expression (DE) analysis can be found in table S2.
+
+
+For pathway analysis, GO_BP terms were analyzed using the enrichGO function of clusterProfiler 4.12.0 (105) with a *P* value threshold of 0.01. The pathway analysis results can be found in table S3. Enrichment analyses of pathways in the Aging Atlas (44) were performed using Camera (106) and visualized using ggplot2 (107). Principal components analysis was conducted on normalized gene expression using limma, focusing on genes present in both GRCm39 and mAcoRus1.1 genome with a count per million of at least 1. GSEA (ver 4.2.3) (108, 109) identified differences in aging-associated pathways between *M. musculus* and *A. russatus*. The gene lists for scoring guided aging trends genes (GATG) (46), iAge (48), SenMayo (54), Aging Atlas (44), and CMA (53) were used to analyze each score following previously reported methods.
+
+
+### Western blot analysis
+
+
+Liver or VAT lysates were prepared by homogenizing the tissue in radioimmunoprecipitation assay buffer (Thermo Fisher Scientific) with protease inhibitors. After centrifugation at 14,000*g* for 10 min, supernatants were collected, and protein concentrations were determined using the DC Protein Assay (Bio-Rad). For SDS–polyacrylamide gel electrophoresis, 15 to 50 μg of protein per sample was separated and transferred to a nitrocellulose membrane, which was blocked with 5% skim milk (Bio-Rad) in tris-buffered saline for 1 hour at room temperature. The membrane was then incubated overnight at 4°C with anti-rabbit p16, p21, γ-H2AX, or heat shock protein 90 (HSP90) primary antibodies (Cell Signaling Technology; 1:1000), followed by secondary incubation with horseradish peroxidase–conjugated goat anti-rabbit antibody (Jackson ImmunoResearch Inc.; 1:2000 dilution) for 1 hour at room temperature. After washing, protein bands were visualized using the SuperSignal West Femto Maximum Sensitivity Substrate (Thermo Fisher Scientific) and imaged with a ChemiDoc (Bio-Rad). Quantification of blots was conducted by ImageJ.
+
+
+### Single-nucleus RNA sequencing
+
+
+Snap-frozen epididymal white adipose tissues from 0.5- or 2.5-year-old *M. musculus* and 0.5- or 3.5-year-old *A. russatus* (*n* = 3 per group) were pooled, and nuclei were isolated as previously described (110). The isolated nuclei were processed using the Chromium Next GEM Single Cell 3′ Reagent Kits (v3.1) targeting 10,000 nuclei for barcoding and library preparation, following the manufacturer’s instructions (10x Genomics). Libraries were sequenced on a HiSeq 3000 instrument (Illumina) at 50,000 read pairs per nucleus depth.
+
+
+Filtered count matrices were generated following the 10x pipeline and processed using scanpy (111). Quality control filters removed cells with fewer than 500 expressed genes, a unique molecular identifier (UMI) count-to-gene ratio below 2.5, or a mitochondrial read fraction above 15%. Doublet detection was performed using the doubletdetection package (112). UMI counts were normalized by cell and log transformed for subsequent analyses. Cell assignment was performed with decoupler-py (113) using markers for mouse white adipose tissue (57). Leiden clustering was performed using scanpy. The resolution parameter for Leiden clustering was optimized by performing several clusterings at different resolutions, computing cell type assignment consistency (i.e., the fraction of cells assigned to the most common cell type in each cluster) and cluster assignment consistency (i.e., fraction of cells assigned to the most common cluster for each cell type) and choosing the value of the resolution parameter that maximized their product. This procedure resulted in several clusters roughly equal to the number of cell types. Cells assigned to a different cell type than the main one in their cluster and with a high Mahalanobis distance from the cluster center in uniform manifold approximation and projection (UMAP) coordinates were classified as outliers. These outliers were reassigned if their type matched the nearest cluster. For cell type identification, major subtypes were extracted, and cell type assignment was repeated using specific markers from previous literature (57). Clusters with high doublet concentration (>0.33%) were not assigned specific subtypes, remaining their main cell type instead. Scanpy and matplotlib (114) were used to generate histograms, UMAP scatter plots, dot plots, and violin plots. Differential expression analysis was performed using limma on normalized gene expression, with *P* values adjusted using the Benjamini-Hochberg correction (threshold of 0.05). The analysis was performed independently for each cell type and independently compared the cells of young and old samples of each organism. The results of the DE analysis can be found in table S4. Pathway analysis for GO_BP terms was performed using the enrichGO function of clusterProfiler 4.12.0 (105) with default parameters. The pathway analysis results can be found in tables S5 and S6.
+
+
+### Macrophage polarization experiments with clusterin
+
+
+BMDMs and the stromal vascular fraction (SVF) from VAT were isolated as previously described (115). BMDMs were polarized into proinflammatory (M1) using recombinant mouse interferon-γ (20 ng/ml) and LPSs (1 μg/ml), or anti-inflammatory (M2) macrophages using recombinant mouse IL-4 (20 ng/ml), for 24 hours in RPMI 1640 medium without FBS. After polarization, cells were washed and treated with recombinant mouse clusterin for an additional 24 hours, followed by qRT-PCR analysis. SVF cells were plated for 3 hours postisolation and then treated with either VEH (saline) or recombinant mouse clusterin (1 μg/ml) for 24 hours in RPMI 1640 medium without FBS. Following treatment, cells were detached and analyzed via flow cytometry.
+
+
+### Human peripheral blood monocyte isolation
+
+
+Human peripheral blood was donated by healthy volunteers under the NIA Human Subject Protocol (#2003054). Frozen peripheral blood was thawed, and CD14<sup>+</sup>CD16<sup>−</sup> monocytes were isolated using the EasySep Human Monocyte Isolation Kit (StemCell Technologies), according to the manufacturer’s instructions. Isolated CD14<sup>+</sup>CD16<sup>−</sup> monocytes were then plated on a 96-well plate at a density of 2.0 × 10<sup>5</sup> cells per well. Cells were stabilized at 37°C CO<sub>2</sub> incubator and were pretreated with indicated doses of recombinant human clusterin (R&D Systems) for 1 hour. After that, LPS (1 μg/ml) was treated for 4 or 24 hours, and culture supernatants were collected. By centrifugation, cell debris was removed, and supernatants were used for enzyme-linked immunosorbent assay (ELISA).
+
+
+### Flow cytometry analysis
+
+
+Isolated SVF from VAT and splenocytes was analyzed by flow cytometry. Cells were first incubated with anti-mouse CD16/CD32 (BD Biosciences) for 5 min on ice, followed by staining with various fluorophore-conjugated antibodies: BV711-CD45 (30-F11) (BioLegend), FITC-CD4 (RM4-5) (eBioscience), APC-CD8a (53-6.7) (Invitrogen), PE-CD44 (IM7) (eBioscience), BV605-CD62L (MEL-14) (BioLegend), APC-B220 (RA3-6B2) (eBioscience), PE-CD21/35 (4E3) (eBioscience), eFluor 450-CD23 (B3B4) (Invitrogen), eFluor 450-B220 (RA3-6B2) (Invitrogen), PE-CD25 (PC61.5) (eBioscience), FITC-F4/80 (BM8) (BioLegend), APC-CD11c (N418) (BioLegend), PE-Cy7-CD206 (C068C2) (BioLegend), APC780-CD206 (MR6F3) (Invitrogen), PerCP-Cy5.5 CD11b (M1/70) (Invitrogen), BV605-CD4 (GK1.5) (BioLegend), PE-Ly6G (1A8) (BioLegend), or APC-CD11b (M1/70) (BioLegend). Staining was performed for 40 min at 4°C, protected from light. After washing with ice-cold saline, cells were incubated with LIVE/DEAD fixable aqua dead cell stain kit for 405-nm excitation (Thermo Fisher Scientific) for 15 min on ice to identify dead cells. Cells were then washed, fixed with 1% paraformaldehyde, and analyzed using an LSR II flow cytometer (BD Biosciences). For intracellular staining of Foxp3, PE-Cy7-Foxp3 (FJK-16s) (Invitrogen) was used in combination with the eBioscience Foxp3/transcription factor staining buffer set, following the manufacturer’s protocol after LIVE/DEAD staining. Flow cytometry data were processed using the FlowJo software (version 10; FlowJo LLC).
+
+
+### Health span analysis
+
+
+A grip strength meter (TSE system) was used to measure forelimb grip strength in aged mice. For the rotarod test, mice were trained on a rotarod apparatus (AccuScan Instruments) for two consecutive days, and testing was conducted the day after the final training session. The rotarod was set to reach its maximum speed of 400 (×0.1 rpm) over 300 s, and the time at which the mice fell off the apparatus was recorded. Both grip strength and rotarod performances were measured in triplicate, and the average of the three trials was used for analysis.
+
+
+### ELISA
+
+
+Mouse blood was collected via cardiac puncture and allowed to clot for 2 hours at room temperature. The serum was then separated by centrifugation at 3000*g* for 20 min. Levels of CLU, IL-1β, IL-6, TNF-α, GRO-α/KC, MCP-1 (R&D Systems), and complement C5b-9 (Thermo Fisher Scientific) in the serum were measured using commercial kits according to the manufacturer’s protocols. For culture supernatants of human peripheral blood monocytes, human IL-1β and IL-18 Quantikine ELISA Kits (R&D Systems) were used according to the manufacturer’s instructions. The absorbance was measured at 450 nm, corrected with 540 nm by the Varioskan LUX microplate reader (Thermo Fisher Scientific).
+
+
+### Quantification and statistical analysis
+
+
+All statistical analysis was performed in Prism (ver 8.0.2.). Statistical differences between the two groups were analyzed using a two-tailed unpaired Student *t* test. For comparisons involving more than three groups, a one-way analysis of variance (ANOVA) followed by Tukey’s multiple comparisons test was applied. Data represent mean ± SEM or min to max, which are indicated in the figure legends. The exact numbers of animals or samples and the specific statistical methods used were provided in the respective figures or figure legends.
+
+---
+
+## Acknowledgments
+
+We express our thanks to the Yale Center for Genome Analysis core for assistance in sequencing. The work by MB and AB was partially supported by NIA’s Intramural Research Program. The work by YK was partially supported by Yale Murine TMC on immune cell senescence–derived inflammation project (U54AG079759).
+
+This work was funded by the National Research Foundation of Korea grant RS-2024-00412002 (H.-H.K.), the Yale University Waldemar Von Zedtwitz endowed chair (V.D.D.), the Yale University School of Medicine’s intramural funding (V.D.D.), and the Israel Science Foundation grant 2129/20 (N.K.-S.).
+
+Conceptualization: H.-H.K., T.S.-Z., M.K.-B., N.K.-S., and V.D.D. Data curation: H.-H.K., T.S.-Z., T.D., F.S., and M.K.-B. Formal analysis: H.-H.K., T.S.-Z., F.S., Y.K., and N.K.-S. Funding acquisition: H.-H.K., N.K.-S., and V.D.D. Investigation: H.-H.K., T.S.-Z., Y.-H.Y., H.V.-N., T.D., F.S., M.K.-B., L.E., M.B., and A.B. Methodology: T.S.-Z., F.S., M.K.-B., and N.K.-S. Project administration: H.-H.K., T.S.-Z., Y.-H.Y., T.D., N.K.-S., and V.D.D. Resources: T.S.-Z., Y.-H.Y., H.V.-N., T.D., M.K.-B., M.B., N.K.-S., and V.D.D. Software: H.-H.K., T.S.-Z., and F.S. Supervision: T.S.-Z., Y.K., N.K.-S., and V.D.D. Validation: H.-H.K., T.S.-Z., Y.-H.Y., M.K.-B., and N.K.-S. Visualization: H.-H.K., Y.-H.Y., F.S., and N.K.-S. Writing—original draft: H.-H.K., T.S.-Z., and N.K.-S. Writing—review and editing: T.S.-Z., Y.-H.Y., F.S., N.K.-S., and V.D.D.
+
+F.S. is employed as the director of PCMGF Limited. All other authors declare that they have no competing interests.
+
+The bulk RNA-seq data of liver tissues and the snRNA-seq data of VAT have been deposited in the NCBI Sequence Read Archive (SRA) with the accession numbers of PRJNA1274859 ([www.ncbi.nlm.nih.gov/bioproject/PRJNA1274859](http://www.ncbi.nlm.nih.gov/bioproject/PRJNA1274859)) and PRJNA1274884 ([www.ncbi.nlm.nih.gov/bioproject/PRJNA1274884](http://www.ncbi.nlm.nih.gov/bioproject/PRJNA1274884)), respectively. All data and code needed to evaluate and reproduce the results in the paper are present in the paper and/or the Supplementary Materials. This study did not generate new materials.
+
+
+## Funding
+
+- National Research Foundation of Korea Grant (Award: RS-2024-00412002)
+- Israel Science Foundation grant (Award: 2129/20)
+- Yale University School of Medicine's intramural funding
+- Yale University Waldemar Von Zedwitz endowed chair
+- Yale murine-TMC (Award: U54AG079759)
+- NIA's intramural research program
+- NIA's intramural research program
+
+## Author Contributions
+
+- **Hee-Hoon Kim:** Conceptualization, Data curation, Formal analysis, Funding acquisition, Investigation, Project administration, Software, Validation, Visualization, Writing - original draft
+- **Tali Sagiv-Zangi:** Conceptualization, Data curation, Formal analysis, Investigation, Methodology, Project administration, Resources, Software, Supervision, Validation, Writing - original draft, Writing - review & editing
+- **Yun-Hee Youm:** Investigation, Project administration, Resources, Validation, Visualization, Writing - review & editing
+- **Hagar Vardi-Naim:** Investigation, Resources
+- **Tamara Dlugos:** Data curation, Investigation, Project administration, Resources
+- **Francesco Strino:** Data curation, Formal analysis, Investigation, Methodology, Software, Visualization, Writing - review & editing
+- **Mila Kazavchinsky-Bar:** Conceptualization, Data curation, Investigation, Methodology, Resources, Validation
+- **Lian Egulsky:** Investigation
+- **Monica Bodogai:** Investigation, Resources
+- **Arya Biragyn:** Investigation
+- **Yuval Kluger:** Formal analysis, Supervision
+- **Noga Kronfeld-Schor:** Conceptualization, Formal analysis, Funding acquisition, Methodology, Project administration, Resources, Supervision, Validation, Visualization, Writing - original draft, Writing - review & editing
+- **Vishwa Deep Dixit:** Conceptualization, Funding acquisition, Project administration, Resources, Supervision, Writing - review & editing
+
+## References
+
+1. Ukraintseva S., Arbeev K., Duan M., et al.. Decline in biological resilience as key manifestation of aging: Potential mechanisms and role in health and longevity. *Mech. Ageing Dev. 194, 111418* (2021). DOI: 10.1016/j.mad.2020.111418
+2. Franceschi C., Garagnani P., Parini P., et al.. Inflammaging: A new immune-metabolic viewpoint for age-related diseases. *Nat. Rev. Endocrinol. 14, 576–590* (2018). DOI: 10.1038/s41574-018-0059-4
+3. Vijg J., Austad S. N.. Biological restraints on indefinite survival. *Cold Spring Harb. Perspect. Med. 13, a041200* (2023). DOI: 10.1101/cshperspect.a041200
+4. Austad S. N.. Comparative biology of aging. *J. Gerontol. A Biol. Sci. Med. Sci. 64, 199–201* (2009). DOI: 10.1093/gerona/gln060
+5. Gladyshev V. N., Kritchevsky S. B., Clarke S. G., et al.. Molecular damage in aging. *Nat. Aging 1, 1096–1106* (2021). DOI: 10.1038/s43587-021-00150-3
+6. Hamilton W. D.. The moulding of senescence by natural selection. *J. Theor. Biol. 12, 12–45* (1966). DOI: 10.1016/0022-5193(66)90184-6
+7. Barrett R. D., Hoekstra H. E.. Molecular spandrels: Tests of adaptation at the genetic level. *Nat. Rev. Genet. 12, 767–780* (2011). DOI: 10.1038/nrg3015
+8. Seifert A. W., Kiama S. G., Seifert M. G., et al.. Skin shedding and tissue regeneration in African spiny mice (*Acomys*). *Nature 489, 561–565* (2012). DOI: 10.1038/nature11499
+9. Gawriluk T. R., Simkin J., Thompson K. L., et al.. Comparative analysis of ear-hole closure identifies epimorphic regeneration as a discrete trait in mammals. *Nat. Commun. 7, 11164* (2016). DOI: 10.1038/ncomms11164
+10. Shargal E., Kronfeld-Schor N., Dayan T.. Population biology and spatial relationships of coexisting spiny mice (*Acomys*) in Israel. *J. Mammal. 81, 1046–1052* (2000).
+11. Weissenberg S. B., Dayan A., Dayan T.. Resistance of the common spiny mouse (*Acomys cahirinus*) to the strikes of the Palestine saw-scaled viper (*Echis coloratus*). *Isr. J. Zool. 43, 119* (1997).
+12. Shargal E., Rath-Wolfson L., Kronfeld N., et al.. Ecological and histological aspects of tail loss in spiny mice (Rodentia: Muridae, *Acomys*) with a review of its occurrence in rodents. *J. Zool. 249, 187–193* (1999).
+13. Wester P., Karvang A. S. N., Niedzwetzki T.. Loss of tail sheath (false autotomy) in South African Cape spiny mice (*Acomys subspinosus*). *Afr. J. Ecol. 56, 656–658* (2018).
+14. Kronfeld-Schor N., Dayan T.. The dietary basis for temporal partitioning: Food habits of coexisting *Acomys* species. *Oecologia 121, 123–128* (1999). DOI: 10.1007/s004420050913
+15. Kronfeld-Schor N., Dayan T., Jones M. E., et al.. Retinal structure and foraging microhabitat use of the golden spiny mouse (*Acomys russatus*). *J. Mammal. 82, 1016–1025* (2001).
+16. Kronfeld-Schor N., Haim A., Dayan T., et al.. Seasonal thermogenic acclimation of diurnally and nocturnally active desert spiny mice. *Physiol. Biochem. Zool. 73, 37–44* (2000). DOI: 10.1086/316718
+17. Levy O., Dayan T., Kronfeld-Schor N.. Adaptive thermoregulation in golden spiny mice: The influence of season and food availability on body temperature. *Physiol. Biochem. Zool. 84, 175–184* (2011). DOI: 10.1086/658171
+18. Gutman R., Hacmon-Keren R., Choshniak I., et al.. Effect of food availability and leptin on the physiology and hypothalamic gene expression of the golden spiny mouse: A desert rodent that does not hoard food. *Am. J. Physiol. Regul. Integr. Comp. Physiol. 295, R2015–R2023* (2008). DOI: 10.1152/ajpregu.00105.2008
+19. Levy O., Dayan T., Rotics S., et al.. Foraging sequence, energy intake and torpor: An individual-based field study of energy balancing in desert golden spiny mice. *Ecol. Lett. 15, 1240–1248* (2012). DOI: 10.1111/j.1461-0248.2012.01845.x
+20. Gutman R., Choshniak I., Kronfeld-Schor N.. Defending body mass during food restriction in *Acomys russatus*: A desert rodent that does not store food. *Am. J. Physiol. Regul. Integr. Comp. Physiol. 290, R881–R891* (2006). DOI: 10.1152/ajpregu.00156.2005
+21. Kronfeld-Schor N., Shargal E., Haim A., et al.. Temporal partitioning among diurnally and nocturnally active desert spiny mice: Energy and water turnover costs. *J. Therm. Biol. 26, 139–142* (2001). DOI: 10.1016/s0306-4565(00)00034-6
+22. Levy O., Dayan T., Porter W. P., et al.. Foraging activity pattern is shaped by water loss rates in a diurnal desert rodent. *Am. Nat. 188, 205–218* (2016). DOI: 10.1086/687246
+23. 
+24. Kirkwood T. B., Austad S. N.. Why do we age?. *Nature 408, 233–238* (2000). DOI: 10.1038/35041682
+25. Bendesky A., Kwon Y. M., Lassance J. M., et al.. The genetic basis of parental care evolution in monogamous mice. *Nature 544, 434–439* (2017). DOI: 10.1038/nature22074
+26. B. Grzimek, Grzimek’s encyclopedia of mammals (McGraw-Hill, 1990).
+27. Peitz B.. The oestrous cycle of the spiny mouse (*Acomys cahirinus*). *J. Reprod. Fertil. 61, 453–459* (1981). DOI: 10.1530/jrf.0.0610453
+28. Kumar S., Suleski M., Craig J. M., et al.. TimeTree 5: An expanded resource for species divergence times. *Mol. Biol. Evol. 39, msac174* (2022). DOI: 10.1093/molbev/msac174
+29. Murman D. L.. The impact of age on cognition. *Semin. Hear. 36, 111–121* (2015). DOI: 10.1055/s-0035-1555115
+30. Mattis J., Sehgal A.. Circadian rhythms, sleep, and disorders of aging. *Trends Endocrinol. Metab. 27, 192–203* (2016). DOI: 10.1016/j.tem.2016.02.003
+31. Brunet A., Goodell M. A., Rando T. A.. Ageing and rejuvenation of tissue stem cells and their niches. *Nat. Rev. Mol. Cell Biol. 24, 45–62* (2023). DOI: 10.1038/s41580-022-00510-w
+32. Varholick J. A., Thermolice J., Godinez G., et al.. Older 6-9-month-old spiny mice (*Acomys cahirinus*) have delayed and spatially heterogenous ear wound regeneration. *Biol. Open 13, bio060565* (2024). DOI: 10.1242/bio.060565
+33. Lopez-Otin C., Blasco M. A., Partridge L., et al.. Hallmarks of aging: An expanding universe. *Cell 186, 243–278* (2023). DOI: 10.1016/j.cell.2022.11.001
+34. Dixit V. D.. Impact of immune-metabolic interactions on age-related thymic demise and T cell senescence. *Semin. Immunol. 24, 321–330* (2012). DOI: 10.1016/j.smim.2012.04.002
+35. Budamagunta V., Foster T. C., Zhou D.. Cellular senescence in lymphoid organs and immunosenescence. *Aging 13, 19920–19941* (2021). DOI: 10.18632/aging.203405
+36. Georgakopoulou E. A., Tsimaratou K., Evangelou K., et al.. Specific lipofuscin staining as a novel biomarker to detect replicative and stress-induced senescence. A method applicable in cryo-preserved and archival tissues. *Aging 5, 37–50* (2013). DOI: 10.18632/aging.100527
+37. Kruisbeek A. M.. Age-related changes in ConA- and LPS-induced lymphocyte transformation. I. Effect of culture conditions on mitogen responses of blood and spleen lymphocytes from young and aged rats. *Mech. Ageing Dev. 5, 125–138* (1976). DOI: 10.1016/0047-6374(76)90013-0
+38. Hoffenbach A., Lagrange P. H., Bach M. A.. Deficit of interleukin 2 production associated with impaired T-cell proliferative responses in *Mycobacterium lepraemurium* infection. *Infect. Immun. 39, 109–116* (1983). DOI: 10.1128/iai.39.1.109-116.1983
+39. Aoki K., Asano K., Okamoto K., et al.. Age-related changes in ConA-induced cytokine production by splenocytes from senescence accelerated mice SAMP8. *Immunol. Lett. 46, 169–175* (1995). DOI: 10.1016/0165-2478(95)00038-7
+40. Kim H. H., Dixit V. D.. Metabolic regulation of immunological aging. *Nat. Aging 5, 1425–1440* (2025). DOI: 10.1038/s43587-025-00921-2
+41. Kondratov R. V., Kondratova A. A., Gorbacheva V. Y., et al.. Early aging and age-related pathologies in mice deficient in BMAL1, the core componentof the circadian clock. *Genes Dev. 20, 1868–1873* (2006). DOI: 10.1101/gad.1432206
+42. Wu H., Xu X., Zheng A., et al.. TNF-α-induce protein 8-like 1 inhibits hepatic steatosis, inflammation, and fibrosis by suppressing polyubiquitination of apoptosis signal-regulating kinase 1. *Hepatology 74, 1251–1270* (2021). DOI: 10.1002/hep.31801
+43. Song Z., Chen W., Athavale D., et al.. Osteopontin takes center stage in chronic liver disease. *Hepatology 73, 1594–1608* (2021). DOI: 10.1002/hep.31582
+44. Aging Atlas Consortium. Aging Atlas: A multi-omics database for aging biology. *Nucleic Acids Res. 49, D825–D830* (2021). DOI: 10.1093/nar/gkaa894
+45. Gonzalez-Hurtado E., Leveau C., Li K., et al.. Nerve-associated macrophages control adipose homeostasis across life span and restrain age-related inflammation. *Nat. Aging 5, 1828–1843* (2025). DOI: 10.1038/s43587-025-00952-9
+46. Xu Y., Li M., Hu C., et al.. Developing a novel aging assessment model to uncover heterogeneity in organ aging and screening of aging-related drugs. *Genome Med. 17, 83* (2025). DOI: 10.1186/s13073-025-01501-0
+47. DOI: 10.1101/2024.07.04.601982
+48. Sayed N., Huang Y., Nguyen K., et al.. An inflammatory aging clock (iAge) based on deep learning tracks multimorbidity, immunosenescence, frailty and cardiovascular aging. *Nat. Aging 1, 598–615* (2021). DOI: 10.1038/s43587-021-00082-y
+49. Kaushik S., Cuervo A. M.. The coming of age of chaperone-mediated autophagy. *Nat. Rev. Mol. Cell Biol. 19, 365–381* (2018). DOI: 10.1038/s41580-018-0001-6
+50. Khawaja R. R., Martin-Segura A., Santiago-Fernandez O., et al.. Sex-specific and cell-type-specific changes in chaperone-mediated autophagy across tissues during aging. *Nat. Aging 5, 691–708* (2025). DOI: 10.1038/s43587-024-00799-6
+51. Kaushik S., Tasset I., Arias E., et al.. Autophagy and the hallmarks of aging. *Ageing Res. Rev. 72, 101468* (2021). DOI: 10.1016/j.arr.2021.101468
+52. de Cabo R., Carmona-Gutierrez D., Bernier M., et al.. The search for antiaging interventions: From elixirs to fasting regimens. *Cell 157, 1515–1526* (2014). DOI: 10.1016/j.cell.2014.05.031
+53. Bourdenx M., Martin-Segura A., Scrivo A., et al.. Chaperone-mediated autophagy prevents collapse of the neuronal metastable proteome. *Cell 184, 2696–2714.e25* (2021). DOI: 10.1016/j.cell.2021.03.048
+54. Saul D., Kosinsky R. L., Atkinson E. J., et al.. A new gene set identifies senescent cells and predicts senescence-associated pathways across tissues. *Nat. Commun. 13, 4827* (2022). DOI: 10.1038/s41467-022-32552-1
+55. Nguyen T. T., Corvera S.. Adipose tissue as a linchpin of organismal ageing. *Nat. Metab. 6, 793–807* (2024). DOI: 10.1038/s42255-024-01046-3
+56. Tyshkovskiy A., Ma S., Shindyapina A. V., et al.. Distinct longevity mechanisms across and within species and their association with aging. *Cell 186, 2929–2949.e20* (2023). DOI: 10.1016/j.cell.2023.05.002
+57. Emont M. P., Jacobs C., Essene A. L., et al.. A single-cell atlas of human and mouse white adipose tissue. *Nature 603, 926–933* (2022). DOI: 10.1038/s41586-022-04518-2
+58. Camell C. D., Gunther P., Lee A., et al.. Aging induces an Nlrp3 inflammasome-dependent expansion of adipose B cells that impairs metabolic homeostasis. *Cell Metab. 30, 1024–1039.e6* (2019). DOI: 10.1016/j.cmet.2019.10.006
+59. DOI: 10.1101/2025.08.04.668533
+60. Statzer C., Jongsma E., Liu S. X., et al.. Youthful and age-related matreotypes predict drugs promoting longevity. *Aging Cell 20, e13441* (2021). DOI: 10.1111/acel.13441
+61. Bell G. A., Kantor E. D., Lampe J. W., et al.. Use of glucosamine and chondroitin in relation to mortality. *Eur. J. Epidemiol. 27, 593–603* (2012). DOI: 10.1007/s10654-012-9714-6
+62. Guo D., Lin C., Lu Y., et al.. FABP4 secreted by M1-polarized macrophages promotes synovitis and angiogenesis to exacerbate rheumatoid arthritis. *Bone. Res. 10, 45* (2022). DOI: 10.1038/s41413-022-00211-2
+63. Liu Z., Arcos M., Martin D. R., et al.. Myeloid FTH1 deficiency protects mice from colitis and colitis-associated colorectal cancer via reducing DMT1-imported iron and STAT3 activation. *Inflamm. Bowel Dis. 29, 1285–1296* (2023). DOI: 10.1093/ibd/izad009
+64. Schmidt T., Samaras P., Frejno M., et al.. ProteomicsDB. *Nucleic Acids Res. 46, D1271–D1281* (2018). DOI: 10.1093/nar/gkx1029
+65. Huang Q., Szklarczyk D., Oehninger J., et al.. PaxDb v6.0: Reprocessed, LLM-selected, curated protein abundance data across organisms. *Nucleic Acids Res. 54, D427–D439* (2025). DOI: 10.1093/nar/gkaf1066
+66. Wilson M. R., Easterbrook-Smith S. B.. Clusterin is a secreted mammalian chaperone. *Trends Biochem. Sci. 25, 95–98* (2000). DOI: 10.1016/s0968-0004(99)01534-0
+67. Hong G. H., Kwon H. S., Moon K. A., et al.. Clusterin modulates allergic airway inflammation by attenuating CCL20-mediated dendritic cell recruitment. *J. Immunol. 196, 2021–2030* (2016). DOI: 10.4049/jimmunol.1500747
+68. Lish A. M., Grogan E. F. L., Benoit C. R., et al.. CLU alleviates Alzheimer’s disease-relevant processes by modulating astrocyte reactivity and microglia-dependent synaptic density. *Neuron 113, 1925–1946.e11* (2025). DOI: 10.1016/j.neuron.2025.03.034
+69. De Miguel Z., Khoury N., Betley M. J., et al.. Exercise plasma boosts memory and dampens brain inflammation via clusterin. *Nature 600, 494–499* (2021). DOI: 10.1038/s41586-021-04183-x
+70. Tschopp J., Chonn A., Hertig S., et al.. Clusterin, the human apolipoprotein and complement inhibitor, binds to complement C7, C8 beta, and the b domain of C9. *J. Immunol. 151, 2159–2165* (1993).
+71. Schrijvers E. M., Koudstaal P. J., Hofman A., et al.. Plasma clusterin and the risk of Alzheimer disease. *JAMA 305, 1322–1326* (2011). DOI: 10.1001/jama.2011.381
+72. Lee Y. N., Shim Y. J., Kang B. H., et al.. Over-expression of human clusterin increases stress resistance and extends lifespan in *Drosophila melanogaster*. *Biochem. Biophys. Res. Commun. 420, 851–856* (2012). DOI: 10.1016/j.bbrc.2012.03.087
+73. Tanaka T., Basisty N., Fantoni G., et al.. Plasma proteomic biomarker signature of age predicts health and life span. *eLife 9, e61073* (2020). DOI: 10.7554/eLife.61073
+74. Schaum N., Lehallier B., Hahn O., et al.. Ageing hallmarks exhibit organ-specific temporal signatures. *Nature 583, 596–602* (2020). DOI: 10.1038/s41586-020-2499-y
+75. Bulut O., Kilic G., Dominguez-Andres J., et al.. Overcoming immune dysfunction in the elderly: Trained immunity as a novel approach. *Int. Immunol. 32, 741–753* (2020). DOI: 10.1093/intimm/dxaa052
+76. Churov A. V., Mamashov K. Y., Novitskaia A. V.. Homeostasis and the functional roles of CD4<sup>+</sup> T<sub>reg</sub> cells in aging. *Immunol. Lett. 226, 83–89* (2020). DOI: 10.1016/j.imlet.2020.07.004
+77. Goronzy J. J., Weyand C. M.. Mechanisms underlying T cell ageing. *Nat. Rev. Immunol. 19, 573–583* (2019). DOI: 10.1038/s41577-019-0180-1
+78. Franceschi C., Bonafe M., Valensin S., et al.. Inflamm-aging: An evolutionary perspective on immunosenescence. *Ann. N. Y. Acad. Sci. 908, 244–254* (2000). DOI: 10.1111/j.1749-6632.2000.tb06651.x
+79. Choi N. H., Tobe T., Hara K., et al.. Sandwich ELISA assay for quantitative measurement of SP-40,40 in seminal plasma and serum. *J. Immunol. Methods 131, 159–163* (1990). DOI: 10.1016/0022-1759(90)90186-y
+80. Pinter-Wollman N., Dayan T., Eilam D., et al.. Can aggression be the force driving temporal separation between competing common and golden spiny mice?. *J. Mammal. 87, 48–53* (2006).
+81. Barak O., Geiser F., Kronfeld-Schor N.. Flood-induced multiday torpor in golden spiny mice (*Acomys russatus*). *Aust. J. Zool. 66, 401-405, 405* (2020).
+82. Emmrich S., Tolibzoda Zakusilo F., Trapp A., et al.. Ectopic cervical thymi and no thymic involution until midlife in naked mole rats. *Aging Cell 20, e13477* (2021). DOI: 10.1111/acel.13477
+83. Youm Y. H., Horvath T. L., Mangelsdorf D. J., et al.. Prolongevity hormone FGF21 protects against immune senescence by delaying age-related thymic involution. *Proc. Natl. Acad. Sci. U.S.A. 113, 1026–1031* (2016). DOI: 10.1073/pnas.1514511113
+84. Youm Y. H., Gliniak C., Zhang Y., et al.. Enhanced paracrine action of FGF21 in stromal cells delays thymic aging. *Nat. Aging 5, 576–587* (2025). DOI: 10.1038/s43587-025-00813-5
+85. Buffenstein R.. The naked mole-rat: A new long-living model for human aging research. *J. Gerontol. A Biol. Sci. Med. Sci. 60, 1369–1377* (2005). DOI: 10.1093/gerona/60.11.1369
+86. Hilton H. G., Rubinstein N. D., Janki P., et al.. Single-cell transcriptomics of the naked mole-rat reveals unexpected features of mammalian immunity. *PLOS Biol. 17, e3000528* (2019). DOI: 10.1371/journal.pbio.3000528
+87. Jiao S., Dai W., Lu L., et al.. The conserved clusterin gene is expressed in the developing choroid plexus under the regulation of notch but not IGF signaling in zebrafish. *Endocrinology 152, 1860–1871* (2011). DOI: 10.1210/en.2010-1183
+88. Leeb C., Eresheim C., Nimpf J.. Clusterin is a ligand for apolipoprotein E receptor 2 (ApoER2) and very low density lipoprotein receptor (VLDLR) and signals via the Reelin-signaling pathway. *J. Biol. Chem. 289, 4161–4172* (2014). DOI: 10.1074/jbc.M113.529271
+89. Moon J. S., Goeminne L. J. E., Kim J. T., et al.. Growth differentiation factor 15 protects against the aging-mediated systemic inflammatory response in humans and mice. *Aging Cell 19, e13195* (2020). DOI: 10.1111/acel.13195
+90. Hanks L. J., Gutierrez O. M., Bamman M. M., et al.. Circulating levels of fibroblast growth factor-21 increase with age independently of body composition indices among healthy individuals. *J. Clin. Transl. Endocrinol. 2, 77–82* (2015). DOI: 10.1016/j.jcte.2015.02.001
+91. Gliniak C. M., Gordillo R., Youm Y. H., et al.. FGF21 promotes longevity in diet-induced obesity through metabolic benefits independent of growth suppression. *Cell Metab. 37, 1547–1567.e6* (2025). DOI: 10.1016/j.cmet.2025.05.011
+92. Sun N., Lin C. H., Li M. Y., et al.. Clusterin drives myeloid bias in aged hematopoietic stem cells by regulating mitochondrial function. *Nat. Aging 5, 1510–1527* (2025). DOI: 10.1038/s43587-025-00908-z
+93. Ross J. B., Myers L. M., Noh J. J., et al.. Depleting myeloid-biased haematopoietic stem cells rejuvenates aged immunity. *Nature 628, 162–170* (2024). DOI: 10.1038/s41586-024-07238-x
+94. Rodriguez-Rivera C., Garcia M. M., Molina-Alvarez M., et al.. Clusterin: Always protecting. Synthesis, function and potential issues. *Biomed. Pharmacother. 134, 111174* (2021). DOI: 10.1016/j.biopha.2020.111174
+95. Ghosh T. S., Shanahan F., O’Toole P. W.. The gut microbiome as a modulator of healthy ageing. *Nat. Rev. Gastroenterol. Hepatol. 19, 565–584* (2022). DOI: 10.1038/s41575-022-00605-x
+96. Bodenheimer F. S.. Ecological and physiological studies on some rodents. *Physiol. Comp. Ocol. Int. J. Comp. Physiol. Ecol. 1, 376–389* (1949).
+97. Percie du Sert N., Ahluwalia A., Alam S., et al.. Reporting animal research: Explanation and elaboration for the ARRIVE guidelines 2.0. *PLOS Biol. 18, e3000411* (2020). DOI: 10.1371/journal.pbio.3000411
+98. Pennington Z. T., Dong Z., Feng Y., et al.. ezTrack: An open-source video analysis pipeline for the investigation of animal behavior. *Sci. Rep. 9, 19979* (2019). DOI: 10.1038/s41598-019-56408-9
+99. Schindelin J., Arganda-Carreras I., Frise E., et al.. Fiji: An open-source platform for biological-image analysis. *Nat. Methods 9, 676–682* (2012). DOI: 10.1038/nmeth.2019
+100. Ewels P. A., Peltzer A., Fillinger S., et al.. The nf-core framework for community-curated bioinformatics pipelines. *Nat. Biotechnol. 38, 276–278* (2020). DOI: 10.1038/s41587-020-0439-x
+101. Dobin A., Davis C. A., Schlesinger F., et al.. STAR: Ultrafast universal RNA-seq aligner. *Bioinformatics 29, 15–21* (2013). DOI: 10.1093/bioinformatics/bts635
+102. Patro R., Duggal G., Love M. I., et al.. Salmon provides fast and bias-aware quantification of transcript expression. *Nat. Methods 14, 417–419* (2017). DOI: 10.1038/nmeth.4197
+103. Law C. W., Chen Y., Shi W., et al.. voom: Precision weights unlock linear model analysis tools for RNA-seq read counts. *Genome Biol. 15, R29* (2014). DOI: 10.1186/gb-2014-15-2-r29
+104. Ritchie M. E., Phipson B., Wu D., et al.. limma powers differential expression analyses for RNA-sequencing and microarray studies. *Nucleic Acids Res. 43, e47* (2015). DOI: 10.1093/nar/gkv007
+105. Wu T., Hu E., Xu S., et al.. clusterProfiler 4.0: A universal enrichment tool for interpreting omics data. *Innovation 2, 100141* (2021). DOI: 10.1016/j.xinn.2021.100141
+106. Wu D., Smyth G. K.. Camera: A competitive gene set test accounting for inter-gene correlation. *Nucleic Acids Res. 40, e133* (2012). DOI: 10.1093/nar/gks461
+107. 
+108. Subramanian A., Tamayo P., Mootha V. K., et al.. Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles. *Proc. Natl. Acad. Sci. U.S.A. 102, 15545–15550* (2005). DOI: 10.1073/pnas.0506580102
+109. Mootha V. K., Lindgren C. M., Eriksson K. F., et al.. PGC-1α-responsive genes involved in oxidative phosphorylation are coordinately downregulated in human diabetes. *Nat. Genet. 34, 267–273* (2003). DOI: 10.1038/ng1180
+110. Van Hauwaert E. L., Gammelmark E., Sarvari A. K., et al.. Isolation of nuclei from mouse white adipose tissues for single-nucleus genomics. *STAR Protoc. 2, 100612* (2021). DOI: 10.1016/j.xpro.2021.100612
+111. Wolf F. A., Angerer P., Theis F. J.. SCANPY: Large-scale single-cell gene expression data analysis. *Genome Biol. 19, 15* (2018). DOI: 10.1186/s13059-017-1382-0
+112. DOI: 10.5281/zenodo.2678041
+113. Badia I. M. P., Velez Santiago J., Braunger J., et al.. decoupleR: Ensemble of computational methods to infer biological activities from omics data. *Bioinform. Adv. 2, vbac016* (2022). DOI: 10.1093/bioadv/vbac016
+114. Hunter J. D.. Matplotlib: A 2D graphics environment. *Comput. Sci. Eng. 9, 90–95* (2007).
+115. Ryu S., Sidorov S., Ravussin E., et al.. The matricellular protein SPARC induces inflammatory interferon-response in macrophages during aging. *Immunity 55, 1609–1626.e7* (2022). DOI: 10.1016/j.immuni.2022.07.007
+

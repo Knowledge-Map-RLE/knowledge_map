@@ -280,21 +280,40 @@ class GoldCaseService:
     async def update_case_blocks(
         self, slug: str, annotator: str, blocks: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
-        """Перезаписывает structural_lines.json кейса выверенными блоками."""
+        """Перезаписывает structural_lines.json и article.md кейса.
+
+        structural_lines.json — выверенные блоки; article.md — свежий снапшот
+        исходного текста статьи (не резолв триплетов), синхронизируемый с
+        текущим текстом документа редактора.
+        """
+        from services.article_editor_service import ArticleEditorService  # тяжёлая зависимость (neomodel)
+
         directory = self.case_dir(slug)
         errors = validate_gold_blocks(blocks)
         if errors:
             raise GoldCaseValidationError([f"[{slug}] {e}" for e in errors])
 
-        meta_path = directory / META_NAME
-        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        meta = json.loads((directory / META_NAME).read_text(encoding="utf-8"))
         meta["updated_at"] = _now_iso()
         meta["updated_by"] = annotator
-        _atomic_write_json(meta_path, meta)
+
+        article_text: Optional[str] = None
+        doc_id = meta.get("doc_id")
+        if doc_id:
+            article_service = ArticleEditorService()
+            text_result = await article_service.get_article_text(doc_id)
+            if not text_result.get("not_annotated"):
+                candidate = text_result.get("text", "")
+                if candidate and candidate.strip():
+                    article_text = candidate
+
+        _atomic_write_json(directory / META_NAME, meta)
 
         payload: Dict[str, Any] = {"schema_version": GOLD_SCHEMA_VERSION}
         payload["blocks"] = blocks
         _atomic_write_json(directory / STRUCTURAL_LINES_NAME, payload)
+        if article_text is not None:
+            _atomic_write_text(directory / ARTICLE_NAME, article_text)
         write_checksums(self.gold_root)
         return self.get_case(slug)
 
