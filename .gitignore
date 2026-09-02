@@ -8,6 +8,7 @@ test_input/
 .pytest_cache/
 .cache/
 .mypy_cache
+.poetry-cache/
 
 __pycache__/
 

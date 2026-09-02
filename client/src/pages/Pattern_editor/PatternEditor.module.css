@@ -1,0 +1,170 @@
+.page {
+    position: fixed;
+    inset: 0;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.header {
+    flex-shrink: 0;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.canvas {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.sidebar {
+    width: 640px;
+    border-left: 1px solid #ddd;
+    background: #fff;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sidebarActions {
+    display: flex;
+    gap: 8px;
+}
+
+.runButton {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #2196F3;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.runButton:hover:not(:disabled) {
+    background: #1976D2;
+}
+
+.runButton:disabled {
+    background: #90CAF9;
+    cursor: not-allowed;
+}
+
+.resetButton {
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.resetButton:hover {
+    background: #f0f0f0;
+}
+
+.sidebarSection {
+    padding: 0;
+}
+
+.zoomControls {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    padding: 6px 10px;
+    z-index: 10;
+    user-select: none;
+}
+
+.zoomButton {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    background: #f5f5f5;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+}
+
+.zoomButton:hover {
+    background: #e0e0e0;
+}
+
+.zoomPercent {
+    min-width: 48px;
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    font-variant-numeric: tabular-nums;
+}
+
+.blockEditLabel {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.blockEditInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.blockEditHint {
+    font-size: 12px;
+    color: #666;
+    margin: 0 0 8px;
+    word-break: break-word;
+}
+
+.removeButton {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #b71c1c;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.removeButton:hover {
+    background: #8e1515;
+}

@@ -44,6 +44,26 @@ class KnowledgeLanguageServiceStub(object):
                 request_serializer=knowledge__language__pb2.HealthCheckRequest.SerializeToString,
                 response_deserializer=knowledge__language__pb2.HealthCheckResponse.FromString,
                 _registered_method=True)
+        self.CheckUniqueness = channel.unary_unary(
+                '/knowledge_language.KnowledgeLanguageService/CheckUniqueness',
+                request_serializer=knowledge__language__pb2.CheckUniquenessRequest.SerializeToString,
+                response_deserializer=knowledge__language__pb2.UniquenessResponse.FromString,
+                _registered_method=True)
+        self.CheckSubgraphUniqueness = channel.unary_unary(
+                '/knowledge_language.KnowledgeLanguageService/CheckSubgraphUniqueness',
+                request_serializer=knowledge__language__pb2.CheckSubgraphUniquenessRequest.SerializeToString,
+                response_deserializer=knowledge__language__pb2.SubgraphUniquenessResponse.FromString,
+                _registered_method=True)
+        self.CheckPatternMatch = channel.unary_unary(
+                '/knowledge_language.KnowledgeLanguageService/CheckPatternMatch',
+                request_serializer=knowledge__language__pb2.CheckPatternMatchRequest.SerializeToString,
+                response_deserializer=knowledge__language__pb2.PatternMatchResponse.FromString,
+                _registered_method=True)
+        self.AddStatementWithUniqueness = channel.unary_unary(
+                '/knowledge_language.KnowledgeLanguageService/AddStatementWithUniqueness',
+                request_serializer=knowledge__language__pb2.AddStatementRequest.SerializeToString,
+                response_deserializer=knowledge__language__pb2.AddStatementResponse.FromString,
+                _registered_method=True)
 
 
 class KnowledgeLanguageServiceServicer(object):
@@ -61,6 +81,30 @@ class KnowledgeLanguageServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CheckUniqueness(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CheckSubgraphUniqueness(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CheckPatternMatch(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddStatementWithUniqueness(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_KnowledgeLanguageServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -73,6 +117,26 @@ def add_KnowledgeLanguageServiceServicer_to_server(servicer, server):
                     servicer.HealthCheck,
                     request_deserializer=knowledge__language__pb2.HealthCheckRequest.FromString,
                     response_serializer=knowledge__language__pb2.HealthCheckResponse.SerializeToString,
+            ),
+            'CheckUniqueness': grpc.unary_unary_rpc_method_handler(
+                    servicer.CheckUniqueness,
+                    request_deserializer=knowledge__language__pb2.CheckUniquenessRequest.FromString,
+                    response_serializer=knowledge__language__pb2.UniquenessResponse.SerializeToString,
+            ),
+            'CheckSubgraphUniqueness': grpc.unary_unary_rpc_method_handler(
+                    servicer.CheckSubgraphUniqueness,
+                    request_deserializer=knowledge__language__pb2.CheckSubgraphUniquenessRequest.FromString,
+                    response_serializer=knowledge__language__pb2.SubgraphUniquenessResponse.SerializeToString,
+            ),
+            'CheckPatternMatch': grpc.unary_unary_rpc_method_handler(
+                    servicer.CheckPatternMatch,
+                    request_deserializer=knowledge__language__pb2.CheckPatternMatchRequest.FromString,
+                    response_serializer=knowledge__language__pb2.PatternMatchResponse.SerializeToString,
+            ),
+            'AddStatementWithUniqueness': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddStatementWithUniqueness,
+                    request_deserializer=knowledge__language__pb2.AddStatementRequest.FromString,
+                    response_serializer=knowledge__language__pb2.AddStatementResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,6 +193,114 @@ class KnowledgeLanguageService(object):
             '/knowledge_language.KnowledgeLanguageService/HealthCheck',
             knowledge__language__pb2.HealthCheckRequest.SerializeToString,
             knowledge__language__pb2.HealthCheckResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CheckUniqueness(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/knowledge_language.KnowledgeLanguageService/CheckUniqueness',
+            knowledge__language__pb2.CheckUniquenessRequest.SerializeToString,
+            knowledge__language__pb2.UniquenessResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CheckSubgraphUniqueness(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/knowledge_language.KnowledgeLanguageService/CheckSubgraphUniqueness',
+            knowledge__language__pb2.CheckSubgraphUniquenessRequest.SerializeToString,
+            knowledge__language__pb2.SubgraphUniquenessResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CheckPatternMatch(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/knowledge_language.KnowledgeLanguageService/CheckPatternMatch',
+            knowledge__language__pb2.CheckPatternMatchRequest.SerializeToString,
+            knowledge__language__pb2.PatternMatchResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddStatementWithUniqueness(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/knowledge_language.KnowledgeLanguageService/AddStatementWithUniqueness',
+            knowledge__language__pb2.AddStatementRequest.SerializeToString,
+            knowledge__language__pb2.AddStatementResponse.FromString,
             options,
             channel_credentials,
             insecure,

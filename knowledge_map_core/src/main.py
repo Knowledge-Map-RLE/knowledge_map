@@ -106,8 +106,16 @@ def _kill_process_on_port(port: int) -> None:
 
 async def serve() -> None:
     from src import knowledge_language_pb2_grpc
+    from src.config import settings
     from src.services.grpc_server import KnowledgeLanguageServicer
     from src.services.pipeline import Pipeline
+    from src.services.uniqueness_pipeline import UniquenessPipeline
+    from src.infrastructure.qdrant_store import QdrantVectorStore
+    from src.infrastructure.embedder import SentenceTransformerEmbedder
+    from src.infrastructure.subgraph_matcher import SubgraphMatcherVF2
+    from src.infrastructure.frequent_miner import GastonMiner
+    from src.infrastructure.wl_hasher import compute_wl_hash
+    from src.neo4j.writer import Neo4jWriter
 
     # Always kill any previous instance on the port first
     _kill_process_on_port(settings.grpc_port)
@@ -121,7 +129,37 @@ async def serve() -> None:
     )
 
     pipeline = Pipeline()
-    servicer = KnowledgeLanguageServicer(pipeline=pipeline)
+
+    # Initialize uniqueness infrastructure
+    embedder = SentenceTransformerEmbedder(settings.embedding_model)
+    if not embedder.ensure_loaded():
+        logger.warning("Embedder failed to load, using default dimension %d", settings.embedding_dimension)
+
+    vector_store = QdrantVectorStore(
+        url=settings.qdrant_url,
+        collection=settings.qdrant_collection,
+        embedding_dimension=settings.embedding_dimension,
+    )
+    await vector_store.connect()
+
+    subgraph_matcher = SubgraphMatcherVF2()
+    frequent_miner = GastonMiner(
+        min_support=settings.uniqueness_fsg_min_support,
+        max_size=settings.uniqueness_fsg_max_size,
+    )
+
+    uniqueness_pipeline = UniquenessPipeline(
+        embedder=embedder,
+        vector_store=vector_store,
+        subgraph_matcher=subgraph_matcher,
+        frequent_miner=frequent_miner,
+        wl_hasher=compute_wl_hash,
+    )
+
+    servicer = KnowledgeLanguageServicer(
+        pipeline=pipeline,
+        uniqueness_pipeline=uniqueness_pipeline,
+    )
 
     knowledge_language_pb2_grpc.add_KnowledgeLanguageServiceServicer_to_server(
         servicer, server,
@@ -131,12 +169,23 @@ async def serve() -> None:
     server.add_insecure_port(address)
     logger.info("Knowledge Language gRPC server starting on %s", address)
 
+    # Ensure Neo4j indexes for uniqueness
+    try:
+        async with Neo4jWriter() as writer:
+            await writer.ensure_indexes()
+            logger.info("Neo4j uniqueness indexes ensured")
+    except Exception as e:
+        logger.warning("Failed to ensure Neo4j indexes: %s", e)
+
     await server.start()
     try:
         await server.wait_for_termination()
     except KeyboardInterrupt:
         logger.info("Server stopped by user")
         await server.stop(0)
+    finally:
+        await vector_store.close()
+        await uniqueness_pipeline.close()
 
 
 def main() -> None:

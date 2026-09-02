@@ -1,11 +1,12 @@
 [tool.poetry]
 name = "knowledge-map-core"
 version = "0.1.0"
-description = "Knowledge Language Parser — ядро Карты Знаний"
+description = "Knowledge Language Parser – ядро синтаксиса знаний"
 authors = ["Dobrosvet <dimaprokofev@yandex.ru>"]
+package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.12,<4.0"
+python = ">=3.12,<3.15"
 
 grpcio = "1.74.0"
 grpcio-tools = "1.74.0"
@@ -17,6 +18,9 @@ python-dotenv = "1.1.0"
 
 neo4j = "^5.15.0"
 networkx = "3.5"
+qdrant-client = "~1.13.0"
+sentence-transformers = "^3.4.0"
+torch = "2.9.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"

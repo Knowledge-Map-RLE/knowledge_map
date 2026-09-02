@@ -24,19 +24,27 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18knowledge_language.proto\x12\x12knowledge_language\"Y\n\x12ProcessTextRequest\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x0e\n\x06\x64oc_id\x18\x02 \x01(\t\x12\x0f\n\x07use_llm\x18\x03 \x01(\x08\x12\x14\n\x0cllm_model_id\x18\x04 \x01(\t\"\xc9\x02\n\x0eStatementProto\x12\n\n\x02id\x18\x01 \x01(\t\x12/\n\x04type\x18\x02 \x01(\x0e\x32!.knowledge_language.StatementType\x12\x12\n\nsubject_id\x18\x03 \x01(\t\x12\x35\n\x0csubject_type\x18\x04 \x01(\x0e\x32\x1f.knowledge_language.SubjectType\x12\x11\n\tpredicate\x18\x05 \x01(\t\x12\x11\n\tobject_id\x18\x06 \x01(\t\x12\x33\n\x0bobject_type\x18\x07 \x01(\x0e\x32\x1e.knowledge_language.ObjectType\x12\x15\n\rliteral_value\x18\x08 \x01(\t\x12\x12\n\nconfidence\x18\t \x01(\x02\x12\x15\n\rsentence_text\x18\n \x01(\t\x12\x12\n\ncreated_at\x18\x0b \x01(\x03\"A\n\x0c\x43onceptProto\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\x12\x17\n\x0fnormalized_text\x18\x03 \x01(\t\"\xe8\x01\n\x16KnowledgeGraphResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x36\n\nstatements\x18\x02 \x03(\x0b\x32\".knowledge_language.StatementProto\x12\x32\n\x08\x63oncepts\x18\x03 \x03(\x0b\x32 .knowledge_language.ConceptProto\x12\x18\n\x10total_statements\x18\x04 \x01(\x05\x12\x16\n\x0etotal_concepts\x18\x05 \x01(\x05\x12\x0f\n\x07message\x18\x06 \x01(\t\x12\x0e\n\x06\x64oc_id\x18\x07 \x01(\t\"6\n\x12HealthCheckRequest\x12\x14\n\x07service\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_service\"Z\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0f\n\x07service\x18\x02 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\t*C\n\rStatementType\x12\x1e\n\x1aSTATEMENT_TYPE_UNSPECIFIED\x10\x00\x12\x08\n\x04\x46\x41\x43T\x10\x01\x12\x08\n\x04META\x10\x02*W\n\x0bSubjectType\x12\x1c\n\x18SUBJECT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n\x0fSUBJECT_CONCEPT\x10\x01\x12\x15\n\x11SUBJECT_STATEMENT\x10\x02*g\n\nObjectType\x12\x1b\n\x17OBJECT_TYPE_UNSPECIFIED\x10\x00\x12\x12\n\x0eOBJECT_CONCEPT\x10\x01\x12\x14\n\x10OBJECT_STATEMENT\x10\x02\x12\x12\n\x0eOBJECT_LITERAL\x10\x03\x32\xdd\x01\n\x18KnowledgeLanguageService\x12\x61\n\x0bProcessText\x12&.knowledge_language.ProcessTextRequest\x1a*.knowledge_language.KnowledgeGraphResponse\x12^\n\x0bHealthCheck\x12&.knowledge_language.HealthCheckRequest\x1a\'.knowledge_language.HealthCheckResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18knowledge_language.proto\x12\x12knowledge_language\"Y\n\x12ProcessTextRequest\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x0e\n\x06\x64oc_id\x18\x02 \x01(\t\x12\x0f\n\x07use_llm\x18\x03 \x01(\x08\x12\x14\n\x0cllm_model_id\x18\x04 \x01(\t\"\xc9\x02\n\x0eStatementProto\x12\n\n\x02id\x18\x01 \x01(\t\x12/\n\x04type\x18\x02 \x01(\x0e\x32!.knowledge_language.StatementType\x12\x12\n\nsubject_id\x18\x03 \x01(\t\x12\x35\n\x0csubject_type\x18\x04 \x01(\x0e\x32\x1f.knowledge_language.SubjectType\x12\x11\n\tpredicate\x18\x05 \x01(\t\x12\x11\n\tobject_id\x18\x06 \x01(\t\x12\x33\n\x0bobject_type\x18\x07 \x01(\x0e\x32\x1e.knowledge_language.ObjectType\x12\x15\n\rliteral_value\x18\x08 \x01(\t\x12\x12\n\nconfidence\x18\t \x01(\x02\x12\x15\n\rsentence_text\x18\n \x01(\t\x12\x12\n\ncreated_at\x18\x0b \x01(\x03\"A\n\x0c\x43onceptProto\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\x12\x17\n\x0fnormalized_text\x18\x03 \x01(\t\"\xe8\x01\n\x16KnowledgeGraphResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x36\n\nstatements\x18\x02 \x03(\x0b\x32\".knowledge_language.StatementProto\x12\x32\n\x08\x63oncepts\x18\x03 \x03(\x0b\x32 .knowledge_language.ConceptProto\x12\x18\n\x10total_statements\x18\x04 \x01(\x05\x12\x16\n\x0etotal_concepts\x18\x05 \x01(\x05\x12\x0f\n\x07message\x18\x06 \x01(\t\x12\x0e\n\x06\x64oc_id\x18\x07 \x01(\t\"6\n\x12HealthCheckRequest\x12\x14\n\x07service\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_service\"Z\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0f\n\x07service\x18\x02 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\t\"m\n\x16\x43heckUniquenessRequest\x12\x14\n\x0csubject_text\x18\x01 \x01(\t\x12\x11\n\tpredicate\x18\x02 \x01(\t\x12\x13\n\x0bobject_text\x18\x03 \x01(\t\x12\x15\n\rsentence_text\x18\x04 \x01(\t\"}\n\x13\x43\x61ndidateMatchProto\x12\x14\n\x0cstatement_id\x18\x01 \x01(\t\x12\x12\n\nsimilarity\x18\x02 \x01(\x02\x12\x14\n\x0csubject_text\x18\x03 \x01(\t\x12\x11\n\tpredicate\x18\x04 \x01(\t\x12\x13\n\x0bobject_text\x18\x05 \x01(\t\"\xcb\x01\n\x12UniquenessResponse\x12\x34\n\x06status\x18\x01 \x01(\x0e\x32$.knowledge_language.UniquenessStatus\x12\x1d\n\x15\x65xisting_statement_id\x18\x02 \x01(\t\x12\x12\n\nconfidence\x18\x03 \x01(\x02\x12;\n\ncandidates\x18\x04 \x03(\x0b\x32\'.knowledge_language.CandidateMatchProto\x12\x0f\n\x07message\x18\x05 \x01(\t\"h\n\x11SubgraphNodeProto\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tnode_type\x18\x02 \x01(\t\x12\x0c\n\x04text\x18\x03 \x01(\t\x12\x11\n\tpredicate\x18\x04 \x01(\t\x12\x13\n\x0b\x66ingerprint\x18\x05 \x01(\t\"_\n\x11SubgraphEdgeProto\x12\x11\n\tsource_id\x18\x01 \x01(\t\x12\x11\n\ttarget_id\x18\x02 \x01(\t\x12\x11\n\tedge_type\x18\x03 \x01(\t\x12\x11\n\tpredicate\x18\x04 \x01(\t\"\x8c\x01\n\x1e\x43heckSubgraphUniquenessRequest\x12\x34\n\x05nodes\x18\x01 \x03(\x0b\x32%.knowledge_language.SubgraphNodeProto\x12\x34\n\x05\x65\x64ges\x18\x02 \x03(\x0b\x32%.knowledge_language.SubgraphEdgeProto\"6\n\rNodeUidsProto\x12\x12\n\nas_subject\x18\x01 \x03(\t\x12\x11\n\tas_object\x18\x02 \x03(\t\"\x1c\n\x0cUidListProto\x12\x0c\n\x04uids\x18\x01 \x03(\t\"\xfa\x03\n\x12SubgraphMatchProto\x12T\n\x10pattern_to_graph\x18\x01 \x03(\x0b\x32:.knowledge_language.SubgraphMatchProto.PatternToGraphEntry\x12\x1e\n\x16matched_graph_node_ids\x18\x02 \x03(\t\x12G\n\tnode_uids\x18\x03 \x03(\x0b\x32\x34.knowledge_language.SubgraphMatchProto.NodeUidsEntry\x12G\n\tedge_uids\x18\x04 \x03(\x0b\x32\x34.knowledge_language.SubgraphMatchProto.EdgeUidsEntry\x1a\x35\n\x13PatternToGraphEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1aR\n\rNodeUidsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x30\n\x05value\x18\x02 \x01(\x0b\x32!.knowledge_language.NodeUidsProto:\x02\x38\x01\x1aQ\n\rEdgeUidsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12/\n\x05value\x18\x02 \x01(\x0b\x32 .knowledge_language.UidListProto:\x02\x38\x01\"\xa6\x01\n\x14\x46requentPatternProto\x12\x0f\n\x07support\x18\x01 \x01(\x05\x12\x11\n\tfrequency\x18\x02 \x01(\x02\x12\x34\n\x05nodes\x18\x03 \x03(\x0b\x32%.knowledge_language.SubgraphNodeProto\x12\x34\n\x05\x65\x64ges\x18\x04 \x03(\x0b\x32%.knowledge_language.SubgraphEdgeProto\"\x99\x02\n\x1aSubgraphUniquenessResponse\x12\x34\n\x06status\x18\x01 \x01(\x0e\x32$.knowledge_language.UniquenessStatus\x12\x0f\n\x07wl_hash\x18\x02 \x01(\t\x12\x1c\n\x14\x65xisting_subgraph_id\x18\x03 \x01(\t\x12@\n\x10subgraph_matches\x18\x04 \x03(\x0b\x32&.knowledge_language.SubgraphMatchProto\x12\x43\n\x11\x66requent_patterns\x18\x05 \x03(\x0b\x32(.knowledge_language.FrequentPatternProto\x12\x0f\n\x07message\x18\x06 \x01(\t\"l\n\x10PatternNodeProto\x12\n\n\x02id\x18\x01 \x01(\t\x12\x15\n\rrequired_type\x18\x02 \x01(\t\x12\x17\n\x0ftext_constraint\x18\x03 \x01(\t\x12\x1c\n\x14predicate_constraint\x18\x04 \x01(\t\"r\n\x10PatternEdgeProto\x12\x11\n\tsource_id\x18\x01 \x01(\t\x12\x11\n\ttarget_id\x18\x02 \x01(\t\x12\x1a\n\x12required_edge_type\x18\x03 \x01(\t\x12\x1c\n\x14predicate_constraint\x18\x04 \x01(\t\"\x99\x01\n\x18\x43heckPatternMatchRequest\x12\x33\n\x05nodes\x18\x01 \x03(\x0b\x32$.knowledge_language.PatternNodeProto\x12\x33\n\x05\x65\x64ges\x18\x02 \x03(\x0b\x32$.knowledge_language.PatternEdgeProto\x12\x13\n\x0bmax_results\x18\x03 \x01(\x05\"\xad\x01\n\x14PatternMatchResponse\x12\x34\n\x06status\x18\x01 \x01(\x0e\x32$.knowledge_language.UniquenessStatus\x12\x37\n\x07matches\x18\x02 \x03(\x0b\x32&.knowledge_language.SubgraphMatchProto\x12\x15\n\rtotal_matches\x18\x03 \x01(\x05\x12\x0f\n\x07message\x18\x04 \x01(\t\"z\n\x13\x41\x64\x64StatementRequest\x12\x14\n\x0csubject_text\x18\x01 \x01(\t\x12\x11\n\tpredicate\x18\x02 \x01(\t\x12\x13\n\x0bobject_text\x18\x03 \x01(\t\x12\x15\n\rsentence_text\x18\x04 \x01(\t\x12\x0e\n\x06\x64oc_id\x18\x05 \x01(\t\"\xae\x01\n\x14\x41\x64\x64StatementResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12?\n\x11uniqueness_status\x18\x02 \x01(\x0e\x32$.knowledge_language.UniquenessStatus\x12\x14\n\x0cstatement_id\x18\x03 \x01(\t\x12\x1d\n\x15\x65xisting_statement_id\x18\x04 \x01(\t\x12\x0f\n\x07message\x18\x05 \x01(\t*C\n\rStatementType\x12\x1e\n\x1aSTATEMENT_TYPE_UNSPECIFIED\x10\x00\x12\x08\n\x04\x46\x41\x43T\x10\x01\x12\x08\n\x04META\x10\x02*W\n\x0bSubjectType\x12\x1c\n\x18SUBJECT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n\x0fSUBJECT_CONCEPT\x10\x01\x12\x15\n\x11SUBJECT_STATEMENT\x10\x02*g\n\nObjectType\x12\x1b\n\x17OBJECT_TYPE_UNSPECIFIED\x10\x00\x12\x12\n\x0eOBJECT_CONCEPT\x10\x01\x12\x14\n\x10OBJECT_STATEMENT\x10\x02\x12\x12\n\x0eOBJECT_LITERAL\x10\x03*\x8e\x01\n\x10UniquenessStatus\x12\x1d\n\x19UNIQUENESS_STATUS_UNKNOWN\x10\x00\x12\x13\n\x0fUNIQUENESS_SAME\x10\x01\x12\x18\n\x14UNIQUENESS_UNCERTAIN\x10\x02\x12\x18\n\x14UNIQUENESS_DIFFERENT\x10\x03\x12\x12\n\x0eUNIQUENESS_NEW\x10\x04\x32\xa1\x05\n\x18KnowledgeLanguageService\x12\x61\n\x0bProcessText\x12&.knowledge_language.ProcessTextRequest\x1a*.knowledge_language.KnowledgeGraphResponse\x12^\n\x0bHealthCheck\x12&.knowledge_language.HealthCheckRequest\x1a\'.knowledge_language.HealthCheckResponse\x12\x65\n\x0f\x43heckUniqueness\x12*.knowledge_language.CheckUniquenessRequest\x1a&.knowledge_language.UniquenessResponse\x12}\n\x17\x43heckSubgraphUniqueness\x12\x32.knowledge_language.CheckSubgraphUniquenessRequest\x1a..knowledge_language.SubgraphUniquenessResponse\x12k\n\x11\x43heckPatternMatch\x12,.knowledge_language.CheckPatternMatchRequest\x1a(.knowledge_language.PatternMatchResponse\x12o\n\x1a\x41\x64\x64StatementWithUniqueness\x12\'.knowledge_language.AddStatementRequest\x1a(.knowledge_language.AddStatementResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'knowledge_language_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_STATEMENTTYPE']._serialized_start=921
-  _globals['_STATEMENTTYPE']._serialized_end=988
-  _globals['_SUBJECTTYPE']._serialized_start=990
-  _globals['_SUBJECTTYPE']._serialized_end=1077
-  _globals['_OBJECTTYPE']._serialized_start=1079
-  _globals['_OBJECTTYPE']._serialized_end=1182
+  _globals['_SUBGRAPHMATCHPROTO_PATTERNTOGRAPHENTRY']._loaded_options = None
+  _globals['_SUBGRAPHMATCHPROTO_PATTERNTOGRAPHENTRY']._serialized_options = b'8\001'
+  _globals['_SUBGRAPHMATCHPROTO_NODEUIDSENTRY']._loaded_options = None
+  _globals['_SUBGRAPHMATCHPROTO_NODEUIDSENTRY']._serialized_options = b'8\001'
+  _globals['_SUBGRAPHMATCHPROTO_EDGEUIDSENTRY']._loaded_options = None
+  _globals['_SUBGRAPHMATCHPROTO_EDGEUIDSENTRY']._serialized_options = b'8\001'
+  _globals['_STATEMENTTYPE']._serialized_start=3618
+  _globals['_STATEMENTTYPE']._serialized_end=3685
+  _globals['_SUBJECTTYPE']._serialized_start=3687
+  _globals['_SUBJECTTYPE']._serialized_end=3774
+  _globals['_OBJECTTYPE']._serialized_start=3776
+  _globals['_OBJECTTYPE']._serialized_end=3879
+  _globals['_UNIQUENESSSTATUS']._serialized_start=3882
+  _globals['_UNIQUENESSSTATUS']._serialized_end=4024
   _globals['_PROCESSTEXTREQUEST']._serialized_start=48
   _globals['_PROCESSTEXTREQUEST']._serialized_end=137
   _globals['_STATEMENTPROTO']._serialized_start=140
@@ -49,6 +57,46 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_HEALTHCHECKREQUEST']._serialized_end=827
   _globals['_HEALTHCHECKRESPONSE']._serialized_start=829
   _globals['_HEALTHCHECKRESPONSE']._serialized_end=919
-  _globals['_KNOWLEDGELANGUAGESERVICE']._serialized_start=1185
-  _globals['_KNOWLEDGELANGUAGESERVICE']._serialized_end=1406
+  _globals['_CHECKUNIQUENESSREQUEST']._serialized_start=921
+  _globals['_CHECKUNIQUENESSREQUEST']._serialized_end=1030
+  _globals['_CANDIDATEMATCHPROTO']._serialized_start=1032
+  _globals['_CANDIDATEMATCHPROTO']._serialized_end=1157
+  _globals['_UNIQUENESSRESPONSE']._serialized_start=1160
+  _globals['_UNIQUENESSRESPONSE']._serialized_end=1363
+  _globals['_SUBGRAPHNODEPROTO']._serialized_start=1365
+  _globals['_SUBGRAPHNODEPROTO']._serialized_end=1469
+  _globals['_SUBGRAPHEDGEPROTO']._serialized_start=1471
+  _globals['_SUBGRAPHEDGEPROTO']._serialized_end=1566
+  _globals['_CHECKSUBGRAPHUNIQUENESSREQUEST']._serialized_start=1569
+  _globals['_CHECKSUBGRAPHUNIQUENESSREQUEST']._serialized_end=1709
+  _globals['_NODEUIDSPROTO']._serialized_start=1711
+  _globals['_NODEUIDSPROTO']._serialized_end=1765
+  _globals['_UIDLISTPROTO']._serialized_start=1767
+  _globals['_UIDLISTPROTO']._serialized_end=1795
+  _globals['_SUBGRAPHMATCHPROTO']._serialized_start=1798
+  _globals['_SUBGRAPHMATCHPROTO']._serialized_end=2304
+  _globals['_SUBGRAPHMATCHPROTO_PATTERNTOGRAPHENTRY']._serialized_start=2084
+  _globals['_SUBGRAPHMATCHPROTO_PATTERNTOGRAPHENTRY']._serialized_end=2137
+  _globals['_SUBGRAPHMATCHPROTO_NODEUIDSENTRY']._serialized_start=2139
+  _globals['_SUBGRAPHMATCHPROTO_NODEUIDSENTRY']._serialized_end=2221
+  _globals['_SUBGRAPHMATCHPROTO_EDGEUIDSENTRY']._serialized_start=2223
+  _globals['_SUBGRAPHMATCHPROTO_EDGEUIDSENTRY']._serialized_end=2304
+  _globals['_FREQUENTPATTERNPROTO']._serialized_start=2307
+  _globals['_FREQUENTPATTERNPROTO']._serialized_end=2473
+  _globals['_SUBGRAPHUNIQUENESSRESPONSE']._serialized_start=2476
+  _globals['_SUBGRAPHUNIQUENESSRESPONSE']._serialized_end=2757
+  _globals['_PATTERNNODEPROTO']._serialized_start=2759
+  _globals['_PATTERNNODEPROTO']._serialized_end=2867
+  _globals['_PATTERNEDGEPROTO']._serialized_start=2869
+  _globals['_PATTERNEDGEPROTO']._serialized_end=2983
+  _globals['_CHECKPATTERNMATCHREQUEST']._serialized_start=2986
+  _globals['_CHECKPATTERNMATCHREQUEST']._serialized_end=3139
+  _globals['_PATTERNMATCHRESPONSE']._serialized_start=3142
+  _globals['_PATTERNMATCHRESPONSE']._serialized_end=3315
+  _globals['_ADDSTATEMENTREQUEST']._serialized_start=3317
+  _globals['_ADDSTATEMENTREQUEST']._serialized_end=3439
+  _globals['_ADDSTATEMENTRESPONSE']._serialized_start=3442
+  _globals['_ADDSTATEMENTRESPONSE']._serialized_end=3616
+  _globals['_KNOWLEDGELANGUAGESERVICE']._serialized_start=4027
+  _globals['_KNOWLEDGELANGUAGESERVICE']._serialized_end=4700
 # @@protoc_insertion_point(module_scope)

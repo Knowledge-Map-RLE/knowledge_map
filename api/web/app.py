@@ -143,6 +143,10 @@ app.include_router(data_download_ws.router, prefix="/api/data_download")
 from web.routers.data_extraction import patterns as patterns_router
 app.include_router(patterns_router.router, prefix="/api/data_extraction")
 
+# Алгоритм уникальности знаний (uniqueness check, subgraph, pattern)
+from web.routers.uniqueness import router as uniqueness_router
+app.include_router(uniqueness_router)
+
 # Лингвистические паттерны
 from web.routers import linguistic as linguistic_router
 app.include_router(linguistic_router.router)
@@ -298,6 +302,26 @@ async def _warm_counts_cache():
         except Exception as e:
             logger.warning(f"[startup] Cache warmup failed: {e}")
     threading.Thread(target=_warm, daemon=True).start()
+
+
+@app.on_event("startup")
+async def _ensure_uniqueness_indexes():
+    """Создаёт индексы Neo4j для алгоритма уникальности знаний."""
+    UNIQUENESS_INDEXES = [
+        "CREATE INDEX IF NOT EXISTS FOR (s:Statement) ON (s.fingerprint)",
+        "CREATE INDEX IF NOT EXISTS FOR (sf:SubgraphFingerprint) ON (sf.wl_hash)",
+        "CREATE INDEX IF NOT EXISTS FOR (sf:SubgraphFingerprint) ON (sf.id)",
+    ]
+    try:
+        from neomodel import db
+        for cypher in UNIQUENESS_INDEXES:
+            try:
+                db.cypher_query(cypher)
+            except Exception as e:
+                logger.warning(f"[startup] Uniqueness index failed: {cypher[:60]}... {e}")
+        logger.info("[startup] Uniqueness indexes ensured")
+    except Exception as e:
+        logger.warning(f"[startup] Could not create uniqueness indexes: {e}")
 
 
 @app.on_event("shutdown")

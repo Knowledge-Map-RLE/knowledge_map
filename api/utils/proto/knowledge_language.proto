@@ -129,9 +129,20 @@ message CheckSubgraphUniquenessRequest {
     repeated SubgraphEdgeProto edges = 2;
 }
 
+message NodeUidsProto {
+    repeated string as_subject = 1;
+    repeated string as_object = 2;
+}
+
+message UidListProto {
+    repeated string uids = 1;
+}
+
 message SubgraphMatchProto {
     map<string, string> pattern_to_graph = 1;
     repeated string matched_graph_node_ids = 2;
+    map<string, NodeUidsProto> node_uids = 3;
+    map<string, UidListProto> edge_uids = 4;
 }
 
 message FrequentPatternProto {

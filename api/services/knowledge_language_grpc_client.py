@@ -203,6 +203,88 @@ class KnowledgeLanguageGrpcClient:
         except Exception as e:
             return {"status": "UNKNOWN", "service": "knowledge_language", "details": str(e), "timestamp": ""}
 
+    # ── Uniqueness (алгоритм уникальности знаний) ────────────────────────────────
+
+    @staticmethod
+    def _status_to_str(status_code: int) -> str:
+        mapping = {
+            0: "UNKNOWN",
+            1: "SAME",
+            2: "UNCERTAIN",
+            3: "DIFFERENT",
+            4: "NEW",
+        }
+        return mapping.get(status_code, "UNKNOWN")
+
+    async def check_uniqueness(
+        self,
+        subject_text: str,
+        predicate: str,
+        object_text: str,
+        sentence_text: str,
+        timeout: int = 30,
+    ) -> dict:
+        await self.connect()
+        try:
+            request = knowledge_language_pb2.CheckUniquenessRequest(
+                subject_text=subject_text,
+                predicate=predicate,
+                object_text=object_text,
+                sentence_text=sentence_text,
+            )
+            response = await self.stub.CheckUniqueness(request, timeout=timeout)
+            return {
+                "status": self._status_to_str(response.status),
+                "existing_statement_id": response.existing_statement_id,
+                "confidence": response.confidence,
+                "candidates": [
+                    {
+                        "statement_id": c.statement_id,
+                        "similarity": c.similarity,
+                        "subject_text": c.subject_text,
+                        "predicate": c.predicate,
+                        "object_text": c.object_text,
+                    }
+                    for c in response.candidates
+                ],
+                "message": response.message,
+            }
+        except Exception as e:
+            logger.exception("[kl_grpc] check_uniqueness failed")
+            return {"status": "UNKNOWN", "existing_statement_id": "", "confidence": 0.0,
+                    "candidates": [], "message": str(e)}
+
+    async def add_statement_with_uniqueness(
+        self,
+        subject_text: str,
+        predicate: str,
+        object_text: str,
+        sentence_text: str,
+        doc_id: str = "",
+        timeout: int = 60,
+    ) -> dict:
+        await self.connect()
+        try:
+            request = knowledge_language_pb2.AddStatementRequest(
+                subject_text=subject_text,
+                predicate=predicate,
+                object_text=object_text,
+                sentence_text=sentence_text,
+                doc_id=doc_id,
+            )
+            response = await self.stub.AddStatementWithUniqueness(request, timeout=timeout)
+            return {
+                "success": response.success,
+                "uniqueness_status": self._status_to_str(response.uniqueness_status),
+                "statement_id": response.statement_id,
+                "existing_statement_id": response.existing_statement_id,
+                "message": response.message,
+            }
+        except Exception as e:
+            logger.exception("[kl_grpc] add_statement_with_uniqueness failed")
+            return {"success": False, "uniqueness_status": "UNKNOWN",
+                    "statement_id": "", "existing_statement_id": "", "message": str(e)}
+
 
 _kl_client: KnowledgeLanguageGrpcClient | None = None
 

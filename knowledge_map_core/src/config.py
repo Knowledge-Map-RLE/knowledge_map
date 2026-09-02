@@ -28,5 +28,17 @@ class Settings(BaseSettings):
 
     hugging_face_token: str = Field(default="", alias="HUGGING_FACE_TOKEN")
 
+    qdrant_url: str = Field(default="http://localhost:6333", alias="QDRANT_URL")
+    qdrant_collection: str = Field(default="statement_embeddings", alias="QDRANT_COLLECTION")
+    embedding_model: str = Field(default="all-MiniLM-L6-v2", alias="EMBEDDING_MODEL")
+    embedding_dimension: int = Field(default=384, alias="EMBEDDING_DIMENSION")
+
+    uniqueness_cosine_threshold: float = Field(default=0.95, alias="UNIQUENESS_COSINE_THRESHOLD")
+    uniqueness_cosine_uncertain: float = Field(default=0.85, alias="UNIQUENESS_COSINE_UNCERTAIN")
+    uniqueness_top_k: int = Field(default=20, alias="UNIQUENESS_TOP_K")
+    uniqueness_wl_iterations: int = Field(default=3, alias="UNIQUENESS_WL_ITERATIONS")
+    uniqueness_fsg_min_support: int = Field(default=2, alias="UNIQUENESS_FSG_MIN_SUPPORT")
+    uniqueness_fsg_max_size: int = Field(default=10, alias="UNIQUENESS_FSG_MAX_SIZE")
+
 
 settings = Settings()

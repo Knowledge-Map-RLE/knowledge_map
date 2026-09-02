@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import logging
 from typing import Any
 
-from neo4j import AsyncGraphDatabase, async_transaction
+from neo4j import AsyncGraphDatabase
 
 from src.config import settings
 from src.domain.models import Statement, StatementType, Concept, Literal
@@ -29,6 +30,35 @@ class Neo4jWriter:
         if self._driver:
             await self._driver.close()
 
+    async def ensure_indexes(self) -> None:
+        if not self._driver:
+            raise RuntimeError("Not connected. Use async with.")
+
+        indexes = [
+            "CREATE INDEX IF NOT EXISTS FOR (s:Statement) ON (s.fingerprint)",
+            "CREATE INDEX IF NOT EXISTS FOR (sf:SubgraphFingerprint) ON (sf.wl_hash)",
+            "CREATE INDEX IF NOT EXISTS FOR (sf:SubgraphFingerprint) ON (sf.id)",
+        ]
+
+        async with self._driver.session() as session:
+            for cypher in indexes:
+                try:
+                    await session.run(cypher)
+                except Exception as e:
+                    logger.warning("Failed to create index: %s — %s", cypher[:60], e)
+
+    def _compute_fingerprint(self, stmt: Statement) -> str:
+        subject_id = stmt.subject.id if isinstance(stmt.subject, Concept) else str(stmt.subject.id)
+        object_id = (
+            stmt.object.id
+            if isinstance(stmt.object, Concept)
+            else str(stmt.object.id)
+            if isinstance(stmt.object, Statement)
+            else stmt.object.value
+        )
+        raw = f"{subject_id.lower()}|{stmt.predicate.lower()}|{object_id.lower()}|positive"
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
     async def write_graph(self, statements: list[Statement], doc_id: str = "") -> dict[str, Any]:
         if not self._driver:
             raise RuntimeError("Not connected. Use async with.")
@@ -38,7 +68,8 @@ class Neo4jWriter:
         async with self._driver.session() as session:
             for stmt in statements:
                 try:
-                    await session.execute_write(self._write_statement, stmt, doc_id)
+                    fp = self._compute_fingerprint(stmt)
+                    await session.execute_write(self._write_statement, stmt, doc_id, fp)
                     result["statements_written"] += 1
                 except Exception as e:
                     logger.exception("Failed to write statement %s", stmt.id)
@@ -46,7 +77,7 @@ class Neo4jWriter:
 
         return result
 
-    async def _write_statement(self, tx, stmt: Statement, doc_id: str) -> None:
+    async def _write_statement(self, tx, stmt: Statement, doc_id: str, fingerprint: str) -> None:
         if doc_id:
             await tx.run(
                 """
@@ -69,7 +100,8 @@ class Neo4jWriter:
                 s.predicate = $predicate,
                 s.confidence = $confidence,
                 s.sentence = $sentence,
-                s.created_at = $created_at
+                s.created_at = $created_at,
+                s.fingerprint = $fingerprint
             """,
             id=str(stmt.id),
             type=stmt_type,
@@ -77,6 +109,7 @@ class Neo4jWriter:
             confidence=stmt.confidence,
             sentence=stmt.sentence_text,
             created_at=int(stmt.created_at.timestamp()),
+            fingerprint=fingerprint,
         )
 
         if doc_id:
