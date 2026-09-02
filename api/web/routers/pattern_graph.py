@@ -2,7 +2,6 @@
 REST endpoints для лингвистического графа (Action + LexicalUnit).
 
 Endpoints:
-  GET  /api/patterns/linguistic-graph/{doc_id}       — граф одного документа
   GET  /api/patterns/global-linguistic-graph         — глобальный граф всех документов
   POST /api/patterns/global-linguistic-graph/layout  — вычислить и сохранить layout
 """
@@ -17,29 +16,6 @@ from web.dependencies import get_pattern_graph_repository
 
 router = APIRouter(prefix="/api/patterns", tags=["patterns"])
 logger = logging.getLogger(__name__)
-
-
-# ---------------------------------------------------------------------------
-# Linguistic graph endpoints
-# ---------------------------------------------------------------------------
-
-
-@router.get("/linguistic-graph/{doc_id}")
-def get_document_linguistic_graph(
-    doc_id: str,
-    repo: PatternGraphRepository = Depends(get_pattern_graph_repository),
-) -> Dict[str, Any]:
-    """Возвращает лингвистический граф одного документа.
-
-    Nodes: Action и LexicalUnit.
-    Edges: LEADS_TO, DEPENDS_ON, PART_OF.
-    """
-    try:
-        nodes, edges = repo.get_document_linguistic_graph(doc_id)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка получения графа: {e}")
-
-    return {"doc_id": doc_id, "nodes": nodes, "edges": edges}
 
 
 @router.get("/global-linguistic-graph")

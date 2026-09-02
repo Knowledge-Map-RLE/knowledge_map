@@ -17,6 +17,7 @@ import Social_network from './pages/Social_network';
 import SocialProfilePage from './pages/Social_network/ProfilePage';
 import Subscription from './pages/Subscription';
 import PatternEditor from './pages/Pattern_editor';
+import PatternMiner from './pages/Pattern_miner';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route path="/science_articles" element={<><Science_articles /><Knowledge_map_ui /></>} />
               <Route path="/pattern_analysis" element={<><PatternAnalysis /><Knowledge_map_ui /></>} />
               <Route path="/pattern_editor" element={<><PatternEditor /></>} />
+              <Route path="/pattern_miner" element={<><PatternMiner /></>} />
               <Route path="/data_download" element={<Data_download />} />
               <Route path="/article_editor" element={<Article_editor />} />
               <Route path="/social_network" element={<Social_network />} />

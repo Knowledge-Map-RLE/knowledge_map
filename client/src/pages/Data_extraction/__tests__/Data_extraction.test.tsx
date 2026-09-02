@@ -87,7 +87,6 @@ describe('Data_extraction Component', () => {
         expect(screen.getByText('Перетащите PDF или нажмите для выбора')).toBeInTheDocument();
         expect(screen.getByText('Аннотатор')).toBeInTheDocument();
         expect(screen.getByText('Исходный PDF')).toBeInTheDocument();
-        expect(screen.getByText('Паттерны')).toBeInTheDocument();
     });
 
     test('отображает область загрузки файлов', async () => {

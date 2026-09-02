@@ -2,11 +2,8 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Header from '../../widgets/Header';
 import MarkdownEditor from '../../widgets/MarkdownEditor';
 import { AnnotationWorkspace } from './Annotation';
-import { LinguisticPatternAnalysis } from './Patterns';
 import { useAuth } from '../../entities/auth';
 
-import { ArticleActionGraph } from './Patterns/ArticleActionGraph';
-import { ArticleLinguisticGraph } from './Patterns/ArticleLinguisticGraph';
 import Document_downloader_ui from './Document_downloader_ui';
 import type { DocumentListHandle } from './Document_downloader_ui';
 import { useDocumentState } from './hooks/useDocumentState';
@@ -106,24 +103,6 @@ const DataExtractionUI: React.FC = () => {
                             Исходный PDF
                         </button>
                         <button
-                            className={`${styles.tabButton} ${activeTab === 'patterns' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('patterns')}
-                        >
-                            Паттерны
-                        </button>
-                        <button
-                            className={`${styles.tabButton} ${activeTab === 'linguistic-graph' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('linguistic-graph')}
-                        >
-                            Лингвистический граф
-                        </button>
-                        <button
-                            className={`${styles.tabButton} ${activeTab === 'graph' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('graph')}
-                        >
-                            Карта статьи
-                        </button>
-                        <button
                             className={`${styles.tabButton} ${activeTab === 'chat' ? styles.active : ''}`}
                             onClick={openDocumentChat}
                             disabled={!selectedDocument}
@@ -203,35 +182,6 @@ const DataExtractionUI: React.FC = () => {
                             </div>
                         )}
 
-                        {activeTab === 'patterns' && (
-                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
-                                {selectedDocument ? (
-                                    <LinguisticPatternAnalysis docId={selectedDocument.uid} />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
-                                )}
-                            </div>
-                        )}
-
-                        {activeTab === 'linguistic-graph' && (
-                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
-                                {selectedDocument ? (
-                                    <ArticleLinguisticGraph docId={selectedDocument.uid} />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
-                                )}
-                            </div>
-                        )}
-
-                        {activeTab === 'graph' && (
-                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }}>
-                                {selectedDocument ? (
-                                    <ArticleActionGraph docId={selectedDocument.uid} />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
-                                )}
-                            </div>
-                        )}
                         {activeTab === 'chat' && (
                             <div className={styles.chatContainer}>
                                 {selectedDocument && isAuthenticated && user ? (

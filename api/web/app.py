@@ -36,10 +36,8 @@ from web.routers import pdf, layout, s3, ai_models, image_proxy, worker_status
 from web.routers.data_extraction import (
     nlp as nlp_router,
     ontology as ontology_router,
-    actions as actions_router,
     pubmed as pubmed_router,
     markdown_validation as markdown_validation_router,
-    auto_review_router,
     shared_actions as shared_actions_router,
 )
 # Статик роутер — оставляем из src (TRANSITIONAL)
@@ -127,10 +125,8 @@ app.include_router(image_proxy.router)
 # data_extraction sub-роутеры
 app.include_router(nlp_router.router, prefix="/api/data_extraction")
 app.include_router(ontology_router.router, prefix="/api/data_extraction")
-app.include_router(actions_router.router, prefix="/api/data_extraction")
 app.include_router(pubmed_router.router, prefix="/api/data_extraction")
 app.include_router(markdown_validation_router.router, prefix="/api/data_extraction")
-app.include_router(auto_review_router.router, prefix="/api/data_extraction")
 app.include_router(shared_actions_router.router, prefix="/api/data_extraction")
 app.include_router(worker_status.router, prefix="/api")
 
@@ -154,6 +150,10 @@ app.include_router(linguistic_router.router)
 # Лингвистический граф (Action + LexicalUnit)
 from web.routers import pattern_graph as pattern_graph_router
 app.include_router(pattern_graph_router.router)
+
+# Выявление паттернов по графу утверждений (pattern-miner)
+from web.routers.pattern_miner import router as pattern_miner_router
+app.include_router(pattern_miner_router)
 
 # Редактор статей (article_editor)
 app.include_router(article_editor_router.router, prefix="/api")

@@ -1,10 +1,6 @@
 import type { LinguisticGraphResponse, DependencyNgramResponse, PatternContextResponse, PatternData, PatternGraphData, ExtractPatternsResponse, PatternCreateStatus, SavePatternsResponse } from '../../entities/document';
 import { fetchJson } from './http';
 
-export async function getDocumentLinguisticGraph(docId: string): Promise<LinguisticGraphResponse> {
-  return fetchJson(`/api/patterns/linguistic-graph/${encodeURIComponent(docId)}`);
-}
-
 export async function getGlobalLinguisticGraph(options?: {
   lexicalLimit?: number;
   actionLimit?: number;

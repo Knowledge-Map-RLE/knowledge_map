@@ -19,6 +19,7 @@ export const LINKS: readonly ProjectTitleLink[] = [
     { to: '/science_articles', label: 'Карта научных статей' },
     { to: '/pattern_analysis', label: 'Анализ паттернов' },
     { to: '/pattern_editor', label: 'Проверка уникальности знаний' },
+    { to: '/pattern_miner', label: 'Паттерны графа утверждений' },
     { to: '/article_editor', label: 'Редактор статей' },
     { to: '/social_network', label: 'Социальная сеть' },
     { to: '/subscription', label: 'Подписка' },
