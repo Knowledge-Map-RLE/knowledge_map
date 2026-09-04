@@ -1,0 +1,47 @@
+B T1 B1 | doi= | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=
+
+B T22 B2 | sub=A. russatus | pred=is | obj=golden spiny mouse species
+
+B T22 B3 | sub=clusterin | pred=is | obj=target driving resilience to age-related decline
+
+B T4 B4 | sub=A. russatus | pred=has | obj=lower inflammaging | epi=experimental_result | src="exhibited better protection against age-associated inflammaging" | ctx=compared to 2.5-year-old laboratory mice
+
+B T4 B5 | sub=A. russatus | pred=has | obj=lower fibrosis | epi=experimental_result | src="exhibited better protection against age-associated fibrosis" | ctx=compared to 2.5-year-old laboratory mice
+
+B T4 B6 | sub=A. russatus | pred=has | obj=lower cellular senescence | epi=experimental_result | src="exhibited better protection against age-associated cellular senescence" | ctx=compared to 2.5-year-old laboratory mice
+
+B T4 B7 | sub=A. russatus | pred=has | obj=higher resilience to age-related functional decline | epi=author_interpretation | src="drive resilience to organismal age-related functional decline"
+
+B T4 B8 | sub=A. russatus | pred=is | obj=model organism for aging research | epi=author_interpretation | src="introduce A. russatus as a model organism for the investigation and identification of targets"
+
+B T4 B9 | sub=clusterin | pred=drives | obj=resilience to age-related functional decline | epi=author_interpretation | src="targets, such as clusterin, which drive resilience to organismal age-related functional decline"
+
+B T4 B10 | sub=previous study | pred=was not conducted under | obj=pathogen-free and thermally regulated conditions | epi=limitation | src="that study was not conducted under pathogen-free and thermally regulated conditions"
+
+B T4 B11 | sub=animals | pred=were exposed to | obj=seasonal temperature variations | epi=limitation | src="the animals were exposed to seasonal temperature variations"
+
+B T4 B12 | sub=mortality rates | pred=were highest during | obj=winter | epi=limitation | src="resulting in the highest mortality rates during winter"
+
+B T4 B13 | sub=sex-specific analysis | pred=was challenging | obj=due to limited mice | epi=limitation | src="it was challenging to have enough mice to perform sex-specific analysis"
+
+B T4 B14 | sub=some analyses | pred=were performed in | obj=age-matched samples | epi=limitation | src="some analyses were performed in the age-matched samples because of the limited sample availability"
+
+B T4 B15 | sub=Mus cohorts | pred=were maintained under | obj=standard laboratory conditions | epi=limitation | src="the Mus cohorts were maintained under standard laboratory conditions"
+
+B T4 B16 | sub=Mus cohorts | pred=differ from | obj=Acomys conditions | epi=limitation | src="vastly different from Acomys"
+
+B T38 B17 | sub=study | pred=introduces | obj=A. russatus as model organism | neg=false | src="our findings introduce A. russatus as a model organism"
+
+B T57 B18 | param=protection against age-associated decline | dir=increased | sig=not_reported | detail=4.5-year-old A. russatus vs 2.5-year-old laboratory mice | grp=[B19,B20] | src="compared to 2.5-year-old laboratory mice, the 4.5-year-old A. russatus exhibited better protection against age-associated inflammaging, fibrosis, and cellular senescence"
+
+B T55 B19 | name=A. russatus aged cohort | n=not reported | cond=4.5-year-old | purpose=aging comparison
+
+B T55 B20 | name=Mus laboratory mice cohort | n=not reported | cond=2.5-year-old, standard laboratory conditions | purpose=aging comparison
+
+B T7 B21 | hyp=A future well-controlled study to explore maximal life span of A. russatus would be important | disproof=
+
+B T2 B22 | sub=study | pred=explore | obj=maximal life span of A. russatus
+
+B T58 B23 | src=clusterin | tgt=resilience to age-related functional decline | rel=drives | conf=medium | ev="targets, such as clusterin, which drive resilience to organismal age-related functional decline"
+
+B T14 B24 | name=aging cohort study | type=longitudinal aging comparison | grp=[B19,B20] | steps=setup aging cohort of Acomys and Mus, comprehensive characterization | findings=4.5-year-old A. russatus exhibited better protection against age-associated inflammaging, fibrosis, and cellular senescence compared to 2.5-year-old laboratory mice | src="we did our best to set up the aging cohort of Acomys and Mus and to comprehensively characterize them"

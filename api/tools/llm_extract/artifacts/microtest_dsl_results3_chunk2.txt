@@ -1,0 +1,62 @@
+B T1 B1 | title=Immunometabolic resistors of aging in long-lived golden spiny mice
+
+B T55 B2 | name=Young M. musculus | n=3 | cond=0.5-year-old, liver | purpose=RNA-seq comparison
+B T55 B3 | name=Aged M. musculus | n=3 | cond=2.5-year-old, liver | purpose=RNA-seq comparison
+B T55 B4 | name=Young A. russatus | n=3 | cond=0.5-year-old, liver | purpose=RNA-seq comparison
+B T55 B5 | name=Aged A. russatus | n=3 | cond=2.5-year-old, liver | purpose=RNA-seq comparison
+
+B T14 B6 | name=Bulk RNA-seq of liver | type=transcriptomics | grp=[B2,B3,B4,B5] | steps=RNA extraction, sequencing, DEG analysis | findings=[B23,B24,B25,B26,B27,B28,B29,B30,B31,B32] | src="we performed bulk RNA sequencing (RNA-seq) of young (0.5-year-old) and aged (2.5-year-old) M. musculus and A. russatus"
+
+B T4 B7 | sub=A. russatus | pred=has | obj=lower hepatic ballooning | epi=experimental_result | ctx=liver, aging | src="the livers of A. russatus did not show age-related increases in hepatic ballooning"
+B T4 B8 | sub=A. russatus | pred=has | obj=lower inflammation | epi=experimental_result | ctx=liver, aging | src="the livers of A. russatus did not show age-related increases in ... inflammation"
+B T4 B9 | sub=A. russatus | pred=has | obj=lower fibrosis | epi=experimental_result | ctx=liver, aging | src="the livers of A. russatus did not show age-related increases in ... fibrosis"
+
+B T4 B10 | sub=M. musculus | pred=has | obj=higher hepatic ballooning | epi=experimental_result | ctx=liver, aging | src="important phenotypes of aging observed in M. musculus"
+B T4 B11 | sub=M. musculus | pred=has | obj=higher inflammation | epi=experimental_result | ctx=liver, aging | src="important phenotypes of aging observed in M. musculus"
+B T4 B12 | sub=M. musculus | pred=has | obj=higher fibrosis | epi=experimental_result | ctx=liver, aging | src="important phenotypes of aging observed in M. musculus"
+
+B T4 B13 | sub=A. russatus | pred=has | obj=lower differentially expressed genes | epi=experimental_result | ctx=liver, aging | src="we found fewer differentially expressed genes (DEGs) during aging in the liver of A. russatus compared to M. musculus"
+
+B T4 B14 | sub=Aged M. musculus | pred=has | obj=higher fibrosis gene expression | epi=experimental_result | ctx=liver | src="aged M. musculus showed elevated expression levels of genes related to fibrosis (Lcn2 and Acta2)"
+B T4 B15 | sub=Aged M. musculus | pred=has | obj=higher inflammaging gene expression | epi=experimental_result | ctx=liver | src="aged M. musculus showed elevated expression levels of genes related to inflammaging (Il1b, Ccr2, Cxcl1, and Nos2)"
+B T4 B16 | sub=Aged M. musculus | pred=has | obj=higher senescence gene expression | epi=experimental_result | ctx=liver | src="aged M. musculus showed elevated expression levels of genes related to senescence (Cdkn1a)"
+B T4 B17 | sub=Aged M. musculus | pred=has | obj=lower lipid metabolism gene expression | epi=experimental_result | ctx=liver | src="along with reduced levels of genes related to lipid metabolism (Ppara, Mup1, and Acsl1)"
+
+B T4 B18 | sub=Aged A. russatus | pred=has | obj=higher Bmal1 expression | epi=experimental_result | ctx=liver | src="the liver of aged A. russatus exhibited up-regulation of genes such as Bmal1"
+B T4 B19 | sub=Aged A. russatus | pred=has | obj=higher Tnfaip8l1 expression | epi=experimental_result | ctx=liver | src="the liver of aged A. russatus exhibited up-regulation of genes such as Tnfaip8l1"
+B T4 B20 | sub=Aged A. russatus | pred=has | obj=lower Spp1 expression | epi=experimental_result | ctx=liver | src="aged A. russatus also showed reduced expression levels of Spp1"
+
+B T4 B21 | sub=Spp1 | pred=encodes | obj=osteopontin | epi=background_claim | src="a gene encoding osteopontin"
+B T4 B22 | sub=osteopontin | pred=plays central role in | obj=development of chronic liver diseases | epi=background_claim | src="which plays a central role in the development of various chronic liver diseases"
+
+B T57 B23 | param=detected genes | dir=no_change | sig=not_reported | detail=13,971 genes (M. musculus) vs 12,022 genes (A. russatus) | exp=B6 | grp=[B2,B3,B4,B5] | src="The total number of detected genes was comparable between the species: 13,971 genes for M. musculus and 12,022 genes for A. russatus"
+B T57 B24 | param=differentially expressed genes during aging | dir=decreased | sig=not_reported | detail=fewer DEGs in A. russatus vs M. musculus | figure=fig. S4, D and E | exp=B6 | src="we found fewer differentially expressed genes (DEGs) during aging in the liver of A. russatus compared to M. musculus"
+B T57 B25 | param=top age-related gene expression changes | dir=no_change | sig=not_reported | detail=top 25 up/down-regulated genes in M. musculus unchanged in A. russatus | figure=Fig. 3, B and C | exp=B6 | src="the top age-related up-regulated or down-regulated genes in the liver of M. musculus were not altered in A. russatus"
+
+B T57 B26 | param=fibrosis gene expression (Lcn2, Acta2) | dir=increased | sig=not_reported | detail=aged M. musculus | figure=fig. S4F | exp=B6 | grp=[B3] | src="aged M. musculus showed elevated expression levels of genes related to fibrosis (Lcn2 and Acta2)"
+B T57 B27 | param=inflammaging gene expression (Il1b, Ccr2, Cxcl1, Nos2) | dir=increased | sig=not_reported | detail=aged M. musculus | figure=fig. S4F | exp=B6 | grp=[B3] | src="aged M. musculus showed elevated expression levels of genes related to inflammaging"
+B T57 B28 | param=senescence gene expression (Cdkn1a) | dir=increased | sig=not_reported | detail=aged M. musculus | figure=fig. S4F | exp=B6 | grp=[B3] | src="aged M. musculus showed elevated expression levels of genes related to senescence (Cdkn1a)"
+B T57 B29 | param=lipid metabolism gene expression (Ppara, Mup1, Acsl1) | dir=decreased | sig=not_reported | detail=aged M. musculus | figure=fig. S4F | exp=B6 | grp=[B3] | src="along with reduced levels of genes related to lipid metabolism (Ppara, Mup1, and Acsl1)"
+
+B T57 B30 | param=Bmal1 expression | dir=increased | sig=not_reported | detail=aged A. russatus | figure=fig. S4G | exp=B6 | grp=[B5] | src="the liver of aged A. russatus exhibited up-regulation of genes such as Bmal1"
+B T57 B31 | param=Tnfaip8l1 expression | dir=increased | sig=not_reported | detail=aged A. russatus | figure=fig. S4G | exp=B6 | grp=[B5] | src="the liver of aged A. russatus exhibited up-regulation of genes such as Tnfaip8l1"
+B T57 B32 | param=Spp1 expression | dir=decreased | sig=not_reported | detail=aged A. russatus | figure=fig. S4G | exp=B6 | grp=[B5] | src="aged A. russatus also showed reduced expression levels of Spp1"
+
+B T58 B33 | src=Bmal1 | tgt=homeostasis | rel=maintains | conf=medium | ev="Bmal1 ... identified as important factors in maintaining homeostasis during aging"
+B T58 B34 | src=Tnfaip8l1 | tgt=hepatic steatosis | rel=protects_against | conf=medium | ev="Tnfaip8l1 ... protecting against hepatic steatosis"
+B T58 B35 | src=Tnfaip8l1 | tgt=inflammation | rel=protects_against | conf=medium | ev="Tnfaip8l1 ... protecting against ... inflammation"
+B T58 B36 | src=Tnfaip8l1 | tgt=fibrosis | rel=protects_against | conf=medium | ev="Tnfaip8l1 ... protecting against ... fibrosis"
+B T58 B37 | src=osteopontin | tgt=chronic liver diseases | rel=plays_central_role_in | conf=medium | ev="osteopontin, which plays a central role in the development of various chronic liver diseases"
+
+B T38 B38 | sub=A. russatus | pred=undergoes | obj=unique adaptive hepatic transcriptional reprogramming during aging | neg=false | src="indicating that a unique adaptive hepatic transcriptional reprogramming occurred during aging between the species"
+
+B T14 B39 | name=Sudan Black B staining | type=histology | grp=[B2,B3,B4,B5] | steps=Sudan Black B staining with nuclear fast red counterstaining; count of positive cells per HPF; sample sizes: M. musculus n=5 per group; A. russatus n=15 (0.5y), n=8 (2.5y), n=4 (3.5y), n=3 (4.5y) | findings=not reported in text | figure=Fig. 3J | src="Representative Sudan Black B staining with the nuclear fast red counterstaining in liver tissues"
+
+B T4 B40 | sub=RNA-seq analysis pipeline | pred=is | obj=reliable | epi=author_interpretation | ctx=comparable gene detection between species | src="suggesting the reliability of the analysis pipeline"
+
+B T14 B41 | name=Mouse aging atlas pathway scoring | type=bioinformatics | grp=[B2,B3,B4,B5] | steps=scoring analysis of mouse aging atlas pathways | findings=not reported in text | figure=Fig. 3D | src="Scoring analysis of the mouse aging atlas pathways in both species"
+B T14 B42 | name=Global aging trend gene scoring | type=bioinformatics | grp=[B2,B3,B4,B5] | steps=calculation of scores for global aging trend genes | findings=not reported in text | figure=Fig. 3E | src="The scores for the global aging trend genes were calculated"
+B T14 B43 | name=Inflammatory aging clock (iAge) | type=bioinformatics | grp=[B2,B3,B4,B5] | steps=iAge index measurement | findings=not reported in text | figure=Fig. 3G | src="An inflammatory aging clock (iAge) index was measured"
+B T14 B44 | name=GSEA | type=bioinformatics | grp=[B2,B3,B4,B5] | steps=gene set enrichment analysis; NES and FDR | findings=not reported in text | figure=Fig. 3H | src="GSEA. Normalized enrichment score (NES) and false discovery rate (FDR)"
+B T14 B45 | name=CMA gene cluster scoring | type=bioinformatics | grp=[B2,B3,B4,B5] | steps=scoring of gene cluster related to CMA | findings=not reported in text | figure=Fig. 3I | src="Scoring of gene cluster related to CMA"
+B T14 B46 | name=SenMayo gene set analysis | type=bioinformatics | grp=[B2,B3,B4,B5] | steps=analysis of SenMayo gene sets during aging | findings=not reported in text | figure=Fig. 3K | src="–Log10(FDR) values of gene sets involved in SenMayo during aging"

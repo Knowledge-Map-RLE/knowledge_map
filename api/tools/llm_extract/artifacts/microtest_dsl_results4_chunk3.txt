@@ -1,0 +1,31 @@
+B55 B1 | name=aged M. musculus | n=not reported | cond=aged | purpose=comparison  
+B55 B2 | name=young M. musculus | n=not reported | cond=young | purpose=comparison  
+B57 B3 | param=expression of complement classical/lectin pathway genes | dir=increased | sig=significant | detail=genes C6 and C4b | figure=Fig. 4I | exp= | grp=[B1,B2] | interv= | src="macrophages in aged M. musculus showed significantly elevated expression of genes related to the classical and lectin pathways of the complement system (C6 and C4b)"  
+B57 B4 | param=expression of complement alternative pathway gene Cfd | dir=decreased | sig=not_reported | detail=gene Cfd | figure=Fig. 4I | exp= | grp=[B1,B2] | interv= | src="the expression of genes associated with the alternative pathway of complement system (Cfd) ... was reduced in aged compared to the young controls"  
+B57 B5 | param=expression of mitochondrial genes | dir=decreased | sig=not_reported | detail=genes mt-Atp6 and mt-Co2 | figure=Fig. 4I | exp= | grp=[B1,B2] | interv= | src="the expression of genes associated with ... mitochondria (mt-Atp6 and mt-Co2) ... was reduced"  
+B57 B6 | param=expression of Retnla | dir=decreased | sig=not_reported | detail=gene Retnla | figure=Fig. 4I | exp= | grp=[B1,B2] | interv= | src="and Retnla was reduced"  
+B4 B7 | sub=elevated complement classical/lectin pathway | pred=is | obj=hallmark of inflammaging | epi=background_claim | src="which is one of the hallmarks of inflammaging" | ctx=macrophages  
+B55 B8 | name=aged A. russatus | n=not reported | cond=aged | purpose=comparison  
+B55 B9 | name=young A. russatus | n=not reported | cond=young | purpose=comparison  
+B57 B10 | param=expression of chondroitin sulfate metabolic process genes (Hexb) | dir=increased | sig=not_reported | detail=gene Hexb | figure=Fig. 4J | exp= | grp=[B8,B9] | interv= | src="the macrophages of aged A. russatus exhibited higher expression levels of genes related to the chondroitin sulfate metabolic process, β-hexosaminidase (Hexb)"  
+B4 B11 | sub=Hexb | pred=remodels | obj=extracellular matrix | epi=background_claim | src="which is known to remodel extracellular matrix"  
+B4 B12 | sub=Hexb | pred=extends | obj=life span in C. elegans | epi=background_claim | src="and extend life span in Caenorhabditis elegans"  
+B4 B13 | sub=Hexb | pred=is associated with | obj=reduced mortality in older adults | epi=background_claim | src="and is associated with reduced mortality in older adults"  
+B4 B14 | sub=A. russatus macrophages | pred=has | obj=lower Fabp4 expression | epi=experimental_result | src="A. russatus macrophages expressed lower proinflammatory genes [Fabp4 ...]" | ctx=with age  
+B4 B15 | sub=A. russatus macrophages | pred=has | obj=lower Fth1 expression | epi=experimental_result | src="A. russatus macrophages expressed lower proinflammatory genes [ ... Fth1 ...]" | ctx=with age  
+B4 B16 | sub=A. russatus VAT macrophages | pred=has | obj=higher clusterin expression | epi=experimental_result | src="In the VAT of aged A. russatus, the macrophages highly expressed clusterin (Clu)" | ctx=aged  
+B57 B17 | param=clusterin gene expression | dir=increased | sig=not_reported | detail=across cell types | figure=Fig. 4K,L | exp= | grp=[B8,B9] | interv= | src="compared to young animals, the gene expression of clusterin was up-regulated across cell types in aged A. russatus but not in older M. musculus"  
+B4 B18 | sub=adipose tissue (human) | pred=has | obj=higher clusterin expression | epi=experimental_result | src="adipose tissue has the highest clusterin expression" | ctx=highest among human tissues  
+B22 B19 | sub=Clusterin | pred=is | obj=apolipoprotein J  
+B22 B20 | sub=Clusterin | pred=is | obj=heterodimeric glycoprotein  
+B4 B21 | sub=Clusterin | pred=has | obj=chaperone-like activity | epi=background_claim | src="has chaperone-like activity"  
+B4 B22 | sub=Clusterin | pred=aids | obj=clearance of misfolded proteins | epi=background_claim | src="which aids the clearance of misfolded proteins"  
+B4 B23 | sub=Clusterin | pred=is involved in | obj=lipid transport | epi=background_claim | src="Clusterin is involved in lipid transport"  
+B58 B24 | src=Clusterin | tgt=complement and membrane attack complex (MAC) | rel=inhibits | conf=high | ev="it binds and inhibits complement and membrane attack complex (MAC; C5b-9)"  
+B58 B25 | src=Clusterin | tgt=complement and membrane attack complex (MAC) | rel=binds | conf=high | ev="it binds and inhibits complement and membrane attack complex (MAC; C5b-9)"  
+B58 B26 | src=Clusterin | tgt=airway inflammation | rel=lowers | conf=high | ev="lowers airway inflammation by interfering with the recruitment of DCs"  
+B58 B27 | src=Clusterin | tgt=DC recruitment | rel=interferes_with | conf=high | ev="by interfering with the recruitment of DCs"  
+B58 B28 | src=Clusterin | tgt=neuroinflammation | rel=prevents | conf=high | ev="prevents neuroinflammation"  
+B58 B29 | src=Clusterin | tgt=synapse loss | rel=prevents | conf=high | ev="prevents ... associated synapse loss"  
+B58 B30 | src=Clusterin | tgt=cell survival | rel=promotes | conf=high | ev="promotes cell survival"  
+B7 B31 | hyp=elevation of clusterin in adipose tissues of aged A. russatus drives mechanisms that promote health span | disproof=not provided

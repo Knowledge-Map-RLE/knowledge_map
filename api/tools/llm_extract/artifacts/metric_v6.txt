@@ -1,0 +1,319 @@
+﻿{
+  "composite": 0.0,
+  "passed": false,
+  "threshold": 0.8,
+  "gates": {
+    "dangling_refs": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "self_refs": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "cycles": {
+      "value": 13,
+      "limit": 0,
+      "passed": false
+    },
+    "forward_refs": {
+      "value": 27,
+      "limit": 0,
+      "passed": false
+    },
+    "duplicate_ids": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    }
+  },
+  "components": {
+    "triplets_f1": 0.1931,
+    "causal_f1": 0.3273,
+    "intervention_ref_validity": 1.0,
+    "ast_edge_f1": 0.0,
+    "claim_recall": 0.0684,
+    "entailment_rate": 0.2576,
+    "polarity_fidelity": 1.0
+  },
+  "weights": {
+    "triplets_f1": 0.25,
+    "causal_f1": 0.15,
+    "claim_recall": 0.2,
+    "entailment_rate": 0.15,
+    "ast_edge_f1": 0.1,
+    "intervention_ref_validity": 0.1,
+    "polarity_fidelity": 0.05
+  },
+  "counts": {
+    "ref": 129,
+    "ext": 132
+  },
+  "type_delta": {
+    "2": -2,
+    "4": 1,
+    "16": 1,
+    "18": 4,
+    "19": -2,
+    "22": -5,
+    "23": 1,
+    "27": -3,
+    "37": 1,
+    "38": -4,
+    "40": -1,
+    "46": 2,
+    "54": -3,
+    "55": -3,
+    "56": -4,
+    "57": 8,
+    "58": 13,
+    "59": -1
+  },
+  "details": {
+    "triplets": {
+      "leaf": {
+        "precision": 0.2727,
+        "recall": 0.2143,
+        "f1": 0.24,
+        "ref_count": 14,
+        "ext_count": 11,
+        "pairs": [
+          {
+            "reference": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "extracted": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "score": 0.8
+          }
+        ]
+      },
+      "resolved": {
+        "precision": 0.1429,
+        "recall": 0.15,
+        "f1": 0.1463,
+        "ref_count": 20,
+        "ext_count": 21,
+        "pairs": [
+          {
+            "reference": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "extracted": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "score": 0.8
+          }
+        ]
+      },
+      "combined_f1": 0.1931
+    },
+    "causal": {
+      "precision": 0.2647,
+      "recall": 0.4286,
+      "f1": 0.3273,
+      "ref_edges": 21,
+      "ext_edges": 34,
+      "node_matches": [
+        {
+          "reference": "A. russatus",
+          "extracted": "A. russatus"
+        },
+        {
+          "reference": "CMA",
+          "extracted": "CMA score"
+        },
+        {
+          "reference": "IL-1╨Ю╨Ж",
+          "extracted": "IL-6"
+        },
+        {
+          "reference": "IL-6",
+          "extracted": "IL-1╬▓"
+        },
+        {
+          "reference": "M2 macrophages",
+          "extracted": "M2-like macrophages"
+        },
+        {
+          "reference": "TNF-╨Ю┬▒",
+          "extracted": "TNF-╬▒"
+        },
+        {
+          "reference": "aging",
+          "extracted": "aging"
+        },
+        {
+          "reference": "cellular senescence",
+          "extracted": "cellular senescence"
+        },
+        {
+          "reference": "clusterin",
+          "extracted": "clusterin"
+        },
+        {
+          "reference": "fibrosis",
+          "extracted": "fibrosis"
+        },
+        {
+          "reference": "functional decline",
+          "extracted": "A. dimidiatus functional decline"
+        },
+        {
+          "reference": "health span",
+          "extracted": "health span"
+        },
+        {
+          "reference": "hepatic senescence",
+          "extracted": "hepatic senescence"
+        },
+        {
+          "reference": "inflammaging",
+          "extracted": "inflammaging"
+        },
+        {
+          "reference": "regenerative capacity",
+          "extracted": "regenerative capacity"
+        },
+        {
+          "reference": "thymic involution",
+          "extracted": "thymic involution"
+        },
+        {
+          "reference": "transcriptional integrity",
+          "extracted": "transcriptional integrity"
+        }
+      ]
+    },
+    "interventions": {
+      "quality": 1.0,
+      "findings": 23,
+      "findings_with_ref": 12,
+      "resolved_refs": 12,
+      "semantically_consistent": 12,
+      "avg_target_similarity": 0.2489
+    },
+    "ast_edges": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "ref_edges": 0,
+      "ext_edges": 75,
+      "matched": 0
+    },
+    "graph": {
+      "blocks": 132,
+      "linked_blocks": 79,
+      "uuid_edges": 196,
+      "dangling_refs": 0,
+      "dangling_unique": 0,
+      "self_refs": 0,
+      "cycles": 13,
+      "forward_refs": 27,
+      "duplicate_ids": 0,
+      "largest_component": 71,
+      "connectivity": 0.8987
+    },
+    "text_alignment": {
+      "claim_recall": 0.0684,
+      "entailment_rate": 0.2576,
+      "sentences_assessed": 395,
+      "sentences_covered": 27,
+      "blocks_total": 132,
+      "blocks_entailed": 34,
+      "uncovered_sample": [
+        {
+          "sentence": "Correspondence: тАаThese authors contributed equally to this work.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "(A) A phylogenetic tree for several mammals.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "P┬а<┬а0.05, P┬а<┬а0.01, and P┬а<┬а0.001.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "P┬а<┬а0.05, P┬а<┬а0.01, and P┬а<┬а0.001.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "P┬а<┬а0.05, P┬а<┬а0.01, and P┬а<┬а0.001.",
+          "best_score": 0.0
+        }
+      ]
+    },
+    "polarity": {
+      "polarity_fidelity": 1.0,
+      "paired_triplets": 1,
+      "polarity_matches": 1
+    },
+    "type_histograms": {
+      "l1_similarity": 0.7763
+    }
+  }
+}

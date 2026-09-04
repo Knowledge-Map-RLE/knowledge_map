@@ -1,0 +1,367 @@
+﻿{
+  "composite": 0.4385,
+  "passed": false,
+  "threshold": 0.8,
+  "gates": {
+    "dangling_refs": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "self_refs": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "cycles": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "forward_refs": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "duplicate_ids": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    }
+  },
+  "components": {
+    "triplets_f1": 0.2084,
+    "causal_f1": 0.4706,
+    "ast_edge_f1": 0.3571,
+    "claim_recall": 0.3342,
+    "entailment_rate": 0.6077,
+    "polarity_fidelity": 1.0
+  },
+  "weights": {
+    "triplets_f1": 0.25,
+    "causal_f1": 0.15,
+    "claim_recall": 0.2,
+    "entailment_rate": 0.15,
+    "ast_edge_f1": 0.1,
+    "intervention_ref_validity": 0.1,
+    "polarity_fidelity": 0.05
+  },
+  "counts": {
+    "ref": 142,
+    "ext": 132
+  },
+  "type_delta": {
+    "2": 1,
+    "4": -16,
+    "14": -1,
+    "22": -1,
+    "38": -2,
+    "47": -1,
+    "54": 1,
+    "56": -1,
+    "57": 8,
+    "58": 1,
+    "59": 1
+  },
+  "details": {
+    "triplets": {
+      "leaf": {
+        "precision": 0.3684,
+        "recall": 0.175,
+        "f1": 0.2373,
+        "ref_count": 40,
+        "ext_count": 19,
+        "pairs": [
+          {
+            "reference": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "extracted": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "clusterin",
+              "restrains",
+              "inflammaging"
+            ],
+            "extracted": [
+              "clusterin",
+              "inhibits",
+              "inflammaging"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "shows",
+              "transcriptomic resilience"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "transcriptomic resilience"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower senescence"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower senescence"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher CMA"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher CMA"
+            ],
+            "score": 0.8
+          }
+        ]
+      },
+      "resolved": {
+        "precision": 0.2258,
+        "recall": 0.1489,
+        "f1": 0.1795,
+        "ref_count": 47,
+        "ext_count": 31,
+        "pairs": [
+          {
+            "reference": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "extracted": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "clusterin",
+              "restrains",
+              "inflammaging"
+            ],
+            "extracted": [
+              "clusterin",
+              "inhibits",
+              "inflammaging"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "shows",
+              "transcriptomic resilience"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "transcriptomic resilience"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower senescence"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower senescence"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher CMA"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher CMA"
+            ],
+            "score": 0.8
+          }
+        ]
+      },
+      "combined_f1": 0.2084
+    },
+    "causal": {
+      "precision": 0.4444,
+      "recall": 0.5,
+      "f1": 0.4706,
+      "ref_edges": 8,
+      "ext_edges": 9,
+      "node_matches": [
+        {
+          "reference": "A. russatus adaptations",
+          "extracted": "A. russatus"
+        },
+        {
+          "reference": "aging",
+          "extracted": "aging"
+        },
+        {
+          "reference": "aging resistance",
+          "extracted": "aging resistance"
+        },
+        {
+          "reference": "cellular senescence",
+          "extracted": "cellular senescence"
+        },
+        {
+          "reference": "clusterin",
+          "extracted": "clusterin"
+        },
+        {
+          "reference": "functional decline",
+          "extracted": "functional decline"
+        },
+        {
+          "reference": "inflammaging",
+          "extracted": "inflammaging"
+        }
+      ]
+    },
+    "ast_edges": {
+      "precision": 0.3774,
+      "recall": 0.339,
+      "f1": 0.3571,
+      "ref_edges": 59,
+      "ext_edges": 53,
+      "matched": 20
+    },
+    "graph": {
+      "blocks": 132,
+      "linked_blocks": 71,
+      "uuid_edges": 95,
+      "dangling_refs": 0,
+      "dangling_unique": 0,
+      "self_refs": 0,
+      "cycles": 0,
+      "forward_refs": 0,
+      "duplicate_ids": 0,
+      "largest_component": 36,
+      "connectivity": 0.507
+    },
+    "text_alignment": {
+      "claim_recall": 0.3342,
+      "entailment_rate": 0.6077,
+      "sentences_assessed": 395,
+      "sentences_covered": 132,
+      "blocks_total": 132,
+      "blocks_entailed": 79,
+      "uncovered_sample": [
+        {
+          "sentence": "Correspondence: тАаThese authors contributed equally to this work.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "(A) A phylogenetic tree for several mammals.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "Data are presented as mean┬а┬▒┬аSEM (K to M) or min to max (D to J).",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "Data are presented as mean┬а┬▒┬аSEM.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "Data are presented as mean┬а┬▒┬аSEM.",
+          "best_score": 0.0
+        }
+      ]
+    },
+    "polarity": {
+      "polarity_fidelity": 1.0,
+      "paired_triplets": 1,
+      "polarity_matches": 1
+    },
+    "type_histograms": {
+      "l1_similarity": 0.8771
+    }
+  }
+}

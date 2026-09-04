@@ -1,0 +1,43 @@
+B T1 B1 | title=Immunometabolic resistors of aging in long-lived golden spiny mice
+
+B T4 B2 | sub=most mammals | pred=has | obj=negligible evidence of senescence contributing to mortality in the wild | epi=background_claim | src="For most mammals, there is negligible evidence that senescence or aging contributes to mortality in the wild"
+
+B T4 B3 | sub=wild mammals | pred=has | obj=extrinsic mortality drivers | epi=hypothesis | src="adult mortality is driven by extrinsic hazards, such as exposure to toxins or poisons, predation, aberrant immune response to infections and injuries, starvation, and thermogenic failure to maintain core body temperature"
+
+B T4 B4 | sub=parental care | pred=protects against | obj=extrinsic mortality | epi=background_claim | src="parental care of neonates is an additional force that protects against extrinsic mortality"
+
+B T4 B5 | sub=A. russatus | pred=has | obj=lower extrinsic mortality | epi=author_interpretation | src="Consistent with their reduced extrinsic mortality"
+
+B T4 B6 | sub=A. russatus | pred=has | obj=fully developed newborns at birth | epi=background_claim | src="produces newborns that are fully developed at birth"
+
+B T4 B7 | sub=A. russatus | pred=has | obj=group fostering of pups | epi=background_claim | src="multiple females engage in group fostering of pups"
+
+B T4 B8 | sub=Acomys | pred=has | obj=11-day menstrual cycle | epi=background_claim | src="Acomys are the only known rodents reported to have an 11-day menstrual cycle"
+
+B T4 B9 | sub=Acomys | pred=has | obj=functional corpus luteum after ovulation | epi=background_claim | src="form a functional corpus luteum after ovulation"
+
+B T4 B10 | sub=Acomys | pred=has | obj=endocrine physiology modeling human physiological aging | epi=author_interpretation | src="suggesting an endocrine physiology that better models some aspects of human physiological aging"
+
+B T4 B11 | sub=A. russatus | pred=has | obj=scant evidence of healthy aging mechanisms | epi=limitation | src="the evidence for the existence of molecular and functional mechanisms that may confer healthy aging to A. russatus is scant"
+
+B T4 B12 | sub=A. russatus | pred=has | obj=close clade relationship to Mus musculus | epi=background_claim | src="Given its close clade relationship to Mus musculus"
+
+B T2 B13 | sub=researchers | pred=aimed to gain | obj=comprehensive understanding of aging biology using A. russatus as model organism | src="we aimed to gain a comprehensive understanding of the biology of aging using A. russatus as a model organism to identify and test the causality of specific potential aging-resistance mechanisms under controlled conditions in laboratory mice"
+
+B T14 B14 | name=life span cohort comparison | type=longitudinal cohort study | grp=[B15,B16,B17] | findings=[B18,B19] | src="we built cohorts of A. russatus and A. dimidiatus and compared them to M. musculus spanning their life spans"
+
+B T55 B15 | name=A. russatus cohort | cond=life span | purpose=aging comparison
+
+B T55 B16 | name=A. dimidiatus cohort | cond=life span | purpose=aging comparison
+
+B T55 B17 | name=M. musculus cohort | cond=life span | purpose=aging comparison
+
+B T4 B18 | sub=A. russatus | pred=has | obj=higher functional resilience | epi=experimental_result | src="A. russatus, or golden spiny mouse, is protected from age-related functional decline"
+
+B T4 B19 | sub=A. russatus | pred=has | obj=higher clusterin | epi=experimental_result | src="we identified elevated clusterin as one of the targets"
+
+B T58 B20 | src=clusterin | tgt=health span | rel=promotes | conf=medium | ev="elevated clusterin as one of the targets that promotes health span"
+
+B T58 B21 | src=clusterin | tgt=inflammaging | rel=inhibits | conf=medium | ev="inhibit inflammaging"
+
+B T58 B22 | src=clusterin | tgt=immunological and metabolic responses | rel=integrates | conf=medium | ev="integrating immunological and metabolic responses"

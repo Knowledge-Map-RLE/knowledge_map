@@ -1,0 +1,33 @@
+B T1 B1 | doi=unknown | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=unknown
+B T22 B2 | sub=A. russatus | pred=is | obj=golden spiny mouse
+B T2 B3 | sub=researchers | pred=examine | obj=uniqueness of A. russatus in aging
+B T56 B4 | name=Phylogenetic analysis | details=compared phylogenetic tree based on TimeTree 5
+B T4 B5 | sub=A. russatus | pred=is_closely_related_to | obj=M. musculus | epi=direct_statement | src="A. russatus is closely related to M. musculus" | ctx=phylogenetic comparison (Fig. 1A)
+B T4 B6 | sub=A. russatus | pred=is | obj=unique animal model of exceptional healthy aging | epi=author_interpretation | src="compared to other unique animal models of exceptional healthy aging"
+B T4 B7 | sub=Heterocephalus glaber | pred=is | obj=unique animal model of exceptional healthy aging | epi=background_claim | src="such as Heterocephalus glaber, the naked mole rat"
+B T4 B8 | sub=A. russatus | pred=has | obj=unknown median and maximal lifespan | epi=limitation | src="the median and maximal life span of A. russatus remains unknown"
+B T4 B9 | sub=A. russatus | pred=has | obj=higher lifespan | epi=observation | src="identified healthy A. russatus in the wild up to 4 years old" | ctx=wild rocky desert of Israel (Fig. 1B)
+B T4 B10 | sub=A. russatus | pred=has | obj=higher lifespan | epi=author_interpretation | src="A. russatus may live at least fourfold longer" | ctx=compared to average mice in the wild (Fig. 1B)
+B T4 B11 | sub=A. russatus | pred=evades | obj=extrinsic mortality | epi=author_interpretation | src="where they successfully evade extrinsic mortality" | ctx=wild
+B T56 B12 | name=Wild capture | details=capture, tagging, and recapture of A. russatus in the rocky desert of Israel
+B T56 B13 | name=Colony establishment | details=established outbred colonies of A. russatus and A. dimidiatus comprising diverse age groups and both sexes
+B T55 B14 | name=A. russatus colony | n=not specified | cond=outbred, diverse age groups, both sexes | purpose=study aging
+B T55 B15 | name=A. dimidiatus colony | n=not specified | cond=outbred, diverse age groups, both sexes | purpose=study aging
+B T4 B16 | sub=A. russatus | pred=has | obj=higher lifespan | epi=observation | src="A. russatus was sustained for 4.5 years in our colony" | ctx=colony (Fig. 1C)
+B T4 B17 | sub=A. dimidiatus | pred=has | obj=lower lifespan | epi=observation | src="Maintaining sufficient numbers of A. dimidiatus beyond 3.5 years of age proved challenging" | ctx=colony
+B T4 B18 | sub=A. dimidiatus | pred=has | obj=comparable body weight | epi=experimental_result | src="The body weights of A. dimidiatus and A. russatus were comparable across age groups" | ctx=compared to A. russatus across age groups (Fig. 1D)
+B T4 B19 | sub=A. dimidiatus | pred=has | obj=higher body weight | epi=experimental_result | src="A. dimidiatus exhibited a continuous increase in body weight with age" | ctx=aging (Fig. 1D)
+B T4 B20 | sub=A. russatus | pred=has | obj=lower age-related weight gain | epi=experimental_result | src="the body weight of A. russatus peaked at 1.5 years and was maintained for more than 3.5 to 4.5 years" | ctx=aging (Fig. 1D)
+B T57 B21 | param=body weight | dir=increased | sig=not_reported | detail=continuous increase with age | figure=Fig. 1D | grp=[B15] | src="A. dimidiatus exhibited a continuous increase in body weight with age"
+B T57 B22 | param=body weight | dir=no_change | sig=not_reported | detail=peaked at 1.5 years and maintained for more than 3.5 to 4.5 years | figure=Fig. 1D | grp=[B14] | src="the body weight of A. russatus peaked at 1.5 years and was maintained"
+B T14 B23 | name=Open field test | type=behavioral test | grp=[B14,B15] | steps=rearing behaviors measured | findings=results not described in text excerpt | src="An open field test was performed... The number of rearing behaviors was measured"
+B T14 B24 | name=Wire hanging test | type=behavioral test | grp=[B14,B15] | steps=total time spent on wire measured | findings=results not described in text excerpt | src="The wire hanging test was performed. The total time spent on the wire was measured"
+B T14 B25 | name=Beam working test | type=behavioral test | grp=[B14,B15] | steps=not specified | findings=results not described in text excerpt | src="Beam working test was performed"
+B T14 B26 | name=Activity measurement | type=behavioral test | grp=[B14,B15] | steps=average activity during resting and active phases measured | findings=results not described in text excerpt | src="The average activity of A. dimidiatus and A. russatus during resting (I) and active (J) phase was measured"
+B T14 B27 | name=Earhole punch regeneration | type=regeneration experiment | grp=[B14,B15] | steps=4-mm earhole punch, earhole area measured weekly for 5 weeks | findings=earhole closure compared between >2.5-year A. dimidiatus and A. russatus | src="A 4-mm earhole punch regeneration experiment was performed. Earhole area... measured weekly for 5 weeks"
+B T57 B28 | param=earhole area | dir=unknown | sig=significant | detail=significant differences between 0.5 years and 1.5 years, and between 0.5 years and >3.5 years | figure=Fig. 1L | exp=B27 | grp=[B14] | src="For (L), ** corresponds to the comparison between 0.5 years and 1.5 years, and * corresponds to the comparison between 0.5 years and >3.5 years"
+B T55 B29 | name=VAT Western blot group | n=3 per group | cond=male A. dimidiatus and A. russatus | purpose=Western blot analysis of visceral adipose tissues
+B T14 B30 | name=Western blot analysis of VAT | type=biochemical analysis | grp=[B29] | steps=visceral adipose tissues subjected to Western blot analysis | findings=results not described in text excerpt | src="Visceral adipose tissues (VAT) of male A. dimidiatus and A. russatus were subjected to Western blot analysis (n = 3 per group)"
+B T56 B31 | name=Statistical analysis | details=Two-tailed student t test (M) or one-way ANOVA with Tukey's multiple comparisons test (D to L) was performed
+B T56 B32 | name=Significance thresholds | details=*P < 0.05, **P < 0.01, and ***P < 0.001
+B T58 B33 | src=evading extrinsic mortality | tgt=longer lifespan | rel=associated_with | conf=low | ev="A. russatus may live at least fourfold longer where they successfully evade extrinsic mortality"

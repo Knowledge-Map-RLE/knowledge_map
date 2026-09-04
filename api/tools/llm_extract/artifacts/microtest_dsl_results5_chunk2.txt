@@ -1,0 +1,57 @@
+B T1 B1 | title=Immunometabolic resistors of aging in long-lived golden spiny mice
+
+B T4 B2 | sub=clusterin gene expression in liver | pred=associated_with | obj=maximum life span | epi=statistical_result | ctx=mammals (multiple orders, including marsupials in Diprotodontia) | src="the gene expression levels of clusterin in the liver, brain, and kidney were positively associated with the maximum life span of multiple orders of mammals"
+
+B T4 B3 | sub=clusterin gene expression in brain | pred=associated_with | obj=maximum life span | epi=statistical_result | ctx=mammals (multiple orders, including marsupials in Diprotodontia) | src="the gene expression levels of clusterin in the liver, brain, and kidney were positively associated with the maximum life span of multiple orders of mammals"
+
+B T4 B4 | sub=clusterin gene expression in kidney | pred=associated_with | obj=maximum life span | epi=statistical_result | ctx=mammals (multiple orders, including marsupials in Diprotodontia) | src="the gene expression levels of clusterin in the liver, brain, and kidney were positively associated with the maximum life span of multiple orders of mammals"
+
+B T4 B5 | sub=circulating clusterin concentration | pred=has | obj=higher concentration | epi=observation | ctx=patients with Alzheimer's disease | src="the circulating concentration of clusterin is also found to be increased in patients with Alzheimer's disease"
+
+B T4 B6 | sub=SNP enhancing clusterin expression | pred=reduces | obj=neuroinflammation | epi=observation | ctx=patients | src="patients who have a single-nucleotide polymorphism that enhances clusterin expression ... exhibit reduced neuroinflammation"
+
+B T4 B7 | sub=elevated clusterin through exercise | pred=reduces | obj=neuroinflammation | epi=observation | ctx=mice | src="mice that have elevated clusterin through exercise ... exhibit reduced neuroinflammation"
+
+B T4 B8 | sub=genetic overexpression of clusterin | pred=reduces | obj=neuroinflammation | epi=observation | ctx=mice | src="mice that have ... genetic overexpression [of clusterin] exhibit reduced neuroinflammation"
+
+B T4 B9 | sub=overexpression of human clusterin | pred=extends | obj=life span | epi=experimental_result | ctx=Drosophila | src="overexpression of human clusterin in Drosophila extends life span"
+
+B T4 B10 | sub=clusterin concentrations | pred=has | obj=higher concentration | epi=statistical_result | ctx=centenarians vs younger adults (21-40 years old) | src="clusterin concentrations are significantly increased in centenarians compared to younger (21 to 40 years old)"
+
+B T4 B11 | sub=clusterin concentrations | pred=has | obj=higher concentration | epi=statistical_result | ctx=centenarians vs older adults (76-89 years old) | src="clusterin concentrations are significantly increased in centenarians compared to ... older adults (76 to 89 years old)"
+
+B T4 B12 | sub=clusterin gene expression | pred=has | obj=no change with age | epi=observation | ctx=M. musculus, multiple tissues | src="the gene expression levels of clusterin were not increased with age in multiple tissues of M. musculus"
+
+B T4 B13 | sub=A. russatus | pred=has | obj=higher clusterin | epi=author_interpretation | ctx=long-lived species | src="the elevation of clusterin in centenarians, long-lived species, and A. russatus"
+
+B T4 B14 | sub=increase in clusterin | pred=is | obj=enantiostatic or hormetic response | epi=hypothesis | ctx=not specified | src="the hypothesis that the increase in clusterin is an enantiostatic or hormetic response"
+
+B T4 B15 | sub=elevation of clusterin | pred=is | obj=adaptive response | epi=hypothesis | ctx=centenarians, long-lived species, A. russatus | src="the elevation of clusterin in centenarians, long-lived species, and A. russatus could be an adaptive response"
+
+B T4 B16 | sub=elevation of clusterin | pred=may limit | obj=age-associated cellular or organismal damage | epi=hypothesis | ctx=centenarians, long-lived species, A. russatus | src="may limit the age-associated cellular or organismal damage"
+
+B T55 B17 | name=vehicle control mice | n=13 | cond=18-month-old male C57BL/6N mice, intraperitoneal saline injection for 2 weeks | purpose=control for clusterin treatment
+
+B T55 B18 | name=clusterin-treated mice | n=13 | cond=18-month-old male C57BL/6N mice, intraperitoneal recombinant mouse clusterin (50 μg/kg) for 2 weeks | purpose=test clusterin effects on health span
+
+B T18 B19 | type=pharmacological | target=clusterin | dosage=50 μg/kg | regimen=intraperitoneal injection for 2 weeks
+
+B T14 B20 | name=clusterin treatment in aged mice | type=in vivo intervention | grp=[B17,B18] | steps=grip strength test; rotarod test; H&E and Sirius Red staining of gastrocnemius muscle, SAT, spleen, liver; serum IL-1β, IL-6, TNF-α, MCP-1 measurement; qRT-PCR of liver; flow cytometry of spleen ABCs, VAT AABs, VAT macrophages; Western blot of liver | findings=results shown in Fig. 5D-P (not described in text) | src="Eighteen-month-old male C57BL/6N mice were intraperitoneally injected with vehicle (saline) or recombinant mouse clusterin (50 μg/kg) for 2 weeks"
+
+B T14 B21 | name=clusterin effect on LPS-stimulated human monocytes | type=in vitro | grp=healthy donor monocytes | steps=treatment with recombinant human clusterin for 1 hour, then LPS (1 μg/ml); IL-1β and IL-18 measured after 24 hours | findings=results shown in Fig. 5Q (not described in text) | src="Peripheral blood monocytes were isolated from healthy donors and treated with indicated doses of recombinant human clusterin for 1 hour, followed by an indicated duration of lipopolysaccharide (LPS; 1 μg/ml). IL-1β and IL-18 levels in culture supernatants were measured after 24 hours"
+
+B T7 B22 | hyp=elevation of clusterin in centenarians, long-lived species, and A. russatus is an adaptive response that limits age-associated cellular or organismal damage | disproof=not stated
+
+B T57 B23 | param=clusterin gene expression | dir=increased | sig=significant | detail=positively associated with maximum life span across multiple mammalian orders | figure=Fig. 5A | src="the gene expression levels of clusterin in the liver, brain, and kidney were positively associated with the maximum life span of multiple orders of mammals"
+
+B T57 B24 | param=clusterin concentration | dir=increased | sig=significant | detail=centenarians vs younger (21-40) and older (76-89) adults | figure=Fig. 5B | src="clusterin concentrations are significantly increased in centenarians compared to younger (21 to 40 years old) and older adults (76 to 89 years old)"
+
+B T58 B25 | src=clusterin gene expression | tgt=maximum life span | rel=correlates_with | conf=medium | ev="positively associated with the maximum life span of multiple orders of mammals"
+
+B T58 B26 | src=clusterin | tgt=neuroinflammation | rel=reduces | conf=medium | ev="exhibit reduced neuroinflammation"
+
+B T58 B27 | src=clusterin overexpression | tgt=life span | rel=extends | conf=medium | ev="overexpression of human clusterin in Drosophila extends life span"
+
+B T58 B28 | src=clusterin concentration | tgt=centenarian status | rel=associated_with | conf=medium | ev="clusterin concentrations are significantly increased in centenarians"
+
+B T38 B29 | sub=elevation of clusterin | pred=is | obj=adaptive response limiting age-associated damage | neg=false | src="the elevation of clusterin in centenarians, long-lived species, and A. russatus could be an adaptive response that may limit the age-associated cellular or organismal damage"

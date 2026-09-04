@@ -1,0 +1,4 @@
+B T4 B1 | sub=A. russatus | pred=has | obj=lower hepatic inflammaging | epi=direct_statement | ctx=hepatic (liver) | src=A. russatus withstands hepatic inflammaging and senescence
+B T4 B2 | sub=A. russatus | pred=has | obj=lower hepatic senescence | epi=direct_statement | ctx=hepatic (liver) | src=A. russatus withstands hepatic inflammaging and senescence
+B T58 B3 | src=A. russatus | tgt=hepatic inflammaging | rel=resists | conf=medium | ev=A. russatus withstands hepatic inflammaging and senescence
+B T58 B4 | src=A. russatus | tgt=hepatic senescence | rel=resists | conf=medium | ev=A. russatus withstands hepatic inflammaging and senescence

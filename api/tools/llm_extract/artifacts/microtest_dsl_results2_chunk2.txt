@@ -1,0 +1,65 @@
+B T1 B1 | doi=not_provided | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=not_provided
+
+B T55 B2 | name=C57BL/6 mice (M. musculus) | n=not_reported | cond=reared under specific pathogen-free (SPF) condition | purpose=comparison species for immune aging
+
+B T55 B3 | name=A. russatus (golden spiny mice) | n=not_reported | cond=maintained in nonbarrier pathogen environment in nonventilated open cages, Tel Aviv Zoological Research Garden | purpose=long-lived species for immune aging comparison
+
+B T14 B4 | name=Spleen histology comparison | type=histological analysis | grp=[B2,B3] | steps=examine spleens of 2.5-year-old animals for decompartmentalization, germinal centers, and fibrosis | findings=decompartmentalization and fibrosis in M. musculus but not in A. russatus | src="The spleens of 2.5-year-old M. musculus showed decompartmentalization, including loss of germinal centers, and developed fibrosis during aging, which was not observed in A. russatus"
+
+B T14 B5 | name=Sudan Black B staining for senescent-like cells | type=histochemical staining | grp=[B2,B3] | steps=stain spleens for lipofuscin (Sudan Black B-positive senescent-like cells) | findings=increased senescent-like cells in aged M. musculus; rare in A. russatus at 2.5 years, accumulated by 4.5 years but lower than M. musculus | src="Sudan Black B–positive senescent-like cells were notably increased in the spleens of 2.5-year-old M. musculus... in A. russatus, senescent-like cells were rarely observed in the spleens of 2.5-year-old animals"
+
+B T14 B6 | name=ConA mitogen stimulation of splenocytes | type=functional assay | grp=[B2,B3] | steps=activate total splenocytes from young (0.5-year-old) or aged (2.5-year-old) animals with T cell mitogen concanavalin A (ConA); measure proliferation and Il2/Il4 expression | findings=aged A. russatus splenocytes maintained proliferation and mitogenic signals; aged M. musculus did not; ConA induced Il2/Il4 in A. russatus but not M. musculus | src="ConA treatment promoted the proliferation of splenocytes isolated from the young, but not aged, M. musculus... Splenocytes isolated from aged A. russatus showed a higher proliferation rate than those from young individuals"
+
+B T57 B7 | param=splenic decompartmentalization | dir=increased | sig=not_reported | detail=loss of germinal centers and fibrosis in 2.5-year-old M. musculus | figure=Fig. 2, C and D; fig. S3C | exp=B4 | grp=[B2] | src="The spleens of 2.5-year-old M. musculus showed decompartmentalization, including loss of germinal centers, and developed fibrosis during aging"
+
+B T57 B8 | param=splenic decompartmentalization | dir=no_change | sig=not_reported | detail=not observed in A. russatus | figure=Fig. 2, C and D; fig. S3C | exp=B4 | grp=[B3] | src="which was not observed in A. russatus"
+
+B T57 B9 | param=senescent-like cells (lipofuscin) | dir=increased | sig=not_reported | detail=Sudan Black B-positive cells notably increased in spleens of 2.5-year-old M. musculus | figure=Fig. 2, C and E | exp=B5 | grp=[B2] | src="Sudan Black B–positive senescent-like cells were notably increased in the spleens of 2.5-year-old M. musculus"
+
+B T57 B10 | param=senescent-like cells (lipofuscin) | dir=no_change | sig=not_reported | detail=rarely observed in A. russatus at 2.5 years; accumulated by 4.5 years but remained lower than 2.5-year-old M. musculus | figure=Fig. 2, C and E | exp=B5 | grp=[B3] | src="in A. russatus, senescent-like cells were rarely observed in the spleens of 2.5-year-old animals, and although they accumulated by 4.5 years of age, their numbers remained lower than those observed in 2.5-year-old M. musculus"
+
+B T57 B11 | param=splenocyte proliferation (ConA response) | dir=increased | sig=not_reported | detail=ConA promoted proliferation in young but not aged M. musculus | figure=Fig. 2F | exp=B6 | grp=[B2] | interv=ConA | src="ConA treatment promoted the proliferation of splenocytes isolated from the young, but not aged, M. musculus"
+
+B T57 B12 | param=splenocyte proliferation (ConA response) | dir=increased | sig=not_reported | detail=aged A. russatus splenocytes showed higher proliferation than young; maintained ConA-induced mitogenic signals | figure=Fig. 2G | exp=B6 | grp=[B3] | interv=ConA | src="Splenocytes isolated from aged A. russatus showed a higher proliferation rate than those from young individuals, and aged splenocytes maintained ConA-induced mitogenic signals"
+
+B T57 B13 | param=splenocyte proliferation (young, unstimulated and ConA) | dir=no_change | sig=non_significant | detail=no significant differences between species in young splenocytes with or without ConA | figure=Fig. 2H | exp=B6 | grp=[B2,B3] | interv=ConA | src="there were no significant differences in the proliferation rate of young splenocytes, with or without ConA stimulation, between the species"
+
+B T57 B14 | param=splenocyte proliferation (aged) | dir=increased | sig=not_reported | detail=aged A. russatus splenocytes showed much higher proliferation than aged M. musculus under both conditions | figure=Fig. 2I | exp=B6 | grp=[B2,B3] | src="splenocytes from aged A. russatus showed a much higher proliferation rate under both conditions compared to those from aged M. musculus"
+
+B T57 B15 | param=Il2 expression | dir=increased | sig=not_reported | detail=ConA induced greater Il2 expression in A. russatus but not in age-matched M. musculus | figure=Fig. 2, J and K | exp=B6 | grp=[B2,B3] | interv=ConA | src="ConA treatment induced greater expression levels of Il2 and Il4 in splenocytes of A. russatus but not in age-matched M. musculus"
+
+B T57 B16 | param=Il4 expression | dir=increased | sig=not_reported | detail=ConA induced greater Il4 expression in A. russatus but not in age-matched M. musculus | figure=Fig. 2, J and K | exp=B6 | grp=[B2,B3] | interv=ConA | src="ConA treatment induced greater expression levels of Il2 and Il4 in splenocytes of A. russatus but not in age-matched M. musculus"
+
+B T4 B17 | sub=A. russatus | pred=has | obj=higher splenic homeostasis | epi=author_interpretation | ctx=spleen, aged (2.5-year-old) | src="A. russatus maintains homeostasis of lymphoid organs at both tissue and cellular levels till advanced age"
+
+B T4 B18 | sub=A. russatus | pred=has | obj=lower senescent-like cells | epi=experimental_result | ctx=spleen, 2.5-year-old | src="in A. russatus, senescent-like cells were rarely observed in the spleens of 2.5-year-old animals"
+
+B T4 B19 | sub=A. russatus | pred=has | obj=higher T cell proliferative response | epi=experimental_result | ctx=splenocytes, aged (2.5-year-old), ConA stimulation | src="Splenocytes isolated from aged A. russatus showed a higher proliferation rate than those from young individuals, and aged splenocytes maintained ConA-induced mitogenic signals"
+
+B T4 B20 | sub=A. russatus | pred=has | obj=higher IL-2 expression | epi=experimental_result | ctx=splenocytes, ConA stimulation | src="ConA treatment induced greater expression levels of Il2 and Il4 in splenocytes of A. russatus"
+
+B T4 B21 | sub=A. russatus | pred=has | obj=higher IL-4 expression | epi=experimental_result | ctx=splenocytes, ConA stimulation | src="ConA treatment induced greater expression levels of Il2 and Il4 in splenocytes of A. russatus"
+
+B T4 B22 | sub=A. russatus | pred=has | obj=higher immune function | epi=author_interpretation | ctx=lymphoid organs, advanced age | src="A. russatus maintains homeostasis of lymphoid organs at both tissue and cellular levels till advanced age, suggesting protection from some of the examined features of immunological aging"
+
+B T38 B23 | sub=A. russatus | pred=maintains | obj=homeostasis of lymphoid organs | neg=false | src="A. russatus maintains homeostasis of lymphoid organs at both tissue and cellular levels till advanced age"
+
+B T4 B24 | sub=senescent-like cells | pred=induces | obj=splenic dysfunction | epi=background_claim | ctx=spleen | src="the accumulation of senescent-like cells has been reported to induce dysfunction in the splenic microenvironment"
+
+B T4 B25 | sub=aging | pred=declines | obj=IL-2 production | epi=background_claim | ctx=activated T cells | src="with aging, the ability to produce interleukin-2 (IL-2) and proliferation declines in activated T cells"
+
+B T4 B26 | sub=aging | pred=declines | obj=proliferation | epi=background_claim | ctx=activated T cells | src="with aging, the ability to produce interleukin-2 (IL-2) and proliferation declines in activated T cells"
+
+B T4 B27 | sub=C57BL/6 mice | pred=reared_under | obj=SPF condition | epi=direct_statement | ctx=all C57BL/6 mice | src="All C57BL/6 mice were reared under a specific pathogen–free (SPF) condition"
+
+B T4 B28 | sub=A. russatus | pred=maintained_in | obj=nonbarrier pathogen environment | epi=direct_statement | ctx=nonventilated open cages, Tel Aviv Zoological Research Garden | src="A. russatus is maintained in a nonbarrier pathogen environment in nonventilated open cages in the Tel Aviv Zoological Research Garden"
+
+B T58 B29 | src=aging | tgt=splenic decompartmentalization | rel=causes | conf=medium | ev="The spleens of 2.5-year-old M. musculus showed decompartmentalization, including loss of germinal centers, and developed fibrosis during aging"
+
+B T58 B30 | src=aging | tgt=senescent-like cell accumulation | rel=increases | conf=medium | ev="Sudan Black B–positive senescent-like cells were notably increased in the spleens of 2.5-year-old M. musculus"
+
+B T58 B31 | src=ConA | tgt=splenocyte proliferation | rel=promotes | conf=medium | ev="ConA treatment promoted the proliferation of splenocytes isolated from the young, but not aged, M. musculus"
+
+B T58 B32 | src=ConA | tgt=Il2 expression | rel=induces | conf=medium | ev="ConA treatment induced greater expression levels of Il2 and Il4 in splenocytes of A. russatus but not in age-matched M. musculus"
+
+B T58 B33 | src=ConA | tgt=Il4 expression | rel=induces | conf=medium | ev="ConA treatment induced greater expression levels of Il2 and Il4 in splenocytes of A. russatus but not in age-matched M. musculus"

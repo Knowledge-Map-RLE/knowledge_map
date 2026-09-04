@@ -1,0 +1,59 @@
+B T1 B1 | doi=unknown | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=unknown
+
+B T22 B2 | sub=A. russatus | pred=is | obj=golden spiny mouse
+B T22 B3 | sub=M. musculus | pred=is | obj=house mouse
+B T22 B4 | sub=Cdkn1a | pred=encodes | obj=p21
+B T22 B5 | sub=SenMayo | pred=is | obj=cellular senescence gene set
+
+B T7 B6 | hyp=A. russatus might not develop cellular senescence-like phenotype in liver with aging | disproof=not disproven; results support hypothesis
+
+B T55 B7 | name=A. russatus aged | n=not reported | cond=aged (3.5 and 4.5 years) | purpose=comparison of hepatic senescence
+B T55 B8 | name=M. musculus aged | n=not reported | cond=2.5-year-old | purpose=comparison of hepatic senescence
+
+B T14 B9 | name=Sudan Black B staining | type=histological staining | grp=[B7,B8] | steps=stain senescent-like cells in liver with Sudan Black B | findings=senescent-like cells increased in 2.5-year-old M. musculus; not observed in A. russatus until 3.5 years; at 4.5 years significantly lower than 2.5-year-old M. musculus | src=We found that senescent-like cells were notably increased in 2.5-year-old M. musculus (Fig. 3J). However, in A. russatus, senescent-like cells were not observed until 3.5 years old, and even at 4.5 years of age, the number of senescent-like cells was significantly lower compared to 2.5-year-old M. musculus (Fig. 3J)
+
+B T14 B10 | name=SenMayo gene set scoring | type=gene expression analysis | grp=[B7,B8] | steps=score expression levels of genes in SenMayo gene set | findings=genes in overall SenMayo, cytokine/chemokine, (metallo-)proteases, transmembrane signal receptors, protease inhibitor modules significantly elevated with age in M. musculus but not in A. russatus | src=By scoring the expression levels of genes in each gene set in SenMayo, we observed that genes involved in the overall SenMayo, cytokine/chemokine, (metallo-)proteases, transmembrane signal receptors, and protease inhibitor modules that indicate proinflammatory response were significantly elevated with age in M. musculus but not in A. russatus (Fig. 3K)
+
+B T14 B11 | name=p16 and γ-H2AX expression analysis | type=protein expression analysis | grp=[B7,B8] | steps=measure hepatic p16 and γ-H2AX expression | findings=p16 and γ-H2AX significantly increased in M. musculus but not in A. russatus during aging | src=hepatic p16 and γ-H2AX expression levels were significantly increased in M. musculus but not in A. russatus during aging (Fig. 3L)
+
+B T57 B12 | param=senescent-like cells | dir=increased | sig=significant | detail=notably increased in 2.5-year-old M. musculus | figure=3J | exp=B9 | grp=[B8] | src=senescent-like cells were notably increased in 2.5-year-old M. musculus (Fig. 3J)
+
+B T57 B13 | param=senescent-like cells | dir=lower | sig=significant | detail=at 4.5 years significantly lower than 2.5-year-old M. musculus | figure=3J | exp=B9 | grp=[B7,B8] | src=even at 4.5 years of age, the number of senescent-like cells was significantly lower compared to 2.5-year-old M. musculus (Fig. 3J)
+
+B T57 B14 | param=SenMayo gene expression | dir=increased | sig=significant | detail=overall SenMayo, cytokine/chemokine, (metallo-)proteases, transmembrane signal receptors, protease inhibitor modules elevated with age | figure=3K | exp=B10 | grp=[B8] | src=genes involved in the overall SenMayo... were significantly elevated with age in M. musculus but not in A. russatus (Fig. 3K)
+
+B T57 B15 | param=p16 expression | dir=increased | sig=significant | detail=hepatic p16 significantly increased in M. musculus but not A. russatus | figure=3L | exp=B11 | grp=[B8] | src=hepatic p16 and γ-H2AX expression levels were significantly increased in M. musculus but not in A. russatus during aging (Fig. 3L)
+
+B T57 B16 | param=γ-H2AX expression | dir=increased | sig=significant | detail=hepatic γ-H2AX significantly increased in M. musculus but not A. russatus | figure=3L | exp=B11 | grp=[B8] | src=hepatic p16 and γ-H2AX expression levels were significantly increased in M. musculus but not in A. russatus during aging (Fig. 3L)
+
+B T4 B17 | sub=A. russatus | pred=has | obj=higher health span | epi=author_interpretation | src=Together, consistent with improved health span, these analyses revealed resilient aging responses in A. russatus | ctx=aging
+
+B T4 B18 | sub=A. russatus | pred=has | obj=higher resilient aging responses | epi=experimental_result | src=these analyses revealed resilient aging responses in A. russatus | ctx=aging
+
+B T4 B19 | sub=A. russatus | pred=has | obj=lower Cdkn1a expression | epi=experimental_result | src=lack of age-related increase in Cdkn1a (encoding p21) expression in aged A. russatus (Fig. 3F) | ctx=liver, aged
+
+B T4 B20 | sub=A. russatus | pred=has | obj=lower cellular senescence | epi=experimental_result | src=senescent-like cells were not observed until 3.5 years old, and even at 4.5 years of age, the number of senescent-like cells was significantly lower compared to 2.5-year-old M. musculus (Fig. 3J) | ctx=liver
+
+B T4 B21 | sub=M. musculus | pred=has | obj=higher cellular senescence | epi=experimental_result | src=senescent-like cells were notably increased in 2.5-year-old M. musculus (Fig. 3J) | ctx=liver, 2.5-year-old
+
+B T4 B22 | sub=A. russatus | pred=has | obj=lower proinflammatory response | epi=experimental_result | src=genes involved in the overall SenMayo, cytokine/chemokine, (metallo-)proteases, transmembrane signal receptors, and protease inhibitor modules that indicate proinflammatory response were significantly elevated with age in M. musculus but not in A. russatus (Fig. 3K) | ctx=liver
+
+B T4 B23 | sub=M. musculus | pred=has | obj=higher proinflammatory response | epi=experimental_result | src=genes involved in the overall SenMayo... were significantly elevated with age in M. musculus but not in A. russatus (Fig. 3K) | ctx=liver
+
+B T4 B24 | sub=A. russatus | pred=has | obj=lower p16 expression | epi=experimental_result | src=hepatic p16 and γ-H2AX expression levels were significantly increased in M. musculus but not in A. russatus during aging (Fig. 3L) | ctx=liver
+
+B T4 B25 | sub=A. russatus | pred=has | obj=lower γ-H2AX expression | epi=experimental_result | src=hepatic p16 and γ-H2AX expression levels were significantly increased in M. musculus but not in A. russatus during aging (Fig. 3L) | ctx=liver
+
+B T4 B26 | sub=M. musculus | pred=has | obj=higher p16 expression | epi=experimental_result | src=hepatic p16 and γ-H2AX expression levels were significantly increased in M. musculus but not in A. russatus during aging (Fig. 3L) | ctx=liver
+
+B T4 B27 | sub=M. musculus | pred=has | obj=higher γ-H2AX expression | epi=experimental_result | src=hepatic p16 and γ-H2AX expression levels were significantly increased in M. musculus but not in A. russatus during aging (Fig. 3L) | ctx=liver
+
+B T4 B28 | sub=A. russatus | pred=has | obj=lower inflammaging | epi=author_interpretation | src=protection from hepatic aging in A. russatus affects multiple hallmarks of aging, including inhibition of inflammaging and cellular senescence | ctx=liver
+
+B T38 B29 | sub=A. russatus | pred=resists | obj=cellular senescence | neg=false | src=protection from hepatic aging in A. russatus affects multiple hallmarks of aging, including inhibition of inflammaging and cellular senescence
+
+B T38 B30 | sub=A. russatus | pred=inhibits | obj=inflammaging | neg=false | src=protection from hepatic aging in A. russatus affects multiple hallmarks of aging, including inhibition of inflammaging and cellular senescence
+
+B T58 B31 | src=A. russatus | tgt=cellular senescence | rel=resists | conf=high | ev=protection from hepatic aging in A. russatus affects multiple hallmarks of aging, including inhibition of inflammaging and cellular senescence
+
+B T58 B32 | src=A. russatus | tgt=inflammaging | rel=inhibits | conf=high | ev=protection from hepatic aging in A. russatus affects multiple hallmarks of aging, including inhibition of inflammaging and cellular senescence

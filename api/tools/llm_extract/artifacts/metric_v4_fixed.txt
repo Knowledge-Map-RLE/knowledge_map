@@ -1,0 +1,705 @@
+﻿{
+  "composite": 0.4879,
+  "passed": false,
+  "threshold": 0.8,
+  "gates": {
+    "dangling_refs": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "self_refs": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "cycles": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    },
+    "forward_refs": {
+      "value": 14,
+      "limit": 0,
+      "passed": false
+    },
+    "duplicate_ids": {
+      "value": 0,
+      "limit": 0,
+      "passed": true
+    }
+  },
+  "components": {
+    "triplets_f1": 1.0,
+    "causal_f1": 1.0,
+    "ast_edge_f1": 0.8762,
+    "claim_recall": 0.081,
+    "entailment_rate": 0.1901,
+    "polarity_fidelity": 1.0
+  },
+  "weights": {
+    "triplets_f1": 0.25,
+    "causal_f1": 0.15,
+    "claim_recall": 0.2,
+    "entailment_rate": 0.15,
+    "ast_edge_f1": 0.1,
+    "intervention_ref_validity": 0.1,
+    "polarity_fidelity": 0.05
+  },
+  "counts": {
+    "ref": 142,
+    "ext": 142
+  },
+  "type_delta": {},
+  "details": {
+    "triplets": {
+      "leaf": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "ref_count": 40,
+        "ext_count": 40,
+        "pairs": [
+          {
+            "reference": [
+              "A. russatus",
+              "resists",
+              "age-related functional decline"
+            ],
+            "extracted": [
+              "A. russatus",
+              "resists",
+              "age-related functional decline"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "clusterin",
+              "restrains",
+              "inflammaging"
+            ],
+            "extracted": [
+              "clusterin",
+              "restrains",
+              "inflammaging"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "extracted": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "shows",
+              "transcriptomic resilience"
+            ],
+            "extracted": [
+              "A. russatus",
+              "shows",
+              "transcriptomic resilience"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "article",
+              "has",
+              "DOI 10.1126/sciadv.aec9991"
+            ],
+            "extracted": [
+              "article",
+              "has",
+              "DOI 10.1126/sciadv.aec9991"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "reduced senescence"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "reduced senescence"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "better regeneration capacity"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "better regeneration capacity"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower p16 expression"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower p16 expression"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower ╬│-H2AX"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower ╬│-H2AX"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower fibrosis"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower fibrosis"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower senescence"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower senescence"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower inflammaging"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower inflammaging"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher clusterin"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher clusterin"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher health span"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher health span"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher lifespan"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher lifespan"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher repair capacity"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher repair capacity"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher motor function"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher motor function"
+            ],
+            "score": 0.8
+          }
+        ]
+      },
+      "resolved": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "ref_count": 47,
+        "ext_count": 47,
+        "pairs": [
+          {
+            "reference": [
+              "A. russatus",
+              "resists",
+              "age-related functional decline"
+            ],
+            "extracted": [
+              "A. russatus",
+              "resists",
+              "age-related functional decline"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "clusterin",
+              "restrains",
+              "inflammaging"
+            ],
+            "extracted": [
+              "clusterin",
+              "restrains",
+              "inflammaging"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "clusterin restrains inflammaging",
+              "enhances",
+              "health span"
+            ],
+            "extracted": [
+              "clusterin restrains inflammaging",
+              "enhances",
+              "health span"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "extracted": [
+              "A. russatus",
+              "maintains",
+              "thymic architecture"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "shows",
+              "transcriptomic resilience"
+            ],
+            "extracted": [
+              "A. russatus",
+              "shows",
+              "transcriptomic resilience"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "clusterin restrains inflammaging",
+              "reduces",
+              "fibrosis"
+            ],
+            "extracted": [
+              "clusterin restrains inflammaging",
+              "reduces",
+              "fibrosis"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "clusterin restrains inflammaging",
+              "reduces",
+              "proinflammatory cytokines"
+            ],
+            "extracted": [
+              "clusterin restrains inflammaging",
+              "reduces",
+              "proinflammatory cytokines"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "clusterin restrains inflammaging",
+              "increases",
+              "M2 macrophages"
+            ],
+            "extracted": [
+              "clusterin restrains inflammaging",
+              "increases",
+              "M2 macrophages"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "clusterin restrains inflammaging",
+              "decreases",
+              "AABs"
+            ],
+            "extracted": [
+              "clusterin restrains inflammaging",
+              "decreases",
+              "AABs"
+            ],
+            "score": 1.0
+          },
+          {
+            "reference": [
+              "article",
+              "has",
+              "DOI 10.1126/sciadv.aec9991"
+            ],
+            "extracted": [
+              "article",
+              "has",
+              "DOI 10.1126/sciadv.aec9991"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "article has DOI 10.1126/sciadv.aec9991",
+              "has",
+              "title Immunometabolic resistors of aging"
+            ],
+            "extracted": [
+              "article has DOI 10.1126/sciadv.aec9991",
+              "has",
+              "title Immunometabolic resistors of aging"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "article has DOI 10.1126/sciadv.aec9991",
+              "has",
+              "authors list"
+            ],
+            "extracted": [
+              "article has DOI 10.1126/sciadv.aec9991",
+              "has",
+              "authors list"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "elevated clusterin"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "reduced senescence"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "reduced senescence"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "higher CMA score"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower circadian disruption"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "better regeneration capacity"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "better regeneration capacity"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower p16 expression"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower p16 expression"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower ╬│-H2AX"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower ╬│-H2AX"
+            ],
+            "score": 0.8
+          },
+          {
+            "reference": [
+              "A. russatus",
+              "has",
+              "lower fibrosis"
+            ],
+            "extracted": [
+              "A. russatus",
+              "has",
+              "lower fibrosis"
+            ],
+            "score": 0.8
+          }
+        ]
+      },
+      "combined_f1": 1.0
+    },
+    "causal": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "ref_edges": 8,
+      "ext_edges": 8,
+      "node_matches": [
+        {
+          "reference": "A. russatus adaptations",
+          "extracted": "A. russatus adaptations"
+        },
+        {
+          "reference": "AABs",
+          "extracted": "AABs"
+        },
+        {
+          "reference": "M2 macrophages",
+          "extracted": "M2 macrophages"
+        },
+        {
+          "reference": "aging",
+          "extracted": "aging"
+        },
+        {
+          "reference": "aging resistance",
+          "extracted": "aging resistance"
+        },
+        {
+          "reference": "cellular senescence",
+          "extracted": "cellular senescence"
+        },
+        {
+          "reference": "clusterin",
+          "extracted": "clusterin"
+        },
+        {
+          "reference": "fibrosis",
+          "extracted": "fibrosis"
+        },
+        {
+          "reference": "functional decline",
+          "extracted": "functional decline"
+        },
+        {
+          "reference": "inflammaging",
+          "extracted": "inflammaging"
+        }
+      ]
+    },
+    "ast_edges": {
+      "precision": 1.0,
+      "recall": 0.7797,
+      "f1": 0.8762,
+      "ref_edges": 59,
+      "ext_edges": 46,
+      "matched": 46
+    },
+    "graph": {
+      "blocks": 142,
+      "linked_blocks": 54,
+      "uuid_edges": 59,
+      "dangling_refs": 0,
+      "dangling_unique": 0,
+      "self_refs": 0,
+      "cycles": 0,
+      "forward_refs": 14,
+      "duplicate_ids": 0,
+      "largest_component": 41,
+      "connectivity": 0.7593
+    },
+    "text_alignment": {
+      "claim_recall": 0.081,
+      "entailment_rate": 0.1901,
+      "sentences_assessed": 395,
+      "sentences_covered": 32,
+      "blocks_total": 142,
+      "blocks_entailed": 27,
+      "uncovered_sample": [
+        {
+          "sentence": "(A) A phylogenetic tree for several mammals.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "Data are presented as mean┬а┬▒┬аSEM (K to M) or min to max (D to J).",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "Data are presented as mean┬а┬▒┬аSEM.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "Data are presented as mean┬а┬▒┬аSEM.",
+          "best_score": 0.0
+        },
+        {
+          "sentence": "After each trial, all objects were cleaned with a 70% ethanol solution, and visible stools were removed.",
+          "best_score": 0.0
+        }
+      ]
+    },
+    "polarity": {
+      "polarity_fidelity": 1.0,
+      "paired_triplets": 4,
+      "polarity_matches": 4
+    },
+    "type_histograms": {
+      "l1_similarity": 1.0
+    }
+  }
+}

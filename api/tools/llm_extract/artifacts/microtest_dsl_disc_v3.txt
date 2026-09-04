@@ -1,0 +1,16 @@
+B T1 B1 | doi=unknown | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=unknown
+B T55 B2 | name=A. russatus | n=not specified | cond=aged, non-pathogen-free environment | purpose=comparison
+B T55 B3 | name=A. dimidiatus | n=not specified | cond=aged, non-pathogen-free environment | purpose=comparison
+B T38 B4 | sub=A. russatus | pred=resists | obj=functional decline | neg=false | src="resist functional decline"
+B T4 B5 | sub=A. russatus | pred=has | obj=higher repair capacity | epi=experimental_result | src="have a greater repair capacity" | ctx=aged, immune-metabolic organs, compared to A. dimidiatus
+B T4 B6 | sub=A. russatus | pred=has | obj=lower senescence | epi=experimental_result | src="reduced senescence" | ctx=aged, immune-metabolic organs, compared to A. dimidiatus
+B T38 B7 | sub=A. russatus | pred=maintains | obj=transcriptional integrity | neg=false | src="maintains transcriptional integrity akin to young mice"
+B T38 B8 | sub=clusterin | pred=restrains | obj=inflammaging | neg=false | src="restrain inflammaging"
+B T38 B9 | sub=clusterin | pred=enhances | obj=health span | neg=false | src="enhance health span"
+B T58 B10 | src=clusterin | tgt=inflammaging | rel=restrains | conf=high | ev="restrain inflammaging"
+B T58 B11 | src=clusterin | tgt=health span | rel=enhances | conf=high | ev="enhance health span"
+B T38 B12 | sub=A. russatus biology | pred=reveals | obj=therapeutically actionable targets | neg=false | src="reveals therapeutically actionable targets"
+B T4 B13 | sub=Spiny mice | pred=have | obj=exceptional regenerative capacity | epi=background_claim | src="known for their exceptional regenerative capacity"
+B T38 B14 | sub=Long-lived wild rodents | pred=may allow | obj=identification of dormant pathways that resist aging | neg=false | src="may allow identification of dormant pathways that resist aging"
+B T38 B15 | sub=resilience to aging of spiny mice | pred=is | obj=unknown | neg=false | src="their resilience to aging is unknown"
+B T14 B16 | name=comparative aging study | type=comparative | grp=[B2,B3] | steps=not specified | findings=[B5,B6,B7] | src="Here, we report that aged golden spiny mice ... compared to their sister species"

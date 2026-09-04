@@ -1,0 +1,75 @@
+B T1 B1 | title=Immunometabolic resistors of aging in long-lived golden spiny mice
+
+B T38 B2 | sub=A. russatus | pred=exhibits | obj=resistance to aging | neg=false | src="A. russatus (golden spiny mice) exhibits resistance to aging"
+
+B T4 B3 | sub=A. russatus | pred=has | obj=higher tissue repair capacity | epi=experimental_result | ctx=compared to A. dimidiatus | src="retained high tissue repair capacity"
+
+B T4 B4 | sub=A. russatus | pred=has | obj=lower frailty | epi=experimental_result | ctx=compared to A. dimidiatus | src="reduced frailty"
+
+B T4 B5 | sub=A. russatus | pred=has | obj=lower inflammaging | epi=experimental_result | ctx=compared to A. dimidiatus | src="lower inflammaging"
+
+B T4 B6 | sub=A. russatus | pred=has | obj=lower fibrosis | epi=experimental_result | ctx=compared to A. dimidiatus or M. musculus | src="fibrosis"
+
+B T4 B7 | sub=A. russatus | pred=has | obj=lower cellular senescence | epi=experimental_result | ctx=compared to A. dimidiatus | src="cellular senescence"
+
+B T4 B8 | sub=A. russatus | pred=has | obj=higher transcriptomic youthfulness | epi=experimental_result | ctx=beyond 4 years | src="youthful transcriptome even beyond 4 years"
+
+B T4 B9 | sub=A. russatus | pred=has | obj=higher life span | epi=experimental_result | ctx=in the wild, compared to A. dimidiatus or M. musculus | src="extended life span in the wild"
+
+B T4 B10 | sub=A. russatus | pred=has | obj=higher regenerative capacity | epi=experimental_result | ctx=compared to A. dimidiatus or M. musculus | src="retained regenerative capacity"
+
+B T4 B11 | sub=A. russatus | pred=has | obj=higher motor function | epi=experimental_result | ctx=compared to A. dimidiatus or M. musculus | src="preserved motor"
+
+B T4 B12 | sub=A. russatus | pred=has | obj=higher muscular function | epi=experimental_result | ctx=compared to A. dimidiatus or M. musculus | src="muscular function"
+
+B T4 B13 | sub=A. russatus | pred=has | obj=lower immunological aging | epi=experimental_result | ctx=compared to A. dimidiatus or M. musculus | src="reduced immunological aging"
+
+B T4 B14 | sub=A. russatus | pred=has | obj=higher clusterin expression | epi=experimental_result | ctx=aged | src="high clusterin expression"
+
+B T4 B15 | sub=A. russatus | pred=has | obj=higher CMA | epi=experimental_result | ctx=aged | src="CMA"
+
+B T4 B16 | sub=A. russatus | pred=has | obj=higher transcriptomic resilience | epi=experimental_result | ctx=aged | src="transcriptomic resilience"
+
+B T4 B17 | sub=A. russatus | pred=has | obj=higher circadian rhythm | epi=experimental_result | ctx=aged | src="lower age-associated disruption of the circadian rhythm"
+
+B T4 B18 | sub=A. russatus | pred=has | obj=lower chronic inflammation | epi=experimental_result | ctx=aged | src="chronic inflammation"
+
+B T4 B19 | sub=A. russatus | pred=has | obj=higher thymic architecture | epi=experimental_result | ctx=till 4 years of age | src="maintenance of functional thymic architecture till 4 years of age"
+
+B T4 B20 | sub=A. russatus | pred=has | obj=lower thymic lipoatrophy | epi=experimental_result | ctx=similar to naked mole-rat and FGF21 transgenic mice | src="the thymi of A. russatus were protected from lipoatrophy and involution, similar to naked mole-rat and long-lived fibroblast growth factor 21 (FGF21) transgenic mice"
+
+B T4 B21 | sub=A. russatus | pred=has | obj=lower thymic involution | epi=experimental_result | ctx=similar to naked mole-rat and FGF21 transgenic mice | src="the thymi of A. russatus were protected from lipoatrophy and involution, similar to naked mole-rat and long-lived fibroblast growth factor 21 (FGF21) transgenic mice"
+
+B T4 B22 | sub=A. russatus | pred=has | obj=higher naive T cell repertoire | epi=author_interpretation | ctx=similar to naked mole-rat and FGF21 transgenic mice | src="similar to naked mole-rat and long-lived fibroblast growth factor 21 (FGF21) transgenic mice that maintain naïve T cell repertoire till advanced age"
+
+B T4 B23 | sub=A. russatus | pred=has | obj=higher splenocyte proliferation | epi=experimental_result | ctx=in response to T cell mitogens | src="age-related loss of proliferation of splenocytes in response to T cell mitogens was mitigated"
+
+B T4 B24 | sub=A. russatus | pred=has | obj=higher T cell responses | epi=author_interpretation | src="suggesting better T cell responses"
+
+B T4 B25 | sub=A. russatus | pred=has | obj=higher splenic germinal center maintenance | epi=experimental_result | ctx=aged | src="maintenance of splenic germinal centers in aged A. russatus"
+
+B T4 B26 | sub=naked mole-rat | pred=has | obj=lower cancer incidence | epi=background_claim | ctx=until advanced age | src="naked mole-rat, which does not develop cancer till advanced age"
+
+B T4 B27 | sub=naked mole-rat | pred=has | obj=lower NK cells | epi=background_claim | src="naked mole-rat lacks NK cells"
+
+B T4 B28 | sub=A. russatus | pred=has | obj=lower neoplasms resistance | epi=limitation | src="the resistance to neoplasms in A. russatus is not substantiated"
+
+B T4 B29 | sub=A. russatus | pred=has | obj=lower validated CD markers | epi=limitation | src="current lack of specific CD markers and validated reagents in A. russatus"
+
+B T4 B30 | sub=A. russatus | pred=has | obj=lower TCR repertoire characterization | epi=limitation | src="the improvement of TCR repertoire and antigen-specific responses of this aging-resilient species remains to be established"
+
+B T4 B31 | sub=mechanisms | pred=require | obj=further study | epi=future_proposal | src="the underlying mechanisms require further study"
+
+B T7 B32 | hyp=Competition with A. dimidiatus for limited resources allowed A. russatus to switch to diurnal or crepuscular activity, exposing it to harsh desert conditions, resulting in unique adaptations | disproof=not provided
+
+B T58 B33 | src=competition with A. dimidiatus | tgt=diurnal or crepuscular activity | rel=causes | conf=low | ev="competition with A. dimidiatus (a nocturnal species) for limited resources allows A. russatus to switch to diurnal or crepuscular activity"
+
+B T58 B34 | src=diurnal or crepuscular activity | tgt=exposure to harsh desert conditions | rel=causes | conf=low | ev="exposing it to extreme harsh desert conditions"
+
+B T58 B35 | src=harsh desert conditions | tgt=unique adaptations | rel=causes | conf=low | ev="resulting in unique adaptations"
+
+B T58 B36 | src=harsh desert conditions | tgt=unique metabolic and water economy features | rel=causes | conf=low | ev="drives A. russatus to develop its unique metabolic and water economy features"
+
+B T58 B37 | src=higher temperatures and radiation | tgt=unique metabolic and water economy features | rel=causes | conf=low | ev="Daytime environments in deserts are harsher and have higher temperatures and radiation, which drives A. russatus to develop its unique metabolic and water economy features"
+
+B T55 B38 | name=A. russatus cohort | n=not provided | cond=outbred, non-SPF conditions | purpose=identification of biomedically relevant mechanisms of health and longevity

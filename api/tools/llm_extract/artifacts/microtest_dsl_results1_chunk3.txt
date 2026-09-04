@@ -1,0 +1,75 @@
+B T1 B1 | doi=unknown | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=unknown
+
+B T55 B2 | name=A. dimidiatus young | n=not reported | cond=0.5-year-old | purpose=young comparison group
+B T55 B3 | name=A. dimidiatus aged | n=not reported | cond=aged | purpose=aging comparison group
+B T55 B4 | name=A. russatus young | n=not reported | cond=0.5-year-old | purpose=young comparison group
+B T55 B5 | name=A. russatus aged | n=not reported | cond=aged | purpose=aging comparison group
+
+B T14 B6 | name=Open field test | type=behavioral | grp=[B2,B3,B4,B5] | findings=[B13,B14,B15,B16,B17,B18,B19,B20,B43,B44,B45,B46,B47] | src="dimidiatus* exhibited age-related decline in rearing behaviors, average speed, traveled distance, and number of entries into the center area" | figure=Fig. 1E-F, fig. S1A-M
+B T14 B7 | name=Wire hanging test | type=behavioral | grp=[B3,B5] | findings=[B21,B22,B23,B48,B49,B51] | src="aged A. russatus exhibited significantly increased latency and freezing time in the wire hanging test... aged A. dimidiatus had reduced latency in the wire hanging test" | figure=Fig. 1G-H, fig. S1N-R
+B T14 B8 | name=Beam walking test | type=behavioral | grp=[B3,B5] | findings=[B21,B22,B50] | src="aged A. russatus... reduced arrival time in the beam walking test" | figure=Fig. 1G-H, fig. S1N-R
+B T14 B9 | name=Novel object recognition test | type=behavioral | grp=[B2,B3,B4,B5] | findings=[B24,B25,B26,B52,B53,B54] | src="discrimination ratio was significantly reduced in 1.5-year-old A. dimidiatus, but rebounded in those older than 2.5 years; on the other hand, A. russatus exhibited no significant differences among the age groups" | figure=fig. S2A-D
+B T14 B10 | name=T-maze test | type=behavioral | grp=[B2,B3,B4,B5] | findings=[B55,B56] | src="no changes were observed in the first- and second-choice latencies across the life span for either species or sex" | figure=fig. S2E-H
+B T14 B11 | name=Activity monitoring | type=behavioral | grp=[B3,B5] | findings=[B30,B31,B32,B57,B58,B59] | src="A. dimidiatus exhibited significantly disrupted daily activity patterns during aging... these disruptions were not observed in either sex of A. russatus" | figure=Fig. 1I-J, fig. S2I-N
+B T14 B12 | name=Ear punch assay | type=regeneration | grp=[B2,B3,B4,B5] | findings=[B33,B34,B35,B36,B60] | src="both adult 0.5-year-old A. dimidiatus and A. russatus exhibited almost completely closed earholes, while regeneration capacity declined with age in both species" | figure=Fig. 1K-L, fig. S2O-R
+
+B T4 B13 | sub=A. dimidiatus | pred=has | obj=lower rearing behaviors | epi=experimental_result | ctx=aged, both sexes | src="dimidiatus* exhibited age-related decline in rearing behaviors"
+B T4 B14 | sub=A. dimidiatus | pred=has | obj=lower average speed | epi=experimental_result | ctx=aged, both sexes | src="dimidiatus* exhibited age-related decline in average speed"
+B T4 B15 | sub=A. dimidiatus | pred=has | obj=lower traveled distance | epi=experimental_result | ctx=aged, both sexes | src="dimidiatus* exhibited age-related decline in traveled distance"
+B T4 B16 | sub=A. dimidiatus | pred=has | obj=lower center area entries | epi=experimental_result | ctx=aged, both sexes | src="dimidiatus* exhibited age-related decline in number of entries into the center area"
+B T4 B17 | sub=A. russatus | pred=has | obj=higher rearing behaviors | epi=experimental_result | ctx=across age groups, both sexes | src="A. russatus maintained all these parameters at comparable levels across age groups"
+B T4 B18 | sub=A. russatus | pred=has | obj=higher average speed | epi=experimental_result | ctx=across age groups, both sexes | src="A. russatus maintained all these parameters at comparable levels across age groups"
+B T4 B19 | sub=A. russatus | pred=has | obj=higher traveled distance | epi=experimental_result | ctx=across age groups, both sexes | src="A. russatus maintained all these parameters at comparable levels across age groups"
+B T4 B20 | sub=A. russatus | pred=has | obj=higher center area entries | epi=experimental_result | ctx=across age groups, both sexes | src="A. russatus maintained all these parameters at comparable levels across age groups"
+B T4 B21 | sub=A. russatus | pred=has | obj=higher motor function | epi=experimental_result | ctx=aged, both sexes | src="aged A. russatus exhibited significantly increased latency and freezing time in the wire hanging test and reduced arrival time in the beam walking test compared to their young counterparts in both sexes, indicating improved motor and muscular functions with age"
+B T4 B22 | sub=A. russatus | pred=has | obj=higher muscular function | epi=experimental_result | ctx=aged, both sexes | src="aged A. russatus exhibited significantly increased latency and freezing time in the wire hanging test and reduced arrival time in the beam walking test compared to their young counterparts in both sexes, indicating improved motor and muscular functions with age"
+B T4 B23 | sub=A. dimidiatus | pred=has | obj=lower latency in wire hanging test | epi=experimental_result | ctx=aged | src="aged A. dimidiatus had reduced latency in the wire hanging test"
+B T4 B24 | sub=A. dimidiatus | pred=has | obj=lower discrimination ratio | epi=experimental_result | ctx=1.5-year-old, both sexes | src="discrimination ratio was significantly reduced in 1.5-year-old A. dimidiatus"
+B T4 B25 | sub=A. russatus | pred=has | obj=higher discrimination ratio | epi=experimental_result | ctx=across age groups, both sexes | src="A. russatus exhibited no significant differences among the age groups in both sexes"
+B T4 B26 | sub=A. dimidiatus | pred=has | obj=higher discrimination ratio | epi=experimental_result | ctx=older than 2.5 years, both sexes | src="discrimination ratio was significantly reduced in 1.5-year-old A. dimidiatus, but rebounded in those older than 2.5 years"
+B T4 B27 | sub=Acomys species | pred=has | obj=higher cognitive function | epi=author_interpretation | ctx=advanced age, both species | src="both species preserve cognitive functions well into advanced age"
+B T4 B28 | sub=A. russatus | pred=has | obj=higher motor function | epi=author_interpretation | ctx=advanced age | src="A. russatus, unlike A. dimidiatus, overcame age-associated decline in motor and muscular functions"
+B T4 B29 | sub=A. russatus | pred=has | obj=higher muscular function | epi=author_interpretation | ctx=advanced age | src="A. russatus, unlike A. dimidiatus, overcame age-associated decline in motor and muscular functions"
+B T4 B30 | sub=A. dimidiatus | pred=has | obj=lower circadian rhythm | epi=experimental_result | ctx=aged, both sexes | src="A. dimidiatus exhibited significantly disrupted daily activity patterns during aging, including increased activity in the resting phase and reduced activity in the active phase"
+B T4 B31 | sub=A. russatus | pred=has | obj=higher circadian rhythm | epi=experimental_result | ctx=aged, both sexes | src="these disruptions were not observed in either sex of A. russatus during aging"
+B T4 B32 | sub=A. dimidiatus females | pred=has | obj=lower circadian rhythm | epi=experimental_result | ctx=aged, females | src="in A. dimidiatus, these age-associated disruptions in daily activity patterns were more pronounced in females than males"
+B T4 B33 | sub=A. dimidiatus | pred=has | obj=lower regeneration capacity | epi=experimental_result | ctx=aged | src="regeneration capacity declined with age in both species"
+B T4 B34 | sub=A. russatus | pred=has | obj=lower regeneration capacity | epi=experimental_result | ctx=aged | src="regeneration capacity declined with age in both species"
+B T4 B35 | sub=A. dimidiatus | pred=has | obj=higher regeneration capacity | epi=experimental_result | ctx=adult 0.5-year-old | src="both adult 0.5-year-old A. dimidiatus and A. russatus exhibited almost completely closed earholes"
+B T4 B36 | sub=A. russatus | pred=has | obj=higher regeneration capacity | epi=experimental_result | ctx=adult 0.5-year-old | src="both adult 0.5-year-old A. dimidiatus and A. russatus exhibited almost completely closed earholes"
+B T4 B37 | sub=A. dimidiatus | pred=has | obj=higher anxiety | epi=author_interpretation | ctx=aged | src="which are indicators of increased anxiety and reduced locomotor activity"
+B T4 B38 | sub=A. dimidiatus | pred=has | obj=lower locomotor activity | epi=author_interpretation | ctx=aged | src="which are indicators of increased anxiety and reduced locomotor activity"
+
+B T4 B39 | sub=learning and memory abilities | pred=decline with | obj=age | epi=background_claim | src="learning and memory abilities are known to decline with age"
+B T4 B40 | sub=wound healing and repair | pred=are impaired in | obj=aged | epi=background_claim | src="wound healing and repair are impaired in the aged"
+B T4 B41 | sub=regenerative capacity in skin or ears of A. kempi and A. cahirinus | pred=declines with | obj=age | epi=background_claim | src="the exceptional regenerative capacity in the skin or ears of A. kempi and A. cahirinus declines with age"
+B T4 B42 | sub=aging | pred=accompanies | obj=disruption in circadian rhythm | epi=background_claim | src="Aging accompanies disruption in circadian rhythm with fragmented and reduced sleep patterns"
+
+B T57 B43 | param=rearing behaviors | dir=decreased | sig=significant | detail=age-related decline in A. dimidiatus | figure=Fig. 1E-F | exp=B6 | grp=[B3] | src="dimidiatus* exhibited age-related decline in rearing behaviors"
+B T57 B44 | param=average speed | dir=decreased | sig=significant | detail=age-related decline in A. dimidiatus | figure=Fig. 1E-F | exp=B6 | grp=[B3] | src="dimidiatus* exhibited age-related decline in average speed"
+B T57 B45 | param=traveled distance | dir=decreased | sig=significant | detail=age-related decline in A. dimidiatus | figure=Fig. 1E-F | exp=B6 | grp=[B3] | src="dimidiatus* exhibited age-related decline in traveled distance"
+B T57 B46 | param=center area entries | dir=decreased | sig=significant | detail=age-related decline in A. dimidiatus | figure=Fig. 1E-F | exp=B6 | grp=[B3] | src="dimidiatus* exhibited age-related decline in number of entries into the center area"
+B T57 B47 | param=time in center area | dir=no_change | sig=non_significant | detail=unchanged in both sexes | figure=Fig. 1E-F | exp=B6 | grp=[B3,B5] | src="time spent in the center area remained unchanged in both sexes"
+B T57 B48 | param=wire hanging latency | dir=increased | sig=significant | detail=aged A. russatus | figure=Fig. 1G-H | exp=B7 | grp=[B5] | src="aged A. russatus exhibited significantly increased latency in the wire hanging test"
+B T57 B49 | param=wire hanging freezing time | dir=increased | sig=significant | detail=aged A. russatus | figure=Fig. 1G-H | exp=B7 | grp=[B5] | src="aged A. russatus exhibited significantly increased freezing time in the wire hanging test"
+B T57 B50 | param=beam walking arrival time | dir=decreased | sig=not_reported | detail=aged A. russatus | figure=Fig. 1G-H | exp=B8 | grp=[B5] | src="aged A. russatus... reduced arrival time in the beam walking test"
+B T57 B51 | param=wire hanging latency | dir=decreased | sig=significant | detail=aged A. dimidiatus | figure=Fig. 1G-H | exp=B7 | grp=[B3] | src="aged A. dimidiatus had reduced latency in the wire hanging test"
+B T57 B52 | param=discrimination ratio | dir=decreased | sig=significant | detail=1.5-year-old A. dimidiatus | figure=fig. S2A-D | exp=B9 | grp=[B2] | src="discrimination ratio was significantly reduced in 1.5-year-old A. dimidiatus"
+B T57 B53 | param=discrimination ratio | dir=no_change | sig=non_significant | detail=A. russatus across age groups | figure=fig. S2A-D | exp=B9 | grp=[B4,B5] | src="A. russatus exhibited no significant differences among the age groups"
+B T57 B54 | param=discrimination ratio | dir=increased | sig=not_reported | detail=rebounded in A. dimidiatus older than 2.5 years | figure=fig. S2A-D | exp=B9 | grp=[B3] | src="discrimination ratio was significantly reduced in 1.5-year-old A. dimidiatus, but rebounded in those older than 2.5 years"
+B T57 B55 | param=first-choice latency | dir=no_change | sig=non_significant | detail=across life span, both species | figure=fig. S2E-H | exp=B10 | grp=[B2,B3,B4,B5] | src="no changes were observed in the first- and second-choice latencies across the life span"
+B T57 B56 | param=second-choice latency | dir=no_change | sig=non_significant | detail=across life span, both species | figure=fig. S2E-H | exp=B10 | grp=[B2,B3,B4,B5] | src="no changes were observed in the first- and second-choice latencies across the life span"
+B T57 B57 | param=activity in resting phase | dir=increased | sig=significant | detail=aged A. dimidiatus | figure=Fig. 1I-J | exp=B11 | grp=[B3] | src="A. dimidiatus exhibited significantly disrupted daily activity patterns during aging, including increased activity in the resting phase"
+B T57 B58 | param=activity in active phase | dir=decreased | sig=significant | detail=aged A. dimidiatus | figure=Fig. 1I-J | exp=B11 | grp=[B3] | src="A. dimidiatus exhibited significantly disrupted daily activity patterns during aging, including reduced activity in the active phase"
+B T57 B59 | param=daily activity patterns | dir=no_change | sig=non_significant | detail=A. russatus during aging | figure=Fig. 1I-J | exp=B11 | grp=[B5] | src="these disruptions were not observed in either sex of A. russatus during aging"
+B T57 B60 | param=regeneration capacity | dir=decreased | sig=significant | detail=declined with age in both species | figure=Fig. 1K-L | exp=B12 | grp=[B3,B5] | src="regeneration capacity declined with age in both species"
+
+B T58 B61 | src=A. russatus | tgt=motor function | rel=maintains | conf=high | ev="A. russatus, unlike A. dimidiatus, overcame age-associated decline in motor and muscular functions"
+B T58 B62 | src=A. russatus | tgt=muscular function | rel=maintains | conf=high | ev="A. russatus, unlike A. dimidiatus, overcame age-associated decline in motor and muscular functions"
+B T58 B63 | src=A. russatus | tgt=circadian rhythm | rel=maintains | conf=high | ev="these disruptions were not observed in either sex of A. russatus during aging"
+B T58 B64 | src=A. dimidiatus | tgt=circadian rhythm | rel=disrupts | conf=high | ev="A. dimidiatus exhibited significantly disrupted daily activity patterns during aging"
+B T58 B65 | src=aging | tgt=regeneration capacity | rel=reduces | conf=high | ev="regeneration capacity declined with age in both species"
+B T58 B66 | src=aging | tgt=rearing behaviors | rel=reduces | conf=high | ev="dimidiatus* exhibited age-related decline in rearing behaviors"
+
+B T38 B67 | sub=A. russatus | pred=overcomes | obj=age-associated decline in motor and muscular functions | neg=false | src="A. russatus, unlike A. dimidiatus, overcame age-associated decline in motor and muscular functions"
+B T38 B68 | sub=both species | pred=preserve | obj=cognitive functions well into advanced age | neg=false | src="both species preserve cognitive functions well into advanced age"

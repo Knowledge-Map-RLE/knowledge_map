@@ -1,0 +1,103 @@
+B T1 B1 | doi=not provided | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=not provided
+
+B T4 B2 | sub=A. russatus | pred=has | obj=all key immune cell subtypes | epi=observation | src="russatus* revealed the presence of all key immune cell subtypes" | ctx=immune system
+
+B T4 B3 | sub=A. russatus | pred=has | obj=higher clusterin | epi=experimental_result | src="The elevation of clusterin in aged A. russatus" | ctx=aged
+
+B T4 B4 | sub=clusterin | pred=is | obj=heterodimeric secreted glycoprotein | epi=background_claim | src="Clusterin is a heterodimeric secreted glycoprotein that is highly conserved throughout species"
+
+B T4 B5 | sub=clusterin | pred=is | obj=highly conserved throughout species | epi=background_claim | src="highly conserved throughout species"
+
+B T4 B6 | sub=clusterin | pred=binds | obj=apolipoprotein E receptor 2 (ApoER2) | epi=background_claim | src="It binds apolipoprotein E receptor 2 (ApoER2)"
+
+B T4 B7 | sub=clusterin | pred=binds | obj=very-low-density lipoprotein receptor (VLDLR) | epi=background_claim | src="and very-low-density lipoprotein receptor (VLDLR)"
+
+B T4 B8 | sub=clusterin | pred=has | obj=chaperone-like activity | epi=background_claim | src="has chaperone-like activity"
+
+B T4 B9 | sub=clusterin | pred=may regulate | obj=aging-related pathways | epi=author_interpretation | src="thus may regulate aging-related pathways in a pleiotropic manner"
+
+B T4 B10 | sub=clusterin | pred=enhances | obj=health span | epi=experimental_result | src="clusterin enhances health span by lowering inflammaging"
+
+B T4 B11 | sub=clusterin | pred=lowers | obj=inflammaging | epi=experimental_result | src="clusterin enhances health span by lowering inflammaging"
+
+B T4 B12 | sub=clusterin | pred=has | obj=protective effects in Alzheimer's disease | epi=background_claim | src="consistent with recent studies that demonstrate the protective effects of clusterin in Alzheimer's disease"
+
+B T38 B13 | sub=increase in Clu expression in aged A. russatus | pred=is | obj=hormetic response | neg=false | src="the increase in Clu expression in aged A. russatus might be a hormetic response during aging"
+
+B T38 B14 | sub=clusterin | pred=is | obj=adaptokine | neg=false | src="We posit that clusterin is an 'adaptokine'"
+
+B T4 B15 | sub=adaptokines | pred=are | obj=secreted proteins up-regulated as adaptive response | epi=hypothesis | src="one of several secreted proteins that are up-regulated as an adaptive response against cellular and organismal perturbations to maintain immunometabolic homeostasis"
+
+B T4 B16 | sub=growth differentiation factor 15 | pred=may function as | obj=adaptokine | epi=hypothesis | src="The growth differentiation factor 15 (89) and FGF21 (84, 90, 91) are additional proteins that may function as adaptokines in aging"
+
+B T4 B17 | sub=FGF21 | pred=may function as | obj=adaptokine | epi=hypothesis | src="The growth differentiation factor 15 (89) and FGF21 (84, 90, 91) are additional proteins that may function as adaptokines in aging"
+
+B T4 B18 | sub=endogenous clusterin overexpression in hematopoietic stem cells | pred=enhances | obj=mitochondrial fusion | epi=background_claim | src="overexpression of endogenous clusterin in hematopoietic stem cells enhances mitochondrial fusion"
+
+B T4 B19 | sub=endogenous clusterin overexpression in hematopoietic stem cells | pred=drives | obj=myeloid bias | epi=background_claim | src="drives myeloid bias"
+
+B T4 B20 | sub=endogenous clusterin overexpression in hematopoietic stem cells | pred=potentially contributes to | obj=chronic inflammation in aged mice | epi=background_claim | src="which potentially contributes to chronic inflammation in aged mice"
+
+B T4 B21 | sub=cytosolic clusterin | pred=has | obj=different mechanisms of action from secreted form | epi=author_interpretation | src="These findings indicate that the cytosolic clusterin has different mechanisms of action from the secreted form"
+
+B T4 B22 | sub=clusterin binding to ApoER2 and VLDLR in neuronal cells | pred=induces | obj=reelin-like signaling cascade | epi=background_claim | src="the binding of clusterin to ApoER2 and VLDLR induces a reelin-like signaling cascade"
+
+B T4 B23 | sub=clusterin binding to ApoER2 and VLDLR | pred=induces | obj=phosphorylation of disabled-1 (Dab1) | epi=background_claim | src="including the phosphorylation of disabled-1 (Dab1)"
+
+B T4 B24 | sub=clusterin binding to ApoER2 and VLDLR | pred=induces | obj=phosphorylation of downstream effectors Crk, C3G, and Rap1 | epi=background_claim | src="and its downstream effectors, such as Crk, C3G, and Rap1"
+
+B T4 B25 | sub=secreted clusterin | pred=has | obj=protective functions on inflammaging | epi=author_interpretation | src="the protective functions of secreted clusterin on inflammaging"
+
+B T4 B26 | sub=clusterin bioavailability elevation | pred=could be | obj=strategy against aging-related diseases driven by chronic inflammation | epi=author_interpretation | src="the elevation of clusterin bioavailability could be an important strategy against aging-related diseases that are driven by chronic inflammation"
+
+B T4 B27 | sub=husbandry and diet differences between Acomys and M. musculus | pred=likely confers | obj=distinct microbiome compositions | epi=author_interpretation | src="The difference in husbandry and diet between Acomys and M. musculus likely confers distinct microbiome compositions and changes"
+
+B T4 B28 | sub=husbandry and diet differences between Acomys and M. musculus | pred=may influence | obj=organismal immunometabolism and aging-related pathologies | epi=author_interpretation | src="which may influence organismal immunometabolism and aging-related pathologies"
+
+B T4 B29 | sub=study | pred=analyzed | obj=health span of A. russatus comprehensively | epi=observation | src="we endeavored to analyze the health span of A. russatus comprehensively"
+
+B T4 B30 | sub=A. russatus | pred=has | obj=wild lifespan exceeding 3 years | epi=observation | src="reported an individual that lived in the wild for more than 3 years"
+
+B T4 B31 | sub=A. russatus | pred=has | obj=captivity lifespan exceeding 4 years | epi=observation | src="and in captivity for more than 4 years"
+
+B T4 B32 | sub=A. russatus maximal life span | pred=is | obj=unclear | epi=limitation | src="the maximal life span of this species remains unclear"
+
+B T4 B33 | sub=A. dimidiatus | pred=has | obj=life span up to 5 years in captivity | epi=background_claim | src="A previous study reported that both sexes of A. dimidiatus live up to 5 years in captivity"
+
+B T58 B34 | src=clusterin | tgt=inflammaging | rel=inhibits | conf=high | ev="supplementation of clusterin in aged mice revealed inhibition of inflammaging"
+
+B T58 B35 | src=clusterin | tgt=health span | rel=enhances | conf=high | ev="clusterin enhances health span by lowering inflammaging"
+
+B T58 B36 | src=clusterin | tgt=inflammaging | rel=lowers | conf=high | ev="clusterin enhances health span by lowering inflammaging"
+
+B T58 B37 | src=endogenous clusterin overexpression | tgt=mitochondrial fusion | rel=enhances | conf=medium | ev="overexpression of endogenous clusterin in hematopoietic stem cells enhances mitochondrial fusion"
+
+B T58 B38 | src=endogenous clusterin overexpression | tgt=myeloid bias | rel=drives | conf=medium | ev="drives myeloid bias"
+
+B T58 B39 | src=endogenous clusterin overexpression | tgt=chronic inflammation | rel=contributes_to | conf=medium | ev="which potentially contributes to chronic inflammation in aged mice"
+
+B T58 B40 | src=clusterin binding to ApoER2 and VLDLR | tgt=reelin-like signaling cascade | rel=induces | conf=medium | ev="the binding of clusterin to ApoER2 and VLDLR induces a reelin-like signaling cascade"
+
+B T58 B41 | src=clusterin | tgt=Alzheimer's disease | rel=protects_against | conf=medium | ev="protective effects of clusterin in Alzheimer's disease"
+
+B T58 B42 | src=husbandry and diet differences | tgt=microbiome composition | rel=confers | conf=low | ev="The difference in husbandry and diet between Acomys and M. musculus likely confers distinct microbiome compositions"
+
+B T58 B43 | src=microbiome composition | tgt=organismal immunometabolism | rel=may_influence | conf=low | ev="which may influence organismal immunometabolism and aging-related pathologies"
+
+B T7 B44 | hyp=clusterin is an adaptokine up-regulated as adaptive response to maintain immunometabolic homeostasis | disproof=not stated
+
+B T2 B45 | sub=future studies | pred=identify and characterize | obj=adaptokines
+
+B T2 B46 | sub=future comparative analysis | pred=identify | obj=potential beneficial microbes or microbial metabolites in aging
+
+B T2 B47 | sub=future studies | pred=define | obj=exact molecular mechanisms underlying protective functions of secreted clusterin on inflammaging
+
+B T14 B48 | name=clusterin supplementation in aged mice | type=intervention study | grp=[B51] | findings=inhibition of inflammaging | src="supplementation of clusterin in aged mice revealed inhibition of inflammaging"
+
+B T18 B49 | type=supplementation | target=clusterin | dosage=not reported | regimen=not reported
+
+B T55 B50 | name=aged A. russatus | n=not reported | cond=aged | purpose=study clusterin elevation and health span
+
+B T55 B51 | name=aged mice | n=not reported | cond=aged | purpose=study clusterin supplementation effects
+
+B T4 B52 | sub=presence of all key immune cell subtypes in A. russatus | pred=supports | obj=investigation of immune resilience mechanisms in aging | epi=author_interpretation | src="supporting investigation of mechanisms biomedically relevant to immune resilience in aging, including tissue regeneration"

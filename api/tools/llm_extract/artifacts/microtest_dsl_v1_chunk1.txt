@@ -1,0 +1,24 @@
+B T1 B1 | doi=not_provided | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=not_provided
+B T4 B2 | sub=Spiny mice (Acomys) | pred=are known for | obj=exceptional regenerative capacity | epi=background_claim | src="Spiny mice (*Acomys*) are known for their exceptional regenerative capacity" | ctx=species
+B T4 B3 | sub=Resilience to aging in spiny mice | pred=is unknown | obj=unknown | epi=background_claim | src="but their resilience to aging is unknown" | ctx=species
+B T22 B4 | sub=Acomys russatus | pred=is | obj=golden spiny mice | src="golden spiny mice (*Acomys russatus*)"
+B T22 B5 | sub=Acomys dimidiatus | pred=is | obj=eastern spiny mice | src="eastern spiny mice (*Acomys dimidiatus*)"
+B T55 B6 | name=Aged A. russatus | n=not reported | cond=aged, non-pathogen-free environment | purpose=comparison to aged A. dimidiatus
+B T55 B7 | name=Aged A. dimidiatus | n=not reported | cond=aged | purpose=comparison to aged A. russatus
+B T55 B8 | name=Young mice | n=not reported | cond=young | purpose=comparison for transcriptional integrity
+B T4 B9 | sub=Aged A. russatus | pred=resist | obj=functional decline | epi=experimental_result | src="aged golden spiny mice (*Acomys russatus*), reared in a non–pathogen-free environment, resist functional decline" | ctx=aged, non-pathogen-free environment
+B T4 B10 | sub=Aged A. russatus | pred=have greater repair capacity compared to | obj=Aged A. dimidiatus | epi=experimental_result | src="have a greater repair capacity ... compared to their sister species, eastern spiny mice (*Acomys dimidiatus*)" | ctx=aged
+B T4 B11 | sub=Aged A. russatus | pred=have reduced senescence in immune-metabolic organs compared to | obj=Aged A. dimidiatus | epi=experimental_result | src="with reduced senescence in immune-metabolic organs compared to their sister species" | ctx=aged
+B T4 B12 | sub=Aged A. russatus | pred=maintains transcriptional integrity akin to | obj=young mice | epi=experimental_result | src="Aged *A. russatus* maintains transcriptional integrity akin to young mice" | ctx=aged
+B T4 B13 | sub=Elevated levels of clusterin in A. russatus macrophages | pred=restrain | obj=inflammaging | epi=experimental_result | src="elevated levels of clusterin in *A. russatus* macrophages restrain inflammaging" | ctx=macrophages
+B T4 B14 | sub=Elevated levels of clusterin in A. russatus macrophages | pred=enhance | obj=health span in aged mice | epi=experimental_result | src="and enhance health span in aged mice" | ctx=macrophages, aged mice
+B T4 B15 | sub=A. russatus biology | pred=reveals | obj=therapeutically actionable targets | epi=author_interpretation | src="Thus, *A. russatus* biology reveals therapeutically actionable targets that may enhance or maintain function during aging." | ctx=aging
+B T4 B16 | sub=Transcriptional integrity in aged A. russatus | pred=highlights | obj=experimental checkpoints for inflammation and mortality | epi=author_interpretation | src="highlighting experimental checkpoints for inflammation and mortality" | ctx=aged
+B T14 B17 | name=Comparison of aging phenotypes in A. russatus vs A. dimidiatus | type=observational study | grp=[B6,B7] | steps=not detailed | findings=[B9,B10,B11] | src=abstract
+B T57 B18 | param=functional decline | dir=decreased | sig=not_reported | detail=aged A. russatus resist functional decline | exp=B17 | grp=[B6,B7] | src="resist functional decline"
+B T57 B19 | param=repair capacity | dir=increased | sig=not_reported | detail=greater repair capacity in A. russatus | exp=B17 | grp=[B6,B7] | src="have a greater repair capacity"
+B T57 B20 | param=senescence in immune-metabolic organs | dir=decreased | sig=not_reported | detail=reduced senescence | exp=B17 | grp=[B6,B7] | src="reduced senescence"
+B T14 B21 | name=Transcriptional integrity comparison | type=gene expression analysis | grp=[B6,B8] | steps=not detailed | findings=[B12] | src=abstract
+B T57 B22 | param=transcriptional integrity | dir=maintained | sig=not_reported | detail=akin to young mice | exp=B21 | grp=[B6,B8] | src="maintains transcriptional integrity akin to young mice"
+B T58 B23 | src=clusterin | tgt=inflammaging | rel=restrains | conf=medium | ev="elevated levels of clusterin in *A. russatus* macrophages restrain inflammaging"
+B T58 B24 | src=clusterin | tgt=health span | rel=enhances | conf=medium | ev="and enhance health span in aged mice"

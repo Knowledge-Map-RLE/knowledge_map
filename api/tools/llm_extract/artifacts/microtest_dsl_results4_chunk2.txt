@@ -1,0 +1,107 @@
+B T1 B1 | doi=not provided | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=not provided
+
+B T4 B2 | sub=age-associated cell type proportional changes | pred=show | obj=similar patterns of expansion or reduction in both species | ctx=VAT | epi=observation | src="most exhibited similar patterns of expansion or reduction with age in both species (Fig. 4D)"
+
+B T4 B3 | sub=aged M. musculus | pred=has | obj=higher lymphocyte transcripts | ctx=VAT, aging | epi=observation | src="transcripts defining lymphocytes (B cells, NK cells, and T cells) and epithelial cells increased in aged M. musculus"
+
+B T4 B4 | sub=aged A. russatus | pred=has | obj=lower lymphocyte frequencies | ctx=VAT, aging | epi=observation | src="aged A. russatus showed decreased frequencies of these populations"
+
+B T4 B5 | sub=IL-1R signaling | pred=drives | obj=expansion of aged adipose B cells (AABs) | epi=background_claim | src="IL-1 receptor (IL-1R) signaling–mediated expansion of aged adipose B cells (AABs)"
+
+B T4 B6 | sub=AAB expansion | pred=associated_with | obj=aging-related impairment in immune-metabolic homeostasis | epi=background_claim | src="was associated with aging-related impairment in immune-metabolic homeostasis"
+
+B T4 B7 | sub=T-bet | pred=is | obj=marker of AABs | epi=background_claim | src="T-box expressed in T cells (T-bet, encoded by Tbx21 gene), a marker of AABs"
+
+B T4 B8 | sub=aged M. musculus | pred=has | obj=higher inflammatory gene expression | ctx=Il1a, Il1b, Il6, Tnf, Il11 in major cell types | epi=observation | src="inflammatory genes (Il1a, Il1b, Il6, Tnf, and Il11) were notably induced with age in major cell types of M. musculus"
+
+B T4 B9 | sub=aged A. russatus | pred=has | obj=lower inflammatory gene expression | ctx=Il1a, Il1b, Il6, Tnf, Il11 relative to young | epi=observation | src="aged A. russatus showed lower or comparable expression levels of these genes relative to the young ones"
+
+B T4 B10 | sub=A. russatus | pred=has | obj=higher adipose microenvironment rewiring | ctx=to limit inflammaging and metabolic dysfunction | epi=author_interpretation | src="A. russatus efficiently rewires the adipose microenvironment to limit inflammaging and metabolic dysfunction"
+
+B T4 B11 | sub=aged M. musculus | pred=has | obj=higher SASP/IASP score | ctx=almost all cell types in VAT | epi=observation | src="increased SASP or IASP score with age in almost all of the cell types in M. musculus"
+
+B T4 B12 | sub=aged A. russatus | pred=has | obj=lower SASP/IASP score | ctx=VAT cells, except modest increase in ASPCs | epi=observation | src="cells in the VAT of aged A. russatus maintained a comparable SASP or IASP score except for a modest increase in ASPCs"
+
+B T4 B13 | sub=aged M. musculus | pred=has | obj=higher Cdkn1a expression | ctx=across cell types except DCs | epi=observation | src="Cdkn1a expression was higher, and more cells expressed it across cell types, except DCs, in aged M. musculus compared to young ones"
+
+B T4 B14 | sub=A. russatus | pred=has | obj=lower Cdkn1a expression | ctx=across clusters, young and aged | epi=observation | src="in both young and aged A. russatus, Cdkn1a expression was lower across clusters"
+
+B T4 B15 | sub=aged A. russatus macrophages | pred=has | obj=lower Cdkn1a expression | ctx=with age | epi=observation | src="its expression was slightly reduced in macrophages with age"
+
+B T4 B16 | sub=T cells in A. russatus | pred=has | obj=lower Treg/exhaustion markers | ctx=aging, Foxp3, Ctla4, Lag3, Tigit | epi=observation | src="T cells in A. russatus did not exhibit an age-associated increase in markers for regulatory T cells (Treg cells) (Foxp3) and exhaustion (Ctla4, Lag3, and Tigit)"
+
+B T4 B17 | sub=A. russatus | pred=has | obj=delayed inflammaging-associated senescence-like phenotype | ctx=VAT | epi=author_interpretation | src="These results indicate a delayed inflammaging-associated senescence-like phenotype in the VAT of A. russatus"
+
+B T4 B18 | sub=aged M. musculus adipocytes | pred=has | obj=lower fatty acid metabolism | ctx=aging | epi=observation | src="reduced fatty acid metabolism in adipocytes"
+
+B T4 B19 | sub=aged M. musculus monocytes | pred=has | obj=higher response to inflammatory signals | ctx=aging | epi=observation | src="up-regulated response to inflammatory signals in monocytes"
+
+B T4 B20 | sub=A. russatus adipocytes | pred=has | obj=higher protein translation pathway enrichment | ctx=aging | epi=observation | src="pathways related to protein translation ... were enriched in adipocytes"
+
+B T4 B21 | sub=A. russatus monocytes | pred=has | obj=higher small GTPase signaling pathway enrichment | ctx=aging | epi=observation | src="small guanosine triphosphatase signaling were enriched in ... monocytes"
+
+B T4 B22 | sub=A. russatus | pred=has | obj=lower aging-upregulated gene expression | ctx=diverse cell types | epi=observation | src="Most of the up-regulated genes in M. musculus remained unchanged or were not increased in diverse cell types in A. russatus"
+
+B T4 B23 | sub=A. russatus | pred=has | obj=lower inflammatory signatures | ctx=aging | epi=observation | src="Considering the lower inflammatory and fibrotic signatures in A. russatus"
+
+B T4 B24 | sub=A. russatus | pred=has | obj=lower fibrotic signatures | ctx=aging | epi=observation | src="Considering the lower inflammatory and fibrotic signatures in A. russatus"
+
+B T4 B25 | sub=aged A. russatus | pred=has | obj=older age | ctx=3.5 years vs 2.5 years for M. musculus | epi=observation | src="although we used 1-year older A. russatus (3.5 years) than M. musculus (2.5 years)"
+
+B T38 B26 | sub=A. russatus | pred=rewires | obj=adipose microenvironment to limit inflammaging and metabolic dysfunction | neg=false | src="A. russatus efficiently rewires the adipose microenvironment to limit inflammaging and metabolic dysfunction"
+
+B T38 B27 | sub=A. russatus | pred=has | obj=delayed inflammaging-associated senescence-like phenotype | neg=false | src="These results indicate a delayed inflammaging-associated senescence-like phenotype in the VAT of A. russatus"
+
+B T57 B28 | param=SASP/IASP score | dir=increased | sig=not_reported | detail=increased with age in almost all cell types | figure=Fig. 4E | grp=[B40] | src="increased SASP or IASP score with age in almost all of the cell types in M. musculus"
+
+B T57 B29 | param=SASP/IASP score | dir=no_change | sig=not_reported | detail=comparable except modest increase in ASPCs | figure=Fig. 4F | grp=[B41] | src="cells in the VAT of aged A. russatus maintained a comparable SASP or IASP score except for a modest increase in ASPCs"
+
+B T57 B30 | param=Cdkn1a expression | dir=increased | sig=not_reported | detail=higher and more cells expressed it across cell types except DCs | figure=fig. S5H | grp=[B40] | src="Cdkn1a expression was higher, and more cells expressed it across cell types, except DCs, in aged M. musculus compared to young ones"
+
+B T57 B31 | param=Cdkn1a expression | dir=decreased | sig=not_reported | detail=lower across clusters; slightly reduced in macrophages with age | figure=fig. S5I | grp=[B41] | src="in both young and aged A. russatus, Cdkn1a expression was lower across clusters; notably, its expression was slightly reduced in macrophages with age"
+
+B T57 B32 | param=inflammatory gene expression | dir=increased | sig=not_reported | detail=Il1a, Il1b, Il6, Tnf, Il11 induced with age | figure=fig. S5, F and G | grp=[B40] | src="inflammatory genes (Il1a, Il1b, Il6, Tnf, and Il11) were notably induced with age in major cell types of M. musculus"
+
+B T57 B33 | param=inflammatory gene expression | dir=decreased | sig=not_reported | detail=lower or comparable relative to young | figure=fig. S5, F and G | grp=[B41] | src="aged A. russatus showed lower or comparable expression levels of these genes relative to the young ones"
+
+B T57 B34 | param=Treg/exhaustion markers | dir=no_change | sig=not_reported | detail=Foxp3, Ctla4, Lag3, Tigit no age-associated increase | figure=fig. S5J | grp=[B41] | src="T cells in A. russatus did not exhibit an age-associated increase in markers for regulatory T cells (Treg cells) (Foxp3) and exhaustion (Ctla4, Lag3, and Tigit)"
+
+B T57 B35 | param=fatty acid metabolism | dir=decreased | sig=not_reported | detail=reduced in adipocytes | figure=fig. S6, A and B | grp=[B40] | src="reduced fatty acid metabolism in adipocytes"
+
+B T57 B36 | param=response to inflammatory signals | dir=increased | sig=not_reported | detail=up-regulated in monocytes | figure=fig. S6, A and B | grp=[B40] | src="up-regulated response to inflammatory signals in monocytes"
+
+B T57 B37 | param=protein translation pathway | dir=increased | sig=not_reported | detail=enriched in adipocytes | figure=fig. S6, A and B | grp=[B41] | src="pathways related to protein translation ... were enriched in adipocytes"
+
+B T57 B38 | param=small GTPase signaling pathway | dir=increased | sig=not_reported | detail=enriched in monocytes | figure=fig. S6, A and B | grp=[B41] | src="small guanosine triphosphatase signaling were enriched in ... monocytes"
+
+B T57 B39 | param=aging-upregulated genes in M. musculus | dir=no_change | sig=not_reported | detail=remained unchanged or not increased in A. russatus | figure=Fig. 4, G and H, fig. S6, C to F | grp=[B41] | src="Most of the up-regulated genes in M. musculus remained unchanged or were not increased in diverse cell types in A. russatus"
+
+B T55 B40 | name=aged M. musculus | n=not reported | cond=2.5 years old | purpose=comparison species for aging study
+
+B T55 B41 | name=aged A. russatus | n=not reported | cond=3.5 years old | purpose=long-lived species for aging study
+
+B T55 B42 | name=young M. musculus | n=not reported | cond=young | purpose=young control
+
+B T55 B43 | name=young A. russatus | n=not reported | cond=young | purpose=young control
+
+B T14 B44 | name=Single-cell transcriptomic analysis of VAT aging | type=transcriptomic profiling | grp=[B40,B41,B42,B43] | steps=analyzed age-associated proportional changes in cell types, SASP/IASP scoring, Cdkn1a expression, pathway enrichment | findings=[B28,B29,B30,B31,B32,B33,B34,B35,B36,B37,B38,B39] | src="When we analyzed the age-associated proportional changes in each cell type..."
+
+B T2 B45 | sub=researchers | pred=identify | obj=potential targets that drive enhanced function and resilience to aging in A. russatus | src="To identify and harness potential targets that drive enhanced function and resilience to aging in A. russatus"
+
+B T22 B46 | sub=AABs | pred=is | obj=aged adipose B cells
+
+B T22 B47 | sub=T-bet | pred=is | obj=T-box expressed in T cells
+
+B T58 B48 | src=IL-1R signaling | tgt=expansion of aged adipose B cells (AABs) | rel=drives | conf=medium | ev="IL-1 receptor (IL-1R) signaling–mediated expansion of aged adipose B cells (AABs)"
+
+B T58 B49 | src=expansion of aged adipose B cells (AABs) | tgt=aging-related impairment in immune-metabolic homeostasis | rel=associated_with | conf=medium | ev="was associated with aging-related impairment in immune-metabolic homeostasis"
+
+B T58 B50 | src=aging | tgt=inflammatory gene expression in M. musculus | rel=increases | conf=high | ev="inflammatory genes (Il1a, Il1b, Il6, Tnf, and Il11) were notably induced with age in major cell types of M. musculus"
+
+B T58 B51 | src=aging | tgt=SASP/IASP score in M. musculus | rel=increases | conf=high | ev="increased SASP or IASP score with age in almost all of the cell types in M. musculus"
+
+B T58 B52 | src=aging | tgt=Cdkn1a expression in M. musculus | rel=increases | conf=high | ev="Cdkn1a expression was higher, and more cells expressed it across cell types, except DCs, in aged M. musculus compared to young ones"
+
+B T58 B53 | src=aging | tgt=Cdkn1a expression in A. russatus macrophages | rel=decreases | conf=medium | ev="its expression was slightly reduced in macrophages with age"
+
+B T58 B54 | src=aging | tgt=Treg/exhaustion markers in A. russatus T cells | rel=does_not_increase | conf=medium | ev="T cells in A. russatus did not exhibit an age-associated increase in markers for regulatory T cells (Treg cells) (Foxp3) and exhaustion (Ctla4, Lag3, and Tigit)"

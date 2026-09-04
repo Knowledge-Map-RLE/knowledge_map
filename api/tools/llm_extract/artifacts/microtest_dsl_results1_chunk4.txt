@@ -1,0 +1,13 @@
+B T4 B1 | sub=A. russatus | pred=has | obj=higher regeneration capacity | epi=experimental_result | src="showed protection against age-associated decline in regeneration capacity" | ctx=aging
+B T4 B2 | sub=A. russatus | pred=has | obj=higher earhole closure | epi=experimental_result | src="improved earhole closure compared to age-matched A. dimidiatus" | ctx=aged
+B T4 B3 | sub=A. russatus | pred=has | obj=higher repair performance | epi=author_interpretation | src="superior repair and wound healing performance" | ctx=during aging
+B T4 B4 | sub=A. russatus | pred=has | obj=higher wound healing performance | epi=author_interpretation | src="superior repair and wound healing performance" | ctx=during aging
+B T22 B5 | sub=cellular senescence | pred=is | obj=hallmark of aging | src="Cellular senescence is considered one of the major hallmarks of aging"
+B T4 B6 | sub=cellular senescence | pred=has | obj=up-regulation of p16 | epi=background_claim | src="A key feature of this phenomenon is the up-regulation of p16 and p21" | ctx=cellular senescence
+B T4 B7 | sub=cellular senescence | pred=has | obj=up-regulation of p21 | epi=background_claim | src="A key feature of this phenomenon is the up-regulation of p16 and p21" | ctx=cellular senescence
+B T58 B8 | src=p16 | tgt=cell cycle arrest | rel=mediates | conf=medium | ev="which are thought to mediate permanent cell cycle arrest"
+B T58 B9 | src=p21 | tgt=cell cycle arrest | rel=mediates | conf=medium | ev="which are thought to mediate permanent cell cycle arrest"
+B T4 B10 | sub=A. dimidiatus | pred=has | obj=higher p16 expression | epi=experimental_result | src="significantly elevated p16 expression in the visceral adipose tissues (VAT) of aged A. dimidiatus" | ctx=aged, VAT
+B T4 B11 | sub=A. russatus | pred=has | obj=lower p16 expression | epi=experimental_result | src="but not in A. russatus" | ctx=aged, VAT
+B T4 B12 | sub=A. russatus | pred=has | obj=lower cellular senescence | epi=author_interpretation | src="suggesting that A. russatus is protected from cellular senescence" | ctx=aged
+B T57 B13 | param=p16 expression | dir=increased | sig=significant | detail=not specified | figure=Fig. 1N and fig. S2S | exp=not specified | grp=not specified | src="significantly elevated p16 expression in the visceral adipose tissues (VAT) of aged A. dimidiatus but not in A. russatus"

@@ -25,6 +25,7 @@ from . import settings
 from .ai_model_client import get_ai_model_client
 from .llm_triplet_extraction_prompt_en import (
     build_unified_prompt_en,
+    build_unified_chunk_prompt_en,
 )
 
 logger = logging.getLogger(__name__)
@@ -185,6 +186,39 @@ class LLMTripletExtractionService:
         return _BROKEN_QUOTE_RE.sub(" ", text)
 
     @staticmethod
+    def _find_first_json_object_end(text: str, start: int) -> int:
+        """Возвращает индекс закрывающей `}` первого объекта от `start`.
+
+        Модель иногда выдаёт несколько ``{"blocks": [...]}`` объектов подряд
+        (или повторяет вывод при обрыве/чанкинге на стороне провайдера), порой
+        даже без запятой-разделителя (``]}{``). ``rfind("}")`` в такой ситуации
+        захватывает все объекты разом, и ``json.loads`` падает с "Extra data".
+        Поэтому ищем конец ПЕРВОГО корневого объекта балансировкой скобок.
+        """
+        depth = 0
+        in_str = False
+        esc = False
+        for i in range(start, len(text)):
+            ch = text[i]
+            if in_str:
+                if esc:
+                    esc = False
+                elif ch == "\\":
+                    esc = True
+                elif ch == '"':
+                    in_str = False
+                continue
+            if ch == '"':
+                in_str = True
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    return i
+        return -1
+
+    @staticmethod
     def _extract_json(text: str) -> Optional[Dict[str, Any]]:
         if not text:
             return None
@@ -192,8 +226,10 @@ class LLMTripletExtractionService:
         m = _JSON_FENCE_RE.search(text)
         candidate = m.group(1) if m else text
         start = candidate.find("{")
-        end = candidate.rfind("}")
-        if start == -1 or end == -1 or end <= start:
+        if start == -1:
+            return None
+        end = LLMTripletExtractionService._find_first_json_object_end(candidate, start)
+        if end == -1 or end <= start:
             return None
         try:
             data = json.loads(candidate[start : end + 1])
@@ -1059,6 +1095,164 @@ class LLMTripletExtractionService:
             "raw_count": len(raw_blocks),
         }
 
+    # ── Chunked (sequential) extraction ───────────────────────────────────────
+    def extract_chunked(
+        self,
+        doc_id: str,
+        text: str,
+        article_title: str = "",
+        *,
+        model_id: str = DEFAULT_MODEL,
+        temperature: float = DEFAULT_TEMPERATURE,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
+        timeout: int = DEFAULT_TIMEOUT,
+        max_chunk_chars: int = DEFAULT_MAX_CHUNK_CHARS,
+        progress_cb=None,
+        cancel_event: Optional["threading.Event"] = None,
+    ) -> Dict[str, Any]:
+        """Извлекает структуру статьи по фрагментам (sequential chunking).
+
+        Длинная статья разбивается на логические фрагменты (``split_into_chunks``),
+        каждый обрабатывается отдельным LLM-вызовом. Это позволяет модели выдавать
+        компактный, сфокусированный вывод на фрагменте и избегает обрыва/дублирования
+        вывода на очень длинные статьи (когда модель физически не генерирует все
+        150+ блоков за один ответ).
+
+        Нумерация ``{Bn}`` — глобальная: каждый последующий фрагмент получает список
+        уже извлечённых блоков (контекст) и продолжает нумерацию с конца, а также
+        может ссылаться на блоки из предыдущих фрагментов без битых ссылок.
+
+        Все сырые блоки всех фрагментов собираются вместе и проходят единый
+        постпроцессинг (присвоение UUID, дедупликацию, детерминированные секции).
+        """
+        if not text:
+            return {"success": False, "message": "Текст статьи пуст", "blocks": []}
+
+        chunks = self.split_into_chunks(text, max_chars=max_chunk_chars)
+        if not chunks:
+            return {"success": False, "message": "Не удалось разбить статью на фрагменты", "blocks": []}
+
+        logger.info(
+            "Chunked extraction for %s: %d chars -> %d chunks, model=%s, chunk_chars=%d",
+            doc_id, len(text), len(chunks), model_id, max_chunk_chars,
+        )
+
+        raw_all: List[Dict[str, Any]] = []
+        chunk_report: List[Dict[str, Any]] = []
+        total_input = 0
+        total_output = 0
+        total_attempts = 0
+        failed_chunks: List[int] = []
+
+        for ci, chunk in enumerate(chunks):
+            if cancel_event is not None and cancel_event.is_set():
+                return {
+                    "success": False,
+                    "cancelled": True,
+                    "message": "Извлечение отменено",
+                    "blocks": [],
+                    "chunks": chunk_report,
+                }
+
+            next_b = 1
+            for b in raw_all:
+                mt = _BTAG_RE.match(str(b.get("tag", "") or "").strip())
+                if mt:
+                    next_b = max(next_b, int(mt.group(1)) + 1)
+
+            prompt = build_unified_chunk_prompt_en(
+                article_title=article_title,
+                chunk_text=chunk,
+                prior_blocks=raw_all,
+                next_b_tag=next_b,
+            )
+
+            chunk_ok = False
+            for attempt in range(1 + MAX_RETRIES):
+                if cancel_event is not None and cancel_event.is_set():
+                    return {
+                        "success": False,
+                        "cancelled": True,
+                        "message": "Извлечение отменено",
+                        "blocks": [],
+                        "chunks": chunk_report,
+                    }
+                if progress_cb:
+                    progress_cb(ci, len(chunks), attempt)
+
+                res = self.client.generate_text_stream(
+                    model_id=model_id,
+                    prompt=prompt,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    timeout=timeout,
+                )
+                total_attempts += 1
+                total_input += int(res.get("input_tokens", 0) or 0)
+                total_output += int(res.get("output_tokens", 0) or 0)
+                if not res.get("success"):
+                    logger.warning(
+                        "Chunk %d/%d attempt %d failed: %s",
+                        ci + 1, len(chunks), attempt, res.get("message"),
+                    )
+                    if attempt < MAX_RETRIES:
+                        continue
+                    failed_chunks.append(ci)
+                    chunk_report.append({
+                        "index": ci,
+                        "chars": len(chunk),
+                        "blocks": 0,
+                        "success": False,
+                        "error": res.get("message", "LLM call failed"),
+                    })
+                    break
+
+                raw_blocks = self._parse_unified_json(res.get("generated_text", ""))
+                chunk_ok = True
+                raw_all.extend(raw_blocks)
+                chunk_report.append({
+                    "index": ci,
+                    "chars": len(chunk),
+                    "blocks": len(raw_blocks),
+                    "success": True,
+                })
+                logger.info(
+                    "Chunk %d/%d done: %d blocks (total %d)",
+                    ci + 1, len(chunks), len(raw_blocks), len(raw_all),
+                )
+                break
+
+            if not chunk_ok and ci not in failed_chunks:
+                failed_chunks.append(ci)
+
+        if not raw_all:
+            return {
+                "success": False,
+                "doc_id": doc_id,
+                "message": "Все фрагменты вернули пустой/невалидный JSON",
+                "blocks": [],
+                "chunks": chunk_report,
+            }
+
+        blocks = self.postprocess_unified(raw_all, article_text=text)
+        summary = self._summary(blocks)
+        summary["tokens"] = {
+            "input": total_input,
+            "output": total_output,
+        }
+        summary["attempts"] = total_attempts
+        summary["chunk_failures"] = failed_chunks
+
+        return {
+            "success": len(blocks) > 0,
+            "doc_id": doc_id,
+            "blocks": blocks,
+            "summary": summary,
+            "chunks": chunk_report,
+            "raw_count": len(raw_all),
+            "failed_chunks": failed_chunks,
+        }
+
     # ── Оркестрация ──────────────────────────────────────────────────────────
     def extract(
         self,
@@ -1075,19 +1269,33 @@ class LLMTripletExtractionService:
         max_chunks: Optional[int] = None,
         progress_cb=None,
         cancel_event: Optional["threading.Event"] = None,
+        use_chunking: bool = True,
     ) -> Dict[str, Any]:
-        """Извлекает структуру блоков из текста статьи (unified one-stage).
+        """Извлекает структуру блоков из текста статьи.
 
-        Вся статья обрабатывается за один LLM-вызов.
-        Оптимизировано для DeepSeek V4 Flash (1M контекст).
+        По умолчанию (``use_chunking=True``) длинная статья обрабатывается
+        пофрагментно (sequential chunking) во избежание обрыва вывода на
+        длинных статьях. Для очень коротких текстов будет один фрагмент.
 
         Возвращает:
-            {"success", "blocks", "summary", "chunks": [{index, chars, containers}]}
+            {"success", "blocks", "summary", "chunks": [{index, chars, blocks}]}
         """
         if not text:
             return {"success": False, "message": "Текст статьи пуст", "blocks": []}
 
-        return self.extract_whole_article(
+        if not use_chunking:
+            return self.extract_whole_article(
+                doc_id,
+                text,
+                article_title,
+                model_id=model_id,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                timeout=timeout,
+                progress_cb=progress_cb,
+            )
+
+        return self.extract_chunked(
             doc_id,
             text,
             article_title,
@@ -1095,6 +1303,9 @@ class LLMTripletExtractionService:
             temperature=temperature,
             max_tokens=max_tokens,
             timeout=timeout,
+            max_chunk_chars=max_chunk_chars,
             progress_cb=progress_cb,
+            cancel_event=cancel_event,
         )
+
 

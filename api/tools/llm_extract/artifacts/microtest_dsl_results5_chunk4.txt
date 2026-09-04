@@ -1,0 +1,69 @@
+B T1 B1 | doi=not_provided | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=not_provided
+
+B T14 B2 | name=BMDM polarization experiment | type=in_vitro_cell_experiment | grp=[B5,B6] | steps=polarize bone marrow-derived macrophages with M1- or M2-like conditions; treat with clusterin; measure gene expression | findings=[B8,B9,B10,B11,B12] | src="we polarized the bone marrow–derived macrophages (BMDMs) with M1- or M2-like conditions"
+
+B T14 B3 | name=Human monocyte LPS experiment | type=in_vitro_cell_experiment | grp=[B7] | steps=isolate peripheral blood monocytes from healthy donors; treat with clusterin; stimulate with LPS; measure cytokine production | findings=[B13,B14] | src="we isolated peripheral blood monocytes from healthy donors and examined the effects of clusterin on lipopolysaccharide (LPS)–induced inflammatory responses"
+
+B T18 B4 | type=protein_treatment | target=clusterin | dosage=up to 10 μg/ml | regimen=time- and dose-dependent treatment
+
+B T55 B5 | name=M1-like BMDMs | n=not_reported | cond=M1 polarization | purpose=test clusterin effect on proinflammatory gene expression
+
+B T55 B6 | name=M2-like BMDMs | n=not_reported | cond=M2 polarization | purpose=test clusterin effect on anti-inflammatory gene expression
+
+B T55 B7 | name=Human monocytes | n=healthy donors | cond=LPS stimulation | purpose=test clusterin effect on LPS-induced inflammatory responses
+
+B T57 B8 | param=Il1b expression | dir=decreased | sig=trend | detail=tendency to decrease | figure=fig. S9J | exp=B2 | grp=[B5] | interv=B4 | src="clusterin showed a tendency to decrease Il1b expression in M1-like BMDMs"
+
+B T57 B9 | param=proinflammatory gene expression (Nos2, Il1b, Tnf) | dir=no_change | sig=non_significant | detail=did not significantly regulate | figure=fig. S9J | exp=B2 | grp=[B5] | interv=B4 | src="did not significantly regulate the expression levels of proinflammatory genes (Nos2, Il1b, and Tnf)"
+
+B T57 B10 | param=anti-inflammatory gene expression (Retnla, Il4, Il10) | dir=increased | sig=significant | detail=significantly induced | figure=fig. S9K | exp=B2 | grp=[B5,B6] | interv=B4 | src="clusterin treatment significantly induced the expression levels of anti-inflammatory genes (Retnla, Il4, and Il10)"
+
+B T57 B11 | param=M2-like macrophage frequency | dir=increased | sig=significant | detail=elevated frequency of reparative M2-like macrophages | figure=fig. S9L | exp=B2 | interv=B4 | src="clusterin treatment elevated the frequency of reparative M2-like macrophages without altering M1-like macrophages in the VAT"
+
+B T57 B12 | param=M1-like macrophage frequency | dir=no_change | sig=not_reported | detail=without altering | figure=fig. S9L | exp=B2 | interv=B4 | src="without altering M1-like macrophages in the VAT"
+
+B T57 B13 | param=IL-1β production | dir=decreased | sig=significant | detail=time- and dose-dependent reduction | figure=Fig. 5Q and fig. S9M | exp=B3 | grp=[B7] | interv=B4 | src="significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-1β"
+
+B T57 B14 | param=IL-18 production | dir=decreased | sig=significant | detail=time- and dose-dependent reduction | figure=Fig. 5Q and fig. S9M | exp=B3 | grp=[B7] | interv=B4 | src="significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-18"
+
+B T4 B15 | sub=clusterin | pred=decreases | obj=Il1b expression | epi=experimental_result | src="clusterin showed a tendency to decrease Il1b expression in M1-like BMDMs" | ctx=mouse BMDMs, M1-like polarization
+
+B T38 B16 | sub=clusterin | pred=regulates | obj=proinflammatory gene expression (Nos2, Il1b, Tnf) | neg=true | src="did not significantly regulate the expression levels of proinflammatory genes (Nos2, Il1b, and Tnf)"
+
+B T4 B17 | sub=clusterin | pred=induces | obj=anti-inflammatory gene expression (Retnla, Il4, Il10) | epi=experimental_result | src="clusterin treatment significantly induced the expression levels of anti-inflammatory genes (Retnla, Il4, and Il10)" | ctx=mouse BMDMs, M1- and M2-polarized
+
+B T4 B18 | sub=clusterin | pred=elevates | obj=frequency of reparative M2-like macrophages | epi=experimental_result | src="clusterin treatment elevated the frequency of reparative M2-like macrophages" | ctx=mouse VAT
+
+B T38 B19 | sub=clusterin | pred=alters | obj=M1-like macrophage frequency in VAT | neg=true | src="without altering M1-like macrophages in the VAT"
+
+B T4 B20 | sub=clusterin | pred=reduces | obj=IL-1β production | epi=experimental_result | src="significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-1β" | ctx=human monocytes, LPS-induced
+
+B T4 B21 | sub=clusterin | pred=reduces | obj=IL-18 production | epi=experimental_result | src="significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-18" | ctx=human monocytes, LPS-induced
+
+B T4 B22 | sub=clusterin dose (10 μg/ml) | pred=is_lower_than | obj=circulating concentration of healthy individuals (~100 μg/ml) | epi=background_claim | src="the highest dose of clusterin (10 μg/ml) used was lower than the circulating concentration of healthy individuals (around 100 μg/ml)"
+
+B T4 B23 | sub=clusterin | pred=restrains | obj=inflammaging | epi=author_interpretation | src="clusterin could restrain inflammaging both in mice and in humans" | ctx=mice and humans
+
+B T4 B24 | sub=elevation of clusterin | pred=extends | obj=health span | epi=author_interpretation | src="elevation of clusterin successfully extends health span" | ctx=mice
+
+B T4 B25 | sub=elevation of clusterin | pred=restrains | obj=inflammaging | epi=author_interpretation | src="elevation of clusterin successfully extends health span and restrains inflammaging" | ctx=mice
+
+B T4 B26 | sub=elevation of clusterin | pred=reduces | obj=VAT AABs | epi=author_interpretation | src="restrains inflammaging via reducing VAT AABs" | ctx=mouse VAT
+
+B T4 B27 | sub=elevation of clusterin | pred=increases | obj=anti-inflammatory macrophages | epi=author_interpretation | src="increasing anti-inflammatory macrophages" | ctx=mouse
+
+B T58 B28 | src=clusterin | tgt=anti-inflammatory genes (Retnla, Il4, Il10) | rel=induces | conf=high | ev="clusterin treatment significantly induced the expression levels of anti-inflammatory genes (Retnla, Il4, and Il10)"
+
+B T58 B29 | src=clusterin | tgt=IL-1β production | rel=reduces | conf=high | ev="significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-1β"
+
+B T58 B30 | src=clusterin | tgt=IL-18 production | rel=reduces | conf=high | ev="significant and time- and dose-dependent reduction in inflammasome-regulated cytokine IL-18"
+
+B T58 B31 | src=clusterin | tgt=M2-like macrophage frequency | rel=increases | conf=high | ev="clusterin treatment elevated the frequency of reparative M2-like macrophages"
+
+B T58 B32 | src=elevation of clusterin | tgt=health span | rel=extends | conf=medium | ev="elevation of clusterin successfully extends health span"
+
+B T58 B33 | src=elevation of clusterin | tgt=inflammaging | rel=restrains | conf=medium | ev="restrains inflammaging"
+
+B T58 B34 | src=elevation of clusterin | tgt=VAT AABs | rel=reduces | conf=medium | ev="reducing VAT AABs"
+
+B T58 B35 | src=elevation of clusterin | tgt=anti-inflammatory macrophages | rel=increases | conf=medium | ev="increasing anti-inflammatory macrophages"

@@ -1,0 +1,68 @@
+B T1 B1 | doi= | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=
+
+B T22 B2 | sub=Acomys | pred=is | obj=genus of spiny mice
+B T22 B3 | sub=Acomys russatus | pred=is | obj=species of spiny mice
+B T22 B4 | sub=Acomys dimidiatus | pred=is | obj=species of spiny mice
+B T22 B5 | sub=Acomys kempi | pred=is | obj=species of spiny mice
+B T22 B6 | sub=Acomys percivali | pred=is | obj=species of spiny mice
+B T22 B7 | sub=Acomys subspinosus | pred=is | obj=species of spiny mice
+B T22 B8 | sub=Deomyinae | pred=is | obj=subfamily of rodents
+
+B T4 B9 | sub=aging | pred=has | obj=loss of biological resilience | epi=background_claim | src="One of the key manifestations of aging is a loss of biological resilience" | ctx=
+B T4 B10 | sub=aging | pred=has | obj=slowdown in cell and tissue repair processes | epi=background_claim | src="including a slowdown in cell and tissue repair processes" | ctx=
+B T4 B11 | sub=chronic sterile inflammation | pred=causes | obj=slowdown in cell and tissue repair | epi=background_claim | src="due to chronic sterile inflammation and metabolic stress" | ctx=
+B T4 B12 | sub=metabolic stress | pred=causes | obj=slowdown in cell and tissue repair | epi=background_claim | src="due to chronic sterile inflammation and metabolic stress" | ctx=
+B T4 B13 | sub=Mus | pred=is | obj=used for aging studies | epi=background_claim | src="the study of the underlying mechanisms of aging has relied on laboratory inbred strains of Mus and Rattus" | ctx=
+B T4 B14 | sub=Rattus | pred=is | obj=used for aging studies | epi=background_claim | src="the study of the underlying mechanisms of aging has relied on laboratory inbred strains of Mus and Rattus" | ctx=
+B T4 B15 | sub=Mus | pred=does not capture | obj=diversity of physiological adaptive traits in rodents | epi=background_claim | src="These species alone, however, do not capture the diversity of physiological adaptive traits in rodents" | ctx=
+B T4 B16 | sub=Rattus | pred=does not capture | obj=diversity of physiological adaptive traits in rodents | epi=background_claim | src="These species alone, however, do not capture the diversity of physiological adaptive traits in rodents" | ctx=
+B T4 B17 | sub=rodents | pred=comprise | obj=>40% of all mammalian species | epi=background_claim | src="which comprises >40% of all mammalian species" | ctx=
+B T4 B18 | sub=comparative biology approach | pred=has | obj=higher chance of identifying mechanisms that resist senescence | epi=author_interpretation | src="one underlying rationale for the investigation of the aging process using a comparative biology approach is to maximize the chances of identifying mechanisms that resist senescence" | ctx=
+B T4 B19 | sub=comparative biology approach | pred=enables | obj=clearance of damage-associated molecular patterns | epi=author_interpretation | src="through the ability to clear the accumulation of damage-associated molecular patterns and promote tissue repair" | ctx=
+B T4 B20 | sub=comparative biology approach | pred=promotes | obj=tissue repair | epi=author_interpretation | src="and promote tissue repair" | ctx=
+
+B T38 B21 | sub=Hamilton | pred=posits | obj=senescence is unavoidable | neg=false | src="As posited by Hamilton (6), senescence is unavoidable because the force of natural selection wanes post–early reproductive age"
+
+B T4 B22 | sub=force of natural selection | pred=wanes | obj=after early reproductive age | epi=background_claim | src="the force of natural selection wanes post–early reproductive age" | ctx=
+B T4 B23 | sub=organisms | pred=acquire | obj=specific adaptive traits to enhance fitness | epi=background_claim | src="organisms acquire specific adaptive traits to enhance fitness to cope with their environment" | ctx=
+B T4 B24 | sub=Acomys | pred=has | obj=higher regenerative capacity | epi=background_claim | src="such as high regenerative capacity" | ctx=
+B T4 B25 | sub=Acomys | pred=has | obj=evolutionarily conserved adaptive features relevant to aging and tissue repair | epi=background_claim | src="organisms have acquired evolutionarily conserved adaptive features, such as high regenerative capacity, which are relevant to aging and tissue repair" | ctx=
+B T4 B26 | sub=spiny mice | pred=number | obj=18 species | epi=background_claim | src="There are 18 species of spiny mice" | ctx=
+B T4 B27 | sub=spiny mice | pred=belong to | obj=subfamily Deomyinae | epi=background_claim | src="that belong to the subfamily Deomyinae" | ctx=
+B T4 B28 | sub=Acomys | pred=inhabits | obj=dry arid regions | epi=background_claim | src="Acomys inhabits dry arid regions" | ctx=
+B T4 B29 | sub=Acomys | pred=inhabits | obj=rocky deserts in the Middle East | epi=background_claim | src="including rocky deserts in the Middle East, Saudi Arabia, Israel, and parts of Africa" | ctx=
+B T4 B30 | sub=Acomys | pred=inhabits | obj=rocky deserts in Saudi Arabia | epi=background_claim | src="including rocky deserts in the Middle East, Saudi Arabia, Israel, and parts of Africa" | ctx=
+B T4 B31 | sub=Acomys | pred=inhabits | obj=rocky deserts in Israel | epi=background_claim | src="including rocky deserts in the Middle East, Saudi Arabia, Israel, and parts of Africa" | ctx=
+B T4 B32 | sub=Acomys | pred=inhabits | obj=rocky deserts in parts of Africa | epi=background_claim | src="including rocky deserts in the Middle East, Saudi Arabia, Israel, and parts of Africa" | ctx=
+B T4 B33 | sub=Acomys kempi | pred=has | obj=higher poison resistance | epi=background_claim | src="three species of spiny mice, Acomys kempi, Acomys dimidiatus..., and Acomys percivali, are resistant to poisons" | ctx=
+B T4 B34 | sub=Acomys dimidiatus | pred=has | obj=higher poison resistance | epi=background_claim | src="three species of spiny mice, Acomys kempi, Acomys dimidiatus..., and Acomys percivali, are resistant to poisons" | ctx=
+B T4 B35 | sub=Acomys percivali | pred=has | obj=higher poison resistance | epi=background_claim | src="three species of spiny mice, Acomys kempi, Acomys dimidiatus..., and Acomys percivali, are resistant to poisons" | ctx=
+B T4 B36 | sub=Acomys kempi | pred=has | obj=higher skin regeneration capacity | epi=background_claim | src="can regenerate their skin from full-thickness injuries" | ctx=
+B T4 B37 | sub=Acomys dimidiatus | pred=has | obj=higher skin regeneration capacity | epi=background_claim | src="can regenerate their skin from full-thickness injuries" | ctx=
+B T4 B38 | sub=Acomys percivali | pred=has | obj=higher skin regeneration capacity | epi=background_claim | src="can regenerate their skin from full-thickness injuries" | ctx=
+B T4 B39 | sub=A. dimidiatus | pred=has | obj=higher ear wound closure capacity | epi=background_claim | src="A. dimidiatus can completely close 4-mm earholes" | ctx=
+B T4 B40 | sub=Acomys russatus | pred=has | obj=tail sheath loss | epi=background_claim | src="Acomys russatus, A. dimidiatus, and Acomys subspinosus exhibit loss of tail sheath or false autotomy" | ctx=
+B T4 B41 | sub=A. dimidiatus | pred=has | obj=tail sheath loss | epi=background_claim | src="Acomys russatus, A. dimidiatus, and Acomys subspinosus exhibit loss of tail sheath or false autotomy" | ctx=
+B T4 B42 | sub=Acomys subspinosus | pred=has | obj=tail sheath loss | epi=background_claim | src="Acomys russatus, A. dimidiatus, and Acomys subspinosus exhibit loss of tail sheath or false autotomy" | ctx=
+B T4 B43 | sub=tail sheath loss | pred=is | obj=antipredatory adaptation | epi=author_interpretation | src="possibly as an antipredatory adaptation" | ctx=
+B T4 B44 | sub=A. russatus | pred=shares | obj=habitat with A. dimidiatus | epi=background_claim | src="A. russatus (golden spiny mouse) that shares habitat with A. dimidiatus" | ctx=
+B T4 B45 | sub=A. russatus | pred=was excluded from | obj=nocturnal niche | epi=background_claim | src="was excluded from the more thermally favorable nocturnal niche to the diurnal niche" | ctx=
+B T4 B46 | sub=A. russatus | pred=was excluded to | obj=diurnal niche | epi=background_claim | src="was excluded from the more thermally favorable nocturnal niche to the diurnal niche" | ctx=
+B T4 B47 | sub=A. russatus | pred=has | obj=higher skin pigmentation | epi=background_claim | src="dark skin pigmentation" | ctx=
+B T4 B48 | sub=A. russatus | pred=has | obj=higher ascorbic acid | epi=background_claim | src="higher concentration of ascorbic acid in eyes" | ctx=eyes
+B T4 B49 | sub=A. russatus | pred=has | obj=higher urine concentration ability | epi=background_claim | src="greater urine concentration ability" | ctx=
+B T4 B50 | sub=A. russatus | pred=has | obj=higher starvation resilience | epi=background_claim | src="resilient to long periods of starvation" | ctx=
+B T4 B51 | sub=A. russatus | pred=has | obj=lower energy expenditure | epi=background_claim | src="ability to lower energy expenditure using torpor" | ctx=
+B T4 B52 | sub=A. russatus | pred=uses | obj=torpor | epi=background_claim | src="using torpor" | ctx=
+B T4 B53 | sub=A. russatus | pred=uses | obj=torpor at warm ambient temperatures | epi=background_claim | src="even at warm ambient temperatures" | ctx=
+B T4 B54 | sub=A. russatus | pred=uses | obj=torpor in response to negative energy balance | epi=background_claim | src="in response to negative energy balance" | ctx=
+B T4 B55 | sub=A. russatus | pred=uses | obj=torpor in response to environmental stressors | epi=background_claim | src="and other environmental stressors" | ctx=
+B T4 B56 | sub=A. russatus | pred=has | obj=higher evaporation rate | epi=background_claim | src="efficient evaporation rate" | ctx=
+B T4 B57 | sub=A. russatus | pred=has | obj=higher water conservation ability | epi=background_claim | src="ability to conserve water" | ctx=
+B T4 B58 | sub=A. russatus | pred=has | obj=higher concentrated urine production | epi=background_claim | src="produce concentrated urine" | ctx=
+B T4 B59 | sub=adaptations of A. russatus | pred=allow | obj=coexistence with A. dimidiatus | epi=author_interpretation | src="This adaptability... allows A. russatus to coexist with its congener, A. dimidiatus" | ctx=
+
+B T58 B60 | src=chronic sterile inflammation | tgt=cell and tissue repair | rel=causes | conf=medium | ev="due to chronic sterile inflammation and metabolic stress"
+B T58 B61 | src=metabolic stress | tgt=cell and tissue repair | rel=causes | conf=medium | ev="due to chronic sterile inflammation and metabolic stress"
+B T58 B62 | src=torpor | tgt=energy expenditure | rel=reduces | conf=medium | ev="ability to lower energy expenditure using torpor"
+B T58 B63 | src=adaptability of A. russatus | tgt=coexistence with A. dimidiatus | rel=enables | conf=medium | ev="This adaptability... allows A. russatus to coexist with its congener, A. dimidiatus"

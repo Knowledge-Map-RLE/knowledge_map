@@ -1,0 +1,29 @@
+B T1 B1 | title=Immunometabolic resistors of aging in long-lived golden spiny mice
+B T4 B2 | sub=thymic aging | pred=is | obj=fastest aging organ | epi=background_claim | src="the aging of the thymus is fastest and precedes the aging of other organs" | ctx=thymus
+B T4 B3 | sub=thymic aging | pred=characterized_by | obj=emergence of fibroadipogenic cells | epi=background_claim | src="Thymic aging is characterized by the emergence of fibroadipogenic cells" | ctx=thymus
+B T4 B4 | sub=thymic aging | pred=characterized_by | obj=cessation of naïve T cell production | epi=background_claim | src="the eventual cessation of naïve T cell production" | ctx=thymus
+B T4 B5 | sub=M. musculus | pred=has | obj=higher thymic lipoatrophy | epi=observation | src="we observed prominent thymic lipoatrophy and fibrosis in a 2.5-year-old M. musculus" | ctx=thymus, 2.5-year-old
+B T4 B6 | sub=M. musculus | pred=has | obj=higher thymic fibrosis | epi=observation | src="we observed prominent thymic lipoatrophy and fibrosis in a 2.5-year-old M. musculus" | ctx=thymus, 2.5-year-old
+B T4 B7 | sub=A. russatus | pred=has | obj=smaller thymus size | epi=observation | src="The overall size of the thymi of A. russatus was smaller than M. musculus" | ctx=thymus, vs M. musculus
+B T4 B8 | sub=A. russatus | pred=has | obj=lower lipid accumulation | epi=experimental_result | src="lipid accumulation and fibrosis, key features of thymic involution, were substantially lower in the thymi of age-matched 2.5-year-old A. russatus" | ctx=thymus, 2.5-year-old, vs M. musculus
+B T4 B9 | sub=A. russatus | pred=has | obj=lower fibrosis | epi=experimental_result | src="lipid accumulation and fibrosis, key features of thymic involution, were substantially lower in the thymi of age-matched 2.5-year-old A. russatus" | ctx=thymus, 2.5-year-old, vs M. musculus
+B T4 B10 | sub=A. russatus | pred=has | obj=higher cortical cellularity | epi=observation | src="displayed notable maintenance of cortical and medullary cellularity" | ctx=thymus, >3.5 years
+B T4 B11 | sub=A. russatus | pred=has | obj=higher medullary cellularity | epi=observation | src="displayed notable maintenance of cortical and medullary cellularity" | ctx=thymus, >3.5 years
+B T4 B12 | sub=A. russatus | pred=has | obj=higher corticomedullary junction integrity | epi=observation | src="preservation of corticomedullary junctions" | ctx=thymus, >3.5 years
+B T4 B13 | sub=A. russatus | pred=has | obj=lower adipogenic cells | epi=observation | src="absence of adipogenic cells in lymphopoietic zones of thymus" | ctx=lymphopoietic zones of thymus, >3.5 years
+B T4 B14 | sub=A. russatus | pred=has | obj=higher mTEC integrity | epi=observation | src="the thymi of aged A. russatus exhibited spatial maintenance of medullary thymic epithelial cells (mTECs)" | ctx=thymus, aged
+B T4 B15 | sub=M. musculus | pred=has | obj=higher epithelial cysts | epi=observation | src="those of the aged M. musculus displayed classical epithelial cysts and loss of mTEC integrity" | ctx=thymus, aged
+B T4 B16 | sub=M. musculus | pred=has | obj=lower mTEC integrity | epi=observation | src="those of the aged M. musculus displayed classical epithelial cysts and loss of mTEC integrity" | ctx=thymus, aged
+B T4 B17 | sub=A. russatus | pred=has | obj=higher lifespan | epi=author_interpretation | src="A. russatus with longer average life span" | ctx=vs C57BL/6 mice
+B T4 B18 | sub=A. russatus | pred=has | obj=higher youthful thymic architecture | epi=author_interpretation | src="maintains youthful thymic architecture till advanced age" | ctx=thymus, advanced age
+B T4 B19 | sub=A. russatus | pred=has | obj=lower immune senescence | epi=author_interpretation | src="indicative of lower immune senescence" | ctx=thymus
+B T4 B20 | sub=A. russatus | pred=has | obj=lower functional decline | epi=observation | src="A. russatus displays reduced functional decline compared to A. dimidiatus" | ctx=vs A. dimidiatus
+B T14 B21 | name=Thymic histology analysis | type=histological staining | grp=[B22,B23] | steps=H&E, Sirius Red, K14 staining of thymus | findings=[B8,B9,B10,B11,B12,B13,B14,B15,B16] | src="Representative images of hematoxylin and eosin (H&E), Sirius Red, and keratin 14 (K14; mTEC marker) staining of the thymus"
+B T55 B22 | name=M. musculus group | n=5 | cond=2.5-year-old C57BL/6 mice | purpose=comparison of thymic aging
+B T55 B23 | name=A. russatus group | n=5 | cond=2.5-year-old A. russatus | purpose=comparison of thymic aging
+B T57 B24 | param=Sirius Red-positive area (thymic fibrosis) | dir=decreased | sig=not_reported | detail=n=5 per group | figure=Fig. 2B | exp=B21 | grp=[B23] | src="Sirius Red–positive area of the thymus was measured (n = 5 per group)"
+B T58 B25 | src=youthful thymic architecture | tgt=immune senescence | rel=reduces | conf=medium | ev="maintains youthful thymic architecture till advanced age, indicative of lower immune senescence"
+B T58 B26 | src=thymic aging | tgt=naïve T cell production | rel=inhibits | conf=medium | ev="Thymic aging is characterized by ... the eventual cessation of naïve T cell production"
+B T58 B27 | src=thymic aging | tgt=fibroadipogenic cells | rel=increases | conf=medium | ev="Thymic aging is characterized by the emergence of fibroadipogenic cells"
+B T2 B28 | sub=researchers | pred=test | obj=whether close evolutionary relationship between M. musculus and A. russatus can identify differentially expressed drivers of health span and disease mechanisms | src="This approach was chosen to test whether the close evolutionary relationship between M. musculus and A. russatus can be translated into the identification and testing of differentially expressed drivers of health span and disease mechanisms"
+B T38 B29 | sub=smaller thymus size in A. russatus | pred=is_due_to | obj=non-pathogen-free husbandry | neg=false | src="which is likely a reflection of their non–pathogen-free husbandry"

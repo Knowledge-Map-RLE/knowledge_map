@@ -1,0 +1,80 @@
+Секция [results3] chars=8590, чанков: 4
+Режим: DSL
+Модель: gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest
+max_tokens=80000, temperature=0.1
+======================================================================
+--- чанк 1: 62 симв., промпт 7490 симв. ---
+--- чанк 2: 3473 симв., промпт 10901 симв. ---
+--- чанк 3: 3403 симв., промпт 10831 симв. ---
+--- чанк 4: 1643 симв., промпт 9071 симв. ---
+
+[ДО ЗАПУСКА — оценка цены]
+  входных ~12764 токенов; выход ~4295 (оценка)
+  БЕЗ промпт-кэша: ~  5.98 ₽
+  (DSL: промпт короткий, кэш-префикса почти нет — вход дешёвый)
+
+=== LLM чанк 1/4 (вызов...) ===
+  вход=1966 выход=725 кэш=0 ЦЕНА=~0.960₽
+  блоков распознано: 4
+  T4-триплетов: 2
+     - ('A. russatus', 'has', 'lower hepatic inflammaging')
+     - ('A. russatus', 'has', 'lower hepatic senescence')
+
+=== LLM чанк 2/4 (вызов...) ===
+  вход=2880 выход=11554 кэш=0 ЦЕНА=~6.650₽
+  блоков распознано: 46
+  T4-триплетов: 17
+     - ('A. russatus', 'has', 'lower hepatic ballooning')
+     - ('A. russatus', 'has', 'lower inflammation')
+     - ('A. russatus', 'has', 'lower fibrosis')
+     - ('A. russatus', 'has', 'lower differentially expressed genes')
+
+=== LLM чанк 3/4 (вызов...) ===
+  вход=2755 выход=23628 кэш=0 ЦЕНА=~12.650₽
+  блоков распознано: 86
+  T4-триплетов: 34
+     - ('A. russatus', 'has', 'lower SASP gene cluster expression')
+     - ('A. russatus', 'has', 'lower NF-kappaB gene cluster expression')
+     - ('A. russatus', 'has', 'higher nutrient sensing gene cluster expression')
+     - ('A. russatus', 'has', 'higher proteostasis gene cluster expression')
+     - ('A. russatus', 'has', 'higher actin assembly')
+     - ('A. russatus', 'has', 'higher wound healing')
+     - ('A. russatus', 'has', 'lower circadian rhythm-related pathway activity')
+     - ('A. russatus', 'has', 'lower biological aging gene set score')
+     - ('A. russatus', 'has', 'lower mortality risk gene set score')
+     - ('A. russatus', 'has', 'lower neutrophil chemotaxis gene enrichment')
+     - ('A. russatus', 'has', 'lower type II interferon response gene enrichment')
+     - ('A. russatus', 'has', 'higher fatty acid beta-oxidation')
+     - ('A. russatus', 'has', 'higher autophagy of mitochondria')
+     - ('A. russatus', 'has', 'higher CMA score')
+
+=== LLM чанк 4/4 (вызов...) ===
+  вход=2342 выход=10017 кэш=0 ЦЕНА=~5.720₽
+  блоков распознано: 32
+  T4-триплетов: 12
+     - ('A. russatus', 'has', 'higher health span')
+     - ('A. russatus', 'has', 'higher resilient aging responses')
+     - ('A. russatus', 'has', 'lower Cdkn1a expression')
+     - ('A. russatus', 'has', 'lower cellular senescence')
+     - ('A. russatus', 'has', 'lower proinflammatory response')
+     - ('A. russatus', 'has', 'lower p16 expression')
+     - ('A. russatus', 'has', 'lower γ-H2AX expression')
+     - ('A. russatus', 'has', 'lower inflammaging')
+
+=== ИТОГО ===
+  вход=9943 выход=45924 ЦЕНА=~25.950₽
+
+=== МЕТРИКА vs ЭТАЛОН (листовые T4) ===
+  эталонных листовых T4: 40; извлечено листовых T4: 65
+  triplets_f1 (leaf): precision=0.123 recall=0.200 f1=0.152 matched=8
+  Совпавшие пары:
+    0.80 | REF ['has', 'higher CMA score']
+    0.80 | REF ['has', 'lower p16 expression']
+    0.80 | REF ['has', 'lower fibrosis']
+    0.80 | REF ['has', 'lower inflammaging']
+    0.80 | REF ['has', 'higher health span']
+    0.72 | REF ['has', 'reduced senescence']
+    0.72 | REF ['has', 'lower γ-H2AX']
+    0.72 | REF ['has', 'lower senescence']
+
+  [атрибутивные 'A. has X'] эталон=35 извлечено=28 f1=0.254 recall=0.229 matched=8

@@ -24,9 +24,14 @@
       "instanceId": "00065a2f-9b04-82eb-8181-4d40d720f9ab",
       "blockType": 4,
       "data": {
-        "subject": "representation",
-        "predicate": "property",
-        "object": "comprehensive"
+        "subject": "aging",
+        "predicate": "causes",
+        "object": "loss of biological resilience",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "trait": "aging"
+        }
       },
       "order": 1,
       "author": {
@@ -39,9 +44,14 @@
       "instanceId": "00065a2f-9c06-82da-a2e2-66a36a5d7326",
       "blockType": 4,
       "data": {
-        "subject": "biology",
-        "predicate": "property",
-        "object": "aging"
+        "subject": "aging",
+        "predicate": "involves",
+        "object": "chronic sterile inflammation",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "trait": "aging"
+        }
       },
       "order": 2,
       "author": {
@@ -54,9 +64,14 @@
       "instanceId": "00065a2f-9d92-8c19-ab2b-0f79220dfb38",
       "blockType": 4,
       "data": {
-        "subject": "representation",
-        "predicate": "about",
-        "object": "00065a2f-9c06-82da-a2e2-66a36a5d7326"
+        "subject": "aging",
+        "predicate": "involves",
+        "object": "metabolic stress",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "trait": "aging"
+        }
       },
       "order": 3,
       "author": {
@@ -69,9 +84,14 @@
       "instanceId": "00065a2f-9eb0-8f8c-b1f1-28aa68a6af91",
       "blockType": 4,
       "data": {
-        "subject": "research",
-        "predicate": "obtain",
-        "object": "00065a2f-9d92-8c19-ab2b-0f79220dfb38"
+        "subject": "Acomys russatus",
+        "predicate": "is",
+        "object": "a long-lived wild rodent",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus"
+        }
       },
       "order": 4,
       "author": {
@@ -84,9 +104,14 @@
       "instanceId": "00065a2f-a0e8-831c-bd7d-276cdb858fc6",
       "blockType": 4,
       "data": {
-        "subject": "Acomys russatus",
-        "predicate": "is",
-        "object": "organism"
+        "subject": "spiny mice (Acomys)",
+        "predicate": "possess",
+        "object": "exceptional regenerative capacity",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "genus": "Acomys"
+        }
       },
       "order": 5,
       "author": {
@@ -99,9 +124,15 @@
       "instanceId": "00065a2f-a0e0-817c-9b9b-50c2fbdbcf77",
       "blockType": 4,
       "data": {
-        "subject": "00065a2f-a0e8-831c-bd7d-276cdb858fc6",
-        "predicate": "property",
-        "object": "model"
+        "subject": "aged Acomys russatus",
+        "predicate": "maintains",
+        "object": "transcriptional integrity akin to young mice",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "age": "aged"
+        }
       },
       "order": 6,
       "author": {
@@ -114,9 +145,15 @@
       "instanceId": "00065a2f-a0d9-80a4-9717-0a6e2a3636dc",
       "blockType": 4,
       "data": {
-        "subject": "research",
-        "predicate": "use",
-        "object": "00065a2f-a0e0-817c-9b9b-50c2fbdbcf77"
+        "subject": "elevated clusterin in Acomys russatus macrophages",
+        "predicate": "restrains",
+        "object": "inflammaging",
+        "epistemicStatus": "direct_statement",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "tissue": "macrophages"
+        }
       },
       "order": 7,
       "author": {
@@ -129,9 +166,12 @@
       "instanceId": "00065a2f-a0d1-82d5-8343-bf3395450036",
       "blockType": 4,
       "data": {
-        "subject": "causality",
-        "predicate": "property",
-        "object": "causal"
+        "subject": "Acomys russatus biology",
+        "predicate": "reveals",
+        "object": "therapeutically actionable targets",
+        "epistemicStatus": "author_interpretation",
+        "sourceRefs": [],
+        "context": {}
       },
       "order": 8,
       "author": {
@@ -144,9 +184,14 @@
       "instanceId": "00065a2f-a0c9-8898-b8f8-774377023b19",
       "blockType": 4,
       "data": {
-        "subject": "mechanisms",
-        "predicate": "property",
-        "object": "specific"
+        "subject": "aging",
+        "predicate": "causes",
+        "object": "slowdown in cell and tissue repair",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "trait": "aging"
+        }
       },
       "order": 9,
       "author": {
@@ -159,9 +204,14 @@
       "instanceId": "00065a2f-a0c1-8fe0-8545-f37eb1bd34ba",
       "blockType": 4,
       "data": {
-        "subject": "mechanisms",
-        "predicate": "property",
-        "object": "potential"
+        "subject": "laboratory inbred mouse strains",
+        "predicate": "are used to study",
+        "object": "mechanisms of aging",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "species": "Mus musculus"
+        }
       },
       "order": 10,
       "author": {
@@ -174,9 +224,12 @@
       "instanceId": "00065a2f-a0b7-87ea-93d3-cd24f655f447",
       "blockType": 4,
       "data": {
-        "subject": "resistance",
-        "predicate": "to",
-        "object": "aging"
+        "subject": "traditional laboratory animal models",
+        "predicate": "may obfuscate",
+        "object": "aging-resistance mechanisms",
+        "epistemicStatus": "author_interpretation",
+        "sourceRefs": [],
+        "context": {}
       },
       "order": 11,
       "author": {
@@ -189,9 +242,14 @@
       "instanceId": "00065a2f-a67a-86d9-b5f5-0df206dc1337",
       "blockType": 4,
       "data": {
-        "subject": "mechanisms",
-        "predicate": "of",
-        "object": "00065a2f-a0b7-87ea-93d3-cd24f655f447"
+        "subject": "genus Acomys",
+        "predicate": "has evolved",
+        "object": "high regenerative capacity",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "genus": "Acomys"
+        }
       },
       "order": 12,
       "author": {
@@ -204,9 +262,14 @@
       "instanceId": "00065a2f-a678-85ca-a2e2-ec2ab0f603a9",
       "blockType": 4,
       "data": {
-        "subject": "00065a2f-a0d1-82d5-8343-bf3395450036",
-        "predicate": "between",
-        "object": "00065a2f-a67a-86d9-b5f5-0df206dc1337"
+        "subject": "aging-resistance mechanisms",
+        "predicate": "may exist in",
+        "object": "Acomys russatus",
+        "epistemicStatus": "hypothesis",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus"
+        }
       },
       "order": 13,
       "author": {
@@ -234,9 +297,14 @@
       "instanceId": "00065a2f-a672-8681-a363-24e4c6f4ccb8",
       "blockType": 4,
       "data": {
-        "subject": "research",
-        "predicate": "test",
-        "object": "00065a2f-a678-85ca-a2e2-ec2ab0f603a9"
+        "subject": "Acomys dimidiatus",
+        "predicate": "can close",
+        "object": "4-mm earholes",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys dimidiatus"
+        }
       },
       "order": 15,
       "author": {
@@ -249,9 +317,14 @@
       "instanceId": "00065a2f-a66e-8e5e-8888-7a5edfa2389f",
       "blockType": 4,
       "data": {
-        "subject": "mice",
-        "predicate": "property",
-        "object": "laboratory"
+        "subject": "several Acomys species",
+        "predicate": "are resistant to",
+        "object": "poisons",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "genus": "Acomys"
+        }
       },
       "order": 16,
       "author": {
@@ -264,9 +337,14 @@
       "instanceId": "00065a2f-a669-88db-a060-90d003507d64",
       "blockType": 4,
       "data": {
-        "subject": "00065a2f-a672-8681-a363-24e4c6f4ccb8",
-        "object": "00065a2f-a66e-8e5e-8888-7a5edfa2389f",
-        "predicate": "in"
+        "subject": "Acomys russatus",
+        "predicate": "is resilient to",
+        "object": "long periods of starvation",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus"
+        }
       },
       "order": 17,
       "author": {
@@ -279,9 +357,14 @@
       "instanceId": "00065a2f-e341-89a6-8141-aac83aba267d",
       "blockType": 4,
       "data": {
-        "subject": "conditions",
-        "predicate": "property",
-        "object": "controlled"
+        "subject": "Acomys russatus",
+        "predicate": "lowers",
+        "object": "energy expenditure via torpor",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus"
+        }
       },
       "order": 18,
       "author": {
@@ -294,9 +377,14 @@
       "instanceId": "00065a2f-a662-844f-bcbc-62e4705175f5",
       "blockType": 4,
       "data": {
-        "subject": "00065a2f-a672-8681-a363-24e4c6f4ccb8",
-        "predicate": "under",
-        "object": "00065a2f-e341-89a6-8141-aac83aba267d"
+        "subject": "Acomys russatus",
+        "predicate": "produces",
+        "object": "concentrated urine",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus"
+        }
       },
       "order": 19,
       "author": {
@@ -309,9 +397,14 @@
       "instanceId": "00065a2f-9d36-8859-9717-705daaf29763",
       "blockType": 4,
       "data": {
-        "subject": "00065a2f-a672-8681-a363-24e4c6f4ccb8",
-        "predicate": "using",
-        "object": "00065a2f-a0e8-831c-bd7d-276cdb858fc6"
+        "subject": "Acomys russatus",
+        "predicate": "shares habitat with",
+        "object": "Acomys dimidiatus",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus, Acomys dimidiatus"
+        }
       },
       "order": 20,
       "author": {
@@ -324,9 +417,14 @@
       "instanceId": "00065a31-1798-880c-8b8b-d0de457de7e6",
       "blockType": 4,
       "data": {
-        "subject": "resilience",
-        "predicate": "to",
-        "object": "aging"
+        "subject": "Acomys",
+        "predicate": "produce",
+        "object": "newborns fully developed at birth",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "genus": "Acomys"
+        }
       },
       "order": 21,
       "author": {
@@ -339,9 +437,14 @@
       "instanceId": "00065a31-1714-804b-abab-9eac8f6d81d1",
       "blockType": 4,
       "data": {
-        "subject": "resilience",
-        "predicate": "property",
-        "object": "functional"
+        "subject": "Acomys",
+        "predicate": "engage in",
+        "object": "group fostering of pups",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "genus": "Acomys"
+        }
       },
       "order": 22,
       "author": {
@@ -354,9 +457,14 @@
       "instanceId": "00065a31-17a1-8a40-a2e2-7e945d0a9ca7",
       "blockType": 4,
       "data": {
-        "subject": "resilience",
-        "predicate": "property",
-        "object": "organismal"
+        "subject": "Acomys",
+        "predicate": "have",
+        "object": "an 11-day menstrual cycle",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {
+          "genus": "Acomys"
+        }
       },
       "order": 23,
       "author": {
@@ -369,9 +477,14 @@
       "instanceId": "00065a31-178c-8152-8aca-4ed932955614",
       "blockType": 4,
       "data": {
-        "subject": "mechanisms",
-        "predicate": "of",
-        "object": "00065a31-1798-880c-8b8b-d0de457de7e6"
+        "subject": "Acomys russatus",
+        "predicate": "is protected from",
+        "object": "age-related functional decline",
+        "epistemicStatus": "direct_statement",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus"
+        }
       },
       "order": 24,
       "author": {
@@ -384,9 +497,12 @@
       "instanceId": "00065a31-1783-8d0a-97d7-bcf2c82da42c",
       "blockType": 4,
       "data": {
-        "subject": "00065a31-178c-8152-8aca-4ed932955614",
-        "predicate": "property",
-        "object": "specific"
+        "subject": "research",
+        "predicate": "built",
+        "object": "cohorts of Acomys russatus and Acomys dimidiatus",
+        "epistemicStatus": "direct_statement",
+        "sourceRefs": [],
+        "context": {}
       },
       "order": 25,
       "author": {
@@ -399,9 +515,14 @@
       "instanceId": "00065a31-177a-8344-80c0-0ce914b65b06",
       "blockType": 4,
       "data": {
-        "subject": "00065a31-178c-8152-8aca-4ed932955614",
-        "predicate": "property",
-        "object": "potential"
+        "subject": "research",
+        "predicate": "compared",
+        "object": "Acomys russatus cohorts to Mus musculus",
+        "epistemicStatus": "direct_statement",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus, Mus musculus"
+        }
       },
       "order": 26,
       "author": {
@@ -430,8 +551,13 @@
       "blockType": 4,
       "data": {
         "subject": "Acomys russatus",
-        "predicate": "is",
-        "object": "organism"
+        "predicate": "maintains",
+        "object": "motor and muscular function with age",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus"
+        }
       },
       "order": 28,
       "author": {
@@ -445,8 +571,14 @@
       "blockType": 4,
       "data": {
         "subject": "Acomys dimidiatus",
-        "predicate": "is",
-        "object": "organism"
+        "predicate": "exhibits",
+        "object": "age-related decline in open-field activity indicators",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys dimidiatus",
+          "age": "aged"
+        }
       },
       "order": 29,
       "author": {
@@ -459,9 +591,15 @@
       "instanceId": "00065a31-1752-8fc2-8888-4e2394c10910",
       "blockType": 4,
       "data": {
-        "subject": "Mus musculus",
-        "predicate": "is",
-        "object": "organism"
+        "subject": "Acomys russatus",
+        "predicate": "is protected from",
+        "object": "age-associated disruption of circadian rhythm",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "age": "aged"
+        }
       },
       "order": 30,
       "author": {
@@ -474,9 +612,15 @@
       "instanceId": "00065a31-1707-8945-8303-2d78699d42e4",
       "blockType": 4,
       "data": {
-        "subject": "cohorts",
-        "predicate": "contain",
-        "object": "00065a31-1766-8a27-b2f2-484879c620d5"
+        "subject": "Acomys russatus",
+        "predicate": "shows",
+        "object": "protection against age-associated decline in regeneration capacity",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "age": "aged"
+        }
       },
       "order": 31,
       "author": {
@@ -489,9 +633,16 @@
       "instanceId": "00065a31-38a4-81ec-a9e9-8710d4be844b",
       "blockType": 4,
       "data": {
-        "subject": "cohorts",
-        "predicate": "contain",
-        "object": "00065a31-175d-82b6-8404-2dba9a1c1b4d"
+        "subject": "Acomys russatus",
+        "predicate": "prevents",
+        "object": "age-related p16 elevation in VAT",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "tissue": "VAT",
+          "age": "aged"
+        }
       },
       "order": 32,
       "author": {
@@ -504,9 +655,16 @@
       "instanceId": "00065a31-389b-8751-9c5c-46e6a4e95f93",
       "blockType": 4,
       "data": {
-        "subject": "research",
-        "predicate": "build",
-        "object": "00065a31-1707-8945-8303-2d78699d42e4"
+        "subject": "Acomys russatus",
+        "predicate": "resists",
+        "object": "thymic involution",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "tissue": "thymus",
+          "age": "aged"
+        }
       },
       "order": 33,
       "author": {
@@ -519,9 +677,16 @@
       "instanceId": "00065a31-3893-8ab6-bbfb-e782106f20b4",
       "blockType": 4,
       "data": {
-        "subject": "research",
-        "predicate": "build",
-        "object": "00065a31-38a4-81ec-a9e9-8710d4be844b"
+        "subject": "Acomys russatus",
+        "predicate": "resists",
+        "object": "splenic fibrosis and senescent cell accumulation",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "tissue": "spleen",
+          "age": "aged"
+        }
       },
       "order": 34,
       "author": {
@@ -534,9 +699,16 @@
       "instanceId": "00065a31-388a-811d-ad2d-f342ce802ab6",
       "blockType": 4,
       "data": {
-        "subject": "00065a31-1766-8a27-b2f2-484879c620d5",
-        "predicate": "compared to",
-        "object": "00065a31-1752-8fc2-8888-4e2394c10910"
+        "subject": "Acomys russatus",
+        "predicate": "withstands",
+        "object": "hepatic inflammaging and senescence",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "tissue": "liver",
+          "age": "aged"
+        }
       },
       "order": 35,
       "author": {
@@ -549,9 +721,16 @@
       "instanceId": "00065a31-3880-8437-bf7f-cb89dcbdbdc5",
       "blockType": 4,
       "data": {
-        "predicate": "compared to",
-        "subject": "00065a31-175d-82b6-8404-2dba9a1c1b4d",
-        "object": "00065a31-1752-8fc2-8888-4e2394c10910"
+        "subject": "Acomys russatus",
+        "predicate": "maintains",
+        "object": "SASP and IASP scores in VAT",
+        "epistemicStatus": "observation",
+        "sourceRefs": [],
+        "context": {
+          "species": "Acomys russatus",
+          "tissue": "VAT",
+          "age": "aged"
+        }
       },
       "order": 36,
       "author": {
@@ -564,9 +743,12 @@
       "instanceId": "00065a31-16f8-857f-95d5-41f9be112ed8",
       "blockType": 4,
       "data": {
-        "subject": "cohorts",
-        "predicate": "spanning",
-        "object": "life spans"
+        "subject": "clusterin",
+        "predicate": "is",
+        "object": "a heterodimeric glycoprotein with chaperone-like activity",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {}
       },
       "order": 37,
       "author": {
@@ -579,9 +761,12 @@
       "instanceId": "00065a31-1633-82d6-9b5b-c82de81afe32",
       "blockType": 4,
       "data": {
-        "subject": "00065a31-1707-8945-8303-2d78699d42e4",
-        "predicate": "span",
-        "object": "00065a31-16f8-857f-95d5-41f9be112ed8"
+        "subject": "clusterin",
+        "predicate": "binds and inhibits",
+        "object": "complement and membrane attack complex",
+        "epistemicStatus": "background_claim",
+        "sourceRefs": [],
+        "context": {}
       },
       "order": 38,
       "author": {
@@ -594,9 +779,14 @@
       "instanceId": "00065a31-4aba-8774-bd7d-568a3e769a1b",
       "blockType": 4,
       "data": {
-        "subject": "00065a31-38a4-81ec-a9e9-8710d4be844b",
-        "predicate": "span",
-        "object": "00065a31-16f8-857f-95d5-41f9be112ed8"
+        "subject": "clusterin",
+        "predicate": "restrains",
+        "object": "inflammaging in mice and humans",
+        "epistemicStatus": "experimental_result",
+        "sourceRefs": [],
+        "context": {
+          "species": "mouse, human"
+        }
       },
       "order": 39,
       "author": {

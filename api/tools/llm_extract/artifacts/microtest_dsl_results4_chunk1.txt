@@ -1,0 +1,22 @@
+B T1 B1 | doi=unknown | title=Immunometabolic resistors of aging in long-lived golden spiny mice | authors=unknown
+B T55 B2 | name=M. musculus young | n=3 | cond=0.5-year-old | purpose=young comparison group
+B T55 B3 | name=M. musculus aged | n=3 | cond=2.5-year-old | purpose=aged comparison group
+B T55 B4 | name=A. russatus young | n=3 | cond=0.5-year-old | purpose=young comparison group
+B T55 B5 | name=A. russatus aged | n=3 | cond=3.5-year-old | purpose=aged comparison group
+B T14 B6 | name=snRNA-seq of VAT | type=single-nucleus RNA-seq | grp=[B2,B3,B4,B5] | steps=pooled VAT from three mice per sample; single-nucleus RNA-seq; UMAP cell type annotation | findings=annotated diverse cell clusters in both species; pericytes only in M. musculus; mast cells only in A. russatus | src="we performed single-nucleus RNA-seq (snRNA-seq)... in the VAT of M. musculus and A. russatus"
+B T4 B7 | sub=A. russatus | pred=has | obj=lower fibrosis | epi=experimental_result | ctx=VAT, aging | src="A. russatus was significantly protected from fibrosis in VAT"
+B T4 B8 | sub=A. russatus | pred=has | obj=lower fibrosis | epi=experimental_result | ctx=SAT, aging | src="A. russatus was significantly protected from fibrosis in VAT, subcutaneous adipose tissue (SAT), and brown adipose tissue during aging"
+B T4 B9 | sub=A. russatus | pred=has | obj=lower fibrosis | epi=experimental_result | ctx=brown adipose tissue, aging | src="A. russatus was significantly protected from fibrosis in VAT, subcutaneous adipose tissue (SAT), and brown adipose tissue during aging"
+B T4 B10 | sub=VAT | pred=expands | obj=with age | epi=background_claim | ctx=aging | src="VAT, which expands with age"
+B T4 B11 | sub=VAT | pred=is | obj=major source of immune cell-derived inflammation | epi=background_claim | ctx=aging | src="a major source of immune cell–derived inflammation that leads to systemic metabolic impairment"
+B T4 B12 | sub=pericytes | pred=detected_in | obj=M. musculus only | epi=experimental_result | ctx=VAT | src="pericytes were only found in M. musculus"
+B T4 B13 | sub=mast cells | pred=detected_in | obj=A. russatus only | epi=experimental_result | ctx=VAT | src="mast cells were only detected in A. russatus"
+B T4 B14 | sub=pericytes and mast cells | pred=have | obj=low abundance | epi=author_interpretation | ctx=VAT | src="which may be due to the low abundance of pericytes and mast cells in VAT"
+B T4 B15 | sub=long-lived species analyses | pred=provided | obj=insights into adaptation programs | epi=background_claim | src="Previous analyses of long-lived species, such as the bowhead whale, Brandt's bat, and naked mole-rat, have provided insights into their successful and unique adaptation programs"
+B T4 B16 | sub=A. russatus aged samples | pred=used | obj=3.5-year-old | epi=experimental_result | ctx=snRNA-seq | src="we used 3.5-year-old A. russatus samples, which are 1 year older than the aged group for M. musculus"
+B T57 B17 | param=fibrosis | dir=decreased | sig=significant | detail=protected from fibrosis in VAT, SAT, and BAT during aging | figure=Fig. 4A, fig. S5A-D | exp=B6 | grp=[B3,B5] | src="A. russatus was significantly protected from fibrosis in VAT, subcutaneous adipose tissue (SAT), and brown adipose tissue during aging"
+B T4 B18 | sub=VAT | pred=contains | obj=diverse cell clusters | epi=experimental_result | ctx=both species | src="we successfully annotated diverse cell clusters in the VAT"
+B T4 B19 | sub=cell types | pred=annotated | obj=mature adipocytes, ASPCs, mesothelial cells, epithelial cells, endothelial cells, macrophages, monocytes, DCs, NK cells, T cells, B cells, SMCs, LyECs | epi=experimental_result | ctx=both species | src="we successfully annotated diverse cell clusters in the VAT, including mature adipocytes..."
+B T58 B20 | src=immune cell-derived inflammation | tgt=systemic metabolic impairment | rel=causes | conf=medium | ev="a major source of immune cell–derived inflammation that leads to systemic metabolic impairment"
+B T2 B21 | sub=researchers | pred=investigated | obj=age-related transcriptional changes in VAT | src="we next investigated age-related transcriptional changes in VAT"
+B T4 B22 | sub=snRNA-seq | pred=allows | obj=examination of adipocytes and stromal vascular-immune fraction heterogeneity | epi=background_claim | ctx=VAT | src="an approach that allows examination of adipocytes and the heterogeneity of stromal vascular-immune fraction"

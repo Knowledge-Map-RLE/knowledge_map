@@ -1,0 +1,64 @@
+Секция [discussion] chars=8033, чанков: 1
+Режим: DSL
+Модель: gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest
+max_tokens=80000, temperature=0.1
+======================================================================
+--- чанк 1: 3399 симв., промпт 10827 симв. ---
+
+[ДО ЗАПУСКА — оценка цены]
+  входных ~3609 токенов; выход ~4016 (оценка)
+  БЕЗ промпт-кэша: ~  3.10 ₽
+  (DSL: промпт короткий, кэш-префикса почти нет — вход дешёвый)
+
+=== LLM чанк 1/1 (вызов...) ===
+  вход=2699 выход=8272 кэш=0 ЦЕНА=~4.950₽
+  блоков распознано: 38
+  T4-триплетов: 29
+     - ('A. russatus', 'has', 'higher tissue repair capacity')
+     - ('A. russatus', 'has', 'lower frailty')
+     - ('A. russatus', 'has', 'lower inflammaging')
+     - ('A. russatus', 'has', 'lower fibrosis')
+     - ('A. russatus', 'has', 'lower cellular senescence')
+     - ('A. russatus', 'has', 'higher transcriptomic youthfulness')
+     - ('A. russatus', 'has', 'higher life span')
+     - ('A. russatus', 'has', 'higher regenerative capacity')
+     - ('A. russatus', 'has', 'higher motor function')
+     - ('A. russatus', 'has', 'higher muscular function')
+     - ('A. russatus', 'has', 'lower immunological aging')
+     - ('A. russatus', 'has', 'higher clusterin expression')
+     - ('A. russatus', 'has', 'higher CMA')
+     - ('A. russatus', 'has', 'higher transcriptomic resilience')
+     - ('A. russatus', 'has', 'higher circadian rhythm')
+     - ('A. russatus', 'has', 'lower chronic inflammation')
+     - ('A. russatus', 'has', 'higher thymic architecture')
+     - ('A. russatus', 'has', 'lower thymic lipoatrophy')
+     - ('A. russatus', 'has', 'lower thymic involution')
+     - ('A. russatus', 'has', 'higher naive T cell repertoire')
+     - ('A. russatus', 'has', 'higher splenocyte proliferation')
+     - ('A. russatus', 'has', 'higher T cell responses')
+     - ('A. russatus', 'has', 'higher splenic germinal center maintenance')
+     - ('A. russatus', 'has', 'lower neoplasms resistance')
+     - ('A. russatus', 'has', 'lower validated CD markers')
+     - ('A. russatus', 'has', 'lower TCR repertoire characterization')
+
+=== ИТОГО ===
+  вход=2699 выход=8272 ЦЕНА=~4.950₽
+
+=== МЕТРИКА vs ЭТАЛОН (листовые T4) ===
+  эталонных листовых T4: 40; извлечено листовых T4: 29
+  triplets_f1 (leaf): precision=0.414 recall=0.300 f1=0.348 matched=12
+  Совпавшие пары:
+    0.80 | REF ['has', 'lower fibrosis']
+    0.80 | REF ['has', 'lower inflammaging']
+    0.80 | REF ['has', 'higher lifespan']
+    0.80 | REF ['has', 'higher motor function']
+    0.80 | REF ['has', 'higher muscular function']
+    0.80 | REF ['has', 'higher circadian rhythm']
+    0.80 | REF ['has', 'higher CMA']
+    0.80 | REF ['has', 'higher clusterin expression']
+    0.72 | REF ['maintains', 'thymic architecture']
+    0.72 | REF ['has', 'reduced senescence']
+    0.72 | REF ['shows', 'transcriptomic resilience']
+    0.72 | REF ['has', 'higher repair capacity']
+
+  [атрибутивные 'A. has X'] эталон=35 извлечено=26 f1=0.328 recall=0.286 matched=10

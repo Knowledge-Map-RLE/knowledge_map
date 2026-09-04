@@ -1,0 +1,55 @@
+Секция [results2] chars=6410, чанков: 2
+Режим: DSL
+Модель: gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest
+max_tokens=80000, temperature=0.1
+======================================================================
+--- чанк 1: 3425 симв., промпт 10853 симв. ---
+--- чанк 2: 2978 симв., промпт 10406 симв. ---
+
+[ДО ЗАПУСКА — оценка цены]
+  входных ~7086 токенов; выход ~3205 (оценка)
+  БЕЗ промпт-кэша: ~  3.73 ₽
+  (DSL: промпт короткий, кэш-префикса почти нет — вход дешёвый)
+
+=== LLM чанк 1/2 (вызов...) ===
+  вход=2852 выход=7629 кэш=0 ЦЕНА=~4.680₽
+  блоков распознано: 29
+  T4-триплетов: 19
+     - ('A. russatus', 'has', 'smaller thymus size')
+     - ('A. russatus', 'has', 'lower lipid accumulation')
+     - ('A. russatus', 'has', 'lower fibrosis')
+     - ('A. russatus', 'has', 'higher cortical cellularity')
+     - ('A. russatus', 'has', 'higher medullary cellularity')
+     - ('A. russatus', 'has', 'higher corticomedullary junction integrity')
+     - ('A. russatus', 'has', 'lower adipogenic cells')
+     - ('A. russatus', 'has', 'higher mTEC integrity')
+     - ('A. russatus', 'has', 'higher lifespan')
+     - ('A. russatus', 'has', 'higher youthful thymic architecture')
+     - ('A. russatus', 'has', 'lower immune senescence')
+     - ('A. russatus', 'has', 'lower functional decline')
+
+=== LLM чанк 2/2 (вызов...) ===
+  вход=2689 выход=5868 кэш=0 ЦЕНА=~3.750₽
+  блоков распознано: 33
+  T4-триплетов: 11
+     - ('A. russatus', 'has', 'higher splenic homeostasis')
+     - ('A. russatus', 'has', 'lower senescent-like cells')
+     - ('A. russatus', 'has', 'higher T cell proliferative response')
+     - ('A. russatus', 'has', 'higher IL-2 expression')
+     - ('A. russatus', 'has', 'higher IL-4 expression')
+     - ('A. russatus', 'has', 'higher immune function')
+
+=== ИТОГО ===
+  вход=5541 выход=13497 ЦЕНА=~8.420₽
+
+=== МЕТРИКА vs ЭТАЛОН (листовые T4) ===
+  эталонных листовых T4: 40; извлечено листовых T4: 30
+  triplets_f1 (leaf): precision=0.167 recall=0.125 f1=0.143 matched=5
+  Совпавшие пары:
+    0.80 | REF ['has', 'lower fibrosis']
+    0.80 | REF ['has', 'higher lifespan']
+    0.80 | REF ['has', 'higher immune function']
+    0.72 | REF ['maintains', 'thymic architecture']
+    0.72 | REF ['has', 'reduced senescence']
+
+  [атрибутивные 'A. has X'] эталон=35 извлечено=18 f1=0.151 recall=0.114 matched=4

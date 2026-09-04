@@ -1,0 +1,44 @@
+﻿=== REF T57 findings ===
+ uid= 00000001 interventionRef= None param= Rearing behavior
+ uid= 00000001 interventionRef= None param= Earhole closure
+ uid= 00000001 interventionRef= None param= p16 expression in VAT
+ uid= 00000001 interventionRef= None param= Thymic fibrosis
+ uid= 00000001 interventionRef= None param= Splenocyte proliferation
+ uid= 00000001 interventionRef= None param= Hepatic inflammaging genes
+ uid= 00000001 interventionRef= None param= Senescent cells in liver
+ uid= 00000001 interventionRef= None param= Clusterin expression in VAT macrophages
+ uid= 00000001 interventionRef= None param= Grip strength after clusterin
+ uid= 00000001 interventionRef= None param= Fibrosis after clusterin
+ uid= 00000001 interventionRef= None param= Serum IL-1╬▓ after clusterin
+ uid= 00000001 interventionRef= None param= AABs after clusterin
+ uid= 00000001 interventionRef= None param= M2 macrophages after clusterin
+ uid= 00000001 interventionRef= None param= Human monocyte IL-1╬▓ after clusterin
+=== REF block types ===
+ref hist: Counter({4: 47, 56: 14, 57: 14, 55: 9, 14: 8, 58: 8, 22: 6, 38: 6, 2: 4, 19: 3, 27: 3, 54: 3, 59: 3, 23: 3, 1: 1, 7: 1, 16: 1, 18: 1, 37: 1, 39: 1, 40: 1, 44: 1, 46: 1, 47: 1, 51: 1})
+ext hist: Counter({4: 31, 57: 22, 56: 13, 55: 9, 58: 9, 14: 7, 2: 5, 22: 5, 54: 4, 59: 4, 38: 4, 19: 3, 27: 3, 23: 3, 1: 1, 7: 1, 16: 1, 18: 1, 37: 1, 39: 1, 40: 1, 44: 1, 46: 1, 51: 1})
+=== EXT T57 findings ===
+ uid= 00065966 interventionRef= None param= rearing behavior
+ uid= 00065966 interventionRef= None param= body weight
+ uid= 00065966 interventionRef= None param= earhole closure
+ uid= 00065966 interventionRef= None param= p16 expression in VAT
+ uid= 00065966 interventionRef= None param= thymic fibrosis
+ uid= 00065966 interventionRef= None param= splenic senescent cells
+ uid= 00065966 interventionRef= None param= splenocyte proliferation
+ uid= 00065966 interventionRef= None param= hepatic fibrosis
+ uid= 00065966 interventionRef= None param= SASP score
+ uid= 00065966 interventionRef= None param= iAge index
+ uid= 00065966 interventionRef= None param= hepatic senescent cells
+ uid= 00065966 interventionRef= None param= clusterin expression in macrophages
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= grip strength
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= rotarod latency
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= serum IL-1╬▓
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= serum IL-6
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= serum TNF-╬▒
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= spleen ABCs
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= VAT AABs
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= VAT M2 macrophages
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b636-ef6d86cff47e' param= hepatic p16
+ uid= 00065966 interventionRef= '00065966-92bc-85a5-b9b9-3f0167f3f5af' param= human IL-1╬▓ production
+=== EXT T18/T54 exist? ===
+T18: 1
+T54: 4
