@@ -1,6 +1,7 @@
 import ProjectTitle from '../ProjectTitle';
 import Search from '../Search';
 import User from '../User';
+import Feedback from '../Feedback';
 import s from './Header.module.css';
 import type { HeaderProps } from './model';
 
@@ -12,6 +13,7 @@ const Header: React.FC<HeaderProps> = ({ showSearch = true, className = '' }) =>
                 ? <Search className={s.search} />
                 : <div style={{ width: '100%' }} />
             }
+            <Feedback className={s.feedback} />
             <User className={s.user} />
         </header>
     );

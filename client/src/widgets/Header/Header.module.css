@@ -20,3 +20,8 @@
 .user {
   width: 300px;
 }
+
+.feedback {
+  flex-shrink: 0;
+  padding: 0 10px;
+}

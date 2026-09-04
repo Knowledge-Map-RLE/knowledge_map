@@ -458,3 +458,37 @@ class AIUsage(StructuredNode):
     created_at = DateTimeProperty(default=datetime.utcnow)
 
     message = RelationshipFrom("AIMessage", "HAS_USAGE")
+
+
+# =============================================================================
+# Feedback — система обратной связи (баг-репорты, пожелания)
+# =============================================================================
+
+
+class FeedbackTicket(StructuredNode):
+    """ORM-модель обращения пользователя (баг-репорт или пожелание)."""
+    uid = StringProperty(primary_key=True)
+    user_uid = StringProperty(required=True, index=True)
+    status = StringProperty(default="new", index=True)
+    browser_info = StringProperty(default="{}")
+    app_version = StringProperty(default="")
+    created_at = FloatProperty()
+    updated_at = FloatProperty()
+
+
+class FeedbackMessage(StructuredNode):
+    """ORM-модель сообщения в чате обращения."""
+    uid = StringProperty(primary_key=True)
+    ticket_uid = StringProperty(required=True, index=True)
+    sender_uid = StringProperty(required=True)
+    sender_type = StringProperty(required=True)  # user | admin
+    text = StringProperty(default="")
+    image_s3_keys = StringProperty(default="[]")
+    created_at = FloatProperty()
+
+
+class FeedbackDraft(StructuredNode):
+    """ORM-модель черновика сообщения (привязан к пользователю)."""
+    user_uid = StringProperty(unique_index=True)
+    text = StringProperty(default="")
+    updated_at = FloatProperty()

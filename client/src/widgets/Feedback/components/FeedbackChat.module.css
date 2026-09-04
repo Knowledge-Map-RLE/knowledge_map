@@ -1,0 +1,467 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+}
+
+.chatWindow {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    z-index: 100;
+    width: 420px;
+    max-width: calc(100vw - 48px);
+    height: 520px;
+    max-height: calc(100vh - 120px);
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #DC2626;
+    color: white;
+    flex-shrink: 0;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.headerIcon {
+    font-size: 20px;
+}
+
+.headerTitle {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+}
+
+.headerActions {
+    display: flex;
+    gap: 4px;
+}
+
+.headerBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.headerBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────── */
+
+.body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ── Ticket list ──────────────────────────────────────────────────────── */
+
+.ticketList {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    max-height: 40%;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.ticketListTitle {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.ticketItem {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ticketItem:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+}
+
+.ticketItemTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ticketStatus {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+}
+
+.ticketDate {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.ticketFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ticketViewBtn {
+    font-size: 12px;
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+.ticketArrow {
+    font-size: 16px;
+    color: #3b82f6;
+    transform: rotate(180deg);
+}
+
+/* ── Compose block ────────────────────────────────────────────────────── */
+
+.composeBlock {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.composeTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.composeIcon {
+    font-size: 16px;
+    color: #3b82f6;
+}
+
+/* ── Messages ─────────────────────────────────────────────────────────── */
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.state {
+    padding: 24px 16px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.message {
+    max-width: 85%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.messageUser {
+    align-self: flex-end;
+    background: #DBEAFE;
+    color: #1e3a5f;
+}
+
+.messageAdmin {
+    align-self: flex-start;
+    background: #F1F5F9;
+    color: #1e293b;
+}
+
+.messageSender {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.messageText {
+    white-space: pre-wrap;
+}
+
+.messageImages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.messageImage {
+    max-width: 160px;
+    max-height: 120px;
+    border-radius: 6px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+}
+
+.messageImage:hover {
+    opacity: 0.85;
+}
+
+.messageTime {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 4px;
+    text-align: right;
+}
+
+/* ── Image previews ───────────────────────────────────────────────────── */
+
+.imagePreviews {
+    display: flex;
+    gap: 6px;
+    padding: 6px 12px;
+    border-top: 1px solid #f1f5f9;
+    overflow-x: auto;
+    flex-shrink: 0;
+}
+
+.previewItem {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.previewImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.previewUploading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 16px;
+}
+
+.previewRemove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0;
+}
+
+.previewRemove:hover {
+    background: rgba(220, 38, 38, 0.8);
+}
+
+/* ── Input ────────────────────────────────────────────────────────────── */
+
+.inputArea {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 8px 12px;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+.attachBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.attachBtn:hover {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.textarea {
+    flex: 1;
+    resize: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    font-family: inherit;
+    outline: none;
+    max-height: 120px;
+    min-height: 32px;
+}
+
+.textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.sendBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.sendBtn:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+.sendBtn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+}
+
+/* ── Minimized state ──────────────────────────────────────────────────── */
+
+.minimized {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    width: 56px;
+    height: 56px;
+    background: #DC2626;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.4);
+    transition: transform 0.15s;
+}
+
+.minimized:hover {
+    transform: scale(1.1);
+}
+
+.minimizedIcon {
+    font-size: 24px;
+}
+
+.statusDot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+/* ── Drop overlay ─────────────────────────────────────────────────────── */
+
+.dropOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: rgba(59, 130, 246, 0.1);
+    border: 2px dashed #3b82f6;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #3b82f6;
+    font-size: 14px;
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.dropIcon {
+    font-size: 32px;
+}

@@ -29,13 +29,14 @@ import {
 import { useToast } from '../../../shared/ui/Toast';
 import { ModalPortal } from '../../../shared/ui/ModalPortal';
 import { fetchUserMe, type UserRole } from '../../../services/api/user';
+import { FeedbackAdminPanel } from './FeedbackAdminPanel';
 
 interface AccountModalProps {
     myUid: string;
     onClose: () => void;
 }
 
-type Tab = 'profile' | 'communities' | 'subscription';
+type Tab = 'profile' | 'communities' | 'subscription' | 'feedback';
 
 const CONTACT_FIELDS: Array<{ key: keyof SocialContacts; label: string; placeholder: string }> = [
     { key: 'email', label: 'Email', placeholder: 'user@example.com' },
@@ -311,9 +312,16 @@ export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) =>
                     <button className={btnTab(tab === 'subscription')} onClick={() => setTab('subscription')}>
                         Подписка
                     </button>
+                    {role === 'admin' && (
+                        <button className={btnTab(tab === 'feedback')} onClick={() => setTab('feedback')}>
+                            Обращения
+                        </button>
+                    )}
                 </div>
 
-                {tab === 'profile' ? (
+                {tab === 'feedback' && role === 'admin' ? (
+                    <FeedbackAdminPanel />
+                ) : tab === 'profile' ? (
                     <div className={s.form}>
                         <div className={s.field}>
                             <label>Имя</label>

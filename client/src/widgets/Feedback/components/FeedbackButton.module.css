@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+.button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #DC2626;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.1s;
+    height: 36px;
+}
+
+.button:hover {
+    background: #B91C1C;
+    transform: scale(1.02);
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.button.active {
+    background: #991B1B;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3);
+}
+
+.icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.label {
+    font-size: 12px;
+    line-height: 1;
+}

@@ -55,6 +55,9 @@ from src.routers import article_editor as article_editor_router
 # Социальная сеть (чат, друзья, сообщества, уведомления)
 from src.routers import social_network as social_network_router
 
+# Система обратной связи (баг-репорты, пожелания)
+from web.routers import feedback as feedback_router
+
 logger = logging.getLogger(__name__)
 
 # Настройка логирования
@@ -170,6 +173,9 @@ app.include_router(ai_chats_router.router)
 
 # Социальная сеть (чат, друзья, сообщества, уведомления)
 app.include_router(social_network_router.router, prefix="/api")
+
+# Система обратной связи (баг-репорты, пожелания)
+app.include_router(feedback_router.router)
 
 # GraphQL
 if _graphql_available:
@@ -322,6 +328,29 @@ async def _ensure_uniqueness_indexes():
         logger.info("[startup] Uniqueness indexes ensured")
     except Exception as e:
         logger.warning(f"[startup] Could not create uniqueness indexes: {e}")
+
+
+@app.on_event("startup")
+async def _ensure_feedback_indexes():
+    """Создаёт индексы Neo4j для системы обратной связи."""
+    FEEDBACK_INDEXES = [
+        "CREATE INDEX IF NOT EXISTS FOR (t:FeedbackTicket) ON (t.user_uid)",
+        "CREATE INDEX IF NOT EXISTS FOR (t:FeedbackTicket) ON (t.status)",
+        "CREATE INDEX IF NOT EXISTS FOR (m:FeedbackMessage) ON (m.ticket_uid)",
+    ]
+    FEEDBACK_UNIQUE_INDEXES = [
+        "CREATE UNIQUE INDEX IF NOT EXISTS FOR (d:FeedbackDraft) ON (d.user_uid)",
+    ]
+    try:
+        from neomodel import db
+        for cypher in FEEDBACK_INDEXES + FEEDBACK_UNIQUE_INDEXES:
+            try:
+                db.cypher_query(cypher)
+            except Exception as e:
+                logger.warning(f"[startup] Feedback index failed: {cypher[:60]}... {e}")
+        logger.info("[startup] Feedback indexes ensured")
+    except Exception as e:
+        logger.warning(f"[startup] Could not create feedback indexes: {e}")
 
 
 @app.on_event("shutdown")

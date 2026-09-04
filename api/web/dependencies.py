@@ -23,6 +23,7 @@ from adapters.repositories.action_repository import ActionRepository
 from adapters.repositories.ai_chat_repository import AIChatRepository
 from adapters.repositories.linguistic_pattern_repository import LinguisticPatternRepository
 from adapters.repositories.pattern_graph_repository import PatternGraphRepository
+from adapters.repositories.feedback_repository import FeedbackRepository
 from infrastructure.s3.s3_storage import get_s3_client, AsyncS3Client
 from infrastructure.grpc_clients.auth_grpc_client import auth_client, AuthClient
 from infrastructure.ai_gateway.ai_gateway_client import AIGatewayClient
@@ -70,6 +71,10 @@ def get_linguistic_pattern_repository() -> LinguisticPatternRepository:
 
 def get_pattern_graph_repository() -> PatternGraphRepository:
     return PatternGraphRepository()
+
+
+def get_feedback_repository() -> FeedbackRepository:
+    return FeedbackRepository()
 
 
 # ── Инфраструктурные сервисы ───────────────────────────────────────────────────
