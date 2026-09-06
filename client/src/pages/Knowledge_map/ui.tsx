@@ -82,8 +82,8 @@ export const Knowledge_mapUI = ({ externalBlocks, externalLinks, embedded }: Kno
       }, 1000); // Debounce 1 секунда
     };
     
-    const handleViewportMoved = () => scheduleLoad();
-    const handleViewportZoomed = () => scheduleLoad();
+    const handleViewportMoved = () => { userInteractedRef.current = true; scheduleLoad(); };
+    const handleViewportZoomed = () => { userInteractedRef.current = true; scheduleLoad(); };
     
     if (viewport.on) {
       viewport.on('moved', handleViewportMoved);
@@ -112,6 +112,11 @@ export const Knowledge_mapUI = ({ externalBlocks, externalLinks, embedded }: Kno
   const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
   const [linkCreationState, setLinkCreationState] = useState<LinkCreationState>({ step: 'waiting' });
   const [focusTargetId, setFocusTargetId] = useState<string | null>(null);
+
+  // После первого взаимодействия пользователя с камерой (drag/zoom)
+  // автоматическое центрирование при догрузке блоков отключается,
+  // чтобы не сбивать пользователю вид.
+  const userInteractedRef = useRef(false);
 
   // Хуки для управления состоянием
   const {
@@ -197,7 +202,7 @@ export const Knowledge_mapUI = ({ externalBlocks, externalLinks, embedded }: Kno
 
   // Автоматическое центрирование при первой загрузке данных
   useEffect(() => {
-    if (actualBlocks.length > 0 && !focusTargetId) {
+    if (actualBlocks.length > 0 && !focusTargetId && !userInteractedRef.current) {
       // Находим центр всех блоков
       const centerX = actualBlocks.reduce((sum, block) => sum + (block.x || 0), 0) / actualBlocks.length;
       const centerY = actualBlocks.reduce((sum, block) => sum + (block.y || 0), 0) / actualBlocks.length;
@@ -385,8 +390,8 @@ export const Knowledge_mapUI = ({ externalBlocks, externalLinks, embedded }: Kno
           {isLoading ? 'Загрузка данных...' : 'Инициализация...'}
         </div>
       )}
-      <Application width={embedded ? (containerRef.current?.clientWidth || window.innerWidth) : window.innerWidth} height={embedded ? (containerRef.current?.clientHeight || window.innerHeight) : window.innerHeight} backgroundColor={0xf5f5f5}>
-        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode} isBlockContextMenuActive={isBlockContextMenuActive} blockRightClickRef={blockRightClickRef} instantBlockClickRef={instantBlockClickRef}>
+      <Application width={embedded ? (containerRef.current?.clientWidth || window.innerWidth) : window.innerWidth} height={embedded ? (containerRef.current?.clientHeight || window.innerHeight) : window.innerHeight} backgroundColor={0xf5f5f5} antialias resolution={window.devicePixelRatio || 1} autoDensity>
+        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode} onDragStart={handleContextMenuClose} isBlockContextMenuActive={isBlockContextMenuActive} blockRightClickRef={blockRightClickRef} instantBlockClickRef={instantBlockClickRef}>
           {/* Рендерим все уровни */}
           {levels.map(level => (
             <Level

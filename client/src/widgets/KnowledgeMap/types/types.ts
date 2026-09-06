@@ -30,6 +30,7 @@ export interface BlockData {
     sublevel?: number;
     is_pinned?: boolean;
     physical_scale?: number;
+    doi?: string;
 }
 
 export interface LinkData {

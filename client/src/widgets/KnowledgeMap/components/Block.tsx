@@ -41,6 +41,7 @@ export const Block = memo(function Block({
   instantBlockClickRef,
 }: BlockProps) {
   const { id, title, x, y, level, is_pinned } = blockData;
+  const showTitle = Boolean(title && title !== id);
   
   // Отладочные логи отключены для производительности
   const containerRef = useRef<Container>(null);
@@ -100,34 +101,34 @@ export const Block = memo(function Block({
          }
          onBlockPointerDown(id, e);
        }}
-       onRightClick={(e: any) => {
-         console.log('Block right click event');
-         e.preventDefault();
-         e.stopPropagation();
-         e.stopImmediatePropagation();
-         e.nativeEvent?.preventDefault?.();
-         e.nativeEvent?.stopPropagation?.();
-         e.nativeEvent?.stopImmediatePropagation?.();
-         onBlockRightClick(id, e.global.x, e.global.y);
-       }}
-     >
-               <pixiGraphics draw={draw} />
-      {/* @ts-ignore PixiText props typing */}
-      <PixiText
-        text={title}
-        x={0}
-        y={0}
-        // @ts-ignore anchor type
-        anchor={0.5}
-        style={{
-          fontSize: 13,
-          fill: 0x1f2937,
-          align: 'center',
-          wordWrap: true,
-          wordWrapWidth: BLOCK_WIDTH - BLOCK_PADDING * 4,
-          fontFamily: 'Arial',
+onRightClick={(e: any) => {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          e.nativeEvent?.preventDefault?.();
+          e.nativeEvent?.stopPropagation?.();
+          e.nativeEvent?.stopImmediatePropagation?.();
+          onBlockRightClick(id, e.global.x, e.global.y);
         }}
-      />
+      >
+               <pixiGraphics draw={draw} />
+      {showTitle && (
+        <PixiText
+          text={title}
+          x={0}
+          y={0}
+          // @ts-ignore anchor type
+          anchor={0.5}
+          style={{
+            fontSize: 13,
+            fill: 0x1f2937,
+            align: 'center',
+            wordWrap: true,
+            wordWrapWidth: BLOCK_WIDTH - BLOCK_PADDING * 2,
+            fontFamily: 'Arial',
+          }}
+        />
+      )}
         
      </container>
   );

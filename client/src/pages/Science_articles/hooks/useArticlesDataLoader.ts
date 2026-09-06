@@ -1,10 +1,42 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import useArticlesData from './useArticlesData';
 import { edgesByViewport } from '../../../services/api';
 
-export function useArticlesDataLoader(viewportRef?: any) {
+// Научные области (OpenAlex field.display_name), относящиеся к биологии и медицине.
+// Используется как фильтр по умолчанию для карты научных статей.
+export const BIOMED_FIELDS = [
+  'Medicine',
+  'Agricultural and Biological Sciences',
+  'Biochemistry, Genetics and Molecular Biology',
+  'Immunology and Microbiology',
+  'Neuroscience',
+  'Nursing',
+  'Pharmacology, Toxicology and Pharmaceutics',
+  'Dentistry',
+  'Health Professions',
+  'Environmental Science',
+  'Veterinary',
+];
+
+// Ключ для сравнения списков полей (null/пустой = все области)
+export function fieldsKey(fields: string[] | null | undefined): string {
+  return fields && fields.length > 0 ? fields.join('|') : '__all__';
+}
+
+/**
+ * Загрузчик блоков/связей для карты научных статей.
+ *
+ * @param viewportRef      ссылка на Viewport для определения границ окна
+ * @param activeFields     активный фильтр по научным областям (field.display_name);
+ *                         null/[] = все области. Управляется родителем (селект фильтра),
+ *                         поэтому не может рассинхронизироваться с UI.
+ */
+export function useArticlesDataLoader(viewportRef?: any, activeFields?: string[] | null) {
   // Флаг: сервер вернул пустой ответ при первом запросе — данных нет, останавливаем опрос
   const dataExhaustedRef = useRef(false);
+  // Текущий фильтр как ключ для детекции его смены родителем
+  const activeFieldsKey = fieldsKey(activeFields);
+  const prevFieldsKeyRef = useRef<string | null>(null);
 
   const {
     blocks,
@@ -29,13 +61,16 @@ export function useArticlesDataLoader(viewportRef?: any) {
     loadedLinkIdsRef
   } = useArticlesData();
 
+  const fieldsQuery = useCallback(() => {
+    if (!activeFields || activeFields.length === 0) return '';
+    return activeFields.map(f => `fields=${encodeURIComponent(f)}`).join('&');
+  }, [activeFieldsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
 
   // Функция центрирования viewport на координатах (0,0)
   const centerViewportOnOrigin = useCallback((newBlocks: any[]) => {
     if (viewportRef?.current && newBlocks.length > 0) {
-      console.log(`[ArticlesPage] Centering viewport on origin (0,0)`);
-      
       // Находим диапазон координат для определения масштаба
       const minX = Math.min(...newBlocks.map(b => b.x || 0));
       const maxX = Math.max(...newBlocks.map(b => b.x || 0));
@@ -44,8 +79,6 @@ export function useArticlesDataLoader(viewportRef?: any) {
       
       const rangeX = maxX - minX;
       const rangeY = maxY - minY;
-      
-      console.log(`[ArticlesPage] Coordinate range: x=${minX}-${maxX} (${rangeX}), y=${minY}-${maxY} (${rangeY})`);
 
       // Центрируем viewport на координатах (0,0)
       setTimeout(() => {
@@ -67,7 +100,6 @@ export function useArticlesDataLoader(viewportRef?: any) {
 
           // Центрируем на координатах (0,0)
           viewportRef.current.focusOn(0, 0);
-          console.log(`[ArticlesPage] Viewport centered on origin (0,0) with scale ${targetScale}`);
         }
       }, 100);
     }
@@ -76,14 +108,12 @@ export function useArticlesDataLoader(viewportRef?: any) {
   const loadNextPage = useCallback(async (centerX?: number, centerY?: number) => {
     if (dataExhaustedRef.current) return;
     if (isLoading) {
-      console.log(`[ArticlesPage] Skipping loadNextPage - already loading`);
       return;
     }
     
     // Простая проверка только для первой постраничной загрузки
     if (centerX == null && centerY == null) {
       if (blocks.length > 0 && pageOffset === 0) {
-        console.log(`[ArticlesPage] Skipping loadNextPage - blocks already exist (${blocks.length} blocks)`);
         // НЕ возвращаемся - продолжаем загрузку для получения большего количества блоков
       }
     }
@@ -96,11 +126,9 @@ export function useArticlesDataLoader(viewportRef?: any) {
       if (centerX != null && centerY != null) {
         // ВАЖНО: используем текущий pageOffset даже при загрузке вокруг центра,
         // чтобы получать следующую страницу, а не одни и те же элементы
-        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}&center_x=${centerX}&center_y=${centerY}`;
-        console.log(`[ArticlesPage] Loading around center=(${centerX},${centerY}) offset=${pageOffset} limit ${pageLimit}`);
+        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}&center_x=${centerX}&center_y=${centerY}&${fieldsQuery()}`;
       } else {
-        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}`;
-        console.log(`[ArticlesPage] Loading page ${pageOffset + 1} with limit ${pageLimit}`);
+        url = `http://localhost:8000/layout/articles_page?offset=${pageOffset}&limit=${pageLimit}&${fieldsQuery()}`;
       }
       
       const response = await fetch(url);
@@ -109,35 +137,26 @@ export function useArticlesDataLoader(viewportRef?: any) {
       }
       
       const data = await response.json();
-      console.log(`[ArticlesPage] received page:`, data);
       
       if (data && data.success) {
         const serverBlocks = Array.isArray(data.blocks) ? data.blocks : [];
         const serverLinks = Array.isArray(data.links) ? data.links : [];
-
-        console.log(`[ArticlesPage] blocks: ${serverBlocks.length}, links: ${serverLinks.length}`);
         
         const processedBlocks = processServerBlocks(serverBlocks);
         const processedLinks = processServerLinks(serverLinks);
-        
-        console.log(`[ArticlesPage] Обработано блоков: ${processedBlocks.length}, связей: ${processedLinks.length}`);
         
         // Обновляем состояние
         updateBlocks(processedBlocks);
         updateLinks(processedLinks);
         
-        console.log(`[ArticlesPage] Состояние обновлено, processedBlocks: ${processedBlocks.length}, processedLinks: ${processedLinks.length}`);
-        
         // Убираем экран загрузки при первой загрузке (даже если блоков нет)
         if (isBootLoading) {
-          console.log(`[ArticlesPage] Убираем экран загрузки, processedBlocks: ${processedBlocks.length}`);
           setIsBootLoading(false);
           if (processedBlocks.length > 0) {
             centerViewportOnOrigin(processedBlocks);
           } else {
             // Первый запрос вернул 0 — данных нет, останавливаем опрос viewport
             dataExhaustedRef.current = true;
-            console.log('[ArticlesPage] No articles in DB, stopping viewport polling');
           }
         }
         
@@ -148,21 +167,19 @@ export function useArticlesDataLoader(viewportRef?: any) {
         throw new Error((data && data.error) || 'Failed to load articles page');
       }
     } catch (error: any) {
-      console.error('Error loading articles page:', error);
       setLoadError(error?.message || 'Unknown error');
       if (isBootLoading) setIsBootLoading(false);
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, pageOffset, blocks.length, pageLimit, isBootLoading, loadedBlockIdsRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, setIsBootLoading, setPageOffset, centerViewportOnOrigin]);
+  }, [isLoading, pageOffset, blocks.length, pageLimit, isBootLoading, loadedBlockIdsRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, setIsBootLoading, setPageOffset, centerViewportOnOrigin, fieldsQuery]);
 
   const loadAround = useCallback(async (centerX: number, centerY: number) => {
     if (isLoading) return;
     setIsLoading(true);
     setLoadError(null);
     try {
-      console.log(`[ArticlesPage] loadAround center=(${centerX},${centerY})`);
-      const response = await fetch(`http://localhost:8000/layout/articles_page?offset=0&limit=${pageLimit}&center_x=${centerX}&center_y=${centerY}`);
+      const response = await fetch(`http://localhost:8000/layout/articles_page?offset=0&limit=${pageLimit}&center_x=${centerX}&center_y=${centerY}&${fieldsQuery()}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       if (data && data.success) {
@@ -172,12 +189,11 @@ export function useArticlesDataLoader(viewportRef?: any) {
         updateLinks(processedLinks);
       }
     } catch (e: any) {
-      console.error('loadAround error', e);
       setLoadError(e?.message || 'Unknown error');
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, pageLimit, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError]);
+  }, [isLoading, pageLimit, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, fieldsQuery]);
 
   const loadEdgesByViewport = useCallback(async () => {
     if (isLoading || !viewportRef?.current) return;
@@ -189,31 +205,52 @@ export function useArticlesDataLoader(viewportRef?: any) {
       // Получаем границы viewport
       const bounds = viewportRef.current.getWorldBounds();
       if (!bounds) {
-        console.log('[ArticlesPage] No viewport bounds available');
         return;
       }
       
-      console.log(`[ArticlesPage] Loading edges by viewport:`, bounds);
-      
-      const data = await edgesByViewport(bounds);
+      const data = await edgesByViewport({
+        ...bounds,
+        fields: activeFields && activeFields.length > 0 ? activeFields : undefined,
+      });
       
       if (data && data.blocks && data.links) {
         const processedBlocks = processServerBlocks(data.blocks);
         const processedLinks = processServerLinks(data.links);
-        
-        console.log(`[ArticlesPage] Loaded by viewport: ${processedBlocks.length} blocks, ${processedLinks.length} links`);
         
         // Обновляем состояние
         updateBlocks(processedBlocks);
         updateLinks(processedLinks);
       }
     } catch (e: any) {
-      console.error('loadEdgesByViewport error', e);
       setLoadError(e?.message || 'Unknown error');
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, viewportRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError]);
+  }, [isLoading, viewportRef, processServerBlocks, processServerLinks, updateBlocks, updateLinks, setIsLoading, setLoadError, activeFieldsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Смена фильтра родителем: сбрасываем всё и загружаем заново.
+  // Первая загрузка (prevFieldsKeyRef === null) пропускается: на старте фильтр
+  // уже учитывается в полях URL запросов, отдельный сброс не нужен.
+  useEffect(() => {
+    if (prevFieldsKeyRef.current === null) {
+      prevFieldsKeyRef.current = activeFieldsKey;
+      return;
+    }
+    if (prevFieldsKeyRef.current === activeFieldsKey) {
+      return;
+    }
+    prevFieldsKeyRef.current = activeFieldsKey;
+    dataExhaustedRef.current = false;
+    loadedBlockIdsRef.current = new Set();
+    loadedLinkIdsRef.current = new Set();
+    setBlocks([]);
+    setLinks([]);
+    setPageOffset(0);
+    setIsBootLoading(true);
+    setLoadError(null);
+    // Дожидаемся следующего тика, чтобы состояние успело примениться
+    setTimeout(() => loadNextPage(), 0);
+  }, [activeFieldsKey, loadedBlockIdsRef, loadedLinkIdsRef, setBlocks, setLinks, setPageOffset, setIsBootLoading, setLoadError, loadNextPage]);
 
   return {
     blocks,
@@ -225,6 +262,6 @@ export function useArticlesDataLoader(viewportRef?: any) {
     pageOffset,
     pageLimit,
     loadNextPage,
-    loadEdgesByViewport
+    loadEdgesByViewport,
   };
 }

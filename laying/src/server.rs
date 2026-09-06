@@ -62,6 +62,7 @@ impl GraphLayoutServer {
             enable_simd: config.performance.enable_simd,
             enable_gpu: config.performance.enable_gpu,
             memory_strategy: crate::generated::MemoryStrategy::MemoryAuto as i32,
+            convert_to_dag: true,
         };
 
         let layout_engine = HighPerformanceLayoutEngine::new(&default_options)?;
@@ -132,6 +133,18 @@ impl GraphLayoutService for GraphLayoutServer {
                 return Err(anyhow::anyhow!("Запрос не содержит рёбер"));
             }
 
+            // Подсчёт уникальных вершин на входе
+            let mut vertex_set: std::collections::HashSet<String> = std::collections::HashSet::new();
+            for e in &req.edges {
+                vertex_set.insert(e.source_id.clone());
+                vertex_set.insert(e.target_id.clone());
+            }
+            info!(
+                "LAYOUT_IN | Вершин: {}, рёбер: {}",
+                vertex_set.len(),
+                req.edges.len()
+            );
+
             let options = req.options.unwrap_or_else(|| crate::generated::LayoutOptions {
                 block_width: self.config.algorithms.block_width,
                 block_height: self.config.algorithms.block_height,
@@ -146,6 +159,7 @@ impl GraphLayoutService for GraphLayoutServer {
                 enable_simd: self.config.performance.enable_simd,
                 enable_gpu: self.config.performance.enable_gpu,
                 memory_strategy: crate::generated::MemoryStrategy::MemoryAuto as i32,
+                convert_to_dag: true,
             });
 
             let neo4j_edges: Vec<Neo4jGraphEdge> = req.edges.into_iter().map(|e| Neo4jGraphEdge {
@@ -187,6 +201,12 @@ impl GraphLayoutService for GraphLayoutServer {
 
         match result {
             Ok(response) => {
+                let layers = response.positions.iter().map(|p| p.layer).max().unwrap_or(0) + 1;
+                let levels = response.positions.iter().map(|p| p.level).max().unwrap_or(0) + 1;
+                info!(
+                    "LAYOUT_OUT | Слоёв: {}, уровней: {}, позиций: {} (за {:.2}с)",
+                    layers, levels, response.positions.len(), total_time.as_secs_f64()
+                );
                 info!(
                     "✅ Укладка завершена за {:.2}с ({} позиций, ID: {})",
                     total_time.as_secs_f64(),

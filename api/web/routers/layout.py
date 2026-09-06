@@ -6,9 +6,9 @@ Business logic будет перенесена в use cases в следующи�
 """
 """Роутер для работы с укладкой графов"""
 import logging
-from typing import Dict, Any
+from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 from src.schemas.api import LayoutRequest, ViewportBounds, ViewportEdgesResponse
 from services.layout_service import LayoutService
@@ -94,7 +94,8 @@ async def get_articles_layout() -> Dict[str, Any]:
 async def get_edges_by_viewport(
     bounds: ViewportBounds,
     limit_per_node: int = 200,
-    only_with_layout: bool = True
+    only_with_layout: bool = True,
+    fields: Optional[List[str]] = Query(default=None, description="Научные области (field.display_name) для фильтрации"),
 ):
     """
     Возвращает узлы в окне и рёбра, у которых хотя бы один конец попадает в окно.
@@ -103,11 +104,16 @@ async def get_edges_by_viewport(
         bounds: Границы viewport (left, right, top, bottom)
         limit_per_node: Максимальное количество связей на узел (default: 200)
         only_with_layout: Фильтровать только узлы с координатами x, y (default: True, в 2-3x быстрее)
+        fields: Если задан — только статьи этих научных областей и связи целиком внутри них
 
     Performance: ~0.5-0.8s with optimized indexes vs ~2+ seconds with old queries
     """
     bounds_dict = bounds.model_dump()
-    result = await layout_service.get_edges_by_viewport(bounds_dict, limit_per_node, only_with_layout)
+    bounds_dict.pop("fields", None)
+    # fields приходит в JSON-теле (клиент edgesByViewport); query-параметр
+    # остаётся как альтернатива для GET-стиля вызовов.
+    effective_fields = fields if fields else bounds.fields
+    result = await layout_service.get_edges_by_viewport(bounds_dict, limit_per_node, only_with_layout, effective_fields)
     return ViewportEdgesResponse(**result)
 
 
@@ -123,9 +129,22 @@ async def get_articles_layout_page(
     limit: int = 2000,
     center_x: float = 0.0,
     center_y: float = 0.0,
+    fields: Optional[List[str]] = Query(default=None, description="Научные области (field.display_name) для фильтрации"),
 ) -> Dict[str, Any]:
     """Возвращает часть графа статей, упорядоченную по близости к (center_x, center_y)."""
-    return await layout_service.get_articles_layout_page(offset, limit, center_x, center_y)
+    return await layout_service.get_articles_layout_page(offset, limit, center_x, center_y, fields)
+
+
+@router.get("/articles_without_links")
+async def get_articles_without_links_route(
+    q: str = Query("", max_length=200, description="Поисковый запрос по названию (активен с 3 символов)"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    fields: Optional[List[str]] = Query(default=None, description="Научные области (field.display_name) для фильтрации"),
+) -> Dict[str, Any]:
+    """Статьи без библиографических ссылок (не попадают на карту):
+    это статьи, у которых нет ни одного BIBLIOGRAPHIC_LINK."""
+    return await layout_service.get_articles_without_links(q=q, skip=skip, limit=limit, fields=fields)
 
 
 @router.get("/knowledge_map_page")

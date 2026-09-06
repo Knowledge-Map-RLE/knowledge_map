@@ -243,13 +243,22 @@ impl Default for OptimalVertexPlacer {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::data_structures::GraphBuilder;
+
+    fn build_graph(edges: &[(&str, &str)]) -> Graph {
+        let mut builder = GraphBuilder::new();
+        for (src, dst) in edges {
+            builder
+                .add_edge(src.to_string(), dst.to_string(), 1.0)
+                .unwrap();
+        }
+        builder.build().unwrap()
+    }
 
     #[tokio::test]
     async fn test_simple_graph_placement() {
         // Create a simple graph: A -> B -> C
-        let mut graph = Graph::new();
-        graph.add_edge("A", "B");
-        graph.add_edge("B", "C");
+        let graph = build_graph(&[("A", "B"), ("B", "C")]);
 
         let mut placer = OptimalVertexPlacer::new();
 
@@ -266,9 +275,9 @@ mod tests {
         assert_eq!(positions.len(), 3);
 
         // Verify layers are assigned correctly (A=0, B=1, C=2)
-        let pos_map: HashMap<&str, &VertexPosition> = positions
+        let pos_map: HashMap<&str, &crate::neo4j::VertexPosition> = positions
             .iter()
-            .map(|p| (p.vertex_id.as_str(), p))
+            .map(|p| (p.article_id.as_str(), p))
             .collect();
 
         assert_eq!(pos_map.get("A").unwrap().layer, 0);
@@ -284,11 +293,7 @@ mod tests {
     #[tokio::test]
     async fn test_diamond_graph_placement() {
         // Create a diamond: A -> B, A -> C, B -> D, C -> D
-        let mut graph = Graph::new();
-        graph.add_edge("A", "B");
-        graph.add_edge("A", "C");
-        graph.add_edge("B", "D");
-        graph.add_edge("C", "D");
+        let graph = build_graph(&[("A", "B"), ("A", "C"), ("B", "D"), ("C", "D")]);
 
         let mut placer = OptimalVertexPlacer::new();
 
@@ -299,9 +304,9 @@ mod tests {
 
         assert_eq!(positions.len(), 4);
 
-        let pos_map: HashMap<&str, &VertexPosition> = positions
+        let pos_map: HashMap<&str, &crate::neo4j::VertexPosition> = positions
             .iter()
-            .map(|p| (p.vertex_id.as_str(), p))
+            .map(|p| (p.article_id.as_str(), p))
             .collect();
 
         // A should be layer 0 (source)

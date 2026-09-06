@@ -5,7 +5,7 @@ const KnowledgeMapUI: React.FC = () => {
     return (
         <div className={s.interface}>
             <Header showSearch={true} className={s.header} />
-            <div className={`${s.left} ${s.panel}`}> </div>
+            <div id="km-left-panel" className={`${s.left} ${s.panel}`}> </div>
             <div className={`${s.center} ${s.panel}`}> </div>
             <div className={`${s.right} ${s.panel}`}>
                 <h2>Вклад пользователя в РПЖ</h2>

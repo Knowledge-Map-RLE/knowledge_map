@@ -5,6 +5,7 @@ from infrastructure.s3.s3_storage import get_s3_client
 from .layout_client import get_layout_client, LayoutOptions, LayoutConfig
 from infrastructure.grpc_clients.auth_grpc_client import auth_client
 from .data_download_service import get_data_download_service, DATA_SOURCES
+from .citation_graph_service import get_citation_graph_service, CITATION_SOURCES_CONFIG
 
 __all__ = [
     "settings",
@@ -15,4 +16,6 @@ __all__ = [
     "auth_client",
     "get_data_download_service",
     "DATA_SOURCES",
+    "get_citation_graph_service",
+    "CITATION_SOURCES_CONFIG",
 ]

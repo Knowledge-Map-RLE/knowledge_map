@@ -115,6 +115,7 @@ class LayoutClient:
         try:
             await self.connect()
             
+            logger.info(f"LAYOUT_SERVICE | Вход: {len(blocks)} вершин, {len(links)} рёбер")
             logger.info(f"Отправка запроса на укладку: {len(blocks)} блоков, {len(links)} связей")
             
             # Создаем gRPC запрос
@@ -159,6 +160,11 @@ class LayoutClient:
                 }
             
             logger.info(f"Статистика ответа: блоков={len(response.blocks)}, уровней={len(response.levels)}, подуровней={len(response.sublevels)}")
+
+            logger.info(
+                f"LAYOUT_SERVICE | Выход: {response.statistics.max_layer} слоёв (max_layer), "
+                f"{response.statistics.total_levels} уровней"
+            )
             
             # Конвертируем ответ в нужный формат
             result = {

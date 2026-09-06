@@ -69,6 +69,8 @@ features = ["full"]
 
 [build-dependencies]
 tonic-build = "0.10"
+# Вендоренный protoc: сборка не требует protoc в системе (dev + production).
+protoc-bin-vendored = "3"
 
 [features]
 default = ["mimalloc"]

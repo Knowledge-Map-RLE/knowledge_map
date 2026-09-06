@@ -142,6 +142,8 @@ class ViewportBounds(BaseModel):
     right: float
     top: float
     bottom: float
+    # Научные области (field.display_name) для фильтрации; клиент передаёт в теле POST
+    fields: Optional[List[str]] = None
 
 
 class ViewportEdgesResponse(BaseModel):

@@ -80,6 +80,7 @@ const convertApiBlockToBlockData = (apiBlock: Block): BlockData => {
   return {
     id: apiBlock.id,
     title: apiBlock.title || apiBlock.content || '',
+    doi: apiBlock.doi || undefined,
     x: (typeof apiBlock.x === 'number') ? apiBlock.x : (undefined as any),
     y: (typeof apiBlock.y === 'number') ? apiBlock.y : (undefined as any),
     level: apiBlock.level || 0,
@@ -423,6 +424,7 @@ export function useDataLoading(): UseDataLoadingResult {
             id: String(b.id),
             title: b.title ?? '',
             content: b.content ?? '',
+            doi: b.doi ?? '',
             x: b.x,
             y: b.y,
             layer: b.layer ?? 0,

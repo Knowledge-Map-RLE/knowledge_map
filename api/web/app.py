@@ -70,6 +70,11 @@ logging.basicConfig(
     ],
 )
 
+# Boto3/ботокор шумят INFO-строками про проверку чексумм и multipart —
+# это косметика серверной части, в WARNING-логи её не пишем.
+logging.getLogger("botocore").setLevel(logging.WARNING)
+logging.getLogger("boto3").setLevel(logging.WARNING)
+
 # Настройка Neo4j
 database_url = settings.get_database_url()
 neomodel_config.DATABASE_URL = database_url
@@ -137,6 +142,10 @@ app.include_router(worker_status.router, prefix="/api")
 from web.routers import data_download, data_download_ws
 app.include_router(data_download.router, prefix="/api/data_download")
 app.include_router(data_download_ws.router, prefix="/api/data_download")
+
+# Citation graph (цитатный граф DOI: OpenCitations, OpenAlex, Crossref, DataCite)
+from web.routers import citation_graph
+app.include_router(citation_graph.router, prefix="/api/citation_graph")
 
 # Паттерны (Action + LexicalUnit графы)
 from web.routers.data_extraction import patterns as patterns_router
@@ -228,6 +237,7 @@ async def _ensure_document_indexes():
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.pubmed_id)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.pmc_id)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.x, d.y)",
     ]
     try:
         from neomodel import db
@@ -339,7 +349,7 @@ async def _ensure_feedback_indexes():
         "CREATE INDEX IF NOT EXISTS FOR (m:FeedbackMessage) ON (m.ticket_uid)",
     ]
     FEEDBACK_UNIQUE_INDEXES = [
-        "CREATE UNIQUE INDEX IF NOT EXISTS FOR (d:FeedbackDraft) ON (d.user_uid)",
+        "CREATE CONSTRAINT IF NOT EXISTS FOR (d:FeedbackDraft) REQUIRE d.user_uid IS UNIQUE",
     ]
     try:
         from neomodel import db
@@ -351,6 +361,33 @@ async def _ensure_feedback_indexes():
         logger.info("[startup] Feedback indexes ensured")
     except Exception as e:
         logger.warning(f"[startup] Could not create feedback indexes: {e}")
+
+
+@app.on_event("startup")
+async def _ensure_citation_indexes():
+    """Создаёт индексы Neo4j для цитатного графа."""
+    CITATION_INDEXES = [
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.doi)",
+        "CREATE INDEX IF NOT EXISTS FOR (s:CitationSource) ON (s.key)",
+    ]
+    try:
+        from neomodel import db
+        for cypher in CITATION_INDEXES:
+            try:
+                db.cypher_query(cypher)
+            except Exception as e:
+                logger.warning(f"[startup] Citation index failed: {cypher[:60]}... {e}")
+
+        try:
+            db.cypher_query(
+                "CREATE INDEX IF NOT EXISTS FOR ()-[r:BIBLIOGRAPHIC_LINK]-() ON (r.source)"
+            )
+        except Exception:
+            pass
+
+        logger.info("[startup] Citation graph indexes ensured")
+    except Exception as e:
+        logger.warning(f"[startup] Could not create citation indexes: {e}")
 
 
 @app.on_event("shutdown")

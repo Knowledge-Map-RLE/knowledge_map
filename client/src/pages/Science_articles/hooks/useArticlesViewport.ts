@@ -61,11 +61,8 @@ export function useArticlesViewport(
   useEffect(() => {
     if (blocks.length > 0 && !focusTargetId && blocks.length <= pageLimit) {
       // Центрируем viewport на центр холста (0, 0) вместо центра блоков
-      console.log(`[useArticlesViewport] Centering viewport on canvas center (0, 0)`);
-      
       setTimeout(() => {
         viewportRef.current?.focusOn(0, 0);
-        console.log(`[useArticlesViewport] Viewport centered on canvas center`);
       }, 100);
     }
   }, [blocks.length, focusTargetId, pageLimit, viewportRef]);

@@ -20,12 +20,11 @@ const useArticlesData = () => {
     }, [blocks]);
 
     const processServerBlocks = useCallback((serverBlocks: any[]) => {
-        console.log(`[processServerBlocks] Обрабатываем ${serverBlocks.length} блоков с сервера`);
-        
-        const processedBlocks = serverBlocks.map((b, index) => {
+        const processedBlocks = serverBlocks.map((b) => {
                     const processed = {
             id: b.id,
-            title: b.title || b.id,
+            title: b.title || b.content || b.id,
+            doi: b.doi || undefined,
             x: (typeof b.x === 'number') ? b.x : undefined,
             y: (typeof b.y === 'number') ? b.y : undefined,
             layer: (typeof b.layer === 'number') ? b.layer : 0,
@@ -33,14 +32,9 @@ const useArticlesData = () => {
             is_pinned: b.is_pinned || false
         };
             
-            if (index < 3) {
-                console.log(`[processServerBlocks] Блок ${index + 1}:`, processed);
-            }
-            
             return processed;
         });
         
-        console.log(`[processServerBlocks] Обработано ${processedBlocks.length} блоков`);
         return processedBlocks;
     }, []);
 
@@ -55,27 +49,21 @@ const useArticlesData = () => {
     }, []);
 
     const updateLinks = useCallback((newLinks: any[]) => {
-        console.log(`[updateLinks] Обновляем связи. Текущих: ${links.length}, новых: ${newLinks.length}`);
-        
         setLinks(prevLinks => {
             const existingIds = new Set(prevLinks.map(l => l.id));
             const linksToAdd = newLinks.filter(l => !existingIds.has(l.id));
             const updatedLinks = [...prevLinks, ...linksToAdd];
             
-            console.log(`[updateLinks] Добавлено ${linksToAdd.length} новых связей, всего: ${updatedLinks.length}`);
             return updatedLinks;
         });
     }, [links.length]);
 
     const updateLevels = useCallback((newLevels: any[]) => {
-        console.log(`[updateLevels] Обновляем уровни. Новых: ${newLevels.length}`);
         setLevels(newLevels);
     }, []);
 
     const processServerLinks = useCallback((serverLinks: any[]) => {
-        console.log(`[processServerLinks] Обрабатываем ${serverLinks.length} связей с сервера`);
-        
-        const processedLinks = serverLinks.map((l, index) => {
+        const processedLinks = serverLinks.map((l) => {
                     const processed = {
             id: l.id,
             source_id: l.source_id || l.source,
@@ -83,14 +71,9 @@ const useArticlesData = () => {
             metadata: l.metadata || {}
         };
             
-            if (index < 3) {
-                console.log(`[processServerLinks] Связь ${index + 1}:`, processed);
-            }
-            
             return processed;
         });
         
-        console.log(`[processServerLinks] Обработано ${processedLinks.length} связей`);
         return processedLinks;
     }, []);
 

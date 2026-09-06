@@ -28,6 +28,7 @@ pub mod longest_path;
 pub mod vertex_placement;
 pub mod memory_optimized;
 pub mod parallel_processing;
+pub mod dag_conversion;
 
 use crate::generated::{LayoutOptions, LayoutStatistics};
 use crate::neo4j::{GraphEdge, VertexPosition};
@@ -261,8 +262,49 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
         // 1. Валидация входных данных
         self.validate_edges(&edges)?;
 
+        // 1.1. Приведение к DAG (разворот минимального числа рёбер).
+        // Включается опцией convert_to_dag. Применяется только при наличии
+        // циклов: разворачиваем feedback arc set, чтобы топологическая
+        // сортировка корректно покрыла все вершины (все слои заполняются).
+        let processed_edges;
+        let mut dag_stats: Option<dag_conversion::DagResult> = None;
+        if options.convert_to_dag {
+            let tuples: Vec<(String, String, f32, String)> = edges
+                .iter()
+                .map(|e| (e.source_id.clone(), e.target_id.clone(), e.weight, e.edge_type.clone()))
+                .collect();
+            let dag = dag_conversion::convert_to_dag(&tuples, &[])?;
+            if dag.reversed_count > 0 {
+                info!(
+                    "DAG conversion: reversed {} edges, {} cyclic vertices",
+                    dag.reversed_count, dag.cyclic_vertices
+                );
+                let reversed_count = dag.reversed_count;
+                let cyclic_vertices = dag.cyclic_vertices;
+                processed_edges = dag
+                    .edges
+                    .into_iter()
+                    .map(|e| GraphEdge {
+                        source_id: e.source_id,
+                        target_id: e.target_id,
+                        weight: e.weight,
+                        edge_type: e.edge_type,
+                    })
+                    .collect();
+                dag_stats = Some(dag_conversion::DagResult {
+                    edges: Vec::new(),
+                    reversed_count,
+                    cyclic_vertices,
+                });
+            } else {
+                processed_edges = edges;
+            }
+        } else {
+            processed_edges = edges;
+        }
+
         // 2. Построение графа
-        let graph = self.build_graph(&edges)?;
+        let graph = self.build_graph(&processed_edges)?;
         info!("Graph: {} vertices, {} edges", graph.vertex_count(), graph.edge_count());
 
         // 3. Топологическая сортировка
@@ -306,7 +348,7 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
         let statistics = LayoutStatistics {
             processing_time_ms: total_time as i64,
             vertices_processed: graph.vertex_count() as i64,
-            edges_processed: edges.len() as i64,
+            edges_processed: processed_edges.len() as i64,
             iterations_completed: 1,
             memory_used_bytes: self.memory_manager.get_memory_usage() as i64,
             connected_components: 1, // Упрощенная версия
@@ -329,24 +371,32 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
         };
         
         // Метаданные
+        let mut optimizations_used = vec![
+            "SIMD".to_string(),
+            "Parallel Processing".to_string(),
+            "Memory Optimization".to_string(),
+        ];
+        let mut parameters = {
+            let mut params = HashMap::new();
+            params.insert("chunk_size".to_string(), options.chunk_size.to_string());
+            params.insert("max_workers".to_string(), options.max_workers.to_string());
+            params.insert("simd_enabled".to_string(), options.enable_simd.to_string());
+            if let Some(ref payload) = edge_paths_payload {
+                params.insert("edge_paths".to_string(), payload.clone());
+            }
+            params
+        };
+        if let Some(ref dag) = dag_stats {
+            optimizations_used.push("DAG conversion (feedback arc set)".to_string());
+            parameters.insert("dag_reversed_edges".to_string(), dag.reversed_count.to_string());
+            parameters.insert("dag_cyclic_vertices".to_string(), dag.cyclic_vertices.to_string());
+        }
+
         let metadata = AlgorithmMetadata {
-            optimizations_used: vec![
-                "SIMD".to_string(),
-                "Parallel Processing".to_string(),
-                "Memory Optimization".to_string(),
-            ],
+            optimizations_used,
             complexity: "O((V + E) / P + V log V)".to_string(),
             version: env!("CARGO_PKG_VERSION").to_string(),
-            parameters: {
-                let mut params = HashMap::new();
-                params.insert("chunk_size".to_string(), options.chunk_size.to_string());
-                params.insert("max_workers".to_string(), options.max_workers.to_string());
-                params.insert("simd_enabled".to_string(), options.enable_simd.to_string());
-                if let Some(ref payload) = edge_paths_payload {
-                    params.insert("edge_paths".to_string(), payload.clone());
-                }
-                params
-            },
+            parameters,
         };
         
         let result = LayoutResult {
@@ -357,7 +407,7 @@ impl LayoutAlgorithm for HighPerformanceLayoutEngine {
         
         info!(
             "Layout done: {} vertices, {} edges in {} ms ({:.0} v/s)",
-            graph.vertex_count(), edges.len(), total_time,
+            graph.vertex_count(), processed_edges.len(), total_time,
             graph.vertex_count() as f32 / total_time as f32 * 1000.0
         );
         

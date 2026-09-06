@@ -11,6 +11,7 @@ export interface Block {
     sublevel_id?: number;
     is_pinned?: boolean;
     physical_scale?: number;
+    doi?: string;
 }
 
 export interface Level {

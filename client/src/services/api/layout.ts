@@ -46,7 +46,7 @@ export async function loadAround(centerX: number, centerY: number, limit: number
   return layoutApi.loadAround(centerX, centerY, limit);
 }
 
-export async function edgesByViewport(bounds: {left:number; right:number; top:number; bottom:number}): Promise<{blocks: Partial<Block>[]; links: Partial<Link>[]}> {
+export async function edgesByViewport(bounds: {left:number; right:number; top:number; bottom:number; fields?: string[]}): Promise<{blocks: Partial<Block>[]; links: Partial<Link>[]}> {
   return fetchJson<{blocks: Partial<Block>[]; links: Partial<Link>[]}>('/layout/api/articles/edges_by_viewport', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -135,4 +135,40 @@ export async function getKnowledgeMapPage(
   centerY = 0,
 ): Promise<ApiResponse> {
   return fetchJson<ApiResponse>(`/layout/knowledge_map_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
+}
+
+export interface ArticleWithoutLinksItem {
+  doc_id: string;
+  title: string;
+  doi: string;
+}
+
+export interface ArticlesWithoutLinksResponse {
+  success: boolean;
+  total_count: number;
+  skip: number;
+  limit: number;
+  query: string;
+  articles: ArticleWithoutLinksItem[];
+}
+
+/** Статьи без библиографических ссылок (исключены с карты connected_ids).
+ * Поиск по названию активируется с 3 введённых символов; limit по умолчанию 100. */
+export async function getArticlesWithoutLinks(
+  q: string,
+  skip = 0,
+  limit = 100,
+  fields?: string[] | null,
+  signal?: AbortSignal,
+): Promise<ArticlesWithoutLinksResponse> {
+  const params = new URLSearchParams();
+  if (q) params.set('q', q);
+  params.set('skip', String(skip));
+  params.set('limit', String(limit));
+  if (fields && fields.length > 0) {
+    for (const f of fields) {
+      params.append('fields', f);
+    }
+  }
+  return fetchJson<ArticlesWithoutLinksResponse>(`/layout/articles_without_links?${params.toString()}`, { signal });
 }

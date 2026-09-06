@@ -12,6 +12,9 @@ INDEXES = [
     "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.upload_date)",
     "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.processing_status)",
     "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source)",
+    "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.x, d.y)",
+    "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.uid)",
+    "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.doi)",
 ]
 
 TEXT_INDEXES = [

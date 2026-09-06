@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './BlockContextMenu.module.css';
 import { SCALE_UNITS, type ScaleUnit, readableScaleToExponent, exponentToReadableScale } from '../utils/scaleUtils';
 
@@ -6,6 +6,7 @@ interface BlockContextMenuProps {
   x: number;
   y: number;
   isPinned: boolean;
+  doi?: string;
   currentPhysicalScale?: number; // текущий физический масштаб блока
   onPin: () => void;
   onUnpin: () => void;
@@ -17,6 +18,7 @@ export const BlockContextMenu: React.FC<BlockContextMenuProps> = ({
   x,
   y,
   isPinned,
+  doi,
   currentPhysicalScale = 0, // по умолчанию 1 метр (10^0)
   onPin,
   onUnpin,
@@ -24,6 +26,8 @@ export const BlockContextMenu: React.FC<BlockContextMenuProps> = ({
   onClose,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
+  const showDoi = Boolean(doi);
+  const shortDoi = doi && doi.length > 32 ? `${doi.slice(0, 29)}...` : doi;
   const [showScaleInput, setShowScaleInput] = useState(false);
   const [scaleValue, setScaleValue] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState<ScaleUnit>(SCALE_UNITS.find(u => u.exponent === 0)!);
@@ -36,7 +40,7 @@ export const BlockContextMenu: React.FC<BlockContextMenuProps> = ({
   }, [currentPhysicalScale]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: PointerEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         onClose();
       }
@@ -48,11 +52,14 @@ export const BlockContextMenu: React.FC<BlockContextMenuProps> = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    // capture-фаза: ловим клики (ЛКМ и ПКМ) где угодно вне меню.
+    // Только capture на document доходит до нас даже тогда, когда страница
+    // вешает блокировщики pointer-событий на canvas при открытом меню.
+    document.addEventListener('pointerdown', handleClickOutside, true);
     document.addEventListener('keydown', handleEscape);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('pointerdown', handleClickOutside, true);
       document.removeEventListener('keydown', handleEscape);
     };
   }, [onClose]);
@@ -84,6 +91,33 @@ export const BlockContextMenu: React.FC<BlockContextMenuProps> = ({
     }
   };
 
+  // Копируем DOI в полном формате (как URL), чтобы его можно было
+  // вставить как ссылку на страницу-источник статьи.
+  const handleCopyDoi = useCallback(() => {
+    if (!doi) return;
+    const url = `https://doi.org/${doi}`;
+    const copyText = async () => {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = url;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+      } catch (error) {
+        console.error('Ошибка копирования DOI:', error);
+      }
+    };
+    copyText();
+    onClose();
+  }, [doi, onClose]);
+
   return (
     <div
       ref={menuRef}
@@ -97,6 +131,14 @@ export const BlockContextMenu: React.FC<BlockContextMenuProps> = ({
     >
       {!showScaleInput ? (
         <>
+          {showDoi && (
+            <button
+              className={styles.menuItem}
+              onClick={() => handleMenuItemClick(handleCopyDoi)}
+            >
+              Скопировать DOI {shortDoi}
+            </button>
+          )}
           <button
             className={styles.menuItem}
             onClick={() => handleMenuItemClick(isPinned ? onUnpin : onPin)}

@@ -1,4 +1,5 @@
 """Сервис для работы с укладкой графов"""
+import asyncio
 import logging
 from typing import List, Dict, Any, Optional
 
@@ -7,15 +8,157 @@ from neomodel import db, DoesNotExist
 
 from src.models import Block
 from . import get_layout_client, LayoutOptions
+from infrastructure.graph_layout_client import get_graph_layout_client, VertexLayout
 
 logger = logging.getLogger(__name__)
+
+# Согласовано с citation_graph_service: координаты x укладываются с шагом слоя ×10,
+# чтобы было визуальное разделение между соседними слоями карты.
+X_SPACING_MULTIPLIER = 10
+
+# Для science_articles расстояние между блоками по оси x делаем в 2 раза меньше
+# (5 вместо 10), чтобы карта статей была компактнее по горизонтали.
+ARTICLES_X_SPACING_MULTIPLIER = X_SPACING_MULTIPLIER / 2
 
 
 class LayoutService:
     """Сервис для работы с укладкой графов"""
-    
+
     def __init__(self):
         self.layout_client = get_layout_client()
+        # Сериализация переукладок и дедупликация по ключу активного фильтра:
+        # переукладка выполняется при загрузке страницы и при смене фильтра,
+        # но не на каждом page/viewport запросе с тем же фильтром.
+        self._relayout_lock = asyncio.Lock()
+        self._relayout_fields_key: Optional[str] = None
+
+    async def _ensure_filtered_layout(self, fields: List[str]) -> None:
+        """Переукладывает подграф статей заданных областей, если для этого
+        набора фильтров укладка ещё не была рассчитана.
+
+        Вызывается из get_articles_layout_page при активном fields-фильтре:
+        первый запрос с новым набором областей пересчитывает координаты,
+        повторные запросы (пейджинг, viewport) используют сохранённые.
+        """
+        key = "|".join(sorted(fields))
+        if self._relayout_fields_key == key:
+            return
+        async with self._relayout_lock:
+            if self._relayout_fields_key == key:
+                return
+            try:
+                updated = await self._relayout_filtered_set(fields)
+                self._relayout_fields_key = key
+                logger.info(
+                    "Filtered relayout done: %d nodes, fields=%s",
+                    updated,
+                    fields,
+                )
+            except Exception as e:
+                logger.error(
+                    "Filtered relayout failed (%s); serving stored coordinates",
+                    e,
+                    exc_info=True,
+                )
+
+    async def _relayout_filtered_set(self, fields: List[str]) -> int:
+        """Рассчитывает укладку подграфа: узлы, чья научная область (primary_field
+        ИЛИ вторичный тег fields) входит в fields, и связи между ними.
+
+        Координаты из Rust-сервиса укладки сохраняются в Neo4j. Возвращает число
+        узлов с обновлёнными координатами.
+        """
+        uid_rows, _ = db.cypher_query(
+            "MATCH (n:Document) "
+            "WHERE n.layer IS NOT NULL AND n.level IS NOT NULL "
+            "  AND n.x IS NOT NULL AND n.y IS NOT NULL "
+            "  AND (n.primary_field IN $fields "
+            " OR any(f IN $fields WHERE f IN coalesce(n.fields, []))) "
+            "RETURN n.uid AS uid",
+            {"fields": fields},
+        )
+        node_ids = {str(r[0]) for r in uid_rows if r and r[0] is not None}
+
+        if not node_ids:
+            logger.info("Filtered relayout: no nodes for fields=%s", fields)
+            return 0
+
+        link_rows, _ = db.cypher_query(
+            "MATCH (s:Document)-[r:BIBLIOGRAPHIC_LINK]->(t:Document) "
+            "WHERE s.uid IN $ids AND t.uid IN $ids "
+            "RETURN s.uid AS source_id, t.uid AS target_id",
+            {"ids": list(node_ids)},
+        )
+        links = [
+            {"source_id": str(row[0]), "target_id": str(row[1])}
+            for row in link_rows
+            if row and row[0] is not None and row[1] is not None
+        ]
+
+        logger.info(
+            "Filtered relayout: %d nodes, %d links, fields=%s",
+            len(node_ids),
+            len(links),
+            fields,
+        )
+
+        layout_client = get_graph_layout_client()
+        positions = await layout_client.compute_layout(
+            edges=links,
+            block_width=200.0,
+            block_height=100.0,
+            horizontal_gap=60.0,
+            vertical_gap=50.0,
+            reduce_crossings=True,
+            convert_to_dag=True,
+        )
+
+        logger.info("Filtered relayout: positions for %d nodes", len(positions))
+
+        # Rust-сервис исключает изолированные вершины (без рёбер внутри подграфа).
+        # Размещаем их компактной сеткой справа от основного кластера, чтобы
+        # фильтрованная карта не разъезжалась по старым координатам.
+        orphans = [uid for uid in node_ids if uid not in positions]
+        if orphans:
+            max_x = max((p.x for p in positions.values()), default=0.0)
+            orphan_cols = 20
+            step_x = 260.0
+            step_y = 150.0
+            base_x = max_x + 3 * step_x
+            for i, uid in enumerate(sorted(orphans)):
+                col = i % orphan_cols
+                row = i // orphan_cols
+                positions[uid] = VertexLayout(
+                    x=base_x + col * step_x,
+                    y=row * step_y,
+                    layer=col,
+                    level=row,
+                )
+            logger.info("Filtered relayout: placed %d isolated nodes in a grid", len(orphans))
+
+        if not positions:
+            return 0
+
+        items = [
+            {
+                "uid": uid,
+                "x": pos.x * ARTICLES_X_SPACING_MULTIPLIER,
+                "y": pos.y,
+                "layer": pos.layer,
+                "level": pos.level,
+            }
+            for uid, pos in positions.items()
+        ]
+        position_batch = 1000
+        for i in range(0, len(items), position_batch):
+            db.cypher_query(
+                "UNWIND $items AS it "
+                "MATCH (n:Document {uid: it.uid}) "
+                "SET n.x = it.x, n.y = it.y, n.layer = it.layer, "
+                "    n.level = it.level, n.layout_status = 'placed'",
+                {"items": items[i : i + position_batch]},
+            )
+        return len(items)
     
     async def get_articles_layout(self) -> Dict[str, Any]:
         """Получает укладку только для статей (блоков с типом "Article")"""
@@ -69,7 +212,7 @@ class LayoutService:
                 else:
                     # Вычисляем координаты на основе layer и level
                     # Используем те же коэффициенты, что и в алгоритме укладки
-                    LAYER_SPACING = 240  # BLOCK_WIDTH (200) + HORIZONTAL_GAP (40)
+                    LAYER_SPACING = 2400  # x-шаг по слоям (×10 исходного, см. X_SPACING_MULTIPLIER в citation_graph_service)
                     LEVEL_SPACING = 130  # BLOCK_HEIGHT (80) + VERTICAL_GAP (50)
                     
                     x_coord = float(layer_val * LAYER_SPACING)
@@ -138,7 +281,7 @@ class LayoutService:
             logger.error(f"Error calculating articles layout from Neo4j: {str(e)}", exc_info=True)
             raise HTTPException(status_code=500, detail=f"Ошибка при получении данных статей из Neo4j: {str(e)}")
 
-    async def get_edges_by_viewport(self, bounds: Dict[str, float], limit_per_node: int = 200, only_with_layout: bool = True) -> Dict[str, Any]:
+    async def get_edges_by_viewport(self, bounds: Dict[str, float], limit_per_node: int = 200, only_with_layout: bool = True, fields: Optional[List[str]] = None) -> Dict[str, Any]:
         """
         Возвращает узлы в окне и рёбра, у которых хотя бы один конец попадает в окно.
 
@@ -146,6 +289,9 @@ class LayoutService:
             bounds: Границы viewport (left, right, top, bottom)
             limit_per_node: Максимальное количество связей на узел (fan-out limiting)
             only_with_layout: Если True, возвращает только узлы с координатами (x, y)
+            fields: если задан — возвращаются только статьи и связи, оба конца которых
+                    относятся к указанным научным областям (по primary_field ИЛИ
+                    по любому вторичному тегу fields).
 
         Performance improvements (vs old version):
             - Removed slow EXISTS clauses (2-3x speedup)
@@ -153,8 +299,16 @@ class LayoutService:
             - Optional fallback to layer/level coordinates
         """
         try:
-            LAYER_SPACING = 240
+            LAYER_SPACING = 2400  # x-шаг по слоям (×10 исходного)
             LEVEL_SPACING = 130
+
+            has_field_filter = bool(fields)
+            field_cond = (
+                " AND (n.primary_field IN $fields "
+                " OR any(f IN $fields WHERE f IN coalesce(n.fields, []))) "
+                if has_field_filter else ""
+            )
+            field_params = {"fields": fields}
 
             # OPTIMIZED: Узлы в окне - БЕЗ EXISTS проверок (в 2-3x быстрее!)
             # EXISTS clauses замедляют запрос, убираем их и полагаемся на фильтрацию связей
@@ -165,7 +319,9 @@ class LayoutService:
                     "WHERE n.x IS NOT NULL AND n.y IS NOT NULL "
                     "  AND n.x >= $left AND n.x <= $right "
                     "  AND n.y >= $top AND n.y <= $bottom "
-                    "RETURN n.uid as id, n.layer as layer, n.level as level, n.x as x, n.y as y"
+                    f" {field_cond}"
+                    "RETURN n.uid as id, n.title as title, n.name as name, n.content as content, "
+                    "       n.doi as doi, n.layer as layer, n.level as level, n.x as x, n.y as y"
                 )
                 params = {
                     "left": bounds["left"],
@@ -181,7 +337,9 @@ class LayoutService:
                     "  AND coalesce(n.x, toFloat(coalesce(n.layer,0))*$LAYER_SPACING) <= $right "
                     "  AND coalesce(n.y, toFloat(coalesce(n.level,0))*$LEVEL_SPACING) >= $top "
                     "  AND coalesce(n.y, toFloat(coalesce(n.level,0))*$LEVEL_SPACING) <= $bottom "
-                    "RETURN n.uid as id, n.layer as layer, n.level as level, n.x as x, n.y as y"
+                    f" {field_cond}"
+                    "RETURN n.uid as id, n.title as title, n.name as name, n.content as content, "
+                    "       n.doi as doi, n.layer as layer, n.level as level, n.x as x, n.y as y"
                 )
                 params = {
                     "left": bounds["left"],
@@ -191,6 +349,8 @@ class LayoutService:
                     "LAYER_SPACING": LAYER_SPACING,
                     "LEVEL_SPACING": LEVEL_SPACING,
                 }
+            if has_field_filter:
+                params.update(field_params)
 
             nodes_result, _ = db.cypher_query(nodes_query, params)
             ids_in_view = [str(r[0]) for r in nodes_result]
@@ -213,7 +373,7 @@ class LayoutService:
 
             # Собираем выдачу
             blocks_map: dict[str, dict] = {}
-            def pack_block(uid, layer, level, x, y):
+            def pack_block(uid, layer, level, x, y, title=None, doi=None):
                 if uid in blocks_map:
                     return
                 if x is None:
@@ -226,11 +386,13 @@ class LayoutService:
                     "level": int(level or 0),
                     "x": float(x),
                     "y": float(y),
+                    "title": title,
+                    "doi": doi,
                 }
 
-            # Добавляем видимые узлы
+            # Добавляем видимые узлы (индексы: 0=id,1=title,2=name,3=content,4=doi,5-8=layer/level/x/y)
             for r in nodes_result:
-                pack_block(r[0], r[1], r[2], r[3], r[4])
+                pack_block(r[0], r[5], r[6], r[7], r[8], title=r[1] or r[2] or r[3], doi=r[4] or "")
 
             links: list[dict] = []
             seen = set()
@@ -244,10 +406,92 @@ class LayoutService:
                 seen.add(key)
                 links.append({"id": key, "source_id": str(sid), "target_id": str(tid)})
 
-            return {"blocks": list(blocks_map.values()), "links": links}
+            # Если задан фильтр по областям — оставляем только узлы, у которых
+            # n.fields пересекается с запрошенным списком, и связи целиком
+            # внутри такого подмножества (чтобы "чужие" ссылки не засоряли карту).
+            blocks_map = self._filter_blocks_by_fields(blocks_map, fields)
+
+            # Дозаполняем title/doi для концов рёбер вне окна
+            missing_ids = [uid for uid, b in blocks_map.items() if not b.get("title")]
+            if missing_ids:
+                fill_query = (
+                    "MATCH (n:Document) WHERE n.uid IN $ids "
+                    "RETURN n.uid as id, n.title as title, n.name as name, n.content as content, n.doi as doi"
+                )
+                try:
+                    fill_result, _ = db.cypher_query(fill_query, {"ids": missing_ids})
+                    for row in fill_result:
+                        b = blocks_map.get(str(row[0]))
+                        if b:
+                            b["title"] = row[1] or row[2] or row[3]
+                            b["doi"] = row[4] or ""
+                except Exception as e:
+                    logger.warning("edges_by_viewport title fill failed: %s", e)
+
+            if has_field_filter:
+                links = [
+                    l for l in links
+                    if l["source_id"] in blocks_map and l["target_id"] in blocks_map
+                ]
+
+            # На карте оставляем только статьи со связями: отбрасываем блоки, которые
+            # не являются концом ни одной отображаемой связи (дёргаем запрос на укладку
+            # координат, но не показываем изолированные блоки без рёбер).
+            connected_ids = (
+                {l["source_id"] for l in links}
+                | {l["target_id"] for l in links}
+            )
+
+            blocks = [
+                {
+                    "id": b["id"],
+                    "title": b.get("title") or b["id"],
+                    "doi": b.get("doi") or "",
+                    "layer": b["layer"],
+                    "level": b["level"],
+                    "x": b["x"],
+                    "y": b["y"],
+                }
+                for b in blocks_map.values()
+                if b["id"] in connected_ids
+            ]
+
+            return {"blocks": blocks, "links": links}
         except Exception as e:
             logger.error(f"edges_by_viewport failed: {e}", exc_info=True)
             raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def _filter_blocks_by_fields(
+        blocks_map: dict[str, dict],
+        fields: Optional[List[str]],
+    ) -> dict[str, dict]:
+        """Ограничивает blocks_map узлами, чья основная область (n.primary_field)
+        или хотя бы один вторичный тег (n.fields) входит в fields.
+
+        Для активности фильтра требуется fields; при пустом/None — без изменений.
+        """
+        if not fields:
+            return blocks_map
+        ids = list(blocks_map)
+        node_fields_index: dict[str, set] = {}
+        for chunk_start in range(0, len(ids), 5000):
+            chunk = ids[chunk_start : chunk_start + 5000]
+            result, _ = db.cypher_query(
+                "MATCH (n:Document) WHERE n.uid IN $ids RETURN n.uid, n.primary_field, n.fields",
+                {"ids": chunk},
+            )
+            for row in result:
+                tags = set(row[2] or [])
+                if row[1]:
+                    tags.add(row[1])
+                node_fields_index[str(row[0])] = tags
+        wanted = set(fields)
+        filtered: dict[str, dict] = {}
+        for uid, block in blocks_map.items():
+            if wanted & node_fields_index.get(uid, set()):
+                filtered[uid] = block
+        return filtered
 
     async def get_all_articles_layout(self) -> Dict[str, Any]:
         """Возвращает все блоки и связи из графа статей."""
@@ -338,13 +582,36 @@ class LayoutService:
         offset: int = 0,
         limit: int = 2000,
         center_x: float = 0.0,
-        center_y: float = 0.0
+        center_y: float = 0.0,
+        fields: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
-        """Возвращает часть графа статей, упорядоченную по близости к (center_x, center_y)."""
+        """Возвращает часть графа статей, упорядоченную по близости к (center_x, center_y).
+
+        fields: если задан — возвращаются только статьи, у которых n.fields
+                пересекается хотя бы с одним из указанных научных полей.
+        """
         try:
             logger.info(
-                f"Articles page requested: offset={offset}, limit={limit}, center=({center_x},{center_y})"
+                f"Articles page requested: offset={offset}, limit={limit}, "
+                f"center=({center_x},{center_y}), fields={fields}"
             )
+
+            # Фильтр по научным областям: статья относится к запрошенным областям,
+            # если их основная область (primary_field) входит в список ИЛИ
+            # биомед-тематика присутствует во вторичных тегах fields.
+            has_field_filter = bool(fields)
+            field_cond = (
+                "AND (n.primary_field IN $fields "
+                " OR any(f IN $fields WHERE f IN coalesce(n.fields, []))) "
+                if has_field_filter else ""
+            )
+            field_params = {"fields": fields} if has_field_filter else {}
+
+            # Переукладка подграфа выбранных областей выполняется при загрузке
+            # страницы science_articles и при смене фильтра (первый запрос с новым
+            # набором fields); повторные page/viewport запросы используют результат.
+            if has_field_filter:
+                await self._ensure_filtered_layout(fields)
 
             # ОПТИМИЗАЦИЯ: Убрана медленная проверка EXISTS для total_query
             # Просто считаем статьи с назначенными координатами (layer, level)
@@ -353,9 +620,10 @@ class LayoutService:
                 "MATCH (n:Document) "
                 "WHERE n.layer IS NOT NULL AND n.level IS NOT NULL "
                 "  AND n.x IS NOT NULL AND n.y IS NOT NULL "
+                f" {field_cond}"
                 "RETURN count(n) as total"
             )
-            total_res, _ = db.cypher_query(total_query)
+            total_res, _ = db.cypher_query(total_query, field_params if has_field_filter else None)
             logger.info(f"Total query result: {total_res}")
             total_articles = int(total_res[0][0]) if total_res and total_res[0] and total_res[0][0] is not None else 0
             logger.info(f"Total articles: {total_articles}")
@@ -367,6 +635,7 @@ class LayoutService:
                 "MATCH (n:Document) "
                 "WHERE n.layer IS NOT NULL AND n.level IS NOT NULL "
                 "  AND n.x IS NOT NULL AND n.y IS NOT NULL "
+                f" {field_cond}"
                 "RETURN n.uid as id, "
                 "       coalesce(n.title, n.name, n.content, toString(n.uid)) as title, "
                 "       n.layer as layer, "
@@ -376,6 +645,8 @@ class LayoutService:
                 "       coalesce(n.physical_scale, 0) as physical_scale, "
                 "       n.x as x, "
                 "       n.y as y, "
+                "       coalesce(n.doi, '') as doi, "
+                "       coalesce(n.title, n.name, n.content, toString(n.uid)) as n_title, "
                 "       n.layout_status as layout_status, "
                 "       coalesce(n.topo_order, 0) as topo_order, "
                 "       sqrt((coalesce(n.x, toFloat(coalesce(n.layer,0)) * $LAYER_SPACING) - $center_x) * (coalesce(n.x, toFloat(coalesce(n.layer,0)) * $LAYER_SPACING) - $center_x) + "
@@ -383,17 +654,17 @@ class LayoutService:
                 "ORDER BY distance ASC, n.layer ASC, n.topo_order ASC "
                 "SKIP $offset LIMIT $limit"
             )
-            blocks_result, _ = db.cypher_query(
-                nodes_query,
-                {
-                    "offset": offset,
-                    "limit": limit,
-                    "center_x": center_x,
-                    "center_y": center_y,
-                    "LAYER_SPACING": 240,
-                    "LEVEL_SPACING": 130,
-                },
-            )
+            nodes_params: Dict[str, Any] = {
+                "offset": offset,
+                "limit": limit,
+                "center_x": center_x,
+                "center_y": center_y,
+                "LAYER_SPACING": 2400,
+                "LEVEL_SPACING": 130,
+            }
+            if has_field_filter:
+                nodes_params["fields"] = fields
+            blocks_result, _ = db.cypher_query(nodes_query, nodes_params)
             logger.info(f"Blocks query result: {len(blocks_result) if blocks_result else 0} rows")
 
             if not blocks_result:
@@ -412,6 +683,8 @@ class LayoutService:
                 block = {
                     "id": str(row[0]),
                     "content": str(row[1] or ""),
+                    "title": str(row[10] or ""),
+                    "doi": str(row[9] or ""),
                     "layer": int(row[2]) if row[2] is not None else None,
                     "level": int(row[3]) if row[3] is not None else None,
                     "sublevel_id": int(row[4] or 0),
@@ -425,12 +698,29 @@ class LayoutService:
                 selected_ids.add(block["id"])
 
             # Загружаем ВСЕ связи для выбранных статей, включая целевые статьи
-            links_query = """
+            # OPTIMIZED: OR в Cypher не использует индексы — разбиваем на два запроса (UNION)
+            # При активном fields-фильтре связь показывается только если ОБА конца
+            # удовлетворяют фильтру (строгий режим, как в edges_by_viewport).
+            links_field_cond = (
+                "  AND (s.primary_field IN $fields "
+                " OR any(f IN $fields WHERE f IN coalesce(s.fields, []))) "
+                "  AND (t.primary_field IN $fields "
+                " OR any(f IN $fields WHERE f IN coalesce(t.fields, []))) "
+                if has_field_filter else ""
+            )
+            links_query = f"""
             MATCH (s:Document)-[r:BIBLIOGRAPHIC_LINK]->(t:Document)
-            WHERE s.uid IN $ids OR t.uid IN $ids
+            WHERE s.uid IN $ids{links_field_cond}
+            RETURN s.uid as source_id, t.uid as target_id
+            UNION
+            MATCH (s:Document)-[r:BIBLIOGRAPHIC_LINK]->(t:Document)
+            WHERE t.uid IN $ids AND NOT s.uid IN $ids{links_field_cond}
             RETURN s.uid as source_id, t.uid as target_id
             """
-            links_result, _ = db.cypher_query(links_query, {"ids": list(selected_ids)})
+            links_params: Dict[str, Any] = {"ids": list(selected_ids)}
+            if has_field_filter:
+                links_params["fields"] = fields
+            links_result, _ = db.cypher_query(links_query, links_params)
             links_for_layout: list[dict] = []
             for row in links_result:
                 link_id = f"{row[0]}-{row[1]}"  # Генерируем ID из source и target
@@ -466,6 +756,8 @@ class LayoutService:
                        coalesce(n.physical_scale, 0) as physical_scale,
                        n.x as x,
                        n.y as y,
+                       coalesce(n.doi, '') as doi,
+                       coalesce(n.title, n.name, n.content, toString(n.uid)) as n_title,
                        n.layout_status as layout_status
                 """
                 missing_targets_result, _ = db.cypher_query(missing_targets_query, {"missing_ids": list(missing_target_ids)})
@@ -475,6 +767,8 @@ class LayoutService:
                     block = {
                         "id": str(row[0]),
                         "content": str(row[1] or ""),
+                        "title": str(row[10] or ""),
+                        "doi": str(row[9] or ""),
                         "layer": int(row[2]) if row[2] is not None else None,
                         "level": int(row[3]) if row[3] is not None else None,
                         "sublevel_id": int(row[4] or 0),
@@ -491,6 +785,15 @@ class LayoutService:
 
             # API просто возвращает все связи как есть - разворот циклов делается в алгоритме укладки
             filtered_links = links_for_layout
+
+            # На карте оставляем только статьи со связями: отбрасываем блоки, которые
+            # не являются концом ни одной отображаемой связи (изолированные статьи
+            # с координатами укладки не должны попадать на карту).
+            connected_ids = (
+                {l["source_id"] for l in filtered_links}
+                | {l["target_id"] for l in filtered_links}
+            )
+            blocks = [b for b in blocks if b["id"] in connected_ids]
 
             # Возвращаем напрямую без вызова gRPC укладки (уровни/подуровни уже в БД)
             return {
@@ -510,6 +813,129 @@ class LayoutService:
             logger.error(f"Error in paged articles layout: {e}", exc_info=True)
             raise HTTPException(status_code=500, detail=str(e))
 
+    async def get_articles_without_links(
+        self,
+        q: str = "",
+        skip: int = 0,
+        limit: int = 100,
+        fields: Optional[List[str]] = None,
+    ) -> Dict[str, Any]:
+        """Возвращает статьи, не связанные ни одной библиографической ссылкой.
+
+        Такие статьи исключаются из карты фильтром connected_ids (у них нет ни
+        одного отношения BIBLIOGRAPHIC_LINK ни в одну, ни из другую сторону),
+        поэтому возвращаем их отдельным списком для левой панели science_articles.
+
+        Поиск по названию/DOI/uid (CONTAINS по ограниченной выборке уложенных
+        статей) активируется с 3 введённых символов; по умолчанию лимит — 100.
+
+        Args:
+            q: поисковый запрос по названию статьи
+            skip: пагинация (сдвиг)
+            limit: максимальное количество статей на выдачу (<= 1000)
+            fields: если задан — только статьи этих научных областей
+                    (primary_field ИЛИ вторичный тег fields).
+        """
+        try:
+            has_field_filter = bool(fields)
+            # Вселенная sciense_articles — документы, уложенные на карту
+            # (у них есть координаты), как в articles_page. Ограничение по
+            # координатам критично: запросов по всем 9+M Document не делаем.
+            coords_cond = (
+                " AND n.layer IS NOT NULL AND n.level IS NOT NULL "
+                " AND n.x IS NOT NULL AND n.y IS NOT NULL"
+            )
+            field_cond = (
+                " AND (n.primary_field IN $fields "
+                " OR any(f IN $fields WHERE f IN coalesce(n.fields, []))) "
+                if has_field_filter else ""
+            )
+            # Связь "видна на карте", если ОБА конца относятся к выбранным
+            # областям (как links_field_cond в articles_page). Статья "без связей"
+            # = нет ни одной такой связи; при fields=None — нет ни одной вообще.
+            neighbor_field_cond = (
+                " WHERE m.primary_field IN $fields "
+                " OR any(f IN $fields WHERE f IN coalesce(m.fields, []))"
+                if has_field_filter else ""
+            )
+            no_links_cond = (
+                " size([(n)-[:BIBLIOGRAPHIC_LINK]->(m:Document)"
+                f"{neighbor_field_cond}| m]) = 0"
+                " AND size([(m:Document)-[:BIBLIOGRAPHIC_LINK]->(n)"
+                f"{neighbor_field_cond}| m]) = 0"
+            )
+            params: Dict[str, Any] = {"skip": skip, "limit": limit}
+            if has_field_filter:
+                params["fields"] = fields
+
+            query = q.strip() if q else ""
+            # All matching happens on the bounded candidate stream (placed docs).
+            # Без барьера MATCH→WITH планировщик иногда сканирует все 9+M Document,
+            # превращая запрос в 150+ секунд; WITH фиксирует выборку кандидатов
+            # (сотни уложенных статей) и связи проверяются только для них.
+            search_cond = (
+                " AND (toLower(coalesce(n.title, '')) CONTAINS toLower($q)"
+                " OR toLower(coalesce(n.doi, '')) CONTAINS toLower($q)"
+                " OR toLower(toString(n.uid)) CONTAINS toLower($q))"
+                if len(query) >= 3 else ""
+            )
+            if search_cond:
+                params["q"] = query
+
+            base = (
+                "MATCH (n:Document) "
+                "WHERE n.title IS NOT NULL AND trim(n.title) <> '' "
+                f"{coords_cond}{field_cond}"
+                " WITH n "
+                f"WHERE {no_links_cond} {search_cond}"
+            )
+            count_res, _ = db.cypher_query(base + " RETURN count(n) AS total", params)
+            total = (
+                int(count_res[0][0])
+                if count_res and count_res[0] and count_res[0][0] is not None
+                else 0
+            )
+            rows, _ = db.cypher_query(
+                base
+                + " RETURN n.uid AS uid, coalesce(n.title, toString(n.uid)) AS title, "
+                + " coalesce(n.doi, '') AS doi"
+                + " ORDER BY n.title ASC "
+                + " SKIP $skip LIMIT $limit",
+                params,
+            )
+
+            articles = [
+                {
+                    "doc_id": str(r[0]),
+                    "title": str(r[1] or ""),
+                    "doi": str(r[2] or ""),
+                }
+                for r in rows
+                if r and r[0] is not None
+            ]
+
+            logger.info(
+                "articles_without_links: q=%r skip=%d limit=%d fields=%s -> %d/%d",
+                query,
+                skip,
+                limit,
+                fields,
+                len(articles),
+                total,
+            )
+
+            return {
+                "success": True,
+                "total_count": total,
+                "skip": skip,
+                "limit": limit,
+                "query": query,
+                "articles": articles,
+            }
+        except Exception as e:
+            logger.error(f"articles_without_links failed: {e}", exc_info=True)
+            raise HTTPException(status_code=500, detail=str(e))
+
     async def get_knowledge_map_page(
         self,
         offset: int = 0,
@@ -521,9 +947,8 @@ class LayoutService:
 
         Координаты (x, y) вычисляются Rust-воркером GraphLayoutService (порт 50051)
         по алгоритму Сугиямы на основе рёбер LEADS_TO.
-        Контракт универсальный: передаём любые рёбра, получаем координаты.
+Контракт универсальный: передаём любые рёбра, получаем координаты.
         """
-        from infrastructure.graph_layout_client import get_graph_layout_client
 
         try:
             # Шаг 1: Считаем общее число нод с рёбрами

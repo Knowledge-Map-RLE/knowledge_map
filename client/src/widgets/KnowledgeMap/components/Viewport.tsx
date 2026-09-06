@@ -13,6 +13,7 @@ export const useViewportContainer = () => useContext(ViewportContainerContext);
 interface ViewportProps {
   children: ReactNode;
   onCanvasClick?: (x: number, y: number) => void;
+  onDragStart?: () => void;
   isBlockContextMenuActive?: boolean;
   blockRightClickRef?: React.RefObject<boolean>;
   instantBlockClickRef?: React.RefObject<boolean>;
@@ -35,7 +36,7 @@ export interface ViewportRef {
 }
 
 // TODO: исправить центрирование
-export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick, isBlockContextMenuActive = false, blockRightClickRef, instantBlockClickRef, onBlockRightClickTime }, ref) => {
+export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCanvasClick, onDragStart, isBlockContextMenuActive = false, blockRightClickRef, instantBlockClickRef, onBlockRightClickTime }, ref) => {
   const containerRef = useRef<Container | null>(null);
   const gridRef = useRef<Graphics | null>(null);
   const tweensRef = useRef<gsap.core.Tween[]>([]);
@@ -43,9 +44,16 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
   const { app } = useApplication();
   const lastBlockRightClickTime = useRef<number>(0);
   const isDraggingRef = useRef<boolean>(false);
+  const cancelActiveDragRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    // При открытии контекстного меню принудительно завершаем возможный активный драг
+    if (isBlockContextMenuActive) {
+      cancelActiveDragRef.current?.();
+    }
+  }, [isBlockContextMenuActive]);
 
   const [isDragging, setIsDragging] = useState(false);
-  const dragWorld = useRef<Point | null>(null);
   const [centerX, setCenterX] = useState(400);
   const [centerY, setCenterY] = useState(300);
 
@@ -56,7 +64,7 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     });
   }, []);
 
-  // Зум через DOM события (wheel) — перетаскивание через Pixi (graphics onPointerDown)
+  // Зум через DOM события (wheel), перетаскивание — DOM pointer events с pointer capture
   useEffect(() => {
     if (!app) return;
 
@@ -93,62 +101,109 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
 
       const onContextMenu = (e: Event) => e.preventDefault();
 
+      // --- Перетаскивание камеры правой кнопкой (DOM pointer events) ---
+      // Драг включается ТОЛЬКО после смещения указателя на порог (DRAG_THRESHOLD).
+      // Поэтому простой правый клик по блоку (открытие меню) не входит в состояние
+      // перетаскивания и не может «залипнуть». pointer capture гарантирует доставку
+      // pointerup при отпускании вне canvas, а pointercancel/blur/window-pointerup
+      // (capture-фаза, до любых блокировщиков) обрывают залипание в любом сценарии.
+      const DRAG_THRESHOLD = 5;
+      let activePointerId: number | null = null;
+      let pendingDrag: { startX: number; startY: number; pointerId: number } | null = null;
+      let lastScreen = { x: 0, y: 0 };
+
+      const onCanvasPointerDown = (e: PointerEvent) => {
+        if (e.button !== 2) return;
+        e.preventDefault();
+        const cnt = containerRef.current;
+        if (!cnt) return;
+        // Клавиатура блока: не стартуем драг сразу после открытия меню (защита от «прыжка»).
+        // Меню само закрывается по mousedown вне него или явно в onDragStart.
+        if (blockRightClickRef && blockRightClickRef.current) {
+          return;
+        }
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        pendingDrag = { startX: mx, startY: my, pointerId: e.pointerId };
+      };
+
+      const engageDrag = (e: PointerEvent) => {
+        if (!pendingDrag) return;
+        const rect = canvas.getBoundingClientRect();
+        lastScreen = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        isDraggingRef.current = true;
+        setIsDragging(true);
+        activePointerId = pendingDrag.pointerId;
+        try { canvas.setPointerCapture(pendingDrag.pointerId); } catch { /* ignore */ }
+        // Драг начат — закрываем контекстное меню, если оно открыто
+        onDragStart?.();
+      };
+
+      const onCanvasPointerMove = (e: PointerEvent) => {
+        if (!isDraggingRef.current) {
+          if (!pendingDrag) return;
+          const rect = canvas.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          const my = e.clientY - rect.top;
+          if (Math.hypot(mx - pendingDrag.startX, my - pendingDrag.startY) < DRAG_THRESHOLD) {
+            return;
+          }
+          engageDrag(e);
+        }
+        const cnt = containerRef.current;
+        if (!cnt) return;
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const dx = mx - lastScreen.x;
+        const dy = my - lastScreen.y;
+        lastScreen = { x: mx, y: my };
+        cnt.position.x += dx;
+        cnt.position.y += dy;
+        emit('moved');
+      };
+
+      const endCanvasDrag = () => {
+        if (!isDraggingRef.current && !pendingDrag) return;
+        isDraggingRef.current = false;
+        pendingDrag = null;
+        setIsDragging(false);
+        if (activePointerId !== null) {
+          try { canvas.releasePointerCapture(activePointerId); } catch { /* ignore */ }
+        }
+        activePointerId = null;
+      };
+
+      cancelActiveDragRef.current = endCanvasDrag;
+
+      const onPointerEnd = () => endCanvasDrag();
+      const onPointerCancel = (e: PointerEvent) => {
+        if (activePointerId === null || activePointerId === e.pointerId) endCanvasDrag();
+      };
+
       canvas.addEventListener('wheel', onWheel, { passive: false });
       canvas.addEventListener('contextmenu', onContextMenu);
-      
-      // --- DEBUG: слушаем pointerdown на canvas напрямую ---
-      const debugCanvasPointerDown = (e: PointerEvent) => {
-        // debug removed
-      };
-      const debugCanvasPointerMove = (e: PointerEvent) => {
-        if (isDraggingRef.current && dragWorld.current) {
-          const cnt = containerRef.current;
-          if (!cnt) return;
-          const rect = canvas.getBoundingClientRect();
-          const mx = e.clientX - rect.left;
-          const my = e.clientY - rect.top;
-          const worldX = dragWorld.current.x;
-          const worldY = dragWorld.current.y;
-          cnt.position.x = mx - worldX * cnt.scale.x;
-          cnt.position.y = my - worldY * cnt.scale.y;
-          emit('moved');
-        }
-      };
-      const debugCanvasPointerDownDrag = (e: PointerEvent) => {
-        if (e.button === 2) {
-          e.preventDefault();
-          const cnt = containerRef.current;
-          if (!cnt) return;
-          const rect = canvas.getBoundingClientRect();
-          const mx = e.clientX - rect.left;
-          const my = e.clientY - rect.top;
-          const world = cnt.toLocal({ x: mx, y: my } as any);
-          dragWorld.current = new Point(world.x, world.y);
-          isDraggingRef.current = true;
-          setIsDragging(true);
-        }
-      };
-      const debugCanvasPointerUp = (e: PointerEvent) => {
-        if (e.button === 2 && isDraggingRef.current) {
-          isDraggingRef.current = false;
-          setIsDragging(false);
-          dragWorld.current = null;
-          emit('moved');
-        }
-      };
-      
-      canvas.addEventListener('pointerdown', debugCanvasPointerDown);
-      canvas.addEventListener('pointerdown', debugCanvasPointerDownDrag);
-      canvas.addEventListener('pointermove', debugCanvasPointerMove);
-      canvas.addEventListener('pointerup', debugCanvasPointerUp);
-      
+      // capture-фаза: драг должен работать даже когда страницы вешают блокировщики
+      // событий на canvas при открытом контекстном меню (stopImmediatePropagation
+      // в bubble/целевой фазе не сможет глушить наши обработчики)
+      canvas.addEventListener('pointerdown', onCanvasPointerDown, { capture: true });
+      canvas.addEventListener('pointermove', onCanvasPointerMove, { capture: true });
+      canvas.addEventListener('pointerup', onPointerEnd, { capture: true });
+      canvas.addEventListener('pointercancel', onPointerCancel, { capture: true });
+      window.addEventListener('blur', endCanvasDrag);
+      // capture-фаза: завершаем драг ДО блокировщиков (например, контекстного меню)
+      window.addEventListener('pointerup', onPointerEnd, true);
+
       return () => {
         canvas.removeEventListener('wheel', onWheel);
         canvas.removeEventListener('contextmenu', onContextMenu);
-        canvas.removeEventListener('pointerdown', debugCanvasPointerDown);
-        canvas.removeEventListener('pointerdown', debugCanvasPointerDownDrag);
-        canvas.removeEventListener('pointermove', debugCanvasPointerMove);
-        canvas.removeEventListener('pointerup', debugCanvasPointerUp);
+        canvas.removeEventListener('pointerdown', onCanvasPointerDown, { capture: true });
+        canvas.removeEventListener('pointermove', onCanvasPointerMove, { capture: true });
+        canvas.removeEventListener('pointerup', onPointerEnd, { capture: true });
+        canvas.removeEventListener('pointercancel', onPointerCancel, { capture: true });
+        window.removeEventListener('blur', endCanvasDrag);
+        window.removeEventListener('pointerup', onPointerEnd, true);
       };
     }, 500);
 
@@ -235,49 +290,20 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
     onCanvasClick(localPoint.x, localPoint.y);
   }, [isDragging, onCanvasClick]);
 
-  // Обработчики перетаскивания через PIXI
+  // Обработчики перетаскивания через PIXI (левая кнопка — только клик/создание)
   const handleBackgroundPointerDown = useCallback((event: any) => {
-    if (event.button === 2) { // Правая кнопка мыши
-      event.preventDefault();
-
-      // Если активно контекстное меню блока, не запускаем перетаскивание
-      if (isBlockContextMenuActive || (blockRightClickRef && blockRightClickRef.current)) {
-        return;
-      }
-
-      const cnt = containerRef.current;
-      if (!cnt) return;
-
-      const worldPoint = cnt.toLocal(event.global);
-      dragWorld.current = new Point(worldPoint.x, worldPoint.y);
-      isDraggingRef.current = true;
-      setIsDragging(true);
-    } else if (event.button === 0) {
+    // Правая кнопка: перетаскивание обрабатывается DOM-слушателями на canvas
+    // (см. useEffect ниже) — единая точка входа с pointer capture.
+    if (event.button === 2) {
+      return;
+    }
+    if (event.button === 0) {
       // Левая кнопка для обычного клика
       if (onCanvasClick && !isDraggingRef.current) {
         handleCanvasClick(event);
       }
     }
-  }, [onCanvasClick, isBlockContextMenuActive, blockRightClickRef, handleCanvasClick]);
-
-  const handleBackgroundPointerMove = useCallback((event: any) => {
-    if (!dragWorld.current || !containerRef.current || !isDraggingRef.current) return;
-
-    const cnt = containerRef.current;
-    const screenPos = cnt.toGlobal(dragWorld.current);
-    cnt.position.x += event.global.x - screenPos.x;
-    cnt.position.y += event.global.y - screenPos.y;
-    emit('moved');
-  }, [emit]);
-
-  const handleBackgroundPointerUp = useCallback((event: any) => {
-    if (event.button === 2 && isDraggingRef.current) {
-      isDraggingRef.current = false;
-      setIsDragging(false);
-      dragWorld.current = null;
-      emit('moved');
-    }
-  }, [emit]);
+  }, [onCanvasClick, handleCanvasClick]);
 
   // useImperativeHandle для focusOn
   useImperativeHandle(ref, () => ({
@@ -396,9 +422,6 @@ export const Viewport = forwardRef<ViewportRef, ViewportProps>(({ children, onCa
         eventMode="static"
         cursor="grab"
         onPointerDown={handleBackgroundPointerDown}
-        onPointerMove={handleBackgroundPointerMove}
-        onPointerUp={handleBackgroundPointerUp}
-        onPointerUpOutside={handleBackgroundPointerUp}
         draw={() => {}}
       />
       <container

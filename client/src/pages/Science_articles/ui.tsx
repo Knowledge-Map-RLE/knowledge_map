@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
 import {
@@ -25,24 +26,171 @@ import {
 } from '../../widgets/KnowledgeMap';
 import type { ViewportRef, LinkCreationState, BlockData, LinkData } from '../../widgets/KnowledgeMap';
 
-import { useArticlesDataLoader } from './hooks/useArticlesDataLoader';
+import { useArticlesDataLoader, BIOMED_FIELDS } from './hooks/useArticlesDataLoader';
 import { useViewport } from '../../shared/contexts';
+import { getArticlesWithoutLinks } from '../../services/api';
+import type { ArticleWithoutLinksItem } from '../../services/api';
 
 extend({ Container, Graphics, Text });
 
+const FIELD_PRESETS: { value: string; label: string; fields: string[] | null }[] = [
+  { value: 'biomed', label: 'Биология и медицина', fields: BIOMED_FIELDS },
+  { value: 'all', label: 'Все области', fields: null },
+];
+
+// Статьи без библиографических связей не попадают на карту (фильтр connected_ids).
+// Показываем их списком в левой панели: поиск по названию активируется с 3 символов,
+// одновременно отображается не более 100 статей (как поиск документов в article_editor).
+const ArticlesWithoutLinksPanel = ({ fields }: { fields: string[] | null }) => {
+  const [query, setQuery] = useState('');
+  const [articles, setArticles] = useState<ArticleWithoutLinksItem[]>([]);
+  const [total, setTotal] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
+  const debounceRef = useRef<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (abortRef.current) abortRef.current.abort();
+
+    const q = query.trim();
+    const runSearch = async (controller: AbortController) => {
+      setIsSearching(true);
+      try {
+        const data = await getArticlesWithoutLinks(q, 0, 100, fields, controller.signal);
+        if (!data?.success) {
+          setArticles([]);
+          return;
+        }
+        setArticles(data.articles || []);
+        setTotal(data.total_count ?? 0);
+      } catch (err: any) {
+        if (err?.name === 'AbortError') return;
+        setArticles([]);
+        setTotal(0);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    if (q.length < 3) {
+      // Без поиска — первые 100 статей без связей
+      const controller = new AbortController();
+      abortRef.current = controller;
+      runSearch(controller);
+      return;
+    }
+
+    // Поиск с задержкой: не дёргаем бэкенд на каждое нажатие клавиши
+    debounceRef.current = window.setTimeout(() => {
+      const controller = new AbortController();
+      abortRef.current = controller;
+      runSearch(controller);
+    }, 300);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      if (abortRef.current) abortRef.current.abort();
+    };
+  }, [query, fields]);
+
+  const handleItemClick = (article: ArticleWithoutLinksItem) => {
+    const doi = article.doi && !/^w\d+$/i.test(article.doi) ? article.doi : '';
+    if (doi) {
+      window.open(`https://doi.org/${doi}`, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>
+        Статьи без связей{total > 0 ? ` (${total})` : ''}
+      </div>
+      <input
+        type="text"
+        placeholder="Поиск по названию..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        style={{
+          width: '100%',
+          padding: '6px 8px',
+          backgroundColor: '#ffffff',
+          color: '#333',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          fontSize: '13px',
+        }}
+      />
+      <div
+        style={{
+          maxHeight: 320,
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          paddingRight: 2,
+        }}
+      >
+        {isSearching ? (
+          <div style={{ fontSize: 12, color: '#999', padding: '4px 8px' }}>Поиск...</div>
+        ) : articles.length === 0 ? (
+          <div style={{ fontSize: 12, color: '#aaa', padding: '4px 8px' }}>
+            {query.trim().length >= 3 ? 'Ничего не найдено' : 'Нет статей без связей'}
+          </div>
+        ) : (
+          articles.map((article) => (
+            <div
+              key={article.doc_id}
+              onClick={() => handleItemClick(article)}
+              title={article.doi ? `Открыть DOI: ${article.doi}` : article.title}
+              style={{
+                padding: '5px 8px',
+                backgroundColor: '#fff',
+                border: '1px solid #eee',
+                borderRadius: '4px',
+                cursor: article.doi ? 'pointer' : 'default',
+                fontSize: '12px',
+                lineHeight: 1.3,
+              }}
+            >
+              <span style={{ display: 'block', color: '#333' }}>
+                {article.title || article.doc_id}
+              </span>
+              {article.doi && (
+                <span
+                  style={{
+                    display: 'block',
+                    color: '#888',
+                    fontSize: 10,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {article.doi}
+                </span>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+      {query.trim().length >= 3 && !isSearching && articles.length > 0 && (
+        <div style={{ fontSize: 11, color: '#888', padding: '0 8px' }}>
+          Найдено {articles.length} статей по запросу «{query.trim()}» из {total}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const ScienceArticlesUI = () => {
-  console.log('Science_articles component is rendering!');
-  
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef | null>(null);
   const { setViewportRef } = useViewport();
 
   // Регистрируем viewportRef в глобальном контексте
   useEffect(() => {
-    console.log('Science_articles useEffect triggered');
-    
     const registerViewport = () => {
-      console.log('Science_articles: Registering viewportRef in context:', !!viewportRef.current);
       if (viewportRef.current) {
         setViewportRef(viewportRef);
       }
@@ -57,7 +205,23 @@ export const ScienceArticlesUI = () => {
     return () => clearTimeout(timer);
   }, [setViewportRef]);
 
-  // Хук для загрузки данных статей
+  // Хук для загрузки данных статей.
+  // Фильтр по научным областям передаётся пропом (выбранный пресет), поэтому
+  // при старте и при смене пресета данные гарантированно загружаются с фильтром.
+  const [fieldPreset, setFieldPreset] = useState<string>('biomed');
+  const activeFields = FIELD_PRESETS.find(p => p.value === fieldPreset)?.fields ?? null;
+
+  // Фильтр и счётчик размещаем внутри левой панели интерфейса
+  // (оболочка KnowledgeMapUI), а не поверх всей страницы.
+  const [leftPanelEl, setLeftPanelEl] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const el = document.getElementById('km-left-panel');
+    if (el) {
+      setLeftPanelEl(el);
+    }
+  }, []);
+
   const {
     blocks,
     links,
@@ -68,13 +232,11 @@ export const ScienceArticlesUI = () => {
     pageLimit,
     loadNextPage,
     loadEdgesByViewport
-  } = useArticlesDataLoader(viewportRef);
+  } = useArticlesDataLoader(viewportRef, activeFields);
 
   // Центрируем viewport на координатах (0,0) при загрузке блоков
   useEffect(() => {
-    if (blocks.length > 0 && viewportRef.current) {
-      console.log(`[Science_articles] Centering viewport on origin (0,0) for ${blocks.length} blocks`);
-      
+    if (blocks.length > 0 && viewportRef.current && !userInteractedRef.current) {
       // Находим диапазон координат для определения масштаба
       const minX = Math.min(...blocks.map(b => b.x || 0));
       const maxX = Math.max(...blocks.map(b => b.x || 0));
@@ -84,15 +246,12 @@ export const ScienceArticlesUI = () => {
       const rangeX = maxX - minX;
       const rangeY = maxY - minY;
       
-      console.log(`[Science_articles] Coordinate range: x=${minX}-${maxX} (${rangeX}), y=${minY}-${maxY} (${rangeY})`);
-      
       // Устанавливаем подходящий масштаб для видимости всех блоков
       const targetScale = Math.min(1.0, 800 / Math.max(rangeX, rangeY, 100));
-      viewportRef.current.scale = targetScale;
+      viewportRef.current.setScale(targetScale);
       
       // Центрируем viewport на координатах (0,0)
       viewportRef.current.focusOn(0, 0);
-      console.log(`[Science_articles] Viewport centered on origin (0,0) with scale ${targetScale}`);
     }
   }, [blocks.length]);
 
@@ -116,6 +275,11 @@ export const ScienceArticlesUI = () => {
   const [pixiReady, setPixiReady] = useState(false);
   const [focusTargetId, setFocusTargetId] = useState<string | null>(null);
 
+  // После первого взаимодействия пользователя с камерой (drag/zoom)
+  // автоматическое центрирование при догрузке блоков отключается,
+  // чтобы не сбивать пользователю вид.
+  const userInteractedRef = useRef(false);
+
   // Хуки для управления состоянием
   const {
     editingBlock,
@@ -123,7 +287,6 @@ export const ScienceArticlesUI = () => {
     creatingBlock,
     setEditingText,
     setCreatingBlock,
-    handleBlockDoubleClick,
     handleSaveEdit,
     handleCancelEdit,
     handleArrowClick,
@@ -180,13 +343,9 @@ export const ScienceArticlesUI = () => {
   const hasInitializedRef = useRef(false);
 
   useEffect(() => { 
-    console.log(`[ArticlesPage] useEffect for loadNextPage triggered, hasInitialized: ${hasInitializedRef.current}`);
     if (!hasInitializedRef.current) {
       hasInitializedRef.current = true;
-      console.log(`[ArticlesPage] First time initialization, calling loadNextPage`);
       loadNextPage();
-    } else {
-      console.log(`[ArticlesPage] Skipping duplicate useEffect call`);
     }
   }, []);
 
@@ -199,14 +358,13 @@ export const ScienceArticlesUI = () => {
     const schedule = () => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        console.log(`[Science_articles] Triggering loadEdgesByViewport from viewport event`);
         loadEdgesByViewport();
       }, 250);
     };
     
     // Слушаем события viewport
-    const handleViewportMoved = () => schedule();
-    const handleViewportZoomed = () => schedule();
+    const handleViewportMoved = () => { userInteractedRef.current = true; schedule(); };
+    const handleViewportZoomed = () => { userInteractedRef.current = true; schedule(); };
     
     if (v.on) {
       v.on('moved', handleViewportMoved);
@@ -246,24 +404,11 @@ export const ScienceArticlesUI = () => {
 
   // Автоматическое центрирование при загрузке блоков
   useEffect(() => {
-    if (blocks.length > 0 && !focusTargetId) {
-      // Логируем координаты блоков для отладки
-      const sampleBlocks = blocks.slice(0, 5); // Первые 5 блоков
-      console.log(`[ArticlesPage] Sample block coordinates:`, sampleBlocks.map(b => ({ 
-        id: b.id, 
-        x: b.x, 
-        y: b.y,
-        layer: b.layer,
-        level: b.level
-      })));
-      
+    if (blocks.length > 0 && !focusTargetId && !userInteractedRef.current) {
       // Центрируем viewport на центр холста (0, 0) вместо центра блоков
-      console.log(`[ArticlesPage] Centering viewport on canvas center (0, 0)`);
-      
       setTimeout(() => {
         if (viewportRef.current) {
           viewportRef.current.focusOn(0, 0);
-          console.log(`[ArticlesPage] Viewport centered on canvas center`);
         }
       }, 100);
     }
@@ -289,7 +434,6 @@ export const ScienceArticlesUI = () => {
 
     const blockAllPointerEvents = (e: Event) => {
       if (isBlockContextMenuActive) {
-        console.log('Blocking all pointer events due to active context menu');
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -333,25 +477,34 @@ export const ScienceArticlesUI = () => {
     }
   }, [isBlockContextMenuActive, contextMenu]);
 
+  // Двойной ЛКМ по блоку: открываем страницу-источник статьи по DOI в новой вкладке.
+  const handleBlockDoubleClick = useCallback((blockId: string) => {
+    handleContextMenuClose();
+    const block = blocks.find(b => b.id === blockId);
+    const rawDoi = block?.doi;
+    const doi = rawDoi && !/^w\d+$/i.test(rawDoi) ? rawDoi : '';
+    if (doi) {
+      window.open(`https://doi.org/${doi}`, '_blank', 'noopener,noreferrer');
+    }
+  }, [blocks, handleContextMenuClose]);
+
   // Простые обработчики, которые остаются в компоненте
   const handleBlockPointerDown = useCallback((blockId: string, event: any) => {
     event.stopPropagation();
-    
-    // Простая реализация двойного клика
+
+    // Двойной ЛКМ по блоку открывает страницу-источник статьи по DOI.
+    // Одиночный клик — выбор блока. Панель редактирования не открывается.
     const currentTime = Date.now();
     const lastClick = (event.currentTarget as any)._lastClick || 0;
     const timeDiff = currentTime - lastClick;
-    
-    if (timeDiff < 300) {
-      // Двойной клик - начинаем редактирование
-      handleBlockDoubleClick(blockId, blocks);
-    } else {
-      // Одиночный клик
-      handleBlockClick(blockId);
-    }
-    
     (event.currentTarget as any)._lastClick = currentTime;
-  }, [handleBlockClick, handleBlockDoubleClick, blocks]);
+
+    if (timeDiff < 300) {
+      handleBlockDoubleClick(blockId);
+      return;
+    }
+    handleBlockClick(blockId);
+  }, [handleBlockClick, handleBlockDoubleClick]);
 
   const handleSublevelClick = (sublevelId: number, x: number, y: number) => {
     if (currentMode === EditMode.CREATE_BLOCKS) {
@@ -388,10 +541,12 @@ export const ScienceArticlesUI = () => {
     );
   }
 
-  console.log(`[ArticlesPage] Rendering: pixiReady=${pixiReady}, isBootLoading=${isBootLoading}, blocks.length=${blocks.length}, isLoading=${isLoading}`);
-  console.log(`[ArticlesPage] loadedBlockIds size:`, loadedBlockIdsRef.current.size);
-  console.log(`[ArticlesPage] pageOffset:`, pageOffset);
-  
+  const contextBlock = contextMenu ? blocks.find(b => b.id === contextMenu.blockId) : undefined;
+  const contextBlockDoi = (() => {
+    const rawDoi = contextBlock?.doi;
+    return rawDoi && !/^w\d+$/i.test(rawDoi) ? rawDoi : '';
+  })();
+
   return (
             <main ref={containerRef} className="knowledge_map" tabIndex={-1}>
       {(!pixiReady || (isBootLoading && blocks.length === 0)) && (
@@ -399,8 +554,8 @@ export const ScienceArticlesUI = () => {
           {isLoading ? 'Загрузка научных статей...' : 'Инициализация...'}
         </div>
       )}
-      <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5}>
-        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode} isBlockContextMenuActive={isBlockContextMenuActive} blockRightClickRef={blockRightClickRef} instantBlockClickRef={instantBlockClickRef}>
+      <Application width={window.innerWidth} height={window.innerHeight} backgroundColor={0xf5f5f5} antialias resolution={window.devicePixelRatio || 1} autoDensity>
+        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode} onDragStart={handleContextMenuClose} isBlockContextMenuActive={isBlockContextMenuActive} blockRightClickRef={blockRightClickRef} instantBlockClickRef={instantBlockClickRef}>
           {/* Рендерим все уровни */}
           {levels.map(level => (
             <Level
@@ -451,27 +606,48 @@ export const ScienceArticlesUI = () => {
       </Application>
       <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
       
-      {/* Кнопка для тестирования подгрузки */}
-      <button 
-        onClick={() => {
-          console.log(`[Science_articles] Manual loadEdgesByViewport triggered`);
-          loadEdgesByViewport();
-        }}
-        style={{
-          position: 'fixed',
-          top: '10px',
-          right: '10px',
-          zIndex: 1000,
-          padding: '8px 16px',
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
-      >
-        Загрузить по viewport ({blocks.length} блоков)
-      </button>
+      {/* Фильтр по научным областям и счётчик — в левой панели интерфейса */}
+      {leftPanelEl && createPortal(
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>
+            Научная область
+          </div>
+          <select
+            value={fieldPreset}
+            onChange={(e) => setFieldPreset(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '6px 8px',
+              backgroundColor: '#ffffff',
+              color: '#333',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+            }}
+          >
+            {FIELD_PRESETS.map(p => (
+              <option key={p.value} value={p.value}>{p.label}</option>
+            ))}
+          </select>
+
+          <div
+            style={{
+              fontSize: '13px',
+              color: '#555',
+              padding: '4px 8px',
+              backgroundColor: '#fff',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+            }}
+          >
+            Статей на карте: {blocks.length}
+          </div>
+
+          <ArticlesWithoutLinksPanel fields={activeFields} />
+        </div>,
+        leftPanelEl
+      )}
 
       {/* Панель редактирования/создания блоков */}
       <EditingPanel
@@ -490,6 +666,7 @@ export const ScienceArticlesUI = () => {
           x={contextMenu.x}
           y={contextMenu.y}
           isPinned={blocks.find(b => b.id === contextMenu.blockId)?.is_pinned || false}
+          doi={contextBlockDoi}
           currentPhysicalScale={0}
           onPin={() => handlePinBlock(contextMenu.blockId)}
           onUnpin={() => handleUnpinBlock(contextMenu.blockId)}

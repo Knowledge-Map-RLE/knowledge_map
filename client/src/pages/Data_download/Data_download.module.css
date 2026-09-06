@@ -197,6 +197,40 @@
 .actions {
     display: flex;
     gap: 12px;
+    align-items: center;
+}
+
+.fileLimitRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.fileLimitLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    white-space: nowrap;
+}
+
+.fileLimitInput {
+    width: 120px;
+    padding: 6px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.fileLimitInput:focus {
+    outline: none;
+    border-color: #7c4dff;
+}
+
+.fileLimitInput:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .startBtn,
@@ -265,4 +299,144 @@
     padding: 40px;
     color: var(--text-secondary, #666);
     font-size: 15px;
+}
+
+/* ── Citation Graph Section ────────────────────────────────────────────── */
+
+.sectionDivider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+    margin: 40px 0 32px;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.sectionTitle {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    margin: 0;
+}
+
+.sectionBadge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    background: #ede7f6;
+    color: #5e35b1;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sourceDescription {
+    color: var(--text-secondary, #666);
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.testBtn {
+    padding: 8px 16px;
+    border: 2px solid #7c4dff;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: white;
+    color: #7c4dff;
+    transition: all 0.2s;
+}
+
+.testBtn:hover:not(:disabled) {
+    background: #ede7f6;
+}
+
+.testBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.testResult {
+    margin: 12px 0;
+    padding: 12px;
+    background: #f3f0ff;
+    border-radius: 8px;
+    border: 1px solid #e0d6ff;
+}
+
+.testTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5e35b1;
+    margin-bottom: 8px;
+}
+
+.testRow {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--text-secondary, #555);
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.testErrors {
+    margin-top: 8px;
+    padding: 8px;
+    background: #ffebee;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #c62828;
+}
+
+/* ── DOI Lookup ────────────────────────────────────────────────────────── */
+
+.doiLookup {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-top: 24px;
+}
+
+.doiLookupTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    margin: 0 0 12px;
+}
+
+.doiInputRow {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.doiInput {
+    flex: 1;
+    padding: 10px 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: monospace;
+    transition: border-color 0.2s;
+}
+
+.doiInput:focus {
+    outline: none;
+    border-color: #7c4dff;
+}
+
+.doiResult {
+    margin-top: 12px;
+    padding: 12px;
+    background: #e8f5e9;
+    border-radius: 8px;
+    border: 1px solid #c8e6c9;
 }

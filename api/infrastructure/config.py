@@ -84,6 +84,19 @@ class Settings(BaseSettings):
     # единственная точка web.dependencies.get_current_admin.
     ADMIN_UIDS: str = ""
 
+    # Citation Graph Sources
+    OPENCITATIONS_ACCESS_TOKEN: str = ""
+    OPENCITATIONS_EMAIL: str = ""
+    OPENALEX_API_KEY: str = ""
+    CROSSREF_MAILTO: str = ""
+    DATACITE_EMAIL: str = ""
+
+    # OpenAlex bulk dump (S3 JSONL works).
+    # Относительные пути отсчитываются от корня репозитория (не от рабочей
+    # директории процесса); в production обычно абсолютный путь к тому.
+    OPENALEX_WORKS_DIR: str = "data/openalex-data/jsonl/works"
+    OPENALEX_CHECKPOINT_FILE: str = "data/citation_openalex_checkpoint.txt"
+
     # Debug режим
     DEBUG: bool = False
 
@@ -98,6 +111,23 @@ class Settings(BaseSettings):
         if not self.GOLD_DIR:
             return repo_root / "eval" / "gold"
         path = Path(self.GOLD_DIR)
+        if not path.is_absolute():
+            path = repo_root / path
+        return path.resolve()
+
+    @property
+    def openalex_works_dir(self) -> Path:
+        """Каталог дампа works OpenAlex: относительный путь — от корня репозитория."""
+        return self._resolve_repo_path(self.OPENALEX_WORKS_DIR)
+
+    @property
+    def openalex_checkpoint_file(self) -> Path:
+        """Файл чекпоинта bulk-загрузки OpenAlex: от корня репозитория."""
+        return self._resolve_repo_path(self.OPENALEX_CHECKPOINT_FILE)
+
+    def _resolve_repo_path(self, value: str) -> Path:
+        repo_root = Path(__file__).resolve().parents[2]
+        path = Path(value)
         if not path.is_absolute():
             path = repo_root / path
         return path.resolve()

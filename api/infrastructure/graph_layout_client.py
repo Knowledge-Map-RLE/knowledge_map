@@ -22,6 +22,41 @@ _GRAPH_LAYOUT_HOST = os.getenv("GRAPH_LAYOUT_HOST", "localhost")
 _GRAPH_LAYOUT_PORT = int(os.getenv("GRAPH_LAYOUT_PORT", "50051"))
 
 
+class VertexLayout:
+    """Координаты и ранг вершины, возвращаемые Rust-воркером.
+
+    Порядок (x, y) и распаковка из клиента по-прежнему работают
+    (layout_service.get_knowledge_map_page): implements __iter__ -> (x, y).
+    """
+
+    __slots__ = ("_x", "_y", "_layer", "_level")
+
+    def __init__(self, x: float, y: float, layer: int, level: int) -> None:
+        self._x = float(x)
+        self._y = float(y)
+        self._layer = layer
+        self._level = level
+
+    def __iter__(self):
+        return iter((self._x, self._y))
+
+    @property
+    def x(self) -> float:
+        return self._x
+
+    @property
+    def y(self) -> float:
+        return self._y
+
+    @property
+    def layer(self) -> int:
+        return self._layer
+
+    @property
+    def level(self) -> int:
+        return self._level
+
+
 class GraphLayoutClient:
     """
     Тонкий gRPC клиент к Rust GraphLayoutService.
@@ -41,16 +76,21 @@ class GraphLayoutClient:
         horizontal_gap: float = 40.0,
         vertical_gap: float = 50.0,
         reduce_crossings: bool = False,
-    ) -> dict[str, tuple[float, float]]:
+        convert_to_dag: bool = False,
+    ) -> dict[str, VertexLayout]:
         """
         Отправляет рёбра в Rust-воркер, получает координаты вершин.
 
         Args:
             edges: список {"source_id": str, "target_id": str}
             block_width, block_height, horizontal_gap, vertical_gap: параметры размещения
+            reduce_crossings: оптимизировать число пересечений рёбер
+            convert_to_dag: развернуть минимальный набор рёбер (feedback arc set),
+                чтобы преобразовать циклический граф в DAG и корректно распределить
+                все вершины по слоям.
 
         Returns:
-            {node_id: (x, y)} — координаты для каждой вершины из ответа
+            {node_id: VertexLayout(x, y, layer, level)} — позиция каждой вершины
 
         Raises:
             grpc.RpcError: если воркер недоступен или вернул ошибку
@@ -71,6 +111,7 @@ class GraphLayoutClient:
             vertical_gap=vertical_gap,
             exclude_isolated_vertices=True,
             optimize_layout=reduce_crossings,
+            convert_to_dag=convert_to_dag,
         )
 
         request = graph_layout_pb2.LayoutRequest(
@@ -87,7 +128,12 @@ class GraphLayoutClient:
             raise RuntimeError(f"GraphLayoutService error: {response.error_message}")
 
         return {
-            pos.article_id: (float(pos.x), float(pos.y))
+            pos.article_id: VertexLayout(
+                x=float(pos.x),
+                y=float(pos.y),
+                layer=int(pos.layer),
+                level=int(pos.level),
+            )
             for pos in response.positions
         }
 
