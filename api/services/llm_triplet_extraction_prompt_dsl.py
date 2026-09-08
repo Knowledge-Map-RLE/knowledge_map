@@ -24,6 +24,103 @@ def build_dsl_prompt(article_title: str, fragment_text: str) -> str:
     )
 
 
+def build_goal_plan_dsl_prompt(plan_title: str, plan_lines: str) -> str:
+    """Собирает промпт формализации декомпозиции цели в Язык Знаний.
+
+    Переиспользует минимальный DSL-формат вывода и парсер ``parse_dsl_text``
+    (НЕ дублирует промпт формализации): каждый пункт плана становится ОДНИМ
+    атомарным утверждением ``sub → pred → obj``, извлечённым из его текста.
+    Иерархия плана (родитель → ребёнок) отдельно передаётся как мета-связи
+    ``decomposed_into`` и строится из неё детерминированно, поэтому здесь
+    требуется только понять содержание пунктов.
+
+    ``plan_lines`` — построчный список пунктов плана с метками ``[item:ID]``
+    (единый текст для формализации).
+    """
+    return (
+        _GOAL_PLAN_TEMPLATE.replace("__TITLE__", plan_title).replace(
+            "__PLAN__", plan_lines
+        )
+    )
+
+
+_GOAL_PLAN_TEMPLATE = """# ROLE
+Scientific knowledge extraction engine for "Knowledge Map". You convert a GOAL PLAN
+(text of a decomposed goal) into structured atomic assertions. Never invent facts
+not present in the text.
+
+# INPUT
+Plan title: __TITLE__
+---START---
+__PLAN__
+---END---
+
+# OUTPUT — YOUR OWN DSL (NOT JSON)
+One block per line. Lines start with "B" (block) then a block TYPE KEY, then a TAG
+(B1, B2, ...), then |-separated fields `key=value`.
+Format:
+  B <TYPEKEY> <TAG> | key=value | key=value ...
+Number tags sequentially B1, B2, ... in output order. Never reuse a tag.
+
+# BLOCK TYPE (only this one)
+  T4   atomic_statement   sub,pred,obj,ctx,epi,sn        (one fact per line, one predicate)
+
+# FIELD KEYS
+  sub=subject  pred=predicate  obj=object
+  ctx=context (MUST contain the plan item tag, e.g. `item:G1`)  epi=epistemicStatus (future_proposal|objective|hypothesis|background_claim)
+  sn=source note or empty
+
+# HOW TO FORMALIZE EACH PLAN ITEM
+For EVERY plan item (a line tagged [item:ID]):
+- Produce ONE atomic T4 assertion per atomic entity.
+- Extract REAL subject/predicate/object from the item text: what acts / what is
+  needed / what it targets. Rephrase only minimally so the triplet is grammatical
+  and self-contained; never invent entities or claims.
+- Put the item id into ctx as `item:<ID>` (e.g. ctx=item:P1). Repeat the same
+  ctx on every line you emit for that item.
+- ATOMICITY: subject and object MUST be SHORT noun phrases (2-6 words), never a
+  clause, never a whole sentence, never nested sub-phrases like "the effect of X
+  on Y in aged mice". If the extracted entity contains a clause or a genitive
+  chain (e.g. "development of a therapy that slows aging in humans"), split it
+  into shorter atomic noun phrases (e.g. "the therapy", "slowing aging in
+  humans") and emit SEPARATE T4 lines for each.
+- SPLIT COORDINATED LISTS: if a subject or object is a list joined by "and",
+  "и", "&", "/" (e.g. "molecular and cellular hallmarks of aging"), split it
+  into separate entities and emit a SEPARATE T4 line for EACH, keeping the same
+  predicate and the other side:
+    molecular and cellular hallmarks of aging -> are elucidated ->
+        B T4 | sub=molecular hallmarks of aging | pred=are elucidated | obj=<real value> | ctx=item:P1
+        B T4 | sub=cellular hallmarks of aging | pred=are elucidated | obj=<real value> | ctx=item:P1
+- NEVER use placeholders like "none", "null", "empty", "-", "N/A" for sub, pred
+  or obj. If the item text has no explicit object, choose the direct
+  target/result of the action as the object; if the object is genuinely
+  absent, still extract a self-contained triplet by rephrasing the item into
+  sub -> pred -> obj (do not write "none").
+- CRITICAL: do NOT emit trivial self-labels like `X -> is -> goal`,
+  `X -> is -> task`, `X -> is -> sub_goal`, `X -> is -> action`.
+  The object must be the real target/result/meaning of the item, taken from its text.
+- If an item text is too vague to extract a meaningful triplet, still emit one
+  plausible non-trivial assertion the text supports; do not skip whole items.
+- Never create meta-assertions or parent/child links here; every line is an
+  independent atomic fact. The plan hierarchy is built by other code.
+
+# EXAMPLE
+Plan item:  [item:G1] Develop a therapy that slows biological aging in humans
+            [item:P2] Test candidate drugs on mouse models
+Expected output (illustrative):
+  B T4 B1 | sub=the therapy | pred=targets | obj=slowing biological aging in humans | ctx=item:G1 | epi=future_proposal
+  B T4 B2 | sub=candidate drugs | pred=are tested on | obj=mouse models | ctx=item:P2 | epi=future_proposal
+
+# RULES
+1. RULE: one T4 per atomic entity; split coordinated lists ("and", "и", "&", "/")
+   into separate T4 lines.
+2. Never output the trivial is->kind self-label (goal/sub_goal/task/action).
+3. Do not invent facts, numbers, or outcomes not present in the item text.
+4. Keep the same language as the plan text (Russian stays Russian, English stays English).
+5. sub/pred/obj MUST be short atomic phrases; NEVER "none", "null", "N/A", "-".
+"""
+
+
 _TEMPLATE = """# ROLE
 Scientific knowledge extraction engine for "Knowledge Map". Convert the article text into structured knowledge blocks. Never invent facts not in the text.
 

@@ -1,7 +1,4 @@
-import type { BlockData, LinkData } from '../../widgets/KnowledgeMap';
-
+/** Пропсы страницы карты знаний (DAG триплетов). */
 export interface Knowledge_mapProps {
-    externalBlocks?: BlockData[];
-    externalLinks?: LinkData[];
-    embedded?: boolean;
+  embedded?: boolean;
 }

@@ -37,6 +37,7 @@ class AIModelClient:
         repetition_penalty: Optional[float] = None,
         enable_chunking: bool = True,
         timeout: int = 300,
+        extra_body: Optional[dict] = None,
     ) -> dict:
         """
         Generate text using the AI model.
@@ -52,6 +53,10 @@ class AIModelClient:
             enable_chunking: Kept for interface compatibility (no-op; the gateway
                 does not chunk prompts)
             timeout: Request timeout in seconds
+            extra_body: Additional provider-specific fields merged into the
+                request body (e.g. ``{"thinking": False}`` to disable the
+                hidden reasoning pass that can exhaust the token budget and
+                return an empty ``content``).
 
         Returns:
             Dictionary with generation results:
@@ -86,6 +91,8 @@ class AIModelClient:
             payload["repetition_penalty"] = repetition_penalty
         if timeout is not None:
             payload["timeout"] = timeout
+        if extra_body:
+            payload.update(extra_body)
 
         try:
             logger.info(f"Sending generation request for model: {model_id}")
@@ -94,7 +101,28 @@ class AIModelClient:
             )
             response.raise_for_status()
             data = response.json()
-            content = data["choices"][0]["message"].get("content", "")
+            content = data["choices"][0]["message"].get("content")
+            if content is None:
+                finish_reason = data["choices"][0].get("finish_reason")
+                logger.error(
+                    "AI Agent response has empty content (finish_reason=%s) for model %s",
+                    finish_reason,
+                    model_id,
+                )
+                return {
+                    "success": False,
+                    "generated_text": "",
+                    "message": (
+                        "AI Agent вернул пустой ответ (finish_reason="
+                        f"{finish_reason}); вероятно, token budget съеден"
+                        " скрытым reasoning. Повторите запрос с extra_body={'thinking': False}."
+                    ),
+                    "model_used": data.get("model", model_id),
+                    "input_tokens": 0,
+                    "output_tokens": 0,
+                    "chunked": False,
+                    "num_chunks": 0,
+                }
             usage = data.get("usage") or {}
             return {
                 "success": True,

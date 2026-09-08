@@ -8,5 +8,6 @@ export * from './patterns';
 export * from './graphs';
 export * from './csv';
 export * from './agent';
+export * from './goal_decomposition';
 
 export * from '../../entities';

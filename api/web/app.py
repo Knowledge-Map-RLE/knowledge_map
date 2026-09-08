@@ -167,6 +167,14 @@ app.include_router(pattern_graph_router.router)
 from web.routers.pattern_miner import router as pattern_miner_router
 app.include_router(pattern_miner_router)
 
+# DAG-карта триплетов знаний (KnowledgeStatement) для /km
+from web.routers.knowledge_triples import router as knowledge_triples_router
+app.include_router(knowledge_triples_router)
+
+# Декомпозиция цели (обратное планирование) для /km правая панель
+from web.routers.goal_decomposition import router as goal_decomposition_router
+app.include_router(goal_decomposition_router)
+
 # Редактор статей (article_editor)
 app.include_router(article_editor_router.router, prefix="/api")
 

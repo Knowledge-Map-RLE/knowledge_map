@@ -137,6 +137,70 @@ export async function getKnowledgeMapPage(
   return fetchJson<ApiResponse>(`/layout/knowledge_map_page?offset=${offset}&limit=${limit}&center_x=${centerX}&center_y=${centerY}`);
 }
 
+export interface KnowledgeTriple {
+  id: string;
+  uid: string;
+  content: string;
+  subject_type: string;
+  subject_text: string;
+  predicate: string;
+  object_type: string;
+  object_text: string;
+  x?: number;
+  y?: number;
+}
+
+export interface KnowledgeGraphBlock extends KnowledgeTriple {
+  x: number;
+  y: number;
+  layer: number;
+  level: number;
+  metadata?: { is_placeholder?: boolean; is_goal?: boolean; is_plan?: boolean };
+}
+
+export interface KnowledgeGraphLink {
+  id: string;
+  source_id: string;
+  target_id: string;
+}
+
+export interface KnowledgeTriplesResponse {
+  success: boolean;
+  blocks: KnowledgeGraphBlock[];
+  links: KnowledgeGraphLink[];
+  isolated: KnowledgeTriple[];
+  isolated_total: number;
+  connected_total: number;
+  isolated_limit: number;
+}
+
+export interface IsolatedTriplesSearchResponse {
+  success: boolean;
+  total_count: number;
+  skip: number;
+  limit: number;
+  query: string;
+  items: KnowledgeTriple[];
+}
+
+/** DAG-карта триплетов знаний (KnowledgeStatement) — источник данных /km. */
+export async function getKnowledgeTriples(isolatedLimit = 200): Promise<KnowledgeTriplesResponse> {
+  return fetchJson<KnowledgeTriplesResponse>(`/layout/knowledge_triples?isolated_limit=${isolatedLimit}`);
+}
+
+/** Поиск по изолированным триплетам (активируется с 3 введённых символов). */
+export async function searchIsolatedTriples(
+  q: string,
+  skip = 0,
+  limit = 100,
+): Promise<IsolatedTriplesSearchResponse> {
+  const params = new URLSearchParams();
+  if (q) params.set('q', q);
+  params.set('skip', String(skip));
+  params.set('limit', String(limit));
+  return fetchJson<IsolatedTriplesSearchResponse>(`/layout/knowledge_triples/isolated?${params.toString()}`);
+}
+
 export interface ArticleWithoutLinksItem {
   doc_id: string;
   title: string;

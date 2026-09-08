@@ -1,475 +1,484 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
+import { createPortal } from 'react-dom';
+import { Container, Graphics } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
-import {
-    Viewport,
-    Block,
-    Link,
-    Level,
-    Sublevel,
-    BlockContextMenu,
-    ModeIndicator,
-    ViewportCoordinates,
-    EditingPanel,
-    useKeyboardControlsWithProps,
-    useDataLoading,
-    useSelectionState,
-    useActions,
-    useInteractionHandlers,
-    useBlockOperations,
-    useEditingState,
-    useContextMenu,
-    EditMode,
-    BLOCK_WIDTH,
-    BLOCK_HEIGHT,
-} from '../../widgets/KnowledgeMap';
-import type { ViewportRef, LinkCreationState, BlockData, LinkData } from '../../widgets/KnowledgeMap';
+import { Viewport, Link } from '../../widgets/KnowledgeMap';
+import type { ViewportRef } from '../../widgets/KnowledgeMap';
 import { useViewport } from '../../shared/contexts';
-import type { Knowledge_mapProps } from './model';
+import { getKnowledgeTriples, searchIsolatedTriples } from '../../services/api';
+import type {
+  KnowledgeGraphBlock,
+  KnowledgeGraphLink,
+  KnowledgeTriple,
+} from '../../services/api';
+import { TripleBlock, TRIPLE_BLOCK_WIDTH } from './TripleBlock';
+import GoalDecompositionPanel from './GoalDecompositionPanel';
 import styles from './Knowledge_map.module.css';
 
-extend({ Container, Graphics, Text });
+extend({ Container, Graphics });
 
-export const Knowledge_mapUI = ({ externalBlocks, externalLinks, embedded }: Knowledge_mapProps = {}) => {
+// Компонент левой панели: список изолированных триплетов + поиск (с 3 символов).
+const IsolatedTriplesPanel = () => {
+  const [query, setQuery] = useState('');
+  const [items, setItems] = useState<KnowledgeTriple[]>([]);
+  const [total, setTotal] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
+  const debounceRef = useRef<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const runSearch = useCallback(async (q: string, controller: AbortController) => {
+    setIsSearching(true);
+    try {
+      const data = await searchIsolatedTriples(q, 0, 200);
+      if (!data?.success) {
+        setItems([]);
+        setTotal(0);
+        return;
+      }
+      setItems(data.items || []);
+      setTotal(data.total_count ?? 0);
+    } catch (err: any) {
+      if (err?.name === 'AbortError') return;
+      setItems([]);
+      setTotal(0);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (abortRef.current) abortRef.current.abort();
+
+    const q = query.trim();
+    const launch = (controller: AbortController) => {
+      abortRef.current = controller;
+      runSearch(q, controller);
+    };
+
+    if (q.length < 3) {
+      const controller = new AbortController();
+      launch(controller);
+      return;
+    }
+
+    debounceRef.current = window.setTimeout(() => {
+      const controller = new AbortController();
+      launch(controller);
+    }, 300);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      if (abortRef.current) abortRef.current.abort();
+    };
+  }, [query, runSearch]);
+
+  return (
+    <div style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>
+        Триплеты без связей{total > 0 ? ` (${total})` : ''}
+      </div>
+      <input
+        type="text"
+        placeholder="Поиск от 3 символов..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        style={{
+          width: '100%',
+          boxSizing: 'border-box',
+          padding: '6px 8px',
+          backgroundColor: '#ffffff',
+          color: '#333',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          fontSize: '13px',
+        }}
+      />
+      <div
+        style={{
+          flex: '1 1 0',
+          minHeight: 0,
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          paddingRight: 2,
+        }}
+      >
+        {isSearching ? (
+          <div style={{ fontSize: 12, color: '#999', padding: '4px 8px' }}>Поиск...</div>
+        ) : items.length === 0 ? (
+          <div style={{ fontSize: 12, color: '#aaa', padding: '4px 8px' }}>
+            {query.trim().length >= 3 ? 'Ничего не найдено' : 'Нет триплетов без связей'}
+          </div>
+        ) : (
+          items.map((item) => (
+            <div
+              key={item.id}
+              title={item.content}
+              style={{
+                padding: '5px 8px',
+                backgroundColor: '#fff',
+                border: '1px solid #eee',
+                borderRadius: '4px',
+                fontSize: '12px',
+                lineHeight: 1.3,
+              }}
+            >
+              <span
+                style={{
+                  display: 'block',
+                  color: '#9ca3af',
+                  fontSize: 10,
+                  fontFamily: 'monospace',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {item.uid}
+              </span>
+              <span
+                style={{
+                  color: '#333',
+                  whiteSpace: 'normal',
+                  lineHeight: 1.4,
+                }}
+              >
+                {item.subject_text} → {item.predicate} → {item.object_text}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
+      {query.trim().length >= 3 && !isSearching && items.length > 0 && (
+        <div style={{ fontSize: 11, color: '#888', padding: '0 8px' }}>
+          Найдено {items.length} из {total}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Панель смежных (входящих/исходящих) блоков, появляющаяся при выделении блока.
+const NeighborPanel: React.FC<{
+  side: 'left' | 'right';
+  title: string;
+  items: KnowledgeGraphBlock[];
+  onPick: (id: string) => void;
+  panelRef: React.RefObject<HTMLDivElement | null>;
+}> = ({ side, title, items, onPick, panelRef }) => {
+  const posStyle = side === 'left' ? { left: 230 } : { right: 228 };
+  return (
+    <div
+      ref={panelRef}
+      style={{
+        position: 'fixed',
+        top: 84,
+        width: 240,
+        maxHeight: 'calc(100vh - 200px)',
+        overflowY: 'auto',
+        zIndex: 60,
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+        padding: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.97)',
+        border: '1px solid #cbd5e1',
+        borderRadius: 12,
+        boxShadow: '0 2px 14px rgba(0,0,0,0.18)',
+        ...posStyle,
+      }}
+    >
+      <div style={{ fontSize: 12, fontWeight: 600, color: '#555' }}>
+        {title}{items.length > 0 ? ` (${items.length})` : ''}
+      </div>
+      {items.length === 0 ? (
+        <div style={{ fontSize: 12, color: '#aaa', padding: '4px 8px' }}>Нет блоков</div>
+      ) : (
+        items.map((b) => (
+          <div
+            key={b.id}
+            title={b.content}
+            onClick={() => onPick(b.id)}
+            style={{
+              cursor: 'pointer',
+              padding: '5px 8px',
+              backgroundColor: '#fff',
+              border: '1px solid #eee',
+              borderRadius: 6,
+              fontSize: 12,
+              lineHeight: 1.35,
+            }}
+          >
+            <span
+              style={{
+                display: 'block',
+                color: '#9ca3af',
+                fontSize: 10,
+                fontFamily: 'monospace',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {b.uid}
+            </span>
+            <span style={{ color: '#333' }}>{b.content.split('\n').slice(1).join(' ') || b.content}</span>
+          </div>
+        ))
+      )}
+    </div>
+  );
+};
+
+export const Knowledge_mapUI = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
   const { setViewportRef } = useViewport();
 
-  // Регистрируем viewportRef в глобальном контексте
+  const [blocks, setBlocks] = useState<KnowledgeGraphBlock[]>([]);
+  const [links, setLinks] = useState<KnowledgeGraphLink[]>([]);
+  const [isolatedTotal, setIsolatedTotal] = useState(0);
   const [pixiReady, setPixiReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [leftPanelEl, setLeftPanelEl] = useState<HTMLElement | null>(null);
+  const userInteractedRef = useRef(false);
+  const incomingPanelRef = useRef<HTMLDivElement | null>(null);
+  const outgoingPanelRef = useRef<HTMLDivElement | null>(null);
 
+  const loadData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await getKnowledgeTriples(200);
+      if (!data?.success) {
+        setLoadError('Не удалось загрузить карту триплетов');
+        return;
+      }
+      setBlocks(data.blocks || []);
+      setLinks(data.links || []);
+      setIsolatedTotal(data.isolated_total ?? 0);
+    } catch (err: any) {
+      setLoadError(err?.message || 'Ошибка загрузки');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Регистрируем viewportRef в глобальном контексте.
   useEffect(() => {
     const registerViewport = () => {
-      console.log('Knowledge_map: Registering viewportRef in context:', !!viewportRef.current);
       if (viewportRef.current) {
         setViewportRef(viewportRef);
       }
     };
-
-    // Пробуем зарегистрировать сразу
     registerViewport();
-    
-    // И также через задержку на случай, если viewport еще не готов
     const timer = setTimeout(registerViewport, 1000);
-    
     return () => clearTimeout(timer);
   }, [setViewportRef, pixiReady]);
 
-  const {
-    blocks, links, levels, sublevels, isLoading, loadError, loadLayoutData, loadAround, loadEdgesByViewport,
-    setBlocks, setLinks, setLevels, setSublevels
-  } = useDataLoading();
-
-  const actualBlocks = externalBlocks ?? blocks;
-  const actualLinks = externalLinks ?? links;
-
-  // Автоматическая загрузка данных при изменении viewport (только в режиме глобальной карты)
+  // Находим левую панель оболочки KnowledgeMapUI.
   useEffect(() => {
-    if (externalBlocks) return;
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    
-    let timer: any;
-    const scheduleLoad = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        const center = viewport.getWorldCenter?.();
-        const vb = viewport.getWorldBounds?.();
-        if (center) loadAround(center.x, center.y, 100);
-        if (vb) {
-          loadEdgesByViewport({ left: vb.left, right: vb.right, top: vb.top, bottom: vb.bottom });
-        }
-      }, 1000); // Debounce 1 секунда
-    };
-    
-    const handleViewportMoved = () => { userInteractedRef.current = true; scheduleLoad(); };
-    const handleViewportZoomed = () => { userInteractedRef.current = true; scheduleLoad(); };
-    
-    if (viewport.on) {
-      viewport.on('moved', handleViewportMoved);
-      viewport.on('zoomed', handleViewportZoomed);
-    }
-    
-    return () => {
-      clearTimeout(timer);
-      if (viewport.off) {
-        viewport.off('moved', handleViewportMoved);
-        viewport.off('zoomed', handleViewportZoomed);
-      }
-    };
-  }, [loadAround, loadEdgesByViewport]);
+    const leftEl = document.getElementById('km-left-panel');
+    if (leftEl) setLeftPanelEl(leftEl);
+  }, []);
 
-  const {
-    selectedBlocks, selectedLinks, handleBlockSelection, handleLinkSelection, clearSelection
-  } = useSelectionState();
-
-  const {
-    handleCreateBlock, handleCreateBlockOnSublevel, handleCreateLink, handleDeleteBlock, handleDeleteLink
-  } = useActions({
-    blocks, links, sublevels, setBlocks, setLinks, setSublevels, clearSelection, loadLayoutData
-  });
-
-  const [currentMode, setCurrentMode] = useState<EditMode>(EditMode.SELECT);
-  const [linkCreationState, setLinkCreationState] = useState<LinkCreationState>({ step: 'waiting' });
-  const [focusTargetId, setFocusTargetId] = useState<string | null>(null);
-
-  // После первого взаимодействия пользователя с камерой (drag/zoom)
-  // автоматическое центрирование при догрузке блоков отключается,
-  // чтобы не сбивать пользователю вид.
-  const userInteractedRef = useRef(false);
-
-  // Хуки для управления состоянием
-  const {
-    editingBlock,
-    editingText,
-    creatingBlock,
-    setEditingText,
-    setCreatingBlock,
-    handleBlockDoubleClick,
-    handleSaveEdit,
-    handleCancelEdit,
-    handleArrowClick,
-    handleCreateNewBlock
-  } = useEditingState();
-
-  const {
-    contextMenu,
-    isBlockContextMenuActive,
-    blockRightClickRef,
-    instantBlockClickRef,
-    handleBlockRightClick,
-    handleContextMenuClose,
-    handlePinBlock,
-    handleUnpinBlock,
-    handlePinBlockWithScale,
-    handleMovePinnedBlock
-  } = useContextMenu(blocks, setBlocks, loadLayoutData, clearSelection);
-
-  const {
-    handleBlockClick,
-    handleBlockMouseEnter,
-    handleBlockMouseLeave,
-    handleArrowHover: originalHandleArrowHover,
-    handleLinkClick,
-    handleCanvasClick
-  } = useInteractionHandlers({
-    currentMode,
-    linkCreationState,
-    setLinkCreationState,
-    setBlocks,
-    blocks,
-    handleBlockSelection,
-    handleLinkSelection,
-    handleCreateLink,
-    handleDeleteBlock,
-    handleDeleteLink,
-    clearSelection
-  });
-
-  // Обработчик стрелок - просто передаем вызов дальше
-  const handleArrowHover = useCallback((blockId: string, arrowPosition: 'left' | 'right' | null) => {
-    originalHandleArrowHover(blockId, arrowPosition);
-  }, [originalHandleArrowHover]);
-
-  const { handleAddBlock } = useBlockOperations({
-    setBlocks,
-    setLinks,
-    setFocusTargetId,
-    loadLayoutData
-  });
-
-  const viewportState = viewportRef.current ?
-    { scale: viewportRef.current.scale, position: viewportRef.current.position } :
-    { scale: 1, position: { x: 0, y: 0 } };
-
-  useKeyboardControlsWithProps({
-    setCurrentMode, 
-    setLinkCreationState, 
-    currentMode, 
-    linkCreationState,
-    selectedBlocks,
-    blocks,
-    levels,
-    onMovePinnedBlock: handleMovePinnedBlock
-  });
-
-  useEffect(() => { if (!externalBlocks) loadLayoutData(); }, [externalBlocks, loadLayoutData]);
+  useEffect(() => { loadData(); }, [loadData]);
   useEffect(() => {
     const timer = setTimeout(() => setPixiReady(true), 500);
     return () => clearTimeout(timer);
   }, []);
   useEffect(() => { containerRef.current?.focus(); }, []);
 
-  // Автоматическое центрирование при первой загрузке данных
+  // Блокируем раскомментирование контекстного меню браузера.
   useEffect(() => {
-    if (actualBlocks.length > 0 && !focusTargetId && !userInteractedRef.current) {
-      // Находим центр всех блоков
-      const centerX = actualBlocks.reduce((sum, block) => sum + (block.x || 0), 0) / actualBlocks.length;
-      const centerY = actualBlocks.reduce((sum, block) => sum + (block.y || 0), 0) / actualBlocks.length;
+    const prevent = (e: MouseEvent) => e.preventDefault();
+    containerRef.current?.addEventListener('contextmenu', prevent);
+    return () => containerRef.current?.removeEventListener('contextmenu', prevent);
+  }, []);
 
-      // Центрируем viewport на центр данных
+  // Автоцентрирование на центр данных при первой загрузке.
+  useEffect(() => {
+    if (blocks.length > 0 && !userInteractedRef.current) {
+      const cx = blocks.reduce((s, b) => s + b.x, 0) / blocks.length;
+      const cy = blocks.reduce((s, b) => s + b.y, 0) / blocks.length;
       setTimeout(() => {
-        viewportRef.current?.focusOn(centerX, centerY);
+        viewportRef.current?.focusOn(cx, cy);
       }, 100);
     }
-  }, [actualBlocks.length, focusTargetId]);
+  }, [blocks.length]);
 
-  useEffect(() => {
-    if (focusTargetId && actualBlocks.length > 0) {
-      const targetBlock = actualBlocks.find(b => b.id === focusTargetId);
-      if (targetBlock && typeof targetBlock.x === 'number' && typeof targetBlock.y === 'number') {
-        const targetX = targetBlock.x + BLOCK_WIDTH / 2;
-        const targetY = targetBlock.y;
-        viewportRef.current?.focusOn(targetX, targetY);
-        setFocusTargetId(null);
-      }
-    }
-  }, [actualBlocks, focusTargetId]);
+  const blockMap = useMemo(() => {
+    const m = new Map<string, KnowledgeGraphBlock>();
+    blocks.forEach((b) => m.set(b.id, b));
+    return m;
+  }, [blocks]);
 
-  // Дополнительная защита от контекстного меню
-  useEffect(() => {
-    const preventContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-    };
-
-    const blockAllPointerEvents = (e: Event) => {
-      if (isBlockContextMenuActive) {
-        console.log('Blocking all pointer events due to active context menu');
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        return false;
-      }
-    };
-
-    const handleGlobalClick = (e: MouseEvent) => {
-      // Если клик вне контекстного меню, сбрасываем флаг
-      if (isBlockContextMenuActive && !contextMenu) {
-        // Флаг сбрасывается автоматически в хуке useContextMenu
-      }
-    };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('contextmenu', preventContextMenu);
-      
-      // Агрессивная блокировка всех pointer событий если контекстное меню активно
-      if (isBlockContextMenuActive) {
-        const canvas = container.querySelector('canvas');
-        if (canvas) {
-          canvas.addEventListener('pointerdown', blockAllPointerEvents, { capture: true });
-          canvas.addEventListener('pointermove', blockAllPointerEvents, { capture: true });
-          canvas.addEventListener('pointerup', blockAllPointerEvents, { capture: true });
+  // Входящие блоки (ссылки, указывающие на выбранный) и исходящие (со ссылкой на другие).
+  const incomingBlocks = useMemo(() => {
+    if (!selectedId) return [];
+    const seen = new Set<string>();
+    const result: KnowledgeGraphBlock[] = [];
+    for (const link of links) {
+      if (link.target_id === selectedId) {
+        const b = blockMap.get(link.source_id);
+        if (b && !seen.has(b.id)) {
+          seen.add(b.id);
+          result.push(b);
         }
       }
-      
-      document.addEventListener('click', handleGlobalClick);
-      
-      return () => {
-        container.removeEventListener('contextmenu', preventContextMenu);
-        const canvas = container.querySelector('canvas');
-        if (canvas) {
-          canvas.removeEventListener('pointerdown', blockAllPointerEvents, { capture: true } as any);
-          canvas.removeEventListener('pointermove', blockAllPointerEvents, { capture: true } as any);
-          canvas.removeEventListener('pointerup', blockAllPointerEvents, { capture: true } as any);
+    }
+    return result;
+  }, [links, selectedId, blockMap]);
+
+  const outgoingBlocks = useMemo(() => {
+    if (!selectedId) return [];
+    const seen = new Set<string>();
+    const result: KnowledgeGraphBlock[] = [];
+    for (const link of links) {
+      if (link.source_id === selectedId) {
+        const b = blockMap.get(link.target_id);
+        if (b && !seen.has(b.id)) {
+          seen.add(b.id);
+          result.push(b);
         }
-        document.removeEventListener('click', handleGlobalClick);
-      };
+      }
     }
-  }, [isBlockContextMenuActive, contextMenu]);
+    return result;
+  }, [links, selectedId, blockMap]);
 
-  // Простые обработчики, которые остаются в компоненте
-  const handleBlockPointerDown = useCallback((blockId: string, event: any) => {
-    event.stopPropagation();
-    
-    // Простая реализация двойного клика
-    const currentTime = Date.now();
-    const lastClick = (event.currentTarget as any)._lastClick || 0;
-    const timeDiff = currentTime - lastClick;
-    
-    if (timeDiff < 300) {
-      // Двойной клик - начинаем редактирование
-      handleBlockDoubleClick(blockId, blocks);
-    } else {
-      // Одиночный клик
-      handleBlockClick(blockId);
-    }
-    
-    (event.currentTarget as any)._lastClick = currentTime;
-  }, [handleBlockClick, handleBlockDoubleClick, blocks]);
+  const handleNeighborPick = useCallback((id: string) => {
+    const block = blockMap.get(id);
+    if (!block) return;
+    setSelectedId(id);
+    viewportRef.current?.focusOn(block.x, block.y);
+  }, [blockMap]);
 
-  const handleSublevelClick = (sublevelId: number, x: number, y: number) => {
-    if (currentMode === EditMode.CREATE_BLOCKS) {
-      handleCreateBlockOnSublevel(x, y, sublevelId);
-    }
-  };
-
-  const handleCanvasClickWithMode = useCallback((x: number, y: number) => {
-    if (currentMode === EditMode.CREATE_BLOCKS) {
-      handleCreateBlock(x, y);
-    } else {
-      handleCanvasClick();
-    }
-  }, [currentMode, handleCreateBlock, handleCanvasClick]);
-
-  // Обработчики для панели редактирования
-  const handleSaveEditWrapper = useCallback(() => {
-    if (editingBlock) {
-      handleSaveEdit(editingBlock, editingText, setBlocks);
-    }
-  }, [editingBlock, editingText, handleSaveEdit, setBlocks]);
-
-  const handleCreateNewBlockWrapper = useCallback(() => {
-    if (creatingBlock) {
-      handleCreateNewBlock(creatingBlock, editingText, blocks, setBlocks, handleAddBlock);
-    }
-  }, [creatingBlock, editingText, blocks, setBlocks, handleAddBlock, handleCreateNewBlock]);
-
-  // Подготавливаем memo-структуры для быстрого доступа и culling
-  const viewportBounds = viewportRef.current?.getWorldBounds?.() || null;
-  const screenSize = viewportRef.current?.getScreenSize?.() || null;
-  const currentScale = viewportRef.current?.scale || 1;
-
-  const pad = useMemo(() => {
-    const w = screenSize?.width || 800;
-    const h = screenSize?.height || 600;
-    // Меньше запас при большом зуме
-    const base = 0.35; // 35% экрана
-    return {
-      x: (w * base) / (currentScale || 1),
-      y: (h * base) / (currentScale || 1)
+  // Клик вне панелей смежных блоков закрывает их (снимает выделение).
+  useEffect(() => {
+    const onDocMouseDown = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (incomingPanelRef.current?.contains(target)) return;
+      if (outgoingPanelRef.current?.contains(target)) return;
+      setSelectedId(null);
     };
-  }, [screenSize?.width, screenSize?.height, currentScale]);
+    document.addEventListener('mousedown', onDocMouseDown, true);
+    return () => document.removeEventListener('mousedown', onDocMouseDown, true);
+  }, []);
 
-  const blockMap = useMemo(() => new Map(actualBlocks.map(b => [b.id, b])), [actualBlocks]);
+  const handleViewportMove = useCallback(() => { userInteractedRef.current = true; }, []);
 
-  const viewBoundsWithPad = useMemo(() => {
-    if (!viewportBounds) return null;
-    return {
-      left: viewportBounds.left - pad.x,
-      right: viewportBounds.right + pad.x,
-      top: viewportBounds.top - pad.y,
-      bottom: viewportBounds.bottom + pad.y,
-    };
-  }, [viewportBounds?.left, viewportBounds?.right, viewportBounds?.top, viewportBounds?.bottom, pad.x, pad.y]);
-
-  const visibleBlocks = useMemo(() => {
-    if (!viewBoundsWithPad) return actualBlocks;
-    const { left, right, top, bottom } = viewBoundsWithPad;
-    return actualBlocks.filter(b => {
-      const x = (b.x ?? 0);
-      const y = (b.y ?? 0);
-      return x >= left && x <= right && y >= top && y <= bottom;
-    });
-  }, [actualBlocks, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
-
-  const visibleLinks = useMemo(() => {
-    if (!viewBoundsWithPad) return actualLinks;
-    const { left, right, top, bottom } = viewBoundsWithPad;
-    const isInView = (b?: BlockData) => {
-      if (!b) return false;
-      const x = (b.x ?? 0);
-      const y = (b.y ?? 0);
-      return x >= left && x <= right && y >= top && y <= bottom;
-    };
-    return actualLinks.filter(l => isInView(blockMap.get(l.source_id)) || isInView(blockMap.get(l.target_id)));
-  }, [actualLinks, blockMap, viewBoundsWithPad?.left, viewBoundsWithPad?.right, viewBoundsWithPad?.top, viewBoundsWithPad?.bottom]);
-  if (!externalBlocks && loadError) {
+  if (loadError) {
     return (
-      <div className={styles.knowledge_map} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
+      <div
+        className={styles.knowledge_map}
+        style={{ justifyContent: 'center', alignItems: 'center', color: 'red' }}
+      >
         Ошибка загрузки: {loadError}
       </div>
     );
   }
 
-
   return (
-    <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1} style={embedded ? { position: 'relative', width: '100%', height: '100%' } : undefined}>
-      {(!pixiReady || (!externalBlocks && isLoading)) && (
+    <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
+      {(!pixiReady || isLoading) && (
         <div className={styles.экран_загрузки}>
-          {isLoading ? 'Загрузка данных...' : 'Инициализация...'}
+          {isLoading ? 'Загрузка карты триплетов...' : 'Инициализация...'}
         </div>
       )}
-      <Application width={embedded ? (containerRef.current?.clientWidth || window.innerWidth) : window.innerWidth} height={embedded ? (containerRef.current?.clientHeight || window.innerHeight) : window.innerHeight} backgroundColor={0xf5f5f5} antialias resolution={window.devicePixelRatio || 1} autoDensity>
-        <Viewport ref={viewportRef} onCanvasClick={handleCanvasClickWithMode} onDragStart={handleContextMenuClose} isBlockContextMenuActive={isBlockContextMenuActive} blockRightClickRef={blockRightClickRef} instantBlockClickRef={instantBlockClickRef}>
-          {/* Рендерим все уровни */}
-          {levels.map(level => (
-            <Level
-              key={level.id}
-              levelData={level}
-              blocks={actualBlocks}
-            />
-          ))}
-
-          {/* Рендерим все подуровни отдельно */}
-          {sublevels.map(sublevel => (
-            <Sublevel
-              key={sublevel.id}
-              sublevelData={sublevel}
-              onSublevelClick={handleSublevelClick}
-            />
-          ))}
-
-          {visibleLinks.map(link => (
-            <Link
-              key={link.id}
-              linkData={link}
-              blockMap={blockMap}
-              isSelected={selectedLinks.includes(link.id)}
-              onClick={() => handleLinkClick(link.id)}
-              perfMode={true}
-            />
-          ))}
-          
-          {visibleBlocks.map(block => (
-            <Block
-              key={block.id}
-              blockData={block}
-              onBlockClick={handleBlockClick}
-              isSelected={selectedBlocks.includes(block.id)}
-              currentMode={currentMode}
-              onArrowClick={handleArrowClick}
-              onBlockPointerDown={handleBlockPointerDown}
-              onBlockMouseEnter={handleBlockMouseEnter}
-              onBlockMouseLeave={handleBlockMouseLeave}
-              onArrowHover={handleArrowHover}
-              onBlockRightClick={handleBlockRightClick}
-              instantBlockClickRef={instantBlockClickRef}
-            />
-          ))}
-          
+      <Application
+        width={window.innerWidth}
+        height={window.innerHeight}
+        backgroundColor={0xf5f5f5}
+        antialias
+        resolution={window.devicePixelRatio || 1}
+        autoDensity
+      >
+        <Viewport
+          ref={viewportRef}
+          onCanvasClick={() => setSelectedId(null)}
+          onDragStart={handleViewportMove}
+        >
+          <container sortableChildren={true}>
+            <container zIndex={0} eventMode="none">
+              {links.map((link) => (
+                <Link
+                  key={link.id}
+                  linkData={link}
+                  blockMap={blockMap as any}
+                  isSelected={false}
+                  onClick={() => {}}
+                  perfMode
+                  blockWidth={TRIPLE_BLOCK_WIDTH}
+                />
+              ))}
+            </container>
+            <container zIndex={1}>
+              {blocks.map((block) => (
+                <TripleBlock
+                  key={block.id}
+                  id={block.id}
+                  content={block.content}
+                  x={block.x}
+                  y={block.y}
+                  isPlaceholder={block.metadata?.is_placeholder}
+                  isGoal={block.metadata?.is_goal}
+                  isPlan={block.metadata?.is_plan}
+                  isSelected={selectedId === block.id}
+                  onClick={setSelectedId}
+                />
+              ))}
+            </container>
+          </container>
         </Viewport>
       </Application>
-        <ModeIndicator currentMode={currentMode} linkCreationStep={linkCreationState.step} />
-        <ViewportCoordinates />
 
-      {/* Панель редактирования/создания блоков */}
-      <EditingPanel
-        editingBlock={editingBlock}
-        creatingBlock={creatingBlock}
-        editingText={editingText}
-        setEditingText={setEditingText}
-        onSaveEdit={handleSaveEditWrapper}
-        onCancelEdit={handleCancelEdit}
-        onCreateNewBlock={handleCreateNewBlockWrapper}
-      />
-
-      {/* Контекстное меню */}
-      {contextMenu && (
-        <BlockContextMenu
-          x={contextMenu.x}
-          y={contextMenu.y}
-          isPinned={actualBlocks.find(b => b.id === contextMenu.blockId)?.is_pinned || false}
-          currentPhysicalScale={actualBlocks.find(b => b.id === contextMenu.blockId)?.physical_scale || 0}
-          onPin={() => handlePinBlock(contextMenu.blockId)}
-          onUnpin={() => handleUnpinBlock(contextMenu.blockId)}
-          onPinWithScale={(physicalScale: number) => handlePinBlockWithScale(contextMenu.blockId, physicalScale)}
-          onClose={handleContextMenuClose}
-        />
+      {selectedId && (
+        <>
+          <NeighborPanel
+            side="left"
+            title="Входящие блоки"
+            items={incomingBlocks}
+            onPick={handleNeighborPick}
+            panelRef={incomingPanelRef}
+          />
+          <NeighborPanel
+            side="right"
+            title="Исходящие блоки"
+            items={outgoingBlocks}
+            onPick={handleNeighborPick}
+            panelRef={outgoingPanelRef}
+          />
+        </>
       )}
-      
+
+      {leftPanelEl && createPortal(
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', height: '100%', minHeight: 0 }}>
+          <div style={{ flex: '1 1 50%', minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <GoalDecompositionPanel onDecomposed={loadData} />
+          </div>
+          <div
+            style={{
+              flex: '1 1 50%',
+              minHeight: 0,
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              borderTop: '1px solid #e5e7eb',
+              paddingTop: 10,
+            }}
+          >
+            <IsolatedTriplesPanel />
+          </div>
+        </div>,
+        leftPanelEl,
+      )}
     </main>
   );
-}
+};
 
 export default Knowledge_mapUI;

@@ -15,9 +15,10 @@ export interface LinkProps {
   perfMode?: boolean;
   color?: number;
   alpha?: number;
+  blockWidth?: number;
 }
 
-export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected, onClick, perfMode: _perfMode = false, color, alpha = 1 }: LinkProps) {
+export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected, onClick, perfMode = false, color, alpha = 1, blockWidth = BLOCK_WIDTH }: LinkProps) {
   const source_block = (blockMap ? blockMap.get(linkData.source_id) : undefined) || (blocks || []).find(block => block.id === linkData.source_id);
   const target_block = (blockMap ? blockMap.get(linkData.target_id) : undefined) || (blocks || []).find(block => block.id === linkData.target_id);
 
@@ -31,10 +32,10 @@ export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected,
     }
 
     return [
-      { x: source_block.x + BLOCK_WIDTH / 2, y: source_block.y },
-      { x: target_block.x - BLOCK_WIDTH / 2, y: target_block.y },
+      { x: source_block.x + blockWidth / 2, y: source_block.y },
+      { x: target_block.x - blockWidth / 2, y: target_block.y },
     ];
-  }, [linkData.polyline, source_block?.x, source_block?.y, target_block?.x, target_block?.y]);
+  }, [linkData.polyline, source_block?.x, source_block?.y, target_block?.x, target_block?.y, blockWidth]);
 
   const draw = useCallback((g: Graphics) => {
     g.clear();
@@ -84,9 +85,9 @@ export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected,
   return (
     <pixiGraphics
       draw={draw}
-      eventMode="static"
-      cursor="pointer"
-      onClick={onClick}
+      eventMode={perfMode ? 'none' : 'static'}
+      cursor={perfMode ? undefined : 'pointer'}
+      onClick={perfMode ? undefined : onClick}
       zIndex={10}
     />
   );
