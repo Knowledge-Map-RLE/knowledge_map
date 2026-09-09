@@ -150,6 +150,70 @@ poetry run python ..\eval\test_rules.py
 
 ---
 
+### `workability` — проверка двух KPI предсказательной системы (пакет)
+
+Пакет `eval/workability/` проверяет работоспособность Карты Знаний по двум KPI
+из `docs/ИИ. Предсказание статей и триплетов.md`:
+
+- **KPI-1 Predictive Accuracy**: Precision@K, Recall@K, F1@K, MRR, Hits@K.
+- **KPI-2 Predictive Distance**: mean/median/max/P90 графового расстояния + Long-range Recall@K(d ≥ D).
+
+Архитектура — чистая: `domain/` (метрики, BFS-расстояния, снапшоты, интерфейс предиктора,
+baselines) без Neo4j-зависимостей, `infrastructure/` (загрузка из Neo4j), `application/`
+(оркестратор backtest), `cli.py` (точка входа), `tests/` (юнит- и интеграционные тесты).
+
+Схема (rolling origin по годам `publication_date`, без утечки будущего):
+
+```
+для каждой контрольной точки T:
+  KnowledgeGraph(T)  = статьи/утверждения/рёбра с publication_date <= T
+  source_nk          = утверждение исходной статьи (<= T)
+  predicted          = predict(snapshot(T), source_nk, k)
+  real_future        = утверждения статей в окне (T, T+H]   [эталон]
+```
+
+Графовые расстояния KPI-2 строятся по рёбрам `BIBLIOGRAPHIC_LINK` между статьями
+(`source` = цитируемая/старая → `target` = цитирующая/новая). Расстояние между
+утверждениями = минимальный кратчайший путь между их статьями по невзвешенному
+графу цитирования snapshot(T); утверждения, отсутствующие в снапшоте,
+считаются недостижимыми. Все рёбра меры равны 1 (невзвешенный граф).
+
+Запуск (из `api/`):
+
+```
+poetry run python -W ignore ..\eval\workability\cli.py --output-dir ..\eval\reports\workability
+# смоук-тест: только документы, у которых есть утверждения (Action):
+poetry run python -W ignore ..\eval\workability\cli.py --limit-docs 50 --start-year 2020 --end-year 2023 --step 1 --horizon 2 --k 5 --max-source-per-year 10
+```
+
+`--limit-docs N` ограничивает корпус статьями с утверждениями (N штук) — это быстро и
+даёт ненулевое число cases. Без флага загружаются все 9.7M документов с
+`publication_date` (загрузчик использует маркерную пагинацию по `uid`, без
+медленных `SKIP`-страниц).
+
+Ключевые аргументы: `--horizon` (окно H, дефолт 5 лет), `--min-distance` (порог D,
+дефолт 10), `--k`, `--ratio`/`--max-source-per-year` (сэмплирование источников для
+масштабируемости на миллионы статей), `--predictor random|popularity`.
+
+Предикторы подключаются через протокол `PredictionEngine` (`domain/predictor.py`):
+`predict(snapshot, source_nk, k) -> List[norm_key]`.
+
+Тесты:
+
+```
+cd d:\Knowledge_Map\api
+poetry run pytest ..\eval\workability\tests\
+```
+
+Важно: механизм опирается на `publication_date` у документов.
+`publication_date` заполнен бэкфиллом для ~9.73M PubMed и ~19.5K PMC документов
+(`data_to_db/backfill_publication_date.py`, режимы по умолчанию и `--pmc`).
+Оставшиеся документы (upload/citation_import, ~105K) даты не имеют и в
+временнóй анализ не попадают. Отчёты пишутся в `eval/reports/workability/`
+(папка в .gitignore).
+
+---
+
 ### Диагностические скрипты
 
 | Скрипт | Назначение |

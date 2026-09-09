@@ -353,7 +353,9 @@ def parse_article_optimized(article, total_articles):
         journal = journal_el.text.strip()
     
     year_elem = article.find('.//pub-date/year')
-    publication_time = year_elem.text.strip() if year_elem is not None and year_elem.text else None
+    publication_time = extract_year_from_date_optimized(
+        year_elem.text.strip() if year_elem is not None and year_elem.text else None
+    )
     
     abstract = ''
     abstract_el = article.find('.//abstract')
@@ -704,6 +706,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                     'doi': node.get('doi', ''),
                     'pubmed_id': node.get('pmid'),
                     'pmc_id': node.get('pmcid'),
+                    'publication_date': int(node['publication_time']) if node.get('publication_time') else None,
                     'source': 'pmc',
                     'is_open_access': True,
                     'is_processed': bool(body_s3_key),
@@ -734,6 +737,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.doi = row.doi,
                       n.pubmed_id = row.pubmed_id,
                       n.pmc_id = row.pmc_id,
+                      n.publication_date = datetime({year: row.publication_date, month: 1, day: 1}),
                       n.source = row.source,
                       n.is_open_access = row.is_open_access,
                       n.is_processed = row.is_processed,
@@ -753,6 +757,7 @@ def write_to_neo4j(path_name: str, nodes: list[dict], rels: list[dict]) -> bool:
                       n.doi = coalesce(n.doi, row.doi),
                       n.pubmed_id = coalesce(n.pubmed_id, row.pubmed_id),
                       n.pmc_id = coalesce(n.pmc_id, row.pmc_id),
+                      n.publication_date = coalesce(n.publication_date, datetime({year: row.publication_date, month: 1, day: 1})),
                       n.source = coalesce(n.source, row.source),
                       n.is_open_access = coalesce(n.is_open_access, row.is_open_access),
                       n.is_processed = row.is_processed,
