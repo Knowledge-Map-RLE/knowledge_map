@@ -158,10 +158,19 @@ export interface KnowledgeGraphBlock extends KnowledgeTriple {
   metadata?: { is_placeholder?: boolean; is_goal?: boolean; is_plan?: boolean };
 }
 
+export interface KnowledgeGraphLinkMetadata {
+  dependency_type?: string;
+  confidence?: number;
+  discovery_method?: string;
+  is_verified?: boolean;
+  [key: string]: unknown;
+}
+
 export interface KnowledgeGraphLink {
   id: string;
   source_id: string;
   target_id: string;
+  metadata?: KnowledgeGraphLinkMetadata;
 }
 
 export interface KnowledgeTriplesResponse {
@@ -199,6 +208,21 @@ export async function searchIsolatedTriples(
   params.set('skip', String(skip));
   params.set('limit', String(limit));
   return fetchJson<IsolatedTriplesSearchResponse>(`/layout/knowledge_triples/isolated?${params.toString()}`);
+}
+
+export interface RebuildDependenciesResponse {
+  success: boolean;
+  triples_total: number;
+  verified: number;
+  saved: number;
+  use_llm: boolean;
+}
+
+/** Пересчёт dependency graph карты знаний (rules + опционально LLM). */
+export async function rebuildDependencies(useLlm = false): Promise<RebuildDependenciesResponse> {
+  return fetchJson<RebuildDependenciesResponse>(`/layout/knowledge_triples/rebuild_dependencies?use_llm=${useLlm ? 'true' : 'false'}`, {
+    method: 'POST',
+  });
 }
 
 export interface ArticleWithoutLinksItem {

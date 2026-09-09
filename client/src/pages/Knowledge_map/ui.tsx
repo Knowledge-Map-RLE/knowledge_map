@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Container, Graphics } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
 import { Viewport, Link } from '../../widgets/KnowledgeMap';
 import type { ViewportRef } from '../../widgets/KnowledgeMap';
 import { useViewport } from '../../shared/contexts';
-import { getKnowledgeTriples, searchIsolatedTriples } from '../../services/api';
+import { getKnowledgeTriples, searchIsolatedTriples, rebuildDependencies } from '../../services/api';
 import type {
   KnowledgeGraphBlock,
   KnowledgeGraphLink,
@@ -233,6 +234,138 @@ const NeighborPanel: React.FC<{
   );
 };
 
+const DEPENDENCY_TYPE_META: { type: string; label: string; color: string }[] = [
+  { type: 'causal', label: 'causal', color: '#16a34a' },
+  { type: 'mechanistic', label: 'mechanistic', color: '#2563eb' },
+  { type: 'logical', label: 'logical', color: '#7c3aed' },
+  { type: 'evidential', label: 'evidential', color: '#d97706' },
+  { type: 'goal_directed', label: 'goal_decomposition', color: '#ea580c' },
+  { type: 'compositional', label: 'compositional', color: '#0d9488' },
+];
+
+interface DependencyControlsProps {
+  links: KnowledgeGraphLink[];
+  enabledDepTypes: Set<string>;
+  onToggleType: (type: string) => void;
+  onResetTypes: () => void;
+  onRebuild: (useLlm: boolean) => void;
+  isRebuilding: boolean;
+}
+
+/** Панель легенды/фильтров типов зависимостей и пересчёта графа. */
+const DependencyControls = ({
+  links,
+  enabledDepTypes,
+  onToggleType,
+  onResetTypes,
+  onRebuild,
+  isRebuilding,
+}: DependencyControlsProps) => {
+  const counts = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const l of links) {
+      const t = l.metadata?.dependency_type || 'causal';
+      m.set(t, (m.get(t) || 0) + 1);
+    }
+    return m;
+  }, [links]);
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 70,
+        left: 240,
+        zIndex: 30,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+        backgroundColor: 'rgba(255,255,255,0.92)',
+        border: '1px solid #e5e7eb',
+        borderRadius: 10,
+        padding: 10,
+        boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+        maxWidth: 220,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>Типы зависимостей</span>
+        <button
+          onClick={onResetTypes}
+          style={{
+            fontSize: 11,
+            border: '1px solid #d1d5db',
+            background: '#fff',
+            borderRadius: 6,
+            padding: '2px 8px',
+            cursor: 'pointer',
+            color: '#555',
+          }}
+        >
+          Все
+        </button>
+      </div>
+      {DEPENDENCY_TYPE_META.map((d) => (
+        <label
+          key={d.type}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            fontSize: 12,
+            color: '#333',
+            cursor: 'pointer',
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={!enabledDepTypes.has(d.type)}
+            onChange={() => onToggleType(d.type)}
+            style={{ accentColor: d.color }}
+          />
+          <span
+            style={{
+              width: 10,
+              height: 3,
+              borderRadius: 2,
+              backgroundColor: d.color,
+              display: 'inline-block',
+            }}
+          />
+          <span style={{ flex: 1 }}>{d.label}</span>
+          <span style={{ color: '#9ca3af', fontSize: 11 }}>{counts.get(d.type) || 0}</span>
+        </label>
+      ))}
+      <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <button
+          onClick={() => onRebuild(false)}
+          disabled={isRebuilding}
+          style={rebuildBtnStyle(isRebuilding)}
+        >
+          {isRebuilding ? 'Пересчёт...' : 'Пересчитать (rules)'}
+        </button>
+        <button
+          onClick={() => onRebuild(true)}
+          disabled={isRebuilding}
+          style={rebuildBtnStyle(isRebuilding)}
+        >
+          Пересчитать (rules + LLM)
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const rebuildBtnStyle = (disabled: boolean): CSSProperties => ({
+  fontSize: 12,
+  border: '1px solid #d1d5db',
+  background: '#f9fafb',
+  borderRadius: 6,
+  padding: '5px 8px',
+  cursor: disabled ? 'wait' : 'pointer',
+  color: '#374151',
+});
+
 export const Knowledge_mapUI = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
@@ -246,6 +379,8 @@ export const Knowledge_mapUI = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [leftPanelEl, setLeftPanelEl] = useState<HTMLElement | null>(null);
+  const [enabledDepTypes, setEnabledDepTypes] = useState<Set<string>>(new Set());
+  const [isRebuilding, setIsRebuilding] = useState(false);
   const userInteractedRef = useRef(false);
   const incomingPanelRef = useRef<HTMLDivElement | null>(null);
   const outgoingPanelRef = useRef<HTMLDivElement | null>(null);
@@ -261,12 +396,30 @@ export const Knowledge_mapUI = () => {
       setBlocks(data.blocks || []);
       setLinks(data.links || []);
       setIsolatedTotal(data.isolated_total ?? 0);
-    } catch (err: any) {
-      setLoadError(err?.message || 'Ошибка загрузки');
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : 'Ошибка загрузки');
     } finally {
       setIsLoading(false);
     }
   }, []);
+
+  const handleRebuild = useCallback(async (useLlm: boolean) => {
+    setIsRebuilding(true);
+    try {
+      await rebuildDependencies(useLlm);
+      await loadData();
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : 'Ошибка пересчёта зависимостей');
+    } finally {
+      setIsRebuilding(false);
+    }
+  }, [loadData]);
+
+  // Только связи выбранных типов зависимостей (пустое множество = все).
+  const visibleLinks = useMemo(() => {
+    if (enabledDepTypes.size === 0) return links;
+    return links.filter((l) => enabledDepTypes.has(l.metadata?.dependency_type || 'causal'));
+  }, [links, enabledDepTypes]);
 
   // Регистрируем viewportRef в глобальном контексте.
   useEffect(() => {
@@ -322,7 +475,7 @@ export const Knowledge_mapUI = () => {
     if (!selectedId) return [];
     const seen = new Set<string>();
     const result: KnowledgeGraphBlock[] = [];
-    for (const link of links) {
+    for (const link of visibleLinks) {
       if (link.target_id === selectedId) {
         const b = blockMap.get(link.source_id);
         if (b && !seen.has(b.id)) {
@@ -332,13 +485,13 @@ export const Knowledge_mapUI = () => {
       }
     }
     return result;
-  }, [links, selectedId, blockMap]);
+  }, [visibleLinks, selectedId, blockMap]);
 
   const outgoingBlocks = useMemo(() => {
     if (!selectedId) return [];
     const seen = new Set<string>();
     const result: KnowledgeGraphBlock[] = [];
-    for (const link of links) {
+    for (const link of visibleLinks) {
       if (link.source_id === selectedId) {
         const b = blockMap.get(link.target_id);
         if (b && !seen.has(b.id)) {
@@ -348,7 +501,7 @@ export const Knowledge_mapUI = () => {
       }
     }
     return result;
-  }, [links, selectedId, blockMap]);
+  }, [visibleLinks, selectedId, blockMap]);
 
   const handleNeighborPick = useCallback((id: string) => {
     const block = blockMap.get(id);
@@ -405,7 +558,7 @@ export const Knowledge_mapUI = () => {
         >
           <container sortableChildren={true}>
             <container zIndex={0} eventMode="none">
-              {links.map((link) => (
+              {visibleLinks.map((link) => (
                 <Link
                   key={link.id}
                   linkData={link}
@@ -436,6 +589,22 @@ export const Knowledge_mapUI = () => {
           </container>
         </Viewport>
       </Application>
+
+      <DependencyControls
+        links={links}
+        enabledDepTypes={enabledDepTypes}
+        onToggleType={(t) => {
+          setEnabledDepTypes((prev) => {
+            const next = new Set(prev);
+            if (next.has(t)) next.delete(t);
+            else next.add(t);
+            return next;
+          });
+        }}
+        onResetTypes={() => setEnabledDepTypes(new Set())}
+        onRebuild={handleRebuild}
+        isRebuilding={isRebuilding}
+      />
 
       {selectedId && (
         <>

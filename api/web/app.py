@@ -398,6 +398,29 @@ async def _ensure_citation_indexes():
         logger.warning(f"[startup] Could not create citation indexes: {e}")
 
 
+@app.on_event("startup")
+async def _ensure_knowledge_statement_indexes():
+    """Создаёт индексы Neo4j для карты триплетов знаний (/km).
+
+    Без :KnowledgeStatement(uid) каждый MATCH по uid в dependency_engine
+    делает полный скан нод, и пакетное создание тысяч [:DEPENDS_ON]
+    «зависает» на минуты.
+    """
+    TRIPLE_INDEXES = [
+        "CREATE INDEX IF NOT EXISTS FOR (s:KnowledgeStatement) ON (s.uid)",
+    ]
+    try:
+        from neomodel import db
+        for cypher in TRIPLE_INDEXES:
+            try:
+                db.cypher_query(cypher)
+            except Exception as e:
+                logger.warning(f"[startup] KnowledgeStatement index failed: {cypher[:60]}... {e}")
+        logger.info("[startup] KnowledgeStatement indexes ensured")
+    except Exception as e:
+        logger.warning(f"[startup] Could not create KnowledgeStatement indexes: {e}")
+
+
 @app.on_event("shutdown")
 async def _close_ai_proxy_client():
     """Закрывает общий httpx-клиент прокси AI Agent микросервиса."""

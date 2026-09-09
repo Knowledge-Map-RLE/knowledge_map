@@ -35,3 +35,16 @@ async def search_isolated_triples(
 ) -> Dict[str, Any]:
     """Поиск по изолированным триплетам с пагинацией."""
     return await _service.search_isolated_triples(q=q, skip=skip, limit=limit)
+
+
+@router.post("/knowledge_triples/rebuild_dependencies")
+async def rebuild_dependencies(
+    use_llm: bool = Query(False, description="Разрешить LLM-верификацию неоднозначных кандидатов"),
+) -> Dict[str, Any]:
+    """
+    Пересчитывает dependency graph карты знаний.
+
+    Запускает DependencyEngine (symbolic rules + опционально LLM),
+    сохраняет полученные dependency edges в Neo4j как [:DEPENDS_ON].
+    """
+    return await _service.rebuild_dependencies(use_llm=use_llm)

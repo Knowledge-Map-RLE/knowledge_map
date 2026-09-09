@@ -2,30 +2,33 @@
 Layer: Services
 Package: services.knowledge_triples_service
 Responsibility: Чтение триплетов знаний (KnowledgeStatement) из Neo4j,
-построение DAG по UUID-ссылкам между утверждениями, вычисление укладки
-через Rust GraphLayoutService (Sugiyama) и поиск изолированных триплетов
-для левой панели карты знаний.
+построение DAG-карты знаний на основе dependency edges (вычисляемых
+DependencyEngine), вычисление укладки через Rust GraphLayoutService
+(Sugiyama) и поиск изолированных триплетов для левой панели.
 
 Каждый триплет — узел графа, идентифицируемый своим uid. Рёбра DAG
-строятся двумя способами:
-  1. UUID-ссылка: если subject_type/object_type == 'statement', а текст —
-     uid другого утверждения, строится ребро «ссылаемый → ссылающийся».
-  2. Структурные связи блоков статьи (step/result/sequence), где A — родитель
-     (sourceBlockId триплета B), B — структурный триплет с object_text = uid
-     блока C: рёбра идут C → B → A (триплеты из C → B → триплеты из A).
+(bependency edges) вычисляются ДВИЖКОМ dependency_engine из semantic
+структуры триплетов (а НЕ напрямую из UUID-ссылок subject/object),
+после чего сохраняются в Neo4j как [:DEPENDS_ON].
+
+См.:
+  - services.dependency_engine.CandidateGenerator — правила Level 1-4
+  - services.dependency_engine.SemanticVerifier — верификация правилами + LLM
+
 Триплеты, не участвующие ни в одном ребре, не попадают на граф и отдаются
 отдельным списком для левой панели.
 """
 from __future__ import annotations
 
 import logging
-import uuid
 from typing import Any, Dict, List, Optional
 
 from fastapi import HTTPException
 from neomodel import db
 
+from domain.models.dependency import DependencyEdge
 from infrastructure.graph_layout_client import get_graph_layout_client
+from services.dependency_engine import DependencyEngine, DependencyPersistence
 
 logger = logging.getLogger(__name__)
 
@@ -88,88 +91,70 @@ class KnowledgeTriplesService:
         return triples
 
     @staticmethod
-    def _collect_references(
-        triples: Dict[str, Dict[str, Any]],
-    ) -> tuple[Dict[str, List[str]], Dict[str, str]]:
-        """Собирает рёбра DAG и маппинг имён блоков.
+    def _collect_references(triples: Dict[str, Dict[str, Any]]) -> List[DependencyEdge]:
+        """Загружает dependency edges из Neo4j (вычисленные DependencyEngine).
 
-        Ребро строится двумя способами:
-          1. UUID-ссылка: если subject_type/object_type == 'statement', то
-             subject_text/object_text — uid другого утверждения.
-          2. Структурные связи статей (C → B → A):
-             Если предикат = step/result/sequence, object_text — uid блока C.
-             A — родительский блок (sourceBlockId триплета B).
-               C → B: каждый триплет из блока C → триплет B.
-               B → A: триплет B → каждый другой триплет из блока A.
+        Рёбра [:DEPENDS_ON] строятся движком dependency_engine (rules + LLM)
+        из семантической структуры триплетов, а НЕ напрямую из UUID-ссылок.
 
-        Возвращает (refs_to, block_names), где block_names блок_uid → имя блока
-        (subject_text первого триплета, порождённого блоком).
+        Если рёбра в Neo4j ещё не вычислены (незасеяны) — возвращает пустой
+        список: карта покажет только plan_uids (декомпозиция целей).
+
+        Возвращает список DependencyEdge.
         """
-        # Индекс: sourceBlockId -> [uid statement, ...].
+        return DependencyPersistence.load_edges()
+
+    @staticmethod
+    def _collect_goal_references(
+        triples: Dict[str, Dict[str, Any]],
+    ) -> List[DependencyEdge]:
+        """Рёбра декомпозиции целей (META decomposed_into) всегда актуальны.
+
+        Даже до пересчёта dependency graph необходимости декомпозиция целей
+        (decomposed_into) показывается на карте: это гарантирует, что план
+        цели виден сразу после создания.
+        """
+        edges: List[DependencyEdge] = []
+        for stmt in triples.values():
+            if stmt["type"] != "META":
+                continue
+            if (stmt.get("predicate") or "").lower() != "decomposed_into":
+                continue
+            if stmt.get("subject_type") != "statement":
+                continue
+            if stmt.get("object_type") != "statement":
+                continue
+            child_uid = stmt.get("subject_text", "")
+            parent_uid = stmt.get("object_text", "")
+            if child_uid and parent_uid:
+                from domain.models.dependency import DependencyType, DiscoveryMethod
+                edges.append(DependencyEdge(
+                    source_uid=child_uid,
+                    target_uid=parent_uid,
+                    dependency_type=DependencyType.GOAL_DIRECTED,
+                    confidence=1.0,
+                    discovery_method=DiscoveryMethod.GOAL_DECOMPOSITION,
+                    is_verified=True,
+                ))
+        return edges
+
+    @staticmethod
+    def _build_block_names(triples: Dict[str, Dict[str, Any]]) -> Dict[str, str]:
+        """Маппинг блок_uid → имя блока (subject_text первого триплета блока)."""
         block_to_statements: Dict[str, List[str]] = {}
         for stmt in triples.values():
             sbid = stmt.get("source_block_id", "")
             if sbid:
                 block_to_statements.setdefault(sbid, []).append(stmt["uid"])
 
-        # Имя блока: subject_text первого триплета из блока.
         block_names: Dict[str, str] = {}
         for sbid, stmt_uids in block_to_statements.items():
-            for uid in stmt_uids:
-                st = triples.get(uid)
+            for uid_ in stmt_uids:
+                st = triples.get(uid_)
                 if st and st["subject_text"]:
                     block_names[sbid] = st["subject_text"]
                     break
-
-        _STRUCTURAL_PREDICATES = {"step", "result", "sequence"}
-
-        # Собираем все рёбра как пары (source, target), затем конвертируем
-        # в refs_to[target] = [source, ...] (source = ссылаемый, target = ссылающийся).
-        edges: list[tuple[str, str]] = []
-
-        for stmt in triples.values():
-            uid = stmt["uid"]
-
-            # 1. UUID-ссылки.
-            if stmt["subject_type"] == "statement" and stmt["object_type"] == "statement":
-                # Связующий META-триплет: subject_text (uid ребёнка) и object_text
-                # (uid родителя). Строим ребро «ребёнок → родитель»: ребёнок
-                # ссылается на родителя, стрелка указывает к цели (декомпозиция
-                # decomposed_into). Без промежуточного узла.
-                edges.append((stmt["subject_text"], stmt["object_text"]))
-            else:
-                if stmt["subject_type"] == "statement":
-                    edges.append((stmt["subject_text"], uid))
-                if stmt["object_type"] == "statement":
-                    edges.append((stmt["object_text"], uid))
-
-            # 2. Структурные связи C → B → A.
-            if stmt["predicate"].lower() in _STRUCTURAL_PREDICATES:
-                child_block_id = stmt["object_text"]
-                parent_block_id = stmt.get("source_block_id", "")
-
-                # C → B: каждый триплет из блока C → текущий триплет B.
-                for c_uid in block_to_statements.get(child_block_id, []):
-                    if c_uid != uid:
-                        edges.append((c_uid, uid))
-
-                # B → A: текущий триплет B → каждый другой триплет из блока A.
-                for a_uid in block_to_statements.get(parent_block_id, []):
-                    if a_uid != uid:
-                        edges.append((uid, a_uid))
-
-        # Конвертация edges -> refs_to (target -> [source, ...]).
-        refs_to: Dict[str, List[str]] = {}
-        for source, target in edges:
-            if source == target:
-                continue
-            refs_to.setdefault(target, []).append(source)
-
-        # Дедупликация.
-        for key in refs_to:
-            refs_to[key] = list(dict.fromkeys(refs_to[key]))
-
-        return refs_to, block_names
+        return block_names
 
     @staticmethod
     def _reposition_by_ranks(
@@ -201,11 +186,15 @@ class KnowledgeTriplesService:
     ) -> Dict[str, Any]:
         """Возвращает DAG-карту триплетов и список изолированных триплетов.
 
+        Рёбра графа — dependency edges (DependencyEngine), вычисленные из
+        семантической структуры утверждений и сохранённые в Neo4j как
+        [:DEPENDS_ON]. UUID-ссылки внутри утверждений рёбрами НЕ становятся.
+
         Returns:
             {
               success: bool,
               blocks: [...],   # триплеты, участвующие в DAG (с x/y от Rust)
-              links: [...],    # рёбра «ссылаемый uid -> ссылающийся uid»
+              links: [...],    # dependency edges с metadata (type/confidence)
               isolated: [...], # триплеты без связей (для левой панели)
               isolated_total: int,
               connected_total: int,
@@ -225,7 +214,12 @@ class KnowledgeTriplesService:
                     "isolated_limit": isolated_limit,
                 }
 
-            refs_to, block_names = self._collect_references(triples)
+            # Dependency edges: вычисленные движком dependency_engine rёbra
+            # (rules + LLM) + всегда актуальные рёбра декомпозиции целей.
+            dependency_edges = self._collect_references(triples)
+            goal_edges = self._collect_goal_references(triples)
+            all_edges = list(dependency_edges) + list(goal_edges)
+            block_names = self._build_block_names(triples)
 
             # uid утверждений, входящих в план декомпозиции (цель и подпункты):
             # они связаны META-триплетами decomposed_into.
@@ -241,45 +235,38 @@ class KnowledgeTriplesService:
                 if bool(stmt.get("is_goal", False)):
                     plan_uids.add(stmt["uid"])
 
-            # Множество uid, задействованных в DAG: ссылающиеся + ссылаемые.
+            # Множество uid, задействованных в DAG: source + target каждого ребра.
             connected_uids: set[str] = set()
-            edges: List[Dict[str, str]] = []
-            for referencing_uid, referenced_uids in refs_to.items():
-                connected_uids.add(referencing_uid)
-                for ref in referenced_uids:
-                    if not ref:
-                        continue
-                    connected_uids.add(ref)
-                    edges.append({"source_id": ref, "target_id": referencing_uid})
-
-            # Уникальные рёбра без дублей.
+            edges: List[Dict[str, Any]] = []
             seen = set()
-            unique_edges = []
-            for e in edges:
-                key = (e["source_id"], e["target_id"])
+            for e in all_edges:
+                key = (e.source_uid, e.target_uid)
                 if key in seen:
                     continue
                 seen.add(key)
-                unique_edges.append(e)
+                if e.source_uid in triples and e.target_uid in triples:
+                    connected_uids.add(e.source_uid)
+                    connected_uids.add(e.target_uid)
+                    edges.append({
+                        "source_id": e.source_uid,
+                        "target_id": e.target_uid,
+                        "dependency_type": e.dependency_type.value,
+                        "confidence": e.confidence,
+                        "discovery_method": e.discovery_method.value,
+                        "is_verified": e.is_verified,
+                    })
 
             # Разделяем граф на две части:
             #   - план декомпозиции (рёбра, где оба конца — блоки плана);
-            #   - всё остальное (обычные триплеты статей/утверждений).
+            #   - всё остальное (обычные dependency edges).
             # Каждая часть укладывается самостоятельно, после чего план
             # сдвигается вправо от самой правой точки обычной части.
             plan_edge_keys = {
                 (e["source_id"], e["target_id"])
-                for e in unique_edges
+                for e in edges
                 if e["source_id"] in plan_uids and e["target_id"] in plan_uids
             }
-            plan_edges = [
-                e for e in unique_edges
-                if (e["source_id"], e["target_id"]) in plan_edge_keys
-            ]
-            regular_edges = [
-                e for e in unique_edges
-                if (e["source_id"], e["target_id"]) not in plan_edge_keys
-            ]
+            regular_edges = [e for e in edges if (e["source_id"], e["target_id"]) not in plan_edge_keys]
             regular_uids = connected_uids - plan_uids
             plan_uids_in_graph = connected_uids & plan_uids
 
@@ -312,7 +299,7 @@ class KnowledgeTriplesService:
 
             # Укладка плана отдельной компонентой.
             plan_positions: Dict[str, Any] = {}
-            if plan_edges:
+            if plan_edges := [e for e in edges if (e["source_id"], e["target_id"]) in plan_edge_keys]:
                 layout_client = get_graph_layout_client()
                 plan_positions = await layout_client.compute_layout(
                     plan_edges,
@@ -382,13 +369,19 @@ class KnowledgeTriplesService:
             for uid_ in sorted(plan_uids_in_graph):
                 blocks.append(build_block(uid_, plan_positions))
 
-            links: List[Dict[str, str]] = []
-            for e in plan_edges + regular_edges:
+            links: List[Dict[str, Any]] = []
+            for e in edges:
                 if e["source_id"] in connected_uids and e["target_id"] in connected_uids:
                     links.append({
                         "id": f"{e['source_id']}->{e['target_id']}",
                         "source_id": e["source_id"],
                         "target_id": e["target_id"],
+                        "metadata": {
+                            "dependency_type": e.get("dependency_type", "causal"),
+                            "confidence": e.get("confidence", 1.0),
+                            "discovery_method": e.get("discovery_method", "exact_match"),
+                            "is_verified": e.get("is_verified", False),
+                        },
                     })
 
             # Изолированные триплеты (не участвуют ни в одном ребре DAG).
@@ -434,6 +427,55 @@ class KnowledgeTriplesService:
             logger.error(f"Error in knowledge triples: {e}", exc_info=True)
             raise HTTPException(status_code=500, detail=str(e))
 
+    async def rebuild_dependencies(self, use_llm: bool = True) -> Dict[str, Any]:
+        """Пересчитывает dependency graph карты знаний.
+
+        Запускает DependencyEngine (Candidate Generator + Semantic Verifier),
+        сохраняет полученные dependency edges в Neo4j как [:DEPENDS_ON]
+        и возвращает статистику.
+
+        Args:
+            use_llm: использовать LLM для верификации неоднозначных кандидатов.
+
+        Returns:
+            {
+              success: bool,
+              triples_total: int,
+              candidates: int,
+              verified: int,
+              saved: int,
+              use_llm: bool,
+            }
+        """
+        try:
+            triples = await self._load_all_triples()
+            engine = DependencyEngine()
+
+            verified_edges = await engine.build_dependency_graph(
+                triples=triples,
+                use_llm=use_llm,
+            )
+            saved = engine.save(verified_edges)
+
+            logger.info(
+                "rebuild_dependencies: triples=%d verified=%d saved=%d use_llm=%s",
+                len(triples),
+                len(verified_edges),
+                saved,
+                use_llm,
+            )
+
+            return {
+                "success": True,
+                "triples_total": len(triples),
+                "verified": len(verified_edges),
+                "saved": saved,
+                "use_llm": use_llm,
+            }
+        except Exception as e:
+            logger.error(f"Error in rebuild_dependencies: {e}", exc_info=True)
+            raise HTTPException(status_code=500, detail=str(e))
+
     async def search_isolated_triples(
         self,
         q: str = "",
@@ -448,13 +490,16 @@ class KnowledgeTriplesService:
         """
         try:
             triples = await self._load_all_triples()
-            refs_to, block_names = self._collect_references(triples)
+            dependency_edges = self._collect_references(triples)
+            goal_edges = self._collect_goal_references(triples)
+            block_names = self._build_block_names(triples)
+
             connected_uids: set[str] = set()
-            for referencing_uid, referenced_uids in refs_to.items():
-                connected_uids.add(referencing_uid)
-                for ref in referenced_uids:
-                    if ref:
-                        connected_uids.add(ref)
+            for e in list(dependency_edges) + list(goal_edges):
+                if e.source_uid in triples:
+                    connected_uids.add(e.source_uid)
+                if e.target_uid in triples:
+                    connected_uids.add(e.target_uid)
 
             isolated_uids = sorted(
                 uid_

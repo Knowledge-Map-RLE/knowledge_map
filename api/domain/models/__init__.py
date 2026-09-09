@@ -15,6 +15,11 @@ from domain.models.pattern import (
     PatternEdgeType,
     NodeRole,
 )
+from domain.models.dependency import (
+    DependencyEdge,
+    DependencyType,
+    DiscoveryMethod,
+)
 
 __all__ = [
     "LinguisticToken",
@@ -29,4 +34,7 @@ __all__ = [
     "PatternNodeType",
     "PatternEdgeType",
     "NodeRole",
+    "DependencyEdge",
+    "DependencyType",
+    "DiscoveryMethod",
 ]
