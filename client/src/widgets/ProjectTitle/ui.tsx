@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
@@ -7,11 +7,22 @@ import { SLOGANS, LINKS, type ProjectTitleProps } from './model';
 
 const ProjectTitle: React.FC<ProjectTitleProps> = ({ className = '' }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const randomSlogan = SLOGANS[Math.floor(Math.random() * SLOGANS.length)];
 
     return (
-        <div className={`${s.main_menu} ${className}`} onClick={() => setIsOpen(o => !o)}>
+        <div ref={menuRef} className={`${s.main_menu} ${className}`} onClick={() => setIsOpen(o => !o)}>
             <h1>КАРТА ЗНАНИЙ</h1>
             <div className={s.slogan}>{randomSlogan}</div>
             <FontAwesomeIcon icon={faBars} className={`${s.arrow} ${isOpen ? s.arrow_open : ''}`} />

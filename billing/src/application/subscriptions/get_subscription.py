@@ -24,8 +24,7 @@ class SubscriptionState:
     current_period_start: Optional[str]
     current_period_end: Optional[str]
     cancel_at_period_end: bool
-    credits_balance: int
-    credits_limit: int
+    token_balance: int
 
 
 class GetSubscription:
@@ -42,8 +41,7 @@ class GetSubscription:
     def execute(self, *, user_id: str, now: datetime) -> SubscriptionState:
         subscription = self._subscription_repository.get_active_by_user(user_id)
         plan_code = effective_plan_code(subscription, now)
-        credits_balance = self._credit_repository.get_balance(user_id)
-        credits_limit = self._monthly_limit(plan_code)
+        token_balance = self._credit_repository.get_balance(user_id)
         return SubscriptionState(
             active=plan_code != "FREE",
             plan_code=plan_code,
@@ -51,13 +49,8 @@ class GetSubscription:
             current_period_start=_iso(subscription.current_period_start) if subscription else None,
             current_period_end=_iso(subscription.current_period_end) if subscription else None,
             cancel_at_period_end=bool(subscription and subscription.cancel_at_period_end),
-            credits_balance=credits_balance,
-            credits_limit=credits_limit,
+            token_balance=token_balance,
         )
-
-    def _monthly_limit(self, plan_code: str) -> int:
-        plan = self._plan_repository.get_by_code(plan_code)
-        return plan.credit_limit if plan else 0
 
 
 def _iso(dt) -> str:

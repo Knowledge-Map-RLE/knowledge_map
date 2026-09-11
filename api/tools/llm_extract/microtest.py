@@ -118,17 +118,7 @@ def main() -> None:
     no_cache = pricing.estimate_usage_cost(
         estimated_input_tokens=est_in, estimated_output_tokens=est_out
     )
-    print(f"  БЕЗ промпт-кэша: ~{pricing.cost_to_kopecks(no_cache.total) / 100:6.2f} ₽")
-    if args.dsl:
-        print("  (DSL: промпт короткий, кэш-префикса почти нет — вход дешёвый)")
-    else:
-        boiler = (len(prompts[0]) // 3) if prompts else 0
-        cached = min(est_in, boiler * (len(frag_chunks) - 1)) if len(frag_chunks) > 1 else 0
-        with_cache = pricing.estimate_usage_cost(
-            estimated_input_tokens=est_in, estimated_output_tokens=est_out,
-            cached_input_tokens=cached,
-        )
-        print(f"  С промпт-кэшем (~{cached} ток.): ~{pricing.cost_to_kopecks(with_cache.total) / 100:6.2f} ₽")
+    print(f"  Оценка: ~{pricing.tokens_to_kopecks(no_cache.total) / 100:6.2f} ₽")
 
     if not args.go:
         print("\nТолько оценка цены (--go не указан). LLM НЕ вызывался.")
@@ -158,12 +148,11 @@ def main() -> None:
         total_out += res.get("output_tokens", 0)
         gen = res.get("generated_text", "")
         cost = pricing.calculate_usage_cost(
-            input_tokens=res.get("input_tokens", 0) + res.get("cached_input_tokens", 0),
-            cached_input_tokens=res.get("cached_input_tokens", 0),
+            input_tokens=res.get("input_tokens", 0),
             output_tokens=res.get("output_tokens", 0),
         )
         print(f"  вход={res.get('input_tokens')} выход={res.get('output_tokens')} "
-              f"кэш={res.get('cached_input_tokens', 0)} ЦЕНА=~{pricing.cost_to_kopecks(cost.total) / 100:.3f}₽")
+              f"ЦЕНА=~{pricing.tokens_to_kopecks(cost.total) / 100:.3f}₽")
 
         if args.dsl:
             blocks = parse_dsl_text(gen)
@@ -177,7 +166,7 @@ def main() -> None:
 
     total = pricing.calculate_usage_cost(input_tokens=total_in, output_tokens=total_out)
     print("\n=== ИТОГО ===")
-    print(f"  вход={total_in} выход={total_out} ЦЕНА=~{pricing.cost_to_kopecks(total.total) / 100:.3f}₽")
+    print(f"  вход={total_in} выход={total_out} ЦЕНА=~{pricing.tokens_to_kopecks(total.total) / 100:.3f}₽")
 
     # Метрика-проверка: recall эталонных листовых T4 абстрактных атрибутов
     if all_blocks:

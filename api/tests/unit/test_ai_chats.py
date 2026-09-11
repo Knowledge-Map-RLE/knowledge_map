@@ -200,23 +200,20 @@ def test_send_message_streams_and_records_usage(repo, chat):
     assert usages[0].user_uid == "user-1"
     assert usages[0].actual_input_tokens == 10
     assert usages[0].actual_output_tokens == 5
-    # 10 вх. токенов некэшированных: 10*0.30/1000=0.003; 5 вых: 5*0.50/1000=0.0025 → 0.0055
-    assert usages[0].actual_cost == "0.0055"
+    # вход 10*0.00002409=0.0002409; выход 5*0.00004820=0.0002410 → 0.0004819
+    assert usages[0].actual_cost == "0.0004819"
 
     usage_evt = [e for e in events if e["type"] == "usage"][0]
-    assert usage_evt["cost"] == "0.0055"
-    assert usage_evt["cached_tokens"] == 0
-    # вход 10*0.30/1000=0.003; кэш 0; выход 5*0.50/1000=0.0025; инструменты 0
+    assert usage_evt["cost"] == "0.0004819"
     assert usage_evt["cost_breakdown"] == {
-        "input": "0.003",
-        "cached": "0",
-        "output": "0.0025",
+        "input": "0.0002409",
+        "output": "0.000241",
         "tool": "0",
     }
     assert usage_evt["deducted"] is True
     assert billing.calls and billing.calls[0]["reference_id"] == usages[0].provider_request_id
-    # 0.0055 ₽ → ceil → 1 копейка
-    assert billing.calls[0]["amount"] == 1
+    # 15 токенов (10 вх + 5 вых)
+    assert billing.calls[0]["amount"] == 15
     assert events[-1]["type"] == "done"
 
 
@@ -235,11 +232,10 @@ def test_send_message_foreign_chat_blocked(repo, chat):
         )
 
 
-def test_send_message_records_cached_tokens_and_breakdown(repo, chat):
+def test_send_message_records_usage_and_breakdown(repo, chat):
     gateway = FakeGateway(
         usage={
             "prompt_tokens": 2000,
-            "prompt_cache_hit_tokens": 1200,
             "completion_tokens": 300,
             "total_tokens": 2300,
             "tool_tokens": 50,
@@ -258,18 +254,14 @@ def test_send_message_records_cached_tokens_and_breakdown(repo, chat):
     )
 
     usage = repo.usages[0]
-    # 1200 кэш *0.075/1000=0.09; 800 некэш *0.30/1000=0.24; 300 вых *0.50/1000=0.15;
-    # 50 инструментов *0.075/1000=0.00375 → 0.48375
-    assert usage.actual_cached_tokens == 1200
-    assert usage.actual_cost == "0.48375"
+    # вход 2000*0.00002409=0.04818; выход 300*0.00004820=0.01446; инстр. 50*0.00002409=0.0012045
+    assert usage.actual_cost == "0.0638445"
 
     usage_evt = [e for e in events if e["type"] == "usage"][0]
-    assert usage_evt["cached_tokens"] == 1200
     assert usage_evt["cost_breakdown"] == {
-        "input": "0.24",
-        "cached": "0.09",
-        "output": "0.15",
-        "tool": "0.00375",
+        "input": "0.04818",
+        "output": "0.01446",
+        "tool": "0.0012045",
     }
 
 
@@ -291,8 +283,8 @@ def test_usage_summary_period(repo, chat):
     assert summary["request_count"] == 2
     assert summary["input_tokens"] == 20
     assert summary["output_tokens"] == 10
-    # 2 * 0.0055 = 0.011
-    assert summary["cost"] == "0.011"
+    # 2 * 0.0004819 = 0.0009638
+    assert summary["cost"] == "0.0009638"
 
 
 def _payload_for_messages(repo, chat_uid):
@@ -308,7 +300,6 @@ def test_messages_payload_distributes_usage_to_pair(repo, chat):
     gateway = FakeGateway(
         usage={
             "prompt_tokens": 2000,
-            "prompt_cache_hit_tokens": 1200,
             "completion_tokens": 300,
             "total_tokens": 2300,
             "tool_tokens": 50,
@@ -331,18 +322,15 @@ def test_messages_payload_distributes_usage_to_pair(repo, chat):
     assert payloads[0]["role"] == "user"
     assert payloads[1]["role"] == "assistant"
 
-    # user-сообщение: входная часть (input + кэш), стоимость входа
+    # user-сообщение: входная часть (input), стоимость входа
     user = payloads[0]
     assert user["tokens"] == 2000
     assert user["input_tokens"] == 2000
-    assert user["cached_tokens"] == 1200
     assert user["tool_tokens"] == 0
-    assert user["cache_used"] is True
-    # 800 * 0.30/1000 + 1200 * 0.075/1000 = 0.24 + 0.09 = 0.33
-    assert user["cost"] == "0.33"
+    # 2000 * 0.00002409 = 0.04818
+    assert user["cost"] == "0.04818"
     assert user["cost_breakdown"] == {
-        "input": "0.24",
-        "cached": "0.09",
+        "input": "0.04818",
         "output": "0",
         "tool": "0",
     }
@@ -351,19 +339,16 @@ def test_messages_payload_distributes_usage_to_pair(repo, chat):
     assistant = payloads[1]
     assert assistant["tokens"] == 300
     assert assistant["input_tokens"] == 0
-    assert assistant["cached_tokens"] == 0
     assert assistant["tool_tokens"] == 50
-    assert assistant["cache_used"] is False
-    # 300 * 0.50/1000 + 50 * 0.075/1000 = 0.15 + 0.00375 = 0.15375
-    assert assistant["cost"] == "0.15375"
+    # 300 * 0.00004820 = 0.01446; 50 * 0.00002409 = 0.0012045
+    assert assistant["cost"] == "0.0156645"
     assert assistant["cost_breakdown"] == {
         "input": "0",
-        "cached": "0",
-        "output": "0.15",
-        "tool": "0.00375",
+        "output": "0.01446",
+        "tool": "0.0012045",
     }
     # суммарная стоимость пары совпадает с фактической
-    assert str((float(user["cost"]) + float(assistant["cost"]))) == "0.48375"
+    assert str((float(user["cost"]) + float(assistant["cost"]))) == "0.0638445"
 
 
 def test_messages_payload_without_usage(repo, chat):
@@ -383,4 +368,3 @@ def test_messages_payload_without_usage(repo, chat):
     assert len(payloads) == 1
     assert payloads[0]["tokens"] is None
     assert payloads[0]["cost"] is None
-    assert payloads[0]["cache_used"] is False

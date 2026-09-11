@@ -5,39 +5,35 @@ import {
     PLANS,
     GROUPS,
     FAQ,
+    TOKEN_PRICES,
     FORUM_URL,
     type Plan,
 } from './model';
+import { useToast } from '../../shared/ui/Toast';
 import {
-    cancelSubscription,
     createCheckout,
     fetchSubscription,
     type SubscriptionState,
 } from '../../services/api/billing';
 
 const SubscriptionUI: React.FC = () => {
+    const { error: toastError } = useToast();
     const [openFaq, setOpenFaq] = useState<number | null>(0);
     const [subscription, setSubscription] = useState<SubscriptionState | null>(null);
-    const [subLoaded, setSubLoaded] = useState(false);
-    const [subError, setSubError] = useState<string | null>(null);
     const [checkoutPlan, setCheckoutPlan] = useState<string | null>(null);
-    const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
     const loadSubscription = useCallback(async () => {
         try {
             const state = await fetchSubscription();
             setSubscription(state);
-            setSubError(null);
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Не удалось получить статус подписки';
-            if (!/401/.test(message)) {
-                setSubError(message);
+            if (!/401|Authorization|Unauthorized/i.test(message)) {
+                toastError(message);
             }
             setSubscription(null);
-        } finally {
-            setSubLoaded(true);
         }
-    }, []);
+    }, [toastError]);
 
     useEffect(() => {
         loadSubscription();
@@ -48,7 +44,6 @@ const SubscriptionUI: React.FC = () => {
             return;
         }
         setCheckoutPlan(plan.id);
-        setCheckoutError(null);
         try {
             const result = await createCheckout(plan.id.toUpperCase());
             if (result.confirmation_url) {
@@ -57,22 +52,14 @@ const SubscriptionUI: React.FC = () => {
             }
             throw new Error('Сервис не вернул ссылку на оплату');
         } catch (err) {
-            const message = err instanceof Error ? err.message : 'Не удалось оформить подписку';
-            setCheckoutError(message);
+            const message = err instanceof Error ? err.message : 'Не удалось оформить покупку';
+            if (!/401|Authorization|Unauthorized/i.test(message)) {
+                toastError(message);
+            }
         } finally {
             setCheckoutPlan(null);
         }
-    }, []);
-
-    const handleCancel = useCallback(async () => {
-        try {
-            await cancelSubscription();
-            await loadSubscription();
-        } catch (err) {
-            const message = err instanceof Error ? err.message : 'Не удалось отменить подписку';
-            setSubError(message);
-        }
-    }, [loadSubscription]);
+    }, [toastError]);
 
     const currentPlanCode = subscription?.plan_code ?? 'FREE';
 
@@ -81,55 +68,17 @@ const SubscriptionUI: React.FC = () => {
             <Header showSearch={true} className={styles.header} />
             <main className={styles.main}>
 
-                <section className={styles.statusSection}>
-                    <div className={styles.sectionInner}>
-                        {subLoaded && subscription && (
-                            <div className={styles.statusBanner}>
-                                <div className={styles.statusInfo}>
-                                    <span className={styles.statusLabel}>Ваш тариф</span>
-                                    <span className={styles.statusPlan}>{subscription.plan_code}</span>
-                                    {subscription.cancel_at_period_end && (
-                                        <span className={styles.statusCancelNote}>
-                                            отменена, действует до конца периода
-                                        </span>
-                                    )}
-                                </div>
-                                <div className={styles.statusCredits}>
-                                    <span className={styles.statusCreditsValue}>
-                                        {subscription.credits.balance.toLocaleString('ru-RU')}
-                                    </span>
-                                    <span className={styles.statusCreditsLabel}>кредитов</span>
-                                </div>
-                                {subscription.active && !subscription.cancel_at_period_end && (
-                                    <button
-                                        type="button"
-                                        className={styles.statusCancelBtn}
-                                        onClick={handleCancel}
-                                    >
-                                        Отменить
-                                    </button>
-                                )}
-                            </div>
-                        )}
-                        {subError && (
-                            <div className={styles.statusError}>{subError}</div>
-                        )}
-                        {checkoutError && (
-                            <div className={styles.statusError}>{checkoutError}</div>
-                        )}
-                    </div>
-                </section>
-
                 <section className={styles.pricing} id="pricing">
                     <div className={styles.pricingGlowBlue} />
                     <div className={styles.pricingGlowPurple} />
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <div className={styles.heroBadge}>Подписки</div>
-                            <h1 className={styles.sectionTitle}>Тарифы Карты Знаний</h1>
+                            <div className={styles.heroBadge}>Токены</div>
+                            <h1 className={styles.sectionTitle}>Пакеты токенов Карты Знаний</h1>
                             <p className={styles.sectionSubtitle}>
-                                Начните бесплатно и расширяйте возможности по мере роста.
-                                Платные функции подключаются в один клик, ваши данные сохраняются при любом плане.
+                                Покупайте токены — платите только за использование.
+                                Сервис не потратит лишних денег: при исчерпании токенов
+                                ИИ-функции приостанавливаются.
                             </p>
                         </div>
 
@@ -175,10 +124,6 @@ const SubscriptionUI: React.FC = () => {
                                 </tbody>
                             </table>
                         </div>
-
-                        <div className={styles.tableNote}>
-                            * У Max единственное отличие от Pro — увеличенные лимиты.
-                        </div>
                     </div>
                 </section>
 
@@ -211,7 +156,7 @@ const SubscriptionUI: React.FC = () => {
                     <div className={styles.ctaInner}>
                         <h2>Поддержите науку о продлении жизни</h2>
                         <p>
-                            Проект открыт и бесплатен для всех. Оформите подписку — и вы получите полный набор
+                            Проект открыт и бесплатен для всех. Купите пакет токенов — и вы получите полный набор
                             ИИ-инструментов, а проект — устойчивость и развитие.
                         </p>
                         <div className={styles.ctaButtons}>
@@ -221,7 +166,7 @@ const SubscriptionUI: React.FC = () => {
                                 onClick={() => handleCheckout(PLANS[1])}
                                 disabled={checkoutPlan !== null}
                             >
-                                {checkoutPlan === PLANS[1].id ? 'Перенаправляем…' : 'Оформить подписку'}
+                                {checkoutPlan === PLANS[1].id ? 'Перенаправляем…' : 'Купить токены'}
                             </button>
                             <a href={FORUM_URL} target="_blank" rel="noopener noreferrer" className={styles.ctaGhostBtn}>
                                 Задать вопрос в сообществе
@@ -254,7 +199,7 @@ const PlanCard: React.FC<{
             onClick={onSelect}
             disabled={busy || disabled}
         >
-            {busy ? 'Перенаправляем…' : current ? 'Текущий тариф' : plan.ctaLabel}
+            {busy ? 'Перенаправляем…' : current ? 'Текущий баланс' : plan.ctaLabel}
         </button>
     </div>
 );
@@ -262,18 +207,17 @@ const PlanCard: React.FC<{
 const GroupBody: React.FC<{
     title: string;
     groupId: string;
-    rows: readonly { label: string; free: boolean; pro: boolean; max: boolean }[];
+    rows: readonly { label: string; free: boolean; paid: boolean }[];
 }> = ({ title, groupId, rows }) => (
     <>
         <tr className={styles.groupRow}>
-            <td className={styles.groupTitle} colSpan={4}>{title}</td>
+            <td className={styles.groupTitle} colSpan={3}>{title}</td>
         </tr>
         {rows.map(row => (
             <tr key={groupId + '-' + row.label}>
                 <td className={styles.featureName}>{row.label}</td>
                 <td className={styles.featureCell}>{row.free ? <Check /> : <Dash />}</td>
-                <td className={styles.featureCell}>{row.pro ? <Check /> : <Dash />}</td>
-                <td className={styles.featureCell}>{row.max ? <Check /> : <Dash />}</td>
+                <td className={styles.featureCell}>{row.paid ? <Check /> : <Dash />}</td>
             </tr>
         ))}
     </>

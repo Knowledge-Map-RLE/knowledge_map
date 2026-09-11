@@ -8,6 +8,9 @@ export const PROFILE_UPDATED_EVENT = 'km:profile-updated';
  *  Испускается из любого места UI (например, из панели «Профиль»). */
 export const ACCOUNT_MODAL_EVENT = 'km:open-account-modal';
 
+/** Событие открытия модалки личного кабинета на вкладке «Пакеты токенов». */
+export const ACCOUNT_SUBSCRIPTION_EVENT = 'km:open-account-subscription';
+
 // ── Типы социальной сети ───────────────────────────────────────────────────
 
 export interface SocialContacts {

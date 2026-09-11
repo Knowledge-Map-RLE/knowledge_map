@@ -130,15 +130,12 @@ def _message_payload(m, usage_by_message: dict, messages) -> dict:
         "tokens": None,
         "cost": None,
         "input_tokens": None,
-        "cached_tokens": None,
         "tool_tokens": None,
         "total_tokens": None,
         "cost_breakdown": None,
-        "cache_used": False,
     }
     usage = usage_by_message.get(m.uid)
     if m.role == "user":
-        # парное сообщение ассистента — следующее в истории
         idx = next((i for i, x in enumerate(messages) if x.uid == m.uid), -1)
         nxt = messages[idx + 1] if idx >= 0 and idx + 1 < len(messages) else None
         if nxt is not None and nxt.role == "assistant":
@@ -149,7 +146,6 @@ def _message_payload(m, usage_by_message: dict, messages) -> dict:
     if m.role == "user":
         cost = calculate_usage_cost(
             input_tokens=usage.actual_input_tokens,
-            cached_input_tokens=usage.actual_cached_tokens,
             output_tokens=0,
             tool_tokens=0,
         )
@@ -158,22 +154,18 @@ def _message_payload(m, usage_by_message: dict, messages) -> dict:
                 "tokens": usage.actual_input_tokens,
                 "cost": str(cost.total.normalize()),
                 "input_tokens": usage.actual_input_tokens,
-                "cached_tokens": usage.actual_cached_tokens,
                 "tool_tokens": 0,
                 "total_tokens": usage.actual_input_tokens,
                 "cost_breakdown": {
                     "input": str(cost.input_cost.normalize()),
-                    "cached": str(cost.cached_input_cost.normalize()),
                     "output": "0",
                     "tool": "0",
                 },
-                "cache_used": bool(usage.actual_cached_tokens),
             }
         )
     else:
         cost = calculate_usage_cost(
             input_tokens=0,
-            cached_input_tokens=0,
             output_tokens=usage.actual_output_tokens,
             tool_tokens=usage.actual_tool_tokens,
         )
@@ -182,16 +174,13 @@ def _message_payload(m, usage_by_message: dict, messages) -> dict:
                 "tokens": usage.actual_output_tokens,
                 "cost": str(cost.total.normalize()),
                 "input_tokens": 0,
-                "cached_tokens": 0,
                 "tool_tokens": usage.actual_tool_tokens,
                 "total_tokens": usage.actual_output_tokens + usage.actual_tool_tokens,
                 "cost_breakdown": {
                     "input": "0",
-                    "cached": "0",
                     "output": str(cost.output_cost.normalize()),
                     "tool": str(cost.tool_cost.normalize()),
                 },
-                "cache_used": False,
             }
         )
     return base

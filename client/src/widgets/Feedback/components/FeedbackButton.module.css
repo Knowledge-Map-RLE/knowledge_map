@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 14px;
+    padding: 2px 12px;
     border: none;
     border-radius: 6px;
     background: #DC2626;
@@ -15,7 +15,8 @@
     white-space: nowrap;
     flex-shrink: 0;
     transition: background 0.15s, transform 0.1s;
-    height: 36px;
+    height: var(--header-control-height);
+    box-sizing: border-box;
 }
 
 .button:hover {

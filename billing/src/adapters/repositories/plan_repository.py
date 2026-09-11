@@ -26,7 +26,7 @@ class PlanRepository:
             price_kopecks=node.price_kopecks,
             currency=node.currency,
             period=node.period,
-            credit_limit=node.credit_limit,
+            tokens_granted=node.tokens_granted,
             sort_order=node.sort_order,
             is_active=node.is_active,
         )

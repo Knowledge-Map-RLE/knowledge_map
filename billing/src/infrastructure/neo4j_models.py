@@ -30,8 +30,8 @@ class PlanNode(StructuredNode):
     name = StringProperty(required=True)
     price_kopecks = IntegerProperty(required=True)
     currency = StringProperty(default="RUB")
-    period = StringProperty(default="month")
-    credit_limit = IntegerProperty(default=0)
+    period = StringProperty(default="token")
+    tokens_granted = IntegerProperty(default=0)
     sort_order = IntegerProperty(default=0)
     is_active = BooleanProperty(default=True)
 

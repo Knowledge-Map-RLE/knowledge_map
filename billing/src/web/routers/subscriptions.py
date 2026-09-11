@@ -25,10 +25,7 @@ async def subscription_state(
         "current_period_start": state.current_period_start,
         "current_period_end": state.current_period_end,
         "cancel_at_period_end": state.cancel_at_period_end,
-        "credits": {
-            "balance": state.credits_balance,
-            "limit": state.credits_limit,
-        },
+        "token_balance": state.token_balance,
     }
 
 
@@ -38,4 +35,4 @@ async def cancel_subscription(
     use_case: CancelSubscription = Depends(get_cancel_subscription),
 ) -> dict:
     use_case.execute(user_id=actor.user_id, now=utcnow())
-    return {"status": "cancelled_at_period_end"}
+    return {"status": "cancelled"}

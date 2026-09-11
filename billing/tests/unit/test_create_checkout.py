@@ -12,7 +12,7 @@ async def test_checkout_success(repos, gateway):
 
     result = await checkout.execute(
         user_id="user-1",
-        plan_code="PRO",
+        plan_code="TOKENS_50M",
         return_url="http://localhost:5555/subscription",
     )
 
@@ -22,9 +22,9 @@ async def test_checkout_success(repos, gateway):
     payment = repos["payments"].get_by_uid(result.payment_uid)
     assert payment is not None
     assert payment.user_id == "user-1"
-    assert payment.amount_kopecks == 150000
+    assert payment.amount_kopecks == 200000
     assert payment.status == PaymentStatus.PENDING
-    assert payment.metadata == {"user_id": "user-1", "plan_code": "PRO"}
+    assert payment.metadata == {"user_id": "user-1", "plan_code": "TOKENS_50M"}
 
 
 @pytest.mark.asyncio
@@ -54,4 +54,4 @@ async def test_checkout_provider_error_wrapped(repos, gateway):
     checkout = make_checkout(repos, BoomGateway())
 
     with pytest.raises(CheckoutError):
-        await checkout.execute(user_id="user-1", plan_code="PRO", return_url="http://x")
+        await checkout.execute(user_id="user-1", plan_code="TOKENS_50M", return_url="http://x")

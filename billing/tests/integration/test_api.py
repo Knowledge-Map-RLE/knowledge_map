@@ -126,20 +126,21 @@ def test_list_plans(client):
     response = test_client.get("/billing/plans")
     assert response.status_code == 200
     plans = response.json()
-    assert {p["code"] for p in plans} == {"FREE", "PRO", "MAX"}
-    pro = next(p for p in plans if p["code"] == "PRO")
-    assert pro["price_kopecks"] == 150000
+    assert {p["code"] for p in plans} == {"FREE", "TOKENS_50M", "TOKENS_200M"}
+    tokens_50m = next(p for p in plans if p["code"] == "TOKENS_50M")
+    assert tokens_50m["price_kopecks"] == 200000
+    assert tokens_50m["tokens_granted"] == 50_000_000
 
 
 def test_checkout_requires_auth(client):
     test_client, _, _ = client
-    response = test_client.post("/billing/checkout", json={"plan_code": "PRO"})
+    response = test_client.post("/billing/checkout", json={"plan_code": "TOKENS_50M"})
     assert response.status_code == 401
 
 
 def test_checkout_flow(client):
     test_client, repos, _ = client
-    response = _post(test_client, "/billing/checkout", {"plan_code": "PRO"})
+    response = _post(test_client, "/billing/checkout", {"plan_code": "TOKENS_50M"})
     assert response.status_code == 200
     body = response.json()
     assert body["confirmation_url"].startswith("https://")
@@ -159,26 +160,25 @@ def test_subscription_state_free(client):
     body = response.json()
     assert body["plan_code"] == "FREE"
     assert body["active"] is False
-    assert body["credits"]["limit"] == 100
+    assert body["token_balance"] == 0
 
 
 def test_access_denied_without_subscription(client):
     test_client, _, _ = client
-    response = _get(test_client, "/billing/access", user_id="user-1")
     response = test_client.get(
         "/billing/access",
         headers=_auth_headers(),
-        params={"user_id": "user-1", "required_plan": "PRO"},
+        params={"user_id": "user-1", "required_plan": "TOKENS_50M"},
     )
     assert response.status_code == 200
     body = response.json()
     assert body["allowed"] is False
-    assert body["reason"] == "PLAN_REQUIRED:PRO"
+    assert body["reason"] == "PLAN_REQUIRED:TOKENS_50M"
 
 
 def test_webhook_full_flow(client):
     test_client, repos, _ = client
-    checkout = _post(test_client, "/billing/checkout", {"plan_code": "PRO"})
+    checkout = _post(test_client, "/billing/checkout", {"plan_code": "TOKENS_50M"})
     payment = repos["payments"].get_by_uid(checkout.json()["payment_uid"])
 
     response = test_client.post(
@@ -187,8 +187,8 @@ def test_webhook_full_flow(client):
             "event": "payment.succeeded",
             "object": {
                 "id": payment.provider_payment_id,
-                "amount": {"value": "1500.00", "currency": "RUB"},
-                "metadata": {"user_id": "user-1", "plan_code": "PRO"},
+                "amount": {"value": "2000.00", "currency": "RUB"},
+                "metadata": {"user_id": "user-1", "plan_code": "TOKENS_50M"},
             },
         },
     )
@@ -196,8 +196,8 @@ def test_webhook_full_flow(client):
     assert response.json()["status"] == "processed"
 
     sub_response = _get(test_client, "/billing/subscription")
-    assert sub_response.json()["plan_code"] == "PRO"
-    assert sub_response.json()["credits"]["balance"] == 10000
+    assert sub_response.json()["plan_code"] == "TOKENS_50M"
+    assert sub_response.json()["token_balance"] == 50_000_000
 
 
 def test_webhook_idempotent(client):
@@ -206,8 +206,8 @@ def test_webhook_idempotent(client):
         "event": "payment.succeeded",
         "object": {
             "id": "pmt-ext",
-            "amount": {"value": "1500.00", "currency": "RUB"},
-            "metadata": {"user_id": "user-1", "plan_code": "PRO"},
+            "amount": {"value": "2000.00", "currency": "RUB"},
+            "metadata": {"user_id": "user-1", "plan_code": "TOKENS_50M"},
         },
     }
     first = test_client.post("/billing/webhooks/yookassa", json=payload)

@@ -29,28 +29,28 @@ FREE_PLAN = Plan(
     code="FREE",
     name="Free",
     price_kopecks=0,
-    credit_limit=100,
+    tokens_granted=0,
     sort_order=0,
 )
-PRO_PLAN = Plan(
-    code="PRO",
-    name="Pro",
-    price_kopecks=150000,
-    credit_limit=10000,
+TOKENS_50M_PLAN = Plan(
+    code="TOKENS_50M",
+    name="50M токенов",
+    price_kopecks=200000,
+    tokens_granted=50_000_000,
     sort_order=1,
 )
-MAX_PLAN = Plan(
-    code="MAX",
-    name="Max",
-    price_kopecks=2000000,
-    credit_limit=200000,
+TOKENS_200M_PLAN = Plan(
+    code="TOKENS_200M",
+    name="200M токенов",
+    price_kopecks=800000,
+    tokens_granted=200_000_000,
     sort_order=2,
 )
 
 
 class FakePlanRepository:
     def __init__(self, plans: Optional[List[Plan]] = None):
-        self.plans = {p.code: p for p in (plans or [FREE_PLAN, PRO_PLAN, MAX_PLAN])}
+        self.plans = {p.code: p for p in (plans or [FREE_PLAN, TOKENS_50M_PLAN, TOKENS_200M_PLAN])}
 
     def list_active(self) -> List[Plan]:
         return [p for p in self.plans.values() if p.is_active]
@@ -240,7 +240,7 @@ class FakeGateway:
         return GatewayPayment(
             provider_payment_id=provider_payment_id,
             status=self.get_status,
-            amount_kopecks=last["amount_kopecks"] if last else 150000,
+            amount_kopecks=last["amount_kopecks"] if last else 200000,
             currency=last["currency"] if last else "RUB",
         )
 
@@ -298,13 +298,13 @@ def make_processor(repos: Dict, gateway: FakeGateway) -> ProcessProviderEvent:
     )
 
 
-def make_succeeded_event(provider_id: str = "pmt-1", amount: str = "1500.00", **overrides) -> Dict:
+def make_succeeded_event(provider_id: str = "pmt-1", amount: str = "2000.00", **overrides) -> Dict:
     event = {
         "event": "payment.succeeded",
         "object": {
             "id": provider_id,
             "amount": {"value": amount, "currency": "RUB"},
-            "metadata": {"user_id": "user-1", "plan_code": "PRO"},
+            "metadata": {"user_id": "user-1", "plan_code": "TOKENS_50M"},
         },
     }
     event["object"].update(overrides)
@@ -326,11 +326,11 @@ def pro_payment(repos) -> Payment:
     payment = Payment(
         uid="pay-1",
         user_id="user-1",
-        amount_kopecks=150000,
+        amount_kopecks=200000,
         currency="RUB",
         status="PENDING",
         provider_payment_id="pmt-1",
-        metadata={"user_id": "user-1", "plan_code": "PRO"},
+        metadata={"user_id": "user-1", "plan_code": "TOKENS_50M"},
     )
     repos["payments"].create(payment)
     return payment

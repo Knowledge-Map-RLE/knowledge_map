@@ -63,8 +63,9 @@
     width: 100%;
     border-radius: 5px;
     font-size: 13px;
-    padding: 4px 12px;
+    padding: 2px 12px;
     white-space: nowrap;
+    align-self: stretch;
     @apply bg-blue-500
 }
 

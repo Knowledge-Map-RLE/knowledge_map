@@ -1,7 +1,11 @@
 """
 Layer: Domain
 Package: domain.rules.subscription_rules
-Responsibility: Правила подписки: период, активность, доступ к тарифам.
+Responsibility: Правила подписки: активность, доступ к тарифам.
+
+Модель «токены без срока»: подписка активна, пока пользователь
+имеет ненулевой баланс токенов. Отдельные пакеты токенов
+накапливаются на балансе.
 """
 from datetime import datetime, timedelta
 from typing import Optional
@@ -10,6 +14,10 @@ from ..models.plan import Plan
 from ..models.subscription import Subscription, SubscriptionStatus
 
 FREE_PLAN_CODE = "FREE"
+
+# Подписка с токенами не имеет фиксированного периода —
+# действует бессрочно (до исчерпания токенов).
+_TOKEN_SUBSCRIPTION_END = datetime(2999, 12, 31, 23, 59, 59)
 
 
 def add_one_month(dt: datetime) -> datetime:
@@ -29,7 +37,13 @@ def _days_in_month(year: int, month: int) -> int:
 
 
 def compute_period(plan: Plan, from_when: Optional[datetime] = None) -> tuple[datetime, datetime]:
-    """Период действия тарифа: [start, end). Если план бесплатный — период не создаётся."""
+    """Период действия тарифа.
+
+    Для токенных пакетов (period='token') — бессрочный период.
+    """
+    if plan.period == "token":
+        start = from_when or datetime.utcnow()
+        return start, _TOKEN_SUBSCRIPTION_END
     if plan.period != "month":
         raise ValueError(f"Unsupported plan period: {plan.period!r}")
     start = from_when or datetime.utcnow()
@@ -52,19 +66,15 @@ def effective_plan_code(subscription: Optional[Subscription], now: datetime) -> 
 
 
 def can_use(subscription: Optional[Subscription], required_plan: str, now: datetime) -> bool:
-    """Проверка доступа к функции тарифа. Max включает Pro."""
+    """Проверка доступа к функции тарифа."""
     if required_plan == FREE_PLAN_CODE:
         return True
     current = effective_plan_code(subscription, now)
-    if current == required_plan:
-        return True
-    if required_plan == "PRO" and current == "MAX":
-        return True
-    return False
+    return current == required_plan
 
 
 def period_extended(old_end: Optional[datetime], new_end: datetime) -> bool:
-    """Расширился ли период подписки (защита от повторного начисления кредитов)."""
+    """Расширился ли период подписки (защита от повторного начисления токенов)."""
     if old_end is None:
         return True
     return new_end > old_end

@@ -21,9 +21,9 @@ async def test_payment_succeeded_activates_subscription(repos, gateway, pro_paym
 
     sub = repos["subscriptions"].get_active_by_user("user-1")
     assert sub is not None
-    assert sub.plan_code == "PRO"
+    assert sub.plan_code == "TOKENS_50M"
 
-    assert repos["credits"].get_balance("user-1") == 10000
+    assert repos["credits"].get_balance("user-1") == 50_000_000
 
 
 @pytest.mark.asyncio
@@ -36,8 +36,8 @@ async def test_duplicate_event_idempotent(repos, gateway, pro_payment):
 
     assert first.status == ProcessingStatus.PROCESSED
     assert second.status == ProcessingStatus.ALREADY_PROCESSED
-    assert repos["credits"].get_balance("user-1") == 10000
-    assert repos["subscriptions"].get_active_by_user("user-1").plan_code == "PRO"
+    assert repos["credits"].get_balance("user-1") == 50_000_000
+    assert repos["subscriptions"].get_active_by_user("user-1").plan_code == "TOKENS_50M"
 
 
 @pytest.mark.asyncio
@@ -153,7 +153,7 @@ async def test_reconstructs_payment_from_event_when_missing(repos, gateway):
     assert result.status == ProcessingStatus.PROCESSED
     payment = repos["payments"].get_by_provider_id("pmt-new")
     assert payment is not None
-    assert repos["credits"].get_balance("user-1") == 10000
+    assert repos["credits"].get_balance("user-1") == 50_000_000
 
 
 def test_processing_result_statuses():

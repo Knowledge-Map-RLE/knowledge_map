@@ -34,6 +34,7 @@ import { FeedbackAdminPanel } from './FeedbackAdminPanel';
 interface AccountModalProps {
     myUid: string;
     onClose: () => void;
+    initialTab?: Tab;
 }
 
 type Tab = 'profile' | 'communities' | 'subscription' | 'feedback';
@@ -56,11 +57,11 @@ const formatRubles = (cost: string): string => {
     return `${value.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ₽`;
 };
 
-export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) => {
+export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose, initialTab }) => {
     const { error: toastError, success: toastSuccess } = useToast();
     const navigate = useNavigate();
     const fileRef = useRef<HTMLInputElement>(null);
-    const [tab, setTab] = useState<Tab>('profile');
+    const [tab, setTab] = useState<Tab>(initialTab ?? 'profile');
     const [subscription, setSubscription] = useState<SubscriptionState | null>(null);
     const [loadingSub, setLoadingSub] = useState(false);
     const [cancelling, setCancelling] = useState(false);
@@ -164,7 +165,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) =>
         setCancelling(true);
         try {
             await cancelSubscription();
-            toastSuccess('Подписка отменена — действует до конца периода');
+            toastSuccess('Подписка отменена');
             await loadSubscription();
         } catch (e) {
             toastError(e instanceof Error ? e.message : 'Не удалось отменить подписку');
@@ -310,7 +311,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) =>
                         Мои сообщества
                     </button>
                     <button className={btnTab(tab === 'subscription')} onClick={() => setTab('subscription')}>
-                        Подписка
+                        Токены
                     </button>
                     {role === 'admin' && (
                         <button className={btnTab(tab === 'feedback')} onClick={() => setTab('feedback')}>
@@ -463,13 +464,13 @@ export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) =>
                                     )}
                                 </div>
                                 <div className={s.field}>
-                                    <label>Кредиты</label>
+                                    <label>Токены</label>
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-lg font-semibold text-gray-900">
-                                            {subscription.credits.balance.toLocaleString('ru-RU')}
+                                            {subscription.token_balance.toLocaleString('ru-RU')}
                                         </span>
                                         <span className="text-sm text-gray-500">
-                                            доступно из лимита {subscription.credits.limit.toLocaleString('ru-RU')}
+                                            доступно
                                         </span>
                                     </div>
                                 </div>
@@ -488,7 +489,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) =>
                                                         <span className="text-sm text-gray-500">в этом месяце</span>
                                                     </div>
                                                     <div className="text-xs text-gray-400">
-                                                        {aiUsage.current.request_count} запросов · {aiUsage.current.total_tokens.toLocaleString('ru-RU')} ток. ({aiUsage.current.input_tokens.toLocaleString('ru-RU')} вх. + {aiUsage.current.cached_tokens.toLocaleString('ru-RU')} кэш + {aiUsage.current.output_tokens.toLocaleString('ru-RU')} вых.)
+                                                        {aiUsage.current.request_count} запросов · {aiUsage.current.total_tokens.toLocaleString('ru-RU')} ток. ({aiUsage.current.input_tokens.toLocaleString('ru-RU')} вх. + {aiUsage.current.output_tokens.toLocaleString('ru-RU')} вых.)
                                                     </div>
                                                 </div>
                                             )}
@@ -523,7 +524,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ myUid, onClose }) =>
                                             navigate('/subscription');
                                         }}
                                     >
-                                        {subscription.plan_code === 'FREE' ? 'Оформить подписку' : 'Изменить тариф'}
+                                        {subscription.plan_code === 'FREE' ? 'Купить токены' : 'Купить ещё'}
                                     </button>
                                 </div>
                             </>

@@ -14,38 +14,38 @@ DEFAULT_PLANS = [
         "code": "FREE",
         "name": "Free",
         "price_kopecks": 0,
-        "credit_limit": 100,
+        "tokens_granted": 0,
         "sort_order": 0,
     },
     {
-        "code": "PRO",
-        "name": "Pro",
-        "price_kopecks": 150000,
-        "credit_limit": 10000,
+        "code": "TOKENS_50M",
+        "name": "50M токенов",
+        "price_kopecks": 200000,
+        "tokens_granted": 50_000_000,
         "sort_order": 1,
     },
     {
-        "code": "MAX",
-        "name": "Max",
-        "price_kopecks": 2000000,
-        "credit_limit": 200000,
+        "code": "TOKENS_200M",
+        "name": "200M токенов",
+        "price_kopecks": 800000,
+        "tokens_granted": 200_000_000,
         "sort_order": 2,
     },
 ]
 
 
 def seed_plans() -> None:
-    """Создаёт/обновляет тарифы FREE/PRO/MAX (идемпотентно)."""
+    """Создаёт/обновляет тарифы (идемпотентно)."""
     for item in DEFAULT_PLANS:
         node = PlanNode.nodes.get_or_none(code=item["code"])
         if node is None:
             node = PlanNode(code=item["code"])
         node.name = item["name"]
         node.price_kopecks = item["price_kopecks"]
-        node.credit_limit = item["credit_limit"]
+        node.tokens_granted = item["tokens_granted"]
         node.sort_order = item["sort_order"]
         node.is_active = True
         node.currency = "RUB"
-        node.period = "month"
+        node.period = "token"
         node.save()
     logger.info("Plans seeded: %s", ", ".join(p["code"] for p in DEFAULT_PLANS))

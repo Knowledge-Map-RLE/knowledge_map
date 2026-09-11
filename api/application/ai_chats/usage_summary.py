@@ -55,7 +55,6 @@ def usage_summary(
     )
 
     input_tokens = 0
-    cached_tokens = 0
     output_tokens = 0
     tool_tokens = 0
     total_cost = Decimal("0")
@@ -63,7 +62,6 @@ def usage_summary(
 
     for usage in usages:
         input_tokens += usage.actual_input_tokens
-        cached_tokens += usage.actual_cached_tokens
         output_tokens += usage.actual_output_tokens
         tool_tokens += usage.actual_tool_tokens
         try:
@@ -75,10 +73,9 @@ def usage_summary(
     return {
         "period": period,
         "input_tokens": input_tokens,
-        "cached_tokens": cached_tokens,
         "output_tokens": output_tokens,
         "tool_tokens": tool_tokens,
-        "total_tokens": input_tokens + cached_tokens + output_tokens + tool_tokens,
+        "total_tokens": input_tokens + output_tokens + tool_tokens,
         "cost": str(total_cost.normalize()),
         "currency": "RUB",
         "request_count": request_count,

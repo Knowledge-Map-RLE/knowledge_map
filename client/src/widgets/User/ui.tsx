@@ -10,7 +10,7 @@ import { NotificationsPopup } from './components/NotificationsPopup';
 import { useAuth, AUTH_LOGIN_EVENT } from '../../entities/auth';
 import type { User as UserType } from '../../services/auth';
 import type { ModalType, UserProps } from './model';
-import { getUnreadCount, getMe, PROFILE_UPDATED_EVENT, ACCOUNT_MODAL_EVENT, socialImageUrl } from '../../services/api/social';
+import { getUnreadCount, getMe, PROFILE_UPDATED_EVENT, ACCOUNT_MODAL_EVENT, ACCOUNT_SUBSCRIPTION_EVENT, socialImageUrl } from '../../services/api/social';
 
 const User: React.FC<UserProps> = ({ className = '' }) => {
     const [activeModal, setActiveModal] = useState<ModalType>(null);
@@ -18,6 +18,7 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [notifOpen, setNotifOpen] = useState(false);
     const [accountOpen, setAccountOpen] = useState(false);
+    const [accountInitialTab, setAccountInitialTab] = useState<'profile' | 'subscription'>('profile');
     const [unread, setUnread] = useState(0);
     const [avatarKey, setAvatarKey] = useState('');
     const menuRef = useRef<HTMLDivElement>(null);
@@ -72,9 +73,15 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
     }, []);
 
     useEffect(() => {
-        const openAccount = () => setAccountOpen(true);
+        const openAccount = () => { setAccountInitialTab('profile'); setAccountOpen(true); };
         window.addEventListener(ACCOUNT_MODAL_EVENT, openAccount);
         return () => window.removeEventListener(ACCOUNT_MODAL_EVENT, openAccount);
+    }, []);
+
+    useEffect(() => {
+        const openSub = () => { setAccountInitialTab('subscription'); setAccountOpen(true); };
+        window.addEventListener(ACCOUNT_SUBSCRIPTION_EVENT, openSub);
+        return () => window.removeEventListener(ACCOUNT_SUBSCRIPTION_EVENT, openSub);
     }, []);
 
     useEffect(() => {
@@ -214,7 +221,7 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
             )}
 
             {accountOpen && (
-                <AccountModal myUid={userData.uid} onClose={() => setAccountOpen(false)} />
+                <AccountModal myUid={userData.uid} onClose={() => setAccountOpen(false)} initialTab={accountInitialTab} />
             )}
         </div>
     );

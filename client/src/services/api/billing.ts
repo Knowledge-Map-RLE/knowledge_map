@@ -38,7 +38,7 @@ export interface BillingPlan {
     price_kopecks: number;
     currency: string;
     period: string;
-    credit_limit: number;
+    tokens_granted: number;
     sort_order: number;
 }
 
@@ -49,10 +49,7 @@ export interface SubscriptionState {
     current_period_start: string | null;
     current_period_end: string | null;
     cancel_at_period_end: boolean;
-    credits: {
-        balance: number;
-        limit: number;
-    };
+    token_balance: number;
 }
 
 export interface CheckoutResult {
@@ -65,7 +62,7 @@ export function fetchPlans(): Promise<BillingPlan[]> {
     return billingFetchJson<BillingPlan[]>('/billing/plans');
 }
 
-/** Текущее состояние подписки и баланс кредитов. */
+/** Текущее состояние подписки и баланс токенов. */
 export function fetchSubscription(): Promise<SubscriptionState> {
     return billingFetchJson<SubscriptionState>('/billing/subscription');
 }
@@ -78,7 +75,7 @@ export function createCheckout(planCode: string): Promise<CheckoutResult> {
     });
 }
 
-/** Отмена подписки с конца оплаченного периода. */
+/** Отмена подписки. */
 export function cancelSubscription(): Promise<{ status: string }> {
     return billingFetchJson<{ status: string }>('/billing/subscription/cancel', {
         method: 'POST',

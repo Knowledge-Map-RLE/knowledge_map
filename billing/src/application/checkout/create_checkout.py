@@ -47,7 +47,8 @@ class CreateCheckout:
 
         amount_kopecks = plan.price_kopecks
         currency = plan.currency
-        description = f"{plan.name} ({plan.price_kopecks // 100} {currency}/мес)"
+        tokens_m = plan.tokens_granted // 1_000_000
+        description = f"{plan.name} ({tokens_m}M токенов, {amount_kopecks // 100} {currency})"
         metadata = {"user_id": user_id, "plan_code": plan.code}
 
         try:

@@ -178,11 +178,11 @@ class ProcessProviderEvent:
                     now=now,
                 )
                 logger.info(
-                    "Subscription %s activated for user %s (plan %s, credits +%s)",
+                    "Subscription %s activated for user %s (plan %s, tokens +%s)",
                     activation.subscription.uid,
                     payment.user_id,
                     plan_code,
-                    activation.credits_granted,
+                    activation.tokens_granted,
                 )
             self._record_event(external_event_id, event_type, payload, now)
             return ProcessingResult(ProcessingStatus.PROCESSED, "payment succeeded")

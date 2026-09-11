@@ -22,7 +22,7 @@ async def list_plans(use_case: ListPlans = Depends(get_list_plans)) -> List[dict
             "price_kopecks": plan.price_kopecks,
             "currency": plan.currency,
             "period": plan.period,
-            "credit_limit": plan.credit_limit,
+            "tokens_granted": plan.tokens_granted,
             "sort_order": plan.sort_order,
         }
         for plan in use_case.execute()

@@ -18,7 +18,7 @@ from typing import AsyncIterator, List, Optional
 
 from domain.exceptions import AuthorizationFailed, NotFoundError
 from domain.models.ai_chat import AIChat, AIMessage, AIUsage
-from domain.rules.ai_pricing import calculate_usage_cost, cost_to_kopecks
+from domain.rules.ai_pricing import calculate_usage_cost, total_tokens_cost
 
 logger = logging.getLogger(__name__)
 
@@ -144,11 +144,10 @@ async def send_ai_message_stream(
     if result.total_tokens or result.completion_tokens:
         cost = calculate_usage_cost(
             input_tokens=result.prompt_tokens,
-            cached_input_tokens=result.cached_tokens or 0,
             output_tokens=result.completion_tokens,
             tool_tokens=result.tool_tokens,
         )
-        result.actual_cost = str(cost.total)
+        result.actual_cost = str(cost.total.normalize())
 
     assistant_order = user_order + 1
     assistant_msg = AIMessage(
@@ -175,7 +174,7 @@ async def send_ai_message_stream(
         estimated_cached_tokens=None,
         estimated_cost=estimated.get("estimated_cost", "0"),
         actual_input_tokens=result.prompt_tokens,
-        actual_cached_tokens=result.cached_tokens or 0,
+        actual_cached_tokens=0,
         actual_output_tokens=result.completion_tokens,
         actual_tool_tokens=result.tool_tokens,
         actual_cost=result.actual_cost,
@@ -183,13 +182,17 @@ async def send_ai_message_stream(
     )
     repository.save_usage(usage_record)
 
-    # Идемпотентное списание через billing.
-    amount_kopecks = cost_to_kopecks(_decimal(result.actual_cost)) if result.actual_cost != "0" else 0
-    if amount_kopecks > 0:
+    # Идемпотентное списание токенов через billing.
+    tokens_deduct = total_tokens_cost(
+        input_tokens=result.prompt_tokens,
+        output_tokens=result.completion_tokens,
+        tool_tokens=result.tool_tokens,
+    ) if result.total_tokens or result.completion_tokens else 0
+    if tokens_deduct > 0:
         try:
             deduct = billing.deduct_credits(
                 user_id=user_uid,
-                amount=amount_kopecks,
+                amount=tokens_deduct,
                 reference_id=usage_record.provider_request_id,
                 description=f"AI usage chat={chat_uid}",
             )
@@ -204,14 +207,12 @@ async def send_ai_message_stream(
         "type": "usage",
         "message_uid": assistant_msg.uid,
         "prompt_tokens": result.prompt_tokens,
-        "cached_tokens": result.cached_tokens or 0,
         "completion_tokens": result.completion_tokens,
         "tool_tokens": result.tool_tokens,
         "total_tokens": result.total_tokens,
         "cost": result.actual_cost,
         "cost_breakdown": _cost_breakdown(
             input_tokens=result.prompt_tokens,
-            cached_input_tokens=result.cached_tokens or 0,
             output_tokens=result.completion_tokens,
             tool_tokens=result.tool_tokens,
         ),
@@ -225,20 +226,17 @@ async def send_ai_message_stream(
 def _cost_breakdown(
     *,
     input_tokens: int,
-    cached_input_tokens: int,
     output_tokens: int,
     tool_tokens: int,
 ) -> dict:
-    """Разбивка стоимости по компонентам (вход/кэш/выход/инструменты)."""
+    """Разбивка стоимости по компонентам (вход/выход/инструменты)."""
     cost = calculate_usage_cost(
         input_tokens=input_tokens,
-        cached_input_tokens=cached_input_tokens,
         output_tokens=output_tokens,
         tool_tokens=tool_tokens,
     )
     return {
         "input": str(cost.input_cost.normalize()),
-        "cached": str(cost.cached_input_cost.normalize()),
         "output": str(cost.output_cost.normalize()),
         "tool": str(cost.tool_cost.normalize()),
     }

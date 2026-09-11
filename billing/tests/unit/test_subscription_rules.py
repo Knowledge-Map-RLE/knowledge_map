@@ -13,7 +13,13 @@ from domain.rules.subscription_rules import (
     is_active,
 )
 
-PRO_PLAN = Plan(code="PRO", name="Pro", price_kopecks=150000, credit_limit=10000)
+TOKENS_50M_PLAN = Plan(
+    code="TOKENS_50M",
+    name="50M токенов",
+    price_kopecks=200000,
+    tokens_granted=50_000_000,
+    period="token",
+)
 
 
 def _dt(year, month, day):
@@ -34,11 +40,11 @@ def test_add_one_month(dt, expected):
     assert add_one_month(dt) == expected
 
 
-def test_compute_period():
+def test_compute_period_token():
     start = _dt(2026, 1, 15)
-    period_start, period_end = compute_period(PRO_PLAN, from_when=start)
+    period_start, period_end = compute_period(TOKENS_50M_PLAN, from_when=start)
     assert period_start == start
-    assert period_end == _dt(2026, 2, 15)
+    assert period_end.year == 2999
 
 
 def test_compute_period_rejects_unknown_period():
@@ -51,7 +57,7 @@ def _active_sub(end: datetime) -> Subscription:
     return Subscription(
         uid="sub-1",
         user_id="user-1",
-        plan_code="PRO",
+        plan_code="TOKENS_50M",
         status=SubscriptionStatus.ACTIVE,
         current_period_start=_dt(2026, 1, 1),
         current_period_end=end,
@@ -59,7 +65,7 @@ def _active_sub(end: datetime) -> Subscription:
 
 
 def test_is_active_true():
-    sub = _active_sub(_dt(2026, 2, 1))
+    sub = _active_sub(_dt(2099, 12, 1))
     assert is_active(sub, _dt(2026, 1, 15)) is True
 
 
@@ -69,7 +75,7 @@ def test_is_active_false_after_end():
 
 
 def test_is_active_false_cancelled():
-    sub = _active_sub(_dt(2026, 2, 1))
+    sub = _active_sub(_dt(2099, 12, 1))
     sub.status = SubscriptionStatus.CANCELLED
     assert is_active(sub, _dt(2026, 1, 15)) is False
 
@@ -79,7 +85,7 @@ def test_effective_plan_code_free_without_subscription():
 
 
 def test_effective_plan_code_active():
-    assert effective_plan_code(_active_sub(_dt(2026, 2, 1)), _dt(2026, 1, 15)) == "PRO"
+    assert effective_plan_code(_active_sub(_dt(2099, 12, 1)), _dt(2026, 1, 15)) == "TOKENS_50M"
 
 
 def test_effective_plan_code_falls_back_to_free_when_expired():
@@ -90,23 +96,10 @@ def test_effective_plan_code_falls_back_to_free_when_expired():
     "sub,required,expected",
     [
         (None, "FREE", True),
-        (None, "PRO", False),
-        (_active_sub(_dt(2026, 2, 1)), "PRO", True),
-        (_active_sub(_dt(2026, 2, 1)), "MAX", False),
-        (_active_sub(_dt(2026, 1, 10)), "PRO", False),
+        (None, "TOKENS_50M", False),
+        (_active_sub(_dt(2099, 12, 1)), "TOKENS_50M", True),
+        (_active_sub(_dt(2026, 1, 10)), "TOKENS_50M", False),
     ],
 )
 def test_can_use(sub, required, expected):
     assert can_use(sub, required, _dt(2026, 1, 15)) is expected
-
-
-def test_can_use_max_includes_pro():
-    sub = Subscription(
-        uid="sub-max",
-        user_id="user-1",
-        plan_code="MAX",
-        status=SubscriptionStatus.ACTIVE,
-        current_period_start=_dt(2026, 1, 1),
-        current_period_end=_dt(2026, 2, 1),
-    )
-    assert can_use(sub, "PRO", _dt(2026, 1, 15)) is True

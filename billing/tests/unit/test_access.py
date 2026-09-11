@@ -7,7 +7,7 @@ from domain.models import Subscription
 from domain.models.subscription import SubscriptionStatus
 
 
-def _make_sub(plan_code="PRO", end_year=2026, end_month=2):
+def _make_sub(plan_code="TOKENS_50M", end_year=2099, end_month=12):
     return Subscription(
         uid=f"sub-{plan_code}",
         user_id="user-1",
@@ -25,32 +25,25 @@ def test_access_free_allowed(repos, now):
     assert decision.plan_code == "FREE"
 
 
-def test_access_pro_denied_for_free(repos, now):
+def test_access_paid_denied_for_free(repos, now):
     access = CheckAccess(subscription_repository=repos["subscriptions"])
-    decision = access.execute(user_id="user-1", required_plan="PRO", now=now)
+    decision = access.execute(user_id="user-1", required_plan="TOKENS_50M", now=now)
     assert decision.allowed is False
-    assert decision.reason == "PLAN_REQUIRED:PRO"
+    assert decision.reason == "PLAN_REQUIRED:TOKENS_50M"
 
 
-def test_access_pro_allowed_with_subscription(repos, now):
-    repos["subscriptions"].save(_make_sub("PRO"))
+def test_access_paid_allowed_with_subscription(repos, now):
+    repos["subscriptions"].save(_make_sub("TOKENS_50M"))
     access = CheckAccess(subscription_repository=repos["subscriptions"])
-    decision = access.execute(user_id="user-1", required_plan="PRO", now=now)
+    decision = access.execute(user_id="user-1", required_plan="TOKENS_50M", now=now)
     assert decision.allowed is True
-    assert decision.plan_code == "PRO"
-
-
-def test_access_max_allows_pro(repos, now):
-    repos["subscriptions"].save(_make_sub("MAX"))
-    access = CheckAccess(subscription_repository=repos["subscriptions"])
-    assert access.execute(user_id="user-1", required_plan="PRO", now=now).allowed is True
-    assert access.execute(user_id="user-1", required_plan="MAX", now=now).allowed is True
+    assert decision.plan_code == "TOKENS_50M"
 
 
 def test_access_expired_subscription_is_free(repos, now):
-    repos["subscriptions"].save(_make_sub("PRO", end_year=2025))
+    repos["subscriptions"].save(_make_sub("TOKENS_50M", end_year=2025))
     access = CheckAccess(subscription_repository=repos["subscriptions"])
-    decision = access.execute(user_id="user-1", required_plan="PRO", now=now)
+    decision = access.execute(user_id="user-1", required_plan="TOKENS_50M", now=now)
     assert decision.allowed is False
     assert decision.plan_code == "FREE"
 
@@ -64,12 +57,12 @@ def test_subscription_state_free_user(repos, now):
     state = get_sub.execute(user_id="user-1", now=now)
     assert state.active is False
     assert state.plan_code == "FREE"
-    assert state.credits_limit == 100
+    assert state.token_balance == 0
 
 
-def test_subscription_state_pro_user(repos, now):
-    repos["subscriptions"].save(_make_sub("PRO"))
-    repos["credits"].get_or_create_account("user-1").balance = 5000
+def test_subscription_state_paid_user(repos, now):
+    repos["subscriptions"].save(_make_sub("TOKENS_50M"))
+    repos["credits"].get_or_create_account("user-1").balance = 30_000_000
     get_sub = GetSubscription(
         subscription_repository=repos["subscriptions"],
         credit_repository=repos["credits"],
@@ -77,6 +70,5 @@ def test_subscription_state_pro_user(repos, now):
     )
     state = get_sub.execute(user_id="user-1", now=now)
     assert state.active is True
-    assert state.plan_code == "PRO"
-    assert state.credits_balance == 5000
-    assert state.credits_limit == 10000
+    assert state.plan_code == "TOKENS_50M"
+    assert state.token_balance == 30_000_000

@@ -17,6 +17,59 @@
   padding: 10px;
 }
 
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  justify-content: center;
+  max-width: 140px;
+  text-align: center;
+  height: var(--header-control-height);
+  box-sizing: border-box;
+}
+
+.badgeLink {
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.badgeLink:hover {
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+}
+
+.badgeClickable {
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.badgeClickable:hover {
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+}
+
+.badgeText {
+  background: linear-gradient(135deg, #6366F1 0%, #A855F7 50%, #EC4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.badgeIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
 .user {
   width: 300px;
 }

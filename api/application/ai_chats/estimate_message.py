@@ -24,17 +24,14 @@ def estimate_message(
     cost = estimate_usage_cost(
         estimated_input_tokens=estimated["estimated_input_tokens"],
         estimated_output_tokens=estimated["estimated_output_tokens"],
-        cached_input_tokens=None,
     )
     return {
         "estimated_input_tokens": estimated["estimated_input_tokens"],
         "estimated_output_tokens": estimated["estimated_output_tokens"],
-        "estimated_cached_tokens": None,
         "estimated_cost": str(cost.total),
         "estimated_max_cost": str(cost.total),
         "cost_breakdown": {
             "input": str(cost.input_cost.normalize()),
-            "cached": str(cost.cached_input_cost.normalize()),
             "output": str(cost.output_cost.normalize()),
             "tool": str(cost.tool_cost.normalize()),
         },
