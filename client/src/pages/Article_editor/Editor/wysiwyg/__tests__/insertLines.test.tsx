@@ -30,8 +30,8 @@ const ID_A = '00065966-ea98-8000-9000-00000000000a';
 const ID_B = '00065966-ea98-8000-9000-00000000000b';
 
 const initialBlocks: ArticleBlockData[] = [
-    { instanceId: ID_A, blockType: 3, order: 0, data: { content: 'AAA' } },
-    { instanceId: ID_B, blockType: 3, order: 1, data: { content: 'BBB' } },
+    { instanceId: ID_A, blockType: 'text', order: 0, data: { content: 'AAA' } },
+    { instanceId: ID_B, blockType: 'text', order: 1, data: { content: 'BBB' } },
 ];
 
 // Редактор контролируемый: состояние блоков живёт снаружи (onApply),

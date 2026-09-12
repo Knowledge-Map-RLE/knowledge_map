@@ -21,6 +21,11 @@ import threading
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from src.uuid8 import uuid8_str
+from src.schemas.block_types import (
+    BlockType,
+    coerce_block_type,
+    LEGACY_INT_TO_KEY,
+)
 from . import settings
 from .ai_model_client import get_ai_model_client
 from .llm_triplet_extraction_prompt_en import (
@@ -38,7 +43,7 @@ DEFAULT_TEMPERATURE = settings.LLM_TEMPERATURE
 MAX_RETRIES = settings.LLM_MAX_RETRIES
 
 # Типы, у которых есть sequence (для summary).
-CONTAINER_TYPES = {7, 16, 22, 23, 37, 38, 39, 40, 44, 46, 47, 56, 57}
+CONTAINER_TYPES = {"hypothesis", "biological_mechanism", "entity", "definition", "statistical_processing", "claim", "limitations", "side_findings", "novelty", "future_research_suggestions", "reference", "experiment_step", "finding"}
 
 _JSON_FENCE_RE = re.compile(r"```(?:json)?\s*(.*?)```", re.IGNORECASE | re.DOTALL)
 _PLACEHOLDER_RE = re.compile(r"\{?\s*SEQ\s*(\d+)\s*\}?")
@@ -49,48 +54,48 @@ _UUID_RE_SIMPLE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-
 
 _HEADING_RE = re.compile(r"^#{1,3}\s+\S")
 
-_UNIFIED_BLOCK_TYPE_MAP: Dict[str, int] = {
-    "article": 1,
-    "objective": 2,
-    "hypothesis": 7,
-    "study": 4,
-    "experiment": 14,
-    "entity": 22,
-    "definition": 23,
-    "intervention": 18,
-    "model": 19,
-    "group": 55,
-    "procedure_step": 56,
-    "result": 57,
-    "statistic": 37,
-    "claim": 38,
-    "mechanism": 16,
-    "action": 54,
-    "relation": 58,
-    "action_relation": 58,
-    "temporal_relation": 59,
-    "limitation": 39,
-    "novelty": 44,
-    "future_proposal": 46,
-    "reference": 47,
-    "funding": 51,
-    "side_finding": 40,
-    "atomic_statement": 4,
-    "direct_triplet": 4,
-    "p_value": 27,
-    "side_finding": 40,
-    "conclusions": 20,
-    "animal_group": 55,
-    "animal_model": 19,
-    "biological_mechanism": 16,
-    "experiment_step": 56,
-    "result_finding": 57,
-    "statistical_processing": 37,
-    "study_limitations": 39,
-    "concept_definition": 23,
-    "research_goal": 2,
-    "links_to_previous_research": 47,
-    "funding_sources": 51,
+_UNIFIED_BLOCK_TYPE_MAP: Dict[str, str] = {
+    "article": "metadata",
+    "objective": "goal",
+    "hypothesis": "hypothesis",
+    "study": "statement",
+    "experiment": "experiment",
+    "entity": "entity",
+    "definition": "definition",
+    "intervention": "intervention",
+    "model": "animal_model",
+    "group": "animal_group",
+    "procedure_step": "experiment_step",
+    "result": "finding",
+    "statistic": "statistical_processing",
+    "claim": "claim",
+    "mechanism": "biological_mechanism",
+    "action": "action",
+    "relation": "relation",
+    "action_relation": "relation",
+    "temporal_relation": "temporal_relation",
+    "limitation": "limitations",
+    "novelty": "novelty",
+    "future_proposal": "future_research_suggestions",
+    "reference": "reference",
+    "funding": "funding",
+    "side_finding": "side_findings",
+    "atomic_statement": "statement",
+    "direct_triplet": "statement",
+    "p_value": "probability_value",
+    "side_finding": "side_findings",
+    "conclusions": "post_claims",
+    "animal_group": "animal_group",
+    "animal_model": "animal_model",
+    "biological_mechanism": "biological_mechanism",
+    "experiment_step": "experiment_step",
+    "result_finding": "finding",
+    "statistical_processing": "statistical_processing",
+    "study_limitations": "limitations",
+    "concept_definition": "definition",
+    "research_goal": "goal",
+    "links_to_previous_research": "reference",
+    "funding_sources": "funding",
 }
 
 
@@ -309,14 +314,13 @@ class LLMTripletExtractionService:
         for b in blocks:
             if not isinstance(b, dict):
                 continue
-            bt_raw = b.get("blockType", b.get("type", 0))
-            if isinstance(bt_raw, str):
-                bt = _UNIFIED_BLOCK_TYPE_MAP.get(bt_raw, 0)
+            bt_raw = b.get("blockType", b.get("type", ""))
+            if isinstance(bt_raw, int):
+                bt = LEGACY_INT_TO_KEY.get(bt_raw, "")
+            elif isinstance(bt_raw, str):
+                bt = coerce_block_type(bt_raw)
             else:
-                try:
-                    bt = int(bt_raw)
-                except (TypeError, ValueError):
-                    bt = 0
+                bt = ""
             d = b.get("data")
             if not isinstance(d, dict):
                 d = {k: v for k, v in b.items() if k not in ("blockType", "type", "tag", "container")}
@@ -364,23 +368,23 @@ class LLMTripletExtractionService:
         article_text: Optional[str],
     ) -> List[Dict[str, Any]]:
         """Добавляет T47/T51, если модель их не выдала (надёжные секции)."""
-        has_type = {int(b.get("blockType", 0)) for b in blocks}
+        has_type = {b.get("blockType", "") for b in blocks}
 
         # T51 «Финансирование» — секция в тексте, bullet-список грантов.
-        if 51 not in has_type and article_text:
+        if "funding" not in has_type and article_text:
             funding = cls._extract_funding_text(article_text)
             if funding:
                 blocks = list(blocks) + [
-                    {"uuid": uuid8_str(), "blockType": 51, "data": {"funding": funding}}
+                    {"uuid": uuid8_str(), "blockType": "funding", "data": {"funding": funding}}
                 ]
-                has_type.add(51)
+                has_type.add("funding")
 
         # T47 «Связи с предыдущими исследованиями» — обёртка над prior-work T4.
-        if 47 not in has_type:
+        if "reference" not in has_type:
             prior = [
                 b
                 for b in blocks
-                if int(b.get("blockType", 0)) == 4
+                if b.get("blockType", "") == "statement"
                 and cls._PRIOR_WORK_RE.search(
                     " ".join(
                         str((b.get("data") or {}).get(k, ""))
@@ -391,7 +395,7 @@ class LLMTripletExtractionService:
             if prior:
                 seq = json.dumps([b["uuid"] for b in prior])
                 blocks = list(blocks) + [
-                    {"uuid": uuid8_str(), "blockType": 47, "data": {"references": "", "sequence": seq}}
+                    {"uuid": uuid8_str(), "blockType": "reference", "data": {"references": "", "sequence": seq}}
                 ]
         return blocks
 
@@ -427,19 +431,19 @@ class LLMTripletExtractionService:
         t57_uuid_to_value: Dict[str, Any] = {}
         out: List[Dict[str, Any]] = []
         for b in blocks:
-            bt = int(b.get("blockType", 0))
+            bt = b.get("blockType", "")
             data = b.get("data") or {}
             uid = str(b.get("uuid", ""))
             by_uuid[uid] = b
             order.append(uid)
-            if bt == 27:
+            if bt == "probability_value":
                 v = data.get("pValue")
                 if isinstance(v, (int, float)) and not isinstance(v, bool):
                     if v not in value_to_keep:
                         value_to_keep[v] = uid
                 out.append(b)
                 continue
-            if bt == 57:
+            if bt == "finding":
                 pv = data.get("pValue")
                 if isinstance(pv, str) and _UUID_RE_SIMPLE.match(pv):
                     t57_uuid_to_value[uid] = pv
@@ -453,7 +457,7 @@ class LLMTripletExtractionService:
         replacement: Dict[str, str] = {}
         for uid in order:
             b = by_uuid[uid]
-            if int(b.get("blockType", 0)) != 27:
+            if b.get("blockType", "") != "probability_value":
                 continue
             v = b.get("data", {}).get("pValue")
             keep = value_to_keep.get(v)
@@ -466,7 +470,7 @@ class LLMTripletExtractionService:
             uid = str(b.get("uuid", ""))
             if uid in drop:
                 continue
-            if int(b.get("blockType", 0)) == 57:
+            if b.get("blockType", "") == "finding":
                 pv = b.get("data", {}).get("pValue")
                 if isinstance(pv, str) and pv in replacement:
                     b["data"] = dict(b["data"])
@@ -491,14 +495,14 @@ class LLMTripletExtractionService:
         один T1. Держим блок с максимальным числом авторов, остальные T1
         удаляем (их sequence-содержимое при этом сохраняется в T4-блоках).
         """
-        t1 = [b for b in blocks if int(b.get("blockType", 0)) == 1]
+        t1 = [b for b in blocks if b.get("blockType", "") == "metadata"]
         if len(t1) <= 1:
             return list(blocks)
         keep = max(t1, key=lambda b: len((b.get("data") or {}).get("authors") or []))
         keep_uid = str(keep.get("uuid", ""))
         return [
             b for b in blocks
-            if int(b.get("blockType", 0)) != 1 or str(b.get("uuid", "")) == keep_uid
+            if b.get("blockType", "") != "metadata" or str(b.get("uuid", "")) == keep_uid
         ]
 
     @staticmethod
@@ -512,7 +516,7 @@ class LLMTripletExtractionService:
         return [
             b for b in blocks
             if not (
-                int(b.get("blockType", 0)) == 54
+                b.get("blockType", "") == "action"
                 and str((b.get("data") or {}).get("predicate", "")).strip()
                 in LLMTripletExtractionService._CREDIT_ROLES
             )
@@ -540,7 +544,7 @@ class LLMTripletExtractionService:
         """
         defining: Dict[str, str] = {}
         for b in blocks:
-            if int(b.get("blockType", 0)) == 4:
+            if b.get("blockType", "") == "statement":
                 s = str((b.get("data") or {}).get("subject", "") or "").strip()
                 if s and not _UUID_RE_SIMPLE.match(s):
                     defining.setdefault(
@@ -548,7 +552,7 @@ class LLMTripletExtractionService:
                     )
         freq: Dict[str, int] = {}
         for b in blocks:
-            if int(b.get("blockType", 0)) == 4:
+            if b.get("blockType", "") == "statement":
                 d = b.get("data") or {}
                 for k in ("subject", "object"):
                     v = str(d.get(k, "") or "").strip()
@@ -557,7 +561,7 @@ class LLMTripletExtractionService:
                         freq[key] = freq.get(key, 0) + 1
         out: List[Dict[str, Any]] = []
         for b in blocks:
-            if int(b.get("blockType", 0)) == 4:
+            if b.get("blockType", "") == "statement":
                 d = dict(b.get("data") or {})
                 uid = str(b.get("uuid", "") or "")
                 for k in ("subject", "object"):
@@ -583,7 +587,7 @@ class LLMTripletExtractionService:
     ) -> List[Dict[str, Any]]:
         """Поднимает вложенные T4-объекты из sequence/steps/findings наверх.
 
-        Модель иногда вкладывает ``{"blockType": 4, "data": {...}}`` прямо в
+        Модель иногда вкладывает ``{"blockType": "statement", "data": {...}}`` прямо в
         списки ``sequence``/``steps``/``findings``. Такие объекты извлекаются
         в отдельные блоки (перед контейнером), а на их место ставится
         плейсхолдер ``{SEQn}`` в порядке встречи.
@@ -602,7 +606,7 @@ class LLMTripletExtractionService:
                     ):
                         counter[0] += 1
                         out.append(
-                            {"blockType": int(item["blockType"]), "data": item["data"]}
+                            {"blockType": item.get("blockType", ""), "data": item["data"]}
                         )
                         new_list.append(f"{{SEQ{counter[0]}}}")
                     else:
@@ -620,7 +624,7 @@ class LLMTripletExtractionService:
             # out накапливает поднятые вложенные блоки глобально (в порядке
             # встречи), поэтому они оказываются перед текущим контейнером.
             out.append({
-                "blockType": int(block.get("blockType", 0)),
+                "blockType": block.get("blockType", ""),
                 "data": new_data,
                 "tag": block.get("tag", ""),
             })
@@ -637,9 +641,9 @@ class LLMTripletExtractionService:
         out: List[Dict[str, Any]] = []
         seq_counter = 0
         for b in blocks:
-            bt = int(b.get("blockType", 0))
+            bt = b.get("blockType", "")
             uid = uuid8_str()
-            if bt == 4:
+            if bt == "statement":
                 seq_counter += 1
                 seq_to_uuid[seq_counter] = uid
             out.append({"blockType": bt, "data": b.get("data", {}), "uuid": uid})
@@ -690,7 +694,7 @@ class LLMTripletExtractionService:
         containers = 0
         with_seq = 0
         for b in blocks:
-            bt = int(b.get("blockType", 0))
+            bt = b.get("blockType", "")
             hist[bt] = hist.get(bt, 0) + 1
             if bt in CONTAINER_TYPES:
                 containers += 1
@@ -706,7 +710,7 @@ class LLMTripletExtractionService:
                     with_seq += 1
         return {
             "total": len(blocks),
-            "histogram": {str(k): v for k, v in sorted(hist.items())},
+            "histogram": {k: v for k, v in sorted(hist.items())},
             "containers": containers,
             "containers_with_sequence": with_seq,
         }
@@ -764,14 +768,13 @@ class LLMTripletExtractionService:
             for b in blocks_raw:
                 if not isinstance(b, dict):
                     continue
-                bt_raw = b.get("blockType", b.get("type", 0))
-                if isinstance(bt_raw, str):
-                    bt = _UNIFIED_BLOCK_TYPE_MAP.get(bt_raw, 0)
+                bt_raw = b.get("blockType", b.get("type", ""))
+                if isinstance(bt_raw, int):
+                    bt = LEGACY_INT_TO_KEY.get(bt_raw, "")
+                elif isinstance(bt_raw, str):
+                    bt = coerce_block_type(bt_raw)
                 else:
-                    try:
-                        bt = int(bt_raw)
-                    except (TypeError, ValueError):
-                        bt = 0
+                    bt = ""
                 d = b.get("data")
                 if not isinstance(d, dict):
                     d = {k: v for k, v in b.items() if k not in ("blockType", "type", "tag")}
@@ -802,7 +805,7 @@ class LLMTripletExtractionService:
 
         seq_counter = 0
         for b in raw_blocks:
-            if int(b.get("blockType", 0)) == 4:
+            if b.get("blockType", "") == "statement":
                 seq_counter += 1
                 seq_to_uuid[seq_counter] = b["uuid"]
 
@@ -829,7 +832,7 @@ class LLMTripletExtractionService:
         """
         _ARRAY_KEYS = ("steps", "findings", "experimentalPairs", "controlPairs")
         for b in raw_blocks:
-            if int(b.get("blockType", 0)) != 14:
+            if b.get("blockType", "") != "experiment":
                 continue
             d = b.get("data") or {}
             for key in ("experimentalPairs", "controlPairs"):
@@ -855,7 +858,7 @@ class LLMTripletExtractionService:
         Блок-конвертер (block_converter.py t1) ожидает строку и сплитит по запятым.
         """
         for b in raw_blocks:
-            if int(b.get("blockType", 0)) != 1:
+            if b.get("blockType", "") != "metadata":
                 continue
             d = b.get("data") or {}
             authors = d.get("authors")
@@ -877,8 +880,8 @@ class LLMTripletExtractionService:
         """
         # Нормализуем ссылочные поля в единый source/target.
         for b in raw_blocks:
-            bt = int(b.get("blockType", 0) or 0)
-            if bt not in (58, 59):
+            bt = b.get("blockType", "") or ""
+            if bt not in ("relation", "temporal_relation"):
                 continue
             d = b.get("data") or {}
 
@@ -897,8 +900,8 @@ class LLMTripletExtractionService:
 
         uuid_map = build_uuid_map(raw_blocks)
         for b in raw_blocks:
-            bt = int(b.get("blockType", 0) or 0)
-            if bt not in (58, 59):
+            bt = b.get("blockType", "") or ""
+            if bt not in ("relation", "temporal_relation"):
                 continue
             d = b.get("data") or {}
             for key in ("source", "target"):
@@ -948,28 +951,28 @@ class LLMTripletExtractionService:
         uuid_to_text: Dict[str, str] = {}
         for b in raw_blocks:
             uid = b.get("uuid", "")
-            bt = int(b.get("blockType", 0))
+            bt = b.get("blockType", "")
             d = b.get("data") or {}
-            if bt == 1:
+            if bt == "metadata":
                 uuid_to_text[uid] = d.get("title", "") or ", ".join(d.get("authors", []))
-            elif bt == 2:
+            elif bt == "goal":
                 uuid_to_text[uid] = f"{d.get('subject', '')} {d.get('object', '')}".strip()
-            elif bt == 7:
+            elif bt == "hypothesis":
                 uuid_to_text[uid] = d.get("hypothesis", "")[:60]
-            elif bt == 16:
+            elif bt == "biological_mechanism":
                 uuid_to_text[uid] = d.get("mechanism", "")[:60]
-            elif bt == 22:
+            elif bt == "entity":
                 uuid_to_text[uid] = f"{d.get('subject', '')} {d.get('predicate', '')} {d.get('object', '')}".strip()
-            elif bt == 38:
+            elif bt == "claim":
                 uuid_to_text[uid] = f"{d.get('claimSubject', '')} {d.get('claimObject', '')}".strip()
-            elif bt == 54:
+            elif bt == "action":
                 uuid_to_text[uid] = f"{d.get('subject', '')} {d.get('predicate', '')} {d.get('object', '')}".strip()
-            elif bt == 58:
+            elif bt == "relation":
                 uuid_to_text[uid] = f"{d.get('source', '')} {d.get('target', '')}".strip()
 
         # Заменяем UUID в T4 блоках
         for b in raw_blocks:
-            if int(b.get("blockType", 0)) != 4:
+            if b.get("blockType", "") != "statement":
                 continue
             d = b.get("data") or {}
             for key in ("subject", "object", "predicate"):
@@ -1201,7 +1204,7 @@ class LLMTripletExtractionService:
                     chunk_report.append({
                         "index": ci,
                         "chars": len(chunk),
-                        "blocks": 0,
+                        "blocks": "0",
                         "success": False,
                         "error": res.get("message", "LLM call failed"),
                     })

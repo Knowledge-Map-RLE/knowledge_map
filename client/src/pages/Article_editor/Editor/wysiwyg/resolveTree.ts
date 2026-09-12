@@ -93,7 +93,7 @@ export function buildBlockTree(blocks: ArticleBlockData[]): BlockTree {
 
 export interface RefEntry {
     id: string;
-    blockType?: number;
+    blockType?: string;
     label: string;
     chainText?: string;
 }
@@ -114,7 +114,7 @@ export function blockLabel(block: ArticleBlockData): string {
     );
     if (nameField) return String(block.data[nameField.key]).trim();
 
-    return `T${def.typeNumber} ${def.name}`;
+    return def.name;
 }
 
 export function sortBlocksByOrder(blocks: ArticleBlockData[]): ArticleBlockData[] {
@@ -163,7 +163,7 @@ function blockLabelResolved(
     );
     if (nameField) return String(block.data[nameField.key]).trim();
 
-    return `T${def.typeNumber} ${def.name}`;
+    return def.name;
 }
 
 export function buildRefIndex(

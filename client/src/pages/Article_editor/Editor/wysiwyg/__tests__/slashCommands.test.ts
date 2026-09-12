@@ -2,12 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { SLASH_COMMANDS, filterSlashCommands, type SlashCommand } from '../slashCommands';
 import { BLOCK_TYPES } from '../../blockTypes';
 
-const typeNumbers = (cmds: SlashCommand[]) => cmds.map((c) => c.typeNumber);
+const designations = (cmds: SlashCommand[]) => cmds.map((c) => c.designation);
 
 describe('SLASH_COMMANDS', () => {
-    test('покрывает все типы блоков с уникальными номерами', () => {
+    test('покрывает все типы блоков с уникальными обозначениями', () => {
         expect(SLASH_COMMANDS.length).toBe(BLOCK_TYPES.length);
-        const set = new Set(typeNumbers(SLASH_COMMANDS));
+        const set = new Set(designations(SLASH_COMMANDS));
         expect(set.size).toBe(SLASH_COMMANDS.length);
     });
 });
@@ -15,30 +15,30 @@ describe('SLASH_COMMANDS', () => {
 describe('filterSlashCommands', () => {
     test('точный алиас ставит команду на первое место', () => {
         const out = filterSlashCommands('triplet');
-        expect(out[0]?.typeNumber).toBe(4);
+        expect(out[0]?.designation).toBe('statement');
     });
 
     test('русский алиас работает', () => {
         const out = filterSlashCommands('триплет');
-        expect(out[0]?.typeNumber).toBe(4);
-        expect(filterSlashCommands('цель')[0]?.typeNumber).toBe(2);
-        expect(filterSlashCommands('утверждение')[0]?.typeNumber).toBe(38);
+        expect(out[0]?.designation).toBe('statement');
+        expect(filterSlashCommands('цель')[0]?.designation).toBe('goal');
+        expect(filterSlashCommands('утверждение')[0]?.designation).toBe('claim');
     });
 
     test('ведущий слэш и пробелы игнорируются', () => {
-        expect(filterSlashCommands('/ meta')[0]?.typeNumber).toBe(1);
-        expect(filterSlashCommands('  goal ')[0]?.typeNumber).toBe(2);
+        expect(filterSlashCommands('/ meta')[0]?.designation).toBe('metadata');
+        expect(filterSlashCommands('  goal ')[0]?.designation).toBe('goal');
     });
 
     test('префиксный поиск по имени', () => {
         const out = filterSlashCommands('гипо');
-        expect(out.map((c) => c.typeNumber)).toContain(7);
-        expect(out[0]?.typeNumber).toBe(7);
+        expect(out.map((c) => c.designation)).toContain('hypothesis');
+        expect(out[0]?.designation).toBe('hypothesis');
     });
 
-    test('числовой запрос находит по номеру типа', () => {
-        const out = filterSlashCommands('38');
-        expect(out[0]?.typeNumber).toBe(38);
+    test('поиск по designation-ключу', () => {
+        const out = filterSlashCommands('claim');
+        expect(out[0]?.designation).toBe('claim');
     });
 
     test('пустой запрос возвращает полный список с учётом лимита', () => {
@@ -47,18 +47,18 @@ describe('filterSlashCommands', () => {
     });
 
     test('недавние поднимаются при пустом запросе', () => {
-        const recent = [38, 14];
+        const recent = ['claim', 'experiment'];
         const out = filterSlashCommands('', recent);
-        expect(typeNumbers(out).slice(0, 2)).toEqual([38, 14]);
+        expect(designations(out).slice(0, 2)).toEqual(['claim', 'experiment']);
         // остальные — после недавних
         for (let i = 2; i < out.length; i++) {
-            expect([38, 14]).not.toContain(out[i].typeNumber);
+            expect(['claim', 'experiment']).not.toContain(out[i].designation);
         }
     });
 
     test('недавние дают бонус только совпадающим по запросу командам', () => {
-        const out = filterSlashCommands('шаг', [57]);
-        expect(out[0]?.typeNumber).toBe(56);
+        const out = filterSlashCommands('шаг', ['finding']);
+        expect(out[0]?.designation).toBe('experiment_step');
     });
 
     test('лимит результата', () => {
@@ -72,6 +72,6 @@ describe('filterSlashCommands', () => {
     test('fuzzy-подпоследовательность находит команду', () => {
         // «птл» — подпоследовательность «триплет»
         const out = filterSlashCommands('птл');
-        expect(out.map((c) => c.typeNumber)).toContain(4);
+        expect(out.map((c) => c.designation)).toContain('statement');
     });
 });

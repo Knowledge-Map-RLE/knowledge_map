@@ -105,7 +105,7 @@ def test_save_blocks_passes_creator(monkeypatch):
 
     result = asyncio.run(service.save_blocks(
         "doc1",
-        [{"instanceId": "b1", "blockType": 1, "data": {}, "order": 0}],
+        [{"instanceId": "b1", "blockType": "metadata", "data": {}, "order": 0}],
         user_uid="u1",
     ))
 

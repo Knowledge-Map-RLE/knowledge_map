@@ -38,10 +38,10 @@ const SlashMenu: React.FC<SlashMenuProps> = ({ items, selectedIdx, top, left, on
             style={{ position: 'fixed', top: pos.top, left: pos.left, width: MENU_WIDTH, maxHeight: MENU_MAX_HEIGHT }}
         >
             {items.map((cmd, idx) => {
-                const def = getBlockTypeDef(cmd.typeNumber);
+                const def = getBlockTypeDef(cmd.designation);
                 return (
                     <button
-                        key={cmd.typeNumber}
+                        key={cmd.designation}
                         ref={(el) => { itemRefs.current[idx] = el; }}
                         type="button"
                         className={`${styles.wySlashItem} ${idx === selectedIdx ? styles.wySlashItemActive : ''}`}

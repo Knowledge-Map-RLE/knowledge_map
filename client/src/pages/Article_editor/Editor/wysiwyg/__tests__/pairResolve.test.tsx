@@ -26,13 +26,13 @@ const EXP_ID = '00065966-ea98-85fd-a828-18b8bf095810';
 const blocks: ArticleBlockData[] = [
     {
         instanceId: GRP_YOUNG,
-        blockType: 55,
+        blockType: 'animal_group',
         order: 0,
         data: { groupName: 'A. russatus young', purpose: 'baseline young control', conditions: '0.5 years, non-SPF', n: 23 },
     },
     {
         instanceId: EXP_ID,
-        blockType: 14,
+        blockType: 'experiment',
         order: 1,
         data: {
             experimentName: 'Behavioral phenotyping',
@@ -42,7 +42,7 @@ const blocks: ArticleBlockData[] = [
 ];
 
 describe('pair-list резолв ссылок в чипах', () => {
-    test('groupRef, указывающий на существующий T55, показывает метку группы, а не UUID', () => {
+    test('groupRef, указывающий на существующий animal_group, показывает метку группы, а не UUID', () => {
         const { container } = render(
             <AuthProvider>
                 <ToastProvider>

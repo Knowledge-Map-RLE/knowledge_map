@@ -289,7 +289,7 @@ class GoalDecompositionService:
         """
         facts: List[Dict[str, Any]] = []
         for b in blocks:
-            if int(b.get("blockType", 0)) != 4:
+            if b.get("blockType", "") != "statement":
                 continue
             data = b.get("data") or {}
             ctx = str(data.get("context") or "").strip()

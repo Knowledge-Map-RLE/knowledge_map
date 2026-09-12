@@ -2,10 +2,10 @@ import React from 'react';
 import type { BlockFieldDef, BlockTypeDef } from '../model';
 import {
     MdDescription, MdGpsFixed, MdTextSnippet, MdSwapHoriz,
-    MdStar, MdStarBorder, MdHelp, MdLink,
-    MdVisibility, MdMenuBook, MdDashboard, MdScience,
+    MdHelp, MdLink,
+    MdVisibility, MdDashboard, MdScience,
     MdBuild, MdBiotech, MdChecklist, MdMyLocation,
-    MdMedication, MdPets, MdGroup, MdPsychology,
+    MdMedication, MdPets, MdGroup,
     MdInventory, MdAutoStories, MdPeople, MdStorage,
     MdQueryStats, MdAutoGraph, MdLeaderboard, MdSpeed,
     MdRule, MdBarChart, MdFunctions, MdAccountTree,
@@ -13,27 +13,27 @@ import {
     MdWarning, MdLightbulb, MdFlashOn, MdCheckCircleOutline,
     MdHelpOutline, MdAutoAwesome, MdUpdate, MdLightbulbOutline,
     MdFormatQuote, MdHourglassBottom, MdImage, MdCode,
-    MdAttachMoney, MdBalance, MdTrendingUp, MdPlayArrow, MdFormatListNumbered,
+    MdAttachMoney, MdBalance, MdTrendingUp, MdPlayArrow, MdFormatListNumbered, MdTimeline,
 } from 'react-icons/md';
 
 const icon = (Component: React.ComponentType<{ size?: number; className?: string }>) =>
     React.createElement(Component, { size: 14 });
 
 // Поле «Последовательность»: uuid-list-ссылки на атомарные блоки-триплеты
-// (T4 «Прямой триплет», T22 «Сущность», T54 «Действие») в порядке следования.
+// (statement «Прямой триплет», entity «Сущность», action «Действие») в порядке следования.
 const TRIPLET_SEQUENCE_FIELD: BlockFieldDef = {
     key: 'sequence',
     label: 'Последовательность (триплеты)',
     inputType: 'uuid-list',
     placeholder: 'атомарный триплет',
     addLabel: 'Добавить триплет',
-    uuidRefBlockTypes: [4, 22, 54],
-    helpText: 'Ссылки на блоки-триплеты (T4 «Прямой триплет», T22 «Сущность», T54 «Действие») в порядке следования. Каждый шаг — отдельный блок-триплет.',
+    uuidRefBlockTypes: ['statement', 'entity', 'action'],
+    helpText: 'Ссылки на блоки-триплеты (statement «Прямой триплет», entity «Сущность», action «Действие») в порядке следования. Каждый шаг — отдельный блок-триплет.',
 };
 
 export const BLOCK_TYPES: BlockTypeDef[] = [
     {
-        typeNumber: 1,
+        designation: 'metadata',
         name: 'Метаданные',
         icon: icon(MdDescription),
         color: '#6366f1',
@@ -47,7 +47,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 2,
+        designation: 'goal',
         name: 'Цель исследования',
         icon: icon(MdGpsFixed),
         color: '#8b5cf6',
@@ -61,7 +61,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 3,
+        designation: 'text',
         name: 'Свободный текст',
         icon: icon(MdTextSnippet),
         color: '#6b7280',
@@ -72,7 +72,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 4,
+        designation: 'statement',
         name: 'Прямой триплет',
         icon: icon(MdSwapHoriz),
         color: '#059669',
@@ -85,29 +85,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 5,
-        name: 'Первичная конечная точка',
-        icon: icon(MdStar),
-        color: '#d97706',
-        canAddMultiple: false,
-        description: 'Primary endpoint',
-        fields: [
-            { key: 'endpoint', label: 'Первичная конечная точка', inputType: 'text', placeholder: 'Смертность от всех причин' },
-        ],
-    },
-    {
-        typeNumber: 6,
-        name: 'Вторичные конечные точки',
-        icon: icon(MdStarBorder),
-        color: '#f59e0b',
-        canAddMultiple: false,
-        description: 'Secondary endpoints',
-        fields: [
-            { key: 'endpoints', label: 'Вторичные конечные точки', inputType: 'textarea', placeholder: 'Каждая точка с новой строки' },
-        ],
-    },
-    {
-        typeNumber: 7,
+        designation: 'hypothesis',
         name: 'Гипотеза',
         icon: icon(MdHelp),
         color: '#dc2626',
@@ -120,7 +98,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 8,
+        designation: 'prerequisite',
         name: 'Предпосылки',
         icon: icon(MdLink),
         color: '#7c3aed',
@@ -131,7 +109,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 9,
+        designation: 'expectations',
         name: 'Ожидания',
         icon: icon(MdVisibility),
         color: '#2563eb',
@@ -142,23 +120,12 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 10,
-        name: 'Знания-зависимости',
-        icon: icon(MdMenuBook),
-        color: '#9333ea',
-        canAddMultiple: false,
-        description: 'На какие знания в виде утверждений опираемся',
-        fields: [
-            { key: 'knowledgeDeps', label: 'Утверждения', inputType: 'textarea', placeholder: 'Каждое утверждение с новой строки' },
-        ],
-    },
-    {
-        typeNumber: 11,
+        designation: 'research_design',
         name: 'Дизайн исследования',
         icon: icon(MdDashboard),
         color: '#0891b2',
         canAddMultiple: false,
-        description: 'Тип исследования, рандомизация, ослепление',
+        description: 'Тип исследования, рандомизация, ослепление, первичные/вторичные конечные точки',
         fields: [
             {
                 key: 'studyType', label: 'Тип исследования', inputType: 'select',
@@ -175,10 +142,12 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             },
             { key: 'randomization', label: 'Рандомизация (RCT)', inputType: 'checkbox' },
             { key: 'blinding', label: 'Ослепление', inputType: 'checkbox' },
+            { key: 'primaryEndpoints', label: 'Первичные конечные точки', inputType: 'text-list', placeholder: 'Каждая точка с новой строки' },
+            { key: 'secondaryEndpoints', label: 'Вторичные конечные точки', inputType: 'text-list', placeholder: 'Каждая точка с новой строки' },
         ],
     },
     {
-        typeNumber: 12,
+        designation: 'material',
         name: 'Материалы',
         icon: icon(MdScience),
         color: '#65a30d',
@@ -189,7 +158,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 13,
+        designation: 'method',
         name: 'Методы',
         icon: icon(MdBuild),
         color: '#475569',
@@ -201,7 +170,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 14,
+        designation: 'experiment',
         name: 'Эксперимент',
         icon: icon(MdBiotech),
         color: '#ea580c',
@@ -211,15 +180,15 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
             { key: 'experimentName', label: 'Название', inputType: 'text', placeholder: 'Сравнение A. russatus vs A. dimidiatus' },
             { key: 'experimentType', label: 'Тип', inputType: 'select', options: ['Поведенческий', 'Гистология', 'Western blot', 'RNA-seq', 'snRNA-seq', 'Интервенция in vivo', 'In vitro', 'Flow cytometry', 'Другое'] },
             { key: 'outcomes', label: 'Измеряемые показатели', inputType: 'tag-list', placeholder: 'rearing, grip strength, earhole closure, p16, SASP score, Il1b...' },
-            { key: 'steps', label: 'Последовательность', inputType: 'uuid-list', placeholder: 'шаги по порядку', uuidRefBlockTypes: [56], helpText: 'Ссылки на блоки «Шаг эксперимента» в порядке выполнения' },
-            { key: 'findings', label: 'Результаты (находки)', inputType: 'uuid-list', placeholder: 'результат', uuidRefBlockTypes: [57], helpText: 'Ссылки на блоки «Результат (находка)»' },
+            { key: 'steps', label: 'Последовательность', inputType: 'uuid-list', placeholder: 'шаги по порядку', uuidRefBlockTypes: ['experiment_step'], helpText: 'Ссылки на блоки «Шаг эксперимента» в порядке выполнения' },
+            { key: 'findings', label: 'Результаты (находки)', inputType: 'uuid-list', placeholder: 'результат', uuidRefBlockTypes: ['finding'], helpText: 'Ссылки на блоки «Результат (находка)»' },
             { key: 'duration', label: 'Длительность', inputType: 'text', placeholder: '2 недели, 5 недель, одномоментно...' },
-            { key: 'experimentalPairs', label: 'Экспериментальные группы', inputType: 'pair-list', placeholder: 'группа + интервенция', pairGroupBlockTypes: [55], pairInterventionBlockTypes: [18] },
-            { key: 'controlPairs', label: 'Контрольные группы', inputType: 'pair-list', placeholder: 'группа + интервенция', pairGroupBlockTypes: [55], pairInterventionBlockTypes: [18] },
+            { key: 'experimentalPairs', label: 'Экспериментальные группы', inputType: 'pair-list', placeholder: 'группа + интервенция', pairGroupBlockTypes: ['animal_group'], pairInterventionBlockTypes: ['intervention'] },
+            { key: 'controlPairs', label: 'Контрольные группы', inputType: 'pair-list', placeholder: 'группа + интервенция', pairGroupBlockTypes: ['animal_group'], pairInterventionBlockTypes: ['intervention'] },
         ],
     },
     {
-        typeNumber: 15,
+        designation: 'inclusion_exclusion_criteria',
         name: 'Критерии включения/исключения',
         icon: icon(MdChecklist),
         color: '#16a34a',
@@ -231,7 +200,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 16,
+        designation: 'biological_mechanism',
         name: 'Биологический механизм',
         icon: icon(MdBiotech),
         color: '#be185d',
@@ -243,7 +212,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 17,
+        designation: 'impact_goal',
         name: 'Объект воздействия',
         icon: icon(MdMyLocation),
         color: '#0d9488',
@@ -258,7 +227,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 18,
+        designation: 'intervention',
         name: 'Интервенция',
         icon: icon(MdMedication),
         color: '#e11d48',
@@ -271,7 +240,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 19,
+        designation: 'animal_model',
         name: 'Животная модель',
         icon: icon(MdPets),
         color: '#a16207',
@@ -284,18 +253,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 21,
-        name: 'Логика исследователя',
-        icon: icon(MdPsychology),
-        color: '#7c2d12',
-        canAddMultiple: false,
-        description: 'Методология и логика рассуждений',
-        fields: [
-            { key: 'logic', label: 'Логика', inputType: 'textarea', placeholder: 'Методология/логика исследователя' },
-        ],
-    },
-    {
-        typeNumber: 22,
+        designation: 'entity',
         name: 'Сущность',
         icon: icon(MdInventory),
         color: '#1d4ed8',
@@ -310,7 +268,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 23,
+        designation: 'definition',
         name: 'Определение понятия',
         icon: icon(MdAutoStories),
         color: '#4338ca',
@@ -323,7 +281,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 24,
+        designation: 'assumptions',
         name: 'Предположения',
         icon: icon(MdVisibility),
         color: '#9333ea',
@@ -334,7 +292,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 25,
+        designation: 'sample_size',
         name: 'Размер выборки',
         icon: icon(MdPeople),
         color: '#be123c',
@@ -345,7 +303,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 26,
+        designation: 'data_source',
         name: 'Источники данных',
         icon: icon(MdStorage),
         color: '#78716c',
@@ -356,7 +314,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 27,
+        designation: 'probability_value',
         name: 'p-value',
         icon: icon(MdQueryStats),
         color: '#dc2626',
@@ -367,7 +325,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 28,
+        designation: 'variance',
         name: 'Дисперсия',
         icon: icon(MdAutoGraph),
         color: '#b91c1c',
@@ -378,7 +336,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 29,
+        designation: 'effect_size',
         name: 'Размер эффекта',
         icon: icon(MdLeaderboard),
         color: '#c2410c',
@@ -390,7 +348,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 30,
+        designation: 'statistical_power',
         name: 'Мощность исследования',
         icon: icon(MdSpeed),
         color: '#9f1239',
@@ -401,7 +359,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 31,
+        designation: 'confidence_interval',
         name: 'Доверительный интервал',
         icon: icon(MdRule),
         color: '#881337',
@@ -414,7 +372,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 32,
+        designation: 'magnitude_value',
         name: 'Числа с названиями',
         icon: icon(MdBarChart),
         color: '#1e40af',
@@ -425,7 +383,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 33,
+        designation: 'formula',
         name: 'Формулы',
         icon: icon(MdFunctions),
         color: '#581c87',
@@ -438,7 +396,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 34,
+        designation: 'causal_graph',
         name: 'Каузальные графы (DAG)',
         icon: icon(MdAccountTree),
         color: '#6d28d9',
@@ -450,7 +408,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 35,
+        designation: 'identifiability_criteria',
         name: 'Критерии идентифицируемости Дж.Перла',
         icon: icon(MdSearch),
         color: '#7e22ce',
@@ -461,7 +419,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 36,
+        designation: 'result',
         name: 'Результаты',
         icon: icon(MdAssessment),
         color: '#0f766e',
@@ -473,7 +431,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 37,
+        designation: 'statistical_processing',
         name: 'Статистическая обработка',
         icon: icon(MdCalculate),
         color: '#155e75',
@@ -486,7 +444,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 38,
+        designation: 'claim',
         name: 'Утверждение',
         icon: icon(MdFactCheck),
         color: '#059669',
@@ -510,7 +468,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 39,
+        designation: 'limitations',
         name: 'Ограничения исследования',
         icon: icon(MdWarning),
         color: '#d97706',
@@ -522,7 +480,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 40,
+        designation: 'side_findings',
         name: 'Побочные выводы/гипотезы',
         icon: icon(MdLightbulb),
         color: '#ea580c',
@@ -534,7 +492,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 41,
+        designation: 'side_effects',
         name: 'Сопутствующие эффекты',
         icon: icon(MdFlashOn),
         color: '#ca8a04',
@@ -545,7 +503,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 42,
+        designation: 'post_claims',
         name: 'Утверждения после исследования',
         icon: icon(MdCheckCircleOutline),
         color: '#16a34a',
@@ -557,7 +515,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 43,
+        designation: 'open_questions',
         name: 'Оставшиеся вопросы',
         icon: icon(MdHelpOutline),
         color: '#7c3aed',
@@ -568,7 +526,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 44,
+        designation: 'novelty',
         name: 'Новизна',
         icon: icon(MdAutoAwesome),
         color: '#6366f1',
@@ -580,7 +538,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 45,
+        designation: 'versions',
         name: 'Версии',
         icon: icon(MdUpdate),
         color: '#525252',
@@ -591,7 +549,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 46,
+        designation: 'future_research_suggestions',
         name: 'Предложения для будущих исследований',
         icon: icon(MdLightbulbOutline),
         color: '#0284c7',
@@ -603,7 +561,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 47,
+        designation: 'reference',
         name: 'Связи с предыдущими исследованиями',
         icon: icon(MdFormatQuote),
         color: '#64748b',
@@ -615,7 +573,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 48,
+        designation: 'link_with_aging',
         name: 'Связь со старением',
         icon: icon(MdHourglassBottom),
         color: '#a16207',
@@ -626,7 +584,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 49,
+        designation: 'image',
         name: 'Изображение',
         icon: icon(MdImage),
         color: '#0e7490',
@@ -639,7 +597,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 50,
+        designation: 'code',
         name: 'Код',
         icon: icon(MdCode),
         color: '#1f2937',
@@ -651,7 +609,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 51,
+        designation: 'funding',
         name: 'Источники финансирования',
         icon: icon(MdAttachMoney),
         color: '#166534',
@@ -662,7 +620,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 52,
+        designation: 'interest_conflict',
         name: 'Конфликт интересов',
         icon: icon(MdBalance),
         color: '#991b1b',
@@ -673,7 +631,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 53,
+        designation: 'scientific_knowledge_value',
         name: 'Информационная ценность',
         icon: icon(MdTrendingUp),
         color: '#0369a1',
@@ -688,7 +646,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 54,
+        designation: 'action',
         name: 'Действие',
         icon: icon(MdPlayArrow),
         color: '#c2410c',
@@ -703,7 +661,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 55,
+        designation: 'animal_group',
         name: 'Группа животных',
         icon: icon(MdGroup),
         color: '#4f46e5',
@@ -711,14 +669,14 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Одна группа животных (повторяемый блок: контрольная или экспериментальная)',
         fields: [
             { key: 'groupName', label: 'Название группы', inputType: 'text', placeholder: 'Aged A. russatus' },
-            { key: 'speciesRef', label: 'Животная модель (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на T19', uuidRefBlockTypes: [19] },
+            { key: 'speciesRef', label: 'Животная модель (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на animal_model', uuidRefBlockTypes: ['animal_model'] },
             { key: 'n', label: 'Размер выборки', inputType: 'text', placeholder: 'n=10' },
             { key: 'conditions', label: 'Условия', inputType: 'textarea', placeholder: 'Условия содержания во время эксперимента' },
             { key: 'purpose', label: 'Назначение', inputType: 'text', placeholder: 'baseline, возрастной контроль, интервенция...' },
         ],
     },
     {
-        typeNumber: 56,
+        designation: 'experiment_step',
         name: 'Шаг эксперимента',
         icon: icon(MdFormatListNumbered),
         color: '#7c3aed',
@@ -732,7 +690,7 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         ],
     },
     {
-        typeNumber: 57,
+        designation: 'finding',
         name: 'Результат (находка)',
         icon: icon(MdTrendingUp),
         color: '#db2777',
@@ -740,22 +698,53 @@ export const BLOCK_TYPES: BlockTypeDef[] = [
         description: 'Одна находка исследования: параметр → направление изменения → группа',
         fields: [
             { key: 'parameter', label: 'Параметр/фенотип', inputType: 'text', placeholder: 'p16+ клетки в VAT', required: true },
-            { key: 'subjectRef', label: 'Группа/условие (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на T55', uuidRefBlockTypes: [55], helpText: 'Группа животных (T55), в которой наблюдается результат' },
-            { key: 'comparisonRef', label: 'Сравнение (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на T55 (опционально)', uuidRefBlockTypes: [55], helpText: 'Группа сравнения (T55), относительно которой оценивается изменение' },
+            { key: 'subjectRef', label: 'Группа/условие (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на animal_group', uuidRefBlockTypes: ['animal_group'], helpText: 'Группа животных (animal_group), в которой наблюдается результат' },
+            { key: 'comparisonRef', label: 'Сравнение (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на animal_group (опционально)', uuidRefBlockTypes: ['animal_group'], helpText: 'Группа сравнения (animal_group), относительно которой оценивается изменение' },
             { key: 'direction', label: 'Направление', inputType: 'select', options: ['повышено', 'понижено', 'без изменений', 'тренд'] },
             { key: 'significance', label: 'Значимость', inputType: 'select', options: ['significant', 'non-significant', 'trend'] },
-            { key: 'pValue', label: 'p-value (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на T27', uuidRefBlockTypes: [27], helpText: 'Ссылка на блок p-value (T27)' },
+            { key: 'pValue', label: 'p-value (UUID)', inputType: 'uuid-ref', placeholder: 'ссылка на probability_value', uuidRefBlockTypes: ['probability_value'], helpText: 'Ссылка на блок p-value (probability_value)' },
             { key: 'figureRef', label: 'Рисунок', inputType: 'text', placeholder: 'Fig. 1N, fig. S4G' },
             { key: 'detail', label: 'Детали', inputType: 'textarea', placeholder: 'Детали результата: величины, % изменения и т.п.' },
             TRIPLET_SEQUENCE_FIELD,
         ],
     },
+    {
+        designation: 'relation',
+        name: 'Причинно-следственная связь',
+        icon: icon(MdLink),
+        color: '#a21caf',
+        canAddMultiple: true,
+        description: 'Зависимость действий (T58): источник → связь → цель',
+        fields: [
+            { key: 'source', label: 'Источник', inputType: 'text', placeholder: 'mTOR hyperfunction' },
+            { key: 'target', label: 'Цель', inputType: 'text', placeholder: 'cellular senescence' },
+            {
+                key: 'relationType', label: 'Тип связи', inputType: 'select',
+                options: ['causes', 'enables', 'requires', 'precedes', 'inhibits', 'prevents', 'leads_to', 'enhances', 'suppresses'],
+            },
+            { key: 'confidence', label: 'Уверенность', inputType: 'select', options: ['high', 'medium', 'low'] },
+            { key: 'evidence', label: 'Доказательства', inputType: 'textarea', placeholder: 'Краткое описание подтверждающего факта (3-8 слов)' },
+        ],
+    },
+    {
+        designation: 'temporal_relation',
+        name: 'Временная последовательность',
+        icon: icon(MdTimeline),
+        color: '#155e75',
+        canAddMultiple: true,
+        description: 'Порядок событий (T59): раньше → связь → позже',
+        fields: [
+            { key: 'earlier', label: 'Раньше', inputType: 'text', placeholder: 'Событие, происходящее раньше' },
+            { key: 'later', label: 'Позже', inputType: 'text', placeholder: 'Событие, происходящее позже' },
+            { key: 'relationType', label: 'Тип связи', inputType: 'select', options: ['precedes', 'follows', 'during'] },
+        ],
+    },
 ];
 
-export const BLOCK_TYPE_MAP: Map<number, BlockTypeDef> = new Map(
-    BLOCK_TYPES.map((t) => [t.typeNumber, t]),
+export const BLOCK_TYPE_MAP: Map<string, BlockTypeDef> = new Map(
+    BLOCK_TYPES.map((t) => [t.designation, t]),
 );
 
-export function getBlockTypeDef(typeNumber: number): BlockTypeDef | undefined {
-    return BLOCK_TYPE_MAP.get(typeNumber);
+export function getBlockTypeDef(designation: string): BlockTypeDef | undefined {
+    return BLOCK_TYPE_MAP.get(designation);
 }

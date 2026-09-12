@@ -79,13 +79,13 @@ class ArticleBlock(StructuredNode):
     Структурный блок статьи (редактор article_editor).
 
     Блок — единица структурированного представления статьи:
-    T1 (заголовок), T14 (эксперимент), T18 (вмешательство),
-    T19 (организм/вид), T55 (группа), T56 (шаг эксперимента).
+    metadata (заголовок), experiment (эксперимент), intervention (вмешательство),
+    animal_model (организм/вид), animal_group (группа), experiment_step (шаг эксперимента).
     data хранится как JSON-строка (Neo4j не поддерживает вложенные map
     в качестве свойств — только примитивы и массивы примитивов).
     """
     uid = StringProperty(primary_key=True)          # instanceId блока
-    block_type = IntegerProperty(required=True, index=True)
+    block_type = StringProperty(required=True, index=True)
     data = StringProperty(default="{}")             # JSON-строка
     order = IntegerProperty(default=0, index=True)
     created_by_uid = StringProperty()

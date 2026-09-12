@@ -16,7 +16,7 @@ const FINDING = '44444444-4444-4444-4444-444444444444';
 
 const mk = (
     instanceId: string,
-    blockType: number,
+    blockType: string,
     data: Record<string, unknown>,
     order: number,
 ): ArticleBlockData => ({
@@ -27,10 +27,10 @@ const mk = (
 });
 
 const experiment = (): ArticleBlockData[] => [
-    mk(STEP_B, 56, { stepName: 'Взвешивание' }, 3),
-    mk(META, 14, { experimentName: 'Эксперимент', steps: JSON.stringify([STEP_A, STEP_B]), findings: JSON.stringify([FINDING]) }, 0),
-    mk(FINDING, 57, { parameter: 'Масса снизилась' }, 4),
-    mk(STEP_A, 56, { stepName: 'Кормление' }, 2),
+    mk(STEP_B, 'experiment_step', { stepName: 'Взвешивание' }, 3),
+    mk(META, 'experiment', { experimentName: 'Эксперимент', steps: JSON.stringify([STEP_A, STEP_B]), findings: JSON.stringify([FINDING]) }, 0),
+    mk(FINDING, 'finding', { parameter: 'Масса снизилась' }, 4),
+    mk(STEP_A, 'experiment_step', { stepName: 'Кормление' }, 2),
 ];
 
 describe('isUuid', () => {
@@ -67,7 +67,7 @@ describe('buildBlockTree', () => {
 
     test('игнорирует ссылки на несуществующие блоки и само-ссылки', () => {
         const blocks = [
-            mk(META, 14, { steps: JSON.stringify(['deadbeef-dead-dead-dead-deaddeadbeef', META]) }, 0),
+            mk(META, 'experiment', { steps: JSON.stringify(['deadbeef-dead-dead-dead-deaddeadbeef', META]) }, 0),
         ];
         const tree = buildBlockTree(blocks);
         expect(tree.parentOf.get(META)).toBeNull();
@@ -76,9 +76,9 @@ describe('buildBlockTree', () => {
 
     test('первое родство выигрывает при конфликте родителей', () => {
         const blocks = [
-            mk(META, 14, { steps: JSON.stringify([STEP_A]) }, 0),
-            mk('55555555-5555-5555-5555-555555555555', 14, { steps: JSON.stringify([STEP_A]) }, 1),
-            mk(STEP_A, 56, {}, 2),
+            mk(META, 'experiment', { steps: JSON.stringify([STEP_A]) }, 0),
+            mk('55555555-5555-5555-5555-555555555555', 'experiment', { steps: JSON.stringify([STEP_A]) }, 1),
+            mk(STEP_A, 'experiment_step', {}, 2),
         ];
         const tree = buildBlockTree(blocks);
         expect(tree.parentOf.get(STEP_A)).toBe(META);
@@ -87,23 +87,23 @@ describe('buildBlockTree', () => {
 
 describe('blockLabel', () => {
     test('для триплета собирает «субъект → предикат → объект»', () => {
-        const b = mk('t1', 4, { subject: 'Метформин', predicate: 'снижает', object: 'массу' }, 0);
+        const b = mk('t1', 'statement', { subject: 'Метформин', predicate: 'снижает', object: 'массу' }, 0);
         expect(blockLabel(b)).toBe('Метформин → снижает → массу');
     });
 
     test('частично заполненный триплет использует ? для пустых частей', () => {
-        const b = mk('t1', 4, { subject: '', predicate: '', object: 'объект' }, 0);
+        const b = mk('t1', 'statement', { subject: '', predicate: '', object: 'объект' }, 0);
         expect(blockLabel(b)).toBe('? → объект');
     });
 
     test('без триплетных полей берёт первое заполненное текстовое поле типа', () => {
-        const b = mk('e1', 14, { experimentName: 'Эксперимент' }, 0);
+        const b = mk('e1', 'experiment', { experimentName: 'Эксперимент' }, 0);
         expect(blockLabel(b)).toBe('Эксперимент');
     });
 
     test('пустой блок — имя типа', () => {
-        const b = mk('m1', 1, {}, 0);
-        expect(blockLabel(b)).toBe('T1 Метаданные');
+        const b = mk('m1', 'metadata', {}, 0);
+        expect(blockLabel(b)).toBe('Метаданные');
     });
 });
 
@@ -132,7 +132,7 @@ describe('buildRefIndex / resolveChainText', () => {
         // блоки, идущие раньше родителей (или вовсе вне дерева — T55/T18),
         // получали chainText в виде голого UUID.
         const blocks: ArticleBlockData[] = [
-            { instanceId: 'grp-1', blockType: 55, order: 0, data: { groupName: 'A. russatus young' } },
+            { instanceId: 'grp-1', blockType: 'animal_group', order: 0, data: { groupName: 'A. russatus young' } },
             ...experiment(),
         ];
         const tree = buildBlockTree(blocks);
@@ -151,8 +151,8 @@ describe('buildRefIndex / резолв UUID в subject/object (T4/T2)', () => {
     test('T4-триплет с UUID в subject/object резолвится в человекочитаемую метку', () => {
         // B — целевой блок «Метформин»; A — T4 «{B} снижает массу».
         const blocks: ArticleBlockData[] = [
-            mk(B, 4, { subject: 'Метформин', predicate: 'является', object: 'лекарством' }, 0),
-            mk(A, 4, { subject: B, predicate: 'снижает', object: 'массу' }, 1),
+            mk(B, 'statement', { subject: 'Метформин', predicate: 'является', object: 'лекарством' }, 0),
+            mk(A, 'statement', { subject: B, predicate: 'снижает', object: 'массу' }, 1),
         ];
         const tree = buildBlockTree(blocks);
         const index = buildRefIndex(blocks, tree);
@@ -162,9 +162,9 @@ describe('buildRefIndex / резолв UUID в subject/object (T4/T2)', () => {
 
     test('T2 «Цель исследования» с uuid-ref субъектом/объектом резолвится', () => {
         const blocks: ArticleBlockData[] = [
-            mk(X, 17, { cell: 'гепатоцит' }, 0),
-            mk(Y, 18, { intervention: 'рапамицин' }, 1),
-            mk(A, 2, { subject: X, predicate: 'цель — изучить', object: Y }, 2),
+            mk(X, 'impact_goal', { cell: 'гепатоцит' }, 0),
+            mk(Y, 'intervention', { intervention: 'рапамицин' }, 1),
+            mk(A, 'goal', { subject: X, predicate: 'цель — изучить', object: Y }, 2),
         ];
         const tree = buildBlockTree(blocks);
         const index = buildRefIndex(blocks, tree);
@@ -173,8 +173,8 @@ describe('buildRefIndex / резолв UUID в subject/object (T4/T2)', () => {
 
     test('защита от циклов: A↔B не зацикливается и завершается', () => {
         const blocks: ArticleBlockData[] = [
-            mk(A, 4, { subject: B, predicate: 'влияет', object: 'сам' }, 0),
-            mk(B, 4, { subject: A, predicate: 'отвечает', object: 'второму' }, 1),
+            mk(A, 'statement', { subject: B, predicate: 'влияет', object: 'сам' }, 0),
+            mk(B, 'statement', { subject: A, predicate: 'отвечает', object: 'второму' }, 1),
         ];
         const tree = buildBlockTree(blocks);
         const index = buildRefIndex(blocks, tree);
@@ -185,7 +185,7 @@ describe('buildRefIndex / резолв UUID в subject/object (T4/T2)', () => {
 
     test('не-UUID значения не трогаются', () => {
         const blocks: ArticleBlockData[] = [
-            mk(A, 4, { subject: 'глюкоза', predicate: 'повышает', object: 'инсулин' }, 0),
+            mk(A, 'statement', { subject: 'глюкоза', predicate: 'повышает', object: 'инсулин' }, 0),
         ];
         const tree = buildBlockTree(blocks);
         const index = buildRefIndex(blocks, tree);

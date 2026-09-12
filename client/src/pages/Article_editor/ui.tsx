@@ -7,6 +7,8 @@ import ArticleMap from './Editor/ArticleMap';
 import EvidencePatterns from './Editor/EvidencePatterns';
 import { ChatPanel } from '../Social_network/components/ChatPanel';
 import type { ChatTarget } from '../Social_network/model';
+import type { PDFDocument } from '../Data_extraction/model';
+import type { ArticleBlockData } from './model';
 import { useArticleState } from './hooks/useArticleState';
 import { useAuth } from '../../entities/auth';
 import { useRequireAuth } from '../../shared/hooks/useRequireAuth';
@@ -17,7 +19,7 @@ import styles from './Article_editor.module.css';
 const ArticleEditorUI: React.FC = () => {
     const [activeTab, setActiveTab] = useState<ArticleEditorTab>('editor');
     const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
-    const [selectedDocument, setSelectedDocument] = useState<any>(null);
+    const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
     const [chatTarget, setChatTarget] = useState<ChatTarget | null>(null);
     const noopRef = useRef<() => void>(() => {});
     const noopSetError = useRef<(e: string | null) => void>(() => {});
@@ -44,7 +46,7 @@ const ArticleEditorUI: React.FC = () => {
         setChatTarget({
             type: 'article',
             uid: selectedDocId,
-            label: (selectedDocument as any)?.title || selectedDocId,
+            label: selectedDocument?.title || selectedDocId,
         });
         setActiveTab('chat');
     }, [selectedDocId, selectedDocument]);
@@ -54,7 +56,7 @@ const ArticleEditorUI: React.FC = () => {
             setChatTarget({
                 type: 'article',
                 uid: selectedDocId,
-                label: (selectedDocument as any)?.title || selectedDocId,
+label: selectedDocument?.title || selectedDocId,
             });
         }
     }, [selectedDocId, selectedDocument]);
@@ -64,7 +66,7 @@ const ArticleEditorUI: React.FC = () => {
         loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, applyBlocks, triggerParse, save, uploadImage,
     } = useArticleState();
 
-    const handleSelectDocument = useCallback(async (doc: any | null) => {
+    const handleSelectDocument = useCallback(async (doc: PDFDocument | null) => {
         setSelectedDocument(doc);
         if (doc && doc.uid) {
             setSelectedDocId(doc.uid);
@@ -108,7 +110,7 @@ const ArticleEditorUI: React.FC = () => {
         }
     }, [selectedDocId, blocks, save, goldByDocId, reloadGoldIndex]);
 
-    const handleExtracted = useCallback(async (docId: string, extractedBlocks: any[]) => {
+    const handleExtracted = useCallback(async (docId: string, extractedBlocks: ArticleBlockData[]) => {
         await applyExtractedBlocks(docId, extractedBlocks);
     }, [applyExtractedBlocks]);
 
@@ -123,10 +125,12 @@ const ArticleEditorUI: React.FC = () => {
                 uid: result.uid,
                 title: result.title,
                 original_filename: result.original_filename,
+                md5_hash: '',
+                upload_date: new Date().toISOString(),
                 processing_status: 'ready_for_annotation',
                 is_processed: false,
             });
-            addBlock(1, { title: result.title || 'Новая статья' });
+            addBlock('metadata', { title: result.title || 'Новая статья' });
             await docListRef.current?.reloadDocuments();
             await new Promise(resolve => setTimeout(resolve, 0));
             await save(result.uid);
@@ -250,7 +254,7 @@ const ArticleEditorUI: React.FC = () => {
                                         onOpenTarget={(t) => setChatTarget(t)}
                                         myUid={user.uid}
                                         hideRail
-                                        title={(selectedDocument as any)?.title || 'Обсуждение статьи'}
+                                        title={selectedDocument?.title || 'Обсуждение статьи'}
                                     />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>

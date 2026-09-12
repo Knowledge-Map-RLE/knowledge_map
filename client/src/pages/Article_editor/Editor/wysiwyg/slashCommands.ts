@@ -1,79 +1,77 @@
 import { BLOCK_TYPES } from '../blockTypes';
 
-const ALIASES: Record<number, string[]> = {
-    1: ['meta', 'metadata', 'метаданные', 'doi', 'статья'],
-    2: ['goal', 'цель', 'aim'],
-    3: ['text', 'текст', 'paragraph', 'абзац', 'проза'],
-    4: ['triplet', 'триплет', 'тройка', 'fact', 'факт'],
-    5: ['endpoint', 'primary endpoint', 'первичная точка', 'конечная точка'],
-    6: ['secondary endpoints', 'вторичные точки'],
-    7: ['hypothesis', 'гипотеза'],
-    8: ['prerequisites', 'предпосылки'],
-    9: ['expectations', 'ожидания'],
-    10: ['deps', 'зависимости', 'knowledge deps'],
-    11: ['design', 'дизайн', 'study design'],
-    12: ['materials', 'материалы'],
-    13: ['methods', 'методы'],
-    14: ['experiment', 'эксперимент', 'exp'],
-    15: ['criteria', 'критерии', 'inclusion', 'исключение'],
-    16: ['mechanism', 'механизм', 'биология'],
-    17: ['target', 'мишень', 'объект воздействия'],
-    18: ['intervention', 'интервенция', 'вмешательство', 'treatment'],
-    19: ['animal model', 'животная модель', 'вид', 'species'],
-    21: ['logic', 'логика'],
-    22: ['entity', 'сущность', 'concept', 'концепт'],
-    23: ['definition', 'определение', 'term', 'термин'],
-    24: ['assumptions', 'предположения'],
-    25: ['sample size', 'выборка', 'n'],
-    26: ['data sources', 'источники'],
-    27: ['pvalue', 'p-value', 'p'],
-    28: ['variance', 'дисперсия'],
-    29: ['effect size', 'эффект'],
-    30: ['power', 'мощность'],
-    31: ['ci', 'confidence interval', 'доверительный интервал'],
-    32: ['numbers', 'числа'],
-    33: ['formula', 'формула', 'latex'],
-    34: ['dag', 'граф', 'causal', 'каузальный'],
-    35: ['pearl', 'перл', 'идентифицируемость'],
-    36: ['results', 'результаты'],
-    37: ['stats', 'статистика', 'stat processing'],
-    38: ['statement', 'claim', 'утверждение'],
-    39: ['limitations', 'ограничения'],
-    40: ['side findings', 'побочные выводы'],
-    41: ['side effects', 'побочные эффекты'],
-    42: ['post claims', 'после исследования'],
-    43: ['open questions', 'вопросы'],
-    44: ['novelty', 'новизна'],
-    45: ['versions', 'версии'],
-    46: ['future research', 'будущее', 'перспективы'],
-    47: ['references', 'ссылки', 'библиография'],
-    48: ['aging', 'старение'],
-    49: ['image', 'изображение', 'картинка', 'figure', 'рисунок'],
-    50: ['code', 'код'],
-    51: ['funding', 'финансирование', 'грант'],
-    52: ['conflict of interest', 'конфликт интересов'],
-    53: ['value', 'ценность', 'информация'],
-    54: ['action', 'действие'],
-    55: ['group', 'группа животных'],
-    56: ['step', 'шаг'],
-    57: ['result', 'finding', 'результат', 'находка'],
+const ALIASES: Record<string, string[]> = {
+    metadata: ['meta', 'metadata', 'метаданные', 'doi', 'статья'],
+    goal: ['goal', 'цель', 'aim'],
+    text: ['text', 'текст', 'paragraph', 'абзац', 'проза'],
+    statement: ['triplet', 'триплет', 'тройка', 'fact', 'факт'],
+    hypothesis: ['hypothesis', 'гипотеза'],
+    prerequisite: ['prerequisites', 'предпосылки'],
+    expectations: ['expectations', 'ожидания'],
+    research_design: ['design', 'дизайн', 'study design', 'endpoint', 'primary endpoint', 'secondary endpoints', 'конечные точки'],
+    material: ['materials', 'материалы'],
+    method: ['methods', 'методы'],
+    experiment: ['experiment', 'эксперимент', 'exp'],
+    inclusion_exclusion_criteria: ['criteria', 'критерии', 'inclusion', 'исключение'],
+    biological_mechanism: ['mechanism', 'механизм', 'биология'],
+    impact_goal: ['target', 'мишень', 'объект воздействия'],
+    intervention: ['intervention', 'интервенция', 'вмешательство', 'treatment'],
+    animal_model: ['animal model', 'животная модель', 'вид', 'species'],
+    entity: ['entity', 'сущность', 'concept', 'концепт'],
+    definition: ['definition', 'определение', 'term', 'термин'],
+    assumptions: ['assumptions', 'предположения'],
+    sample_size: ['sample size', 'выборка', 'n'],
+    data_source: ['data sources', 'источники'],
+    probability_value: ['pvalue', 'p-value', 'p'],
+    variance: ['variance', 'дисперсия'],
+    effect_size: ['effect size', 'эффект'],
+    statistical_power: ['power', 'мощность'],
+    confidence_interval: ['ci', 'confidence interval', 'доверительный интервал'],
+    magnitude_value: ['numbers', 'числа'],
+    formula: ['formula', 'формула', 'latex'],
+    causal_graph: ['dag', 'граф', 'causal', 'каузальный'],
+    identifiability_criteria: ['pearl', 'перл', 'идентифицируемость'],
+    result: ['results', 'результаты'],
+    statistical_processing: ['stats', 'статистика', 'stat processing'],
+    claim: ['statement', 'claim', 'утверждение'],
+    limitations: ['limitations', 'ограничения'],
+    side_findings: ['side findings', 'побочные выводы'],
+    side_effects: ['side effects', 'побочные эффекты'],
+    post_claims: ['post claims', 'после исследования'],
+    open_questions: ['open questions', 'вопросы'],
+    novelty: ['novelty', 'новизна'],
+    versions: ['versions', 'версии'],
+    future_research_suggestions: ['future research', 'будущее', 'перспективы'],
+    reference: ['references', 'ссылки', 'библиография'],
+    link_with_aging: ['aging', 'старение'],
+    image: ['image', 'изображение', 'картинка', 'figure', 'рисунок'],
+    code: ['code', 'код'],
+    funding: ['funding', 'финансирование', 'грант'],
+    interest_conflict: ['conflict of interest', 'конфликт интересов'],
+    scientific_knowledge_value: ['value', 'ценность', 'информация'],
+    action: ['action', 'действие'],
+    animal_group: ['group', 'группа животных'],
+    experiment_step: ['step', 'шаг'],
+    finding: ['result', 'finding', 'результат', 'находка'],
+    relation: ['relation', 'связь', 'причинно-следственная', 'зависимость'],
+    temporal_relation: ['temporal', 'временная', 'последовательность', 'раньше', 'позже'],
 };
 
 export interface SlashCommand {
-    typeNumber: number;
+    designation: string;
     name: string;
     description: string;
     keywords: string[];
 }
 
 export const SLASH_COMMANDS: SlashCommand[] = BLOCK_TYPES.map((t) => ({
-    typeNumber: t.typeNumber,
+    designation: t.designation,
     name: t.name,
     description: t.description ?? '',
     keywords: [
         t.name.toLowerCase(),
-        ...(ALIASES[t.typeNumber] ?? []),
-        String(t.typeNumber),
+        ...(ALIASES[t.designation] ?? []),
+        t.designation,
     ],
 }));
 
@@ -106,16 +104,13 @@ function commandScore(cmd: SlashCommand, q: string): number {
             if (s > best) best = s * 10;
         }
     }
-    if (/^\d+$/.test(q) && String(cmd.typeNumber).startsWith(q)) {
-        best = Math.max(best, 8000);
-    }
     return best;
 }
 
 export function filterSlashCommands(
     rawQuery: string,
-    recentTypes: readonly number[] = [],
-    limit = 30,
+    recentDesignations: readonly string[] = [],
+    limit = SLASH_COMMANDS.length,
 ): SlashCommand[] {
     const q = rawQuery.trim().toLowerCase().replace(/^\//, '').trim();
     const scored: Array<{ cmd: SlashCommand; score: number }> = [];
@@ -123,16 +118,16 @@ export function filterSlashCommands(
         let score: number;
         if (q) {
             score = commandScore(cmd, q);
-            const idx = recentTypes.indexOf(cmd.typeNumber);
+            const idx = recentDesignations.indexOf(cmd.designation);
             if (idx >= 0 && score > 0) score += Math.max(0, 40 - idx);
         } else {
-            const idx = recentTypes.indexOf(cmd.typeNumber);
-            score = idx >= 0 ? recentTypes.length - idx + 1 : 0;
+            const idx = recentDesignations.indexOf(cmd.designation);
+            score = idx >= 0 ? recentDesignations.length - idx + 1 : 0;
         }
         if (!q || score > 0) {
             scored.push({ cmd, score });
         }
     }
-    scored.sort((a, b) => b.score - a.score || a.cmd.typeNumber - b.cmd.typeNumber);
+    scored.sort((a, b) => b.score - a.score || a.cmd.name.localeCompare(b.cmd.name));
     return scored.slice(0, limit).map((s) => s.cmd);
 }

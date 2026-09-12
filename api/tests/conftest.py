@@ -8,7 +8,6 @@ This module provides:
 - Common test utilities
 """
 
-import asyncio
 import json
 import pytest
 from pathlib import Path
@@ -32,18 +31,6 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "dataset: mark test as using dataset fixtures"
     )
-
-
-# ============================================================================
-# Event Loop Fixture (for async tests)
-# ============================================================================
-
-@pytest.fixture(scope="session")
-def event_loop():
-    """Create an event loop for the entire test session"""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
 
 
 # ============================================================================

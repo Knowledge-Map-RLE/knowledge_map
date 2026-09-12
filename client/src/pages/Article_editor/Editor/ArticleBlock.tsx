@@ -76,7 +76,7 @@ export const ArticleBlock = memo(function ArticleBlock({
         >
             <pixiGraphics draw={drawBg} />
             <PixiText
-                text={typeDef?.name ?? `T${blockType}`}
+                text={typeDef?.name ?? blockType}
                 x={0}
                 y={-BLOCK_HEIGHT / 2 + 12}
                 anchor={0.5}

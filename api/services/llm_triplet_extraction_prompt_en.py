@@ -2,7 +2,7 @@
 
 Unified one-stage prompt for whole-article extraction. Replaces the two-stage
 (Structure → Atomize) approach with a single LLM call that produces all block
-types including T4 triplets, T58 action dependencies, and T59 temporal relations.
+types including statement triplets, relation action dependencies, and temporal_relation temporal relations.
 
 This design is optimized for downstream pattern analysis of action dependencies
 (successful/unsuccessful goal-achievement patterns in Neo4j).
@@ -93,10 +93,10 @@ Each structural block receives a unique local identifier:
     "tag": "{B2}"
     "tag": "{B3}"
 and so on.
-T4 also MUST receive a tag.
+statement also MUST receive a tag.
 For example:
     {
-      "blockType": "atomic_statement",
+      "blockType": "statement",
       "tag": "{B27}",
       ...
     }
@@ -132,7 +132,7 @@ Before finalizing the JSON, re-scan every `{Bn}` and confirm all five hold.
 "Sn" (here written as `{Bn}`, later converted to a UUID by the backend) is THE ONLY
 mechanism of structural nesting in this schema. All nesting between structural lines
 goes exclusively through Sn references.
-- If a subject/object of a T4 triplet is another structural line (a term, entity, or
+- If a subject/object of a statement triplet is another structural line (a term, entity, or
   statement), represent it ONLY as an Sn reference: `"{B17}"`. Never by copying its text.
 - Never inline the whole contents of one block into a field of another block.
 - Never mix visible text and an Sn reference in the same subject/object.
@@ -141,11 +141,11 @@ goes exclusively through Sn references.
   text is never duplicated, so the same fact is described exactly once.
 
 # ONE ASSERTION = ONE SEMANTIC PREDICATE
-Each T4 structural line carries exactly ONE semantic predicate — a single relation
+Each statement structural line carries exactly ONE semantic predicate — a single relation
 between one subject and one object.
 - Do NOT join several relations in one line with "and"/"or"/",".
 - Do NOT pack a whole clause into subject/object: split the clause into a chain of
-  linked lines joined by Sn references (see T4 ATOMICITY RULES).
+  linked lines joined by Sn references (see statement ATOMICITY RULES).
 - A compound/complex phrase is unfolded into as many lines as there are semantic
   relations, each line keeping its own single predicate.
 
@@ -181,7 +181,7 @@ Do NOT copy the entire paragraph. Use the minimal exact fragment sufficient for 
 If the exact text cannot be identified, the source may be left partially filled, but always attempt to find the exact quote.
 
 # SOURCE SPAN vs EVIDENCE QUOTE
-For DERIVED statements (meta-assertions, canonical T4 rebuilt from a container, and
+For DERIVED statements (meta-assertions, canonical statement rebuilt from a container, and
 other statements that have no verbatim sentence) the exact-quote requirement cannot
 always be satisfied. Distinguish two notions:
 - `evidenceQuote` — an EXACT verbatim quote from the article (used in `source.text`).
@@ -190,7 +190,7 @@ always be satisfied. Distinguish two notions:
 - `sourceSpan` — the minimal fragment of article text (which may be a non-verbatim,
   normalized reconstruction) from which a derived statement was built. Use it when the
   statement is a derived/composed meta-assertion that has no verbatim quote.
-This applies to T4 and T58: put the verbatim quote in `source.text`/`evidence`, and for
+This applies to statement and relation: put the verbatim quote in `source.text`/`evidence`, and for
 derived statements keep a `sourceSpan` on the block recording the text window used.
 Never fabricate a verbatim quote that does not exist in the article; if none exists,
 record the `sourceSpan` and leave `source.text` minimally filled or empty with
@@ -261,46 +261,46 @@ Extract scientifically significant entities:
 - numerical values.
 Do not create a separate entity for every common word.
 An entity must be semantically significant to the research content.
-Distinguish (see T22 in the catalog):
-- CONCEPT IDENTITY (what a term means) → T22 entity block (e.g. "AABs" → "are" →
+Distinguish (see entity in the catalog):
+- CONCEPT IDENTITY (what a term means) → entity entity block (e.g. "AABs" → "are" →
   "age-associated B cells"). Only when the article states an explicit expansion/definition.
-- CONCEPT ASSERTION (a property/relation asserted about a concept) → T4 atomic_statement
+- CONCEPT ASSERTION (a property/relation asserted about a concept) → statement
   (e.g. "AABs → accumulate → with age").
-Do not force every entity into a T22 identity block; extract identities only where the
+Do not force every entity into a entity identity block; extract identities only where the
 article explicitly defines them.
 
 # STAGE 3. OBJECTIVE EXTRACTION
-Create an `objective` block for each explicitly stated research objective.
+Create a `goal` block for each explicitly stated research objective.
 Do not fabricate objectives based on what "the researchers likely wanted to find out."
 If the article contains one objective — create one.
 If the objective consists of multiple independent sub-objectives — split it.
 Each objective must be atomic.
 
-T4 IS THE CANONICAL LAYER FOR THE OBJECTIVE. The T2 `objective` block is a light
-pointer; the real, machine-computable decomposition of the goal lives in the T4 layer
-(the canonical knowledge layer). Never put a long free-text goal into the T2 object.
+statement IS THE CANONICAL LAYER FOR THE OBJECTIVE. The goal `objective` block is a light
+pointer; the real, machine-computable decomposition of the goal lives in the statement layer
+(the canonical knowledge layer). Never put a long free-text goal into the goal object.
 
 SEVERAL ACTIONS OF ONE COMPOUND OBJECTIVE → SEVERAL CANONICAL META-ASSERTIONS.
-A compound objective is NOT squeezed into a single `objective` block with a long object.
-The central/primary aim becomes the `objective` (T2); each additional action of the
-same compound goal becomes its own separate T4 canonical line.
+A compound objective is NOT squeezed into a single `goal` block with a long object.
+The central/primary aim becomes the `goal`; each additional action of the
+same compound goal becomes its own separate statement canonical line.
 Example:
     "We aimed to identify the causal mechanisms of resistance to aging and to test
     them in laboratory mice under controlled conditions"
-is broken down into the canonical T4 layer as:
-    T2:  research → aims_to → {B…identify-causal-mechanisms}
-    T4:  {identify-causal-mechanisms} → of → {resistance-to-aging}
-    T4:  research → aims_to → {B…test-causal-mechanisms}
-    T4:  {test-causal-mechanisms} → using → {B…mice}
-    T4:  mice → property → laboratory
-    T4:  {test-causal-mechanisms} → under → {B…conditions}
-    T4:  conditions → property → controlled
+is broken down into the canonical statement layer as:
+    goal:  research → aims_to → {B…identify-causal-mechanisms}
+    statement:  {identify-causal-mechanisms} → of → {resistance-to-aging}
+    statement:  research → aims_to → {B…test-causal-mechanisms}
+    statement:  {test-causal-mechanisms} → using → {B…mice}
+    statement:  mice → property → laboratory
+    statement:  {test-causal-mechanisms} → under → {B…conditions}
+    statement:  conditions → property → controlled
 Each sub-objective, each action, and each context element is its own atomic
-single-predicate meta-assertion in the T4 layer. Repeated elements join the chain via
+single-predicate meta-assertion in the statement layer. Repeated elements join the chain via
 Sn references to the pattern line that introduces them — text is introduced exactly
 once and every later use is an Sn reference (see DEFINITION-FIRST).
-The T2 `objective` points to the primary aim via an Sn reference to the canonical T4
-that introduces that aim; additional actions are separate T4 lines, not extra T2 blocks.
+The `goal` block points to the primary aim via an Sn reference to the canonical statement
+that introduces that aim; additional actions are separate statement lines, not extra goal blocks.
 Do not create an artificial dependency between separate actions if the article does not
 express one — they are emitted as independent lines, not chained by invented links.
 Do NOT decompose a noun phrase into grammatical fragments unless the components are
@@ -415,7 +415,7 @@ For each intervention preserve:
 Do not turn a regular observation into an intervention.
 
 # STAGE 9. PROCEDURE STEP EXTRACTION
-Create a `procedure_step` for each essential procedural step.
+Create an `experiment_step` for each essential procedural step.
 A step must describe an actual researcher action.
 For example:
     animals were treated with X
@@ -607,14 +607,14 @@ or:
     hypothesized
 depending on context.
 
-# STAGE 14. RELATIONSHIPS BETWEEN ASSERTIONS (T58)
-Create `relation` (blockType: 58) for causal, regulatory, or causal-semantic connections between entities. This is one of the most important block types.
-What MUST become T58:
+# STAGE 14. RELATIONSHIPS BETWEEN ASSERTIONS (relation)
+Create `relation` (blockType: "relation") for causal, regulatory, or causal-semantic connections between entities. This is one of the most important block types.
+What MUST become relation:
 - Any X → Y causal claim with experimental evidence
 - Any regulatory interaction with experimental evidence
 - Any mechanistic link with experimental evidence
 - Statistical evidence that supports or weakens a causal interpretation
-When to create T58:
+When to create relation:
 - If the article says "X increased Y" → X causes/increases Y
 - If the article says "X was associated with Y" → X associated_with Y
 - If the article says "knockdown of A reduced B" → A enables B
@@ -629,18 +629,18 @@ Types:
 - associated_with / correlates_with (correlational)
 - tests (experiment tests claim)
 - explains (mechanistic explanation)
-Each T58 MUST have:
+Each relation MUST have:
 - source / target — short entity names (NOT UUIDs); a short text name of the entity/concept
 - relationType — the exact causal/regulatory relation type
 - evidence — an exact quote from the article supporting this relation
-Optionally, when the endpoint entity is already introduced as a canonical T4 in this
-response, link it via `sourceRef`/`targetRef` ({Bn} tags) to that T4 line, so T58 stays
+Optionally, when the endpoint entity is already introduced as a canonical statement in this
+response, link it via `sourceRef`/`targetRef` ({Bn} tags) to that statement line, so relation stays
 first-class in the graph without duplicating entity text.
 
-Only create a T58 when the article actually asserts (or supports with evidence) a
-causal/regulatory/mechanistic-linking relation. Do NOT create a T58 for a relation
-that is already fully captured by a T4 atomic statement — each distinct fact is
-recorded exactly once, in the most appropriate block type. A correlation is T58
+Only create a relation when the article actually asserts (or supports with evidence) a
+causal/regulatory/mechanistic-linking relation. Do NOT create a relation for a relation
+that is already fully captured by a statement atomic statement — each distinct fact is
+recorded exactly once, in the most appropriate block type. A correlation is relation
 `associated_with`/`correlates_with`, not `causes`.
 
 # STAGE 15. CONTRADICTION VERIFICATION
@@ -705,7 +705,7 @@ or:
     Experiment A
         ↓ tests
     Hypothesis B
-For relationships between actions use `action_relation`.
+For relationships between actions use `relation`.
 Types:
 - enables
 - requires
@@ -769,7 +769,7 @@ Extract author proposals:
 - which limitations to address;
 - which hypothesis to test.
 Do not automatically turn this into established knowledge.
-This is `future_proposal`.
+This is `future_research_suggestions`.
 
 # STAGE 24. PREVIOUS RESEARCH
 Preserve references to previous research if they play a substantive role.
@@ -787,11 +787,11 @@ Create `reference` only if the article uses a study as a substantive part of an 
 Extract funding information if present.
 Do not fabricate an organization or grant.
 
-# ATOMIC ASSERTIONS T4 (CRITICAL — EXTRACT EVERYTHING)
-`atomic_statement` is a minimal computable assertion. Extract EVERY factual claim from the article as a T4 block.
+# ATOMIC ASSERTIONS statement (CRITICAL — EXTRACT EVERYTHING)
+`statement` is a minimal computable assertion. Extract EVERY factual claim from the article as a statement block.
 Format:
     subject → predicate → object
-Each T4 has:
+Each statement has:
     tag
     subject (1-3 words, entity name, or an Sn reference to a structural line)
     predicate (1-3 words, one semantic relation)
@@ -800,39 +800,39 @@ Each T4 has:
     sourceRefs (array of {Bn} tags pointing to container blocks)
     context (species, tissue, age, condition if available)
     source (EXACT quote from the article — see SOURCE section above)
-Semantic atomicity: ONE T4 = ONE semantic predicate. A long/composite phrase is unfolded
-into a chain of linked T4 lines (each with its own single predicate), joined by Sn
-references — never packed into a single T4 (see T4 ATOMICITY RULES below).
+Semantic atomicity: ONE statement = ONE semantic predicate. A long/composite phrase is unfolded
+into a chain of linked statement lines (each with its own single predicate), joined by Sn
+references — never packed into a single statement (see statement ATOMICITY RULES below).
 
-What MUST become T4 (extract ALL of these):
-- Every factual claim: "A. russatus resists aging" → T4
-- Every experimental result: "clusterin was elevated" → T4
-- Every species/tissue/age difference: "A. russatus had higher X than A. dimidiatus" → T4
-- Every intervention effect: "rapamycin extended lifespan" → T4
-- Every statistical finding: "p < 0.05 for comparison X vs Y" → T4
-- Every mechanistic step: "AMPK activates mTOR inhibition" → T4
-- Every hypothesis: "clusterin may protect against inflammaging" → T4
-- Every author interpretation: "this suggests a protective role" → T4
-- Every limitation: "the study was limited to mice" → T4
-- Every future proposal: "further studies should test in humans" → T4
+What MUST become statement (extract ALL of these):
+- Every factual claim: "A. russatus resists aging" → statement
+- Every experimental result: "clusterin was elevated" → statement
+- Every species/tissue/age difference: "A. russatus had higher X than A. dimidiatus" → statement
+- Every intervention effect: "rapamycin extended lifespan" → statement
+- Every statistical finding: "p < 0.05 for comparison X vs Y" → statement
+- Every mechanistic step: "AMPK activates mTOR inhibition" → statement
+- Every hypothesis: "clusterin may protect against inflammaging" → statement
+- Every author interpretation: "this suggests a protective role" → statement
+- Every limitation: "the study was limited to mice" → statement
+- Every future proposal: "further studies should test in humans" → statement
 
-Do not impose a target count on T4: extract EVERY distinct atomic fact the article makes,
+Do not impose a target count on statement: extract EVERY distinct atomic fact the article makes,
 decomposing each significant compound phrase into its micro-facts only where those
 fragments are themselves independent, semantically useful facts (see SEMANTIC ATOMICITY
-below). Precision of each T4 (exact article wording for subject and object) matters more
+below). Precision of each statement (exact article wording for subject and object) matters more
 than count; still, do not stop early and do not merge two facts into one line.
 
-Add T4 for EVERY atomic assertion the article makes — the T4 layer is the complete
-set of minimal subject–predicate–object facts. T4 does NOT replace container fields nor
-duplicate them: containers (T57 findings, T38 claims, T58 relations, ...) describe the
-article structure, while T4 captures each atomic fact as a standalone triplet. These two
-layers are parallel and both complete. Do not skip a T4 because the same fact appears in
-a container. Do not drop essential atomicity: keep each T4 to one semantic predicate.
+Add statement for EVERY atomic assertion the article makes — the statement layer is the complete
+set of minimal subject–predicate–object facts. statement does NOT replace container fields nor
+duplicate them: containers (finding findings, claim claims, relation relations, ...) describe the
+article structure, while statement captures each atomic fact as a standalone triplet. These two
+layers are parallel and both complete. Do not skip a statement because the same fact appears in
+a container. Do not drop essential atomicity: keep each statement to one semantic predicate.
 
-CRITICAL: sourceRefs MUST point to the container block (T38, T57, T14, etc.) that contains this assertion. If the assertion comes from a result, sourceRefs should point to the T57 block. If from a claim, point to the T38 block.
+CRITICAL: sourceRefs MUST point to the container block (claim, finding, experiment, etc.) that contains this assertion. If the assertion comes from a result, sourceRefs should point to the finding block. If from a claim, point to the claim block.
 
-# T4 ATOMICITY RULES
-One T4 must contain one simple fact = one semantic predicate.
+# statement ATOMICITY RULES
+One statement must contain one simple fact = one semantic predicate.
 Bad:
     X increases Y and decreases Z
 Good:
@@ -843,7 +843,7 @@ Bad:
 Good:
     X → is → a protein
     X → regulates → Y
-Each characteristic/property is its own T4 line with its own predicate
+Each characteristic/property is its own statement line with its own predicate
 (use `property`/`is` for attributes):
     Note: the same subject may yield several property lines, one per attribute.
 Atomicity means semantic atomicity, not a word count limit.
@@ -852,11 +852,11 @@ But do NOT split an indivisible scientific term:
 may remain a single object.
 
 # SEMANTIC ATOMICITY (CRITICAL)
-Atomicity = each T4 has ONE semantic predicate AND each T4 represents ONE piece of
+Atomicity = each statement has ONE semantic predicate AND each statement represents ONE piece of
 independently useful knowledge that can participate in graph reasoning.
 Split a phrase ONLY when each resulting component is itself independently useful
 knowledge. Do NOT split grammatical dependencies merely because they exist syntactically.
-"AABs are age-associated B cells" is a single scientific identity claim → one T4
+"AABs are age-associated B cells" is a single scientific identity claim → one statement
 (`AABs → are → age-associated B cells`), NOT a parse tree:
     ✗ AABs → are → age-associated
     ✗ age-associated → B → cells
@@ -866,8 +866,8 @@ object, NOT three separate facts:
     ✗ resistance → to → aging
 Keep it as one object UNLESS the article treats the components as independent
 scientific claims with their own predicates.
-Do NOT act as a grammatical/`of`/`to` parser. T4 is the canonical knowledge layer;
-T58/T16/T38 are derived views of that knowledge — they do not manufacture extra
+Do NOT act as a grammatical/`of`/`to` parser. statement is the canonical knowledge layer;
+relation/biological_mechanism/claim are derived views of that knowledge — they do not manufacture extra
 grammatical fragments.
 
 # SEMANTIC-ROLE PREDICATES
@@ -879,11 +879,11 @@ word "of" or "to". Only use a semantic-role predicate when it names a real relat
 between two separate facts (e.g. `{test-causal-mechanisms} → under → {conditions}`,
 `{cohort} → compared to → {Mus-musculus}`).
 Enumerations are unfolded item by item: a sentence that contrasts or lists several
-outcomes (e.g. "X increased Y, decreased Z, and left W stable") yields one T4 per
+outcomes (e.g. "X increased Y, decreased Z, and left W stable") yields one statement per
 outcome, never a single joined line.
 
 # DEFINITION-FIRST, Sn-AFTER (term introduction + reuse)
-A term/entity is introduced by TEXT exactly once, in the first T4 line that uses it
+A term/entity is introduced by TEXT exactly once, in the first statement line that uses it
 as its subject (and/or a defining predicate):
     Acomys russatus → is → organism
 Introduce the identity of a term ONLY when the article itself states it (explicit
@@ -891,11 +891,11 @@ definition or an unambiguous abbreviation expansion such as "AABs are age-associ
 B cells"). Do NOT auto-generate `X → is → organism` for every species merely because you
 recognize it — identity reflects what the article asserts, not external knowledge.
 Distinguish:
-- CONCEPT IDENTITY (what the term means): `AABs → are → age-associated B cells` (one T4)
+- CONCEPT IDENTITY (what the term means): `AABs → are → age-associated B cells` (one statement)
 - CONCEPT DESCRIPTION (properties/attributes asserted about it):
   `A. russatus → lives → up to 4 years`, `mice → property → laboratory`
-  Each property is its own T4 line.
-Every later occurrence of the same term (in any other T4 line) is replaced by an Sn
+  Each property is its own statement line.
+Every later occurrence of the same term (in any other statement line) is replaced by an Sn
 reference to that first line — never by repeating the text:
     cohorts → contain → {B…Acomys-russatus}
     {Acomys-russatus} → compared to → {B…Mus-musculus}
@@ -903,7 +903,7 @@ Rationale: the defining line keeps the text (so the triplet is matchable by metr
 and reuse happens purely structurally via Sn. Use an Sn reference ONLY when the term has
 already been introduced in this response — never to pad a quota.
 
-# REFERENCES WITHIN T4
+# REFERENCES WITHIN statement
 If the subject or object is another structured assertion or an already-introduced
 term, use an Sn reference:
     "{B17}"
@@ -1023,9 +1023,13 @@ In such a case, the corresponding block is simply absent.
 Never create an empty or fictitious block just to match the schema.
 
 # STRUCTURAL BLOCK CATALOG
-Use the following types. The number in parentheses is the blockType value to use in JSON.
+Use the following types. The lowercase designation in parentheses is the exact
+`blockType` string to use in JSON — it replaces the old numeric type numbers
+(e.g. metadata, goal, statement, relation). Output only fields you filled; omit empty
+ones. Output only the types the article genuinely contains; a type absent from the
+article is simply absent from the output.
 
-## article (blockType: 1)
+## metadata (blockType: "metadata")
 Publication metadata:
     doi — the full URL of the DOI, MUST start with "https://doi.org/".
         If the article gives a bare DOI (e.g. "10.18632/aging.204082"),
@@ -1037,64 +1041,129 @@ Publication metadata:
         semicolons, or "and". If the article lists 5 authors, the array has
         exactly 5 elements. Use the name exactly as written (no honorifics).
         If no authors are listed, omit the field.
+    authorsOrcid (array of strings) — ORCID iDs, aligned with `authors`
+    organizations (array of strings) — author affiliations, aligned with `authors`
+    correspondingAuthors (array of strings)
+    publicationDate
+    journal
+    volume
+    issue
+    pages
+    publisher
+    license
+    funding
+    conflictOfInterest
+    studyRegistration — clinical/study registration number (e.g. NCT...), if declared
     source
 
-## objective (blockType: 2)
-Research objective (one primary aim per T2; the object is an Sn reference to the
-canonical T4 meta-assertion that introduces the aim — see STAGE 3; additional actions
-of a compound goal become separate canonical T4 lines):
+## goal (blockType: "goal")
+Research objective (one primary aim per goal; the object is an Sn reference to the
+canonical statement meta-assertion that introduces the aim — see STAGE 3; additional actions
+of a compound goal become separate canonical statement lines):
     subject
     predicate
-    object — an Sn reference ({Bn}) to the canonical T4 line introducing the primary
+    object — an Sn reference ({Bn}) to the canonical statement line introducing the primary
              aim, NOT a long free-text goal
 
-## hypothesis (blockType: 7)
-Hypothesis:
-    hypothesis
-    disproofExplanation (what would disprove this hypothesis)
+## text (blockType: "text")
+Free text (use ONLY if the article contains an unstructured free-text passage that must
+stay as a whole; do NOT use it for structured facts):
+    text
 
-## study (blockType: 3)
-Study (DO NOT create unless the article explicitly describes a multi-experiment study with clear structure):
-    name
-    type
-    purpose
-    experiments
-    hypotheses
+## statement (blockType: "statement")
+Atomic triplet — the minimal computable unit of knowledge (ONE semantic predicate).
+    subject — 1-3 words, entity name, or an Sn reference ({Bn}) to a structural line
+    predicate — 1-3 words, single relation (semantic-role predicates allowed only for real relations)
+    object — 1-3 words, entity name or value, or an Sn reference ({Bn}) to a structural line
+    epistemicStatus (one of: direct_statement, observation, experimental_result, statistical_result, author_interpretation, hypothesis, background_claim, limitation, future_proposal)
+    sourceRefs — array of {Bn} tags pointing to container blocks (claim, finding, experiment, etc.) that contain this assertion
+    context — species, tissue, age, condition, dose, duration, etc. (if available)
+    source — EXACT quote (see SOURCE section). For derived statements include `sourceSpan` (the text window used) when no verbatim quote exists.
+Rules:
+- One statement = one semantic predicate. Never join relations with "and/or/,".
+- Introduce each term by text once; every later occurrence is an Sn reference.
+- Structural nesting between statements goes ONLY through Sn references.
+- statement is the canonical knowledge layer; do NOT emit grammatical `of`/`to` fragments
+  (see SEMANTIC ATOMICITY).
+What MUST become statement:
+- Every factual claim from the article (e.g., "A. russatus resists aging")
+- Every experimental result (e.g., "clusterin was elevated in macrophages")
+- Every statistical finding (e.g., "p < 0.05 for comparison X vs Y")
+- Every species/tissue/age difference (e.g., "A. russatus had higher X than A. dimidiatus")
+- Every intervention effect (e.g., "rapamycin extended lifespan")
+- Every mechanistic step (e.g., "AMPK activates mTOR inhibition")
+- Every hypothesis or author interpretation
+Quantity guideline: no target count. Every atomic fact the article states is a statement line,
+independent of whether it also appears inside a container field — the statement layer and the
+container layer are parallel and both complete. Do not inflate by over-splitting a single
+assertion into many semantic-role fragments; atomicity means one semantic predicate per
+statement. Assignment to statement is by nature of the fact, never by a numeric quota.
+
+## research_design (blockType: "research_design")
+Study design (absorbs the old separate primary/secondary-endpoint blocks):
+    design
+    primaryEndpoints (array) — primary endpoints
+    secondaryEndpoints (array) — secondary endpoints
+    experiments (array of {Bn} tags)
+    hypotheses (array of {Bn} tags)
     conclusions
     source
 
-## experiment (blockType: 14)
+## hypothesis (blockType: "hypothesis")
+Hypothesis:
+    hypothesis
+    disproofExplanation (what would disprove this hypothesis)
+    hypothesisSubject
+    hypothesisPredicate
+    hypothesisObject
+    disproofSubject
+    disproofPredicate
+    disproofObject
+
+## prerequisite (blockType: "prerequisite")
+Prerequisites (absorbs the old knowledge-dependencies):
+    prerequisites (array)
+
+## expectations (blockType: "expectations")
+Expected results:
+    expectations (array)
+
+## material (blockType: "material")
+Materials:
+    materials
+
+## method (blockType: "method")
+Methods (absorbs the old research-logic):
+    methods
+
+## experiment (blockType: "experiment")
 Experiment:
     experimentName
     experimentType (one of: in_vitro, in_vivo, clinical, observational, behavioral, histology, molecular, omics, sequencing, computational, statistical, imaging, meta_analysis, systematic_review, other)
-    experimentalPairs (array of {groupRef: "{Bn}"} pointing to T55 experimental groups)
-    controlPairs (array of {groupRef: "{Bn}"} pointing to T55 control groups)
-    steps (array of "{Bn}" tags pointing to T56 procedure steps)
-    findings (array of "{Bn}" tags pointing to T57 results)
+    experimentalPairs (array of {groupRef: "{Bn}"} pointing to animal_group experimental groups)
+    controlPairs (array of {groupRef: "{Bn}"} pointing to animal_group control groups)
+    steps (array of "{Bn}" tags pointing to experiment_step procedure steps)
+    findings (array of "{Bn}" tags pointing to finding results)
     duration
     source
 
-## entity (blockType: 22)
-Entity (abbreviation or key concept identity). This is the CONCEPT IDENTITY layer —
-what a term means. It uses the same subject/predicate/object shape as a triplet
-(e.g. "AABs" → "are" → "age-associated B cells"), where the `is`/`are` predicate
-expresses identity, not a separate knowledge assertion.
-    subject — the term/key concept or its abbreviation
-    predicate — the identity relation (typically "is" / "are" / "=")
-    object — the full concept the abbreviation/term expands to
-    aliases (optional array of strings) — other names/synonyms of the same concept
-    canonicalName (optional string) — the preferred/full name of the concept
-Create a T22 ONLY for a genuine concept identity that the article states (an explicit
-abbreviation expansion or an explicit "X is Y" concept definition). Do NOT auto-generate
-an identity for every term, and do NOT use T22 as a dumping ground for every
-verb/nominal relation — those belong to T4 atomic statements.
+## inclusion_exclusion_criteria (blockType: "inclusion_exclusion_criteria")
+Inclusion/exclusion criteria:
+    criterionType (one of: inclusion, exclusion)
+    inclusionExclusionCriteria
 
-## definition (blockType: 23)
-Term definition:
-    term
-    definition
+## biological_mechanism (blockType: "biological_mechanism")
+Mechanism:
+    mechanism
+    explains
+    supportedBy
+    source
 
-## intervention (blockType: 18)
+## impact_goal (blockType: "impact_goal")
+Target of the action (what the intervention/process is aimed at):
+    target
+
+## intervention (blockType: "intervention")
 Intervention or treatment:
     interventionType
     mechanism
@@ -1106,57 +1175,90 @@ Intervention or treatment:
     purpose
     source
 
-## model (blockType: 19)
+## animal_model (blockType: "animal_model")
 Experimental model:
     species
+    speciesRef ({Bn} tag pointing to the entity block introducing the species) — optional
     timeline
     conditions
 
-## group (blockType: 55)
-Experimental group:
-    groupName
-    n
-    conditions
-    purpose
+## entity (blockType: "entity")
+Entity (abbreviation or key concept identity). This is the CONCEPT IDENTITY layer —
+what a term means. It uses the same subject/predicate/object shape as a triplet
+(e.g. "AABs" → "are" → "age-associated B cells"), where the `is`/`are` predicate
+expresses identity, not a separate knowledge assertion.
+    subject — the term/key concept or its abbreviation
+    predicate — the identity relation (typically "is" / "are" / "=")
+    object — the full concept the abbreviation/term expands to
+    type — entity kind (e.g. species, gene/protein, process, tissue, disease, cell, drug) — optional
+    value — numeric value if this entity is a named magnitude — optional
+    aliases (optional array of strings) — other names/synonyms of the same concept
+    canonicalName (optional string) — the preferred/full name of the concept
+Create a entity ONLY for a genuine concept identity that the article states (an explicit
+abbreviation expansion or an explicit "X is Y" concept definition). Do NOT auto-generate
+an identity for every term, and do NOT use entity as a dumping ground for every
+verb/nominal relation — those belong to statement atomic statements.
 
-## procedure_step (blockType: 56)
-Research step:
-    stepName
-    details
-    duration
+## definition (blockType: "definition")
+Term definition:
+    term
+    definition
+
+## assumptions (blockType: "assumptions")
+Assumptions:
+    assumptions
+
+## sample_size (blockType: "sample_size")
+Sample size:
+    sampleSize
+
+## data_source (blockType: "data_source")
+Data sources:
+    sources (array)
+
+## probability_value (blockType: "probability_value")
+p-value:
+    pValue (number, e.g. 0.05). One probability_value block per p value.
+
+## variance (blockType: "variance")
+Dispersion/variance:
+    dispersion (mean, sd, se, range, ...)
+
+## effect_size (blockType: "effect_size")
+Effect size:
+    effectSize
+
+## statistical_power (blockType: "statistical_power")
+Statistical power:
+    power
+
+## confidence_interval (blockType: "confidence_interval")
+Confidence interval:
+    ci
+
+## magnitude_value (blockType: "magnitude_value")
+Named numbers:
+    values (array)
+
+## formula (blockType: "formula")
+Formula:
+    formula
+
+## causal_graph (blockType: "causal_graph")
+Causal graph (DAG):
+    graph
+
+## identifiability_criteria (blockType: "identifiability_criteria")
+Perl identifiability criteria:
+    criteria
+
+## result (blockType: "result")
+Results table (structural container for the tabular results section):
+    rows
+    rawData
     source
 
-## result (blockType: 57)
-Result or finding — extract EVERY quantitative or qualitative result from the article.
-    parameter — what was measured (e.g. "serum IL-6 level", "forelimb grip strength")
-    direction (one of: increased, decreased, no_change, mixed, trend, unknown)
-    significance (one of: significant, non_significant, trend, not_reported)
-    detail — specific numbers if available (e.g. "2.5-fold increase", "p = 0.003")
-    outcomeClass (one of: positive, negative, neutral, mixed, inconclusive)
-    figureRef — figure reference (e.g. "Fig. 2A")
-    experimentRef ({Bn} tag pointing to T14 experiment)
-    groupRefs (array of {Bn} tags pointing to T55 groups)
-    interventionRef ({Bn} tag pointing to T18 intervention) — OPTIONAL: set it ONLY
-        when the result is genuinely the product of an intervention (a drug, a genetic
-        knockout/overexpression/knockdown, a dietary change, exercise, temperature,
-        surgery, or another explicit experimental treatment administered to the system).
-        Do NOT set interventionRef for a comparison of naturally-different species or
-        age groups, and NEVER force a species/condition to become an intervention.
-    conditionRef ({Bn} tag pointing to the T18/T19 block that defines the experimental
-        condition or model under which the result was obtained) — use instead of
-        interventionRef when the distinguishing factor is an experimental condition or
-        model, not an administered intervention.
-    statisticRefs (array of {Bn} tags pointing to T37 statistics)
-    source — quote from the article
-CRITICAL: interventionRef is NOT mandatory. Only experimental results produced by a real
-administered treatment get an interventionRef. Distinguish clearly:
-- administered treatment (drug/KO/overexpression/diet/exercise) → interventionRef
-- comparison between species (A. russatus vs A. dimidiatus) or between age groups →
-  NO interventionRef; record the distinction via groupRefs and conditionRef
-- purely observational measurement → NO interventionRef, no conditionRef
-Never invent a treatment and never label a natural species or age as an intervention.
-
-## statistic (blockType: 37)
+## statistical_processing (blockType: "statistical_processing")
 Statistical result:
     statProcessing (statistical method used)
     expectationsComparison (how results compare to expectations)
@@ -1166,7 +1268,7 @@ Statistical result:
     sampleSize
     source
 
-## claim (blockType: 38)
+## claim (blockType: "claim")
 Author's claim or assertion:
     claimSubject
     claimPredicate
@@ -1175,116 +1277,160 @@ Author's claim or assertion:
     isNegated (boolean)
     source
 
-## mechanism (blockType: 16)
-Mechanism:
-    mechanism
-    explains
-    supportedBy
+## limitations (blockType: "limitations")
+Limitation:
+    limitations
+    type
     source
 
-## action (blockType: 54)
+## side_findings (blockType: "side_findings")
+Side finding or additional observation:
+    finding
+    context
+    source
+
+## side_effects (blockType: "side_effects")
+Side/co-occurring effects:
+    sideEffects
+
+## post_claims (blockType: "post_claims")
+Conclusions — claims made by the authors after the study (absorbs the old conclusions):
+    postClaims
+
+## open_questions (blockType: "open_questions")
+Open questions:
+    openQuestions
+
+## novelty (blockType: "novelty")
+Novelty or novel finding:
+    novelty
+    source
+
+## versions (blockType: "versions")
+Versions:
+    versions
+
+## future_research_suggestions (blockType: "future_research_suggestions")
+Future research proposal:
+    futureResearch
+    source
+
+## reference (blockType: "reference")
+Substantive connection to previous work:
+    references
+    source
+
+## link_with_aging (blockType: "link_with_aging")
+Connection with aging:
+    connection
+
+## image (blockType: "image")
+Image:
+    title
+    description
+    file
+
+## code (blockType: "code")
+Code:
+    code
+    language
+
+## funding (blockType: "funding")
+Funding source:
+    funding
+    source
+
+## interest_conflict (blockType: "interest_conflict")
+Conflict of interest:
+    conflict
+
+## scientific_knowledge_value (blockType: "scientific_knowledge_value")
+Informational / scientific value:
+    value
+
+## action (blockType: "action")
 Research or experimental action:
     subject
     predicate
     object
     source
 
-## relation (blockType: 58)
+## animal_group (blockType: "animal_group")
+Experimental group:
+    groupName
+    n
+    conditions
+    purpose
+    speciesRef ({Bn} tag) — optional
+    interventionRef ({Bn} tag) — optional
+
+## experiment_step (blockType: "experiment_step")
+Research step:
+    stepName
+    details
+    duration
+    source
+
+## finding (blockType: "finding")
+Result or finding — extract EVERY quantitative or qualitative result from the article.
+    parameter — what was measured (e.g. "serum IL-6 level", "forelimb grip strength")
+    direction (one of: increased, decreased, no_change, mixed, trend, unknown)
+    significance (one of: significant, non_significant, trend, not_reported)
+    detail — specific numbers if available (e.g. "2.5-fold increase", "p = 0.003")
+    outcomeClass (one of: positive, negative, neutral, mixed, inconclusive)
+    figureRef — figure reference (e.g. "Fig. 2A")
+    experimentRef ({Bn} tag pointing to experiment experiment)
+    groupRefs (array of {Bn} tags pointing to animal_group groups)
+    interventionRef ({Bn} tag pointing to intervention intervention) — OPTIONAL: set it ONLY
+        when the result is genuinely the product of an intervention (a drug, a genetic
+        knockout/overexpression/knockdown, a dietary change, exercise, temperature,
+        surgery, or another explicit experimental treatment administered to the system).
+        Do NOT set interventionRef for a comparison of naturally-different species or
+        age groups, and NEVER force a species/condition to become an intervention.
+    conditionRef ({Bn} tag pointing to the intervention/animal_model block that defines the experimental
+        condition or model under which the result was obtained) — use instead of
+        interventionRef when the distinguishing factor is an experimental condition or
+        model, not an administered intervention.
+    statisticRefs (array of {Bn} tags pointing to statistical_processing statistics)
+    source — quote from the article
+CRITICAL: interventionRef is NOT mandatory. Only experimental results produced by a real
+administered treatment get an interventionRef. Distinguish clearly:
+- administered treatment (drug/KO/overexpression/diet/exercise) → interventionRef
+- comparison between species (A. russatus vs A. dimidiatus) or between age groups →
+  NO interventionRef; record the distinction via groupRefs and conditionRef
+- purely observational measurement → NO interventionRef, no conditionRef
+Never invent a treatment and never label a natural species or age as an intervention.
+
+## relation (blockType: "relation")
 Causal or regulatory relationship between entities.
     source — human-readable entity name (e.g. "clusterin", "aging", "inflammaging"). A short text name, NOT a tag like {B17} and NOT a UUID.
     target — human-readable entity name (e.g. "health span", "IL-1β"). A short text name, NOT a tag like {B17} and NOT a UUID.
-    sourceRef ({Bn}) — OPTIONAL: the Sn tag of the canonical T4 line that introduces the source entity, when that entity already exists in the graph. Do not invent it.
-    targetRef ({Bn}) — OPTIONAL: the Sn tag of the canonical T4 line that introduces the target entity, when that entity already exists in the graph. Do not invent it.
+    sourceRef ({Bn}) — OPTIONAL: the Sn tag of the canonical statement line that introduces the source entity, when that entity already exists in the graph. Do not invent it.
+    targetRef ({Bn}) — OPTIONAL: the Sn tag of the canonical statement line that introduces the target entity, when that entity already exists in the graph. Do not invent it.
     relationType (one of: causes, inhibits, prevents, reduces, decreases, increases, enhances, maintains, resists, enables, supports, suppresses, weakens, contradicts, derived_from, tests, explains, depends_on, precedes, follows, contextualizes, associated_with, correlates_with)
     confidence (one of: high, medium, low)
     evidence — exact quote from the article supporting this relation
 CRITICAL: source and target are SHORT TEXT NAMES of entities/concepts. The sourceRef/
 targetRef fields (when present) additionally link the edge endpoints to the canonical
-T4 lines that introduce them, so T58 does not duplicate text and stays first-class in
-the graph. Entity identity lives in the canonical T4 layer; T58 references it.
-Extract one T58 for each distinct causal/regulatory edge asserted by the article. The T58
-layer is parallel to the T4 layer, not a replacement: a fact may appear both as a T4
-triplet and as a T58 edge (the T4 name the relation; the T58 name the direction and type
+statement lines that introduce them, so relation does not duplicate text and stays first-class in
+the graph. Entity identity lives in the canonical statement layer; relation references it.
+Extract one relation for each distinct causal/regulatory edge asserted by the article. The relation
+layer is parallel to the statement layer, not a replacement: a fact may appear both as a statement
+triplet and as a relation edge (the statement name the relation; the relation name the direction and type
 of effect between two concepts). Do not set a target count; do not skip an edge because a
-T4 or a container already mentions the two concepts. Use the specific verb the article
+statement or a container already mentions the two concepts. Use the specific verb the article
 uses where possible (prevents, suppresses, inhibits, reduces, decreases, causes,
 enhances, increases, maintains, resists, ...) before the generic `associated_with` /
 `correlates_with`; reserve `associated_with` / `correlates_with` for mere statistical
 correlations and co-occurrences, never for relations the article asserts causally.
+Use the same `relation` type for ACTION relationships between actions/processes (do NOT create
+a separate type) — put the action's subject/predicate/object into source/target/relationType.
 
-## action_relation (blockType: 58, different from causal relation)
-Action relationship (DO NOT confuse with T58 causal relation):
-    source — human-readable entity name, NOT a tag or UUID
-    target — human-readable entity name, NOT a tag or UUID
-    relationType
-    evidence
-
-## temporal_relation (blockType: 59)
+## temporal_relation (blockType: "temporal_relation")
 Temporal ordering between events:
     earlier — human-readable event/entity name
     later — human-readable event/entity name
     relationType (typically "precedes")
-
-## limitation (blockType: 39)
-Limitation:
-    limitations
-    type
-    source
-
-## novelty (blockType: 44)
-Novelty or novel finding:
-    novelty
-    source
-
-## side_finding (blockType: 40)
-Side finding or additional observation:
-    finding
-    context
-    source
-
-## future_proposal (blockType: 46)
-Future research proposal:
-    futureResearch
-    source
-
-## reference (blockType: 47)
-Substantive connection to previous work:
-    references
-    source
-
-## funding (blockType: 51)
-Funding source:
-    funding
-    source
-
-## atomic_statement (blockType: 4)
-Atomic triplet — the minimal computable unit of knowledge (ONE semantic predicate).
-    subject — 1-3 words, entity name, or an Sn reference ({Bn}) to a structural line
-    predicate — 1-3 words, single relation (semantic-role predicates allowed only for real relations)
-    object — 1-3 words, entity name or value, or an Sn reference ({Bn}) to a structural line
-    epistemicStatus (one of: direct_statement, observation, experimental_result, statistical_result, author_interpretation, hypothesis, background_claim, limitation, future_proposal)
-    sourceRefs — array of {Bn} tags pointing to container blocks (T38, T57, T14, etc.) that contain this assertion
-    context — species, tissue, age, condition, dose, duration, etc. (if available)
-    source — EXACT quote (see SOURCE section). For derived statements include `sourceSpan` (the text window used) when no verbatim quote exists.
-Rules:
-- One T4 = one semantic predicate. Never join relations with "and/or/,".
-- Introduce each term by text once; every later occurrence is an Sn reference.
-- Structural nesting between statements goes ONLY through Sn references.
-- T4 is the canonical knowledge layer; do NOT emit grammatical `of`/`to` fragments
-  (see SEMANTIC ATOMICITY).
-What MUST become T4:
-- Every factual claim from the article (e.g., "A. russatus resists aging")
-- Every experimental result (e.g., "clusterin was elevated in macrophages")
-- Every statistical finding (e.g., "p < 0.05 for comparison X vs Y")
-- Every species/tissue/age difference (e.g., "A. russatus had higher X than A. dimidiatus")
-- Every intervention effect (e.g., "rapamycin extended lifespan")
-- Every mechanistic step (e.g., "AMPK activates mTOR inhibition")
-- Every hypothesis or author interpretation
-Quantity guideline: no target count. Every atomic fact the article states is a T4 line,
-independent of whether it also appears inside a container field — the T4 layer and the
-container layer are parallel and both complete. Do not inflate by over-splitting a single
-assertion into many semantic-role fragments; atomicity means one semantic predicate per
-T4. Assignment to T4 is by nature of the fact, never by a numeric quota.
 
 # INTERNAL PROCESSING ORDER
 Within a single call, perform:
@@ -1292,7 +1438,7 @@ Within a single call, perform:
 2. Determine the article structure.
 3. Determine the publication type.
 4. Extract entities.
-5. Extract objectives.
+5. Extract goals.
 6. Extract hypotheses.
 7. Identify studies.
 8. Identify experiments.
@@ -1326,34 +1472,34 @@ Do not output these stages.
 
 # OUTPUT ORDER
 Output blocks in this order:
-1. Metadata (if any) and objectives.
-2. Animal models (T19) and groups (T55) — before blocks that reference them.
+1. Metadata (if any) and goals.
+2. Animal models (animal_model) and groups (animal_group) — before blocks that reference them.
 3. Hypotheses, entities, definitions.
-4. Interventions (T18) — before results that reference them.
-5. Procedure steps (T56).
-6. Experiments (T14) — referencing their groups, steps, findings via {Bn} tags.
-7. Results (T57) — referencing their experiment, groups, intervention via {Bn} tags.
-8. Statistics (T37), claims (T38), mechanisms (T16).
-9. Causal relations (T58), temporal relations (T59).
+4. Interventions (intervention) — before results that reference them.
+5. Procedure steps (experiment_step).
+6. Experiments (experiment) — referencing their groups, steps, findings via {Bn} tags.
+7. Results (finding) — referencing their experiment, groups, intervention via {Bn} tags.
+8. Statistics (statistical_processing), claims (claim), mechanisms (biological_mechanism).
+9. Causal relations (relation), temporal relations (temporal_relation).
 10. Discussion elements: limitations, novelty, future research, references, funding.
-11. Atomic assertions (T4) — at the end, after all containers.
+11. Atomic assertions (statement) — at the end, after all containers.
 
 # CROSS-REFERENCES BETWEEN BLOCKS
 Use `{Bn}` tags to reference other blocks. Each `{Bn}` must point to a genuinely existing block in this response.
-- T14 (experiment): use `experimentalPairs` and `controlPairs` arrays with `{"groupRef": "{Bn}"}` pointing to T55 groups; `steps` array with `["{Bn}"]` pointing to T56 blocks; `findings` array with `["{Bn}"]` pointing to T57 blocks.
-- T57 (result): use `experimentRef` to point to T14; `groupRefs` array to point to T55 groups; `interventionRef` to point to T18 intervention ONLY when the result is produced by an administered treatment (a drug/KO/overexpression/knockdown/diet/exercise); `conditionRef` to point to the T18/T19 block defining the experimental condition or model; `statisticRefs` array to point to T37 statistic blocks.
+- experiment (experiment): use `experimentalPairs` and `controlPairs` arrays with `{"groupRef": "{Bn}"}` pointing to animal_group groups; `steps` array with `["{Bn}"]` pointing to experiment_step blocks; `findings` array with `["{Bn}"]` pointing to finding blocks.
+- finding (result): use `experimentRef` to point to experiment; `groupRefs` array to point to animal_group groups; `interventionRef` to point to intervention intervention ONLY when the result is produced by an administered treatment (a drug/KO/overexpression/knockdown/diet/exercise); `conditionRef` to point to the intervention/animal_model block defining the experimental condition or model; `statisticRefs` array to point to statistical_processing statistic blocks.
   - interventionRef is OPTIONAL and only for real administered treatments. Do NOT force a species or an age group to be an intervention; do NOT set interventionRef for species/age comparisons or purely observational measurements. Use groupRefs/conditionRef to record those distinctions instead.
   - Examples of when interventionRef IS set:
-    * A drug treatment effect → reference the T18 drug
-    * A genetic KO/overexpression/knockdown → reference the T18 manipulation
-    * A dietary change / exercise / temperature / surgery → reference the T18 treatment
+    * A drug treatment effect → reference the intervention drug
+    * A genetic KO/overexpression/knockdown → reference the intervention manipulation
+    * A dietary change / exercise / temperature / surgery → reference the intervention treatment
   - Examples of when interventionRef is NOT set (use conditionRef or none):
     * Species comparison (e.g. A. russatus vs A. dimidiatus)
     * Age-group comparison (young vs old)
     * Baseline/observational measurements with no comparison
     * Demographic data, methods descriptions
-- T4 (atomic_statement): use `sourceRefs` array to point to the container block (T38, T57, T14, etc.) that contains this assertion.
-- T16 (mechanism): use `supportedBy` array to point to supporting evidence blocks.
+- statement: use `sourceRefs` array to point to the container block (claim, finding, experiment, etc.) that contains this assertion.
+- biological_mechanism (mechanism): use `supportedBy` array to point to supporting evidence blocks.
 Hard rule: every `{Bn}` you reference must be output in this same response. Do not reference non-output blocks.
 
 # CAUSATION VERIFICATION
@@ -1469,7 +1615,7 @@ Format:
   },
   "blocks": [
     {
-      "blockType": 1,
+      "blockType": "metadata",
       "tag": "{B1}",
       "data": {
         "doi": "https://doi.org/10.xxxx/xxxxx",
@@ -1479,7 +1625,7 @@ Format:
       }
     },
     {
-      "blockType": 2,
+      "blockType": "goal",
       "tag": "{B2}",
       "data": {
         "subject": "research",
@@ -1489,7 +1635,7 @@ Format:
       }
     },
     {
-      "blockType": 7,
+      "blockType": "hypothesis",
       "tag": "{B3}",
       "data": {
         "hypothesis": "X modifies Y",
@@ -1497,7 +1643,7 @@ Format:
       }
     },
     {
-      "blockType": 22,
+      "blockType": "entity",
       "tag": "{B4}",
       "data": {
         "subject": "X",
@@ -1506,7 +1652,7 @@ Format:
       }
     },
     {
-      "blockType": 55,
+      "blockType": "animal_group",
       "tag": "{B5}",
       "data": {
         "groupName": "Group A",
@@ -1516,7 +1662,7 @@ Format:
       }
     },
     {
-      "blockType": 56,
+      "blockType": "experiment_step",
       "tag": "{B6}",
       "data": {
         "stepName": "Drug administration",
@@ -1524,7 +1670,7 @@ Format:
       }
     },
     {
-      "blockType": 18,
+      "blockType": "intervention",
       "tag": "{B7}",
       "data": {
         "interventionType": "drug",
@@ -1534,7 +1680,7 @@ Format:
       }
     },
     {
-      "blockType": 14,
+      "blockType": "experiment",
       "tag": "{B8}",
       "data": {
         "experimentName": "Experiment 1",
@@ -1545,7 +1691,7 @@ Format:
       }
     },
     {
-      "blockType": 57,
+      "blockType": "finding",
       "tag": "{B9}",
       "data": {
         "parameter": "lifespan",
@@ -1561,7 +1707,7 @@ Format:
       }
     },
     {
-      "blockType": 37,
+      "blockType": "statistical_processing",
       "tag": "{B10}",
       "data": {
         "statProcessing": "Student's t-test",
@@ -1571,7 +1717,7 @@ Format:
       }
     },
     {
-      "blockType": 38,
+      "blockType": "claim",
       "tag": "{B11}",
       "data": {
         "claimSubject": "X",
@@ -1582,7 +1728,7 @@ Format:
       }
     },
     {
-      "blockType": 4,
+      "blockType": "statement",
       "tag": "{B12}",
       "data": {
         "subject": "X",
@@ -1594,7 +1740,7 @@ Format:
       }
     },
     {
-      "blockType": 58,
+      "blockType": "relation",
       "tag": "{B13}",
       "data": {
         "source": "rapamycin",
@@ -1605,7 +1751,7 @@ Format:
       }
     },
     {
-      "blockType": 58,
+      "blockType": "relation",
       "tag": "{B14}",
       "data": {
         "source": "rapamycin",
@@ -1616,7 +1762,7 @@ Format:
       }
     },
     {
-      "blockType": 58,
+      "blockType": "relation",
       "tag": "{B15}",
       "data": {
         "source": "mTOR",
@@ -1627,7 +1773,7 @@ Format:
       }
     },
     {
-      "blockType": 4,
+      "blockType": "statement",
       "tag": "{B16}",
       "data": {
         "subject": "rapamycin",
@@ -1639,7 +1785,7 @@ Format:
       }
     },
     {
-      "blockType": 4,
+      "blockType": "statement",
       "tag": "{B17}",
       "data": {
         "subject": "rapamycin",
@@ -1657,7 +1803,7 @@ Do not chase a fixed number of blocks of any type. Two failure modes are equally
 - Too few: important assertions, results, or relations from the article are missing.
 - Too many: one fact is spread across several near-identical blocks, or a causal
   relation is produced where the article only reports correlation, or the same fact is
-  recorded twice (once as T4 and once as a container/T58).
+  recorded twice (once as statement and once as a container/relation).
 Target: exactly the article's actual set of distinct facts, each once, in the most
 appropriate type. When in doubt between producing a duplicate and dropping an assertion,
 prefer the assertion, but never invent one.
@@ -1685,7 +1831,7 @@ No fictitious experiments have been created.
 ## Check 10 — duplicates
 Identical knowledge is not represented by multiple independent blocks without reason.
 ## Check 11 — atomicity
-Each atomic_statement contains one simple fact.
+Each statement contains one simple fact.
 ## Check 12 — meta-assertions
 If an assertion refers to another assertion, use a reference to its `{Bn}`, not a text copy.
 ## Check 13 — numerical data
@@ -1795,7 +1941,7 @@ def build_unified_chunk_prompt_en(
 
 # ── Legacy two-stage prompts (kept for Russian version compatibility) ────────
 
-PROMPT_STRUCTURE_TEMPLATE_EN = """You are a knowledge representation expert. Your task is to extract from a fragment of a scientific article the **structural container blocks** (WITHOUT atomic T4 triplets — those are decomposed in a separate step).
+PROMPT_STRUCTURE_TEMPLATE_EN = """You are a knowledge representation expert. Your task is to extract from a fragment of a scientific article the **structural container blocks** (WITHOUT atomic statement triplets — those are decomposed in a separate step).
 
 # Input
 
@@ -1807,7 +1953,7 @@ __CHUNK_TEXT__
 
 # What to do
 
-Output ONLY container blocks (all types except 4 "Direct triplet"). Assign each container a tag `{B1}`, `{B2}`, ... sequentially in order of appearance in the output `blocks` array. Do NOT output atomic T4 triplets — they are decomposed in the next step.
+Output ONLY container blocks (all types except "statement" (Direct triplet)). Assign each container a tag `{B1}`, `{B2}`, ... sequentially in order of appearance in the output `blocks` array. Do NOT output atomic statement triplets — they are decomposed in the next step.
 
 # Catalog of block types and their fields
 
@@ -1816,7 +1962,7 @@ Use ONLY these types and fields (output only fields you filled; omit empty ones)
 - **1 Metadata**: `doi`, `title`, `authors` (array of strings). Only if the fragment contains DOI/title/authors (usually the 1st chunk).
 - **2 Research goal**: `subject`, `predicate`, `object` (text; the goal is formulated as a triplet: subject → goal → object).
 - **7 Hypothesis**: `hypothesis` (text), `disproofExplanation`.
-- **14 Experiment**: `experimentName`, `experimentType` (e.g. "Behavioral", "Histology", "RNA-seq", "In vivo intervention", "In vitro"), `outcomes` (array of measured indicators), `steps` (array of tags `{Bn}` → T56 in execution order), `findings` (array of tags `{Bn}` → T57), `duration`, `experimentalPairs`/`controlPairs` (arrays of groups: group names + interventions).
+- **14 Experiment**: `experimentName`, `experimentType` (e.g. "Behavioral", "Histology", "RNA-seq", "In vivo intervention", "In vitro"), `outcomes` (array of measured indicators), `steps` (array of tags `{Bn}` → experiment_step in execution order), `findings` (array of tags `{Bn}` → finding), `duration`, `experimentalPairs`/`controlPairs` (arrays of groups: group names + interventions).
 - **16 Biological mechanism**: `mechanism`.
 - **18 Intervention**: `intervention`, `dosage`, `dosageRegimen`.
 - **19 Animal model**: `species`, `timeline`, `conditions`.
@@ -1835,57 +1981,57 @@ Use ONLY these types and fields (output only fields you filled; omit empty ones)
 - **54 Action**: `subject`, `predicate`, `object` (text).
 - **55 Animal group**: `groupName`, `n`, `conditions`, `purpose`.
 - **56 Experiment step**: `stepName`, `details`, `duration`.
-- **57 Result (finding)**: `parameter`, `direction` (increased/decreased/no change/trend), `significance` (significant/non-significant/trend), `pValue` (tag `{Bn}` of the T27 block OR a number if you do not output T27), `figureRef` (e.g. "Fig. 1F"), `detail`.
+- **57 Result (finding)**: `parameter`, `direction` (increased/decreased/no change/trend), `significance` (significant/non-significant/trend), `pValue` (tag `{Bn}` of the probability_value block OR a number if you do not output probability_value), `figureRef` (e.g. "Fig. 1F"), `detail`.
 
 # Cross-references between containers (tags {Bn})
 
-- In `T14.steps` put an array of step tags: `["{B2}", "{B5}"]`.
-- In `T14.findings` put an array of result tags: `["{B7}", "{B8}"]`.
-- In `T57.pValue` put the tag of the T27 block: `"{B9}"` (if you output T27). Output the T27 block separately from T57.
+- In `experiment.steps` put an array of step tags: `["{B2}", "{B5}"]`.
+- In `experiment.findings` put an array of result tags: `["{B7}", "{B8}"]`.
+- In `finding.pValue` put the tag of the probability_value block: `"{B9}"` (if you output probability_value). Output the probability_value block separately from finding.
 - **Hard rule:** every `{Bn}` you reference must be output in this same response. Do not reference non-output blocks. Do not embed block objects inside fields — only tag strings.
 
 # When to use which type (important — container density!)
 
 The text is densely packed with containers. A typical 15-25 word sentence yields **2-5 containers**. Do not compress the text into a few blocks — unfold every significant element. **But do NOT inflate:** create exactly ONE block per entity/group/step/result, not one per mention. If the same entity, group, species or experiment is repeated across sentences, reuse the already-created block (do not duplicate it). Balance: results, steps, findings and key relations get blocks; incidental repetitions do not.
 
-**Whole-article scale calibration (critical).** The reference decomposition of this ENTIRE article contains approximately: 94 results (T57), 46 steps (T56), 47 entities (T22), 28 animal models (T19), 22 groups (T55), 8 claims (T38), 6 experiments (T14), 6 interventions (T18), 5 definitions (T23), 4 goals (T2), 3 p-values (T27), 3 actions (T54), 1 hypothesis (T7), 1 mechanism (T16), 1 statistics (T37), 1 limitations (T39), 1 side findings (T40), 1 novelty (T44), 1 future research (T46), 1 links (T47), 1 funding (T51), 1 metadata (T1), 1 conclusions (T20). This fragment is one chunk of ~18 — scale these totals proportionally (a results chunk has many T57, a methods chunk many T56/T55, a discussion chunk at most one each of T39/40/44/46/47). Do not exceed the article-wide totals; per-chunk counts must NOT sum above them.
+**Whole-article scale calibration (critical).** The reference decomposition of this ENTIRE article contains approximately: 94 results (finding), 46 steps (experiment_step), 47 entities (entity), 28 animal models (animal_model), 22 groups (animal_group), 8 claims (claim), 6 experiments (experiment), 6 interventions (intervention), 5 definitions (definition), 4 goals (goal), 3 p-values (probability_value), 3 actions (action), 1 hypothesis (hypothesis), 1 mechanism (biological_mechanism), 1 statistics (statistical_processing), 1 limitations (limitations), 1 side findings (side_findings), 1 novelty (novelty), 1 future research (future_research_suggestions), 1 links (reference), 1 funding (funding), 1 metadata (metadata), 1 conclusions (post_claims). This fragment is one chunk of ~18 — scale these totals proportionally (a results chunk has many finding, a methods chunk many experiment_step/animal_group, a discussion chunk at most one each of limitations/side_findings/novelty/future_research_suggestions/reference). Do not exceed the article-wide totals; per-chunk counts must NOT sum above them.
 
-**Per-fragment budget (critical — this fragment is ONE chunk, not the whole article).** These are HARD caps for ONE fragment. A term (species, group, entity, experiment) that repeats across sentences was almost certainly already extracted in an earlier chunk — do NOT re-create it, you have no memory of other chunks but assume the term exists. Caps per fragment: T22 ≤ 3, T55 ≤ 2, T19 ≤ 2, T14 ≤ 1, T38 ≤ 2, T2 ≤ 1, T7 ≤ 1 (hypothesis appears in the introduction chunk), T18 ≤ 1, T23 ≤ 1, T27 ≤ 1, T16 ≤ 1, T37 ≤ 1 (statistics section), T51 ≤ 1, T1 ≤ 1 (metadata only in the first chunk), T20 ≤ 1, T39 ≤ 1, T40 ≤ 1, T44 ≤ 1, T46 ≤ 1, T47 ≤ 1 (discussion elements — only if the fragment genuinely contains them; at most one each per article). If the fragment genuinely contains more distinct entities than the cap, prefer keeping the most significant ones — the others were likely already extracted previously.
+**Per-fragment budget (critical — this fragment is ONE chunk, not the whole article).** These are HARD caps for ONE fragment. A term (species, group, entity, experiment) that repeats across sentences was almost certainly already extracted in an earlier chunk — do NOT re-create it, you have no memory of other chunks but assume the term exists. Caps per fragment: entity ≤ 3, animal_group ≤ 2, animal_model ≤ 2, experiment ≤ 1, claim ≤ 2, goal ≤ 1, hypothesis ≤ 1 (hypothesis appears in the introduction chunk), intervention ≤ 1, definition ≤ 1, probability_value ≤ 1, biological_mechanism ≤ 1, statistical_processing ≤ 1 (statistics section), funding ≤ 1, metadata ≤ 1 (metadata only in the first chunk), post_claims ≤ 1, limitations ≤ 1, side_findings ≤ 1, novelty ≤ 1, future_research_suggestions ≤ 1, reference ≤ 1 (discussion elements — only if the fragment genuinely contains them; at most one each per article). If the fragment genuinely contains more distinct entities than the cap, prefer keeping the most significant ones — the others were likely already extracted previously.
 
 **Facts that MUST NOT be dropped (critical).** The caps above apply to container types; they do NOT excuse missing results or steps:
-- **T57 results:** every numeric result in the fragment — do NOT cap them. If a results paragraph lists 8 parameters, output 8 T57 blocks (the whole article has ~94).
-- **T56 steps:** every distinct procedure step (the whole article has ~46). If a methods paragraph describes 8 steps, output 8 T56 blocks.
-- **T54 actions:** if the fragment contains genuine verbal actions/processes (e.g. `clusterin → suppresses → inflammaging`, `cells → ingest → erythrocytes`), output T54 blocks (whole article ~3). This type exists in the reference and must be produced when applicable. Still NEVER for author contribution credits.
+- **finding results:** every numeric result in the fragment — do NOT cap them. If a results paragraph lists 8 parameters, output 8 finding blocks (the whole article has ~94).
+- **experiment_step steps:** every distinct procedure step (the whole article has ~46). If a methods paragraph describes 8 steps, output 8 experiment_step blocks.
+- **action actions:** if the fragment contains genuine verbal actions/processes (e.g. `clusterin → suppresses → inflammaging`, `cells → ingest → erythrocytes`), output action blocks (whole article ~3). This type exists in the reference and must be produced when applicable. Still NEVER for author contribution credits.
 
-- **T57 "Result (finding)"** — EVERY numeric result: parameter, direction, significance, p, figure. MANDATORY linking: T57 MUST reference T18/T54 intervention via `interventionRef` when the finding follows from an intervention. There are dozens in the article (10-20 per results section). Do not skip any. If a sentence lists several parameters — each parameter is a separate T57.
-- **T22 "Entity"** — every significant concept and its relation: `resistance mechanism → to what → aging`, `aging → is associated with → inflammation`. Every verbal/nominal link is a separate T22. BUT do not explode: the whole article has only ~45-50 unique entities (one block per UNIQUE concept, reused across fragments, not one per mention or per sentence). If you already created `aging → is associated with → inflammation`, do not recreate it later.
-- **T56 "Experiment step"** — EVERY separate procedure step (weighing, open field test, tissue collection, ...). One experiment = 2-8 steps. Whole article ~45.
-- **T14 "Experiment"** — each separate experiment (with its T55 groups, T56 steps, T57 results, T18 interventions). MANDATORY linking: T14 MUST reference T55 groups (experimentalPairs/controlPairs), T56 steps, and T57 findings. Whole article ~6.
-- **T55 "Animal group"** — each experimental/control group (name, n, conditions, purpose). Whole article ~20-25. One block per group, reused across fragments.
-- **T19 "Animal model"** — each species/line of animals (A. russatus, A. dimidiatus, M. musculus, ...). Whole article ~25-30 (one per species × condition combination).
-- **T38 "Claim"** — general statements/conclusions of the text (claims). Whole article ~8.
-- **T27 p-value** — VERY rare! Whole article 1-3: create a T27 block ONLY if you encountered the p value itself (0.05/0.01/0.001) separately. In T57.pValue put the tag `{Bn}` of this T27 block, not the number.
-- **T2 "Research goal"** — goals (at the start of the article). Whole article 2-4.
-- **T7 "Hypothesis"** — at most 1 per article (the main hypothesis).
-- **T16 "Mechanism"** — at most 1-2 per article: create it when the text describes a biological mechanism/cascade/signaling pathway (e.g. a reelin-like cascade: ApoER2/VLDLR → Dab1 → Crk/C3G/Rap1). Do NOT skip it — it is a distinct block type present in the reference.
-- **T18 "Intervention"** — substance administration/dosages (e.g. clusterin injection). Whole article ~6.
-- **T23 "Definition"** — concepts explicitly defined in the text. Whole article ~5.
-- **T37 "Statistics"** — statistical methods (Prism, t-test, ANOVA). Whole article 1.
-- **T39/T40/T44/T46/T47** — discussion: limitations, side findings, novelty, future research, links to previous research. At most ONE per type per article: create them only in the DISCUSSION fragment, only when the text genuinely has that element. Do not create them speculatively.
-- **T51 "Funding"**, **T1 "Metadata"** — if present in the fragment.
-- **T20 "Conclusions"** — section conclusions. Whole article 1.
-- **T54 "Action"** — verbal actions/processes. Whole article ~3. **Never** create T54 for author contribution credits (Conceptualization, Data curation, Formal analysis, Funding acquisition, Investigation, Methodology, Project administration, Resources, Software, Supervision, Validation, Visualization, Writing, Writing - original draft, Writing - review & editing) — these are NOT actions/knowledge triplets.
+- **finding "Result (finding)"** — EVERY numeric result: parameter, direction, significance, p, figure. MANDATORY linking: finding MUST reference intervention/action intervention via `interventionRef` when the finding follows from an intervention. There are dozens in the article (10-20 per results section). Do not skip any. If a sentence lists several parameters — each parameter is a separate finding.
+- **entity "Entity"** — every significant concept and its relation: `resistance mechanism → to what → aging`, `aging → is associated with → inflammation`. Every verbal/nominal link is a separate entity. BUT do not explode: the whole article has only ~45-50 unique entities (one block per UNIQUE concept, reused across fragments, not one per mention or per sentence). If you already created `aging → is associated with → inflammation`, do not recreate it later.
+- **experiment_step "Experiment step"** — EVERY separate procedure step (weighing, open field test, tissue collection, ...). One experiment = 2-8 steps. Whole article ~45.
+- **experiment "Experiment"** — each separate experiment (with its animal_group groups, experiment_step steps, finding results, intervention interventions). MANDATORY linking: experiment MUST reference animal_group groups (experimentalPairs/controlPairs), experiment_step steps, and finding findings. Whole article ~6.
+- **animal_group "Animal group"** — each experimental/control group (name, n, conditions, purpose). Whole article ~20-25. One block per group, reused across fragments.
+- **animal_model "Animal model"** — each species/line of animals (A. russatus, A. dimidiatus, M. musculus, ...). Whole article ~25-30 (one per species × condition combination).
+- **claim "Claim"** — general statements/conclusions of the text (claims). Whole article ~8.
+- **probability_value p-value** — VERY rare! Whole article 1-3: create a probability_value block ONLY if you encountered the p value itself (0.05/0.01/0.001) separately. In finding.pValue put the tag `{Bn}` of this probability_value block, not the number.
+- **goal "Research goal"** — goals (at the start of the article). Whole article 2-4.
+- **hypothesis "Hypothesis"** — at most 1 per article (the main hypothesis).
+- **biological_mechanism "Mechanism"** — at most 1-2 per article: create it when the text describes a biological mechanism/cascade/signaling pathway (e.g. a reelin-like cascade: ApoER2/VLDLR → Dab1 → Crk/C3G/Rap1). Do NOT skip it — it is a distinct block type present in the reference.
+- **intervention "Intervention"** — substance administration/dosages (e.g. clusterin injection). Whole article ~6.
+- **definition "Definition"** — concepts explicitly defined in the text. Whole article ~5.
+- **statistical_processing "Statistics"** — statistical methods (Prism, t-test, ANOVA). Whole article 1.
+- **limitations/side_findings/novelty/future_research_suggestions/reference** — discussion: limitations, side findings, novelty, future research, links to previous research. At most ONE per type per article: create them only in the DISCUSSION fragment, only when the text genuinely has that element. Do not create them speculatively.
+- **funding "Funding"**, **metadata "Metadata"** — if present in the fragment.
+- **post_claims "Conclusions"** — section conclusions. Whole article 1.
+- **action "Action"** — verbal actions/processes. Whole article ~3. **Never** create action for author contribution credits (Conceptualization, Data curation, Formal analysis, Funding acquisition, Investigation, Methodology, Project administration, Resources, Software, Supervision, Validation, Visualization, Writing, Writing - original draft, Writing - review & editing) — these are NOT actions/knowledge triplets.
 
-**Check after parsing:** if the fragment has definitions → T23; cascades/signaling pathways → T16; substance administration/dosages → T18; conclusions → T20; statistical methods → T37; p-values → T27. These types must appear when the text relates to them — do not skip them.
+**Check after parsing:** if the fragment has definitions → definition; cascades/signaling pathways → biological_mechanism; substance administration/dosages → intervention; conclusions → post_claims; statistical methods → statistical_processing; p-values → probability_value. These types must appear when the text relates to them — do not skip them.
 
 # Output order
 
 1. Metadata (if any) and goals.
-2. Animal models (T19) and groups (T55) — before the blocks that reference them.
+2. Animal models (animal_model) and groups (animal_group) — before the blocks that reference them.
 3. Hypothesis, entities, definitions.
-4. Experiments (T14): output T55 groups, T18 interventions, T56 steps, and T57 results FIRST, then the T14 block that references them. T14 must reference existing blocks via `{Bn}` tags. CRITICAL: T18 intervention blocks MUST appear in the output BEFORE any T57 blocks that reference them via `interventionRef`.
-5. Statistics (T37), claims (T38), discussion (T39/40/44/46/47).
-6. Funding (T51), if present in the fragment.
+4. Experiments (experiment): output animal_group groups, intervention interventions, experiment_step steps, and finding results FIRST, then the experiment block that references them. experiment must reference existing blocks via `{Bn}` tags. CRITICAL: intervention intervention blocks MUST appear in the output BEFORE any finding blocks that reference them via `interventionRef`.
+5. Statistics (statistical_processing), claims (claim), discussion (limitations/side_findings/novelty/future_research_suggestions/reference).
+6. Funding (funding), if present in the fragment.
 7. Everything in text reading order.
 
 # Output format
@@ -1893,22 +2039,22 @@ The text is densely packed with containers. A typical 15-25 word sentence yields
 JSON only, without explanations:
 
 {"blocks": [
-  {"blockType": 56, "tag": "{B1}", "data": {"stepName": "...", "details": "..."}},
-  {"blockType": 14, "tag": "{B2}", "data": {"experimentName": "...", "experimentalPairs": [{"groupRef": "{B5}"}], "controlPairs": [{"groupRef": "{B6}"}], "steps": ["{B1}"], "findings": ["{B3}"]}},
+  {"blockType": "experiment_step", "tag": "{B1}", "data": {"stepName": "...", "details": "..."}},
+  {"blockType": "experiment", "tag": "{B2}", "data": {"experimentName": "...", "experimentalPairs": [{"groupRef": "{B5}"}], "controlPairs": [{"groupRef": "{B6}"}], "steps": ["{B1}"], "findings": ["{B3}"]}},
   ...
 ]}
 
 # Anti-patterns (forbidden)
 
-- Do not output atomic T4 triplets (type 4) — that is the next step.
+- Do not output atomic statement triplets (type "statement") — that is the next step.
 - Do not lose numeric results, sizes, n, p, temperatures, years, figure references.
 - Do not invent DOI/authors/funding if they are not in the fragment.
-- Do not output T1 "Metadata" more than once per fragment (title/authors appear once; subsequent chunks that merely repeat the article title must NOT produce another T1).
-- Do not output T54 for author contribution credits (Conceptualization, Data curation, ...).
+- Do not output metadata "Metadata" more than once per fragment (title/authors appear once; subsequent chunks that merely repeat the article title must NOT produce another metadata).
+- Do not output action for author contribution credits (Conceptualization, Data curation, ...).
 - Do not output explanations, markdown formatting, or text outside JSON."""  # noqa: E501
 
 
-PROMPT_ATOMIZE_TEMPLATE_EN = """You are a knowledge representation expert. Your task is to decompose the contents of the container blocks of a fragment into **atomic T4 triplets** (subject → predicate → object).
+PROMPT_ATOMIZE_TEMPLATE_EN = """You are a knowledge representation expert. Your task is to decompose the contents of the container blocks of a fragment into **atomic statement triplets** (subject → predicate → object).
 
 # Input
 
@@ -1926,25 +2072,25 @@ __CONTAINERS_JSON__
 
 # What to do
 
-Decompose the contents of ALL containers into **atomic T4 triplets**. Every significant fact of a container's content is a separate triplet. Do not condense details: a long field decomposes into a chain of triplets (5-10 per container depending on text volume), a short one into 2-4.
+Decompose the contents of ALL containers into **atomic statement triplets**. Every significant fact of a container's content is a separate triplet. Do not condense details: a long field decomposes into a chain of triplets (5-10 per container depending on text volume), a short one into 2-4.
 
-**Quantity floor (critical — the most important requirement of this task).** Never stop early. The total number of T4 triplets must be **at least 3× the number of containers**, and for dense fragments 3.5× or more. If a fragment has 20 containers, output at least 60 triplets. There is no upper bound other than the fragment's content — every meaningful fact gets its own triplet. Each container must yield at least 2 triplets (except truly one-line values like a p-value). A typical 15-25 word sentence decomposes into 3-6 triplets. If you produce fewer than 3× the containers, you are condensing details — expand until every clause, number, enumeration element and qualifier has its own triplet.
+**Quantity floor (critical — the most important requirement of this task).** Never stop early. The total number of statement triplets must be **at least 3× the number of containers**, and for dense fragments 3.5× or more. If a fragment has 20 containers, output at least 60 triplets. There is no upper bound other than the fragment's content — every meaningful fact gets its own triplet. Each container must yield at least 2 triplets (except truly one-line values like a p-value). A typical 15-25 word sentence decomposes into 3-6 triplets. If you produce fewer than 3× the containers, you are condensing details — expand until every clause, number, enumeration element and qualifier has its own triplet.
 
 One simple fact = one triplet; each of S/P/O is 1-3 words (except indivisible terms: `Acomys russatus`, `two-tailed unpaired Student's t test`). The meaning of the source is preserved completely: do not lose negation, modality, numeric values, references, time frames.
 
-**Output format:** each T4 block indicates WHICH container it belongs to via the field `"container": "{Bn}"` (a tag from the input list). No separate `sequences` mapping is needed. One container → several consecutive triplets with the same `container`.
+**Output format:** each statement block indicates WHICH container it belongs to via the field `"container": "{Bn}"` (a tag from the input list). No separate `sequences` mapping is needed. One container → several consecutive triplets with the same `container`.
 
 # Decomposition by container type (important!)
 
-- **T56 "Step"** (e.g. `Beam walking test`): each procedure element is a separate triplet. Usually 5-10: `beams → what kind → wooden`, `width → what → 33.45 × 4 × 0.5 cm`, `weighed → whom → mice`, `before → what → the test`, `purpose → what → balance assessment`, `handled → how → gently`, `trials → how many → 3`. Do not condense details.
-- **T57 "Result (finding)"** (e.g. `Rearing decreased`): unfold parameter, group, direction, significance, p, figure. Usually 3-6: `rearing → in whom → A. dimidiatus`, `rearing → when → with age`, `rearing → what → decreased`, `decreased → by how much → significantly (p<0.05)`, `rearing → shown in → Fig. 1F`.
-- **T22 "Entity" / T54 "Action"** (triplet containers): split each part into micro-facts, preserving all 3 components. Usually 3-6.
-- **T19 "Model"** (e.g. `Acomys russatus`): species + conditions + life span. Usually 3-5: `A. russatus → lives → up to 4.5 years`, `A. russatus → under what conditions → wild`, `A. russatus → compared with → A. dimidiatus`.
-- **T55 "Group"**: group name + n + purpose + conditions. Usually 3-5.
-- **T38 "Claim"**: subject/predicate/object + confidence + scope. Usually 3-5.
-- **T14 "Experiment"**: name + type + each included test. Usually 2-5.
-- **T27 p-value / T19 one-liner / short**: 1-2 triplets.
-- **T7/T16/T23/T37/T39/T40/T44/T46/T47**: decompose the long text field into a chain of facts. Usually 5-10.
+- **experiment_step "Step"** (e.g. `Beam walking test`): each procedure element is a separate triplet. Usually 5-10: `beams → what kind → wooden`, `width → what → 33.45 × 4 × 0.5 cm`, `weighed → whom → mice`, `before → what → the test`, `purpose → what → balance assessment`, `handled → how → gently`, `trials → how many → 3`. Do not condense details.
+- **finding "Result (finding)"** (e.g. `Rearing decreased`): unfold parameter, group, direction, significance, p, figure. Usually 3-6: `rearing → in whom → A. dimidiatus`, `rearing → when → with age`, `rearing → what → decreased`, `decreased → by how much → significantly (p<0.05)`, `rearing → shown in → Fig. 1F`.
+- **entity "Entity" / action "Action"** (triplet containers): split each part into micro-facts, preserving all 3 components. Usually 3-6.
+- **animal_model "Model"** (e.g. `Acomys russatus`): species + conditions + life span. Usually 3-5: `A. russatus → lives → up to 4.5 years`, `A. russatus → under what conditions → wild`, `A. russatus → compared with → A. dimidiatus`.
+- **animal_group "Group"**: group name + n + purpose + conditions. Usually 3-5.
+- **claim "Claim"**: subject/predicate/object + confidence + scope. Usually 3-5.
+- **experiment "Experiment"**: name + type + each included test. Usually 2-5.
+- **probability_value p-value / animal_model one-liner / short**: 1-2 triplets.
+- **hypothesis/biological_mechanism/definition/statistical_processing/limitations/side_findings/novelty/future_research_suggestions/reference**: decompose the long text field into a chain of facts. Usually 5-10.
 
 # Decomposition rules
 
@@ -1954,20 +2100,20 @@ One simple fact = one triplet; each of S/P/O is 1-3 words (except indivisible te
 - Enumerations via `include`/`comprise`/`contain`/`;`/`and`/`,` → split into separate triplets (each element is its own triplet).
 - Each characteristic/definition → `X → is → characteristic`.
 - Negation: `not increased`/`no differences`/`no change` → preserve in the predicate or object.
-- **Distribute across containers:** facts about the procedure → the step container (T56); facts about parameter/direction/group → the result container (T57); facts about species/longevity → the model container (T19); group → T55; experiment as a whole → T14; concept/entity → T22.
-- **Cross-references (required, not optional)**: when a term is already decomposed by a separate T4 triplet in THIS response, reference it as `{SEQn}` instead of repeating the full term, where `n` is the ordinal number of that triplet in the `blocks` array (1st triplet = `{SEQ1}`). Apply this to every recurring term (species, group, parameter, intervention, mechanism). Roughly 1 in 4 triplets (20-30%) should contain such a reference in S, P or O. This keeps triplets short and matches the reference structure.
+- **Distribute across containers:** facts about the procedure → the step container (experiment_step); facts about parameter/direction/group → the result container (finding); facts about species/longevity → the model container (animal_model); group → animal_group; experiment as a whole → experiment; concept/entity → entity.
+- **Cross-references (required, not optional)**: when a term is already decomposed by a separate statement triplet in THIS response, reference it as `{SEQn}` instead of repeating the full term, where `n` is the ordinal number of that triplet in the `blocks` array (1st triplet = `{SEQ1}`). Apply this to every recurring term (species, group, parameter, intervention, mechanism). Roughly 1 in 4 triplets (20-30%) should contain such a reference in S, P or O. This keeps triplets short and matches the reference structure.
 
 # Example
 
 Fragment: "The beams were wooden, 33.45 × 4 × 0.5 cm wide. Mice were weighed before the test."
-Containers: `[{"tag": "{B1}", "blockType": 56, "name": "Beam walking test"}]`
+Containers: `[{"tag": "{B1}", "blockType": "experiment_step", "name": "Beam walking test"}]`
 
 Correct answer:
 
 {"blocks": [
-  {"blockType": 4, "container": "{B1}", "data": {"subject": "weighed", "predicate": "whom", "object": "mice"}},
-  {"blockType": 4, "container": "{B1}", "data": {"subject": "before", "predicate": "what", "object": "the test"}},
-  {"blockType": 4, "container": "{B1}", "data": {"subject": "beams", "predicate": "what kind", "object": "wooden"}}
+  {"blockType": "statement", "container": "{B1}", "data": {"subject": "weighed", "predicate": "whom", "object": "mice"}},
+  {"blockType": "statement", "container": "{B1}", "data": {"subject": "before", "predicate": "what", "object": "the test"}},
+  {"blockType": "statement", "container": "{B1}", "data": {"subject": "beams", "predicate": "what kind", "object": "wooden"}}
  ]}
 
 # Output format
@@ -1975,11 +2121,11 @@ Correct answer:
 JSON only, without explanations and markdown formatting:
 
 {"blocks": [
-  {"blockType": 4, "container": "{B1}", "data": {"subject": "...", "predicate": "...", "object": "..."}},
-  {"blockType": 4, "container": "{B2}", "data": {"subject": "...", "predicate": "...", "object": "..."}}
+  {"blockType": "statement", "container": "{B1}", "data": {"subject": "...", "predicate": "...", "object": "..."}},
+  {"blockType": "statement", "container": "{B2}", "data": {"subject": "...", "predicate": "...", "object": "..."}}
  ]}
 
-**Hard rules:** every `container` is a tag from the input list (do not invent new ones); `blocks` may contain ONLY `blockType: 4` (containers are already extracted — do not repeat them); every `{SEQn}` in cross-references must be ≤ the total number of triplets in the response."""  # noqa: E501
+**Hard rules:** every `container` is a tag from the input list (do not invent new ones); `blocks` may contain ONLY `blockType: "statement"` (containers are already extracted — do not repeat them); every `{SEQn}` in cross-references must be ≤ the total number of triplets in the response."""  # noqa: E501
 
 
 def build_structure_prompt_en(article_title: str, chunk_text: str) -> str:
@@ -1992,7 +2138,7 @@ def build_structure_prompt_en(article_title: str, chunk_text: str) -> str:
 def build_atomize_prompt_en(
     article_title: str, chunk_text: str, containers_json: str
 ) -> str:
-    """Stage 2 (English): container → atomic T4 decomposition prompt."""
+    """Stage 2 (English): container → atomic statement decomposition prompt."""
     return PROMPT_ATOMIZE_TEMPLATE_EN.replace("__ARTICLE_TITLE__", article_title).replace(
         "__CHUNK_TEXT__", chunk_text
     ).replace("__CONTAINERS_JSON__", containers_json)

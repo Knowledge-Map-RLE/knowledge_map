@@ -4,7 +4,7 @@ import {
     saveBlocks, getBlocks, updateArticleTitle,
     parseText, parseTextStream, uploadArticleImage,
 } from '../../../services/api/article_editor';
-import { blocksToStatements, statementsToBlocks, blocksToText, statementsToResolvedText, uuid8Str } from '../Editor/blockConverter';
+import { blocksToStatements, statementsToBlocks, statementsToResolvedText, uuid8Str } from '../Editor/blockConverter';
 import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
 import { useAuth } from '../../../entities/auth';
 import type { KnowledgeArticle, KnowledgeStatement, SaveStatus, ArticleBlockData, BlockDataValue, AuthorInfo } from '../model';
@@ -33,7 +33,7 @@ interface UseArticleStateResult {
     initNewArticle: (docId: string) => void;
     applyExtractedBlocks: (docId: string, blocks: ArticleBlockData[]) => Promise<void>;
     setText: (text: string) => void;
-    addBlock: (typeNumber: number, initialData?: Record<string, BlockDataValue>) => void;
+    addBlock: (designation: string, initialData?: Record<string, BlockDataValue>) => void;
     updateBlock: (instanceId: string, fieldKey: string, value: BlockDataValue) => void;
     deleteBlock: (instanceId: string) => void;
     reorderBlocks: (fromIndex: number, toIndex: number) => void;
@@ -238,14 +238,14 @@ export function useArticleState(): UseArticleStateResult {
         setTextState(derivedText);
     }, [statements]);
 
-    const addBlock = useCallback((typeNumber: number, initialData?: Record<string, BlockDataValue>) => {
+    const addBlock = useCallback((designation: string, initialData?: Record<string, BlockDataValue>) => {
         if (!requireAuth()) return;
         const author = authorFromUser(user);
         setBlocks((prev) => {
             const maxOrder = prev.length > 0 ? Math.max(...prev.map((b) => b.order)) : -1;
             const newBlock: ArticleBlockData = {
                 instanceId: newBlockId(),
-                blockType: typeNumber,
+                blockType: designation,
                 data: initialData || {},
                 order: maxOrder + 1,
                 author,
@@ -352,22 +352,18 @@ export function useArticleState(): UseArticleStateResult {
         setSaveStatus('saving');
         try {
             if (currentBlocks.length > 0) {
-                const t1Block = currentBlocks.find((b) => b.blockType === 1);
+                const t1Block = currentBlocks.find((b) => b.blockType === 'metadata');
                 const titleFromBlock = t1Block?.data?.title;
-                const promises: Promise<any>[] = [
-                    saveBlocks(docId, currentBlocks),
-                ];
-                if (titleFromBlock) {
-                    promises.push(updateArticleTitle(docId, String(titleFromBlock)));
-                }
-                const results = await Promise.all(promises);
-                const blocksResult = results[0];
+                const blocksResult = await saveBlocks(docId, currentBlocks);
                 if (!blocksResult?.success) {
                     setSaveStatus('error');
                     return;
                 }
                 if (blocksResult?.statements) {
                     setStatements(blocksResult.statements);
+                }
+                if (titleFromBlock) {
+                    await updateArticleTitle(docId, String(titleFromBlock));
                 }
             } else {
                 const textResult = await saveArticleText(docId, currentText);

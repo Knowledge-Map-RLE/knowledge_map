@@ -6,6 +6,7 @@ import re
 from datetime import datetime, timezone
 
 from src.uuid8 import uuid8_str
+from src.schemas.block_types import coerce_block_type
 from typing import Any
 
 from neomodel import db
@@ -352,7 +353,7 @@ class ArticleEditorService:
             block_uid = block.get("instanceId") or uuid8_str()
             batch.append({
                 "uid": block_uid,
-                "bt": int(block.get("blockType", 0)),
+                "bt": coerce_block_type(block.get("blockType", "")),
                 "data": json.dumps(block.get("data", {}), ensure_ascii=False),
                 "order": int(block.get("order", i)),
                 "creator": user_uid,
@@ -379,7 +380,7 @@ class ArticleEditorService:
             (
                 str(block.get("data", {}).get("doi", "") or "").strip()
                 for block in blocks
-                if int(block.get("blockType", 0)) == 1
+                if coerce_block_type(block.get("blockType", "")) == "metadata"
             ),
             "",
         )
@@ -532,7 +533,7 @@ class ArticleEditorService:
                 data = {}
             blocks.append({
                 "instanceId": row[0],
-                "blockType": row[1],
+                "blockType": coerce_block_type(row[1]),
                 "data": data,
                 "order": row[3],
                 "author": _author_from_user_node(row[4]),

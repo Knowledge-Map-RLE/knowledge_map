@@ -81,13 +81,13 @@ export interface BlockFieldDef {
     required?: boolean;
     helpText?: string;
     uuidRefs?: Array<{ id: string; label: string }>;
-    uuidRefBlockTypes?: number[];
-    pairGroupBlockTypes?: number[];
-    pairInterventionBlockTypes?: number[];
+    uuidRefBlockTypes?: string[];
+    pairGroupBlockTypes?: string[];
+    pairInterventionBlockTypes?: string[];
 }
 
 export interface BlockTypeDef {
-    typeNumber: number;
+    designation: string;
     name: string;
     icon: ReactNode;
     color: string;
@@ -101,7 +101,7 @@ export type BlockDataValue = string | boolean | number | Record<string, string> 
 
 export interface ArticleBlockData {
     instanceId: string;
-    blockType: number;
+    blockType: string;
     data: Record<string, BlockDataValue>;
     order: number;
     author?: AuthorInfo;
@@ -113,7 +113,7 @@ export interface DerivedTriplet {
     predicate: string;
     object_text: string;
     sourceBlockId: string;
-    sourceBlockType: number;
+    sourceBlockType: string;
     type: 'FACT' | 'META';
     subject_type: 'concept' | 'statement';
     object_type: 'concept' | 'statement' | 'literal';

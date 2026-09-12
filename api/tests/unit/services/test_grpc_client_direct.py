@@ -7,13 +7,13 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock, AsyncMock
 
 # Добавляем путь к модулям
-sys.path.append(str(Path(__file__).parent.parent.parent))
+sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 # Импортируем напрямую, минуя __init__.py
 import importlib.util
 spec = importlib.util.spec_from_file_location(
     "pdf_to_md_grpc_client", 
-    Path(__file__).parent.parent.parent / "services" / "pdf_to_md_grpc_client.py"
+    Path(__file__).resolve().parents[3] / "services" / "pdf_to_md_grpc_client.py"
 )
 pdf_to_md_grpc_client = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pdf_to_md_grpc_client)

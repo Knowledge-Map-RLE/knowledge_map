@@ -127,12 +127,12 @@ const LineRowInner: React.FC<LineRowProps> = ({
                 data-wy-line-row={block.instanceId}
                 style={{ ['--pad' as string]: `${PAD_BASE + depth * PAD_STEP}px` }}
             >
-                <span className={styles.wyTypeName}>{`T${block.blockType}`}</span>
+                <span className={styles.wyTypeName}>{block.blockType}</span>
             </div>
         );
     }
 
-    const typeTitle = `T${def.typeNumber} · ${def.name}${def.description ? ` — ${def.description}` : ''}\nUUID: ${block.instanceId}\nКлик — сменить тип (/)`;
+    const typeTitle = `${def.name}${def.description ? ` — ${def.description}` : ''}\nUUID: ${block.instanceId}\nКлик — сменить тип (/)`;
 
     return (
         <div
@@ -175,7 +175,7 @@ const LineRowInner: React.FC<LineRowProps> = ({
                 className={styles.wyTypeBarBtn}
                 onClick={handleTypeBarClick}
                 title={typeTitle}
-                aria-label={`Тип T${def.typeNumber}: ${def.name}`}
+                aria-label={`Тип: ${def.name}`}
             />
             {def.layout === 'yaml' ? (
                 <div className={styles.wyYamlWrap}>

@@ -12,7 +12,7 @@ import {
 
 const block = (instanceId: string, order: number, data: Record<string, unknown> = {}): ArticleBlockData => ({
     instanceId,
-    blockType: 4,
+    blockType: 'statement',
     data: data as ArticleBlockData['data'],
     order,
 });
@@ -29,7 +29,7 @@ describe('blockOps', () => {
 
     describe('insertBlock', () => {
         test('вставляет в конец и реиндексирует order', () => {
-            const { next, instanceId } = insertBlock([block('a', 0)], { blockType: 4 });
+            const { next, instanceId } = insertBlock([block('a', 0)], { blockType: 'statement' });
             expect(next.map((b) => b.instanceId)).toEqual(['a', instanceId]);
             expect(next.map((b) => b.order)).toEqual([0, 1]);
         });
@@ -37,7 +37,7 @@ describe('blockOps', () => {
         test('вставляет после указанного индекса', () => {
             const { next, instanceId } = insertBlock(
                 [block('a', 0), block('b', 1)],
-                { blockType: 4, afterIndex: 0 },
+                { blockType: 'statement', afterIndex: 0 },
             );
             expect(next.map((b) => b.instanceId)).toEqual(['a', instanceId, 'b']);
             expect(next[2].order).toBe(2);
@@ -45,7 +45,7 @@ describe('blockOps', () => {
 
         test('использует переданный instanceId и данные', () => {
             const { next, instanceId } = insertBlock([], {
-                blockType: 4,
+                blockType: 'statement',
                 instanceId: 'fixed-id',
                 data: { subject: 'X' },
             });
@@ -55,7 +55,7 @@ describe('blockOps', () => {
 
         test('не мутирует исходный массив', () => {
             const input = [block('a', 0)];
-            insertBlock(input, { blockType: 4 });
+            insertBlock(input, { blockType: 'statement' });
             expect(input).toHaveLength(1);
         });
     });
@@ -103,7 +103,7 @@ describe('blockOps', () => {
             expect(next.map((b) => b.instanceId)).toEqual(['orig', instanceId]);
             expect(next[1].data).not.toBe(source.data);
             expect(next[1].data).toEqual(source.data);
-            expect(next[1].blockType).toBe(4);
+            expect(next[1].blockType).toBe('statement');
             expect(next[1].order).toBe(1);
         });
 
@@ -131,9 +131,9 @@ describe('blockOps', () => {
 
         test('меняет тип блока', () => {
             const input = [block('a', 0)];
-            const next = setBlockType(input, 'a', 14);
-            expect(next[0].blockType).toBe(14);
-            expect(setBlockType(input, 'a', 4)[0]).toBe(input[0]);
+            const next = setBlockType(input, 'a', 'experiment');
+            expect(next[0].blockType).toBe('experiment');
+            expect(setBlockType(input, 'a', 'statement')[0]).toBe(input[0]);
         });
     });
 });

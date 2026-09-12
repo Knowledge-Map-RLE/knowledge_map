@@ -50,12 +50,40 @@ interface PendingFocus {
 const RECENT_KEY = 'wy-recent-types';
 const UIDS_KEY = 'wy-show-uids';
 
-function loadRecent(): number[] {
+// Миграция legacy-ключа «wy-recent-types» (числовые typeNumber 1..57) в
+// строковые обозначения. Удалённые типы (5/6/10/21) поглощаются соседними.
+const LEGACY_INT_TO_DESIGNATION: Record<number, string> = {
+    1: 'metadata', 2: 'goal', 3: 'text', 4: 'statement',
+    5: 'research_design', 6: 'research_design', 7: 'hypothesis', 8: 'prerequisite',
+    9: 'expectations', 10: 'prerequisite', 11: 'research_design', 12: 'material',
+    13: 'method', 14: 'experiment', 15: 'inclusion_exclusion_criteria', 16: 'biological_mechanism',
+    17: 'impact_goal', 18: 'intervention', 19: 'animal_model', 21: 'method',
+    22: 'entity', 23: 'definition', 24: 'assumptions', 25: 'sample_size',
+    26: 'data_source', 27: 'probability_value', 28: 'variance', 29: 'effect_size',
+    30: 'statistical_power', 31: 'confidence_interval', 32: 'magnitude_value', 33: 'formula',
+    34: 'causal_graph', 35: 'identifiability_criteria', 36: 'result', 37: 'statistical_processing',
+    38: 'claim', 39: 'limitations', 40: 'side_findings', 41: 'side_effects',
+    42: 'post_claims', 43: 'open_questions', 44: 'novelty', 45: 'versions',
+    46: 'future_research_suggestions', 47: 'reference', 48: 'link_with_aging', 49: 'image',
+    50: 'code', 51: 'funding', 52: 'interest_conflict', 53: 'scientific_knowledge_value',
+    54: 'action', 55: 'animal_group', 56: 'experiment_step', 57: 'finding',
+};
+
+function loadRecent(): string[] {
     try {
         const raw = localStorage.getItem(RECENT_KEY);
         if (!raw) return [];
         const parsed = JSON.parse(raw) as unknown;
-        return Array.isArray(parsed) ? parsed.map(Number).filter(Number.isFinite) : [];
+        if (!Array.isArray(parsed)) return [];
+        const out: string[] = [];
+        for (const v of parsed) {
+            if (typeof v === 'string' && out.indexOf(v) < 0) out.push(v);
+            else if (typeof v === 'number') {
+                const d = LEGACY_INT_TO_DESIGNATION[v];
+                if (d && out.indexOf(d) < 0) out.push(d);
+            }
+        }
+        return out;
     } catch {
         return [];
     }
@@ -126,7 +154,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
 
     const [slash, setSlash] = useState<SlashState | null>(null);
     const [selectedSlashIdx, setSelectedSlashIdx] = useState(0);
-    const [recentTypes, setRecentTypes] = useState<number[]>(loadRecent);
+    const [recentTypes, setRecentTypes] = useState<string[]>(loadRecent);
     const [showUids, setShowUids] = useState<boolean>(() => localStorage.getItem(UIDS_KEY) === '1');
     const [focusedLineId, setFocusedLineId] = useState<string | null>(null);
     const [highlightLineId, setHighlightLineId] = useState<string | null>(null);
@@ -199,7 +227,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         if (pendingFocusRef.current) flushPendingFocus();
     }, [virtualItems, flushPendingFocus]);
 
-    const insertBelow = useCallback((anchorLineId: string, typeNumber?: number): void => {
+    const insertBelow = useCallback((anchorLineId: string, designation?: string): void => {
         if (!requireAuth()) return;
         const currentLines = linesRef.current;
         const anchorIndex = anchorLineId
@@ -208,7 +236,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         const afterIndex = anchorIndex >= 0 ? anchorIndex : currentLines.length - 1;
         const anchorType = currentLines[afterIndex]?.blockType;
         const anchorDef = anchorType !== undefined ? getBlockTypeDef(anchorType) : undefined;
-        const newType = typeNumber ?? (anchorDef?.canAddMultiple ? anchorDef.typeNumber : 4);
+        const newType = designation ?? (anchorDef?.canAddMultiple ? anchorDef.designation : 'statement');
         const { next, instanceId } = insertBlock(currentLines, { afterIndex, blockType: newType });
         commit(next);
         requestFocus(instanceId);
@@ -222,7 +250,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         const at = Math.max(0, Math.min(index, currentLines.length));
         const neighbour = currentLines[at] ?? currentLines[at - 1];
         const def = neighbour ? getBlockTypeDef(neighbour.blockType) : undefined;
-        const newType = def?.canAddMultiple ? def.typeNumber : 4;
+        const newType = def?.canAddMultiple ? def.designation : 'statement';
         const { next, instanceId } = insertBlock(currentLines, { afterIndex: at - 1, blockType: newType });
         commit(next);
         requestFocus(instanceId);
@@ -239,7 +267,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         const parentDef = getBlockTypeDef(currentLines[parentIdx].blockType);
         const fieldDef = parentDef?.fields.find((f) => f.key === fieldKey);
         const allowed = fieldDef?.uuidRefBlockTypes ?? [];
-        const childType = allowed.length > 0 ? allowed[0] : 4;
+        const childType = allowed.length > 0 ? allowed[0] : 'statement';
 
         let ids: string[] = [];
         try {
@@ -310,27 +338,27 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         if (!anchor) return;
         setSlash(null);
 
-        const nextRecent = [cmd.typeNumber, ...recentTypes.filter((t) => t !== cmd.typeNumber)].slice(0, 8);
+        const nextRecent = [cmd.designation, ...recentTypes.filter((t) => t !== cmd.designation)].slice(0, 8);
         setRecentTypes(nextRecent);
         try {
             localStorage.setItem(RECENT_KEY, JSON.stringify(nextRecent));
         } catch { /* storage unavailable */ }
 
         if (anchor.fieldKey === '__append__') {
-            insertBelow('', cmd.typeNumber);
+            insertBelow('', cmd.designation);
             return;
         }
         const convertInPlace = anchor.fieldKey === '__type__' || isLineEmpty(anchor.lineId);
         if (convertInPlace) {
             const currentLines = linesRef.current;
-            let next = setBlockType(currentLines, anchor.lineId, cmd.typeNumber);
+            let next = setBlockType(currentLines, anchor.lineId, cmd.designation);
             if (anchor.fieldKey !== '__type__') {
                 next = setBlockField(next, anchor.lineId, anchor.fieldKey, '');
             }
             commit(next);
             requestFocus(anchor.lineId);
         } else {
-            insertBelow(anchor.lineId, cmd.typeNumber);
+            insertBelow(anchor.lineId, cmd.designation);
         }
     }, [recentTypes, isLineEmpty, commit, requestFocus, insertBelow]);
 

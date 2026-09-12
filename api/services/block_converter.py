@@ -19,72 +19,71 @@ import re
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from src.uuid8 import uuid8_str
+from src.schemas.block_types import coerce_block_type
 
 # Поля-кандидаты на «имя» блока (порядок как в findNameField клиента).
 _NAME_CANDIDATES = ("name", "title", "subject", "term")
 
 # Поля блока по типу — для findNameField (fallback на первое непустое текстовое).
-_BLOCK_FIELDS: Dict[int, List[str]] = {
-    1: ["doi", "title", "authors"],
-    2: ["subject", "predicate", "object"],
-    3: ["content"],
-    4: ["subject", "predicate", "object"],
-    5: ["endpoint"],
-    6: ["endpoints"],
-    7: ["hypothesis", "disproofExplanation", "sequence"],
-    8: ["prerequisites"],
-    9: ["expectations"],
-    10: ["knowledgeDeps"],
-    11: ["studyType", "randomization", "blinding"],
-    12: ["materials"],
-    13: ["methods", "measurementMethods"],
-    14: ["experimentName", "experimentType", "outcomes", "steps", "findings",
-         "duration", "experimentalPairs", "controlPairs"],
-    15: ["inclusionCriteria", "exclusionCriteria"],
-    16: ["mechanism", "sequence"],
-    17: ["cell", "tissue", "organ", "pathway", "substanceLevel"],
-    18: ["intervention", "dosage", "dosageRegimen"],
-    19: ["species", "timeline", "conditions"],
-    21: ["logic"],
-    22: ["subject", "predicate", "object", "sequence"],
-    23: ["term", "definition", "sequence"],
-    24: ["assumptions"],
-    25: ["sampleSize"],
-    26: ["dataSources"],
-    27: ["pValue"],
-    28: ["variance"],
-    29: ["effectSize", "effectType"],
-    30: ["power"],
-    31: ["ciLower", "ciUpper", "ciLevel"],
-    32: ["namedNumbers"],
-    33: ["formulaName", "formulaLatex", "formulaVariables"],
-    34: ["dagDescription", "dagData"],
-    35: ["criteria"],
-    36: ["results", "resultsSummary"],
-    37: ["statProcessing", "expectationsComparison", "sequence"],
-    38: ["claimSubject", "claimPredicate", "claimObject", "confidenceNotes",
-         "isNegated", "sequence"],
-    39: ["limitations", "sequence"],
-    40: ["sideFindings", "sequence"],
-    41: ["sideEffects"],
-    42: ["postClaims", "comparisonWithExpectations"],
-    43: ["openQuestions"],
-    44: ["novelty", "sequence"],
-    45: ["versions"],
-    46: ["futureResearch", "sequence"],
-    47: ["references", "sequence"],
-    48: ["agingConnection"],
-    49: ["imageKey", "caption", "imageRefs"],
-    50: ["codeLanguage", "code"],
-    51: ["funding"],
-    52: ["conflictOfInterest"],
-    53: ["uncertaintyReduced", "hypothesesExcluded", "hypothesesProbabilized",
-         "newHypotheses", "nextExperiment"],
-    54: ["subject", "predicate", "object", "sequence"],
-    55: ["groupName", "speciesRef", "n", "conditions", "purpose"],
-    56: ["stepName", "details", "duration", "sequence"],
-    57: ["parameter", "subjectRef", "comparisonRef", "direction", "significance",
-         "pValue", "figureRef", "detail", "sequence"],
+_BLOCK_FIELDS: Dict[str, List[str]] = {
+    "metadata": ["doi", "title", "authors"],
+    "goal": ["subject", "predicate", "object"],
+    "text": ["content"],
+    "statement": ["subject", "predicate", "object"],
+    "research_design": ["studyType", "randomization", "blinding",
+                        "primaryEndpoints", "secondaryEndpoints"],
+    "hypothesis": ["hypothesis", "disproofExplanation", "sequence"],
+    "prerequisite": ["prerequisites"],
+    "expectations": ["expectations"],
+    "material": ["materials"],
+    "method": ["methods", "measurementMethods"],
+    "experiment": ["experimentName", "experimentType", "outcomes", "steps",
+                   "findings", "duration", "experimentalPairs", "controlPairs"],
+    "inclusion_exclusion_criteria": ["inclusionCriteria", "exclusionCriteria"],
+    "biological_mechanism": ["mechanism", "sequence"],
+    "impact_goal": ["cell", "tissue", "organ", "pathway", "substanceLevel"],
+    "intervention": ["intervention", "dosage", "dosageRegimen"],
+    "animal_model": ["species", "timeline", "conditions"],
+    "entity": ["subject", "predicate", "object", "sequence"],
+    "definition": ["term", "definition", "sequence"],
+    "assumptions": ["assumptions"],
+    "sample_size": ["sampleSize"],
+    "data_source": ["dataSources"],
+    "probability_value": ["pValue"],
+    "variance": ["variance"],
+    "effect_size": ["effectSize", "effectType"],
+    "statistical_power": ["power"],
+    "confidence_interval": ["ciLower", "ciUpper", "ciLevel"],
+    "magnitude_value": ["namedNumbers"],
+    "formula": ["formulaName", "formulaLatex", "formulaVariables"],
+    "causal_graph": ["dagDescription", "dagData"],
+    "identifiability_criteria": ["criteria"],
+    "result": ["results", "resultsSummary", "rawData"],
+    "statistical_processing": ["statProcessing", "expectationsComparison", "sequence"],
+    "claim": ["claimSubject", "claimPredicate", "claimObject", "confidenceNotes",
+              "isNegated", "sequence"],
+    "limitations": ["limitations", "sequence"],
+    "side_findings": ["sideFindings", "sequence"],
+    "side_effects": ["sideEffects"],
+    "post_claims": ["postClaims", "comparisonWithExpectations"],
+    "open_questions": ["openQuestions"],
+    "novelty": ["novelty", "sequence"],
+    "versions": ["versions"],
+    "future_research_suggestions": ["futureResearch", "sequence"],
+    "reference": ["references", "sequence"],
+    "link_with_aging": ["agingConnection"],
+    "image": ["imageKey", "caption", "imageRefs"],
+    "code": ["codeLanguage", "code"],
+    "funding": ["funding"],
+    "interest_conflict": ["conflictOfInterest"],
+    "scientific_knowledge_value": ["uncertaintyReduced", "hypothesesExcluded",
+                                   "hypothesesProbabilized", "newHypotheses",
+                                   "nextExperiment"],
+    "action": ["subject", "predicate", "object", "sequence"],
+    "animal_group": ["groupName", "speciesRef", "n", "conditions", "purpose"],
+    "experiment_step": ["stepName", "details", "duration", "sequence"],
+    "finding": ["parameter", "subjectRef", "comparisonRef", "direction",
+                "significance", "pValue", "figureRef", "detail", "sequence"],
 }
 
 
@@ -97,7 +96,7 @@ def fact(
     predicate: str,
     obj: str,
     source_block_id: str,
-    source_block_type: int,
+    source_block_type: str,
     confidence: float = 1.0,
 ) -> Dict[str, Any]:
     return {
@@ -119,7 +118,7 @@ def meta(
     predicate: str,
     obj: str,
     source_block_id: str,
-    source_block_type: int,
+    source_block_type: str,
 ) -> Dict[str, Any]:
     return {
         "id": uuid8_str(),
@@ -198,7 +197,7 @@ def sequence_triplets(
         )
 
 
-def find_name_field(block_type: int, data: Dict[str, Any]) -> Optional[str]:
+def find_name_field(block_type: str, data: Dict[str, Any]) -> Optional[str]:
     """Имя блока: кандидаты name/title/subject/term, иначе первое непустое."""
     fields = _BLOCK_FIELDS.get(block_type, [])
 
@@ -222,8 +221,8 @@ def find_name_field(block_type: int, data: Dict[str, Any]) -> Optional[str]:
 ConverterFn = Callable[[Dict[str, Any]], List[Dict[str, Any]]]
 
 
-def _converters() -> Dict[int, ConverterFn]:
-    c: Dict[int, ConverterFn] = {}
+def _converters() -> Dict[str, ConverterFn]:
+    c: Dict[str, ConverterFn] = {}
 
     # T1: Метаданные
     def t1(b: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -253,23 +252,13 @@ def _converters() -> Dict[int, ConverterFn]:
         return [fact(s, p, o, b["instanceId"], b["blockType"])] if s and p and o else []
 
     # T3: Свободный текст → 0 триплетов
-    c[3] = lambda b: []
+    c["text"] = lambda b: []
 
     # T4: Прямой триплет
     def t4(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         data = b["data"]
         s, p, o = _str(data, "subject"), _str(data, "predicate"), _str(data, "object")
         return [fact(s, p, o, b["instanceId"], b["blockType"])] if s and p and o else []
-
-    # T5: Первичная конечная точка
-    def t5(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        v = _str(b["data"], "endpoint")
-        return [fact("Study", "primary endpoint", v, b["instanceId"], b["blockType"])] if v else []
-
-    # T6: Вторичные конечные точки
-    def t6(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Study", "secondary endpoint", ep, b["instanceId"], b["blockType"])
-                for ep in split_lines(b["data"].get("endpoints"))]
 
     # T7: Гипотеза
     def t7(b: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -294,12 +283,7 @@ def _converters() -> Dict[int, ConverterFn]:
         v = _str(b["data"], "expectations")
         return [fact("Study", "expects", v, b["instanceId"], b["blockType"])] if v else []
 
-    # T10: Знания-зависимости
-    def t10(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        return [fact("Study", "relies on", dep, b["instanceId"], b["blockType"])
-                for dep in split_lines(b["data"].get("knowledgeDeps"))]
-
-    # T11: Дизайн исследования
+    # research_design: Дизайн исследования (абсорбирует T5/T6-конечные точки)
     def t11(b: Dict[str, Any]) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
         study_type = _str(b["data"], "studyType")
@@ -309,6 +293,10 @@ def _converters() -> Dict[int, ConverterFn]:
             out.append(fact("Study", "randomized", "yes", b["instanceId"], b["blockType"]))
         if _bool(b["data"], "blinding"):
             out.append(fact("Study", "blinded", "yes", b["instanceId"], b["blockType"]))
+        for key, label in (("primaryEndpoints", "primary endpoint"),
+                           ("secondaryEndpoints", "secondary endpoint")):
+            for ep in split_lines(b["data"].get(key)):
+                out.append(fact("Study", label, ep, b["instanceId"], b["blockType"]))
         return out
 
     # T12: Материалы
@@ -454,11 +442,6 @@ def _converters() -> Dict[int, ConverterFn]:
         if conditions:
             out.append(fact("Study", "model housing conditions", conditions, b["instanceId"], b["blockType"]))
         return out
-
-    # T21: Логика исследователя
-    def t21(b: Dict[str, Any]) -> List[Dict[str, Any]]:
-        v = _str(b["data"], "logic")
-        return [fact("Study", "logic", v, b["instanceId"], b["blockType"])] if v else []
 
     # T22: Сущность (s/p/o)
     def t22(b: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -785,65 +768,61 @@ def _converters() -> Dict[int, ConverterFn]:
         sequence_triplets(b, out)
         return out
 
-    c[1] = t1
-    c[2] = t2
-    c[4] = t4
-    c[5] = t5
-    c[6] = t6
-    c[7] = t7
-    c[8] = t8
-    c[9] = t9
-    c[10] = t10
-    c[11] = t11
-    c[12] = t12
-    c[13] = t13
-    c[14] = t14
-    c[15] = t15
-    c[16] = t16
-    c[17] = t17
-    c[18] = t18
-    c[19] = t19
-    c[21] = t21
-    c[22] = t22
-    c[23] = t23
-    c[24] = t24
-    c[25] = t25
-    c[26] = t26
-    c[27] = t27
-    c[28] = t28
-    c[29] = t29
-    c[30] = t30
-    c[31] = t31
-    c[32] = t32
-    c[33] = t33
-    c[34] = t34
-    c[35] = t35
-    c[36] = t36
-    c[37] = t37
-    c[38] = t38
-    c[39] = t39
-    c[40] = t40
-    c[41] = t41
-    c[42] = t42
-    c[43] = t43
-    c[44] = t44
-    c[45] = t45
-    c[46] = t46
-    c[47] = t47
-    c[48] = t48
-    c[49] = t49
-    c[50] = t50
-    c[51] = t51
-    c[52] = t52
-    c[53] = t53
-    c[54] = t54
-    c[55] = t55
-    c[56] = t56
-    c[57] = t57
+    c["metadata"] = t1
+    c["goal"] = t2
+    c["statement"] = t4
+    c["hypothesis"] = t7
+    c["prerequisite"] = t8
+    c["expectations"] = t9
+    c["research_design"] = t11
+    c["material"] = t12
+    c["method"] = t13
+    c["experiment"] = t14
+    c["inclusion_exclusion_criteria"] = t15
+    c["biological_mechanism"] = t16
+    c["impact_goal"] = t17
+    c["intervention"] = t18
+    c["animal_model"] = t19
+    c["entity"] = t22
+    c["definition"] = t23
+    c["assumptions"] = t24
+    c["sample_size"] = t25
+    c["data_source"] = t26
+    c["probability_value"] = t27
+    c["variance"] = t28
+    c["effect_size"] = t29
+    c["statistical_power"] = t30
+    c["confidence_interval"] = t31
+    c["magnitude_value"] = t32
+    c["formula"] = t33
+    c["causal_graph"] = t34
+    c["identifiability_criteria"] = t35
+    c["result"] = t36
+    c["statistical_processing"] = t37
+    c["claim"] = t38
+    c["limitations"] = t39
+    c["side_findings"] = t40
+    c["side_effects"] = t41
+    c["post_claims"] = t42
+    c["open_questions"] = t43
+    c["novelty"] = t44
+    c["versions"] = t45
+    c["future_research_suggestions"] = t46
+    c["reference"] = t47
+    c["link_with_aging"] = t48
+    c["image"] = t49
+    c["code"] = t50
+    c["funding"] = t51
+    c["interest_conflict"] = t52
+    c["scientific_knowledge_value"] = t53
+    c["action"] = t54
+    c["animal_group"] = t55
+    c["experiment_step"] = t56
+    c["finding"] = t57
     return c
 
 
-CONVERTERS: Dict[int, ConverterFn] = _converters()
+CONVERTERS: Dict[str, ConverterFn] = _converters()
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -878,7 +857,7 @@ def blocks_to_statements(
     sorted_blocks = sorted(blocks, key=lambda b: int(b.get("order", 0)))
 
     for block in sorted_blocks:
-        converter = CONVERTERS.get(int(block.get("blockType", 0)))
+        converter = CONVERTERS.get(coerce_block_type(block.get("blockType", "")))
         if not converter:
             continue
         block_triplets = converter(block)
@@ -891,7 +870,7 @@ def blocks_to_statements(
     # blockNameMap: instanceId → имя блока (для резолва UUID-ссылок)
     block_name_map: Dict[str, str] = {}
     for block in blocks:
-        name_field = find_name_field(int(block.get("blockType", 0)), block.get("data") or {})
+        name_field = find_name_field(coerce_block_type(block.get("blockType", "")), block.get("data") or {})
         if name_field:
             value = block["data"].get(name_field)
             if isinstance(value, str):

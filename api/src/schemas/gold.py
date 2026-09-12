@@ -6,6 +6,7 @@ from typing import Any, Dict
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from src.schemas.block_types import BlockType, coerce_block_type
 from tools.llm_extract.metrics import is_uuid
 
 GOLD_SCHEMA_VERSION = 1
@@ -27,7 +28,7 @@ class GoldBlock(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     instanceId: str
-    blockType: int = Field(ge=1, le=59)
+    blockType: str
     order: int = Field(ge=0)
     data: Dict[str, Any]
 
@@ -37,6 +38,14 @@ class GoldBlock(BaseModel):
         if not is_uuid(value):
             raise ValueError("instanceId не является корректным UUID")
         return value
+
+    @field_validator("blockType")
+    @classmethod
+    def _block_type_valid(cls, value: str) -> str:
+        key = coerce_block_type(value)
+        if key not in BlockType.ALL_TYPES_SET:
+            raise ValueError(f"неизвестный blockType: {value!r}")
+        return key
 
     @field_validator("data")
     @classmethod

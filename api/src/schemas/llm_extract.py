@@ -1,63 +1,117 @@
 """Pydantic-схемы для структурированного вывода LLM-экстракции триплетов.
 
-Unified (one-stage): модель выдаёт ВСЕ блоки (контейнеры + T4 + T58/T59) за один вызов.
+Unified (one-stage): модель выдаёт ВСЕ блоки (контейнеры + statement + relation)
+за один вызов.
+
+Типы блоков — строковые обозначения из Спецификации.md (см. block_types.py).
+Старые числовые коды (1..59) принимаются на чтение через коэрцию.
 """
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from pydantic import BaseModel, Field, field_validator
 
-_UNIFIED_BLOCK_TYPE_MAP: Dict[str, int] = {
-    "article": 1,
-    "objective": 2,
-    "hypothesis": 7,
-    "study": 4,
-    "experiment": 14,
-    "entity": 22,
-    "definition": 23,
-    "intervention": 18,
-    "model": 19,
-    "group": 55,
-    "procedure_step": 56,
-    "result": 57,
-    "statistic": 37,
-    "claim": 38,
-    "mechanism": 16,
-    "action": 54,
-    "relation": 58,
-    "action_relation": 58,
-    "temporal_relation": 59,
-    "limitation": 39,
-    "novelty": 44,
-    "future_proposal": 46,
-    "reference": 47,
-    "funding": 51,
-    "side_finding": 40,
-    "atomic_statement": 4,
-    "direct_triplet": 4,
-    "p_value": 27,
-    "side_finding": 40,
-    "conclusions": 20,
-    "animal_group": 55,
-    "animal_model": 19,
-    "biological_mechanism": 16,
-    "experiment_step": 56,
-    "result_finding": 57,
-    "statistical_processing": 37,
-    "study_limitations": 39,
-    "concept_definition": 23,
-    "research_goal": 2,
-    "links_to_previous_research": 47,
-    "funding_sources": 51,
+from .block_types import BlockType, coerce_block_type
+
+# Ключи из JSON-ответа LLM (two-stage / unified) → обозначение типа.
+_UNIFIED_BLOCK_TYPE_MAP: Dict[str, str] = {
+    "article": BlockType.METADATA,
+    "objective": BlockType.GOAL,
+    "research_goal": BlockType.GOAL,
+    "hypothesis": BlockType.HYPOTHESIS,
+    "statement": BlockType.STATEMENT,
+    "study": BlockType.STATEMENT,
+    "atomic_statement": BlockType.STATEMENT,
+    "direct_triplet": BlockType.STATEMENT,
+    "experiment": BlockType.EXPERIMENT,
+    "entity": BlockType.ENTITY,
+    "definition": BlockType.DEFINITION,
+    "concept_definition": BlockType.DEFINITION,
+    "intervention": BlockType.INTERVENTION,
+    "model": BlockType.ANIMAL_MODEL,
+    "animal_model": BlockType.ANIMAL_MODEL,
+    "group": BlockType.ANIMAL_GROUP,
+    "animal_group": BlockType.ANIMAL_GROUP,
+    "procedure_step": BlockType.EXPERIMENT_STEP,
+    "experiment_step": BlockType.EXPERIMENT_STEP,
+    "result": BlockType.RESULT,
+    "result_finding": BlockType.FINDING,
+    "finding": BlockType.FINDING,
+    "statistic": BlockType.STATISTICAL_PROCESSING,
+    "statistical_processing": BlockType.STATISTICAL_PROCESSING,
+    "claim": BlockType.CLAIM,
+    "mechanism": BlockType.BIOLOGICAL_MECHANISM,
+    "biological_mechanism": BlockType.BIOLOGICAL_MECHANISM,
+    "action": BlockType.ACTION,
+    "relation": BlockType.RELATION,
+    "action_relation": BlockType.RELATION,
+    "temporal_relation": BlockType.TEMPORAL_RELATION,
+    "limitation": BlockType.LIMITATIONS,
+    "study_limitations": BlockType.LIMITATIONS,
+    "novelty": BlockType.NOVELTY,
+    "future_proposal": BlockType.FUTURE_RESEARCH_SUGGESTIONS,
+    "reference": BlockType.REFERENCE,
+    "links_to_previous_research": BlockType.REFERENCE,
+    "funding": BlockType.FUNDING,
+    "funding_sources": BlockType.FUNDING,
+    "side_finding": BlockType.SIDE_FINDINGS,
+    "p_value": BlockType.PROBABILITY_VALUE,
+    "conclusions": BlockType.POST_CLAIMS,
+    "post_claims": BlockType.POST_CLAIMS,
+    "goal": BlockType.GOAL,
+    "text": BlockType.TEXT,
+    "prerequisite": BlockType.PREREQUISITE,
+    "expectations": BlockType.EXPECTATIONS,
+    "research_design": BlockType.RESEARCH_DESIGN,
+    "material": BlockType.MATERIAL,
+    "method": BlockType.METHOD,
+    "inclusion_exclusion_criteria": BlockType.INCLUSION_EXCLUSION_CRITERIA,
+    "impact_goal": BlockType.IMPACT_GOAL,
+    "assumptions": BlockType.ASSUMPTIONS,
+    "sample_size": BlockType.SAMPLE_SIZE,
+    "data_source": BlockType.DATA_SOURCE,
+    "probability_value": BlockType.PROBABILITY_VALUE,
+    "variance": BlockType.VARIANCE,
+    "effect_size": BlockType.EFFECT_SIZE,
+    "statistical_power": BlockType.STATISTICAL_POWER,
+    "confidence_interval": BlockType.CONFIDENCE_INTERVAL,
+    "magnitude_value": BlockType.MAGNITUDE_VALUE,
+    "formula": BlockType.FORMULA,
+    "causal_graph": BlockType.CAUSAL_GRAPH,
+    "identifiability_criteria": BlockType.IDENTIFIABILITY_CRITERIA,
+    "side_effects": BlockType.SIDE_EFFECTS,
+    "open_questions": BlockType.OPEN_QUESTIONS,
+    "versions": BlockType.VERSIONS,
+    "link_with_aging": BlockType.LINK_WITH_AGING,
+    "image": BlockType.IMAGE,
+    "code": BlockType.CODE,
+    "interest_conflict": BlockType.INTEREST_CONFLICT,
+    "scientific_knowledge_value": BlockType.SCIENTIFIC_KNOWLEDGE_VALUE,
 }
+
+
+def _coerce(v: Any) -> str:
+    """Строковое обозначение типа из значения ответа LLM."""
+    if isinstance(v, str):
+        key = v.strip()
+        mapped = _UNIFIED_BLOCK_TYPE_MAP.get(key)
+        if mapped:
+            return mapped
+        return coerce_block_type(key)
+    return coerce_block_type(v)
 
 
 class StructureBlock(BaseModel):
     """Один контейнерный блок из ответа Stage 1 (two-stage) или unified."""
-    blockType: int = Field(alias="blockType")
+    blockType: str = Field(alias="blockType")
     data: Dict[str, Any] = Field(default_factory=dict)
     tag: str = ""
+
+    @field_validator("blockType", mode="before")
+    @classmethod
+    def coerce_block_type(cls, v: Any) -> str:
+        return _coerce(v)
 
     @field_validator("data", mode="before")
     @classmethod
@@ -73,10 +127,15 @@ class StructureResponse(BaseModel):
 
 
 class AtomizeBlock(BaseModel):
-    """Один атомарный T4-триплет из ответа Stage 2."""
-    blockType: int = 4
+    """Один атомарный statement-триплет из ответа Stage 2."""
+    blockType: str = BlockType.STATEMENT
     data: Dict[str, Any] = Field(default_factory=dict)
     container: str = ""
+
+    @field_validator("blockType", mode="before")
+    @classmethod
+    def coerce_block_type(cls, v: Any) -> str:
+        return _coerce(v)
 
     @field_validator("data", mode="before")
     @classmethod
@@ -87,26 +146,21 @@ class AtomizeBlock(BaseModel):
 
 
 class AtomizeResponse(BaseModel):
-    """Ответ Stage 2 (Atomize): T4-триплеты + маппинг последовательностей."""
+    """Ответ Stage 2 (Atomize): statement-триплеты + маппинг последовательностей."""
     blocks: List[AtomizeBlock] = Field(default_factory=list)
     sequences: Dict[str, Any] = Field(default_factory=dict)
 
 
 class UnifiedBlock(BaseModel):
-    """Блок из unified-ответа (one-stage): все типы включая T4, T58, T59."""
-    blockType: int = Field(alias="blockType")
+    """Блок из unified-ответа (one-stage): все типы включая statement, relation."""
+    blockType: str = Field(alias="blockType")
     data: Dict[str, Any] = Field(default_factory=dict)
     tag: str = ""
 
     @field_validator("blockType", mode="before")
     @classmethod
-    def coerce_block_type(cls, v: Any) -> int:
-        if isinstance(v, str):
-            return _UNIFIED_BLOCK_TYPE_MAP.get(v, 0)
-        try:
-            return int(v)
-        except (TypeError, ValueError):
-            return 0
+    def coerce_block_type(cls, v: Any) -> str:
+        return _coerce(v)
 
     @field_validator("data", mode="before")
     @classmethod
@@ -119,72 +173,3 @@ class UnifiedBlock(BaseModel):
 class UnifiedResponse(BaseModel):
     """Ответ unified (one-stage): все блоки за один вызов."""
     blocks: List[UnifiedBlock] = Field(default_factory=list)
-
-
-# Константы для типов блоков
-class BlockType:
-    METADATA = 1
-    RESEARCH_GOAL = 2
-    FREE_TEXT = 3
-    DIRECT_TRIPLET = 4
-    PRIMARY_ENDPOINT = 5
-    SECONDARY_ENDPOINTS = 6
-    HYPOTHESIS = 7
-    PREREQUISITES = 8
-    EXPECTATIONS = 9
-    KNOWLEDGE_DEPS = 10
-    STUDY_DESIGN = 11
-    MATERIALS = 12
-    METHODS = 13
-    EXPERIMENT = 14
-    INCLUSION_CRITERIA = 15
-    BIOLOGICAL_MECHANISM = 16
-    TARGET_OF_ACTION = 17
-    INTERVENTION = 18
-    ANIMAL_MODEL = 19
-    CONCLUSIONS = 20
-    RESEARCH_LOGIC = 21
-    ENTITIES = 22
-    CONCEPT_DEFINITION = 23
-    ASSUMPTIONS = 24
-    SAMPLE_SIZE = 25
-    DATA_SOURCES = 26
-    P_VALUE = 27
-    DISPERSION = 28
-    EFFECT_SIZE = 29
-    POWER = 30
-    CONFIDENCE_INTERVAL = 31
-    NAMED_NUMBERS = 32
-    FORMULAS = 33
-    CAUSAL_GRAPHS = 34
-    PERL_CRITERIA = 35
-    RESULTS_TABLE = 36
-    STAT_PROCESSING = 37
-    CLAIM = 38
-    LIMITATIONS = 39
-    SIDE_FINDINGS = 40
-    SIDE_EFFECTS = 41
-    POST_CLAIMS = 42
-    OPEN_QUESTIONS = 43
-    NOVELTY = 44
-    VERSIONS = 45
-    FUTURE_RESEARCH = 46
-    REFERENCES = 47
-    AGING_CONNECTION = 48
-    IMAGES = 49
-    CODE = 50
-    FUNDING = 51
-    CONFLICT_OF_INTEREST = 52
-    INFORMATIONAL_VALUE = 53
-    ACTION = 54
-    ANIMAL_GROUP = 55
-    EXPERIMENT_STEP = 56
-    RESULT = 57
-    ACTION_DEPENDENCY = 58   # NEW: каузальная связь между действиями
-    TEMPORAL_RELATION = 59   # NEW: временная последовательность
-
-    # Типы, у которых есть sequence (контейнеры для T4-триплетов).
-    CONTAINER_TYPES = frozenset({7, 16, 22, 23, 37, 38, 39, 40, 44, 46, 47, 56, 57})
-
-    # Все типы (для гистограмм и т.д.)
-    ALL_TYPES = frozenset(range(1, 60))

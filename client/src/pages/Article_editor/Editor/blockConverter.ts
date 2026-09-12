@@ -21,7 +21,7 @@ function fact(
     predicate: string,
     object: string,
     sourceBlockId: string,
-    sourceBlockType: number,
+    sourceBlockType: string,
     confidence = 1.0,
 ): DerivedTriplet {
     return {
@@ -43,7 +43,7 @@ function meta(
     predicate: string,
     object: string,
     sourceBlockId: string,
-    sourceBlockType: number,
+    sourceBlockType: string,
 ): DerivedTriplet {
     return {
         id: uuid8Str(),
@@ -125,9 +125,9 @@ function findNameField(def: BlockTypeDef, data: Record<string, BlockDataValue>):
 
 type ConverterFn = (block: ArticleBlockData) => DerivedTriplet[];
 
-const converters: Record<number, ConverterFn> = {
+const converters: Record<string, ConverterFn> = {
     // T1: Метаданные
-    1: (b) => {
+'metadata': (b) => {
         const triplets: DerivedTriplet[] = [];
         const doi = str(b.data, 'doi');
         const title = str(b.data, 'title');
@@ -144,7 +144,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T2: Цель исследования (s/p/o триплет)
-    2: (b) => {
+'goal': (b) => {
         const s = str(b.data, 'subject');
         const p = str(b.data, 'predicate');
         const o = str(b.data, 'object');
@@ -156,30 +156,18 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T3: Свободный текст → 0 triplets
-    3: () => [],
+    'text': () => [],
 
     // T4: Прямой триплет
-    4: (b) => {
+'statement': (b) => {
         const s = str(b.data, 'subject');
         const p = str(b.data, 'predicate');
         const o = str(b.data, 'object');
         return (s && p && o) ? [fact(s, p, o, b.instanceId, b.blockType)] : [];
     },
 
-    // T5: Первичная конечная точка
-    5: (b) => {
-        const v = str(b.data, 'endpoint');
-        return v ? [fact('Study', 'primary endpoint', v, b.instanceId, b.blockType)] : [];
-    },
-
-    // T6: Вторичные конечные точки
-    6: (b) => {
-        const lines = splitLines(b.data.endpoints);
-        return lines.map((ep) => fact('Study', 'secondary endpoint', ep, b.instanceId, b.blockType));
-    },
-
     // T7: Гипотеза
-    7: (b) => {
+'hypothesis': (b) => {
         const triplets: DerivedTriplet[] = [];
         const h = str(b.data, 'hypothesis');
         if (h) {
@@ -192,43 +180,42 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T8: Предпосылки
-    8: (b) => {
+'prerequisite': (b) => {
         return splitLines(b.data.prerequisites).map((p) =>
             fact(p, 'prerequisite', 'Study', b.instanceId, b.blockType)
         );
     },
 
     // T9: Ожидания
-    9: (b) => {
+'expectations': (b) => {
         const v = str(b.data, 'expectations');
         return v ? [fact('Study', 'expects', v, b.instanceId, b.blockType)] : [];
     },
 
-    // T10: Знания-зависимости
-    10: (b) => {
-        return splitLines(b.data.knowledgeDeps).map((dep) =>
-            fact('Study', 'relies on', dep, b.instanceId, b.blockType)
-        );
-    },
-
     // T11: Дизайн исследования
-    11: (b) => {
+    'research_design': (b) => {
         const triplets: DerivedTriplet[] = [];
         const studyType = str(b.data, 'studyType');
         if (studyType) triplets.push(fact('Study', 'type', studyType, b.instanceId, b.blockType));
         if (bool(b.data, 'randomization')) triplets.push(fact('Study', 'randomized', 'yes', b.instanceId, b.blockType));
         if (bool(b.data, 'blinding')) triplets.push(fact('Study', 'blinded', 'yes', b.instanceId, b.blockType));
+        for (const ep of splitLines(b.data.primaryEndpoints)) {
+            triplets.push(fact('Study', 'primary endpoint', ep, b.instanceId, b.blockType));
+        }
+        for (const ep of splitLines(b.data.secondaryEndpoints)) {
+            triplets.push(fact('Study', 'secondary endpoint', ep, b.instanceId, b.blockType));
+        }
         return triplets;
     },
 
     // T12: Материалы
-    12: (b) => {
+    'material': (b) => {
         const v = str(b.data, 'materials');
         return v ? [fact('Study', 'materials', v, b.instanceId, b.blockType)] : [];
     },
 
     // T13: Методы
-    13: (b) => {
+    'method': (b) => {
         const triplets: DerivedTriplet[] = [];
         const methods = str(b.data, 'methods');
         if (methods) triplets.push(fact('Study', 'methods', methods, b.instanceId, b.blockType));
@@ -238,7 +225,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T14: Эксперимент
-    14: (b) => {
+    'experiment': (b) => {
         const triplets: DerivedTriplet[] = [];
         const name = str(b.data, 'experimentName');
         const expType = str(b.data, 'experimentType');
@@ -264,7 +251,7 @@ const converters: Record<number, ConverterFn> = {
                         if (stepUuid) triplets.push(fact(b.instanceId, 'step', stepUuid, b.instanceId, b.blockType));
                     }
                 }
-            } catch {}
+            } catch { void 0; }
         }
         const findings = str(b.data, 'findings');
         if (findings) {
@@ -276,7 +263,7 @@ const converters: Record<number, ConverterFn> = {
                         if (findingUuid) triplets.push(fact(b.instanceId, 'result', findingUuid, b.instanceId, b.blockType));
                     }
                 }
-            } catch {}
+            } catch { void 0; }
         }
         if (duration) triplets.push(fact(expKey, 'duration', duration, b.instanceId, b.blockType));
 
@@ -292,7 +279,7 @@ const converters: Record<number, ConverterFn> = {
                         if (iv) triplets.push(fact(g, 'receives', iv, b.instanceId, b.blockType));
                     }
                 }
-            } catch {}
+            } catch { void 0; }
         };
 
         makePairs(str(b.data, 'experimentalPairs'), 'experimental group');
@@ -302,7 +289,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T15: Критерии включения/исключения
-    15: (b) => {
+    'inclusion_exclusion_criteria': (b) => {
         const triplets: DerivedTriplet[] = [];
         const inc = str(b.data, 'inclusionCriteria');
         if (inc) triplets.push(fact('Study', 'inclusion criterion', inc, b.instanceId, b.blockType));
@@ -312,7 +299,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T16: Биологический механизм
-    16: (b) => {
+    'biological_mechanism': (b) => {
         const v = str(b.data, 'mechanism');
         const triplets = v ? [fact('Study', 'biological mechanism', v, b.instanceId, b.blockType)] : [];
         sequenceTriplets(b, triplets);
@@ -320,7 +307,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T17: Объект воздействия
-    17: (b) => {
+    'impact_goal': (b) => {
         const triplets: DerivedTriplet[] = [];
         const targets: Array<[string, string]> = [
             ['cell', 'cell'],
@@ -337,7 +324,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T18: Интервенция
-    18: (b) => {
+    'intervention': (b) => {
         const triplets: DerivedTriplet[] = [];
         const intervention = str(b.data, 'intervention');
         if (intervention) triplets.push(fact('Study', 'intervention', intervention, b.instanceId, b.blockType));
@@ -349,7 +336,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T19: Животная модель
-    19: (b) => {
+    'animal_model': (b) => {
         const triplets: DerivedTriplet[] = [];
         const species = str(b.data, 'species');
         if (species) triplets.push(fact('Study', 'animal species', species, b.instanceId, b.blockType));
@@ -360,14 +347,8 @@ const converters: Record<number, ConverterFn> = {
         return triplets;
     },
 
-    // T21: Логика исследователя
-    21: (b) => {
-        const v = str(b.data, 'logic');
-        return v ? [fact('Study', 'logic', v, b.instanceId, b.blockType)] : [];
-    },
-
     // T22: Сущность (s/p/o триплет)
-    22: (b) => {
+    'entity': (b) => {
         const s = str(b.data, 'subject');
         const p = str(b.data, 'predicate');
         const o = str(b.data, 'object');
@@ -377,7 +358,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T23: Определение понятия
-    23: (b) => {
+    'definition': (b) => {
         const triplets: DerivedTriplet[] = [];
         const term = str(b.data, 'term');
         const def = str(b.data, 'definition');
@@ -387,39 +368,39 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T24: Предположения
-    24: (b) => {
+    'assumptions': (b) => {
         return splitLines(b.data.assumptions).map((a) =>
             fact('Study', 'assumes', a, b.instanceId, b.blockType)
         );
     },
 
     // T25: Размер выборки
-    25: (b) => {
+    'sample_size': (b) => {
         const v = str(b.data, 'sampleSize');
         return v ? [fact('Study', 'sample size', 'n=' + v, b.instanceId, b.blockType)] : [];
     },
 
     // T26: Источники данных
-    26: (b) => {
+    'data_source': (b) => {
         return splitLines(b.data.dataSources).map((ds) =>
             fact('Study', 'data source', ds, b.instanceId, b.blockType)
         );
     },
 
     // T27: p-value
-    27: (b) => {
+    'probability_value': (b) => {
         const v = str(b.data, 'pValue');
         return v ? [fact('Study', 'p-value', v, b.instanceId, b.blockType)] : [];
     },
 
     // T28: Дисперсия
-    28: (b) => {
+    'variance': (b) => {
         const v = str(b.data, 'variance');
         return v ? [fact('Study', 'variance', v, b.instanceId, b.blockType)] : [];
     },
 
     // T29: Размер эффекта
-    29: (b) => {
+    'effect_size': (b) => {
         const v = str(b.data, 'effectSize');
         if (!v) return [];
         const effectType = str(b.data, 'effectType');
@@ -428,13 +409,13 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T30: Мощность исследования
-    30: (b) => {
+    'statistical_power': (b) => {
         const v = str(b.data, 'power');
         return v ? [fact('Study', 'power', v, b.instanceId, b.blockType)] : [];
     },
 
     // T31: Доверительный интервал
-    31: (b) => {
+    'confidence_interval': (b) => {
         const lower = str(b.data, 'ciLower');
         const upper = str(b.data, 'ciUpper');
         if (!lower && !upper) return [];
@@ -443,14 +424,14 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T32: Числа с названиями
-    32: (b) => {
+    'magnitude_value': (b) => {
         return kvPairs(b.data.namedNumbers).map(({ key, value }) =>
             fact(key, 'magnitude', value, b.instanceId, b.blockType)
         );
     },
 
     // T33: Формулы
-    33: (b) => {
+    'formula': (b) => {
         const triplets: DerivedTriplet[] = [];
         const name = str(b.data, 'formulaName');
         const latex = str(b.data, 'formulaLatex');
@@ -466,19 +447,19 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T34: Каузальные графы (DAG)
-    34: (b) => {
+    'causal_graph': (b) => {
         const desc = str(b.data, 'dagDescription');
         return desc ? [meta('Causal graph', 'describes', desc, b.instanceId, b.blockType)] : [];
     },
 
     // T35: Критерии идентифицируемости Дж.Перла
-    35: (b) => {
+    'identifiability_criteria': (b) => {
         const v = str(b.data, 'criteria');
         return v ? [fact('Study', 'identifiability criterion', v, b.instanceId, b.blockType)] : [];
     },
 
     // T36: Результаты
-    36: (b) => {
+    'result': (b) => {
         const triplets: DerivedTriplet[] = [];
         const results = str(b.data, 'results');
         if (results) triplets.push(fact('Study', 'results', results, b.instanceId, b.blockType));
@@ -488,7 +469,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T37: Статистическая обработка
-    37: (b) => {
+    'statistical_processing': (b) => {
         const triplets: DerivedTriplet[] = [];
         const p = str(b.data, 'statProcessing');
         if (p) triplets.push(fact('Study', 'statistical processing', p, b.instanceId, b.blockType));
@@ -499,7 +480,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T38: Утверждения
-    38: (b) => {
+    'claim': (b) => {
         const s = str(b.data, 'claimSubject');
         const p = str(b.data, 'claimPredicate');
         const o = str(b.data, 'claimObject');
@@ -515,7 +496,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T39: Ограничения исследования
-    39: (b) => {
+    'limitations': (b) => {
         const v = str(b.data, 'limitations');
         const triplets = v ? [fact('Study', 'limitations', v, b.instanceId, b.blockType)] : [];
         sequenceTriplets(b, triplets);
@@ -523,7 +504,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T40: Побочные выводы/гипотезы
-    40: (b) => {
+    'side_findings': (b) => {
         const v = str(b.data, 'sideFindings');
         const triplets = v ? [fact('Study', 'side findings', v, b.instanceId, b.blockType)] : [];
         sequenceTriplets(b, triplets);
@@ -531,13 +512,13 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T41: Сопутствующие эффекты
-    41: (b) => {
+    'side_effects': (b) => {
         const v = str(b.data, 'sideEffects');
         return v ? [fact('Study', 'side effects', v, b.instanceId, b.blockType)] : [];
     },
 
     // T42: Утверждения после исследования
-    42: (b) => {
+    'post_claims': (b) => {
         const triplets: DerivedTriplet[] = [];
         const claims = str(b.data, 'postClaims');
         if (claims) {
@@ -551,13 +532,13 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T43: Оставшиеся вопросы
-    43: (b) => {
+    'open_questions': (b) => {
         const v = str(b.data, 'openQuestions');
         return v ? [fact('Study', 'open questions', v, b.instanceId, b.blockType)] : [];
     },
 
     // T44: Новизна
-    44: (b) => {
+    'novelty': (b) => {
         const v = str(b.data, 'novelty');
         const triplets = v ? [fact('Study', 'novelty', v, b.instanceId, b.blockType)] : [];
         sequenceTriplets(b, triplets);
@@ -565,14 +546,14 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T45: Версии
-    45: (b) => {
+    'versions': (b) => {
         return kvPairs(b.data.versions).map(({ key, value }) =>
             fact('Study', `версия: ${key}`, value, b.instanceId, b.blockType)
         );
     },
 
     // T46: Предложения для будущих исследований
-    46: (b) => {
+    'future_research_suggestions': (b) => {
         const triplets = splitLines(b.data.futureResearch).map((r) =>
             fact('Study', 'future research proposal', r, b.instanceId, b.blockType)
         );
@@ -581,7 +562,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T47: Связи с предыдущими исследованиями
-    47: (b) => {
+    'reference': (b) => {
         const triplets = splitLines(b.data.references).map((ref) =>
             fact('Study', 'references', ref, b.instanceId, b.blockType)
         );
@@ -590,13 +571,13 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T48: Связь со старением
-    48: (b) => {
+    'link_with_aging': (b) => {
         const v = str(b.data, 'agingConnection');
         return v ? [fact('Study', 'aging connection', v, b.instanceId, b.blockType)] : [];
     },
 
     // T49: Изображение
-    49: (b) => {
+    'image': (b) => {
         const triplets: DerivedTriplet[] = [];
         const imageKey = str(b.data, 'imageKey');
         if (imageKey) triplets.push(fact('Study', 'image', imageKey, b.instanceId, b.blockType));
@@ -609,7 +590,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T50: Код
-    50: (b) => {
+    'code': (b) => {
         const lang = str(b.data, 'codeLanguage');
         const code = str(b.data, 'code');
         if (!code) return [];
@@ -617,20 +598,20 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T51: Источники финансирования
-    51: (b) => {
+    'funding': (b) => {
         return splitLines(b.data.funding).map((f) =>
             fact('Study', 'funding source', f, b.instanceId, b.blockType)
         );
     },
 
     // T52: Конфликт интересов
-    52: (b) => {
+    'interest_conflict': (b) => {
         const v = str(b.data, 'conflictOfInterest');
         return v ? [fact('Study', 'conflict of interest', v, b.instanceId, b.blockType)] : [];
     },
 
     // T53: Информационная ценность
-    53: (b) => {
+    'scientific_knowledge_value': (b) => {
         const triplets: DerivedTriplet[] = [];
         const fields: Array<[string, string]> = [
             ['uncertaintyReduced', 'reduced uncertainty'],
@@ -647,7 +628,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T54: Действие (s/p/o триплет)
-    54: (b) => {
+    'action': (b) => {
         const s = str(b.data, 'subject');
         const p = str(b.data, 'predicate');
         const o = str(b.data, 'object');
@@ -657,7 +638,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T55: Группа животных
-    55: (b) => {
+    'animal_group': (b) => {
         const triplets: DerivedTriplet[] = [];
         const name = str(b.data, 'groupName');
         if (name) triplets.push(fact('Study', 'animal group', name, b.instanceId, b.blockType));
@@ -669,7 +650,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T56: Шаг эксперимента
-    56: (b) => {
+    'experiment_step': (b) => {
         const triplets: DerivedTriplet[] = [];
         const stepName = str(b.data, 'stepName');
         if (stepName) triplets.push(fact(b.instanceId, 'step', stepName, b.instanceId, b.blockType));
@@ -682,7 +663,7 @@ const converters: Record<number, ConverterFn> = {
     },
 
     // T57: Результат (находка)
-    57: (b) => {
+    'finding': (b) => {
         const triplets: DerivedTriplet[] = [];
         const parameter = str(b.data, 'parameter');
         if (!parameter) return [];
@@ -855,7 +836,7 @@ export function statementsToBlocks(statements: KnowledgeStatement[]): ArticleBlo
         if (subj === 'Study' && pred === 'objective') {
             blocks.push({
                 instanceId: `imp-${order}`,
-                blockType: 2,
+                blockType: 'goal',
                 data: { subject: subj, predicate: pred, object: obj },
                 order: order++,
             });
@@ -866,7 +847,7 @@ export function statementsToBlocks(statements: KnowledgeStatement[]): ArticleBlo
         if (pred === 'hypothesis') {
             blocks.push({
                 instanceId: `imp-${order}`,
-                blockType: 7,
+                blockType: 'hypothesis',
                 data: { hypothesis: obj },
                 order: order++,
             });
@@ -882,7 +863,7 @@ export function statementsToBlocks(statements: KnowledgeStatement[]): ArticleBlo
         if (subj === 'Study' && pred === 'type') {
             blocks.push({
                 instanceId: `imp-${order}`,
-                blockType: 11,
+                blockType: 'research_design',
                 data: { studyType: obj },
                 order: order++,
             });
@@ -890,13 +871,13 @@ export function statementsToBlocks(statements: KnowledgeStatement[]): ArticleBlo
         }
 
         if (subj === 'Study' && pred === 'randomized') {
-            const existing = blocks.find((b) => b.blockType === 11);
+            const existing = blocks.find((b) => b.blockType === 'research_design');
             if (existing) {
                 existing.data.randomization = obj === 'yes';
             } else {
                 blocks.push({
                     instanceId: `imp-${order}`,
-                    blockType: 11,
+                    blockType: 'research_design',
                     data: { randomization: obj === 'yes' },
                     order: order++,
                 });
@@ -905,13 +886,13 @@ export function statementsToBlocks(statements: KnowledgeStatement[]): ArticleBlo
         }
 
         if (subj === 'Study' && pred === 'blinded') {
-            const existing = blocks.find((b) => b.blockType === 11);
+            const existing = blocks.find((b) => b.blockType === 'research_design');
             if (existing) {
                 existing.data.blinding = obj === 'yes';
             } else {
                 blocks.push({
                     instanceId: `imp-${order}`,
-                    blockType: 11,
+                    blockType: 'research_design',
                     data: { blinding: obj === 'yes' },
                     order: order++,
                 });
@@ -922,7 +903,7 @@ export function statementsToBlocks(statements: KnowledgeStatement[]): ArticleBlo
         // Прямой триплет (fallback)
         blocks.push({
             instanceId: `imp-${order}`,
-            blockType: 4,
+            blockType: 'statement',
             data: { subject: subj, predicate: pred, object: obj },
             order: order++,
         });
@@ -932,7 +913,7 @@ export function statementsToBlocks(statements: KnowledgeStatement[]): ArticleBlo
     if (metadataDois.length || metadataTitles.length || metadataAuthors.length) {
         blocks.unshift({
             instanceId: `imp-meta`,
-            blockType: 1,
+            blockType: 'metadata',
             data: {
                 doi: metadataDois.join('; '),
                 title: metadataTitles.join('; '),
@@ -962,7 +943,7 @@ export function blocksToText(blocks: ArticleBlockData[], articleUuid?: string): 
     for (const block of sorted) {
         const d = block.data;
         switch (block.blockType) {
-            case 1: {
+            case 'metadata': {
                 const parts: string[] = [];
                 if (d.doi) parts.push(`DOI: ${d.doi}`);
                 if (d.title) parts.push(`Title: ${d.title}`);
@@ -970,10 +951,10 @@ export function blocksToText(blocks: ArticleBlockData[], articleUuid?: string): 
                 if (parts.length) lines.push(parts.join(' | '));
                 break;
             }
-            case 3:
+            case 'text':
                 if (d.content) lines.push(String(d.content));
                 break;
-            case 4:
+            case 'statement':
                 if (d.subject && d.predicate && d.object) {
                     lines.push(`${d.subject} → ${d.predicate} → ${d.object}`);
                 }
@@ -1001,7 +982,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 function getArticleTitle(blocks: ArticleBlockData[]): string {
     for (const b of blocks) {
-        if (b.blockType === 1) {
+        if (b.blockType === 'metadata') {
             const t = b.data.title;
             if (typeof t === 'string' && t.trim()) return t.trim();
         }
@@ -1261,7 +1242,7 @@ export function statementsToResolvedText(
                 lines.push(`    - ${blockLabelMap.get(u) || resolveField(u, new Set<string>())}`);
                 continue;
             }
-            if (ref.blockType === 4) {
+            if (ref.blockType === 'statement') {
                 const s = str(ref.data, 'subject');
                 const p = str(ref.data, 'predicate');
                 const o = str(ref.data, 'object');
@@ -1278,7 +1259,7 @@ export function statementsToResolvedText(
                 lines.push(`    - ${part(s)} → ${p} → ${part(o)}`);
                 continue;
             }
-            if (ref.blockType === 22 || ref.blockType === 54) {
+            if (ref.blockType === 'entity' || ref.blockType === 'action') {
                 const s = str(ref.data, 'subject');
                 const p = str(ref.data, 'predicate');
                 const o = str(ref.data, 'object');
@@ -1306,7 +1287,7 @@ export function statementsToResolvedText(
         const renderFinding = (uuid: string): string => {
             const blk = blockById.get(uuid);
             if (!blk) return resolveField(uuid, new Set<string>());
-            if (blk.blockType === 57) {
+            if (blk.blockType === 'finding') {
                 const d = blk.data;
                 const parameter = typeof d.parameter === 'string' ? d.parameter.trim() : '';
                 if (!parameter) return resolveField(uuid, new Set<string>());
@@ -1429,7 +1410,7 @@ export function statementsToResolvedText(
     };
     const renderRemainingBlock = (blk: ArticleBlockData): string[] => {
         const d = blk.data;
-        if (blk.blockType === 19) {
+        if (blk.blockType === 'animal_model') {
             const species = str(d, 'species');
             if (!species) return [];
             const lines = [`- **${species}**`];
@@ -1439,7 +1420,7 @@ export function statementsToResolvedText(
             if (conditions) lines.push(`  - Условия: ${conditions}`);
             return lines;
         }
-        if (blk.blockType === 4) {
+        if (blk.blockType === 'statement') {
             const s = str(d, 'subject');
             const p = str(d, 'predicate');
             const o = str(d, 'object');
@@ -1452,7 +1433,7 @@ export function statementsToResolvedText(
             };
             return [`- ${part(s)} → ${p} → ${part(o)}`];
         }
-        if (blk.blockType === 22 || blk.blockType === 54) {
+        if (blk.blockType === 'entity' || blk.blockType === 'action') {
             const s = str(d, 'subject');
             const p = str(d, 'predicate');
             const o = str(d, 'object');
@@ -1465,7 +1446,7 @@ export function statementsToResolvedText(
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 23) {
+        if (blk.blockType === 'definition') {
             const term = str(d, 'term');
             const def = str(d, 'definition');
             if (!term || !def) return renderSequence(blk);
@@ -1473,7 +1454,7 @@ export function statementsToResolvedText(
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 38) {
+        if (blk.blockType === 'claim') {
             const s = str(d, 'claimSubject');
             const p = str(d, 'claimPredicate');
             const o = str(d, 'claimObject');
@@ -1485,7 +1466,7 @@ export function statementsToResolvedText(
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 7) {
+        if (blk.blockType === 'hypothesis') {
             const h = str(d, 'hypothesis');
             if (!h) return renderSequence(blk);
             const exp = str(d, 'disproofExplanation');
@@ -1494,47 +1475,47 @@ export function statementsToResolvedText(
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 16) {
+        if (blk.blockType === 'biological_mechanism') {
             const m = str(d, 'mechanism');
             const lines = m ? [`- **Механизм:** ${m}`] : [];
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 39) {
+        if (blk.blockType === 'limitations') {
             const l = str(d, 'limitations');
             const lines = l ? splitLines(l).map((x) => `- ${x}`) : [];
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 40) {
+        if (blk.blockType === 'side_findings') {
             const f = str(d, 'sideFindings');
             const lines = f ? splitLines(f).map((x) => `- ${x}`) : [];
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 44) {
+        if (blk.blockType === 'novelty') {
             const n = str(d, 'novelty');
             const lines = n ? [`- **Новизна:** ${n}`] : [];
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 46) {
+        if (blk.blockType === 'future_research_suggestions') {
             const f = str(d, 'futureResearch');
             const lines = f ? splitLines(f).map((x) => `- ${x}`) : [];
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 47) {
+        if (blk.blockType === 'reference') {
             const r = str(d, 'references');
             const lines = r ? splitLines(r).map((x) => `- ${x}`) : [];
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 48) {
+        if (blk.blockType === 'link_with_aging') {
             const a = str(d, 'agingConnection');
             return a ? [`- **Связь со старением:** ${a}`] : [];
         }
-        if (blk.blockType === 37) {
+        if (blk.blockType === 'statistical_processing') {
             const p = str(d, 'statProcessing');
             if (!p) return renderSequence(blk);
             const lines = [`- **Статистическая обработка:** ${p}`];
@@ -1543,7 +1524,7 @@ export function statementsToResolvedText(
             lines.push(...renderSequence(blk));
             return lines;
         }
-        if (blk.blockType === 51) {
+        if (blk.blockType === 'funding') {
             const f = str(d, 'funding');
             return f ? [`- **Финансирование:** ${f}`] : [];
         }
@@ -1556,11 +1537,11 @@ export function statementsToResolvedText(
     const sequenceRefs = new Set<string>();
     for (const b of blocks) for (const u of sequenceUuids(b)) sequenceRefs.add(u);
     const remainingBlocks = blocks
-        .filter((b) => ![1, 2, 14, 18, 27, 55, 56, 57].includes(b.blockType) && hasAnyValue(b.data))
-        .filter((b) => !(b.blockType === 4 && sequenceRefs.has(b.instanceId)))
+        .filter((b) => !['metadata', 'goal', 'experiment', 'intervention', 'probability_value', 'animal_group', 'experiment_step', 'finding'].includes(b.blockType) && hasAnyValue(b.data))
+        .filter((b) => !(b.blockType === 'statement' && sequenceRefs.has(b.instanceId)))
         .sort((a, b) => a.order - b.order);
     if (remainingBlocks.length > 0) {
-        const byType = new Map<number, ArticleBlockData[]>();
+        const byType = new Map<string, ArticleBlockData[]>();
         for (const blk of remainingBlocks) {
             const arr = byType.get(blk.blockType);
             if (arr) arr.push(blk);

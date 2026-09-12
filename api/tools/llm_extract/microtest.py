@@ -34,6 +34,8 @@ from services.llm_triplet_extraction_prompt_dsl import build_dsl_prompt  # noqa:
 from services.llm_triplet_extraction_service import LLMTripletExtractionService  # noqa: E402
 from tools.llm_extract.dsl_parser import parse_dsl_text  # noqa: E402
 from tools.llm_extract import metrics as m  # noqa: E402
+
+from src.schemas.block_types import BlockType, coerce_block_type, ALL_TYPES as DESIGNATIONS
 from infrastructure.config import settings  # noqa: E402
 from domain.rules import ai_pricing as pricing  # noqa: E402
 
@@ -181,7 +183,7 @@ def _guess_output(frag: str) -> int:
 def _report_blocks(blocks: list[dict]) -> None:
     t4 = []
     for b in blocks:
-        if b.get("blockType") != 4:
+        if b.get("blockType", "") != BlockType.STATEMENT:
             continue
         d = b.get("data") or {}
         t4.append((str(d.get("subject", "")), str(d.get("predicate", "")),

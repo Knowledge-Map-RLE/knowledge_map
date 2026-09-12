@@ -8,6 +8,7 @@ import json
 import re
 from pathlib import Path
 
+from src.schemas.block_types import BlockType, coerce_block_type, ALL_TYPES as DESIGNATIONS
 _UUID_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.IGNORECASE
 )
@@ -67,7 +68,7 @@ def get_causal_pairs(blocks):
     """Extract (source, target, relationType) from T58 blocks."""
     pairs = []
     for b in blocks:
-        if int(b.get("blockType", 0)) == 58:
+        if b.get("blockType", "") == BlockType.RELATION:
             d = b.get("data") or {}
             src = str(d.get("source_name", d.get("source", "")) or "")
             tgt = str(d.get("target_name", d.get("target", "")) or "")
@@ -99,7 +100,7 @@ def smart_align_t58(ref_blocks, ext_blocks):
     
     # Remove non-matching ref T58 blocks
     ref_t58_ids = {id(rb) for ri, (_, _, _, rb) in enumerate(ref_pairs) if ri not in matched_ref_indices}
-    new_ref = [b for b in ref_blocks if int(b.get("blockType", 0)) != 58 or id(b) not in ref_t58_ids]
+    new_ref = [b for b in ref_blocks if b.get("blockType", "") != BlockType.RELATION or id(b) not in ref_t58_ids]
     
     # Add non-matching ext T58 blocks
     ext_t58_to_add = [eb for ei, (_, _, _, eb) in enumerate(ext_pairs) if ei not in matched_ext_indices]
@@ -120,7 +121,7 @@ def smart_align_t58(ref_blocks, ext_blocks):
 def smart_align_t57(ref_blocks, ext_blocks):
     """Ensure ref T57 has similar interventionRef ratio as ext."""
     def count_t57_with_ref(blocks):
-        t57 = [b for b in blocks if int(b.get("blockType", 0)) == 57]
+        t57 = [b for b in blocks if b.get("blockType", "") == BlockType.FINDING]
         with_ref = [b for b in t57 if (b.get("data") or {}).get("interventionRef")]
         return len(with_ref), len(t57)
     
@@ -133,11 +134,11 @@ def smart_align_t57(ref_blocks, ext_blocks):
     if ref_linked < ext_linked:
         ext_t57_with_ref = [
             b for b in ext_blocks
-            if int(b.get("blockType", 0)) == 57 and (b.get("data") or {}).get("interventionRef")
+            if b.get("blockType", "") == BlockType.FINDING and (b.get("data") or {}).get("interventionRef")
         ]
         ref_t57_params = set()
         for b in ref_blocks:
-            if int(b.get("blockType", 0)) == 57:
+            if b.get("blockType", "") == BlockType.FINDING:
                 d = b.get("data") or {}
                 ref_t57_params.add(d.get("parameter", ""))
         

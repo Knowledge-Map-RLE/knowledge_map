@@ -24,7 +24,7 @@ export const OUTCOME_COLORS: Record<NodeOutcome, number> = {
 };
 
 export interface ArticleMapNode extends BlockData {
-    blockType: number;
+    blockType: string;
     order: number;
     label: string;
     outcome: NodeOutcome;
@@ -117,8 +117,8 @@ function parsePairs(raw: string): Array<{ groupRef: string; interventionRef: str
     return [];
 }
 
-function typeNameOf(blockType: number): string {
-    return getBlockTypeDef(blockType)?.name ?? `T${blockType}`;
+function typeNameOf(blockType: string): string {
+    return getBlockTypeDef(blockType)?.name ?? blockType;
 }
 
 // ── Подписи блоков (с разрешением uuid-ссылок и защитой от циклов) ──────────
@@ -148,32 +148,32 @@ function blockShortLabel(
     const d = block.data;
     const lab = (refKey: string): string => resolveRefLabel(d, refKey, blocksById, guard);
     switch (block.blockType) {
-        case 57: {
+        case 'finding': {
             const param = sval(d, 'parameter').trim();
             const dir = sval(d, 'direction').trim();
             const grp = lab('subjectRef');
             return [param, dir, grp].filter(Boolean).join(' · ') || '(находка)';
         }
-        case 14:
+        case 'experiment':
             return sval(d, 'experimentName').trim() || '(эксперимент)';
-        case 55:
+        case 'animal_group':
             return sval(d, 'groupName').trim() || '(группа)';
-        case 38:
+        case 'claim':
             return [sval(d, 'claimSubject'), sval(d, 'claimPredicate'), sval(d, 'claimObject')]
                 .map(x => x.trim()).filter(Boolean).join(' ') || '(утверждение)';
-        case 7:
+        case 'hypothesis':
             return sval(d, 'hypothesis').trim() || '(гипотеза)';
-        case 27: {
+        case 'probability_value': {
             const p = nval(d, 'pValue');
             return p !== null ? `p = ${p}` : '(p-value)';
         }
-        case 23:
+        case 'definition':
             return sval(d, 'term').trim() || '(определение)';
-        case 56:
+        case 'experiment_step':
             return sval(d, 'stepName').trim() || '(шаг)';
-        case 2:
-        case 22:
-        case 54: {
+        case 'goal':
+        case 'entity':
+        case 'action': {
             const s = lab('subject');
             const p = sval(d, 'predicate').trim();
             const o = lab('object');
@@ -598,7 +598,7 @@ export function buildArticleMapGraph(blocks: ArticleBlockData[]): ArticleMapGrap
     const groups = new Map<string, { purpose: string; n: string; species: string | null }>();
     const findingUidToParam = new Map<string, string>();
     for (const b of sorted) {
-        if (b.blockType === 55) {
+        if (b.blockType === 'animal_group') {
             const name = sval(b.data, 'groupName').trim();
             if (!name) continue;
             const speciesRef = sval(b.data, 'speciesRef').trim();
@@ -610,7 +610,7 @@ export function buildArticleMapGraph(blocks: ArticleBlockData[]): ArticleMapGrap
                 species: detectSpecies(speciesText),
             });
         }
-        if (b.blockType === 57) {
+        if (b.blockType === 'finding') {
             const param = sval(b.data, 'parameter').trim();
             if (param) findingUidToParam.set(b.instanceId, param);
         }
@@ -628,7 +628,7 @@ export function buildArticleMapGraph(blocks: ArticleBlockData[]): ArticleMapGrap
         'снижено': 'понижено в',
     };
     for (const b of sorted) {
-        if (b.blockType !== 57) continue;
+        if (b.blockType !== 'finding') continue;
         const param = sval(b.data, 'parameter').trim();
         const direction = directionMap[sval(b.data, 'direction').trim()] ?? '';
         if (!param || !direction) continue;
@@ -636,7 +636,7 @@ export function buildArticleMapGraph(blocks: ArticleBlockData[]): ArticleMapGrap
         const pvRef = sval(b.data, 'pValue').trim();
         if (pvRef) {
             const p27 = byId.get(pvRef);
-            if (p27 && p27.blockType === 27) {
+            if (p27 && p27.blockType === 'probability_value') {
                 const pv = nval(p27.data, 'pValue');
                 if (pv !== null) pvalue = pv;
             }
@@ -662,7 +662,7 @@ export function buildArticleMapGraph(blocks: ArticleBlockData[]): ArticleMapGrap
     const experiments = new Map<string, ExpRec>();
     const expByFindingUid = new Map<string, string>();
     for (const b of sorted) {
-        if (b.blockType !== 14) continue;
+        if (b.blockType !== 'experiment') continue;
         const name = sval(b.data, 'experimentName').trim();
         if (!name) continue;
         const exp: ExpRec = {
@@ -685,7 +685,7 @@ export function buildArticleMapGraph(blocks: ArticleBlockData[]): ArticleMapGrap
     const claims: ClaimRec[] = [];
     const claimByKey = new Map<string, ClaimRec>();
     for (const b of sorted) {
-        if (b.blockType !== 38) continue;
+        if (b.blockType !== 'claim') continue;
         const subj = sval(b.data, 'claimSubject').trim();
         const pred = sval(b.data, 'claimPredicate').trim();
         const obj = sval(b.data, 'claimObject').trim();
@@ -711,7 +711,7 @@ export function buildArticleMapGraph(blocks: ArticleBlockData[]): ArticleMapGrap
     }
     let hypothesisBlock: ArticleBlockData | null = null;
     for (const b of sorted) {
-        if (b.blockType === 7) {
+        if (b.blockType === 'hypothesis') {
             hypothesisBlock = b;
             break;
         }
@@ -837,18 +837,18 @@ function outcomeForBlock(
     verdict: string,
 ): { outcome: NodeOutcome; label: string } {
     switch (block.blockType) {
-        case 57: {
+        case 'finding': {
             const f = findingByUid.get(block.instanceId);
             if (!f) break;
             return { outcome: evidenceToOutcome(f.evidence), label: EVIDENCE_LABELS[f.evidence] ?? f.evidence };
         }
-        case 14: {
+        case 'experiment': {
             const name = sval(block.data, 'experimentName').trim();
             const exp = name ? experiments.get(name) : undefined;
             if (!exp) break;
             return { outcome: verdictToOutcome(exp.verdict), label: exp.verdict };
         }
-        case 38: {
+        case 'claim': {
             const subj = sval(block.data, 'claimSubject').trim();
             const pred = sval(block.data, 'claimPredicate').trim();
             const obj = sval(block.data, 'claimObject').trim();
@@ -858,7 +858,7 @@ function outcomeForBlock(
             if (!c) break;
             return { outcome: claimOutcomeToNode(c.outcome), label: c.outcome };
         }
-        case 7:
+        case 'hypothesis':
             if (hypothesisBlock && block.instanceId === hypothesisBlock.instanceId) {
                 const outcome: NodeOutcome = verdict.includes('не подтвердилась') ? 'fail'
                     : verdict.includes('частично') ? 'partial'

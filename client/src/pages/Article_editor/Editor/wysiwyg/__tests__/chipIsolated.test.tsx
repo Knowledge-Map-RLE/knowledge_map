@@ -8,7 +8,7 @@ const GRP_YOUNG = '00065966-ea98-83eb-a060-d391f64300f7';
 
 const refs: UuidRef[] = [
     { id: 'doc', label: 'doc' },
-    { id: GRP_YOUNG, label: 'A. russatus young', blockType: 55 },
+    { id: GRP_YOUNG, label: 'A. russatus young', blockType: 'animal_group' },
 ];
 
 const noop = vi.fn();

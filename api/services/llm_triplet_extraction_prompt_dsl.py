@@ -16,6 +16,7 @@ entailment_rate, polarity_fidelity). Нейтральные/вредные ин�
 Функции:
   build_dsl_prompt(article_title, fragment_text) -> str
 """
+from src.schemas.block_types import BlockType, LEGACY_INT_TO_KEY
 
 
 def build_dsl_prompt(article_title: str, fragment_text: str) -> str:
@@ -63,7 +64,7 @@ Format:
 Number tags sequentially B1, B2, ... in output order. Never reuse a tag.
 
 # BLOCK TYPE (only this one)
-  T4   atomic_statement   sub,pred,obj,ctx,epi,sn        (one fact per line, one predicate)
+  statement   atomic_statement   sub,pred,obj,ctx,epi,sn        (one fact per line, one predicate)
 
 # FIELD KEYS
   sub=subject  pred=predicate  obj=object
@@ -72,7 +73,7 @@ Number tags sequentially B1, B2, ... in output order. Never reuse a tag.
 
 # HOW TO FORMALIZE EACH PLAN ITEM
 For EVERY plan item (a line tagged [item:ID]):
-- Produce ONE atomic T4 assertion per atomic entity.
+- Produce ONE atomic statement assertion per atomic entity.
 - Extract REAL subject/predicate/object from the item text: what acts / what is
   needed / what it targets. Rephrase only minimally so the triplet is grammatical
   and self-contained; never invent entities or claims.
@@ -83,14 +84,14 @@ For EVERY plan item (a line tagged [item:ID]):
   on Y in aged mice". If the extracted entity contains a clause or a genitive
   chain (e.g. "development of a therapy that slows aging in humans"), split it
   into shorter atomic noun phrases (e.g. "the therapy", "slowing aging in
-  humans") and emit SEPARATE T4 lines for each.
+  humans") and emit SEPARATE statement lines for each.
 - SPLIT COORDINATED LISTS: if a subject or object is a list joined by "and",
   "и", "&", "/" (e.g. "molecular and cellular hallmarks of aging"), split it
-  into separate entities and emit a SEPARATE T4 line for EACH, keeping the same
+  into separate entities and emit a SEPARATE statement line for EACH, keeping the same
   predicate and the other side:
     molecular and cellular hallmarks of aging -> are elucidated ->
-        B T4 | sub=molecular hallmarks of aging | pred=are elucidated | obj=<real value> | ctx=item:P1
-        B T4 | sub=cellular hallmarks of aging | pred=are elucidated | obj=<real value> | ctx=item:P1
+        B statement | sub=molecular hallmarks of aging | pred=are elucidated | obj=<real value> | ctx=item:P1
+        B statement | sub=cellular hallmarks of aging | pred=are elucidated | obj=<real value> | ctx=item:P1
 - NEVER use placeholders like "none", "null", "empty", "-", "N/A" for sub, pred
   or obj. If the item text has no explicit object, choose the direct
   target/result of the action as the object; if the object is genuinely
@@ -108,12 +109,12 @@ For EVERY plan item (a line tagged [item:ID]):
 Plan item:  [item:G1] Develop a therapy that slows biological aging in humans
             [item:P2] Test candidate drugs on mouse models
 Expected output (illustrative):
-  B T4 B1 | sub=the therapy | pred=targets | obj=slowing biological aging in humans | ctx=item:G1 | epi=future_proposal
-  B T4 B2 | sub=candidate drugs | pred=are tested on | obj=mouse models | ctx=item:P2 | epi=future_proposal
+  B statement B1 | sub=the therapy | pred=targets | obj=slowing biological aging in humans | ctx=item:G1 | epi=future_proposal
+  B statement B2 | sub=candidate drugs | pred=are tested on | obj=mouse models | ctx=item:P2 | epi=future_proposal
 
 # RULES
-1. RULE: one T4 per atomic entity; split coordinated lists ("and", "и", "&", "/")
-   into separate T4 lines.
+1. RULE: one statement per atomic entity; split coordinated lists ("and", "и", "&", "/")
+   into separate statement lines.
 2. Never output the trivial is->kind self-label (goal/sub_goal/task/action).
 3. Do not invent facts, numbers, or outcomes not present in the item text.
 4. Keep the same language as the plan text (Russian stays Russian, English stays English).
@@ -137,37 +138,37 @@ Format:
 Number tags sequentially B1, B2, ... in output order. Never reuse a tag. Reference a block by its TAG (e.g. B5). That is the ONLY way to link things.
 
 # BLOCK TYPES (minimal set)
-  T4   atomic_statement   sub,pred,obj,epi,src,ctx        (one fact per line, one predicate)
-  T38  claim              sub,pred,obj,neg,src             (author assertion)
-  T22  entity             sub,pred,obj                     (concept identity, "X is Y")
-  T57  result             param,dir,sig,detail,figure,exp,grp,interv,src
-  T14  experiment         name,type,grp,steps,findings,src
-  T55  group              name,n,cond,purpose
-  T56  step               name,details
-  T18  intervention       type,target,dosage,regimen
-  T2   objective          sub,pred,obj
-  T7   hypothesis         hyp,disproof
-  T1   article            doi,title,authors
+  statement          sub,pred,obj,epi,src,ctx                    (one fact per line, one predicate)
+  claim              sub,pred,obj,neg,src                        (author assertion)
+  entity             sub,pred,obj                                (concept identity, "X is Y")
+  finding            param,dir,sig,detail,figure,exp,grp,interv,src
+  experiment         name,type,grp,steps,findings,src
+  animal_group       name,n,cond,purpose
+  experiment_step    name,details
+  intervention       type,target,dosage,regimen
+  goal               sub,pred,obj
+  hypothesis         hyp,disproof
+  metadata           doi,title,authors
 
 # FIELD KEYS
-T4/T38/T22/T2:  sub=subject  pred=predicate  obj=object
-T4:  epi=epistemicStatus (direct_statement|observation|experimental_result|statistical_result|author_interpretation|hypothesis|background_claim|limitation|future_proposal)  src=source quote  ctx=context (species/tissue/age)
-T38:  neg=isNegated (true|false)  src=source quote
-T57:  param=parameter  dir=direction (increased|decreased|no_change|mixed|trend|unknown)  sig=significance (significant|non_significant|trend|not_reported)  detail=numbers  figure=figureRef  exp=experimentRef tag  grp=groupRefs  interv=interventionRef  src=quote
-T14:  name=experimentName  type=experimentType  grp=experimentalPairs  steps  findings  src
-T55:  name=groupName  n=sample size  cond=conditions  purpose
-T18:  type=interventionType  target  dosage  regimen=dosageRegimen
-T7:   hyp=hypothesis  disproof=disproofExplanation
-T1:   doi (full https://doi.org/...)  title  authors
+statement/claim/entity/goal:  sub=subject  pred=predicate  obj=object
+statement:  epi=epistemicStatus (direct_statement|observation|experimental_result|statistical_result|author_interpretation|hypothesis|background_claim|limitation|future_proposal)  src=source quote  ctx=context (species/tissue/age)
+claim:  neg=isNegated (true|false)  src=source quote
+finding:  param=parameter  dir=direction (increased|decreased|no_change|mixed|trend|unknown)  sig=significance (significant|non_significant|trend|not_reported)  detail=numbers  figure=figureRef  exp=experimentRef tag  grp=groupRefs  interv=interventionRef  src=quote
+experiment:  name=experimentName  type=experimentType  grp=experimentalPairs  steps  findings  src
+animal_group:  name=groupName  n=sample size  cond=conditions  purpose
+intervention:  type=interventionType  target  dosage  regimen=dosageRegimen
+hypothesis:  hyp=hypothesis  disproof=disproofExplanation
+metadata:  doi (full https://doi.org/...)  title  authors
 
 # REFS
 - `exp=B8`, `grp=[B5,B6]`, `findings=[B9]` etc. Reference existing tags only.
-- A T58 causal/regulatory edge (causes, inhibits, reduces, increases, enhances, prevents, maintains, resists, suppresses, correlates_with, associated_with, ...):
-  B T58 <TAG> | src=<entity name> | tgt=<entity name> | rel=<relationType> | conf=<high|medium|low> | ev=<evidence quote>
+- A relation causal/regulatory edge (causes, inhibits, reduces, increases, enhances, prevents, maintains, resists, suppresses, correlates_with, associated_with, ...):
+  B relation <TAG> | src=<entity name> | tgt=<entity name> | rel=<relationType> | conf=<high|medium|low> | ev=<evidence quote>
   Use the specific verb the article uses; reserve correlates_with/associated_with for mere statistics. Source/target are short entity names, not tags.
 
 # CORE RULES — START MINIMAL, KEEP ONLY WHAT HELPS METRICS
-1. T4 = ONE semantic predicate per line. Never join with and/or/,. Extract EVERY atomic fact: factual claims, experimental results, species/tissue/age differences ("A. russatus has higher X"), intervention effects, statistical findings, hypotheses, interpretations, background claims.
+1. statement = ONE semantic predicate per line. Never join with and/or/,. Extract EVERY atomic fact: factual claims, experimental results, species/tissue/age differences ("A. russatus has higher X"), intervention effects, statistical findings, hypotheses, interpretations, background claims.
 2. Introduce each term by text once; later use its tag reference.
 3. No target count; completeness matters more than inflation control now.
 4. Ground truth: do not invent. If uncertain about a result direction/relation, still record what is stated or leave it out — do not fabricate.
@@ -175,7 +176,7 @@ T1:   doi (full https://doi.org/...)  title  authors
 
 # NORMALIZED ATTRIBUTE TRIPLETS (for species/age/comparison differences)
 When an attribute/quantity of a subject (usually A. russatus) is compared or stated, encode it as:
-  B T4 <TAG> | sub=<short subject> | pred=has | obj=<higher|lower> <concept>
+  B statement <TAG> | sub=<short subject> | pred=has | obj=<higher|lower> <concept>
 Examples:
   "A. russatus has higher repair capacity"
   "A. russatus has lower senescence"
@@ -200,16 +201,16 @@ Rules:
 When a sentence lists MULTIPLE attributes of a subject separated by commas or "and"
 (e.g. "lower inflammaging, fibrosis, cellular senescence"; "preserved motor and muscular
 function"; "high clusterin expression, CMA, and transcriptomic resilience"), emit a
-SEPARATE atomic T4 for EACH listed attribute. NEVER collapse a list into a single T4.
+SEPARATE atomic statement for EACH listed attribute. NEVER collapse a list into a single statement.
 Examples:
   "reduced frailty with lower inflammaging, fibrosis, and cellular senescence" ->
-    B T4 | sub=A. russatus | pred=has | obj=lower inflammaging
-    B T4 | sub=A. russatus | pred=has | obj=lower fibrosis
-    B T4 | sub=A. russatus | pred=has | obj=lower cellular senescence
+    B statement | sub=A. russatus | pred=has | obj=lower inflammaging
+    B statement | sub=A. russatus | pred=has | obj=lower fibrosis
+    B statement | sub=A. russatus | pred=has | obj=lower cellular senescence
   "preserved motor and muscular function" ->
-    B T4 | sub=A. russatus | pred=has | obj=higher motor function
-    B T4 | sub=A. russatus | pred=has | obj=higher muscular function
-Order of "and" between attributes is broken into separate T4s too (and "motor and
+    B statement | sub=A. russatus | pred=has | obj=higher motor function
+    B statement | sub=A. russatus | pred=has | obj=higher muscular function
+Order of "and" between attributes is broken into separate statements too (and "motor and
 muscular function" = motor function AND muscular function).
 
 # PRESERVED FUNCTION = higher (absence of age-related decline)
@@ -234,8 +235,61 @@ NOTES:
 
 
 DSL_TYPEKEY_TO_BLOCKTYPE = {
-    "T1": 1, "T2": 2, "T3": 3, "T4": 4, "T7": 7, "T14": 14, "T16": 16,
-    "T18": 18, "T19": 19, "T22": 22, "T23": 23, "T27": 27, "T37": 37,
-    "T38": 38, "T39": 39, "T40": 40, "T44": 44, "T46": 46, "T47": 47,
-    "T51": 51, "T54": 54, "T55": 55, "T56": 56, "T57": 57, "T58": 58, "T59": 59,
+    # Новые обозначения по Спецификации.md
+    "metadata": BlockType.METADATA,
+    "goal": BlockType.GOAL,
+    "text": BlockType.TEXT,
+    "statement": BlockType.STATEMENT,
+    "hypothesis": BlockType.HYPOTHESIS,
+    "prerequisite": BlockType.PREREQUISITE,
+    "expectations": BlockType.EXPECTATIONS,
+    "research_design": BlockType.RESEARCH_DESIGN,
+    "material": BlockType.MATERIAL,
+    "method": BlockType.METHOD,
+    "experiment": BlockType.EXPERIMENT,
+    "inclusion_exclusion_criteria": BlockType.INCLUSION_EXCLUSION_CRITERIA,
+    "biological_mechanism": BlockType.BIOLOGICAL_MECHANISM,
+    "impact_goal": BlockType.IMPACT_GOAL,
+    "intervention": BlockType.INTERVENTION,
+    "animal_model": BlockType.ANIMAL_MODEL,
+    "animal_group": BlockType.ANIMAL_GROUP,
+    "entity": BlockType.ENTITY,
+    "definition": BlockType.DEFINITION,
+    "assumptions": BlockType.ASSUMPTIONS,
+    "sample_size": BlockType.SAMPLE_SIZE,
+    "data_source": BlockType.DATA_SOURCE,
+    "probability_value": BlockType.PROBABILITY_VALUE,
+    "variance": BlockType.VARIANCE,
+    "effect_size": BlockType.EFFECT_SIZE,
+    "statistical_power": BlockType.STATISTICAL_POWER,
+    "confidence_interval": BlockType.CONFIDENCE_INTERVAL,
+    "magnitude_value": BlockType.MAGNITUDE_VALUE,
+    "formula": BlockType.FORMULA,
+    "causal_graph": BlockType.CAUSAL_GRAPH,
+    "identifiability_criteria": BlockType.IDENTIFIABILITY_CRITERIA,
+    "result": BlockType.RESULT,
+    "statistical_processing": BlockType.STATISTICAL_PROCESSING,
+    "claim": BlockType.CLAIM,
+    "limitations": BlockType.LIMITATIONS,
+    "side_findings": BlockType.SIDE_FINDINGS,
+    "side_effects": BlockType.SIDE_EFFECTS,
+    "post_claims": BlockType.POST_CLAIMS,
+    "open_questions": BlockType.OPEN_QUESTIONS,
+    "novelty": BlockType.NOVELTY,
+    "versions": BlockType.VERSIONS,
+    "future_research_suggestions": BlockType.FUTURE_RESEARCH_SUGGESTIONS,
+    "reference": BlockType.REFERENCE,
+    "link_with_aging": BlockType.LINK_WITH_AGING,
+    "image": BlockType.IMAGE,
+    "code": BlockType.CODE,
+    "funding": BlockType.FUNDING,
+    "interest_conflict": BlockType.INTEREST_CONFLICT,
+    "scientific_knowledge_value": BlockType.SCIENTIFIC_KNOWLEDGE_VALUE,
+    "action": BlockType.ACTION,
+    "experiment_step": BlockType.EXPERIMENT_STEP,
+    "finding": BlockType.FINDING,
+    "relation": BlockType.RELATION,
+    "temporal_relation": BlockType.TEMPORAL_RELATION,
+    # Старые ключи DSL (T1..T59) для обратной совместимости.
+    **{f"T{n}": key for n, key in LEGACY_INT_TO_KEY.items()},
 }

@@ -31,6 +31,8 @@ Hard gates (все должны выполняться):
 from __future__ import annotations
 
 import json
+
+from src.schemas.block_types import BlockType, coerce_block_type, ALL_TYPES as DESIGNATIONS
 import math
 import re
 import sys
@@ -40,13 +42,14 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
 from scipy.optimize import linear_sum_assignment
 
+
 # ─── Константы ────────────────────────────────────────────────────────────────
 
 _UUID_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.IGNORECASE
 )
 
-ALL_TYPES = frozenset(range(1, 60))
+ALL_TYPES = frozenset(DESIGNATIONS)
 
 TRIPLET_MATCH_THRESHOLD = 0.55
 ENTITY_MATCH_THRESHOLD = 0.55
@@ -381,36 +384,33 @@ def load_reference(path: Optional[Path] = None, slug: Optional[str] = None) -> L
     return load_blocks(gold_case_paths(slug or resolve_reference_slug())["reference"])
 
 
-def _block_type(block: Dict[str, Any]) -> int:
-    try:
-        return int(block.get("blockType", 0) or 0)
-    except (TypeError, ValueError):
-        return 0
+def _block_type(block: Dict[str, Any]) -> str:
+    return coerce_block_type(block.get("blockType", ""))
 
 
-BLOCK_TEXT_FIELDS: Dict[int, Tuple[str, ...]] = {
-    1: ("title", "doi", "authors"),
-    2: ("subject", "predicate", "object"),
-    4: ("subject", "predicate", "object"),
-    7: ("hypothesis", "disproofExplanation"),
-    14: ("experimentName", "experimentType"),
-    16: ("mechanism",),
-    18: ("interventionType", "mechanism", "target"),
-    19: ("species", "timeline", "conditions"),
-    22: ("subject", "predicate", "object"),
-    23: ("term", "definition"),
-    37: ("statProcessing", "expectationsComparison"),
-    38: ("claimSubject", "claimPredicate", "claimObject"),
-    39: ("limitations",),
-    40: ("finding", "context"),
-    44: ("novelty",),
-    46: ("futureResearch",),
-    51: ("funding",),
-    54: ("subject", "predicate", "object"),
-    55: ("groupName", "conditions"),
-    56: ("stepName", "details"),
-    57: ("parameter", "direction", "detail"),
-    58: ("source_name", "relationType", "target_name", "source", "target"),
+BLOCK_TEXT_FIELDS: Dict[str, Tuple[str, ...]] = {
+    "metadata": ("title", "doi", "authors"),
+    "goal": ("subject", "predicate", "object"),
+    "statement": ("subject", "predicate", "object"),
+    "hypothesis": ("hypothesis", "disproofExplanation"),
+    "experiment": ("experimentName", "experimentType"),
+    "biological_mechanism": ("mechanism",),
+    "intervention": ("interventionType", "mechanism", "target"),
+    "animal_model": ("species", "timeline", "conditions"),
+    "entity": ("subject", "predicate", "object"),
+    "definition": ("term", "definition"),
+    "statistical_processing": ("statProcessing", "expectationsComparison"),
+    "claim": ("claimSubject", "claimPredicate", "claimObject"),
+    "limitations": ("limitations",),
+    "side_findings": ("finding", "context"),
+    "novelty": ("novelty",),
+    "future_research_suggestions": ("futureResearch",),
+    "funding": ("funding",),
+    "action": ("subject", "predicate", "object"),
+    "animal_group": ("groupName", "conditions"),
+    "experiment_step": ("stepName", "details"),
+    "finding": ("parameter", "direction", "detail"),
+    "relation": ("source", "relationType", "target"),
 }
 
 
@@ -682,7 +682,7 @@ def extract_leaf_triplets(blocks: Sequence[Dict[str, Any]]) -> List[Tuple[str, s
     """Извлекает «листовые» триплеты T4 — S/P/O без UUID-ссылок."""
     out: List[Tuple[str, str, str]] = []
     for b in blocks:
-        if _block_type(b) != 4:
+        if _block_type(b) != BlockType.STATEMENT:
             continue
         d = b.get("data") or {}
         s, p, o = d.get("subject"), d.get("predicate"), d.get("object")
@@ -700,7 +700,7 @@ def extract_resolved_triplets(
     """Извлекает триплеты T4 с UUID-ссылками и/или Sn-тегами {Bn}, резолвит их в текст."""
     out: List[Tuple[str, str, str]] = []
     for b in blocks:
-        if _block_type(b) != 4:
+        if _block_type(b) != BlockType.STATEMENT:
             continue
         d = b.get("data") or {}
         s, p, o = d.get("subject"), d.get("predicate"), d.get("object")
@@ -859,7 +859,7 @@ def extract_causal_edges(
 ) -> List[Dict[str, str]]:
     edges: List[Dict[str, str]] = []
     for b in blocks:
-        if _block_type(b) != 58:
+        if _block_type(b) != BlockType.RELATION:
             continue
         d = b.get("data") or {}
         src = _resolve_ref(str(d.get("source_name") or d.get("source") or ""), tag_map)
@@ -947,7 +947,7 @@ def evaluate_interventions(
     не характерна), компонента исключается из композита, а не принудительно
     зануляет его через геометрическое среднее.
     """
-    findings = [b for b in blocks if _block_type(b) == 57]
+    findings = [b for b in blocks if _block_type(b) == BlockType.FINDING]
     if not findings:
         return None
 
@@ -961,7 +961,7 @@ def evaluate_interventions(
     # Симметрия: если в эталоне нет findings с interventionRef — объекта
     # сравнения нет, компонента исключается (как «нет эталона»).
     if reference_blocks is not None:
-        ref_findings = [b for b in reference_blocks if _block_type(b) == 57]
+        ref_findings = [b for b in reference_blocks if _block_type(b) == BlockType.FINDING]
         ref_with_ref = [
             b for b in ref_findings
             if str((b.get("data") or {}).get("interventionRef") or "").strip()
@@ -980,7 +980,7 @@ def evaluate_interventions(
             continue
         resolved += 1
         target_type = _block_type(target)
-        if target_type in (18, 54):
+        if target_type in (BlockType.INTERVENTION, BlockType.ACTION):
             consistent += 1
             finding_text = block_to_text(b, uuid_map=by_id)
             target_text = block_to_text(target, uuid_map=by_id)

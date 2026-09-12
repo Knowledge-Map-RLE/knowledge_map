@@ -5,6 +5,8 @@ Usage:
 """
 import json
 import sys
+
+from src.schemas.block_types import BlockType, coerce_block_type, ALL_TYPES as DESIGNATIONS
 from pathlib import Path
 
 try:
@@ -60,7 +62,7 @@ def save_blocks_to_neo4j(driver, doc_id: str, blocks: list[dict]):
             block_uid = block.get("instanceId") or f"gen-{doc_id[:8]}-{i}"
             batch.append({
                 "uid": block_uid,
-                "bt": int(block.get("blockType", 0)),
+                "bt": coerce_block_type(block.get("blockType", "")),
                 "data": json.dumps(block.get("data", {}), ensure_ascii=False),
                 "order": int(block.get("order", i)),
             })

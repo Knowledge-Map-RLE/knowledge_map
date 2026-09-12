@@ -6,7 +6,7 @@ export interface UuidRef {
     id: string;
     label: string;
     chainText?: string;
-    blockType?: number;
+    blockType?: string;
 }
 
 export interface FieldKeyInfo {
@@ -18,7 +18,7 @@ export interface FieldKeyInfo {
 export interface WysiwygApi {
     setField: (lineId: string, fieldKey: string, value: BlockDataValue) => void;
     requestFocus: (lineId: string, fieldKey?: string) => void;
-    insertBelow: (lineId: string, typeNumber?: number) => void;
+    insertBelow: (lineId: string, designation?: string) => void;
     removeLine: (lineId: string) => void;
     duplicateLine: (lineId: string) => void;
     moveLine: (lineId: string, delta: -1 | 1) => void;

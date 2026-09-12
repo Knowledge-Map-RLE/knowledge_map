@@ -8,6 +8,7 @@ import sys
 import re
 from pathlib import Path
 
+from src.schemas.block_types import BlockType, coerce_block_type, ALL_TYPES as DESIGNATIONS
 _UUID_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.IGNORECASE
 )
@@ -24,13 +25,13 @@ def load_blocks(path):
 def block_type_counts(blocks):
     counts = {}
     for b in blocks:
-        t = int(b.get("blockType", 0))
+        t = coerce_block_type(b.get("blockType", ""))
         counts[t] = counts.get(t, 0) + 1
     return counts
 
 def has_uuid_in_spo(block):
     """Check if a T4 block has UUID in subject, predicate, or object."""
-    if int(block.get("blockType", 0)) != 4:
+    if coerce_block_type(block.get("blockType", "")) != BlockType.STATEMENT:
         return False
     data = block.get("data") or {}
     for key in ("subject", "predicate", "object"):
@@ -54,7 +55,7 @@ def merge_references(ref_path, ext_path, out_path, target_ext_count=None):
     # Group extraction blocks by type
     ext_by_type = {}
     for b in ext_blocks:
-        t = int(b.get("blockType", 0))
+        t = coerce_block_type(b.get("blockType", ""))
         ext_by_type.setdefault(t, []).append(b)
     
     # For each type, calculate how many to add
@@ -87,10 +88,10 @@ def merge_references(ref_path, ext_path, out_path, target_ext_count=None):
     if target_ext_count and len(ref_blocks) + len(blocks_to_add) > target_ext_count:
         excess = len(ref_blocks) + len(blocks_to_add) - target_ext_count
         # Remove excess from T4 first (most numerous)
-        for bt in [4, 22, 38, 54, 58]:
+        for bt in [BlockType.STATEMENT, BlockType.ENTITY, BlockType.CLAIM, BlockType.ACTION, BlockType.RELATION]:
             if excess <= 0:
                 break
-            type_blocks = [b for b in blocks_to_add if int(b.get("blockType", 0)) == bt]
+            type_blocks = [b for b in blocks_to_add if coerce_block_type(b.get("blockType", "")) == bt]
             # Remove from end
             to_remove = min(excess, len(type_blocks))
             for b in type_blocks[-to_remove:]:

@@ -8,7 +8,7 @@ import type { UuidRef } from '../WysiwygContext';
 const METFORMIN = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 
 const refs: UuidRef[] = [
-    { id: METFORMIN, label: 'Метформин', blockType: 4 },
+    { id: METFORMIN, label: 'Метформин', blockType: 'statement' },
 ];
 
 function makeApi(): WysiwygApi {

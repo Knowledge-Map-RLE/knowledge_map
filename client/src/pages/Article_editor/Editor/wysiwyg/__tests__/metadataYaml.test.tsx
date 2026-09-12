@@ -31,7 +31,7 @@ const META_ID = '00065966-ea98-8000-9000-000000000001';
 const initialBlocks: ArticleBlockData[] = [
     {
         instanceId: META_ID,
-        blockType: 1,
+        blockType: 'metadata',
         order: 0,
         data: {
             doi: '10.1016/j.cmet.2024.01.001',

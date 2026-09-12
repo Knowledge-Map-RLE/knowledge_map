@@ -11,6 +11,8 @@ ArticleBlock целевой статьи, классифицирует нахо�
 """
 import json
 import re
+
+from src.schemas.block_types import BlockType, coerce_block_type, ALL_TYPES as DESIGNATIONS
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -274,21 +276,21 @@ class OutcomePrototype:
     # ── Реестры ────────────────────────────────────────────────────────────
     def build_registries(self) -> None:
         for b in self.blocks:
-            bt = b["block_type"]
+            bt = coerce_block_type(b["block_type"])
             data = b["data"]
-            if bt == 55:
+            if bt == BlockType.ANIMAL_GROUP:
                 name = (data.get("groupName") or "").strip()
                 if name:
                     if data.get("purpose"):
                         self.group_purpose[name] = str(data["purpose"]).strip()
                     if data.get("n"):
                         self.group_n[name] = str(data["n"]).strip()
-            elif bt == 57:
+            elif bt == BlockType.FINDING:
                 param = (data.get("parameter") or "").strip()
                 if param:
                     self.finding_uid_to_param[b["uid"]] = param
                     self.block_t57_by_param.setdefault(param, []).append(b["uid"])
-            elif bt == 38:
+            elif bt == BlockType.CLAIM:
                 subj, pred, obj = (data.get("claimSubject") or "").strip(), \
                     (data.get("claimPredicate") or "").strip(), (data.get("claimObject") or "").strip()
                 if subj and pred and obj:
@@ -299,7 +301,7 @@ class OutcomePrototype:
                         object=obj, negated=neg, confidence=0.8 if notes else 1.0,
                         notes=notes or None,
                     ))
-            elif bt == 14:
+            elif bt == BlockType.EXPERIMENT:
                 name = (data.get("experimentName") or "").strip()
                 if name:
                     exp = Experiment(
@@ -329,7 +331,7 @@ class OutcomePrototype:
                                 if g:
                                     exp.exp_groups.append(g)
                     self.experiments[name] = exp
-            elif bt == 7:
+            elif bt == BlockType.HYPOTHESIS:
                 self.hypothesis = data
 
         # 'назначение' / 'размер выборки' из стейтментов (если нет в блоках)
@@ -381,7 +383,7 @@ class OutcomePrototype:
                     if not pv_ref:
                         continue
                     for b in self.blocks:
-                        if b["uid"] == pv_ref and b["block_type"] == 27:
+                        if b["uid"] == pv_ref and coerce_block_type(b["block_type"]) == BlockType.PROBABILITY_VALUE:
                             pv = parse_pvalue(str(b["data"].get("pValue", "")))
                             if pv is not None:
                                 f.pvalue = pv
@@ -617,7 +619,7 @@ class OutcomePrototype:
             "control_pairs": sum(1 for e in self.experiments.values() if e.control_groups),
             "comparison_meta": sum(1 for f in self.findings if f.comparison),
         }
-        stats_blocks = [b for b in self.blocks if b["block_type"] == 37]
+        stats_blocks = [b for b in self.blocks if coerce_block_type(b["block_type"]) == BlockType.STATISTICAL_PROCESSING]
         stats_stmts = any(s["predicate"] == "статистическая обработка" for s in self.statements)
         flags["statistics"] = {
             "ok": bool(stats_blocks) or stats_stmts,

@@ -12,6 +12,7 @@ export interface AIChatCostBreakdown {
   input: string;
   output: string;
   tool: string;
+  cached: string;
 }
 
 export interface AIChatMessage {
@@ -22,8 +23,10 @@ export interface AIChatMessage {
   tokens?: number | null;
   cost?: string | null;
   input_tokens?: number | null;
+  cached_tokens?: number | null;
   tool_tokens?: number | null;
   total_tokens?: number | null;
+  cache_used?: boolean;
   cost_breakdown?: AIChatCostBreakdown | null;
 }
 
@@ -62,6 +65,7 @@ export interface AIChatStreamUsage {
   prompt_tokens: number;
   completion_tokens: number;
   tool_tokens: number;
+  cached_tokens?: number;
   total_tokens: number;
   cost: string;
   cost_breakdown?: AIChatCostBreakdown | null;

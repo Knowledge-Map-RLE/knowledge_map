@@ -5,8 +5,8 @@
   2. у каждого кейса есть article.md, meta.json, structural_lines.json;
   3. meta.json содержит обязательные поля, slug совпадает с каталогом,
      schema_version поддерживается;
-  4. каждый блок проходит pydantic-схему (UUID instanceId, blockType 1..59,
-     непустой data, целочисленный order);
+4. каждый блок проходит pydantic-схему (UUID instanceId, blockType —
+      строковое обозначение типа, непустой data, целочисленный order);
   5. instanceId уникальны; UUID-ссылки не «висячие» (dangling_refs == 0);
   6. checksums.sha256 совпадает с фактическим содержимым файлов.
 

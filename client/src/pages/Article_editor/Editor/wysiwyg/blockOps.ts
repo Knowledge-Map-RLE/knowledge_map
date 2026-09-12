@@ -11,7 +11,7 @@ function reindex(blocks: ArticleBlockData[]): ArticleBlockData[] {
 
 export interface InsertOptions {
     afterIndex?: number | null;
-    blockType: number;
+    blockType: string;
     instanceId?: string;
     author?: AuthorInfo;
     data?: Record<string, BlockDataValue>;
@@ -78,6 +78,6 @@ export function setBlockField(
     );
 }
 
-export function setBlockType(blocks: ArticleBlockData[], instanceId: string, blockType: number): ArticleBlockData[] {
+export function setBlockType(blocks: ArticleBlockData[], instanceId: string, blockType: string): ArticleBlockData[] {
     return blocks.map((b) => (b.instanceId === instanceId && b.blockType !== blockType ? { ...b, blockType } : b));
 }
