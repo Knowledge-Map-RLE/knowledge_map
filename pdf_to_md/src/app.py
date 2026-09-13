@@ -12,12 +12,14 @@ from .api.middleware import LoggingMiddleware, SecurityMiddleware, RateLimitMidd
 from .core.config import settings
 from .core.logger import setup_logging, get_logger
 from .services.conversion_service import ConversionService
+from observability import init_telemetry, instrument_fastapi, instrument_grpc_client
 
-# Setup logging
-logger = setup_logging(
-    log_level=settings.log_level,
-    service_name=settings.service_name
-)
+# Setup observability
+setup_logging(service_name=settings.service_name)
+init_telemetry()
+instrument_fastapi()
+instrument_grpc_client()
+logger = get_logger("app")
 
 
 @asynccontextmanager

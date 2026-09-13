@@ -5,7 +5,7 @@ import warnings
 
 import graph_layout_pb2 as graph__layout__pb2
 
-GRPC_GENERATED_VERSION = '1.74.0'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

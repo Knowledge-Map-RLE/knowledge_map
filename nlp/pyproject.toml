@@ -11,8 +11,8 @@ python = ">=3.12,<4.0"
 
 # gRPC dependencies
 grpcio = "1.74.0"
-grpcio-tools = "1.74.0"
-protobuf = "6.31.1"
+grpcio-tools = "1.71.0"
+protobuf = "5.29.6"
 
 # Configuration
 pydantic = "2.11.7"
@@ -33,6 +33,7 @@ networkx = "3.5"
 setuptools = "^80.9.0"
 rdflib = "^7.5.0"
 graphviz = "^0.21"
+knowledge-map-observability = { path = "../shared/observability", develop = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"

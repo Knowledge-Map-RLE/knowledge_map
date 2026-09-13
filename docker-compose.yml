@@ -49,6 +49,8 @@ services:
     build:
       context: ./auth
       dockerfile: Dockerfile
+      additional_contexts:
+        shared: ./shared
     container_name: knowledge_map_auth
     restart: unless-stopped
     ports:
@@ -86,6 +88,8 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
+      additional_contexts:
+        shared: ./shared
     container_name: knowledge_map_api
     restart: unless-stopped
     ports:
@@ -100,6 +104,8 @@ services:
       - AUTH_SERVICE_PORT=50057
       - AI_MODEL_SERVICE_HOST=ai
       - AI_MODEL_SERVICE_PORT=50059
+      - AI_UI_MODEL=${AI_UI_MODEL:-gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest}
+      - LLM_EXTRACT_MODEL=${LLM_EXTRACT_MODEL:-gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest}
       - NLP_SERVICE_HOST=nlp
       - NLP_SERVICE_PORT=50055
       - S3_ENDPOINT_URL=http://s3:9000
@@ -108,6 +114,9 @@ services:
       - S3_REGION=us-east-1
       - QDRANT_URL=http://qdrant:6333
       - DEBUG=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://alloy:4317
+      - OTEL_SERVICE_NAME=api
+      - LOG_FORMAT=logfmt
     networks:
       - knowledge_map_network
     depends_on:
@@ -149,6 +158,8 @@ services:
     build:
       context: ./billing
       dockerfile: Dockerfile
+      additional_contexts:
+        shared: ./shared
     container_name: knowledge_map_billing
     restart: unless-stopped
     ports:
@@ -157,6 +168,9 @@ services:
       - BILLING_HOST=0.0.0.0
       - BILLING_PORT=50058
       - LOG_LEVEL=INFO
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://alloy:4317
+      - OTEL_SERVICE_NAME=billing
+      - LOG_FORMAT=logfmt
       - NEO4J_URI=bolt://neo4j:7687
       - NEO4J_USER=neo4j
       - NEO4J_PASSWORD=password
@@ -186,23 +200,32 @@ services:
     build:
       context: ./ai
       dockerfile: Dockerfile
+      additional_contexts:
+        shared: ./shared
     container_name: knowledge_map_ai
     restart: unless-stopped
     ports:
-      - "50059:50059"  # gRPC port for AI service
+      - "50059:50059"  # OpenAI-совместимый HTTP-шлюз AI-микросервиса
     environment:
-      - GRPC_HOST=0.0.0.0
-      - GRPC_PORT=50059
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - AI_HOST=0.0.0.0
+      - AI_PORT=50059
+      - DEFAULT_PROVIDER=${AI_DEFAULT_PROVIDER:-yandex-ai}
+      - DEFAULT_MODEL=${AI_DEFAULT_MODEL:-gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest}
+      - YANDEX_CLOUD_FOLDER=${YANDEX_CLOUD_FOLDER:-b1gulkghbtm74u59sakh}
+      - YANDEX_CLOUD_API_KEY=${YANDEX_CLOUD_API_KEY:-}
+      - YANDEX_CLOUD_MODEL=${YANDEX_CLOUD_MODEL:-deepseek-v4-flash/latest}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      # Local GGUF-провайдер регистрируется только при ENVIRONMENT=development.
+      - HF_MODEL_REPO=${HF_MODEL_REPO:-}
+      - HF_GGUF_FILE=${HF_GGUF_FILE:-}
+      - HUGGING_FACE_TOKEN=${HUGGING_FACE_TOKEN:-}
       - MODEL_CACHE_DIR=/app/models
-      - DEFAULT_MODEL=Qwen/Qwen2.5-0.5B-Instruct
-      - MODEL_DEVICE=auto
-      - LOG_LEVEL=INFO
-      - DEFAULT_MAX_TOKENS=2048
-      - DEFAULT_TEMPERATURE=0.7
-      - MAX_CONTEXT_LENGTH=18000
-      - CHUNK_OVERLAP=200
-      - NVIDIA_VISIBLE_DEVICES=all
-      - CUDA_VISIBLE_DEVICES=0
+      - LOCAL_CONTEXT_LENGTH=${LOCAL_CONTEXT_LENGTH:-32768}
+      - LOCAL_N_GPU_LAYERS=${LOCAL_N_GPU_LAYERS:-0}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://alloy:4317
+      - OTEL_SERVICE_NAME=ai
+      - LOG_FORMAT=logfmt
     networks:
       - knowledge_map_network
     volumes:
@@ -215,19 +238,19 @@ services:
         reservations:
           memory: 4G
           cpus: '2.0'
-    # Enable GPU support if available
-    runtime: nvidia
     healthcheck:
-      test: ["CMD", "python", "-c", "import grpc; channel = grpc.insecure_channel('localhost:50059'); channel.close()"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:50059/health"]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
-      start_period: 120s  # More time for model download
+      start_period: 30s
 
   nlp:
     build:
       context: ./nlp
       dockerfile: Dockerfile
+      additional_contexts:
+        shared: ./shared
     container_name: knowledge_map_nlp
     restart: unless-stopped
     ports:
@@ -248,6 +271,9 @@ services:
       - NLP_BATCH_SIZE=32
       - NLP_LOG_LEVEL=INFO
       - MODEL_CACHE_DIR=/app/models
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://alloy:4317
+      - OTEL_SERVICE_NAME=nlp
+      - LOG_FORMAT=logfmt
     networks:
       - knowledge_map_network
     volumes:
@@ -275,6 +301,8 @@ services:
       dockerfile: Dockerfile
     container_name: knowledge_map_client
     restart: unless-stopped
+    environment:
+      OTEL_COLLECTOR_HOST: alloy
     ports:
       - "3000:80"
     networks:
@@ -330,6 +358,104 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+
+  # ── Observability stack (OpenTelemetry → Loki / Prometheus / Tempo / Grafana) ──
+  loki:
+    image: grafana/loki:3.4.2
+    container_name: knowledge_map_loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - ./data/monitoring/loki:/loki
+    networks:
+      - knowledge_map_network
+
+  tempo:
+    image: grafana/tempo:2.7.1
+    container_name: knowledge_map_tempo
+    restart: unless-stopped
+    command: -config.file=/etc/tempo/tempo.yaml
+    ports:
+      - "3200:3200"
+    volumes:
+      - ./monitoring/tempo/tempo.yaml:/etc/tempo/tempo.yaml:ro
+      - ./data/monitoring/tempo:/var/tempo
+    networks:
+      - knowledge_map_network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3200/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: knowledge_map_prometheus
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-remote-write-receiver
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./data/monitoring/prometheus:/prometheus
+    networks:
+      - knowledge_map_network
+
+  alloy:
+    image: grafana/alloy:v1.5.1
+    container_name: knowledge_map_alloy
+    restart: unless-stopped
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - --stability.level=public-preview
+      - /etc/alloy/config.alloy
+    ports:
+      - "127.0.0.1:4317:4317"   # OTLP gRPC (только localhost — для dev-процессов вне docker)
+      - "127.0.0.1:4318:4318"   # OTLP HTTP (browser + dev)
+      - "12345:12345"           # UI Alloy
+    volumes:
+      - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/dev_logs:/dev_logs:ro
+      - ./data/monitoring/alloy:/var/lib/alloy/data
+    networks:
+      - knowledge_map_network
+    depends_on:
+      - loki
+      - prometheus
+      - tempo
+
+  grafana:
+    image: grafana/grafana:11.3.1
+    container_name: knowledge_map_grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./data/monitoring/grafana:/var/lib/grafana
+    networks:
+      - knowledge_map_network
+    depends_on:
+      - loki
+      - prometheus
+      - tempo
 
 volumes:
   neo4j_data:

@@ -1,6 +1,7 @@
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 
 import { getToken } from '../token';
+import { getSessionId } from '../telemetry';
 
 const withBase = (path: string) => {
   if (!API_BASE_URL) {
@@ -15,6 +16,10 @@ export function authHeaders(headersInit?: HeadersInit): HeadersInit {
   const token = getToken();
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
+  }
+  const sessionId = getSessionId();
+  if (sessionId) {
+    headers.set('X-Client-Session-ID', sessionId);
   }
   return headers;
 }

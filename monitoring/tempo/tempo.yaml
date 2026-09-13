@@ -1,0 +1,42 @@
+# Tempo — распределённые трассировки (OTLP приём на gRPC :4317 / HTTP :4318).
+stream_over_http_enabled: true
+
+server:
+  http_listen_port: 3200
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+
+metrics_generator:
+  storage:
+    path: /var/tempo/metrics
+  registry:
+    external_labels:
+      cluster: knowledge-map
+  traces_storage:
+    path: /var/tempo/metrics-traces
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors: [service-graphs, span-metrics]
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/tempo/traces
+    block:
+      bloom_filter_false_positive: 0.01
+    wal:
+      path: /var/tempo/wal
+
+compactor:
+  compaction:
+    block_retention: 48h

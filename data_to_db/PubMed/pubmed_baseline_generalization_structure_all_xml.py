@@ -12,9 +12,10 @@ import time
 
 # ================== Конфигурация ==================
 
+LOG_DIR = Path(os.getenv("LOG_DIR", "logs"))
 LOCAL_DIR = Path(__file__).resolve().parents[2] / "data" / "PubMed"
-OUTPUT_FILE = Path("./logs/pubmed_baseline_generalization_structure_all_xml.log")
-LOG_FILE = Path("./logs/pubmed_baseline_generalization_structure_all_xml_processing.log")
+OUTPUT_FILE = LOG_DIR / "pubmed_baseline_generalization_structure_all_xml.log"
+LOG_FILE = LOG_DIR / "pubmed_baseline_generalization_structure_all_xml_processing.log"
 MAX_WORKERS = min(cpu_count(), 4)  # Ограничиваем количество процессов
 
 # ================== Логирование ==================

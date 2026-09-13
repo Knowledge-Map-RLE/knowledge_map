@@ -2,6 +2,7 @@ import grpc
 from concurrent import futures
 import sys
 import os
+import logging
 sys.path.insert(0, os.path.dirname(__file__))
 import auth_pb2
 import auth_pb2_grpc
@@ -331,7 +332,7 @@ def serve():
     listen_addr = f"{settings.GRPC_HOST}:{settings.GRPC_PORT}"
     server.add_insecure_port(listen_addr)
     server.start()
-    print(f"Auth gRPC сервер запущен на {listen_addr}")
+    logging.getLogger("auth").info("Auth gRPC сервер запущен на %s", listen_addr)
     server.wait_for_termination()
 
 

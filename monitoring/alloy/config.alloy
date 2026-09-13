@@ -1,0 +1,157 @@
+// Grafana Alloy — единый шлюз наблюдаемости Knowledge Map.
+// Принимает OTLP (gRPC :4317, HTTP :4318) от всех сервисов и браузера,
+// раздаёт: traces → Tempo, metrics → Prometheus (remote_write),
+// и собирает контейнерные логи (json-file) → Loki.
+
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+
+  output {
+    traces  = [otelcol.exporter.otlphttp.tempo.input]
+    metrics = [otelcol.processor.batch.metrics.input]
+  }
+}
+
+otelcol.processor.batch "metrics" {
+  output {
+    metrics = [otelcol.exporter.prometheus.prometheus.input]
+  }
+}
+
+otelcol.exporter.otlphttp "tempo" {
+  client {
+    endpoint    = "http://tempo:4318"
+    compression = "gzip"
+  }
+}
+
+otelcol.exporter.prometheus "prometheus" {
+  forward_to = [prometheus.remote_write.prometheus.receiver]
+}
+
+prometheus.remote_write "prometheus" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+  }
+}
+
+// ── Логи контейнеров → Loki ─────────────────────────────────────────────────
+discovery.docker "docker_containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+loki.source.docker "default" {
+  host     = "unix:///var/run/docker.sock"
+  targets  = discovery.docker.docker_containers.targets
+  forward_to = [loki.process.container_labels.receiver]
+
+  relabel_rules = loki.relabel.container_name.rules
+}
+
+// ── Логи локальных dev-процессов (data/dev_logs/*.log) → Loki ──────────────
+local.file_match "dev_logs" {
+  path_targets = [{"__path__" = "/dev_logs/*.log"}]
+}
+
+loki.source.file "dev_logs" {
+  targets    = local.file_match.dev_logs.targets
+  forward_to = [loki.process.dev_logfmt.receiver]
+}
+
+loki.process "dev_logfmt" {
+  stage.logfmt {
+    mapping = {
+      "timestamp"  = "ts",
+      "level"      = "level",
+      "logger"     = "logger",
+      "service"    = "service",
+      "msg"        = "msg",
+      "trace_id"   = "trace_id",
+      "span_id"    = "span_id",
+      "session_id" = "session_id",
+      "user_id"    = "user_id",
+    }
+  }
+
+  stage.labels {
+    values = {
+      level     = "level",
+      logger    = "logger",
+      service   = "service",
+      trace_id  = "trace_id",
+      span_id   = "span_id",
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.relabel "container_name" {
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    target_label  = "container"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_log_stream"]
+    target_label  = "stream"
+  }
+
+  forward_to = [loki.process.container_labels.receiver]
+}
+
+// Разбор logfmt: ts=... level=... logger=... service=... msg=... trace_id=... span_id=... session_id=... user_id=...
+loki.process "container_labels" {
+  stage.logfmt {
+    mapping = {
+      "timestamp"  = "ts",
+      "level"      = "level",
+      "logger"     = "logger",
+      "service"    = "service",
+      "msg"        = "msg",
+      "trace_id"   = "trace_id",
+      "span_id"    = "span_id",
+      "session_id" = "session_id",
+      "user_id"    = "user_id",
+    }
+  }
+
+  stage.labels {
+    values = {
+      level     = "level",
+      logger    = "logger",
+      service   = "service",
+      trace_id  = "trace_id",
+      span_id   = "span_id",
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+
+// ── Native /metrics (laying и др.) в Prometheus ──────────────────────────────
+// Раскомментировать, когда laying добавлен в docker-compose.
+//prometheus.scrape "laying" {
+//  targets = [
+//    { "__address__" = "laying:9090" },
+//  ]
+//  forward_to = [prometheus.remote_write.laying.receiver]
+//}
+//
+//prometheus.remote_write "laying" {
+//  client {
+//    url = "http://prometheus:9090/api/v1/write"
+//  }
+//}

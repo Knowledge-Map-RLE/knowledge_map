@@ -20,9 +20,10 @@ from s3_client import get_s3_client
 LOADER_DISABLED = False
 
 # ========== КОНФИГУРАЦИЯ ==========
+LOG_DIR = os.getenv("LOG_DIR", "logs")
 DATA_DIR        = Path("..") / "data" / "PubMed"
-LOG_FILE        = Path("./logs/article_to_neo4j.log")
-CHECKPOINT_FILE = Path("./logs/parse_checkpoint.txt")
+LOG_FILE        = Path(LOG_DIR) / "article_to_neo4j.log"
+CHECKPOINT_FILE = Path(LOG_DIR) / "parse_checkpoint.txt"
 
 MAX_WORKERS       = 2        # потоки парсинга файлов
 WRITER_COUNT      = 3        # число потоков-писателей

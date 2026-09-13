@@ -4,6 +4,13 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+# Observability (local dev): OTLP → Alloy localhost:4317
+$env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:4317"
+$env:OTEL_SERVICE_NAME = "data_to_db"
+$env:OTEL_SERVICE_VERSION = "0.1.0"
+$env:OTEL_METRIC_EXPORT_INTERVAL = "30000"
+$env:LOG_FORMAT = "logfmt"
+
 # Create logs directory if not exists
 if (-not (Test-Path "logs")) {
     New-Item -ItemType Directory -Force -Path "logs" | Out-Null

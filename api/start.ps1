@@ -4,6 +4,13 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+# Observability (local dev): OTLP → Alloy localhost:4317
+$env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:4317"
+$env:OTEL_SERVICE_NAME = "api"
+$env:OTEL_SERVICE_VERSION = "0.1.0"
+$env:OTEL_METRIC_EXPORT_INTERVAL = "30000"
+$env:LOG_FORMAT = "logfmt"
+
 # 1) Install dependencies via Poetry
 Write-Host "Updating lock file..."
 poetry lock --no-interaction
@@ -14,7 +21,7 @@ poetry install --only=main --no-root --no-interaction
 Write-Host "Generating proto files..."
 New-Item -ItemType Directory -Force -Path "utils/generated" | Out-Null
 
-python -m grpc_tools.protoc `
+poetry run python -m grpc_tools.protoc `
     -I../nlp/proto `
     -I./utils/proto `
     --python_out=./utils/generated `
@@ -86,4 +93,4 @@ if (-not $selectedPort) {
 
 # 7) Start server (no --reload: cold start is ~98s, --reload watcher kills worker mid-import)
 Write-Host "Starting uvicorn on port $selectedPort..."
-poetry run python -m uvicorn web.app:app --host 0.0.0.0 --port $selectedPort
+poetry run python -m uvicorn web.app:app --host 0.0.0.0 --port $selectedPort --no-access-log

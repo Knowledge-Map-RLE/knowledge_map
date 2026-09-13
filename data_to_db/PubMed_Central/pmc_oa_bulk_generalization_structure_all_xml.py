@@ -14,16 +14,13 @@ from collections import defaultdict
 
 # ================== Конфигурация ==================
 
+LOG_DIR = Path(os.getenv("LOG_DIR", "logs"))
 LOCAL_DIR = Path(__file__).resolve().parents[2] / "data" / "PubMed_Central"
-OUTPUT_FILE = Path("./logs/pmc_oa_bulk_generalization_structure_all_xml.log")
-LOG_FILE = Path("./logs/pmc_oa_bulk_generalization_structure_all_xml_processing.log")
+OUTPUT_FILE = LOG_DIR / "pmc_oa_bulk_generalization_structure_all_xml.log"
+LOG_FILE = LOG_DIR / "pmc_oa_bulk_generalization_structure_all_xml_processing.log"
 MAX_WORKERS = min(cpu_count(), 8)  # Увеличиваем количество процессов для ускорения
 
 # ================== Логирование ==================
-
-ROOT_DIR = Path(__file__).resolve().parents[1]  # worker_data_to_db
-OUTPUT_FILE = ROOT_DIR / "logs" / "pmc_oa_bulk_generalization_structure_all_xml.log"
-LOG_FILE = ROOT_DIR / "logs" / "pmc_oa_bulk_generalization_structure_all_xml_processing.log"
 
 OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 LOG_FILE.parent.mkdir(parents=True, exist_ok=True)

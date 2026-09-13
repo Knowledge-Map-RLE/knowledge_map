@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package ai_model;
+
+// AI Model Service for text generation using Hugging Face models
+service AIModelService {
+    // Generate text based on a prompt
+    rpc GenerateText(GenerateTextRequest) returns (GenerateTextResponse);
+
+    // Get list of available models
+    rpc GetModels(GetModelsRequest) returns (GetModelsResponse);
+
+    // Health check
+    rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+// Request for text generation
+message GenerateTextRequest {
+    // Model identifier (e.g., "meta-llama/Llama-3.2-1B-Instruct")
+    string model_id = 1;
+
+    // Input prompt for text generation
+    string prompt = 2;
+
+    // Maximum number of tokens to generate (optional)
+    optional int32 max_tokens = 3;
+
+    // Temperature for sampling (0.0 to 2.0, optional)
+    optional float temperature = 4;
+
+    // Top-p nucleus sampling (0.0 to 1.0, optional)
+    optional float top_p = 5;
+
+    // Top-k sampling (optional)
+    optional int32 top_k = 6;
+
+    // Repetition penalty (optional, default 1.0)
+    optional float repetition_penalty = 7;
+
+    // Whether to enable chunking for large prompts (optional, default true)
+    optional bool enable_chunking = 8;
+}
+
+// Response from text generation
+message GenerateTextResponse {
+    // Whether the generation was successful
+    bool success = 1;
+
+    // Generated text
+    string generated_text = 2;
+
+    // Status message or error description
+    string message = 3;
+
+    // Model that was used for generation
+    string model_used = 4;
+
+    // Number of input tokens
+    int32 input_tokens = 5;
+
+    // Number of generated tokens
+    int32 output_tokens = 6;
+
+    // Whether chunking was applied
+    bool chunked = 7;
+
+    // Number of chunks if chunking was applied
+    int32 num_chunks = 8;
+}
+
+// Request for getting available models
+message GetModelsRequest {
+    // Optional filter by model name/id
+    optional string filter = 1;
+}
+
+// Response with list of available models
+message GetModelsResponse {
+    // Whether the request was successful
+    bool success = 1;
+
+    // Status message
+    string message = 2;
+
+    // List of available models
+    repeated ModelInfo models = 3;
+}
+
+// Information about a model
+message ModelInfo {
+    // Model identifier
+    string model_id = 1;
+
+    // Human-readable model name
+    string name = 2;
+
+    // Model description
+    string description = 3;
+
+    // Whether the model is currently loaded
+    bool is_loaded = 4;
+
+    // Maximum context length in tokens
+    int32 max_context_length = 5;
+
+    // Device the model is running on (cpu, cuda, etc.)
+    string device = 6;
+}
+
+// Health check request
+message HealthCheckRequest {
+    // Optional service name to check
+    optional string service = 1;
+}
+
+// Health check response
+message HealthCheckResponse {
+    // Health status
+    string status = 1;
+
+    // Service name
+    string service = 2;
+
+    // Additional details
+    string details = 3;
+
+    // Timestamp
+    string timestamp = 4;
+}

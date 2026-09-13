@@ -13,6 +13,7 @@ test_input/
 __pycache__/
 
 .env
+.env.development
 .env.local
 api/.env
 auth/.env

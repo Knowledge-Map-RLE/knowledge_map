@@ -1,10 +1,18 @@
 import asyncio
+import logging
 import threading
 import time
 import socket
+from observability import init_telemetry, instrument_grpc_server, setup_logging
 from .grpc_server import serve
 from .user_service import UserService
 from .config import settings
+
+logger = logging.getLogger("auth")
+
+setup_logging(service_name="auth")
+init_telemetry()
+instrument_grpc_server()
 
 
 def start_grpc_server():
@@ -55,7 +63,7 @@ def cleanup_sessions():
 
 def main():
     """Основная функция запуска"""
-    print("Запуск сервиса авторизации...")
+    logger.info("Запуск сервиса авторизации...")
 
     # Ждём Neo4j, чтобы уменьшить шум ошибок при старте
     _wait_for_neo4j(timeout_sec=30)
@@ -68,14 +76,14 @@ def main():
     cleanup_thread = threading.Thread(target=cleanup_sessions, daemon=True)
     cleanup_thread.start()
 
-    print("Сервис авторизации запущен")
+    logger.info("Сервис авторизации запущен")
 
     # Держим основной поток живым
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("Завершение работы сервиса авторизации...")
+        logger.info("Завершение работы сервиса авторизации...")
 
 
 if __name__ == "__main__":

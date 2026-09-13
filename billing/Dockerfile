@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Poetry
 RUN pip install poetry==1.7.1
 
+# Copy shared-пакет observability (нужен для path-зависимости poetry)
+COPY --from=shared ./observability ../shared/observability
+
 # Copy dependency files
 COPY pyproject.toml poetry.lock* ./
 
@@ -29,7 +32,8 @@ RUN mkdir -p utils/generated \
         --python_out=./utils/generated \
         --grpc_python_out=./utils/generated \
         ./proto/auth.proto \
-    && touch utils/generated/__init__.py
+    && touch utils/generated/__init__.py \
+    && sed -i "s/^import auth_pb2 as auth__pb2$/from . import auth_pb2 as auth__pb2/g" utils/generated/auth_pb2_grpc.py
 
 # Copy source code
 COPY src/ ./src/

@@ -10,12 +10,13 @@ from .core.config import settings
 from .core.logger import setup_logging, get_logger
 from .services.conversion_service import ConversionService
 from .grpc_services.pdf_to_md_servicer import PDFToMarkdownServicer
+from observability import init_telemetry, instrument_grpc_server
 
-# Setup logging
-logger = setup_logging(
-    log_level=settings.log_level,
-    service_name=f"{settings.service_name}-grpc"
-)
+# Setup observability
+setup_logging(service_name=settings.service_name)
+init_telemetry()
+instrument_grpc_server()
+logger = get_logger("grpc_app")
 
 
 class GRPCApplication:

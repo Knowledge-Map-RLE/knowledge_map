@@ -5,6 +5,8 @@ from pathlib import Path
 
 from neo4j import GraphDatabase
 
+from _logfmt import LogfmtStreamHandler, logfmt_handler
+
 NEO4J_URI      = os.getenv("NEO4J_URI",      "bolt://127.0.0.1:7687")
 NEO4J_USER     = os.getenv("NEO4J_USER",     "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
@@ -41,12 +43,22 @@ def append_checkpoint(checkpoint_file: Path, fname: str) -> None:
 
 def setup_logging(log_file: Path, level: int = logging.INFO) -> logging.Logger:
     log_file.parent.mkdir(parents=True, exist_ok=True)
-    logging.basicConfig(
-        level=level,
-        format="%(asctime)s %(levelname)-8s %(message)s",
-        handlers=[
-            logging.FileHandler(log_file, encoding="utf-8"),
-            logging.StreamHandler(),
-        ],
+    root = logging.getLogger()
+    root.setLevel(level)
+
+    has_logfmt = any(
+        isinstance(handler, LogfmtStreamHandler) for handler in root.handlers
     )
+    if not has_logfmt:
+        root.addHandler(logfmt_handler(service_name="data_to_db"))
+
+    has_file = any(
+        isinstance(handler, logging.FileHandler) and getattr(handler, "baseFilename", "") == str(log_file)
+        for handler in root.handlers
+    )
+    if not has_file:
+        file_handler = logging.FileHandler(log_file, encoding="utf-8")
+        file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s %(message)s"))
+        root.addHandler(file_handler)
+
     return logging.getLogger(__name__)

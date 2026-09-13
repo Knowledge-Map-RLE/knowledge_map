@@ -1,20 +1,3 @@
-[project]
-name = "ai"
-version = "0.1.0"
-description = "AI Agent microservice - OpenAI-compatible chat gateway (LM Studio, DeepSeek, ...)"
-authors = [{ name = "Dobrosvet", email = "dimaprokofev@yandex.ru" }]
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "fastapi>=0.104.0",
-    "uvicorn[standard]>=0.24.0",
-    "pydantic>=2.5.0",
-    "pydantic-settings>=2.1.0",
-    "python-dotenv>=1.0.0",
-    "httpx>=0.27.0",
-    "yandex-ai-studio-sdk (>=0.22.1,<0.23.0)",
-]
-
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
@@ -35,6 +18,9 @@ pydantic = "^2.5.0"
 pydantic-settings = "^2.1.0"
 python-dotenv = "^1.0.0"
 httpx = "^0.27.0"
+llama-cpp-python = ">=0.3.15"
+huggingface-hub = ">=0.24.0"
+knowledge-map-observability = { path = "../shared/observability", develop = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"

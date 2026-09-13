@@ -8,8 +8,24 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def _resolve_env_file() -> str:
+    """Выбор env-файла по ENVIRONMENT: `.env.<ENV>` > `.env.local` > `.env`."""
+    import os
+    from pathlib import Path
+
+    base_dir = Path(__file__).resolve().parents[1]  # каталог сервиса billing/
+    env = os.environ.get("ENVIRONMENT", "development")
+    for name in (f".env.{env}", ".env.local", ".env"):
+        candidate = base_dir / name
+        if candidate.is_file():
+            return str(candidate)
+    return ""
+
+
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_file=_resolve_env_file(), extra="ignore")
+
+    ENVIRONMENT: str = "development"
 
     BILLING_HOST: str = "0.0.0.0"
     BILLING_PORT: int = 50058

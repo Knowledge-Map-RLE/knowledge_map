@@ -71,6 +71,10 @@ message LayoutOptions {
     
     // Стратегия памяти
     MemoryStrategy memory_strategy = 13;
+
+    // Convert cyclic graph to DAG: compute minimal feedback arc set
+    // (Tarjan SCC + expand cycles) and reverse the minimal set of edges.
+    bool convert_to_dag = 14;
 }
 
 // Стратегия управления памятью

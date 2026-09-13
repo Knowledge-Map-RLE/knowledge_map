@@ -16,9 +16,10 @@ pydantic = "2.11.7"
 pydantic-settings = "2.9.1"
 httpx = "^0.27.0"
 grpcio = "1.74.0"
-grpcio-tools = "1.74.0"
-protobuf = "6.31.1"
+grpcio-tools = "1.71.0"
+protobuf = "5.29.6"
 python-multipart = "0.0.6"
+knowledge-map-observability = { path = "../shared/observability", develop = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

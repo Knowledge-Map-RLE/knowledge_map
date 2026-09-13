@@ -41,23 +41,11 @@ except ImportError:
     import nlp_pb2
     import nlp_pb2_grpc
 
-# Настройка логирования
-import os
-os.makedirs('logs', exist_ok=True)
-
-# Настройка UTF-8 для консольного вывода на Windows
-stream_handler = logging.StreamHandler()
-if hasattr(stream_handler.stream, 'reconfigure'):
-    stream_handler.stream.reconfigure(encoding='utf-8')
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/nlp.log', encoding='utf-8'),
-        stream_handler
-    ]
-)
+# Настройка observability
+from observability import init_telemetry, instrument_grpc_server, setup_logging
+setup_logging(service_name="nlp")
+init_telemetry()
+instrument_grpc_server()
 logger = logging.getLogger(__name__)
 
 # Импортируем наши модули

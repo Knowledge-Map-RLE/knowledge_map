@@ -35,6 +35,11 @@ export default defineConfig({
         target: 'http://localhost:50058',
         ws: false,
       },
+      '/v1': {
+        target: 'http://127.0.0.1:4318',
+        ws: false,
+        changeOrigin: true,
+      },
     },
   },
   worker: {

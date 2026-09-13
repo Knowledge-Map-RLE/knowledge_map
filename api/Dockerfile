@@ -15,7 +15,10 @@ RUN for i in 1 2 3; do \
         && break || sleep 10; \
     done
 
-# 2) Копируем pyproject и lock-файл
+# 2) Копируем shared-пакет observability (нужен для path-зависимости poetry)
+COPY --from=shared ./observability ../shared/observability
+
+# 3) Копируем pyproject и lock-файл
 COPY pyproject.toml poetry.lock* ./
 
 # 3) Устанавливаем Poetry

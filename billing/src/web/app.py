@@ -14,16 +14,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from neomodel import config as neomodel_config
 
+from observability import init_telemetry, instrument_fastapi, instrument_grpc_client, instrument_httpx, setup_logging
 from config import settings
 from infrastructure.seeding import seed_plans
 from web.exception_handlers import register_exception_handlers
 
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(
-    level=settings.LOG_LEVEL.upper(),
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-)
+setup_logging(service_name="billing")
+init_telemetry()
+instrument_fastapi()
+instrument_httpx()
+instrument_grpc_client()
 
 
 def _configure_neo4j() -> None:

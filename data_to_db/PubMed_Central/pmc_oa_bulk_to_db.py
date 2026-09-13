@@ -25,9 +25,10 @@ from xml_to_md_grpc_client import get_xml_to_md_client
 from s3_client import get_s3_client, S3_BUCKET_NAME
 
 # ========== КОНФИГУРАЦИЯ ==========
+LOG_DIR = os.getenv("LOG_DIR", "logs")
 DATA_DIR        = Path("..") / "data" / "PubMed_Central"
-LOG_FILE        = Path("./logs/pmc_oa_bulk_to_db.log")
-CHECKPOINT_FILE = Path("./logs/pmc_parse_checkpoint.txt")
+LOG_FILE        = Path(LOG_DIR) / "pmc_oa_bulk_to_db.log"
+CHECKPOINT_FILE = Path(LOG_DIR) / "pmc_parse_checkpoint.txt"
 
 # Оптимизированные настройки
 MAX_WORKERS       = 2        # Увеличено для параллелизма

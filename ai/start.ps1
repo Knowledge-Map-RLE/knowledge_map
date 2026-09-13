@@ -1,6 +1,13 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
+# Observability (local dev): OTLP → Alloy localhost:4317
+$env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:4317"
+$env:OTEL_SERVICE_NAME = "ai"
+$env:OTEL_SERVICE_VERSION = "0.1.0"
+$env:OTEL_METRIC_EXPORT_INTERVAL = "30000"
+$env:LOG_FORMAT = "logfmt"
+
 $port = 50059
 
 Write-Host "Starting AI Agent microservice on port $port..."

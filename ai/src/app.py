@@ -2,17 +2,19 @@
 
 from __future__ import annotations
 
-import logging
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from observability import init_telemetry, instrument_fastapi, instrument_httpx, setup_logging
 from src.config import settings
 from src.routers import chat, health, models
 
 
 def create_app() -> FastAPI:
-    logging.basicConfig(level=settings.log_level.upper())
+    setup_logging(service_name="ai")
+    init_telemetry()
+    instrument_fastapi()
+    instrument_httpx()
 
     app = FastAPI(
         title="AI Agent Microservice",

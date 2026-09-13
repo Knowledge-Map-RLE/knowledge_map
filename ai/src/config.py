@@ -2,25 +2,37 @@
 
 The service is an OpenAI-compatible chat gateway. It knows nothing about specific
 models: it forwards ``/v1/chat/completions`` requests to one of the configured
-providers (LM Studio during development, DeepSeek Pro/Flash later) and streams
-the reply back in OpenAI format.
+providers (LM Studio during development, DeepSeek Pro/Flash later, a local GGUF
+model via llama-cpp-python) and streams the reply back in OpenAI format.
+
+Environment split
+-----------------
+The service reads ``.env.<ENVIRONMENT>`` when ``ENVIRONMENT`` is set in the
+process environment (or defaults to ``development`` locally), falling back to
+``.env``. Example: ``ai/.env.development`` holds the development provider
+configuration, ``ai/.env.production`` would hold production secrets.
 """
 
 from __future__ import annotations
 
 import json
+import os
+from pathlib import Path
 
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Provider(BaseModel):
-    """An upstream provider (LM Studio, DeepSeek, ...).
+    """An upstream provider (LM Studio, Yandex, local GGUF, ...).
 
     ``use_sdk`` marks a provider whose upstream calls are made through the
     official ``yandex-ai-studio-sdk`` instead of the raw HTTP client. For such
     providers ``base_url``/``api_key`` are still stored for model-listing and
     compatibility, but generation/streaming go through the SDK.
+
+    ``use_local`` marks a provider implemented by ``LocalGGUFProviderClient``
+    (llama-cpp-python + HuggingFace Hub).
     """
 
     name: str
@@ -30,11 +42,23 @@ class Provider(BaseModel):
     default_model: str | None = None
     context_length: int | None = None
     use_sdk: bool = False
+    use_local: bool = False
+
+
+def _resolve_env_file() -> str:
+    """Pick ``<service_dir>/.env.<ENVIRONMENT>`` else ``.env`` (absolute path)."""
+    service_dir = Path(__file__).resolve().parents[1]
+    env = os.environ.get("ENVIRONMENT", "development")
+    candidate = service_dir / f".env.{env}"
+    if candidate.is_file():
+        return str(candidate)
+    base = service_dir / ".env"
+    return str(base) if base.is_file() else ""
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_resolve_env_file(),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -42,6 +66,9 @@ class Settings(BaseSettings):
 
     host: str = Field(default="0.0.0.0", alias="AI_HOST")
     port: int = Field(default=50059, alias="AI_PORT")
+
+    # Deployment environment: development / staging / production.
+    environment: str = Field(default="development", alias="ENVIRONMENT")
 
     # Provider/model used when the client does not specify one.
     default_provider: str = Field(default="lm-studio", alias="DEFAULT_PROVIDER")
@@ -77,6 +104,19 @@ class Settings(BaseSettings):
         default="deepseek-v4-flash/latest", alias="YANDEX_CLOUD_MODEL"
     )
 
+    # Local GGUF model via llama-cpp-python + HuggingFace Hub.
+    # A "local-gguf" provider is registered only when ENVIRONMENT=development
+    # (staging/production never expose a locally served model) and HF_MODEL_REPO
+    # / HF_GGUF_FILE are set. The model file is downloaded on first use into
+    # MODEL_CACHE_DIR.
+    model_cache_dir: str = Field(default="./models", alias="MODEL_CACHE_DIR")
+    hf_model_repo: str = Field(default="", alias="HF_MODEL_REPO")
+    hf_gguf_file: str = Field(default="", alias="HF_GGUF_FILE")
+    hugging_face_token: str = Field(default="", alias="HUGGING_FACE_TOKEN")
+    local_context_length: int = Field(default=32768, alias="LOCAL_CONTEXT_LENGTH")
+    local_n_gpu_layers: int = Field(default=0, alias="LOCAL_N_GPU_LAYERS")
+    local_strip_reasoning: bool = Field(default=True, alias="LOCAL_STRIP_REASONING")
+
     request_timeout: float = Field(default=300.0, alias="AI_REQUEST_TIMEOUT")
     connect_timeout: float = Field(default=15.0, alias="AI_CONNECT_TIMEOUT")
     models_cache_ttl: float = Field(default=60.0, alias="AI_MODELS_CACHE_TTL")
@@ -110,23 +150,46 @@ def _yandex_provider() -> Provider | None:
     )
 
 
+def _local_gguf_provider() -> Provider | None:
+    """Build the local GGUF provider (development only) from HF_* constants."""
+    if settings.environment != "development":
+        return None
+    if not settings.hf_model_repo or not settings.hf_gguf_file:
+        return None
+    short_name = settings.hf_model_repo.rsplit("/", 1)[-1]
+    model_id = f"local-gguf/{short_name}"
+    return Provider(
+        name="local-gguf",
+        base_url="local://gguf",
+        models=[model_id, short_name],
+        default_model=model_id,
+        context_length=settings.local_context_length,
+        use_local=True,
+    )
+
+
+def _lm_studio_fallback() -> list[Provider]:
+    return [
+        Provider(
+            name="lm-studio",
+            base_url=settings.lm_studio_base_url,
+            api_key=settings.lm_studio_api_key,
+            models=[settings.default_model],
+            default_model=settings.default_model,
+        )
+    ]
+
+
 def load_providers() -> list[Provider]:
     """Build the provider list from ``AI_PROVIDERS``, the LM Studio defaults,
-    or the Yandex provider configured via ``YANDEX_CLOUD_*`` constants."""
+    the Yandex provider configured via ``YANDEX_CLOUD_*`` constants and the
+    development-only local GGUF provider."""
     providers: list[Provider]
     if settings.providers_json:
         data = json.loads(settings.providers_json)
         providers = [Provider(**item) for item in data]
     elif not settings.yandex_cloud_api_key:
-        providers = [
-            Provider(
-                name=settings.default_provider,
-                base_url=settings.lm_studio_base_url,
-                api_key=settings.lm_studio_api_key,
-                models=[settings.default_model],
-                default_model=settings.default_model,
-            )
-        ]
+        providers = _lm_studio_fallback()
     else:
         providers = []
 
@@ -134,14 +197,10 @@ def load_providers() -> list[Provider]:
     if yandex and not any(p.name == "yandex-ai" for p in providers):
         providers.append(yandex)
 
+    local = _local_gguf_provider()
+    if local and not any(p.name == "local-gguf" for p in providers):
+        providers.append(local)
+
     if not providers:
-        providers = [
-            Provider(
-                name="lm-studio",
-                base_url=settings.lm_studio_base_url,
-                api_key=settings.lm_studio_api_key,
-                models=["qwen/qwen3-4b"],
-                default_model="qwen/qwen3-4b",
-            )
-        ]
+        providers = _lm_studio_fallback()
     return providers

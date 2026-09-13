@@ -22,6 +22,9 @@ RUN set -eux; \
 # 2) Установка Poetry
 RUN pip install --no-cache-dir poetry==1.7.1
 
+# 2.5) Копируем shared-пакет observability (нужен для path-зависимости poetry)
+COPY --from=shared ./observability ../shared/observability
+
 # 3) Копируем манифесты и устанавливаем зависимости
 COPY pyproject.toml poetry.lock* ./
 RUN poetry config virtualenvs.create false && \

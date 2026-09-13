@@ -16,13 +16,19 @@ Allowed imports: fastapi, neomodel.config, web.middleware, web.exception_handler
 Forbidden imports: services (напрямую — только через web/routers и use cases)
 """
 import logging
-import os
 from typing import Dict, Any
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from neomodel import config as neomodel_config
 
+from observability import (
+    init_telemetry,
+    instrument_fastapi,
+    instrument_httpx,
+    instrument_grpc_client,
+    setup_logging,
+)
 from infrastructure.config import settings
 from web.middleware import ORIGINS, log_requests, add_cors_headers
 from web.exception_handlers import register_exception_handlers
@@ -60,20 +66,12 @@ from web.routers import feedback as feedback_router
 
 logger = logging.getLogger(__name__)
 
-# Настройка логирования
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler("api.log", encoding="utf-8"),
-    ],
-)
-
-# Boto3/ботокор шумят INFO-строками про проверку чексумм и multipart —
-# это косметика серверной части, в WARNING-логи её не пишем.
-logging.getLogger("botocore").setLevel(logging.WARNING)
-logging.getLogger("boto3").setLevel(logging.WARNING)
+# Observability: logfmt в stdout (→ Loki), OTLP traces+metrics (→ Alloy).
+setup_logging(service_name="api")
+init_telemetry()
+instrument_fastapi()
+instrument_httpx()
+instrument_grpc_client()
 
 # Настройка Neo4j
 database_url = settings.get_database_url()
@@ -110,6 +108,19 @@ app.add_middleware(
 )
 app.middleware("http")(log_requests)
 app.middleware("http")(add_cors_headers)
+
+
+@app.middleware("http")
+async def trace_context_middleware(request, call_next):
+    """Прокидывает X-Client-Session-ID из запроса в активный OTel-спан."""
+    from observability import attach_request_attrs
+
+    session_id = request.headers.get("x-client-session-id") or None
+    attach_request_attrs(session_id=session_id)
+    response = await call_next(request)
+    if session_id:
+        response.headers["X-Client-Session-ID"] = session_id
+    return response
 
 # Регистрируем обработчики доменных исключений
 register_exception_handlers(app)

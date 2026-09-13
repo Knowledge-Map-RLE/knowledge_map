@@ -17,15 +17,31 @@ from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def _resolve_env_file() -> str:
+    """Выбор env-файла по ENVIRONMENT: `.env.<ENV>` > `.env.local` > `.env`.
+
+    ENVIRONMENT берётся из процесса (development|staging|production), чтобы его
+    можно было выставлять в compose/launcher, а не хранить в самом env-файле.
+    """
+    base_dir = Path(__file__).resolve().parents[1]  # каталог сервиса api/
+    env = os.environ.get("ENVIRONMENT", "development")
+    for name in (f".env.{env}", ".env.local", ".env"):
+        candidate = base_dir / name
+        if candidate.is_file():
+            return str(candidate)
+    return ""
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env.local" if os.path.exists(
-            os.path.join(os.path.dirname(__file__), "..", ".env.local")
-        ) else ".env",
+        env_file=_resolve_env_file(),
         env_file_encoding="utf-8",
         case_sensitive=True,
         extra="ignore",  # Игнорируем неизвестные переменные окружения
     )
+
+    # Окружение развёртывания: development / staging / production.
+    ENVIRONMENT: str = "development"
 
     # База данных
     NEO4J_URI: str = "bolt://localhost:7687"
@@ -59,6 +75,14 @@ class Settings(BaseSettings):
     # API
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
+
+    # Единая директория логов сервиса (от рабочей директории процесса).
+    LOG_DIR: str = "logs"
+
+    # Модель для UI-чата: всегда фиксированная (Yandex), чтобы переключение
+    # DEFAULT_PROVIDER в микросервисе ai НЕ влияло на интерфейс. Пусто — шлюз
+    # использует свой DEFAULT_PROVIDER.
+    AI_UI_MODEL: str = ""
 
     # LLM Extraction (triplet extraction from articles)
     LLM_EXTRACT_MODEL: str = "gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest"

@@ -2,6 +2,13 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
+# Observability (local dev): OTLP → Alloy localhost:4317
+$env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:4317"
+$env:OTEL_SERVICE_NAME = "billing"
+$env:OTEL_SERVICE_VERSION = "0.1.0"
+$env:OTEL_METRIC_EXPORT_INTERVAL = "30000"
+$env:LOG_FORMAT = "logfmt"
+
 $port = 50058
 
 Write-Host "Starting Billing microservice on port $port..."
@@ -13,7 +20,7 @@ poetry install --only=main --no-root --no-interaction
 # 2) Generate proto files (auth.proto -> utils/generated)
 Write-Host "Generating proto files..."
 New-Item -ItemType Directory -Force -Path "utils/generated" | Out-Null
-python -m grpc_tools.protoc `
+poetry run python -m grpc_tools.protoc `
     -I./proto `
     --python_out=./utils/generated `
     --grpc_python_out=./utils/generated `

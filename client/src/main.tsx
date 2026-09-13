@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './styles/index.css'
 import './styles/fonts.css'
 import App from './App.tsx'
+import { startTelemetry } from './services/telemetry'
+
+startTelemetry()
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   const devtools = (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__ as {

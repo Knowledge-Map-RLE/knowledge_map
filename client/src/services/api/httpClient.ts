@@ -8,6 +8,7 @@ const withBase = (path: string) => {
 };
 
 import { getToken } from '../token';
+import { getSessionId } from '../telemetry';
 
 class HttpClient {
   async request(method: string, path: string, body?: unknown): Promise<Response> {
@@ -18,6 +19,11 @@ class HttpClient {
     const token = getToken();
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const sessionId = getSessionId();
+    if (sessionId) {
+      headers['X-Client-Session-ID'] = sessionId;
     }
 
     const res = await fetch(withBase(path), {

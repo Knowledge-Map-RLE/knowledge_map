@@ -28,6 +28,7 @@ from application.ai_chats.send_message import send_ai_message_stream
 from application.ai_chats.usage_summary import usage_summary
 from domain.exceptions import AuthorizationFailed, NotFoundError
 from domain.rules.ai_pricing import calculate_usage_cost
+from infrastructure.config import settings
 from web.dependencies import (
     get_ai_chat_repository,
     get_ai_gateway,
@@ -221,16 +222,45 @@ async def send_message(
     """Отправляет сообщение в AI-чат и стримит ответ (SSE)."""
 
     async def event_stream():
-        async for event in send_ai_message_stream(
-            repository=repository,
-            tokenizer=tokenizer,
-            gateway=gateway,
-            billing=billing,
-            chat_uid=chat_id,
-            user_uid=user.get("uid", ""),
-            content=body.content,
-        ):
-            yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+        import time
+
+        from infrastructure.telemetry import record_llm_request
+
+        started = time.monotonic()
+        model = settings.AI_UI_MODEL or ""
+        recorded = False
+        try:
+            async for event in send_ai_message_stream(
+                repository=repository,
+                tokenizer=tokenizer,
+                gateway=gateway,
+                billing=billing,
+                chat_uid=chat_id,
+                user_uid=user.get("uid", ""),
+                content=body.content,
+                model=model,
+            ):
+                etype = event.get("type")
+                if etype in ("usage", "error"):
+                    record_llm_request(
+                        model,
+                        ok=(etype == "usage"),
+                        duration_seconds=time.monotonic() - started,
+                        input_tokens=event.get("prompt_tokens"),
+                        output_tokens=event.get("completion_tokens"),
+                    )
+                    recorded = True
+                if etype == "error":
+                    yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+                    return
+                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+            if not recorded:
+                record_llm_request(
+                    model, ok=False, duration_seconds=time.monotonic() - started
+                )
+        except Exception:
+            record_llm_request(model, ok=False, duration_seconds=time.monotonic() - started)
+            raise
 
     # Проверка существования/владельца до начала стрима.
     try:

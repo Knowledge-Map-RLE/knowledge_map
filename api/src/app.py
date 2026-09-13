@@ -2,7 +2,6 @@
 Основной app теперь в web/app.py.
 """
 import logging
-import os
 from typing import Dict, Any
 
 from fastapi import FastAPI
@@ -19,14 +18,10 @@ from src.routers import (
 )
 
 # Настройка логирования
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s | %(levelname)s | %(name)s | %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('api.log', encoding='utf-8')
-    ]
-)
+from observability import init_telemetry, setup_logging
+
+setup_logging(service_name="api")
+init_telemetry()
 logger = logging.getLogger(__name__)
 
 # Включаем детальное логирование

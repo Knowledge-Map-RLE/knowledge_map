@@ -16,8 +16,10 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import threading
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import httpx
 
@@ -244,6 +246,153 @@ class YandexSDKProviderClient:
         pass
 
 
+class LocalGGUFProviderClient:
+    """Provider client running a local GGUF model via ``llama-cpp-python``.
+
+    The model file is downloaded on first use from the HuggingFace Hub into
+    ``MODEL_CACHE_DIR`` (``hf_hub_download``) and loaded lazily by llama.cpp.
+    llama.cpp is blocking, so every call runs in a worker thread and generation
+    is serialised with a lock (a loaded ``Llama`` instance is not thread-safe).
+
+    Reasoning-style models (e.g. Qwen3.x "thinking") open the reply with a
+    ``...`` block; it is stripped unless ``LOCAL_STRIP_REASONING=false``.
+    """
+
+    def __init__(self, provider: Provider) -> None:
+        self.provider = provider
+        self._llm: object | None = None
+        self._load_lock = threading.Lock()
+        self._gen_lock = threading.Lock()
+
+    def _load_model(self):  # blocking; called from a worker thread
+        from huggingface_hub import hf_hub_download
+        from llama_cpp import Llama
+
+        cache_dir = Path(settings.model_cache_dir)
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        model_path = hf_hub_download(
+            repo_id=settings.hf_model_repo,
+            filename=settings.hf_gguf_file,
+            local_dir=cache_dir,
+            token=settings.hugging_face_token or None,
+        )
+        logger.info(
+            "Loading local GGUF model %s (context=%d, gpu_layers=%d)...",
+            model_path, settings.local_context_length, settings.local_n_gpu_layers,
+        )
+        return Llama(
+            model_path=str(model_path),
+            n_ctx=settings.local_context_length,
+            n_gpu_layers=settings.local_n_gpu_layers,
+            verbose=False,
+        )
+
+    def _get_llm(self):  # blocking; called from a worker thread
+        if self._llm is None:
+            with self._load_lock:
+                if self._llm is None:
+                    self._llm = self._load_model()
+        return self._llm
+
+    def _completion(self, llm, req: dict) -> dict:
+        kwargs: dict = {
+            "messages": req.get("messages") or [],
+            "max_tokens": req.get("max_tokens") or -1,
+            "temperature": req.get("temperature"),
+            "stream": False,
+        }
+        if kwargs["temperature"] is None:
+            kwargs.pop("temperature")
+        if kwargs["max_tokens"] == -1 or kwargs["max_tokens"] is None:
+            kwargs["max_tokens"] = -1
+        with self._gen_lock:
+            return llm.create_chat_completion(**kwargs)
+
+    @staticmethod
+    def _strip_reasoning_block(text: str) -> str:
+        """Drop the Qwen3.x ``...<thinking>...`` prefix from a reasoning reply."""
+        if not text.startswith("..."):
+            return text
+        rest = text[3:]
+        for marker in ("\n...\n", "\n..."):
+            idx = rest.find(marker)
+            if idx != -1:
+                return rest[idx + len(marker):].lstrip(" \n")
+        end = rest.find("...")
+        if end != -1:
+            return rest[end + 3:].lstrip(" \n")
+        return rest.lstrip(" \n")
+
+    def _to_openai(self, completion: dict, model: str) -> dict:
+        choice = (completion.get("choices") or [{}])[0]
+        content = (choice.get("message") or {}).get("content") or ""
+        if settings.local_strip_reasoning:
+            content = self._strip_reasoning_block(content)
+        usage = completion.get("usage") or {}
+        return {
+            "id": completion.get("id") or "chatcmpl-local",
+            "object": "chat.completion",
+            "created": int(time.time()),
+            "model": model,
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {"role": "assistant", "content": content},
+                    "finish_reason": choice.get("finish_reason", "stop"),
+                }
+            ],
+            "usage": {
+                "prompt_tokens": int(usage.get("prompt_tokens") or 0),
+                "completion_tokens": int(usage.get("completion_tokens") or 0),
+                "total_tokens": int(usage.get("total_tokens") or 0),
+            },
+        }
+
+    async def generate(self, model: str, req: dict) -> dict:
+        llm = await asyncio.to_thread(self._get_llm)
+        completion = await asyncio.to_thread(self._completion, llm, req)
+        return self._to_openai(completion, model)
+
+    async def stream(self, model: str, req: dict):
+        llm = await asyncio.to_thread(self._get_llm)
+        completion = await asyncio.to_thread(self._completion, llm, req)
+        data = self._to_openai(completion, model)
+        message = data["choices"][0]["message"]
+
+        yield _sse_event(
+            {
+                "id": data["id"],
+                "object": "chat.completion.chunk",
+                "created": data["created"],
+                "model": model,
+                "choices": [
+                    {"index": 0, "delta": {"content": message["content"]}, "finish_reason": None}
+                ],
+            }
+        )
+        yield _sse_event(
+            {
+                "id": data["id"],
+                "object": "chat.completion.chunk",
+                "created": data["created"],
+                "model": model,
+                "choices": [
+                    {"index": 0, "delta": {}, "finish_reason": data["choices"][0]["finish_reason"]}
+                ],
+                "usage": data["usage"],
+            }
+        )
+
+    async def list_models(self) -> list[ModelEntry]:
+        return [
+            ModelEntry(id=m, provider=self.provider.name, configured=True, context_length=self.provider.context_length)
+            for m in self.provider.models
+        ]
+
+    async def close(self) -> None:
+        self._llm = None
+
+
 def _request_timeout(req: dict) -> float:
     """Preferred upper bound for a single SDK call, seconds."""
     t = req.get("timeout")
@@ -351,6 +500,8 @@ class Catalog:
         if client is None:
             if provider.use_sdk:
                 client = YandexSDKProviderClient(provider)
+            elif provider.use_local:
+                client = LocalGGUFProviderClient(provider)
             else:
                 client = HttpProviderClient(provider)
             self._clients[provider.name] = client

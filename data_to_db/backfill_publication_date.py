@@ -40,13 +40,15 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from common import get_driver, load_checkpoint, append_checkpoint, setup_logging  # noqa: E402
 
-logger = setup_logging(Path("./logs/backfill_publication_date.log"))
+LOG_DIR = os.getenv("LOG_DIR", "logs")
+
+logger = setup_logging(Path(LOG_DIR) / "backfill_publication_date.log")
 
 # ========== КОНФИГУРАЦИЯ ==========
 DATA_DIR_PUBMED = Path("..") / "data" / "PubMed"
 DATA_DIR_PMC = Path("..") / "data" / "PubMed_Central"
-CHECKPOINT_FILE = Path("./logs/backfill_pubdate_checkpoint.txt")
-CHECKPOINT_FILE_PMC = Path("./logs/backfill_pmc_checkpoint.txt")
+CHECKPOINT_FILE = Path(LOG_DIR) / "backfill_pubdate_checkpoint.txt"
+CHECKPOINT_FILE_PMC = Path(LOG_DIR) / "backfill_pmc_checkpoint.txt"
 BATCH_SIZE = 2000
 WRITE_RETRIES = 3
 PARSE_WORKERS = 4

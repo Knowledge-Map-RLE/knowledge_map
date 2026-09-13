@@ -179,7 +179,6 @@ class DataDownloadService:
             current_file=current_file or "",
             error_message=error_message,
         )
-        logger.info(f"Updated {name}: {downloaded_files}/{total_files} ({progress:.1f}%) - {current_file}")
 
     def update_process_progress(
         self,
@@ -207,7 +206,6 @@ class DataDownloadService:
             progress=round(progress, 2),
             current_file=current_file or "",
         )
-        logger.info(f"Processed {name}: {processed_files}/{processing_total} ({progress:.1f}%) - {current_file}")
 
     def set_status(self, name: str, status: str, error_message: Optional[str] = None):
         """Устанавливает статус источника."""

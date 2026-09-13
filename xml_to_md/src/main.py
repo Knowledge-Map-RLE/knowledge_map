@@ -35,21 +35,11 @@ except ImportError:
     import xml_to_md_pb2
     import xml_to_md_pb2_grpc
 
-# Настройка логирования
-os.makedirs('logs', exist_ok=True)
-
-stream_handler = logging.StreamHandler()
-if hasattr(stream_handler.stream, 'reconfigure'):
-    stream_handler.stream.reconfigure(encoding='utf-8')
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/xml_to_md.log', encoding='utf-8'),
-        stream_handler
-    ]
-)
+# Настройка observability
+from observability import init_telemetry, instrument_grpc_server, setup_logging
+setup_logging(service_name="xml_to_md")
+init_telemetry()
+instrument_grpc_server()
 logger = logging.getLogger(__name__)
 
 from converters.pmc import PmcXmlConverter

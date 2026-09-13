@@ -7,6 +7,17 @@ from pydantic import Field, ConfigDict
 from pydantic_settings import BaseSettings
 
 
+def _resolve_env_file() -> str:
+    """Выбор env-файла по ENVIRONMENT: `.env.<ENV>` > `.env.local` > `.env`."""
+    base_dir = Path(__file__).resolve().parents[2]  # каталог сервиса pdf_to_md/
+    env = os.environ.get("ENVIRONMENT", "development")
+    for name in (f".env.{env}", ".env.local", ".env"):
+        candidate = base_dir / name
+        if candidate.is_file():
+            return str(candidate)
+    return ""
+
+
 class Settings(BaseSettings):
     """Application settings"""
     
@@ -14,6 +25,7 @@ class Settings(BaseSettings):
     service_name: str = Field(default="pdf-to-md-service", env="SERVICE_NAME")
     version: str = Field(default="0.1.0", env="SERVICE_VERSION")
     debug: bool = Field(default=False, env="DEBUG")
+    environment: str = Field(default="development", env="ENVIRONMENT")
     
     # API settings
     api_host: str = Field(default="0.0.0.0", env="API_HOST")
@@ -35,6 +47,7 @@ class Settings(BaseSettings):
     
     # Logging settings
     log_level: str = Field(default="INFO", env="LOG_LEVEL")
+    log_dir: Path = Field(default=Path("logs"), env="LOG_DIR")
     log_format: str = Field(
         default="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         env="LOG_FORMAT"
@@ -63,7 +76,7 @@ class Settings(BaseSettings):
     ai_formatting_timeout: int = Field(default=600, env="AI_FORMATTING_TIMEOUT")
 
     model_config = ConfigDict(
-        env_file = ".env",
+        env_file = _resolve_env_file(),
         env_file_encoding = "utf-8",
         case_sensitive = False
     )

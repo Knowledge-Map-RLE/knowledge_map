@@ -27,6 +27,8 @@ NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
 API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
+LOG_DIR = os.getenv("LOG_DIR", "logs")
+
 DATA_ROOT = Path("..") / "data"
 
 STATUS_REFRESH_INTERVAL = 60  # секунд между обновлением статуса idle-источников
@@ -41,12 +43,13 @@ LEASE_TTL = 30                # секунд, после которых lease с
 LEASE_RENEW_INTERVAL = 10     # как часто воркер продлевает lease (должно быть < LEASE_TTL)
 WATCHDOG_TIMEOUT = 30         # секунд без тика monitor-loop -> аварийный выход
 
+from _logfmt import LogfmtStreamHandler, logfmt_handler
+
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler("logs/worker.log", encoding="utf-8"),
+        logfmt_handler(service_name="data_to_db"),
+        logging.FileHandler(os.path.join(LOG_DIR, "worker.log"), encoding="utf-8"),
     ],
 )
 logger = logging.getLogger(__name__)
@@ -459,8 +462,8 @@ class DataDownloadWorker:
         update_downloader = PubMedDownloader("PubMed Update", "/pubmed/updatefiles/", update_dir)
         pmc_downloader = PmcOaOpendataDownloader()
 
-        baseline_ckpt = Path("./logs/parse_checkpoint_baseline.txt")
-        update_ckpt = Path("./logs/parse_checkpoint_update.txt")
+        baseline_ckpt = Path(LOG_DIR) / "parse_checkpoint_baseline.txt"
+        update_ckpt = Path(LOG_DIR) / "parse_checkpoint_update.txt"
 
         self.runners["PubMed Baseline"] = SourceDownloadRunner(
             name="PubMed Baseline",

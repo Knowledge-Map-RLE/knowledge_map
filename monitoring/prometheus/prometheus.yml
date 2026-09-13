@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: knowledge-map
+
+# Все user-facing метрики приходят сюда через Alloy remote_write (OLTP/OTLP).
+# Дополнительно скрейпим системные и Tempo-генератор (RED из трейсов).
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: tempo
+    static_configs:
+      - targets: ["tempo:3200"]
+
+  # Native /metrics Rust laying. Раскомментировать, когда laying добавлен в compose.
+  # - job_name: laying
+  #   metrics_path: /metrics
+  #   static_configs:
+  #     - targets: ["laying:9090"]

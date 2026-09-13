@@ -20,8 +20,8 @@ python-multipart = "^0.0.6"
 
 # gRPC
 grpcio = "^1.59.3"
-grpcio-tools = "^1.59.3"
-protobuf = "^4.25.1"
+grpcio-tools = "1.71.0"
+protobuf = "5.29.6"
 
 # PDF processing
 pillow = "^10.1.0"
@@ -38,6 +38,9 @@ aiofiles = "^23.2.1"
 aioboto3 = "^12.0.0"
 botocore = "^1.31.0"
 tiktoken = "^0.12.0"
+
+# Observability
+knowledge-map-observability = { path = "../shared/observability", develop = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
