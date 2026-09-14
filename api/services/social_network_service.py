@@ -186,28 +186,113 @@ class SocialNetworkService:
     # ── Друзья ────────────────────────────────────────────────────────────────
 
     def _friend_relation(self, a: str, b: str) -> bool:
+        """Есть ли подтверждённая дружба между a и b."""
         results, _ = db.cypher_query(
             "MATCH (a:User {uid: $a})-[:FRIEND]-(b:User {uid: $b}) RETURN count(*) AS c",
             {"a": a, "b": b},
         )
         return bool(results and results[0][0] > 0)
 
-    def add_friend(self, a: str, b: str) -> dict:
+    def _relation_state(self, a: str, b: str) -> str:
+        """Статус отношения a → b: friends | outgoing | incoming | none."""
+        if self._friend_relation(a, b):
+            return "friends"
+        results, _ = db.cypher_query(
+            "MATCH (a:User {uid: $a})-[:FRIEND_REQUEST]->(b:User {uid: $b}) RETURN count(*) AS c",
+            {"a": a, "b": b},
+        )
+        if results and results[0][0] > 0:
+            return "outgoing"
+        results, _ = db.cypher_query(
+            "MATCH (a:User {uid: $a})<-[:FRIEND_REQUEST]-(b:User {uid: $b}) RETURN count(*) AS c",
+            {"a": a, "b": b},
+        )
+        if results and results[0][0] > 0:
+            return "incoming"
+        return "none"
+
+    def send_friend_request(self, a: str, b: str) -> dict:
+        """Отправляет заявку в друзья от a к b.
+
+        Если пользователи уже дружат — ничего не делает. Если от b уже есть
+        встречная заявка — принимает её (дружба становится взаимной).
+        """
+        self.ensure_user({"uid": a})
+        self.ensure_user({"uid": b})
+        if a == b:
+            return {"success": False, "error": "self_friend"}
+        state = self._relation_state(a, b)
+        if state == "friends":
+            return {"success": True, "status": "friends"}
+        if state == "outgoing":
+            return {"success": True, "status": "requested"}
+        if state == "incoming":
+            accept = self.accept_friend_request(a, b)
+            return {"success": True, "status": "friends",
+                    "is_friend": accept.get("is_friend", True)}
+        db.cypher_query(
+            "MATCH (a:User {uid: $a}), (b:User {uid: $b}) "
+            "CREATE (a)-[:FRIEND_REQUEST {created_at: $ts}]->(b)",
+            {"a": a, "b": b, "ts": _now()},
+        )
+        requester = self.get_user(a) or {}
+        requester_name = requester.get("nickname") or requester.get("login") or "Пользователь"
+        self._notify(b, "friend_request", "user", a,
+                     f"Пользователь {requester_name} хочет добавить вас в друзья")
+        return {"success": True, "status": "requested"}
+
+    def _has_request(self, a: str, b: str) -> bool:
+        results, _ = db.cypher_query(
+            "MATCH (a:User {uid: $a})-[:FRIEND_REQUEST]->(b:User {uid: $b}) RETURN count(*) AS c",
+            {"a": a, "b": b},
+        )
+        return bool(results and results[0][0] > 0)
+
+    def accept_friend_request(self, a: str, b: str) -> dict:
+        """a принимает входящую заявку от b."""
         self.ensure_user({"uid": a})
         self.ensure_user({"uid": b})
         if a == b:
             return {"success": False, "error": "self_friend"}
         if self._friend_relation(a, b):
             return {"success": True, "is_friend": True}
+        if not self._has_request(b, a):
+            return {"success": False, "error": "request_not_found"}
+        db.cypher_query(
+            "MATCH (b:User {uid: $b})-[r:FRIEND_REQUEST]->(a:User {uid: $a}) DELETE r",
+            {"a": a, "b": b},
+        )
         db.cypher_query(
             "MATCH (a:User {uid: $a}), (b:User {uid: $b}) "
             "CREATE (a)-[:FRIEND {created_at: $ts}]->(b) "
             "CREATE (a)<-[:FRIEND {created_at: $ts}]-(b)",
             {"a": a, "b": b, "ts": _now()},
         )
-        self._notify(b, "friend_request", "user", a,
-                     "Вас добавили в друзья")
+        accepter = self.get_user(a) or {}
+        accepter_name = accepter.get("nickname") or accepter.get("login") or "Пользователь"
+        self._notify(b, "friend_accepted", "user", a,
+                     f"Пользователь {accepter_name} принял вашу заявку в друзья")
         return {"success": True, "is_friend": True}
+
+    def decline_friend_request(self, a: str, b: str) -> dict:
+        """a отклоняет входящую заявку от b."""
+        if not self._has_request(b, a):
+            return {"success": False, "error": "request_not_found"}
+        db.cypher_query(
+            "MATCH (b:User {uid: $b})-[r:FRIEND_REQUEST]->(a:User {uid: $a}) DELETE r",
+            {"a": a, "b": b},
+        )
+        return {"success": True, "status": "none"}
+
+    def cancel_friend_request(self, a: str, b: str) -> dict:
+        """a отзывает собственную исходящую заявку к b."""
+        if not self._has_request(a, b):
+            return {"success": False, "error": "request_not_found"}
+        db.cypher_query(
+            "MATCH (a:User {uid: $a})-[r:FRIEND_REQUEST]->(b:User {uid: $b}) DELETE r",
+            {"a": a, "b": b},
+        )
+        return {"success": True, "status": "none"}
 
     def remove_friend(self, a: str, b: str) -> dict:
         db.cypher_query(
@@ -223,6 +308,77 @@ class SocialNetworkService:
             {"uid": uid, "limit": limit},
         )
         return [_row_user({"n": r[0]}) for r in results]
+
+    def list_friend_requests(self, uid: str, limit: int = 200) -> dict:
+        """Входящие и исходящие заявки в друзья текущего пользователя."""
+        incoming = db.cypher_query(
+            "MATCH (u:User {uid: $uid})<-[:FRIEND_REQUEST]-(f:User) "
+            "RETURN f ORDER BY f.nickname LIMIT $limit",
+            {"uid": uid, "limit": limit},
+        )[0]
+        outgoing = db.cypher_query(
+            "MATCH (u:User {uid: $uid})-[:FRIEND_REQUEST]->(f:User) "
+            "RETURN f ORDER BY f.nickname LIMIT $limit",
+            {"uid": uid, "limit": limit},
+        )[0]
+        return {
+            "incoming": [_row_user({"n": r[0]}) for r in incoming],
+            "outgoing": [_row_user({"n": r[0]}) for r in outgoing],
+        }
+
+    # ── Друзья: BFS-сортировка (эффект «шести рукопожатий») ───────────────────
+
+    def _bfs_distances(self, start_uid: str, max_depth: int = 6) -> dict[str, int]:
+        """Кратчайшие расстояния от start_uid по графу дружбы (без ориентации).
+
+        Возвращает {uid: глубина}. Вершины, недостижимые в пределах max_depth,
+        в словарь не попадают ни с какой глубиной.
+        """
+        results, _ = db.cypher_query(
+            "MATCH (a:User)-[:FRIEND]->(b:User) RETURN a.uid, b.uid",
+        )
+        adjacency: dict[str, set[str]] = {}
+        for a, b in results:
+            adjacency.setdefault(a, set()).add(b)
+            adjacency.setdefault(b, set()).add(a)
+        distances: dict[str, int] = {}
+        frontier = {start_uid}
+        distances[start_uid] = 0
+        for depth in range(1, max_depth + 1):
+            if not frontier:
+                break
+            next_frontier: set[str] = set()
+            for node in frontier:
+                for neighbor in adjacency.get(node, set()):
+                    if neighbor not in distances:
+                        distances[neighbor] = depth
+                        next_frontier.add(neighbor)
+            frontier = next_frontier
+        return distances
+
+    def list_public_friends(self, target_uid: str, viewer_uid: Optional[str] = None,
+                            limit: int = 200) -> list[dict]:
+        """Публичный список друзей target_uid.
+
+        Если viewer_uid авторизован (и не совпадает с target_uid), каждый друг
+        получает distance = число шагов по графу дружбы от viewer (None — если
+        недостижим за 6 рукопожатий), и список сортируется по близости к viewer.
+        Иначе — алфавитный порядок.
+        """
+        friends = self.list_friends(target_uid, limit=limit)
+        if not viewer_uid or viewer_uid == target_uid:
+            return friends
+        distances = self._bfs_distances(viewer_uid)
+        for friend in friends:
+            friend["distance"] = distances.get(friend["uid"])
+        friends.sort(
+            key=lambda f: (
+                f.get("distance") is None,
+                f.get("distance") if f.get("distance") is not None else 0,
+                (f.get("nickname") or "").lower(),
+            )
+        )
+        return friends
 
     # ── Сообщества ────────────────────────────────────────────────────────────
 
@@ -1034,6 +1190,9 @@ class SocialNetworkService:
         }
         if viewer_uid:
             profile["is_friend"] = self._friend_relation(viewer_uid, uid)
+            profile["friend_state"] = self._relation_state(viewer_uid, uid)
+        elif uid:
+            profile["friend_state"] = "none"
         return profile
 
     def list_communities_member_of(self, user_uid: str) -> list[dict]:

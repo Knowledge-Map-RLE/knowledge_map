@@ -97,17 +97,54 @@ async def list_friends(user: dict = Depends(get_current_user)):
     return {"success": True, "friends": service.list_friends(user.get("uid", ""))}
 
 
+@router.get("/social/friends/requests")
+async def list_friend_requests(user: dict = Depends(get_current_user)):
+    return {"success": True, **service.list_friend_requests(user.get("uid", ""))}
+
+
 @router.post("/social/friends/{friend_uid}")
 async def add_friend(friend_uid: str, user: dict = Depends(get_current_user)):
-    result = service.add_friend(user.get("uid", ""), friend_uid)
+    result = service.send_friend_request(user.get("uid", ""), friend_uid)
     if not result.get("success"):
         raise HTTPException(status_code=400, detail=result.get("error", "add_friend_failed"))
+    return result
+
+
+@router.post("/social/friends/{friend_uid}/accept")
+async def accept_friend(friend_uid: str, user: dict = Depends(get_current_user)):
+    result = service.accept_friend_request(user.get("uid", ""), friend_uid)
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail=result.get("error", "accept_friend_failed"))
+    return result
+
+
+@router.post("/social/friends/{friend_uid}/decline")
+async def decline_friend(friend_uid: str, user: dict = Depends(get_current_user)):
+    result = service.decline_friend_request(user.get("uid", ""), friend_uid)
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail=result.get("error", "decline_friend_failed"))
+    return result
+
+
+@router.post("/social/friends/{friend_uid}/cancel")
+async def cancel_friend_request(friend_uid: str, user: dict = Depends(get_current_user)):
+    result = service.cancel_friend_request(user.get("uid", ""), friend_uid)
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail=result.get("error", "cancel_friend_failed"))
     return result
 
 
 @router.delete("/social/friends/{friend_uid}")
 async def remove_friend(friend_uid: str, user: dict = Depends(get_current_user)):
     return service.remove_friend(user.get("uid", ""), friend_uid)
+
+
+@router.get("/social/users/{uid}/friends")
+async def get_user_friends(uid: str, user: Optional[dict] = Depends(get_optional_user)):
+    if service.get_user(uid) is None:
+        raise HTTPException(status_code=404, detail="user_not_found")
+    friends = service.list_public_friends(uid, viewer_uid=(user or {}).get("uid"))
+    return {"success": True, "friends": friends}
 
 
 # ── Сообщества ───────────────────────────────────────────────────────────────

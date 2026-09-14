@@ -1,6 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+    acceptFriend,
     addFriend,
+    cancelFriendRequest,
+    declineFriend,
+    getFriendRequests,
     listFriends,
     removeFriend,
     searchUsers,
@@ -22,6 +26,8 @@ export function FriendsPanel({ onOpenChat }: FriendsPanelProps) {
     const { error: toastError, success: toastSuccess } = useToast();
     const { isAuthenticated, requestLogin } = useAuth();
     const [friends, setFriends] = useState<SocialUserProfile[]>([]);
+    const [requestsIncoming, setRequestsIncoming] = useState<SocialUserProfile[]>([]);
+    const [requestsOutgoing, setRequestsOutgoing] = useState<SocialUserProfile[]>([]);
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<SocialUserProfile[]>([]);
     const [searching, setSearching] = useState(false);
@@ -30,12 +36,18 @@ export function FriendsPanel({ onOpenChat }: FriendsPanelProps) {
     const load = useCallback(async () => {
         if (!isAuthenticated) {
             setFriends([]);
+            setRequestsIncoming([]);
+            setRequestsOutgoing([]);
             return;
         }
         setLoading(true);
         try {
             const res = await listFriends();
             setFriends(res.friends ?? []);
+            const reqs = await getFriendRequests();
+            setRequestsIncoming(reqs.incoming ?? []);
+            setRequestsOutgoing(reqs.outgoing ?? []);
+            window.dispatchEvent(new Event('social:graph-refresh'));
         } catch (e) {
             toastError(e instanceof Error ? e.message : 'Ошибка загрузки друзей');
         } finally {
@@ -61,17 +73,49 @@ export function FriendsPanel({ onOpenChat }: FriendsPanelProps) {
         }
     };
 
-    const handleAdd = async (uid: string) => {
+    const handleSendRequest = async (uid: string) => {
         if (!requireAuth('Войдите или зарегистрируйтесь, чтобы добавлять друзей')) return;
         try {
             const res = await addFriend(uid);
             if (res.success) {
-                toastSuccess('В друзьях');
+                toastSuccess(res.status === 'requested' ? 'Заявка отправлена' : 'Вы уже в друзьях');
                 await load();
-                setResults((prev) => prev.map((u) => (u.uid === uid ? { ...u, is_friend: true } : u)));
             } else {
-                toastError(res.error || 'Не удалось добавить');
+                toastError(res.error || 'Не удалось отправить заявку');
             }
+        } catch (e) {
+            toastError(e instanceof Error ? e.message : 'Ошибка');
+        }
+    };
+
+    const handleAccept = async (uid: string) => {
+        if (!requireAuth('Войдите или зарегистрируйтесь, чтобы управлять заявками')) return;
+        try {
+            await acceptFriend(uid);
+            toastSuccess('Заявка принята — вы в друзьях');
+            await load();
+        } catch (e) {
+            toastError(e instanceof Error ? e.message : 'Ошибка');
+        }
+    };
+
+    const handleDecline = async (uid: string) => {
+        if (!requireAuth('Войдите или зарегистрируйтесь, чтобы управлять заявками')) return;
+        try {
+            await declineFriend(uid);
+            toastSuccess('Заявка отклонена');
+            await load();
+        } catch (e) {
+            toastError(e instanceof Error ? e.message : 'Ошибка');
+        }
+    };
+
+    const handleCancelRequest = async (uid: string) => {
+        if (!requireAuth('Войдите или зарегистрируйтесь, чтобы управлять заявками')) return;
+        try {
+            await cancelFriendRequest(uid);
+            toastSuccess('Заявка отменена');
+            await load();
         } catch (e) {
             toastError(e instanceof Error ? e.message : 'Ошибка');
         }
@@ -88,6 +132,10 @@ export function FriendsPanel({ onOpenChat }: FriendsPanelProps) {
             toastError(e instanceof Error ? e.message : 'Ошибка');
         }
     };
+
+    const friendUids = useMemo(() => new Set(friends.map((f) => f.uid)), [friends]);
+    const outgoingUids = useMemo(() => new Set(requestsOutgoing.map((u) => u.uid)), [requestsOutgoing]);
+    const incomingUids = useMemo(() => new Set(requestsIncoming.map((u) => u.uid)), [requestsIncoming]);
 
     return (
         <div className={s.panel}>
@@ -114,14 +162,53 @@ export function FriendsPanel({ onOpenChat }: FriendsPanelProps) {
                         <button className={s.ghostBtn} onClick={() => onOpenChat({ type: 'user', uid: u.uid, label: u.nickname || u.login })}>
                             <MdChatBubbleOutline />
                         </button>
-                        {u.is_friend || friends.some((f) => f.uid === u.uid) ? (
+                        {friendUids.has(u.uid) ? (
                             <button className={s.dangerBtn} onClick={() => handleRemove(u.uid)}>Убрать</button>
+                        ) : outgoingUids.has(u.uid) ? (
+                            <button className={s.ghostBtn} onClick={() => handleCancelRequest(u.uid)}>Отменить заявку</button>
+                        ) : incomingUids.has(u.uid) ? (
+                            <button className={s.primaryBtn} onClick={() => handleAccept(u.uid)}>Принять заявку</button>
                         ) : (
-                            <button className={s.primaryBtn} onClick={() => handleAdd(u.uid)}>Добавить</button>
+                            <button className={s.primaryBtn} onClick={() => handleSendRequest(u.uid)}>Добавить</button>
                         )}
                     </div>
                 ))}
             </div>
+
+            {isAuthenticated && (
+                <div className={s.panelSection}>
+                    <div className={s.panelTitle}>Входящие заявки ({requestsIncoming.length})</div>
+                    {loading && <div className={s.hint}>Загрузка…</div>}
+                    {!loading && requestsIncoming.length === 0 && <div className={s.hint}>Входящих заявок нет</div>}
+                    {requestsIncoming.map((f) => (
+                        <div key={f.uid} className={s.cardRow}>
+                            <div className={s.cardMain}>
+                                <div className={s.cardName}>{f.nickname || f.login}</div>
+                                <div className={s.cardSub}>@{f.login}</div>
+                            </div>
+                            <button className={s.primaryBtn} onClick={() => handleAccept(f.uid)}>Принять</button>
+                            <button className={s.dangerBtn} onClick={() => handleDecline(f.uid)}>Отклонить</button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {isAuthenticated && (
+                <div className={s.panelSection}>
+                    <div className={s.panelTitle}>Исходящие заявки ({requestsOutgoing.length})</div>
+                    {loading && <div className={s.hint}>Загрузка…</div>}
+                    {!loading && requestsOutgoing.length === 0 && <div className={s.hint}>Исходящих заявок нет</div>}
+                    {requestsOutgoing.map((f) => (
+                        <div key={f.uid} className={s.cardRow}>
+                            <div className={s.cardMain}>
+                                <div className={s.cardName}>{f.nickname || f.login}</div>
+                                <div className={s.cardSub}>@{f.login}</div>
+                            </div>
+                            <button className={s.ghostBtn} onClick={() => handleCancelRequest(f.uid)}>Отменить</button>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             <div className={s.panelSection}>
                 <div className={s.panelTitle}>Мои друзья ({friends.length})</div>

@@ -5,15 +5,19 @@ import {
 } from 'react-icons/md';
 import Header from '../../widgets/Header';
 import {
+    acceptFriend,
     addFriend,
+    cancelFriendRequest,
     decodeContacts,
     getCommunity,
     getUserProfile,
     joinCommunity,
     leaveCommunity,
+    listUserFriends,
     removeFriend,
     socialImageUrl,
     type Community,
+    type PublicFriend,
     type SocialUserProfile,
 } from '../../services/api/social';
 import { useAuth } from '../../entities/auth';
@@ -29,6 +33,7 @@ interface UserProfileData {
     communities: Array<{ uid: string; name: string; description: string }>;
     contributions?: { article_count: number; block_count: number };
     is_friend?: boolean;
+    friend_state?: 'friends' | 'outgoing' | 'incoming' | 'none';
     is_me?: boolean;
 }
 
@@ -66,6 +71,7 @@ export default function ProfilePage() {
                     communities: p.communities ?? [],
                     contributions: p.contributions,
                     is_friend: p.is_friend,
+                    friend_state: p.friend_state ?? 'none',
                     is_me: p.uid === myUid,
                 });
                 return;
@@ -92,14 +98,21 @@ export default function ProfilePage() {
     const toggleFriend = async () => {
         if (!data || data.kind !== 'user' || !uid) return;
         if (!requireAuth('Войдите или зарегистрируйтесь, чтобы добавлять друзей')) return;
+        const state = data.friend_state ?? 'none';
         setActionBusy(true);
         try {
-            if (data.is_friend) {
+            if (state === 'friends') {
                 await removeFriend(uid);
                 toast.success('Удалено из друзей');
+            } else if (state === 'outgoing') {
+                await cancelFriendRequest(uid);
+                toast.success('Заявка отменена');
+            } else if (state === 'incoming') {
+                await acceptFriend(uid);
+                toast.success('Заявка принята — вы в друзьях');
             } else {
                 await addFriend(uid);
-                toast.success('Запрос дружбы отправлен');
+                toast.success('Заявка отправлена');
             }
             await load();
         } catch (e) {
@@ -215,6 +228,16 @@ function renderContacts(contacts?: SocialUserProfile['contacts']) {
     );
 }
 
+function stepsLabel(n: number): string {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return `${n} шаг`;
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return `${n} шага`;
+    return `${n} шагов`;
+}
+
+type ProfileTabId = 'profile' | 'wall' | 'friends';
+
 function UserProfileView({
     data,
     actionBusy,
@@ -227,6 +250,15 @@ function UserProfileView({
     onOpenChat: () => void;
 }) {
     const p = data.profile;
+    const [tab, setTab] = useState<ProfileTabId>('profile');
+    const friendLabel =
+        data.friend_state === 'friends'
+            ? 'Убрать из друзей'
+            : data.friend_state === 'outgoing'
+                ? 'Отменить заявку'
+                : data.friend_state === 'incoming'
+                    ? 'Подтвердить заявку'
+                    : 'Добавить в друзья';
     return (
         <div className={s.card}>
             <div className={s.profileHead}>
@@ -239,7 +271,7 @@ function UserProfileView({
                 <div className={s.profileActions}>
                     {!data.is_me && (
                         <button className={s.ghostBtn} onClick={onToggleFriend} disabled={actionBusy}>
-                            {data.is_friend ? 'Убрать из друзей' : 'Добавить в друзья'}
+                            {friendLabel}
                         </button>
                     )}
                     <button className={s.ghostBtn} onClick={onOpenChat}>Сообщение</button>
@@ -251,29 +283,121 @@ function UserProfileView({
                 <div className={s.stat}><b>{data.contributions?.article_count ?? 0}</b> статей</div>
                 <div className={s.stat}><b>{data.contributions?.block_count ?? 0}</b> блоков</div>
             </div>
-            {renderContacts(p.contacts)}
-            {data.communities.length > 0 && (
-                <div className={s.profileSection}>
-                    <div className={s.panelTitle}>Сообщества</div>
-                    <div className={s.row}>
-                        {data.communities.map((c) => (
-                            <Link
-                                key={c.uid}
-                                to={`/social_network/profile/${encodeURIComponent(c.uid)}`}
-                                className={s.cardRow}
-                                role="button"
-                            >
-                                <span><MdGroups /></span>
-                                <span className={s.cardMain}>
-                                    <span className={s.cardName}>{c.name}</span>
-                                    <span className={s.cardSub}>{c.description}</span>
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
+            <nav className={s.tabs}>
+                <button
+                    className={tab === 'profile' ? `${s.tab} ${s.tabActive}` : s.tab}
+                    onClick={() => setTab('profile')}
+                >
+                    Профиль
+                </button>
+                <button
+                    className={tab === 'wall' ? `${s.tab} ${s.tabActive}` : s.tab}
+                    onClick={() => setTab('wall')}
+                >
+                    Стена
+                </button>
+                <button
+                    className={tab === 'friends' ? `${s.tab} ${s.tabActive}` : s.tab}
+                    onClick={() => setTab('friends')}
+                >
+                    Друзья ({data.friend_count})
+                </button>
+            </nav>
+            {tab === 'profile' && (
+                <>
+                    {renderContacts(p.contacts)}
+                    {data.communities.length > 0 && (
+                        <div className={s.profileSection}>
+                            <div className={s.panelTitle}>Сообщества</div>
+                            <div className={s.row}>
+                                {data.communities.map((c) => (
+                                    <Link
+                                        key={c.uid}
+                                        to={`/social_network/profile/${encodeURIComponent(c.uid)}`}
+                                        className={s.cardRow}
+                                        role="button"
+                                    >
+                                        <span><MdGroups /></span>
+                                        <span className={s.cardMain}>
+                                            <span className={s.cardName}>{c.name}</span>
+                                            <span className={s.cardSub}>{c.description}</span>
+                                        </span>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
+            {tab === 'wall' && <Wall uid={p.uid} isMe={data.is_me} />}
+            {tab === 'friends' && <FriendsTab uid={p.uid} selfViewed={data.is_me} />}
+        </div>
+    );
+}
+
+function FriendsTab({ uid, selfViewed }: { uid: string; selfViewed: boolean }) {
+    const toast = useToast();
+    const { isAuthenticated } = useAuth();
+    const [friends, setFriends] = useState<PublicFriend[] | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let cancelled = false;
+        setLoading(true);
+        (async () => {
+            try {
+                const res = await listUserFriends(uid);
+                if (!cancelled) setFriends(res.friends ?? []);
+            } catch (e) {
+                if (!cancelled) {
+                    toast.error(e instanceof Error ? e.message : 'Ошибка загрузки друзей');
+                    setFriends([]);
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, [uid, toast]);
+
+    return (
+        <div className={s.profileSection}>
+            <div className={s.panelTitle}>Друзья пользователя</div>
+            {!selfViewed && (
+                <div className={s.hint}>
+                    Список отсортирован по близости к вам — через проверенных друзей до любого человека
+                    не более 6 «рукопожатий»
                 </div>
             )}
-            <Wall uid={p.uid} isMe={data.is_me} />
+            {loading && <div className={s.hint}>Загрузка…</div>}
+            {!loading && friends?.length === 0 && <div className={s.hint}>Друзей пока нет</div>}
+            <div className={s.row}>
+                {(friends ?? []).map((f) => {
+                    const hasDistance = typeof f.distance === 'number';
+                    const showFar = isAuthenticated && !selfViewed && !hasDistance;
+                    return (
+                        <Link
+                            key={f.uid}
+                            to={`/social_network/profile/${encodeURIComponent(f.uid)}`}
+                            className={s.cardRow}
+                            role="button"
+                        >
+                            <Avatar url={f.avatar_key} size={32} />
+                            <span className={s.cardMain}>
+                                <span className={s.cardName}>{f.nickname || f.login}</span>
+                                <span className={s.cardSub}>@{f.login}</span>
+                            </span>
+                            {hasDistance ? (
+                                <span className={s.friendBadge}>{stepsLabel(f.distance as number)}</span>
+                            ) : showFar ? (
+                                <span className={`${s.friendBadge} ${s.friendBadgeFar}`}>дальше 6 шагов</span>
+                            ) : null}
+                        </Link>
+                    );
+                })}
+            </div>
         </div>
     );
 }

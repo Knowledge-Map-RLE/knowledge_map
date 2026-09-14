@@ -64,6 +64,9 @@ from src.routers import social_network as social_network_router
 # Система обратной связи (баг-репорты, пожелания)
 from web.routers import feedback as feedback_router
 
+# Серверная аналитика посещаемости
+from web.routers import analytics as analytics_router
+
 logger = logging.getLogger(__name__)
 
 # Observability: logfmt в stdout (→ Loki), OTLP traces+metrics (→ Alloy).
@@ -204,6 +207,9 @@ app.include_router(social_network_router.router, prefix="/api")
 
 # Система обратной связи (баг-репорты, пожелания)
 app.include_router(feedback_router.router)
+
+# Серверная аналитика посещаемости
+app.include_router(analytics_router.router)
 
 # GraphQL
 if _graphql_available:

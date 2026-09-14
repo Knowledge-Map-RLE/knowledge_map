@@ -30,7 +30,14 @@ export interface SocialUserProfile {
     friend_count?: number;
     communities?: CommunitySummary[];
     is_friend?: boolean;
+    friend_state?: 'friends' | 'outgoing' | 'incoming' | 'none';
     contributions?: { article_count: number; block_count: number };
+}
+
+/** Друг в публичном списке профиля: содержит дистанцию до зрителя (если он
+ *  авторизован), вычисленную по графу дружбы (BFS, глубина до 6). */
+export interface PublicFriend extends SocialUserProfile {
+    distance?: number | null;
 }
 
 export interface CommunitySummary {
@@ -220,12 +227,36 @@ export async function getUserProfile(uid: string): Promise<{ success: boolean; p
     return fetchJson(`/api/social/users/${encodeURIComponent(uid)}/profile`, { method: 'GET' });
 }
 
+export async function listUserFriends(uid: string): Promise<{ success: boolean; friends: PublicFriend[] }> {
+    return fetchJson(`/api/social/users/${encodeURIComponent(uid)}/friends`, { method: 'GET' });
+}
+
 export async function listFriends(): Promise<{ success: boolean; friends: SocialUserProfile[] }> {
     return fetchJson('/api/social/friends', { method: 'GET' });
 }
 
-export async function addFriend(uid: string): Promise<{ success: boolean; is_friend?: boolean; error?: string }> {
+export async function getFriendRequests(): Promise<{
+    success: boolean;
+    incoming: SocialUserProfile[];
+    outgoing: SocialUserProfile[];
+}> {
+    return fetchJson('/api/social/friends/requests', { method: 'GET' });
+}
+
+export async function addFriend(uid: string): Promise<{ success: boolean; status?: string; is_friend?: boolean; error?: string }> {
     return fetchJson(`/api/social/friends/${encodeURIComponent(uid)}`, { method: 'POST' });
+}
+
+export async function acceptFriend(uid: string): Promise<{ success: boolean; is_friend?: boolean; error?: string }> {
+    return fetchJson(`/api/social/friends/${encodeURIComponent(uid)}/accept`, { method: 'POST' });
+}
+
+export async function declineFriend(uid: string): Promise<{ success: boolean; error?: string }> {
+    return fetchJson(`/api/social/friends/${encodeURIComponent(uid)}/decline`, { method: 'POST' });
+}
+
+export async function cancelFriendRequest(uid: string): Promise<{ success: boolean; error?: string }> {
+    return fetchJson(`/api/social/friends/${encodeURIComponent(uid)}/cancel`, { method: 'POST' });
 }
 
 export async function removeFriend(uid: string): Promise<{ success: boolean; is_friend?: boolean }> {

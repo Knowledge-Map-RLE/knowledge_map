@@ -193,8 +193,8 @@ export interface IsolatedTriplesSearchResponse {
 }
 
 /** DAG-карта триплетов знаний (KnowledgeStatement) — источник данных /km. */
-export async function getKnowledgeTriples(isolatedLimit = 200): Promise<KnowledgeTriplesResponse> {
-  return fetchJson<KnowledgeTriplesResponse>(`/layout/knowledge_triples?isolated_limit=${isolatedLimit}`);
+export async function getKnowledgeTriples(isolatedLimit = 200, signal?: AbortSignal): Promise<KnowledgeTriplesResponse> {
+  return fetchJson<KnowledgeTriplesResponse>(`/layout/knowledge_triples?isolated_limit=${isolatedLimit}`, { signal });
 }
 
 /** Поиск по изолированным триплетам (активируется с 3 введённых символов). */

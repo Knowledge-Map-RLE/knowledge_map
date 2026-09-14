@@ -492,3 +492,24 @@ class FeedbackDraft(StructuredNode):
     user_uid = StringProperty(unique_index=True)
     text = StringProperty(default="")
     updated_at = FloatProperty()
+
+
+# Analytics — серверный трекинг посещаемости
+# =============================================================================
+
+
+class PageVisit(StructuredNode):
+    """ORM-модель одного просмотра страницы (серверная аналитика).
+
+    `visited_at` — Unix-время (epoch, секунды, UTC), заполняется на сервере.
+    `session_id` — стабильный идентификатор браузерной сессии из заголовка
+    X-Client-Session-ID (см. client/src/services/telemetry.ts).
+    """
+    uid = StringProperty(primary_key=True)
+    session_id = StringProperty(required=True, index=True)
+    user_uid = StringProperty(default="")
+    route = StringProperty(required=True, index=True)
+    referrer_domain = StringProperty(default="direct")
+    ip_address = StringProperty(default="")
+    authenticated = BooleanProperty(default=False)
+    visited_at = FloatProperty(index=True)

@@ -613,6 +613,11 @@ class GoalDecompositionService:
         # 5. Сохранение в Neo4j.
         self._save_plan_to_neo4j(plan_id, plan_title, statements, user_uid)
 
+        # Новые триплеты появились на карте — сбрасываем кэш карты знаний,
+        # чтобы последующее открытие /km показало план сразу.
+        from services.knowledge_triples_service import invalidate_knowledge_triples_cache
+        invalidate_knowledge_triples_cache()
+
         # 6. Блоки/рёбра для карты.
         blocks_out, links_out = self._build_graph_component(statements)
 

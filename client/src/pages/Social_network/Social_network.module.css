@@ -316,6 +316,25 @@
     white-space: nowrap;
 }
 
+.friendBadge {
+    flex: none;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1d4ed8;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.friendBadgeFar {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #64748b;
+    font-weight: 500;
+}
+
 .cardExpand {
     padding: 10px 12px;
     background: #f8fafc;

@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './styles/App.css'
 import Landing from './pages/Landing'
 import Introduction from './pages/Introduction'
@@ -9,6 +10,10 @@ import Science_articles from './pages/Science_articles';
 import { ViewportProvider } from './shared/contexts';
 import { ToastProvider } from './shared/ui/Toast';
 import { AuthProvider } from './entities/auth';
+import CookieConsent from './widgets/CookieConsent';
+import { reportPageView } from './services/analytics';
+import { reportPageVisit } from './services/api/analytics';
+import { authService } from './services/auth';
 import Data_extraction from './pages/Data_extraction';
 import Article_editor from './pages/Article_editor';
 import RLE_Databases from './pages/RLE_databases';
@@ -19,12 +24,27 @@ import Subscription from './pages/Subscription';
 import PatternEditor from './pages/Pattern_editor';
 import PatternMiner from './pages/Pattern_miner';
 
+/** Собирает просмотры страниц SPA (маршрут + состояние авторизации). */
+function PageViewTracker() {
+  const location = useLocation();
+  useEffect(() => {
+    const authenticated = authService.isAuthenticated();
+    const reported = reportPageView(location.pathname, { authenticated });
+    if (reported) {
+      reportPageVisit(location.pathname);
+    }
+  }, [location.pathname]);
+  return null;
+}
+
 function App() {
   return (
     <ViewportProvider>
       <AuthProvider>
         <ToastProvider>
           <Router>
+            <CookieConsent />
+            <PageViewTracker />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/km" element={<><Knowledge_map /><Knowledge_map_ui /></>} />

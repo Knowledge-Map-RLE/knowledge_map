@@ -21,6 +21,11 @@ logger = logging.getLogger(__name__)
 _GRAPH_LAYOUT_HOST = os.getenv("GRAPH_LAYOUT_HOST", "localhost")
 _GRAPH_LAYOUT_PORT = int(os.getenv("GRAPH_LAYOUT_PORT", "50051"))
 
+# Дедлайн gRPC-вызова укладки. Rust-воркер считает реальный граф за
+# десятки миллисекунд; если он завис или недоступен, вызов обязан быстро
+# завершиться исключением, а не висеть (и вместе с ним — HTTP /layout/*).
+_LAYOUT_RPC_TIMEOUT_SECONDS = float(os.getenv("GRAPH_LAYOUT_TIMEOUT", "5"))
+
 
 class VertexLayout:
     """Координаты и ранг вершины, возвращаемые Rust-воркером.
@@ -122,7 +127,7 @@ class GraphLayoutClient:
 
         async with grpc.aio.insecure_channel(self._address) as channel:
             stub = graph_layout_pb2_grpc.GraphLayoutServiceStub(channel)
-            response: Any = await stub.ComputeLayout(request)
+            response = await stub.ComputeLayout(request, timeout=_LAYOUT_RPC_TIMEOUT_SECONDS)
 
         if not response.success:
             raise RuntimeError(f"GraphLayoutService error: {response.error_message}")

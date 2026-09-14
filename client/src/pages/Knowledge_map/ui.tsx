@@ -387,8 +387,13 @@ export const Knowledge_mapUI = () => {
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
+    setLoadError(null);
+    // Защита от «вечной» загрузки: если API не отвечает (зависший gRPC-вызов
+    // укладки, упавшая БД), прерываем запрос и показываем понятную ошибку.
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 30000);
     try {
-      const data = await getKnowledgeTriples(200);
+      const data = await getKnowledgeTriples(200, controller.signal);
       if (!data?.success) {
         setLoadError('Не удалось загрузить карту триплетов');
         return;
@@ -397,8 +402,15 @@ export const Knowledge_mapUI = () => {
       setLinks(data.links || []);
       setIsolatedTotal(data.isolated_total ?? 0);
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Ошибка загрузки');
+      if (controller.signal.aborted) {
+        setLoadError('Загрузка карты триплетов заняла слишком много времени. Попробуйте ещё раз.');
+      } else if (err instanceof Error && err.name === 'AbortError') {
+        setLoadError('Загрузка карты триплетов была прервана. Попробуйте ещё раз.');
+      } else {
+        setLoadError(err instanceof Error ? err.message : 'Ошибка загрузки');
+      }
     } finally {
+      window.clearTimeout(timer);
       setIsLoading(false);
     }
   }, []);
@@ -529,9 +541,23 @@ export const Knowledge_mapUI = () => {
     return (
       <div
         className={styles.knowledge_map}
-        style={{ justifyContent: 'center', alignItems: 'center', color: 'red' }}
+        style={{ justifyContent: 'center', alignItems: 'center', gap: 12, flexDirection: 'column', color: 'red' }}
       >
-        Ошибка загрузки: {loadError}
+        <div>Ошибка загрузки: {loadError}</div>
+        <button
+          onClick={loadData}
+          style={{
+            fontSize: 13,
+            padding: '6px 14px',
+            border: '1px solid #d1d5db',
+            background: '#fff',
+            borderRadius: 8,
+            cursor: 'pointer',
+            color: '#374151',
+          }}
+        >
+          Повторить
+        </button>
       </div>
     );
   }

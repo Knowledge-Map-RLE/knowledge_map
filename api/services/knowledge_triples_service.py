@@ -21,7 +21,8 @@ DependencyEngine), вычисление укладки через Rust GraphLayo
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+import time
+from typing import Any, Dict, List, Optional, Tuple
 
 from fastapi import HTTPException
 from neomodel import db
@@ -43,6 +44,26 @@ _TRIPLE_BLOCK_HEIGHT = 140.0
 _TRIPLE_HORIZONTAL_GAP = 120.0
 _TRIPLE_VERTICAL_GAP = 160.0
 
+# Триплеты меняются редко (редактор статей, декомпозиция целей, пересчёт
+# зависимостей), а их полная выборка из Neo4j — самая дорогая операция
+# страницы /km (сотни тысяч строк). Чтобы открытие карты и поиск по
+# изолированным триплетам не перечитывали базу при каждом запросе, результат
+# кэшируется на короткий TTL. Кэш сбрасывается явно (invalidate) в местах,
+# где триплеты реально меняются: rebuild_dependencies и goal_decomposition.
+_TRIPLES_CACHE_TTL_SECONDS = 15.0
+
+_triples_cache: Optional[Tuple[float, Dict[str, Dict[str, Any]]]] = None
+
+
+def invalidate_knowledge_triples_cache() -> None:
+    """Сбрасывает кэш триплетов карты знаний.
+
+    Вызывается из точек записи (пересчёт зависимостей, декомпозиция целей),
+    чтобы после записи карта строилась из свежих данных.
+    """
+    global _triples_cache
+    _triples_cache = None
+
 
 class KnowledgeTriplesService:
     """Сервис для построения DAG-карты триплетов знаний."""
@@ -50,16 +71,35 @@ class KnowledgeTriplesService:
     async def _load_all_triples(self) -> Dict[str, Dict[str, Any]]:
         """Загружает все валидные триплеты KnowledgeStatement из Neo4j.
 
+        Дорогая операция (десятки тысяч строк) кэшируется на короткий TTL:
+        повторные открытия /km и поиск в левой панели не перечитывают БД.
+        """
+        global _triples_cache
+        now = time.monotonic()
+        if _triples_cache is not None and (now - _triples_cache[0]) < _TRIPLES_CACHE_TTL_SECONDS:
+            return _triples_cache[1]
+        triples = await self._load_all_triples_from_db()
+        _triples_cache = (now, triples)
+        return triples
+
+    @staticmethod
+    async def _load_all_triples_from_db() -> Dict[str, Dict[str, Any]]:
+        """Читает триплеты KnowledgeStatement из Neo4j (без кэширования).
+
         Возвращает словарь {uid: triple}, где triple содержит текст субъекта,
         предикат, текст объекта, их типы и sourceBlockId. Невалидные (пустой
         предикат/субъект/объект) и служебные META-предикаты отбрасываются.
+        Служебные предикаты отсеиваются на стороне Neo4j, чтобы не гонять
+        тысячи строк текстов по сети и не фильтровать их в Python.
         """
         query = """
         MATCH (s:KnowledgeStatement)
-        WITH s, coalesce(s.subject_text, '') AS subj,
-             coalesce(s.predicate, '') AS pred,
-             coalesce(s.object_text, '') AS obj
-        WHERE trim(pred) <> '' AND trim(subj) <> '' AND trim(obj) <> ''
+        WITH s,
+             trim(coalesce(s.subject_text, '')) AS subj,
+             trim(coalesce(s.predicate, '')) AS pred,
+             trim(coalesce(s.object_text, '')) AS obj
+        WHERE subj <> '' AND pred <> '' AND obj <> ''
+          AND NOT toLower(pred) IN $noise_predicates
         RETURN s.uid AS uid,
                coalesce(s.subject_type, 'concept') AS subject_type,
                subj AS subject_text,
@@ -70,15 +110,14 @@ class KnowledgeTriplesService:
                coalesce(s.sourceBlockId, '') AS source_block_id,
                coalesce(s.is_goal, false) AS is_goal
         """
-        result, _ = db.cypher_query(query)
+        result, _ = db.cypher_query(
+            query,
+            {"noise_predicates": list(_NOISE_PREDICATES)},
+        )
         triples: Dict[str, Dict[str, Any]] = {}
         for row in result:
-            uid = str(row[0])
-            pred = str(row[3] or "").strip().lower()
-            if pred in _NOISE_PREDICATES:
-                continue
-            triples[uid] = {
-                "uid": uid,
+            triples[str(row[0])] = {
+                "uid": str(row[0]),
                 "subject_type": str(row[1] or "concept").strip().lower(),
                 "subject_text": str(row[2] or "").strip(),
                 "predicate": str(row[3] or "").strip(),
@@ -456,6 +495,8 @@ class KnowledgeTriplesService:
                 use_llm=use_llm,
             )
             saved = engine.save(verified_edges)
+
+            invalidate_knowledge_triples_cache()
 
             logger.info(
                 "rebuild_dependencies: triples=%d verified=%d saved=%d use_llm=%s",
