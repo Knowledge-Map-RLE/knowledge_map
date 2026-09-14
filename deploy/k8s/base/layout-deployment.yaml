@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: layout
+  namespace: knowledge-map
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: layout
+  template:
+    metadata:
+      labels:
+        app: layout
+    spec:
+      containers:
+        - name: layout
+          image: layout:latest
+          ports:
+            - containerPort: 50051
+              name: grpc
+            - containerPort: 9090
+              name: metrics
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config.toml
+              subPath: config.toml
+              readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "0.25"
+            limits:
+              memory: "1Gi"
+              cpu: "0.5"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: config-layout

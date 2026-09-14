@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-layout
+  namespace: knowledge-map
+data:
+  config.toml: |
+    [server]
+    bind_address = "0.0.0.0"
+    grpc_port = 50051
+    metrics_port = 9090
+    max_connections = 1000
+    request_timeout = 300
+    stream_buffer_size = 1024

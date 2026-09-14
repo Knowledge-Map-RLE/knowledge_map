@@ -79,13 +79,13 @@ class Settings(BaseSettings):
     # Единая директория логов сервиса (от рабочей директории процесса).
     LOG_DIR: str = "logs"
 
-    # Модель для UI-чата: всегда фиксированная (Yandex), чтобы переключение
+    # Модель для UI-чата: всегда фиксированная (cloud.ru), чтобы переключение
     # DEFAULT_PROVIDER в микросервисе ai НЕ влияло на интерфейс. Пусто — шлюз
     # использует свой DEFAULT_PROVIDER.
     AI_UI_MODEL: str = ""
 
     # LLM Extraction (triplet extraction from articles)
-    LLM_EXTRACT_MODEL: str = "gpt://b1gulkghbtm74u59sakh/deepseek-v4-flash/latest"
+    LLM_EXTRACT_MODEL: str = "deepseek-ai/DeepSeek-V4-Flash"
     LLM_MAX_CHUNK_CHARS: int = 3500
     LLM_MAX_TOKENS: int = 80000
     LLM_TIMEOUT: int = 1800
@@ -95,6 +95,8 @@ class Settings(BaseSettings):
     LLM_UUIDREF_MAX_WORDS: int = 1
     LLM_UUIDREF_MIN_FREQ: int = 3
     LLM_WHOLE_ARTICLE_MAX_CHARS: int = 100000
+    # Тарифы AI-запросов (CLOUDRU_BASE_INPUT_PRICE / CLOUDRU_BASE_OUTPUT_PRICE)
+    # читаются сервисом из окружения напрямую (см. domain.rules.ai_pricing).
 
     # Золотые эталоны LLM-экстракции (eval/gold)
     # Каталог золотых эталонов (eval/gold).

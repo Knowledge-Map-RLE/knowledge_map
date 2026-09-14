@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: knowledge-map
+  labels:
+    app.kubernetes.io/part-of: knowledge-map

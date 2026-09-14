@@ -42,9 +42,21 @@ class FakeClient:
         self._stream = stream
         self.last_payload: dict | None = None
 
-    async def chat_completions(self, model: str, payload: dict):
-        self.last_payload = payload
-        return self._stream, model
+    async def generate(self, model: str, req: dict) -> dict:
+        self.last_payload = {**req, "model": model}
+        content = (await self._stream.aread()).decode("utf-8")
+        return json.loads(content)
+
+    async def stream(self, model: str, req: dict):
+        self.last_payload = {**req, "model": model, "stream": True}
+        async for chunk in self._stream.aiter_bytes():
+            yield chunk
+
+    async def list_models(self):
+        return []
+
+    async def close(self):
+        pass
 
 
 def _plain_chunk(content: str) -> bytes:

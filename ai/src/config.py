@@ -2,7 +2,7 @@
 
 The service is an OpenAI-compatible chat gateway. It knows nothing about specific
 models: it forwards ``/v1/chat/completions`` requests to one of the configured
-providers (LM Studio during development, DeepSeek Pro/Flash later, a local GGUF
+providers (cloud.ru Foundation Models, LM Studio during development, a local GGUF
 model via llama-cpp-python) and streams the reply back in OpenAI format.
 
 Environment split
@@ -24,12 +24,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Provider(BaseModel):
-    """An upstream provider (LM Studio, Yandex, local GGUF, ...).
+    """An upstream provider (cloud.ru, LM Studio, local GGUF, ...).
 
-    ``use_sdk`` marks a provider whose upstream calls are made through the
-    official ``yandex-ai-studio-sdk`` instead of the raw HTTP client. For such
-    providers ``base_url``/``api_key`` are still stored for model-listing and
-    compatibility, but generation/streaming go through the SDK.
+    All HTTP-based providers use ``HttpProviderClient`` (OpenAI-compatible).
 
     ``use_local`` marks a provider implemented by ``LocalGGUFProviderClient``
     (llama-cpp-python + HuggingFace Hub).
@@ -41,7 +38,6 @@ class Provider(BaseModel):
     models: list[str] = Field(default_factory=list)
     default_model: str | None = None
     context_length: int | None = None
-    use_sdk: bool = False
     use_local: bool = False
 
 
@@ -95,13 +91,12 @@ class Settings(BaseSettings):
     #   "api_key":"lm-studio","models":["qwen/qwen3-4b"]}]
     providers_json: str | None = Field(default=None, alias="AI_PROVIDERS")
 
-    # Yandex AI Studio / Yandex Cloud Foundation Models provider.
-    # Configured via these constants; a "yandex-ai" provider is registered
-    # automatically when YANDEX_CLOUD_API_KEY is set.
-    yandex_cloud_folder: str = Field(default="", alias="YANDEX_CLOUD_FOLDER")
-    yandex_cloud_api_key: str = Field(default="", alias="YANDEX_CLOUD_API_KEY")
-    yandex_cloud_model: str = Field(
-        default="deepseek-v4-flash/latest", alias="YANDEX_CLOUD_MODEL"
+    # cloud.ru Foundation Models provider.
+    # Configured via these constants; a "cloudru" provider is registered
+    # automatically when CLOUDRU_API_KEY is set.
+    cloudru_api_key: str = Field(default="", alias="CLOUDRU_API_KEY")
+    cloudru_model: str = Field(
+        default="deepseek-ai/DeepSeek-V4-Flash", alias="CLOUDRU_MODEL"
     )
 
     # Local GGUF model via llama-cpp-python + HuggingFace Hub.
@@ -131,22 +126,17 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
-def _yandex_provider() -> Provider | None:
-    """Build the Yandex AI Studio / Cloud provider from YANDEX_CLOUD_* constants."""
-    if not settings.yandex_cloud_api_key or not settings.yandex_cloud_folder:
+def _cloudru_provider() -> Provider | None:
+    """Build the cloud.ru Foundation Models provider from CLOUDRU_* constants."""
+    if not settings.cloudru_api_key:
         return None
-    model_uri = (
-        f"gpt://{settings.yandex_cloud_folder.rstrip('/')}/"
-        f"{settings.yandex_cloud_model.lstrip('/')}"
-    )
     return Provider(
-        name="yandex-ai",
-        base_url="https://llm.api.cloud.yandex.net/v1",
-        api_key=settings.yandex_cloud_api_key,
-        models=[model_uri],
-        default_model=model_uri,
+        name="cloudru",
+        base_url="https://foundation-models.api.cloud.ru/v1",
+        api_key=settings.cloudru_api_key,
+        models=[settings.cloudru_model],
+        default_model=settings.cloudru_model,
         context_length=128000,
-        use_sdk=True,
     )
 
 
@@ -182,20 +172,20 @@ def _lm_studio_fallback() -> list[Provider]:
 
 def load_providers() -> list[Provider]:
     """Build the provider list from ``AI_PROVIDERS``, the LM Studio defaults,
-    the Yandex provider configured via ``YANDEX_CLOUD_*`` constants and the
+    the cloud.ru provider configured via ``CLOUDRU_*`` constants and the
     development-only local GGUF provider."""
     providers: list[Provider]
     if settings.providers_json:
         data = json.loads(settings.providers_json)
         providers = [Provider(**item) for item in data]
-    elif not settings.yandex_cloud_api_key:
+    elif not settings.cloudru_api_key:
         providers = _lm_studio_fallback()
     else:
         providers = []
 
-    yandex = _yandex_provider()
-    if yandex and not any(p.name == "yandex-ai" for p in providers):
-        providers.append(yandex)
+    cloudru = _cloudru_provider()
+    if cloudru and not any(p.name == "cloudru" for p in providers):
+        providers.append(cloudru)
 
     local = _local_gguf_provider()
     if local and not any(p.name == "local-gguf" for p in providers):

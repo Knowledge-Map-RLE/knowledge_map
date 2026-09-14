@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: knowledge-map
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          env:
+            - name: ALLOWED_ORIGINS
+              value: "http://localhost:5173,http://localhost:3000"
+            - name: API_BASE_URL
+              value: "http://localhost:8000"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "0.25"
+            limits:
+              memory: "1Gi"
+              cpu: "0.5"

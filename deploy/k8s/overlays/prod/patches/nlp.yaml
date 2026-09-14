@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nlp
+  namespace: knowledge-map
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: nlp
+          env:
+            - name: NLP_LOG_LEVEL
+              value: "INFO"
+            - name: NLP_ENABLE_SPACY
+              value: "true"
+            - name: NLP_SPACY_MODEL
+              value: "en_core_sci_scibert"
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "2"
+            limits:
+              memory: "8Gi"
+              cpu: "4"
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 60
+            periodSeconds: 30

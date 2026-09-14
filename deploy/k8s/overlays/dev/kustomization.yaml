@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - minio-deployment.yaml
+  - minio-pvc.yaml
+  - minio-service.yaml
+  - secret-app-secrets.yaml
+
+patches:
+  - path: config-common-patch.yaml
+  - path: patches/neo4j.yaml
+  - path: patches/api.yaml
+  - path: patches/auth.yaml
+  - path: patches/billing.yaml
+  - path: patches/ai.yaml
+  - path: patches/nlp.yaml
+  - path: patches/layout.yaml
+  - path: patches/knowledge-map-core.yaml
+  - path: patches/pdf-to-md.yaml
+  - path: patches/client.yaml
+
+namespace: knowledge-map

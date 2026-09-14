@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: knowledge-map
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: api:latest
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: config-common
+            - secretRef:
+                name: app-secrets
+          env:
+            - name: LAYOUT_SERVICE_TIMEOUT
+              value: "300"
+            - name: GRAPH_LAYOUT_TIMEOUT
+              value: "5"
+            - name: API_BASE_URL
+              value: "http://api:8000"
+            - name: ALLOWED_ORIGINS
+              value: "https://knowledge-map.ru,https://www.knowledge-map.ru"
+            - name: ADMIN_UIDS
+              value: ""
+            - name: LLM_EXTRACT_MODEL
+              value: "deepseek-ai/DeepSeek-V4-Flash"
+            - name: CLOUDRU_BASE_INPUT_PRICE
+              value: "0.00001853"
+            - name: CLOUDRU_BASE_OUTPUT_PRICE
+              value: "0.00003708"
+            - name: LLM_MAX_CHUNK_CHARS
+              value: "3500"
+            - name: LLM_MAX_TOKENS
+              value: "80000"
+            - name: LLM_TIMEOUT
+              value: "1800"
+            - name: LLM_TEMPERATURE
+              value: "0.1"
+            - name: LLM_MAX_RETRIES
+              value: "2"
+            - name: NCBI_TOOL_NAME
+              value: "KnowledgeMap"
+            - name: NCBI_EMAIL
+              value: "support@knowledge-map.ru"
+            - name: OPENALEX_WORKS_DIR
+              value: "data/openalex-data/jsonl/works"
+            - name: OPENALEX_CHECKPOINT_FILE
+              value: "data/citation_openalex_checkpoint.txt"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 90
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1"
+            limits:
+              memory: "4Gi"
+              cpu: "2"

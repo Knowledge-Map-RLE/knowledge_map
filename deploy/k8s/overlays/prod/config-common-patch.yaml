@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-common
+  namespace: knowledge-map
+data:
+  ENVIRONMENT: "production"
+  DEBUG: "false"
+  NEO4J_URI: "bolt://neo4j:7687"
+  S3_ENDPOINT_URL: "https://s3.cloud.ru"
+  S3_REGION: "ru-msk"
+  S3_BUCKET_NAME: "km-storage"
+  BILLING_SERVICE_URL: "http://billing:50058"
+  PDF_TO_MD_SERVICE_URL: "http://pdf-to-md:8002"
+  ALLOWED_ORIGINS: "https://knowledge-map.ru,https://www.knowledge-map.ru"
+  YOOKASSA_RETURN_URL: "https://knowledge-map.ru/subscription"

@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - configmap-common.yaml
+  - configmap-layout.yaml
+  - configmap-nginx-client.yaml
+
+  - neo4j-statefulset.yaml
+  - neo4j-service.yaml
+  - qdrant-statefulset.yaml
+  - qdrant-service.yaml
+
+  - auth-deployment.yaml
+  - auth-service.yaml
+  - billing-deployment.yaml
+  - billing-service.yaml
+  - ai-deployment.yaml
+  - ai-service.yaml
+  - nlp-deployment.yaml
+  - nlp-service.yaml
+  - api-deployment.yaml
+  - api-service.yaml
+  - layout-deployment.yaml
+  - layout-service.yaml
+  - knowledge-map-core-deployment.yaml
+  - knowledge-map-core-service.yaml
+  - pdf-to-md-deployment.yaml
+  - pdf-to-md-service.yaml
+  - client-deployment.yaml
+  - client-service.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: knowledge-map

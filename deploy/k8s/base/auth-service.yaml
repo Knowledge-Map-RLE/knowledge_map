@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  namespace: knowledge-map
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: grpc
+      port: 50057
+      targetPort: grpc
+  type: ClusterIP

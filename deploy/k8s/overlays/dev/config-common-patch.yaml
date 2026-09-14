@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-common
+  namespace: knowledge-map
+data:
+  ENVIRONMENT: "development"
+  DEBUG: "true"
+  NEO4J_URI: "bolt://neo4j:7687"
+  S3_ENDPOINT_URL: "http://minio:9000"
+  S3_REGION: "us-east-1"
+  S3_BUCKET_NAME: "knowledge-map-data"
+  BILLING_SERVICE_URL: "http://billing:50058"
+  PDF_TO_MD_SERVICE_URL: "http://pdf-to-md:8002"

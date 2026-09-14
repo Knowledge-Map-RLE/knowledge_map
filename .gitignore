@@ -24,6 +24,10 @@ billing/.env
 worker_distributed_layering_rust/tests/artifacts/
 *.log
 
+# Secrets kubernetes
+deploy/k8s/overlays/prod/secrets.env
+kubeconfig*.yaml
+
 target/
 
 eval/reports/

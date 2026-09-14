@@ -160,9 +160,10 @@ class AIModelClient:
     ) -> dict:
         """Streaming version of generate_text — accumulates SSE chunks.
 
-        The gateway forwards ``stream: true`` to the Yandex SDK ``run_stream``,
-        which keeps the TCP connection alive by sending chunks continuously,
-        avoiding the server-side disconnect that plagues long non-streaming calls.
+        The gateway forwards ``stream: true`` to the upstream provider
+        (cloud.ru Foundation Models), which keeps the TCP connection alive by
+        sending chunks continuously, avoiding the server-side disconnect that
+        plagues long non-streaming calls.
         """
         payload = {
             "model": model_id,

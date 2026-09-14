@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai
+  namespace: knowledge-map
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai
+  template:
+    metadata:
+      labels:
+        app: ai
+    spec:
+      containers:
+        - name: ai
+          image: ai:latest
+          ports:
+            - containerPort: 50059
+              name: http
+          envFrom:
+            - configMapRef:
+                name: config-common
+            - secretRef:
+                name: app-secrets
+          env:
+            - name: DEFAULT_PROVIDER
+              value: "cloudru"
+            - name: DEFAULT_MODEL
+              value: "deepseek-ai/DeepSeek-V4-Flash"
+            - name: CLOUDRU_MODEL
+              value: "deepseek-ai/DeepSeek-V4-Flash"
+            - name: AI_REQUEST_TIMEOUT
+              value: "300"
+            - name: AI_CONNECT_TIMEOUT
+              value: "15"
+            - name: AI_MODELS_CACHE_TTL
+              value: "60"
+            - name: AI_CONTEXT_LENGTH
+              value: "32000"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 90
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "2"
+            limits:
+              memory: "8Gi"
+              cpu: "4"
+          volumeMounts:
+            - name: ai-model-cache
+              mountPath: /app/models
+      volumes:
+        - name: ai-model-cache
+          emptyDir:
+            sizeLimit: 10Gi

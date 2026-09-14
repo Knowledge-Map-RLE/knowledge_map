@@ -200,14 +200,14 @@ def test_send_message_streams_and_records_usage(repo, chat):
     assert usages[0].user_uid == "user-1"
     assert usages[0].actual_input_tokens == 10
     assert usages[0].actual_output_tokens == 5
-    # вход 10*0.00002409=0.0002409; выход 5*0.00004820=0.0002410 → 0.0004819
-    assert usages[0].actual_cost == "0.0004819"
+    # вход 10*0.00001853=0.0001853; выход 5*0.00003708=0.0001854 → 0.0003707
+    assert usages[0].actual_cost == "0.0003707"
 
     usage_evt = [e for e in events if e["type"] == "usage"][0]
-    assert usage_evt["cost"] == "0.0004819"
+    assert usage_evt["cost"] == "0.0003707"
     assert usage_evt["cost_breakdown"] == {
-        "input": "0.0002409",
-        "output": "0.000241",
+        "input": "0.0001853",
+        "output": "0.0001854",
         "tool": "0",
     }
     assert usage_evt["deducted"] is True
@@ -254,14 +254,14 @@ def test_send_message_records_usage_and_breakdown(repo, chat):
     )
 
     usage = repo.usages[0]
-    # вход 2000*0.00002409=0.04818; выход 300*0.00004820=0.01446; инстр. 50*0.00002409=0.0012045
-    assert usage.actual_cost == "0.0638445"
+    # вход 2000*0.00001853=0.03706; выход 300*0.00003708=0.011124; инстр. 50*0.00001853=0.0009265
+    assert usage.actual_cost == "0.0491105"
 
     usage_evt = [e for e in events if e["type"] == "usage"][0]
     assert usage_evt["cost_breakdown"] == {
-        "input": "0.04818",
-        "output": "0.01446",
-        "tool": "0.0012045",
+        "input": "0.03706",
+        "output": "0.011124",
+        "tool": "0.0009265",
     }
 
 
@@ -283,8 +283,8 @@ def test_usage_summary_period(repo, chat):
     assert summary["request_count"] == 2
     assert summary["input_tokens"] == 20
     assert summary["output_tokens"] == 10
-    # 2 * 0.0004819 = 0.0009638
-    assert summary["cost"] == "0.0009638"
+    # 2 * 0.0003707 = 0.0007414
+    assert summary["cost"] == "0.0007414"
 
 
 def _payload_for_messages(repo, chat_uid):
@@ -327,10 +327,10 @@ def test_messages_payload_distributes_usage_to_pair(repo, chat):
     assert user["tokens"] == 2000
     assert user["input_tokens"] == 2000
     assert user["tool_tokens"] == 0
-    # 2000 * 0.00002409 = 0.04818
-    assert user["cost"] == "0.04818"
+    # 2000 * 0.00001853 = 0.03706
+    assert user["cost"] == "0.03706"
     assert user["cost_breakdown"] == {
-        "input": "0.04818",
+        "input": "0.03706",
         "output": "0",
         "tool": "0",
     }
@@ -340,15 +340,15 @@ def test_messages_payload_distributes_usage_to_pair(repo, chat):
     assert assistant["tokens"] == 300
     assert assistant["input_tokens"] == 0
     assert assistant["tool_tokens"] == 50
-    # 300 * 0.00004820 = 0.01446; 50 * 0.00002409 = 0.0012045
-    assert assistant["cost"] == "0.0156645"
+    # 300 * 0.00003708 = 0.011124; 50 * 0.00001853 = 0.0009265
+    assert assistant["cost"] == "0.0120505"
     assert assistant["cost_breakdown"] == {
         "input": "0",
-        "output": "0.01446",
-        "tool": "0.0012045",
+        "output": "0.011124",
+        "tool": "0.0009265",
     }
     # суммарная стоимость пары совпадает с фактической
-    assert str((float(user["cost"]) + float(assistant["cost"]))) == "0.0638445"
+    assert str((float(user["cost"]) + float(assistant["cost"]))) == "0.0491105"
 
 
 def test_messages_payload_without_usage(repo, chat):

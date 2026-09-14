@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: knowledge-map-core
+  namespace: knowledge-map
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: knowledge-map-core
+          env:
+            - name: QDRANT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: config-common
+                  key: QDRANT_URL
+            - name: HUGGING_FACE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: HUGGING_FACE_TOKEN
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1"
+            limits:
+              memory: "4Gi"
+              cpu: "2"
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 60
+            periodSeconds: 30

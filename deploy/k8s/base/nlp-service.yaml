@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nlp
+  namespace: knowledge-map
+spec:
+  selector:
+    app: nlp
+  ports:
+    - name: grpc
+      port: 50055
+      targetPort: grpc
+  type: ClusterIP

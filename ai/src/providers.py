@@ -175,77 +175,6 @@ class HttpProviderClient:
         await self._client.aclose()
 
 
-class YandexSDKProviderClient:
-    """Provider client backed by the official ``yandex-ai-studio-sdk``.
-
-    Generation and streaming use ``sdk.chat.completions`` — the OpenAI-compatible
-    chat domain of the SDK — and are re-emitted to the outside in OpenAI format.
-    """
-
-    def __init__(self, provider: Provider) -> None:
-        from yandex_ai_studio_sdk import AsyncAIStudio
-        from yandex_ai_studio_sdk.auth import APIKeyAuth
-
-        self.provider = provider
-        self._sdk = AsyncAIStudio(
-            folder_id=_sdk_folder_id(provider),
-            auth=APIKeyAuth(provider.api_key or ""),
-        )
-        self._filter: str | None = None
-
-    async def generate(self, model: str, req: dict) -> dict:
-        messages = req.get("messages") or []
-        config: dict = {}
-        if req.get("temperature") is not None:
-            config["temperature"] = req["temperature"]
-        if req.get("max_tokens") is not None:
-            config["max_tokens"] = req["max_tokens"]
-
-        try:
-            result = await self._sdk.chat.completions(
-                model_name=_sdk_model_name(model, self.provider),
-            ).configure(**config).run(messages, timeout=_request_timeout(req))
-        except Exception as exc:  # noqa: BLE001 — normalise any SDK error
-            logger.error("Yandex SDK chat failed for '%s': %s", self.provider.name, exc)
-            raise ProviderError(
-                f"Provider '{self.provider.name}' SDK call failed: {exc}"
-            ) from exc
-
-        return _chat_result_to_openai(result, model)
-
-    async def stream(self, model: str, req: dict):
-        messages = req.get("messages") or []
-        config: dict = {}
-        if req.get("temperature") is not None:
-            config["temperature"] = req["temperature"]
-        if req.get("max_tokens") is not None:
-            config["max_tokens"] = req["max_tokens"]
-
-        model_obj = self._sdk.chat.completions(
-            model_name=_sdk_model_name(model, self.provider),
-        ).configure(**config)
-        try:
-            async for result in model_obj.run_stream(messages, timeout=_request_timeout(req)):
-                payload = _chat_chunk_to_openai(result, model)
-                if payload is not None:
-                    yield _sse_event(payload)
-        except Exception as exc:  # noqa: BLE001
-            logger.error("Yandex SDK chat stream failed for '%s': %s", self.provider.name, exc)
-            raise ProviderError(
-                f"Provider '{self.provider.name}' SDK stream failed: {exc}"
-            ) from exc
-        yield _sse_event({"choices": [], "done": True})
-
-    async def list_models(self) -> list[ModelEntry]:
-        return [
-            ModelEntry(id=m, provider=self.provider.name, configured=True, context_length=128000)
-            for m in self.provider.models
-        ]
-
-    async def close(self) -> None:
-        pass
-
-
 class LocalGGUFProviderClient:
     """Provider client running a local GGUF model via ``llama-cpp-python``.
 
@@ -393,96 +322,6 @@ class LocalGGUFProviderClient:
         self._llm = None
 
 
-def _request_timeout(req: dict) -> float:
-    """Preferred upper bound for a single SDK call, seconds."""
-    t = req.get("timeout")
-    if isinstance(t, (int, float)) and t > 0:
-        return float(t)
-    return float(settings.request_timeout)
-
-
-def _sdk_folder_id(provider: Provider) -> str:
-    """Extract the Yandex folder id from a ``gpt://<folder>/<model>`` URI."""
-    uri = (provider.default_model or provider.models[0] if provider.models else "")
-    if "://" in uri:
-        head = uri.split("://", 1)[1]  # <folder>/<model>[/version]
-        folder = head.split("/", 1)[0]
-        return folder
-    return ""
-
-
-def _sdk_model_name(model: str, provider: Provider) -> str:
-    """Normalise the requested model to a full ``gpt://<folder>/<model>`` URI."""
-    if model and "://" in model:
-        return model
-    folder = _sdk_folder_id(provider)
-    base = model or (provider.default_model or "")
-    if folder and not base.startswith(f"{folder}/"):
-        # e.g. "deepseek-v4-flash/latest" -> "gpt://<folder>/deepseek-v4-flash/latest"
-        return f"gpt://{folder}/{base}"
-    return base
-
-
-def _chat_result_to_openai(result, resolved_model: str) -> dict:
-    choice = result.choices[0]
-    return {
-        "id": result.id,
-        "object": "chat.completion",
-        "created": int(result.created.timestamp()),
-        "model": resolved_model,
-        "choices": [
-            {
-                "index": 0,
-                "message": {
-                    "role": choice.role,
-                    "content": choice.text,
-                },
-                "finish_reason": choice.finish_reason.value,
-            }
-        ],
-        "usage": {
-            "prompt_tokens": result.usage.prompt_tokens if result.usage else 0,
-            "completion_tokens": result.usage.completion_tokens if result.usage else 0,
-            "total_tokens": result.usage.total_tokens if result.usage else 0,
-        },
-    }
-
-
-def _chat_chunk_to_openai(result, resolved_model: str) -> dict | None:
-    """Convert one SDK streaming result into an OpenAI ``chat.completion.chunk``.
-
-    Returns ``None`` when the chunk carries no new delta to emit.
-    """
-    choice = result.choices[0]
-    delta_content = getattr(choice, "delta", "")
-    finish = choice.finish_reason.value
-
-    delta: dict = {}
-    if delta_content:
-        delta["content"] = delta_content
-    if not delta.get("content") and finish in ("stop",):
-        delta["content"] = choice.text or ""
-
-    chunk = {
-        "id": result.id,
-        "object": "chat.completion.chunk",
-        "created": int(result.created.timestamp()),
-        "model": resolved_model,
-        "choices": [
-            {
-                "index": 0,
-                "delta": delta,
-                "finish_reason": finish,
-            }
-        ],
-    }
-    if finish == "content_filter":
-        delta["content"] = choice.text or ""
-    if not delta and finish not in ("stop", "length", "content_filter", "tool_calls", "usage"):
-        return None
-    return chunk
-
-
 class Catalog:
     """Holds configured providers and resolves model -> provider."""
 
@@ -498,9 +337,7 @@ class Catalog:
     def _client_for(self, provider: Provider) -> object:
         client = self._clients.get(provider.name)
         if client is None:
-            if provider.use_sdk:
-                client = YandexSDKProviderClient(provider)
-            elif provider.use_local:
+            if provider.use_local:
                 client = LocalGGUFProviderClient(provider)
             else:
                 client = HttpProviderClient(provider)
@@ -512,7 +349,7 @@ class Catalog:
 
         The returned client exposes ``generate(model, req)`` and
         ``stream(model, req)`` regardless of the underlying implementation
-        (raw HTTP or the official yandex-ai-studio-sdk).
+        (raw HTTP or local GGUF).
         """
         requested = (model or "").strip()
 

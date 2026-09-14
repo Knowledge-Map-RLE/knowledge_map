@@ -1,31 +1,69 @@
 """
 Layer: Domain (Rules)
 Package: domain.rules.ai_pricing
-Responsibility: Расчёт стоимости AI-запросов на основе тарифов Сбер Cloud.
+Responsibility: Расчёт стоимости AI-запросов на основе тарифов cloud.ru
+Foundation Models.
 
-Тарифы (₽ за 1 токен) — DeepSeek V4 Flash через Сбер Cloud
-с наценкой 30%:
-  - входные токены:            24,09 ₽ / 1M  (18,53 + 30%)
-  - исходящие токены:          48,20 ₽ / 1M  (37,08 + 30%)
-  - токены инструментов:       24,09 ₽ / 1M  (как входные)
+Тарифы (₽ за 1 токен) — DeepSeek-V4-Flash через cloud.ru:
+  - входные токены:    18,53 ₽ / 1M
+  - исходящие токены:  37,08 ₽ / 1M
+  - токены инструментов:  тариф входных токенов
+
+Значения задаются через переменные окружения:
+  - CLOUDRU_BASE_INPUT_PRICE   — цена 1 входного токена в ₽
+  - CLOUDRU_BASE_OUTPUT_PRICE  — цена 1 исходящего токена в ₽
+
+Дефолты совпадают с базовыми тарифами cloud.ru.
 
 Allowed imports: только стандартная библиотека Python
 Forbidden imports: neomodel, pydantic, fastapi, grpc, aioboto3
 """
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Optional
 
-# Цена за 1 токен, рубли (₽/1M токенов / 1_000_000).
-# ``str`` (а не float) гарантирует точное десятичное представление.
-INPUT_TOKENS_PRICE = Decimal("0.00002409")    # 24,09 ₽ / 1M
-OUTPUT_TOKENS_PRICE = Decimal("0.00004820")   # 48,20 ₽ / 1M
-TOOL_TOKENS_PRICE = Decimal("0.00002409")     # как входные
+# Дефолты совпадают с базовыми тарифами cloud.ru (без наценки).
+_DEFAULT_INPUT_TOKENS_PRICE = Decimal("0.00001853")    # 18,53 ₽ / 1M
+_DEFAULT_OUTPUT_TOKENS_PRICE = Decimal("0.00003708")   # 37,08 ₽ / 1M
+
+
+def _env_decimal(var: str, default: Decimal) -> Decimal:
+    raw = os.environ.get(var)
+    if raw is None or not raw.strip():
+        return default
+    return Decimal(raw)
+
+
+@dataclass(frozen=True)
+class TokenPrices:
+    """Итоговые цены за 1 токен (рубли, Decimal)."""
+
+    input_price: Decimal
+    output_price: Decimal
+    tool_price: Decimal
+
+
+def load_token_prices() -> TokenPrices:
+    """Читает тарифы из окружения (с дефолтами cloud.ru) в runtime."""
+    input_price = _env_decimal("CLOUDRU_BASE_INPUT_PRICE", _DEFAULT_INPUT_TOKENS_PRICE)
+    output_price = _env_decimal("CLOUDRU_BASE_OUTPUT_PRICE", _DEFAULT_OUTPUT_TOKENS_PRICE)
+    return TokenPrices(
+        input_price=input_price,
+        output_price=output_price,
+        tool_price=input_price,
+    )
+
 
 # Копеек в рубле — для конвертации стоимости в целые копейки.
 _KOPECKS_PER_RUBLE = Decimal("100")
+
+# Рекламация для обратной совместимости: цены по умолчанию из окружения.
+INPUT_TOKENS_PRICE = load_token_prices().input_price
+OUTPUT_TOKENS_PRICE = load_token_prices().output_price
+TOOL_TOKENS_PRICE = INPUT_TOKENS_PRICE
 
 
 @dataclass(frozen=True)
@@ -46,11 +84,18 @@ def calculate_usage_cost(
     input_tokens: int = 0,
     output_tokens: int = 0,
     tool_tokens: int = 0,
+    prices: Optional[TokenPrices] = None,
 ) -> UsageCost:
-    """Считает стоимость запроса по фактическим/оценочным токенам."""
-    input_cost = _cost(input_tokens, INPUT_TOKENS_PRICE)
-    output_cost = _cost(output_tokens, OUTPUT_TOKENS_PRICE)
-    tool_cost = _cost(tool_tokens, TOOL_TOKENS_PRICE)
+    """Считает стоимость запроса по фактическим/оценочным токенам.
+
+    ``prices`` — цены за токен; если не передан, читаются из окружения
+    через ``load_token_prices``.
+    """
+    if prices is None:
+        prices = load_token_prices()
+    input_cost = _cost(input_tokens, prices.input_price)
+    output_cost = _cost(output_tokens, prices.output_price)
+    tool_cost = _cost(tool_tokens, prices.tool_price)
     return UsageCost(
         input_cost=input_cost,
         output_cost=output_cost,
@@ -63,12 +108,14 @@ def estimate_usage_cost(
     estimated_input_tokens: int = 0,
     estimated_output_tokens: int = 0,
     estimated_tool_tokens: int = 0,
+    prices: Optional[TokenPrices] = None,
 ) -> UsageCost:
     """Оценочная стоимость до отправки запроса."""
     return calculate_usage_cost(
         input_tokens=estimated_input_tokens,
         output_tokens=estimated_output_tokens,
         tool_tokens=estimated_tool_tokens,
+        prices=prices,
     )
 
 

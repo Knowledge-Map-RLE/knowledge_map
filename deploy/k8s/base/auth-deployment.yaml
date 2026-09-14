@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: knowledge-map
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: auth:latest
+          ports:
+            - containerPort: 50057
+              name: grpc
+          envFrom:
+            - configMapRef:
+                name: config-common
+            - secretRef:
+                name: app-secrets
+          env:
+            - name: ACCESS_TOKEN_EXPIRE_MINUTES
+              value: "60"
+            - name: REMEMBER_ME_EXPIRE_DAYS
+              value: "30"
+            - name: PASSWORD_MIN_LENGTH
+              value: "8"
+            - name: RECOVERY_KEYS_COUNT
+              value: "10"
+            - name: RECOVERY_KEY_LENGTH
+              value: "16"
+            - name: LOGIN_ATTEMPTS_LIMIT
+              value: "5"
+            - name: LOGIN_ATTEMPTS_WINDOW
+              value: "300"
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 90
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "0.25"
+            limits:
+              memory: "2Gi"
+              cpu: "1"

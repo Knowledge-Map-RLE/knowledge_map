@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: knowledge-map-core
+  namespace: knowledge-map
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: knowledge-map-core
+  template:
+    metadata:
+      labels:
+        app: knowledge-map-core
+    spec:
+      containers:
+        - name: knowledge-map-core
+          image: knowledge-map-core:latest
+          ports:
+            - containerPort: 50056
+              name: grpc
+          envFrom:
+            - configMapRef:
+                name: config-common
+            - secretRef:
+                name: app-secrets
+          env:
+            - name: GRPC_HOST
+              value: "0.0.0.0"
+            - name: GRPC_PORT
+              value: "50056"
+            - name: GRPC_MAX_WORKERS
+              value: "10"
+            - name: DEFAULT_LLM_MODEL
+              value: "qwen/qwen3-4b"
+            - name: LOCAL_LLM_MODEL
+              value: "qwen/qwen3-4b"
+            - name: QDRANT_COLLECTION
+              value: "statement_embeddings"
+            - name: EMBEDDING_MODEL
+              value: "all-MiniLM-L6-v2"
+            - name: EMBEDDING_DIMENSION
+              value: "384"
+            - name: UNIQUENESS_COSINE_THRESHOLD
+              value: "0.95"
+            - name: UNIQUENESS_COSINE_UNCERTAIN
+              value: "0.85"
+            - name: UNIQUENESS_TOP_K
+              value: "20"
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 90
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1"
+            limits:
+              memory: "4Gi"
+              cpu: "2"

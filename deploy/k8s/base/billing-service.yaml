@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing
+  namespace: knowledge-map
+spec:
+  selector:
+    app: billing
+  ports:
+    - name: http
+      port: 50058
+      targetPort: http
+  type: ClusterIP

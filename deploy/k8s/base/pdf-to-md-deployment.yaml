@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pdf-to-md
+  namespace: knowledge-map
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pdf-to-md
+  template:
+    metadata:
+      labels:
+        app: pdf-to-md
+    spec:
+      containers:
+        - name: pdf-to-md
+          image: pdf-to-md:latest
+          ports:
+            - containerPort: 8002
+              name: http
+            - containerPort: 50053
+              name: grpc
+          envFrom:
+            - configMapRef:
+                name: config-common
+            - secretRef:
+                name: app-secrets
+          env:
+            - name: MAX_FILE_SIZE_MB
+              value: "100"
+            - name: MAX_CONCURRENT_CONVERSIONS
+              value: "5"
+            - name: CONVERSION_TIMEOUT_SECONDS
+              value: "1800"
+            - name: TEMP_DIR
+              value: "/tmp/pdf_to_md"
+            - name: OUTPUT_DIR
+              value: "./markdown_output"
+            - name: DEFAULT_MODEL
+              value: "opendataloader"
+            - name: ENABLE_RATE_LIMITING
+              value: "true"
+            - name: RATE_LIMIT_REQUESTS
+              value: "100"
+            - name: RATE_LIMIT_WINDOW
+              value: "3600"
+            - name: AI_MODEL_ID
+              value: "Qwen/Qwen2.5-0.5B-Instruct"
+            - name: AI_MAX_CHUNK_TOKENS
+              value: "18000"
+            - name: AI_OVERLAP_TOKENS
+              value: "1000"
+            - name: AI_MAX_GENERATION_TOKENS
+              value: "4096"
+            - name: AI_TEMPERATURE
+              value: "0.3"
+            - name: AI_FORMATTING_TIMEOUT
+              value: "600"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 90
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1"
+            limits:
+              memory: "4Gi"
+              cpu: "2"
+          volumeMounts:
+            - name: temp-storage
+              mountPath: /tmp/pdf_to_md
+            - name: model-cache
+              mountPath: /app/model_cache
+      volumes:
+        - name: temp-storage
+          emptyDir:
+            sizeLimit: 10Gi
+        - name: model-cache
+          emptyDir:
+            sizeLimit: 5Gi

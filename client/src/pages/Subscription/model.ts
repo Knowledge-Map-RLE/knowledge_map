@@ -213,16 +213,6 @@ export const GROUPS: readonly FeatureGroup[] = [
     },
 ] as const;
 
-export interface TokenPrice {
-    label: string;
-    price: string;
-}
-
-export const TOKEN_PRICES: readonly TokenPrice[] = [
-    { label: 'Входящие токены', price: '24,09 ₽/M' },
-    { label: 'Исходящие токены', price: '48,20 ₽/M' },
-];
-
 export interface FaqItem {
     question: string;
     answer: string;

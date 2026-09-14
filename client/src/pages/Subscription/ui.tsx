@@ -5,7 +5,6 @@ import {
     PLANS,
     GROUPS,
     FAQ,
-    TOKEN_PRICES,
     FORUM_URL,
     type Plan,
 } from './model';
