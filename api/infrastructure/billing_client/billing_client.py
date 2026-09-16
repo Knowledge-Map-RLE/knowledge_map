@@ -84,5 +84,151 @@ class BillingClient:
             )
         return int(response.json().get("balance", 0))
 
+    async def get_all_plans(self) -> list[dict]:
+        """Список всех тарифов (публичный endpoint, токен не требуется).
+
+        GET /billing/plans
+        """
+        headers = {"Content-Type": "application/json"}
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                response = await client.get(
+                    f"{self._base_url}/billing/plans",
+                    headers=headers,
+                )
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError("billing", f"plans request failed: {exc}") from exc
+        if response.status_code >= 400:
+            raise ExternalServiceError(
+                "billing",
+                f"plans returned HTTP {response.status_code}: {response.text[:300]}",
+            )
+        return response.json()
+
+    async def get_user_subscription(self, user_id: str) -> dict | None:
+        """Статус подписки пользователя.
+
+        GET /billing/subscription?user_id=X (internal token)
+        """
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                response = await client.get(
+                    f"{self._base_url}/billing/subscription",
+                    params={"user_id": user_id},
+                    headers=self._headers(),
+                )
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError("billing", f"subscription request failed: {exc}") from exc
+        if response.status_code == 404:
+            return None
+        if response.status_code >= 400:
+            raise ExternalServiceError(
+                "billing",
+                f"subscription returned HTTP {response.status_code}: {response.text[:300]}",
+            )
+        return response.json()
+
+    async def get_user_payments(self, user_id: str, limit: int = 50) -> list[dict]:
+        """Платежи отдельного пользователя.
+
+        GET /billing/admin/payments?user_id=X (internal token)
+        """
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                response = await client.get(
+                    f"{self._base_url}/billing/admin/payments",
+                    params={"user_id": user_id, "limit": limit},
+                    headers=self._headers(),
+                )
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError("billing", f"payments request failed: {exc}") from exc
+        if response.status_code >= 400:
+            raise ExternalServiceError(
+                "billing",
+                f"payments returned HTTP {response.status_code}: {response.text[:300]}",
+            )
+        return response.json().get("payments", [])
+
+    async def get_all_payments(
+        self,
+        offset: int = 0,
+        limit: int = 100,
+        status: Optional[str] = None,
+    ) -> list[dict]:
+        """Все платежи сервиса с пагинацией и фильтром по статусу.
+
+        GET /billing/admin/payments (internal token)
+        """
+        params = {"offset": offset, "limit": limit}
+        if status:
+            params["status"] = status
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                response = await client.get(
+                    f"{self._base_url}/billing/admin/payments",
+                    params=params,
+                    headers=self._headers(),
+                )
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError("billing", f"payments request failed: {exc}") from exc
+        if response.status_code >= 400:
+            raise ExternalServiceError(
+                "billing",
+                f"payments returned HTTP {response.status_code}: {response.text[:300]}",
+            )
+        return response.json().get("payments", [])
+
+    async def get_all_subscriptions(self, status: Optional[str] = None) -> list[dict]:
+        """Все подписки сервиса с фильтром по статусу.
+
+        GET /billing/admin/subscriptions (internal token)
+        """
+        params: dict = {}
+        if status:
+            params["status"] = status
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                response = await client.get(
+                    f"{self._base_url}/billing/admin/subscriptions",
+                    params=params,
+                    headers=self._headers(),
+                )
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError("billing", f"subscriptions request failed: {exc}") from exc
+        if response.status_code >= 400:
+            raise ExternalServiceError(
+                "billing",
+                f"subscriptions returned HTTP {response.status_code}: {response.text[:300]}",
+            )
+        return response.json()
+
+    async def get_admin_credit_transactions(
+        self,
+        user_id: Optional[str] = None,
+        limit: int = 100,
+    ) -> list[dict]:
+        """Все кредитные транзакции, опционально фильтр по пользователю.
+
+        GET /billing/admin/credits/transactions (internal token)
+        """
+        params = {"limit": limit}
+        if user_id:
+            params["user_id"] = user_id
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                response = await client.get(
+                    f"{self._base_url}/billing/admin/credits/transactions",
+                    params=params,
+                    headers=self._headers(),
+                )
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError("billing", f"credit transactions request failed: {exc}") from exc
+        if response.status_code >= 400:
+            raise ExternalServiceError(
+                "billing",
+                f"credit transactions returned HTTP {response.status_code}: {response.text[:300]}",
+            )
+        return response.json().get("transactions", [])
+
 
 billing_client = BillingClient()

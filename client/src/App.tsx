@@ -23,6 +23,20 @@ import SocialProfilePage from './pages/Social_network/ProfilePage';
 import Subscription from './pages/Subscription';
 import PatternEditor from './pages/Pattern_editor';
 import PatternMiner from './pages/Pattern_miner';
+import AdminLayout from './pages/Admin';
+import DashboardPage from './pages/Admin/pages/Dashboard/ui';
+import UsersPage from './pages/Admin/pages/Users/ui';
+import UserDetailPage from './pages/Admin/pages/Users/UserDetail';
+import TokensPage from './pages/Admin/pages/Tokens/ui';
+import SalesPage from './pages/Admin/pages/Sales/ui';
+import ExpensesPage from './pages/Admin/pages/Expenses/ui';
+import ProfitabilityPage from './pages/Admin/pages/Profitability/ui';
+import PlanVsFactPage from './pages/Admin/pages/PlanVsFact/ui';
+import PlanEditor from './pages/Admin/pages/PlanVsFact/PlanEditor';
+import SettingsPage from './pages/Admin/pages/Settings/ui';
+import StrategyPage from './pages/Admin/pages/Strategy/ui';
+import UnitEconomicsPage from './pages/Admin/pages/UnitEconomics/ui';
+import LaunchPage from './pages/Admin/pages/Launch/ui';
 
 /** Собирает просмотры страниц SPA (маршрут + состояние авторизации). */
 function PageViewTracker() {
@@ -60,6 +74,21 @@ function App() {
               <Route path="/social_network" element={<Social_network />} />
               <Route path="/social_network/profile/:uid" element={<SocialProfilePage />} />
               <Route path="/subscription" element={<Subscription />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="users" element={<UsersPage />} />
+                <Route path="users/:uid" element={<UserDetailPage />} />
+                <Route path="tokens" element={<TokensPage />} />
+                <Route path="sales" element={<SalesPage />} />
+                <Route path="expenses" element={<ExpensesPage />} />
+                <Route path="profitability" element={<ProfitabilityPage />} />
+                <Route path="plan" element={<PlanVsFactPage />} />
+                <Route path="plan/editor" element={<PlanEditor />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="strategy" element={<StrategyPage />} />
+                <Route path="unit-economics" element={<UnitEconomicsPage />} />
+                <Route path="launch" element={<LaunchPage />} />
+              </Route>
             </Routes>
           </Router>
         </ToastProvider>

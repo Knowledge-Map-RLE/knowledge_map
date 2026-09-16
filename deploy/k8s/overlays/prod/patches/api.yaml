@@ -14,6 +14,11 @@ spec:
               value: "production"
             - name: DEBUG
               value: "false"
+            - name: INTERNAL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: INTERNAL_TOKEN
             - name: S3_ACCESS_KEY
               valueFrom:
                 secretKeyRef:

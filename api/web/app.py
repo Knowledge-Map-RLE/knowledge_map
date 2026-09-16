@@ -67,6 +67,9 @@ from web.routers import feedback as feedback_router
 # Серверная аналитика посещаемости
 from web.routers import analytics as analytics_router
 
+# Admin-панель экономики
+from web.routers.admin import admin_router
+
 logger = logging.getLogger(__name__)
 
 # Observability: logfmt в stdout (→ Loki), OTLP traces+metrics (→ Alloy).
@@ -210,6 +213,9 @@ app.include_router(feedback_router.router)
 
 # Серверная аналитика посещаемости
 app.include_router(analytics_router.router)
+
+# Admin-панель экономики
+app.include_router(admin_router, prefix="/api/admin")
 
 # GraphQL
 if _graphql_available:
@@ -436,6 +442,37 @@ async def _ensure_knowledge_statement_indexes():
         logger.info("[startup] KnowledgeStatement indexes ensured")
     except Exception as e:
         logger.warning(f"[startup] Could not create KnowledgeStatement indexes: {e}")
+
+
+@app.on_event("startup")
+async def _ensure_admin_indexes():
+    """Создаёт индексы Neo4j для admin-панели экономики."""
+    ADMIN_INDEXES = [
+        "CREATE INDEX IF NOT EXISTS FOR (p:AIProvider) ON (p.name)",
+        "CREATE INDEX IF NOT EXISTS FOR (pv:ProviderPriceVersion) ON (pv.provider_uid)",
+        "CREATE INDEX IF NOT EXISTS FOR (pv:ProviderPriceVersion) ON (pv.model)",
+        "CREATE INDEX IF NOT EXISTS FOR (pv:ProviderPriceVersion) ON (pv.valid_from)",
+        "CREATE INDEX IF NOT EXISTS FOR (e:Expense) ON (e.category)",
+        "CREATE INDEX IF NOT EXISTS FOR (e:Expense) ON (e.period_start)",
+        "CREATE INDEX IF NOT EXISTS FOR (e:Expense) ON (e.created_by_uid)",
+        "CREATE INDEX IF NOT EXISTS FOR (fp:FinancialPlan) ON (fp.is_active)",
+        "CREATE INDEX IF NOT EXISTS FOR (al:AdminAuditLog) ON (al.admin_uid)",
+        "CREATE INDEX IF NOT EXISTS FOR (al:AdminAuditLog) ON (al.action)",
+        "CREATE INDEX IF NOT EXISTS FOR (al:AdminAuditLog) ON (al.entity_type)",
+        "CREATE INDEX IF NOT EXISTS FOR (al:AdminAuditLog) ON (al.created_at)",
+        "CREATE INDEX IF NOT EXISTS FOR (ss:StrategyStage) ON (ss.user_count)",
+        "CREATE INDEX IF NOT EXISTS FOR (ls:LaunchScenario) ON (ls.name)",
+    ]
+    try:
+        from neomodel import db
+        for cypher in ADMIN_INDEXES:
+            try:
+                db.cypher_query(cypher)
+            except Exception as e:
+                logger.warning(f"[startup] Admin index failed: {cypher[:60]}... {e}")
+        logger.info("[startup] Admin panel indexes ensured")
+    except Exception as e:
+        logger.warning(f"[startup] Could not create admin indexes: {e}")
 
 
 @app.on_event("shutdown")

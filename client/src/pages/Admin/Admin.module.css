@@ -1,0 +1,529 @@
+.adminLayout {
+  display: flex;
+  min-height: 100vh;
+  background: #0f1117;
+  color: #e0e0e0;
+  font-family: 'PT Sans', Helvetica, system-ui, sans-serif;
+}
+
+.adminSidebar {
+  width: 250px;
+  background: #1a1d27;
+  border-right: 1px solid #2a2d37;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebarHeader {
+  padding: 20px 16px;
+  border-bottom: 1px solid #2a2d37;
+}
+
+.sidebarHeader h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.sidebarHeader span {
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 2px;
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebarLink:hover {
+  background: #242736;
+  color: #e0e0e0;
+}
+
+.sidebarLinkActive {
+  background: #1e3a5f;
+  color: #60a5fa;
+}
+
+.sidebarLinkActive:hover {
+  background: #1e3a5f;
+  color: #60a5fa;
+}
+
+.sidebarIcon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adminContent {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.adminContent h1 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.adminContent h2 {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  color: #ccc;
+  font-weight: 600;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.kpiCard {
+  background: #1e2130;
+  border: 1px solid #2a2d37;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  transition: border-color 0.15s;
+}
+
+.kpiCard:hover {
+  border-color: #3b82f6;
+}
+
+.kpiTitle {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.kpiValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 4px 0;
+}
+
+.kpiTooltip {
+  font-size: 0.7rem;
+  color: #666;
+  font-style: italic;
+}
+
+.kpiTrendUp {
+  color: #22c55e;
+}
+
+.kpiTrendDown {
+  color: #ef4444;
+}
+
+.adminTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.adminTable th {
+  background: #1a1d27;
+  color: #888;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2d37;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.adminTable td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #1e2130;
+  white-space: nowrap;
+}
+
+.adminTable tr:hover td {
+  background: #1e2130;
+}
+
+.adminTableClickable tr {
+  cursor: pointer;
+}
+
+.periodSelector {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.periodBtn {
+  background: transparent;
+  border: 1px solid #2a2d37;
+  color: #888;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.periodBtn:hover {
+  border-color: #4a4d57;
+  color: #fff;
+}
+
+.periodBtnActive {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.chartContainer {
+  background: #1e2130;
+  border: 1px solid #2a2d37;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.chartContainer h3 {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.adminForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.adminInput {
+  background: #1a1d27;
+  border: 1px solid #2a2d37;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.adminInput:focus {
+  border-color: #3b82f6;
+}
+
+.adminSelect {
+  background: #1a1d27;
+  border: 1px solid #2a2d37;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.adminBtn {
+  background: #3b82f6;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.adminBtn:hover {
+  background: #2563eb;
+}
+
+.adminBtnDanger {
+  background: #ef4444;
+}
+
+.adminBtnDanger:hover {
+  background: #dc2626;
+}
+
+.adminBtnSecondary {
+  background: #374151;
+}
+
+.adminBtnSecondary:hover {
+  background: #4b5563;
+}
+
+.filtersBar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.positive {
+  color: #22c55e;
+}
+
+.negative {
+  color: #ef4444;
+}
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #2a2d37;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  color: #888;
+  font-size: 0.875rem;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.9rem;
+}
+
+.tabsBar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #2a2d37;
+  margin-bottom: 16px;
+}
+
+.tabBtn {
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #888;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tabBtn:hover {
+  color: #e0e0e0;
+}
+
+.tabBtnActive {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  transition: color 0.15s;
+}
+
+.backLink:hover {
+  color: #e0e0e0;
+}
+
+.card {
+  background: #1e2130;
+  border: 1px solid #2a2d37;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pageBtn {
+  background: #1e2130;
+  border: 1px solid #2a2d37;
+  color: #9ca3af;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.pageBtn:hover {
+  border-color: #4a4d57;
+  color: #fff;
+}
+
+.pageBtnActive {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.pageBtnDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.formRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formLabel {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modalContent {
+  background: #1e2130;
+  border: 1px solid #2a2d37;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modalContent h3 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .adminLayout {
+    flex-direction: column;
+  }
+
+  .adminSidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .kpiGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid2,
+  .grid3 {
+    grid-template-columns: 1fr;
+  }
+
+  .formRow {
+    flex-direction: column;
+  }
+}

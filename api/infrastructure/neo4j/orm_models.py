@@ -513,3 +513,19 @@ class PageVisit(StructuredNode):
     ip_address = StringProperty(default="")
     authenticated = BooleanProperty(default=False)
     visited_at = FloatProperty(index=True)
+
+
+# =============================================================================
+# Admin — ORM-модели admin-панели экономики
+# =============================================================================
+
+from infrastructure.neo4j.admin_models import (  # noqa: E402, F401
+    AIProviderNode,
+    ProviderPriceVersionNode,
+    ProviderPriceVersionRel,
+    ExpenseNode,
+    FinancialPlanNode,
+    AdminAuditLogNode,
+    StrategyStageNode,
+    LaunchScenarioNode,
+)

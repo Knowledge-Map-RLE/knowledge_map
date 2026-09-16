@@ -141,3 +141,68 @@ def _cost(tokens: int, price_per_token: Decimal) -> Decimal:
     if tokens <= 0:
         return Decimal("0")
     return Decimal(tokens) * price_per_token
+
+
+# =============================================================================
+# Price versions — для версионирования тарифов провайдеров
+# =============================================================================
+
+
+@dataclass(frozen=True)
+class PriceVersionData:
+    """Снимок цены на момент AI-запроса.
+
+    Хранится в AIUsage для трассируемости: стоимость запроса рассчитывается
+    по тарифу, действовавшему на момент выполнения, а не по текущему.
+    """
+
+    price_version_uid: str
+    model: str
+    input_price_per_token: Decimal
+    output_price_per_token: Decimal
+    cache_price_per_token: Optional[Decimal] = None
+
+    @classmethod
+    def from_million_prices(
+        cls,
+        uid: str,
+        model: str,
+        input_per_million: Decimal,
+        output_per_million: Decimal,
+        cache_per_million: Optional[Decimal] = None,
+    ) -> "PriceVersionData":
+        """Создаёт из цен за 1M токенов (₽)."""
+        million = Decimal("1000000")
+        return cls(
+            price_version_uid=uid,
+            model=model,
+            input_price_per_token=input_per_million / million,
+            output_price_per_token=output_per_million / million,
+            cache_price_per_token=cache_per_million / million if cache_per_million else None,
+        )
+
+
+def calculate_provider_cost(
+    *,
+    input_tokens: int = 0,
+    output_tokens: int = 0,
+    cached_tokens: int = 0,
+    price_version: PriceVersionData,
+) -> UsageCost:
+    """Расчёт себестоимости AI по версии тарифа провайдера.
+
+    Использует цену из price_version — НЕ из окружения.
+    Это гарантирует, что прошлые usage не пересчитываются.
+    """
+    input_cost = _cost(input_tokens, price_version.input_price_per_token)
+    output_cost = _cost(output_tokens, price_version.output_price_per_token)
+    cache_cost = (
+        _cost(cached_tokens, price_version.cache_price_per_token)
+        if price_version.cache_price_per_token is not None
+        else Decimal("0")
+    )
+    return UsageCost(
+        input_cost=input_cost,
+        output_cost=output_cost,
+        tool_cost=cache_cost,
+    )

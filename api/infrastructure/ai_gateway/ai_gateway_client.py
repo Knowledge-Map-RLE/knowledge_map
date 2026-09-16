@@ -50,11 +50,14 @@ class AIGatewayClient:
         self,
         messages: List[dict],
         model: str,
+        max_tokens: Optional[int] = None,
         signal=None,
     ) -> AsyncIterator[str]:
         """Стримит SSE-чанки ответа. Возвращает только строки ``data:``.
 
         Генератор — вызывающий код сам разбирает usage из финальных чанков.
+        ``max_tokens`` — жёсткий потолок вывода (используется для соблюдения
+        лимита токенов пользователя).
         """
         payload = {
             "model": model or None,
@@ -62,6 +65,8 @@ class AIGatewayClient:
             "stream": True,
             "stream_options": {"include_usage": True},
         }
+        if max_tokens and max_tokens > 0:
+            payload["max_tokens"] = max_tokens
         try:
             async with httpx.AsyncClient(timeout=self._timeout) as client:
                 async with client.stream(

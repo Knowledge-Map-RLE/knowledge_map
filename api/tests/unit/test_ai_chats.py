@@ -104,8 +104,12 @@ class FakeGateway:
 
 
 class FakeBilling:
-    def __init__(self):
+    def __init__(self, balance=1_000_000):
         self.calls = []
+        self.balance = balance
+
+    def get_balance(self, *, user_id):
+        return self.balance
 
     def deduct_credits(self, *, user_id, amount, reference_id, description=None):
         self.calls.append(

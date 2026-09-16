@@ -22,6 +22,12 @@ from domain.rules.ai_pricing import calculate_usage_cost, total_tokens_cost
 
 logger = logging.getLogger(__name__)
 
+# Максимальное число выходных токенов одной генерации, которое гарантированно
+# принимают все провайдеры шлюза (DeepSeek/cloud.ru, LLM-Studio). Больший остаток
+# пакета не является ограничителем: ответ и так не превысит дефолтный потолок
+# модели, а сам баланс контролируется атомарным списанием.
+PROVIDER_SAFE_MAX_TOKENS = 8192
+
 
 class SendMessageResult:
     """Результат отправки: собраны usage и стоимость."""
@@ -82,6 +88,29 @@ async def send_ai_message_stream(
     if content:
         context.append({"role": "user", "content": content})
 
+    # Оценка до отправки (только для предупреждения, не финансовый источник).
+    estimated = _estimate_before_send(tokenizer, context)
+
+    # Pre-check лимита: пользователь не должен получить ответ, если его баланс
+    # не покрывает хотя бы вход. Списание происходит после ответа (по факту),
+    # поэтому до вызова LLM проверяем остаток пакета и ограничиваем вывод
+    # максимумом, влезающим в баланс. Если текущий баланс недоступен (billing
+    # упал) — лимит проверить нельзя, поэтому не отдаём контент без контроля.
+    try:
+        balance = billing.get_balance(user_id=user_uid)
+    except Exception as exc:
+        logger.error("Billing balance check failed: %s", exc)
+        yield {"type": "error", "message": "Не удалось проверить баланс токенов, попробуйте позже"}
+        return
+
+    max_output_budget = balance - (estimated.get("estimated_input_tokens", 0) or 0)
+    if balance <= 0 or max_output_budget < 1:
+        yield {
+            "type": "error",
+            "message": "Недостаточно токенов на балансе. Пополните пакет, чтобы продолжить.",
+        }
+        return
+
     # Сохраняем сообщение пользователя.
     user_order = len(history) + 1
     user_msg = AIMessage(
@@ -94,9 +123,6 @@ async def send_ai_message_stream(
     )
     repository.add_message(user_msg)
 
-    # Оценка до отправки (только для предупреждения, не финансовый источник).
-    estimated = _estimate_before_send(tokenizer, context)
-
     result = SendMessageResult()
     if estimated:
         result.prompt_tokens = estimated.get("estimated_input_tokens", 0)
@@ -106,6 +132,7 @@ async def send_ai_message_stream(
         async for chunk_data in gateway.stream_chat_completions(
             messages=context,
             model=model or chat.model,
+            max_tokens=min(max_output_budget, PROVIDER_SAFE_MAX_TOKENS),
         ):
             if chunk_data == "[DONE]":
                 break

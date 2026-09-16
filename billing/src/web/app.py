@@ -114,7 +114,7 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
-from web.routers import access, checkout, credits, health, payments, plans, subscriptions, webhooks  # noqa: E402
+from web.routers import access, admin, checkout, credits, health, payments, plans, subscriptions, webhooks  # noqa: E402
 
 app.include_router(health.router)
 app.include_router(plans.router)
@@ -124,6 +124,7 @@ app.include_router(payments.router)
 app.include_router(credits.router)
 app.include_router(access.router)
 app.include_router(webhooks.router)
+app.include_router(admin.router)
 
 
 @app.get("/")
