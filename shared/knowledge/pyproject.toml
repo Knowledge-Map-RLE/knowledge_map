@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "knowledge-map-contracts"
+version = "0.1.0"
+description = "Pure contracts and validation for scientific article provenance"
+authors = ["Knowledge Map"]
+packages = [{include = "knowledge_contracts"}]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"

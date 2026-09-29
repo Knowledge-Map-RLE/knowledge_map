@@ -2,6 +2,7 @@ from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from model_registry import ModelRegistry
 
 
 class Settings(BaseSettings):
@@ -23,8 +24,8 @@ class Settings(BaseSettings):
 
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
-    default_llm_model: str = Field(default="qwen/qwen3-4b", alias="DEFAULT_LLM_MODEL")
-    local_llm_model: str = Field(default="qwen/qwen3-4b", alias="LOCAL_LLM_MODEL")
+    model_config_path: str = Field(default="", alias="MODEL_CONFIG_PATH")
+    model_profile: str = Field(default="", alias="MODEL_PROFILE")
 
     hugging_face_token: str = Field(default="", alias="HUGGING_FACE_TOKEN")
 
@@ -42,3 +43,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+model_registry = ModelRegistry(settings.model_config_path or None)

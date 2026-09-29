@@ -36,7 +36,7 @@ from tools.llm_extract.dsl_parser import parse_dsl_text  # noqa: E402
 from tools.llm_extract import metrics as m  # noqa: E402
 
 from src.schemas.block_types import BlockType, coerce_block_type, ALL_TYPES as DESIGNATIONS
-from infrastructure.config import settings  # noqa: E402
+from infrastructure.config import resolve_model_profile, settings  # noqa: E402
 from domain.rules import ai_pricing as pricing  # noqa: E402
 
 ARTICLE_MD = Path(
@@ -95,7 +95,7 @@ def main() -> None:
 
     print(f"Секция [{args.section}] chars={len(frag)}, чанков: {len(frag_chunks)}")
     print(f"Режим: {'DSL' if args.dsl else 'JSON (unified)'}")
-    print(f"Модель: {settings.LLM_EXTRACT_MODEL}")
+    print(f"Профиль модели: {resolve_model_profile('article_extraction')}")
     print(f"max_tokens={settings.LLM_MAX_TOKENS}, temperature={settings.LLM_TEMPERATURE}")
     print("=" * 70)
 
@@ -136,7 +136,7 @@ def main() -> None:
     for ci, (ch, prompt) in enumerate(zip(frag_chunks, prompts)):
         print(f"\n=== LLM чанк {ci + 1}/{len(frag_chunks)} (вызов...) ===")
         res = client.generate_text(
-            model_id=settings.LLM_EXTRACT_MODEL,
+            model_id=resolve_model_profile("article_extraction"),
             prompt=prompt,
             max_tokens=settings.LLM_MAX_TOKENS,
             temperature=settings.LLM_TEMPERATURE,

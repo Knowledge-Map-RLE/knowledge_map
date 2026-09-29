@@ -1,0 +1,1363 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 331,
+      "text": "# The Impact of Caregiving on Successful Ageing of Informal Carers: A Qualitative Study among Respiratory Patients’ Caregivers\n\n**Авторы:** Benko Meštrović Snježana, Šklempe Kokić Iva, Friganović Adriano, Krupa Sabina, Babić Dijana, Zelko Erika, Đorđević Dušan\n\n**Журнал:** Healthcare (2023)\n\n**DOI:** 10.3390/healthcare11050715\n\n\n",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 331,
+      "end": 332,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S3",
+      "start": 332,
+      "end": 333,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S4",
+      "start": 334,
+      "end": 514,
+      "text": "Abstract\n\nProviding intensive informal caregiving can cause caregivers’ overburden, possibly impacting successful ageing factors such as physical and mental health and social life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 515,
+      "end": 681,
+      "text": "This article aimed to investigate how informal caregivers experience the impact of providing care for chronic respiratory patients on the process of caregiver ageing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 682,
+      "end": 761,
+      "text": "A qualitative exploratory study was performed using semi-structured interviews.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 762,
+      "end": 905,
+      "text": "The sample comprised 15 informal caregivers who provided intensive care for patients with chronic respiratory failure for more than six months.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 906,
+      "end": 1102,
+      "text": "They were recruited while accompanying the patients on their examination for chronic respiratory failure in Special Hospital for Pulmonary Disease in Zagreb between January 2020 and November 2020.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1103,
+      "end": 1248,
+      "text": "Semi-structured interviews were used with informal caregivers, and interview transcripts were analysed by the inductive thematic analysis method.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1249,
+      "end": 1335,
+      "text": "Similar codes were organised into categories, and categories were grouped into themes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1336,
+      "end": 1700,
+      "text": "Two themes were identified in the domain of physical health relating to informal caregiving activities and inadequate treatment of their difficulties, three themes were in the domain of mental health relating to satisfaction with the recipient of care and feelings, and two themes were in the domain of social life, relating to social isolation and social support.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 1701,
+      "end": 1874,
+      "text": "Informal caregivers of patients with chronic respiratory failure experience a negative impact on the factors that contribute to the successful ageing of informal caregivers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 1875,
+      "end": 1993,
+      "text": "The results of our research suggest that caregivers need support in maintaining their own health and social inclusion.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 1993,
+      "end": 1996,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S15",
+      "start": 1996,
+      "end": 1997,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S16",
+      "start": 1997,
+      "end": 2001,
+      "text": "# 1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S17",
+      "start": 2002,
+      "end": 2235,
+      "text": "Introduction\n\nAccording to the data on informal care collected through the European Quality of Life Survey among close to 37,000 people from 33 countries, it is obvious that a lot of people identify themselves as informal caregivers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 2236,
+      "end": 2473,
+      "text": "For example, as much as 34% of the population in Greece, 30% in Belgium, 10% in Austria, Bulgaria, Ireland, and 15% in Slovenia care for disabled relatives, neighbours, or friends at least once a week, There is no data for Croatia [1,2].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 2474,
+      "end": 2676,
+      "text": "It is important to highlight that there is no consensus in the literature about the definition of informal caregiving, so it could be a limitation in determining the exact number of informal caregivers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 2677,
+      "end": 2840,
+      "text": "The WHO does not provide its official definition of “informal caregiving” but in the context of global cost for informal care, they use the term “unpaid” task [3].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 2841,
+      "end": 3100,
+      "text": "According to the United Nations, “informal caregiving” primarily stands for any non-professional care provided by family members, friends, neighbours, or other persons caring for people with long-term care needs at all ages, usually in private households [4].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3101,
+      "end": 3358,
+      "text": "OECD considers “informal caregivers” only as family members, friends, or uncompensated volunteers who provide support to care recipients on a regular basis and who do not receive cash or other benefits beyond those intended to support caring activities [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 3358,
+      "end": 3360,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S24",
+      "start": 3360,
+      "end": 3568,
+      "text": "Considering the fact that the incidence and prevalence of chronic diseases are increasing and that individuals prefer being cared for at home, the need for informal care is expected to grow in the future [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 3569,
+      "end": 3828,
+      "text": "This is also supported by recorded increase in the number of family caregivers in the United States of 9.5 million from 2015 to 2020, which means that nearly one in five Americans (19%) are providing unpaid care to an adult with health or functional need [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 3829,
+      "end": 4138,
+      "text": "On the other hand, it is essential to note that due to providing care, informal caregivers usually do not have enough time to take care of their own health or to be socially active, which can have a negative impact on informal caregivers’ physical and psychological wellbeing, leading to their overburden [8].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 4139,
+      "end": 4383,
+      "text": "It is well known that because of the increasing lifespan, public health and health care systems promote preservation of functional capacity for as long as possible, emphasising independent functioning and optimal physical and mental health [9].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4384,
+      "end": 4504,
+      "text": "Those efforts have resulted in the concept of successful ageing that appeared in the literature in the early 1960s [10].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 4505,
+      "end": 4753,
+      "text": "Successful ageing means reaching the maximum personal level of physical, mental, and social wellbeing in old age with three components met: disease avoidance, social inclusion, and maintaining a high level of cognitive and bodily functions [11,12].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 4754,
+      "end": 4966,
+      "text": "Family caregivers are in an ideal position to provide insights into the meaning of successful ageing since their everyday lives are profoundly affected by caring for family members who are unwell and/or disabled.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 4967,
+      "end": 5110,
+      "text": "If we know that informal caregivers are mostly females aged 45–65 [13,14], it is questionable whether they have a chance for successful ageing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 5110,
+      "end": 5112,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S33",
+      "start": 5112,
+      "end": 5280,
+      "text": "Lack of family and social support, and insufficient coping skills for everyday challenges of care, are among the most important predictors of informal caregiver burden.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 5281,
+      "end": 5366,
+      "text": "Overburdened informal caregivers are at a high risk of developing health impairments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 5367,
+      "end": 5599,
+      "text": "This means that, if they disregard their own health to focus on the health and support of the person they are caring for, caregivers’ health may worsen to the point that they are no longer able to perform the caring duty [15,16,17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 5600,
+      "end": 5707,
+      "text": "Other important predictors of informal caregiver burden are the physical and mental conditions of patients.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 5708,
+      "end": 5907,
+      "text": "Chronic respiratory failure patients, as well as their informal caregivers, are confronted with many symptoms such as dyspnoea and fatigue and multiple limitations in activities of daily living [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 5908,
+      "end": 6105,
+      "text": "Respiratory failure is a clinical condition that occurs when the respiratory system fails to maintain its main function and usually requires providing support with oxygenation and ventilation [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 6105,
+      "end": 6107,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S40",
+      "start": 6107,
+      "end": 6321,
+      "text": "Caregivers of patients with severe symptoms and more functional disabilities, especially during exacerbation of the disease, perceived that they had poorer physical and mental health-related quality of life [6,20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 6322,
+      "end": 6559,
+      "text": "Hence, the aim of our research was to investigate how informal caregivers of chronic respiratory failure patients experienced providing care and how the caring role impacted successful ageing: physical and mental health, and social life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 6560,
+      "end": 6713,
+      "text": "With this research, we aimed to fill the literature gap and to contribute with new knowledge in the field of caregiving for chronic respiratory patients.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 6714,
+      "end": 6870,
+      "text": "No studies were found that specifically addressed how chronic respiratory failure patients’ caregivers experienced the impact of caregiving to their ageing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 6870,
+      "end": 6873,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S45",
+      "start": 6873,
+      "end": 6981,
+      "text": "## 2. Materials and Methods\n\n### 2.1. Study Subjects\n\nThe study was conducted from January to November 2020.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 6982,
+      "end": 7302,
+      "text": "The inclusion criteria were providers of informal care for people with chronic respiratory failure, who used some kind of respiratory support for more than 6 months (20+ h/week), self-identification as primary informal caregivers, with no financial compensation for care (except parents who receive 500 euros per month).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 7303,
+      "end": 7481,
+      "text": "The exclusion criteria were the provision of informal care to a person who has another unrelated illness that requires care, and receiving compensation/salary for providing care.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 7482,
+      "end": 7692,
+      "text": "During patient follow-up examinations for chronic respiratory failure in the Special Hospital for Pulmonary Disease, informal caregivers who met the criteria were asked to participate in this qualitative study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 7692,
+      "end": 8281,
+      "text": "\n\nInformal care included assistance for respiratory patients in activities of daily living (cooking, shopping, bathing, dressing, moving from bed to bathroom, and feeding) and conducting medical interventions (giving oral and parenteral drug therapy; assistance in using walking aids; preparing special food; caring for wounds; use of equipment to measure glucose, oxygen, temperature, and blood pressure; incontinence-related activities; aspiration of bronchial secretions; tube or percutaneous gastrostomy feeding; and control of devices such as ventilators and/or oxygen concentrators).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 8282,
+      "end": 8389,
+      "text": "Ethics approval was granted by the Special Hospital for Pulmonary Disease Ethics Committee (No. 3000/2019).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 8390,
+      "end": 8437,
+      "text": "Participants provided written informed consent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 8438,
+      "end": 8517,
+      "text": "Likewise, researchers followed all recommendations of the Helsinki Declaration.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 8517,
+      "end": 8528,
+      "text": "\n\n\n### 2.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S54",
+      "start": 8529,
+      "end": 8606,
+      "text": "Methods\n\nWe conducted 15 semi-structured interviews with informal caregivers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 8607,
+      "end": 8658,
+      "text": "Data saturation was achieved by the 15th interview.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 8659,
+      "end": 8821,
+      "text": "The interview questions were developed after literature research and with suggestions from the focus group of experts relating to the research topic (Appendix A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 8822,
+      "end": 8954,
+      "text": "The focus group, comprising a gerontologist, psychologist, and physiotherapist, defined key factors important for successful ageing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 8955,
+      "end": 9246,
+      "text": "Considering that physical/mental health and social life are crucial domains related to successful ageing, the semi-structured interview consisted of 15 main questions with sub-questions, five of them related to physical health, five related to mental health, and five related to social life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 9247,
+      "end": 9477,
+      "text": "If informal caregivers agreed to participate in the research, they self-completed a sociodemographic questionnaire and orally responded to the semi-structured interview to provide greater and deeper insight into their experiences.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 9478,
+      "end": 9600,
+      "text": "The questions included their experience of how providing care influenced their physical and mental health and social life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 9601,
+      "end": 9807,
+      "text": "Interviews were taken in the Special Hospital for Pulmonary Disease in Zagreb during a regular medical check-up of the care recipient or at the caregiver home and were carried out by the chief investigator.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 9808,
+      "end": 9883,
+      "text": "Interviews were recorded and not conducted in front of the care recipients.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 9884,
+      "end": 9981,
+      "text": "Only the person conducting the interviews (researcher) was aware of the participants’ identities.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 9982,
+      "end": 10134,
+      "text": "The same researcher was the one who made transcripts, which did not contain the name or any other identifier but were rather coded as IDI 1, IDI 2, etc.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 10135,
+      "end": 10197,
+      "text": "Analysis and coding were done only based on coded transcripts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 10197,
+      "end": 10208,
+      "text": "\n\n\n### 2.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S67",
+      "start": 10209,
+      "end": 10327,
+      "text": "Analysis\n\nEvery participant had a personal code to ensure absolute anonymity and to follow all ethical considerations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 10328,
+      "end": 10402,
+      "text": "The further process of data analysis excluded participants’ personal data.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 10403,
+      "end": 10523,
+      "text": "We digitally taped the interviews and transcribed the recordings verbatim, assigning each interview a unique identifier.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 10524,
+      "end": 10699,
+      "text": "We completed an inductive thematic analysis of the transcripts by three researchers (triangulation), beginning after the first interview and using an open coding process [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 10700,
+      "end": 10820,
+      "text": "The goal of these interviews and the inductive thematic analysis of their contents was to answer the research questions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 10821,
+      "end": 10947,
+      "text": "In open coding, researchers independently identified codes, then grouped the codes into categories and categories into themes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 10948,
+      "end": 11120,
+      "text": "The open coding process gave us the possibility to identify specific concepts and themes for categorisation and the initial broad thematic domains for data assemblage [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 11121,
+      "end": 11168,
+      "text": "They repeated this process for each transcript.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 11169,
+      "end": 11269,
+      "text": "All three researchers coded independently, and inconsistencies were resolved by the main researcher.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 11270,
+      "end": 11450,
+      "text": "Independent analysis procedures were synthesised at the general meeting, and then, consensus was achieved on the final themes arising from the three different data interpretations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 11451,
+      "end": 11504,
+      "text": "Inconsistencies were resolved by the main researcher.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 11504,
+      "end": 11508,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S79",
+      "start": 11508,
+      "end": 11509,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S80",
+      "start": 11509,
+      "end": 11513,
+      "text": "# 3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S81",
+      "start": 11514,
+      "end": 11803,
+      "text": "Results\n\nThe study sample comprised 15 informal caregivers of chronic respiratory failure patients. Eight of the patients used long-term oxygen therapy, four used non-invasive mechanical ventilation and oxygen therapy, and three used invasive mechanical ventilation as respiratory support.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 11804,
+      "end": 11969,
+      "text": "The average age of the informal caregivers was 57 (57.11 ± 11.63 years), and the other sociodemographic characteristics of the participants are presented in Table 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 11969,
+      "end": 12252,
+      "text": "\n\nThe average duration of the semi-structured interviews was 28 min. An inductive thematic analysis of the interview data resulted in 7 themes, 20 categories, and 70 codes (Figure 1).\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> Results of the inductive analysis.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 12252,
+      "end": 12253,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S85",
+      "start": 12253,
+      "end": 12260,
+      "text": "/figure",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 12260,
+      "end": 12448,
+      "text": ">\n\nIn the first theme (subjective assessment of physical health), caregivers assessed their own physical health and noted that they usually were not satisfied with their health conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 12449,
+      "end": 12540,
+      "text": "They also reported a lack of free time for physical activity and improper diet as problems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 12541,
+      "end": 12588,
+      "text": "“Apart from not moving enough, I also eat more.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 12589,
+      "end": 12678,
+      "text": "Especially in the last year, I have felt pain in my back, shoulders, and arms more often.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 12679,
+      "end": 12780,
+      "text": "(Name withheld) weighs about 13 kg, and it is usually in my arms because it makes it easier to relax.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 12780,
+      "end": 12795,
+      "text": "” (Caregiver 1)",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 12795,
+      "end": 12796,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S93",
+      "start": 12796,
+      "end": 12998,
+      "text": "\n\nIn the second theme (health problems), caregivers reported that, besides not having enough time to engage in physical activity, they also lacked time for their own medical examinations and treatments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 12999,
+      "end": 13173,
+      "text": "They also reported changes in their health status since they took on the role of caregivers, such as discovering new diagnoses, musculoskeletal pain, and weight oscillations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 13174,
+      "end": 13202,
+      "text": "“I’m sure that I’m not well.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 13203,
+      "end": 13259,
+      "text": "But I can’t visit my physician. Not even a gynecologist.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 13260,
+      "end": 13307,
+      "text": "Imagine I have no one to leave a sick child to.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 13308,
+      "end": 13340,
+      "text": "The only doctors I see are hers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 13341,
+      "end": 13391,
+      "text": "So I really don’t know if I have a disease or not.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 13392,
+      "end": 13437,
+      "text": "But my whole body often hurts” (Caregiver 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 13437,
+      "end": 13651,
+      "text": "\n\nParticipants noted, in particular, problems with gastritis, breathing difficulties, headache, sleep disorders, and fatigue, and it is well known that those physical problems are related to psychological problems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 13652,
+      "end": 13873,
+      "text": "“I associate some of these changes, such as pain in the head and neck, with a change in lifestyle, which used to be much more active. And there is also tension. Yes, I feel that tension in my head and neck” (Caregiver 3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 13873,
+      "end": 14216,
+      "text": "\n\nIn the third theme (experiencing the role of a caregiver), they described how they coped with the role of a caregiver. Sometimes, they feel a heavy burden due to the role of being an informal caregiver and feel that they cannot do it anymore, but because of compassion and a sense of duty, they continue to take care of a sick family member.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 14217,
+      "end": 14350,
+      "text": "“There are days when I think I will not be able to continue. That I will tell my husband and the children that I can’t do it anymore.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 14351,
+      "end": 14527,
+      "text": "I’m telling you, I’m tired. And then I look at him and I feel sorry for him. I’m so sorry for him. I don’t know who would take better care of him than I do...“ (Caregiver 4).\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 14527,
+      "end": 14659,
+      "text": "In the fourth theme (caregivers’ feelings and mental status), participants described the feelings the caregiver role evoked in them.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 14660,
+      "end": 14760,
+      "text": "Some of them were used to the situation, but most of them felt nervous and worried about the future.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 14761,
+      "end": 14791,
+      "text": "“I think I’m constantly tense.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 14792,
+      "end": 14871,
+      "text": "I don’t know what it’s like not to be tense! I’m definitely tenser than before.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 14872,
+      "end": 15181,
+      "text": "On the one hand, I am more nervous because I know that (name withheld) depends on me the most and I often don’t have much time for myself, no time to sleep, let alone anything else… It’s just that now I’m more afraid for her than a year ago because she had several ugly seizures with a big drop in saturation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 15181,
+      "end": 15196,
+      "text": "“ (Caregiver 5)",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 15196,
+      "end": 15197,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S113",
+      "start": 15197,
+      "end": 15312,
+      "text": "\n\nIn the fifth theme (relationship with the patient), they described their relationship with the recipient of care.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 15313,
+      "end": 15417,
+      "text": "The quality of their relationships usually depended on the state of the relationship before the illness.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 15418,
+      "end": 15478,
+      "text": "The mothers of ill children were very patient and sensitive.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 15479,
+      "end": 15584,
+      "text": "Spouses who found their marriage harmonious tolerated the role of informal caregivers better than others.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 15585,
+      "end": 15657,
+      "text": "“It used to bother me more, and I resented him more when he was healthy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 15658,
+      "end": 15702,
+      "text": "Now, he is helpless and nailed to the house.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 15703,
+      "end": 15905,
+      "text": "He can be demanding at times and wants to be the center of attention all the time, but he has been like that before. What used to bother me doesn’t bother me anymore because the disease calmed him down.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 15905,
+      "end": 15920,
+      "text": "” (Caregiver 6)",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 15920,
+      "end": 15921,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S122",
+      "start": 15921,
+      "end": 16085,
+      "text": "\n\nIn the sixth theme (social circle), participants reported that they did not have social lives, except occasional socialising with family members or medical staff.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 16086,
+      "end": 16154,
+      "text": "Only employed caregivers sometimes had coffee with their colleagues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 16155,
+      "end": 16208,
+      "text": "“The son is in Germany, the daughter sometimes comes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 16209,
+      "end": 16235,
+      "text": "Otherwise, I am all alone.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 16236,
+      "end": 16284,
+      "text": "Only people from the ambulance and the hospital.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 16284,
+      "end": 16299,
+      "text": "” (Caregiver 6)",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 16299,
+      "end": 16300,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S129",
+      "start": 16300,
+      "end": 16700,
+      "text": "\n\nIn the seventh theme (Place/time of socialising), participants reported they were usually at home, and the only socialising they experienced was when somebody visited them, which was very rarely, and during the pandemic, it was almost non-existent. “No one is coming to us in this pandemic anymore. Children and grandchildren say it’s because of the pandemic. But I think that’s an excuse for them.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 16701,
+      "end": 16780,
+      "text": "It’s hard for them to watch Dad so helpless. I understand that.” (Caregiver 7).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 16780,
+      "end": 17019,
+      "text": "\n\n\n## 4. Discussion\n\nOur study aimed to investigate how informal caregivers of chronic respiratory failure patients experience providing care and how the caring role impacted successful ageing: physical and mental health and social life.\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 17019,
+      "end": 17139,
+      "text": "According to the results of our research, informal caregivers experience problems with their physical and mental health.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 17140,
+      "end": 17229,
+      "text": "Usually, they suffer from musculoskeletal pain, sleep disorders, and weight oscillations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 17230,
+      "end": 17337,
+      "text": "Some of them have been diagnosed with new health conditions as a result of caring for an ill family member.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 17338,
+      "end": 17626,
+      "text": "Our results, especially those obtained from caregivers 1, 2, and 3, are likely in line with other authors’ results [22,23,24], who have also obtained that informal caregiver overburden causes immune system weakening, high blood glucose levels, high blood pressure, and sleeping disorders.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 17627,
+      "end": 17825,
+      "text": "This could potentially be linked with providing caring interventions, feeling overburdened, lack of free time for their own physical activity, or lack of regular medical examinations and treatments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 17826,
+      "end": 18074,
+      "text": "Likewise, our results correlate with previously published studies about caregiving for a person with advanced illness suffering from breathlessness where informal caregivers also experienced a lack of time for their own needs and self-care [15,25].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 18075,
+      "end": 18339,
+      "text": "Despite the fact that women are less career-oriented and place more considerable importance on non-market activities such as family responsibilities, women who provide ongoing intense care may find it more difficult to focus on the positive aspects of caring [26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 18340,
+      "end": 18447,
+      "text": "They may feel seriously impaired if they become inactive as a result of their caring responsibilities [27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 18448,
+      "end": 18558,
+      "text": "In that regard, caregivers encounter all the problems of organising a care program with minimal or no support.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 18559,
+      "end": 18680,
+      "text": "As a result, they are burdened with far more responsibility, resulting in an excessive amount of emotional pressure [28].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 18680,
+      "end": 18682,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S143",
+      "start": 18682,
+      "end": 18859,
+      "text": "Caring interventions such as transfers and bathing lead to physical overburden, which includes headaches, musculoskeletal pain, obesity, and high levels of stress hormones [29].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 18860,
+      "end": 18934,
+      "text": "These diverse challenges could be the main cause of caregiver mental risk.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 18935,
+      "end": 19159,
+      "text": "The results of other research [22,24,30,31,32] indicated that informal caregivers are at a high risk of developing mental disorders, such as depression and anxiety, especially if the caregiver and patient are relatives [33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 19160,
+      "end": 19346,
+      "text": "In our case, participants often felt a heavy burden due to the role of the informal caregiver, and there were caregivers who were relatives, which is in line with other research results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 19347,
+      "end": 19619,
+      "text": "Likewise, several authors [34,35,36,37] agreed on the fact that intensive care, feelings of being overburden, lack of social and emotional support, being female, and emotionally focused confrontation with caregiving problems are predictors for both depression and anxiety.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 19620,
+      "end": 19749,
+      "text": "Zarit and Reamy [38] believed that stress and burden may lead to burnout, which will further impair the caregiver’s mental state.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 19750,
+      "end": 19945,
+      "text": "Another fact that must be considered is that women are more exposed than men to the stress generated by informal caregiving, with men reacting differently to stressful situations than women [39].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 19945,
+      "end": 19947,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S151",
+      "start": 19947,
+      "end": 20046,
+      "text": "Our participants also experienced social isolation because of a lack of free time for social lives.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 20047,
+      "end": 20141,
+      "text": "Sometimes, care recipients can feel uneasy when signs of poor health become visible in public.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 20142,
+      "end": 20273,
+      "text": "If he/she does not want to be seen in such a condition, the caregiver cannot go outside, and visiting friends are not welcome [25].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 20274,
+      "end": 20474,
+      "text": "Considering that informal caregivers’ satisfaction with their social lives may prevent the negative impacts of informal caregiving, other opportunities for their social inclusion should be considered.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 20475,
+      "end": 20532,
+      "text": "This could also include virtual technology [22,40,41,42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 20532,
+      "end": 20900,
+      "text": "\n\nIn addition to the previous, since our participants’ average age was 57 (57.11 ± 11.63 years) and comprised mainly women, we could say that there is a link in terms of age and gender with European informal care [1], as well as with the OECD report [2]. However, further research is needed to complete the gaps and update the insufficient data in this part of Europe.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 20900,
+      "end": 20902,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S158",
+      "start": 20902,
+      "end": 20943,
+      "text": "The conducted study had some limitations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 20944,
+      "end": 21149,
+      "text": "Participants were recruited only in one hospital, and they all lived in the capital of Croatia (Zagreb), which could mean that our sample was not representative of all caregiver populations in the country.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 21150,
+      "end": 21209,
+      "text": "Furthermore, the majority of our sample consisted of women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 21210,
+      "end": 21581,
+      "text": "The types of caregiver recipient’s respiratory support were different (long-term oxygen therapy, non-invasive mechanical ventilation and oxygen therapy, and invasive mechanical ventilation), so it could possibly be expected that the caregiver’s experience is not the same if they take care of somebody who uses long-term oxygen therapy or invasive mechanical ventilation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 21582,
+      "end": 21720,
+      "text": "Furthermore, there was a conceptual framework deficiency that guided the interview questions, which further benefited the data processing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 21720,
+      "end": 21724,
+      "text": "\n\n\n#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S164",
+      "start": 21724,
+      "end": 21728,
+      "text": "# 5.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S165",
+      "start": 21729,
+      "end": 22107,
+      "text": "Conclusions\n\nInformal caregivers experience negative impacts on the factors that contribute to the successful ageing of informal caregivers of patients with chronic respiratory failure: physical and mental health and social life. Due to the demanding nature of providing intensive care, they usually do not have enough time to take care of their own health or have social lives.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 22108,
+      "end": 22276,
+      "text": "Caregivers’ needs for maintaining their own health are not being met effectively; they require aid and emotional support to prevent care recipient institutionalisation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 22277,
+      "end": 22484,
+      "text": "In that regard, it is essential to identify informal caregivers whose physical/mental health and social life are affected by providing care and provide them with appropriate support in line with their needs.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 22484,
+      "end": 22810,
+      "text": "\n\nBased on the fact that we conducted a qualitative study, future ones should focus on a longitudinal approach, mainly because we did not explore the impact that arose from the caregiving role (e.g., caregiver’s resilience, patience, tolerance, inner strength, improving relationship with person that receiving care, etc.).\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=Providing intensive informal caregiving | pred=cause | obj=caregivers’ overburden | unit=S4\nB T4 B2 | sub=This article | pred=aim | obj=to investigate how informal caregivers experience | unit=S5\nB T4 B3 | sub=A qualitative exploratory study | pred=perform | obj=using semi-structured interviews | unit=S6\nB T4 B4 | sub=The sample | pred=comprise | obj=15 informal caregivers who provided intensive | unit=S7\nB T4 B5 | sub=They | pred=recruit | obj=patients | unit=S8\nB T4 B6 | sub=Semi-structured interviews | pred=use | obj=with informal caregivers | unit=S9\nB T4 B7 | sub=Similar codes | pred=organise | obj=into categories | unit=S10\nB T4 B8 | sub=Two themes | pred=identify | obj=in the domain of physical health | unit=S11\nB T4 B9 | sub=Informal caregivers of patients with chronic | pred=experience | obj=a negative impact | unit=S12\nB T4 B10 | sub=The results of our research | pred=suggest | obj=that caregivers need support in maintaining | unit=S13\nB T4 B11 | sub=it | pred=be | obj=According to the data on informal | unit=S17\nB T4 B12 | sub=There | pred=be | obj=For example, as much as 34% | unit=S18\nB T4 B13 | sub=It | pred=important | obj=to highlight that there is no | unit=S19\nB T4 B14 | sub=The WHO | pred=provide | obj=its official definition of “informal caregiving | unit=S20\nB T4 B15 | sub=informal caregiving | pred=stand | obj=According to the United Nations | unit=S21\nB T4 B16 | sub=OECD | pred=consider | obj=informal caregivers | unit=S22\nB T4 B17 | sub=the need for informal care | pred=expect | obj=to grow in the future | unit=S24\nB T4 B18 | sub=This | pred=support | obj=by recorded increase in the number | unit=S25\nB T4 B19 | sub=it | pred=essential | obj=On the other hand | unit=S26\nB T4 B20 | sub=It | pred=know | obj=that because of the increasing lifespan, | unit=S27\nB T4 B21 | sub=Those efforts | pred=result | obj=in the concept of successful ageing | unit=S28\nB T4 B22 | sub=Successful ageing | pred=mean | obj=reaching the maximum personal level of | unit=S29\nB T4 B23 | sub=Family caregivers | pred=position | obj=insights | unit=S30\nB T4 B24 | sub=it | pred=questionable | obj=whether they have a chance for | unit=S31\nB T4 B25 | sub=Lack of family | pred=predictor | obj=of informal caregiver burden | unit=S33\nB T4 B26 | sub=Overburdened informal caregivers | pred=risk | obj=health | unit=S34\nB T4 B27 | sub=This | pred=mean | obj=that, if they disregard their own | unit=S35\nB T4 B28 | sub=Other important predictors of informal caregiver | pred=condition | obj=of patients | unit=S36\nB T4 B29 | sub=Chronic respiratory failure patients | pred=confront | obj=with many symptoms such as dyspnoea | unit=S37\nB T4 B30 | sub=Respiratory failure | pred=condition | obj=that | unit=S38\nB T4 B31 | sub=Caregivers of patients with severe symptoms | pred=perceive | obj=that they had poorer physical and | unit=S40\nB T4 B32 | sub=the aim of our research | pred=be | obj=to investigate how informal caregivers of | unit=S41\nB T4 B33 | sub=we | pred=aim | obj=With this research | unit=S42\nB T4 B34 | sub=No studies | pred=find | obj=that | unit=S43\nB T4 B35 | sub=article text | pred=material | obj=Methods | unit=S45\nB T4 B36 | sub=The inclusion criteria | pred=provider | obj=of informal care for people with | unit=S46\nB T4 B37 | sub=The exclusion criteria | pred=provision | obj=of informal care | unit=S47\nB T4 B38 | sub=informal caregivers who met the criteria | pred=ask | obj=During patient follow-up examinations for chronic | unit=S48\nB T4 B39 | sub=Informal care | pred=include | obj=assistance for respiratory patients in activities | unit=S49\nB T4 B40 | sub=Ethics approval | pred=grant | obj=by the Special Hospital for Pulmonary | unit=S50\nB T4 B41 | sub=Participants | pred=provide | obj=written informed consent | unit=S51\nB T4 B42 | sub=researchers | pred=follow | obj=all recommendations of the Helsinki Declaration | unit=S52\nB T4 B43 | sub=article text | pred=method | obj=We | unit=S54\nB T4 B44 | sub=Data saturation | pred=achieve | obj=by the 15th interview | unit=S55\nB T4 B45 | sub=The interview questions | pred=develop | obj=after literature research | unit=S56\nB T4 B46 | sub=The focus group, comprising a gerontologist | pred=define | obj=key factors important for successful ageing | unit=S57\nB T4 B47 | sub=the semi-structured interview | pred=consist | obj=of 15 main questions with sub-questions, | unit=S58\nB T4 B48 | sub=they | pred=self-complete | obj=a sociodemographic questionnaire | unit=S59\nB T4 B49 | sub=The questions | pred=include | obj=their experience of how providing care | unit=S60\nB T4 B50 | sub=Interviews | pred=take | obj=in the Special Hospital for Pulmonary | unit=S61\nB T4 B51 | sub=Interviews | pred=record | obj=front | unit=S62\nB T4 B52 | sub=Only the person conducting the interviews | pred=aware | obj=of the participants’ identities | unit=S63\nB T4 B53 | sub=which | pred=contain | obj=the name | unit=S64\nB T4 B54 | sub=Analysis | pred=do | obj=transcripts | unit=S65\nB T4 B55 | sub=Analysis | pred=have | obj=a personal code | unit=S67\nB T4 B56 | sub=The further process of data analysis | pred=exclude | obj=participants’ personal data | unit=S68\nB T4 B57 | sub=We | pred=tap | obj=the interviews | unit=S69\nB T4 B58 | sub=We | pred=complete | obj=an inductive thematic analysis of the | unit=S70\nB T4 B59 | sub=The goal of these interviews | pred=answer | obj=the research questions | unit=S71\nB T4 B60 | sub=researchers | pred=identify | obj=In open coding | unit=S72\nB T4 B61 | sub=The open coding process | pred=give | obj=us | unit=S73\nB T4 B62 | sub=They | pred=repeat | obj=this process | unit=S74\nB T4 B63 | sub=All three researchers | pred=cod | obj=inconsistencies | unit=S75\nB T4 B64 | sub=Independent analysis procedures | pred=synthesise | obj=at the general meeting | unit=S76\nB T4 B65 | sub=Inconsistencies | pred=resolve | obj=by the main researcher | unit=S77\nB T4 B66 | sub=Results The study sample comprised 15 | pred=use | obj=long-term oxygen therapy | unit=S81\nB T4 B67 | sub=The average age of the informal | pred=57 | obj=57.11 | unit=S82\nB T4 B68 | sub=data | pred=theme | obj=20 | unit=S83\nB T4 B69 | sub=article text | pred=/figure | obj=/figure | unit=S85\nB T4 B70 | sub=caregivers | pred=assess | obj=In the first theme (subjective assessment | unit=S86\nB T4 B71 | sub=They | pred=report | obj=a lack of free time for | unit=S87\nB T4 B72 | sub=I | pred=eat | obj=more | unit=S88\nB T4 B73 | sub=I | pred=feel | obj=Especially in the last year | unit=S89\nB T4 B74 | sub=Name | pred=weigh | obj=about 13 kg | unit=S90\nB T4 B75 | sub=article text | pred=caregiver | obj=1 | unit=S91\nB T4 B76 | sub=they | pred=lack | obj=time for their own medical examinations | unit=S93\nB T4 B77 | sub=They | pred=report | obj=changes in their health status | unit=S94\nB T4 B78 | sub=I | pred=sure | obj=that I’m not well | unit=S95\nB T4 B79 | sub=I | pred=visit | obj=my physician | unit=S96\nB T4 B80 | sub=article text | pred=imagine | obj=I have no one to leave | unit=S97\nB T4 B81 | sub=The only doctors I see | pred=her | obj=The only doctors I see are | unit=S98\nB T4 B82 | sub=I | pred=know | obj=if I have a disease | unit=S99\nB T4 B83 | sub=my whole body | pred=hurt | obj=Caregiver | unit=S100\nB T4 B84 | sub=Participants | pred=note | obj=problems with gastritis | unit=S101\nB T4 B85 | sub=I | pred=associate | obj=some of these changes, such as | unit=S102\nB T4 B86 | sub=they | pred=feel | obj=due to the role of being | unit=S103\nB T4 B87 | sub=There | pred=be | obj=days when I think I will | unit=S104\nB T4 B88 | sub=I | pred=tell | obj=you | unit=S105\nB T4 B89 | sub=participants | pred=describe | obj=In the fourth theme (caregivers’ feelings | unit=S106\nB T4 B90 | sub=Some of them | pred=use | obj=to the situation | unit=S107\nB T4 B91 | sub=I | pred=think | obj=I’m constantly tense | unit=S108\nB T4 B92 | sub=I | pred=know | obj=what it’s like not to be | unit=S109\nB T4 B93 | sub=I | pred=nervous | obj=On the one hand | unit=S110\nB T4 B94 | sub=article text | pred=caregiver | obj=5 | unit=S111\nB T4 B95 | sub=they | pred=describe | obj=In the fifth theme (relationship with | unit=S113\nB T4 B96 | sub=The quality of their relationships | pred=depend | obj=on the state of the relationship | unit=S114\nB T4 B97 | sub=The mothers of ill children | pred=patient | obj=sensitive | unit=S115\nB T4 B98 | sub=Spouses who found their marriage harmonious | pred=tolerate | obj=the role of informal caregivers | unit=S116\nB T4 B99 | sub=It | pred=use | obj=to bother me more | unit=S117\nB T4 B100 | sub=he | pred=helpless | obj=house | unit=S118\nB T4 B101 | sub=He | pred=demanding | obj=at times | unit=S119\nB T4 B102 | sub=article text | pred=caregiver | obj=6 | unit=S120\nB T4 B103 | sub=they | pred=have | obj=social lives | unit=S122\nB T4 B104 | sub=Only employed caregivers | pred=have | obj=coffee | unit=S123\nB T4 B105 | sub=the daughter | pred=come | obj=The son is in Germany | unit=S124\nB T4 B106 | sub=I | pred=alone | obj=Otherwise, I am all alone. | unit=S125\nB T4 B107 | sub=article text | pred=people | obj=from the ambulance | unit=S126\nB T4 B108 | sub=article text | pred=caregiver | obj=6 | unit=S127\nB T4 B109 | sub=the only socialising they experienced | pred=visit | obj=them | unit=S129\nB T4 B110 | sub=It | pred=hard | obj=them | unit=S130\nB T4 B111 | sub=informal caregivers of chronic respiratory failure | pred=experience | obj=providing care | unit=S131\nB T4 B112 | sub=informal caregivers | pred=experience | obj=According to the results of our | unit=S132\nB T4 B113 | sub=they | pred=suffer | obj=from musculoskeletal pain | unit=S133\nB T4 B114 | sub=Some of them | pred=diagnose | obj=with new health conditions | unit=S134\nB T4 B115 | sub=Our results, especially those obtained from | pred=likely | obj=in line with other authors’ results | unit=S135\nB T4 B116 | sub=This | pred=link | obj=caring | unit=S136\nB T4 B117 | sub=our results | pred=correlate | obj=with previously published studies about caregiving | unit=S137\nB T4 B118 | sub=women who provide ongoing intense care | pred=find | obj=Despite the fact that women are | unit=S138\nB T4 B119 | sub=They | pred=feel | obj=seriously impaired | unit=S139\nB T4 B120 | sub=caregivers | pred=encounter | obj=In that regard | unit=S140\nB T4 B121 | sub=they | pred=burden | obj=As a result | unit=S141\nB T4 B122 | sub=Caring interventions such as transfers | pred=lead | obj=to physical overburden, which includes headaches | unit=S143\nB T4 B123 | sub=These diverse challenges | pred=cause | obj=of caregiver mental risk | unit=S144\nB T4 B124 | sub=The results of other research | pred=indicate | obj=that informal caregivers are at a | unit=S145\nB T4 B125 | sub=participants | pred=feel | obj=In our case | unit=S146\nB T4 B126 | sub=several authors [34,35,36,37 | pred=agree | obj=on the fact that intensive care, | unit=S147\nB T4 B127 | sub=Zarit and Reamy [38 | pred=believe | obj=that stress and burden may lead | unit=S148\nB T4 B128 | sub=Another fact that must be considered | pred=be | obj=that women are more exposed than | unit=S149\nB T4 B129 | sub=Our participants | pred=experience | obj=social isolation | unit=S151\nB T4 B130 | sub=care recipients | pred=feel | obj=uneasy | unit=S152\nB T4 B131 | sub=the caregiver | pred=go | obj=friends | unit=S153\nB T4 B132 | sub=other opportunities for their social inclusion | pred=consider | obj=Considering that informal caregivers’ satisfaction with | unit=S154\nB T4 B133 | sub=This | pred=include | obj=virtual technology | unit=S155\nB T4 B134 | sub=further research | pred=need | obj=gaps | unit=S156\nB T4 B135 | sub=The conducted study | pred=have | obj=some limitations | unit=S158\nB T4 B136 | sub=Participants | pred=recruit | obj=only in one hospital | unit=S159\nB T4 B137 | sub=the majority of our sample | pred=consist | obj=of women | unit=S160\nB T4 B138 | sub=The types of caregiver recipient’s respiratory | pred=different | obj=long-term | unit=S161\nB T4 B139 | sub=there | pred=be | obj=conceptual | unit=S162\nB T4 B140 | sub=article text | pred=conclusion | obj=Informal | unit=S165\nB T4 B141 | sub=Caregivers’ needs for maintaining their own | pred=meet | obj=they | unit=S166\nB T4 B142 | sub=it | pred=essential | obj=In that regard | unit=S167\nB T4 B143 | sub=future ones | pred=focus | obj=on a longitudinal approach | unit=S168",
+  "expected": {
+    "assertion_count": 143,
+    "minimum_concept_count": 231,
+    "minimum_structural_row_count": 506,
+    "minimum_knowledge_map_node_count": 506,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

@@ -1,5 +1,12 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
+$registryPythonPath = (Resolve-Path "..\shared\model_registry").Path
+$existingPythonPath = [Environment]::GetEnvironmentVariable("PYTHONPATH")
+if ([string]::IsNullOrWhiteSpace($existingPythonPath)) {
+    $env:PYTHONPATH = $registryPythonPath
+} else {
+    $env:PYTHONPATH = $registryPythonPath + ";" + $existingPythonPath
+}
 
 # Observability (local dev): OTLP → Alloy localhost:4317
 $env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:4317"

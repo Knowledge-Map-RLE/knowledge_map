@@ -1,0 +1,1995 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 248,
+      "text": "# Maternal age effects on offspring lifespan and reproduction vary within a species\n\n**Авторы:** Liguori Alyssa, Korm Sovannarith, Profetto Alex, Richters Emily, Gribble Kristin E.\n\n**Журнал:** bioRxiv (2023)\n\n**DOI:** 10.1101/2023.02.27.530305\n\n\n#",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 248,
+      "end": 260,
+      "text": "# Abstract\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S3",
+      "start": 260,
+      "end": 346,
+      "text": "Across diverse taxa, offspring from older mothers have decreased lifespan and fitness.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 347,
+      "end": 453,
+      "text": "Little is known about whether such maternal age effects vary among genotypes for a given species, however.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 454,
+      "end": 563,
+      "text": "We compared maternal age effects among four strains of rotifers in the Brachionus plicatilis species complex.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 564,
+      "end": 720,
+      "text": "For each strain, we measured lifespan, reproductive schedule, and lifetime reproductive output of offspring produced by young, middle-aged, and old mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 721,
+      "end": 855,
+      "text": "We found unexpected variability among strains in the magnitude and direction of maternal age effects on offspring life history traits.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 856,
+      "end": 1038,
+      "text": "In one strain, offspring of young mothers lived 20% longer than offspring of old mothers, whereas there were no significant effects of maternal age on lifespan for the other strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1039,
+      "end": 1162,
+      "text": "Across strains, advanced maternal age had positive effects, negative effects, or no effect on lifetime reproductive output.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1163,
+      "end": 1277,
+      "text": "For all but one strain, older mothers produced offspring that had higher maximum daily reproduction early in life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1278,
+      "end": 1442,
+      "text": "Maternal age effects appear to be genetically determined traits, not features of life history strategy or due to accumulation of age-related damage in the germline.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 1443,
+      "end": 1608,
+      "text": "Investigating intraspecific variability is critical for understanding the ubiquity of maternal age effects and their role in the evolution of life history and aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 1608,
+      "end": 1829,
+      "text": "\n\n\n## Introduction\n\nMaternal age effects, in which a mother’s age at the time of reproduction influences the phenotype of her offspring absent of any changes in genotype, are a common form of intergenerational plasticity.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 1830,
+      "end": 1926,
+      "text": "In many taxa, offspring from older mothers have decreased lifespan, fecundity, and health [1–6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 1927,
+      "end": 2173,
+      "text": "As one of the earliest experimental studies of maternal age effects was conducted by Albert Lansing using the rotifer Philodina citrina [3,7], a decrease in lifespan and fecundity in old-mother offspring is often referred to as a “Lansing Effect.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2173,
+      "end": 2292,
+      "text": "” In other species, however, advanced maternal age has positive effects [8–10] or no effects [11] on offspring fitness.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 2293,
+      "end": 2506,
+      "text": "While many studies have described maternal age effects, it is unclear how they are distributed across species and whether the tendency to have positive, neutral, or negative maternal age effects is clade-specific.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 2507,
+      "end": 2885,
+      "text": "A recent meta-analysis of 97 animal species has shown that Lepidopterans, other invertebrates (including C. elegans, rotifers, copepods, annelids, snails, and fruit flies), wild (non-agricultural) mammals, and humans exhibited significant negative effects of advanced maternal age, whereas wild birds had positive maternal age effects on the early development of offspring [12].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 2885,
+      "end": 3042,
+      "text": "\n\nThe causes of maternal age effects are not clear, but are frequently thought to involve age-related shifts in trade-offs between lifespan and reproduction.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 3043,
+      "end": 3245,
+      "text": "If more resources are allocated to higher reproduction, then fewer resources can be allocated to somatic maintenance, repair, and growth, which could result in decreased lifespan, or vice versa [13–16].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 3246,
+      "end": 3482,
+      "text": "For example, if offspring from older mothers receive fewer maternally-provisioned lipids, gene transcripts, organelles, metabolites, or other resources, they may be shorter-lived or have altered developmental and reproductive schedules.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3483,
+      "end": 3605,
+      "text": "Changes in early life reproductive schedule are thought to impact late-life reproduction or schedule and lifespan [14,17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 3606,
+      "end": 3796,
+      "text": "Negative maternal age effects are hypothesized to be caused by age-related declines in the reproductive system or gamete quality, or by other physiological constraints as mothers age [3,18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 3797,
+      "end": 4041,
+      "text": "Positive maternal age effects could occur in organisms with life histories, morphologies, or physiologies that enable parents to allocate more resources to offspring later in life (e.g., if older parents are larger or more experienced) [10,12].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 4042,
+      "end": 4277,
+      "text": "Both positive and negative maternal age effects could be the result of life history adaptations, such as shifting of reproductive schedules, that optimize population fitness across generations in response to environmental changes [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 4278,
+      "end": 4341,
+      "text": "However, there is limited evidence to support these hypotheses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 4342,
+      "end": 4525,
+      "text": "With the currently available studies, it is difficult to disentangle the effects of phylogeny, life history, and environment on maternal age effects among broad taxonomic groups [12].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4525,
+      "end": 4749,
+      "text": "\n\nTo address questions about the evolution of life history and the impact of maternal age effects on population dynamics, it will be critical to understand the evolutionary mechanisms underlying intergenerational plasticity.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 4750,
+      "end": 4855,
+      "text": "A promising avenue of investigation is to characterize intraspecific variability in maternal age effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 4856,
+      "end": 5097,
+      "text": "Analyses among species are limited by multiple confounding variables, but within species we can compare populations or strains with relatively similar genetics, morphology, life history strategies, and environments, but distinct vital rates.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 5098,
+      "end": 5355,
+      "text": "Studies of Daphnia [19,20], Drosophila [4,11,21,22], and other insects [23] provide examples of high variability in the magnitude and direction of parental age effects on lifespan, development, fecundity, or embryonic diapause among strains and populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 5356,
+      "end": 5499,
+      "text": "To understand whether intraspecific variability in maternal age effects is typical, additional experimental studies of other clades are needed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 5499,
+      "end": 5501,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S34",
+      "start": 5501,
+      "end": 5606,
+      "text": "Monogonont rotifers are an ideal study system for investigating phenotypic plasticity across generations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 5607,
+      "end": 5757,
+      "text": "They are microscopic invertebrate animals that are abundant worldwide and play critical roles in many aquatic food webs as primary consumers and prey.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 5758,
+      "end": 5946,
+      "text": "Rotifers in the Brachionus plicatilis cryptic species complex have lifespans from 1 – 4 weeks and are easily reared across multiple, age-synchronized generations in the laboratory [24,25].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 5947,
+      "end": 6167,
+      "text": "Brachionus spp. are cyclical parthenogens: they reproduce asexually, but in response to environmental cues (dense populations) can switch to a sexual reproduction phase that results in the formation of resting eggs [26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 6168,
+      "end": 6316,
+      "text": "Therefore, genetic diversity of populations can be manipulated, resulting in experimental cohorts that are isogenic, inbred, or genetically diverse.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 6317,
+      "end": 6542,
+      "text": "Phenotypic plasticity and maternal effects in response to inter- and intra-specific interactions, including inducible defenses and the induction of sexual reproduction, have been studied in these rotifers for decades [27,28].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 6543,
+      "end": 6857,
+      "text": "Unlike many short-lived invertebrates, Brachionus females do not produce large numbers of small offspring in broods, but instead make a large reproductive investment in each offspring, producing 1–6 large neonates each day throughout the reproductive period, with a lifetime reproductive output of 20–30 offspring.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 6858,
+      "end": 6970,
+      "text": "This makes it an interesting species in which to examine the conservation of maternal age effects among strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 6971,
+      "end": 7245,
+      "text": "Brachionus has externally brooded embryos, direct development with no larval stages, and no parental care after neonates hatch, so we can distinguish the effects of metamorphoses and maternal care from other maternal age-related differences in maternal provisioning [24,25].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 7245,
+      "end": 7500,
+      "text": "\n\nMaternal age effects are just beginning to be explored in Brachionus rotifers. Recent studies on the Russian strain of B. manjavacas (BmanRUS), have found that advanced maternal age leads to decreased lifespan and lifetime fecundity in offspring [1,29].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 7501,
+      "end": 7748,
+      "text": "While large differences in lifespan and reproductive plasticity between closely-related Brachionus strains in response to environmental stressors have been found [30,31], the variability in maternal age effects among Brachionus strains is unknown.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 7748,
+      "end": 7750,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S46",
+      "start": 7750,
+      "end": 7911,
+      "text": "Here, we tested for differences in maternal age effects on offspring lifespan and reproduction among four strains from the Brachionus plicatilis species complex.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 7912,
+      "end": 8163,
+      "text": "We compared one strain of B. plicatilis (BpL1) and three strains of B. manjavacas: BmanL5 and BmanRUS (both maintained in constant culture for > 20 years) and BmanRUS-RE, which was newly hatched from five-year-old resting (diapausing) eggs of BmanRUS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 8164,
+      "end": 8432,
+      "text": "We compared BmanRUS and BmanRUS-RE to test whether the life history phenotypes that have been observed in past studies were preserved in the diapausing strain (BmanRUS-RE), which had not been subjected to laboratory selective pressures for the past five years [30,31].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 8432,
+      "end": 8622,
+      "text": "\n\nDespite their genetic similarity, these strains differ in their origins, time in culture, vital rates under control laboratory conditions, and responses to environmental stressors [32,33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 8623,
+      "end": 8736,
+      "text": "Under control conditions (21°C, ad libitum food), median lifespan ranged from 10 d for BpL1 to 23.5 d for BmanL5.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 8737,
+      "end": 8864,
+      "text": "At lower temperatures (16°C), lifespans of BmanRUS and BmanL5 were extended, but the mean lifespan of BpL1 was unaffected [30].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 8865,
+      "end": 9000,
+      "text": "BmanRUS has the highest tendency for mixis (sexual reproduction), BmanL5 has less, and the BpL1 strain is completely amictic (asexual).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 9001,
+      "end": 9163,
+      "text": "Under chronic caloric restriction and intermittent fasting diets, BmanRUS lifespan was significantly extended, but BmanL5 and BpL1 had no change in lifespan [31].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 9164,
+      "end": 9408,
+      "text": "Given the substantial differences in lifespan, reproduction, and responses to environment between these strains of the same and closely related species, we wanted to know if they also differ in the effect of maternal age on offspring phenotype.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 9408,
+      "end": 9611,
+      "text": "\n\nIn this study, we conducted multi-generation life table experiments to quantify survivorship, lifetime reproductive output, and reproductive schedules for multiple maternal age cohorts for each strain.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 9612,
+      "end": 9824,
+      "text": "Since BpL1 is the most distantly related strain with the most disparate vital rates and responses to environmental conditions, we expected that it would have different maternal age effects from the other strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 9825,
+      "end": 10030,
+      "text": "While BmanRUS and BmanRUS-RE are the most closely related, we hypothesized that the BmanRUS line has undergone laboratory evolution, and therefore could have distinct phenotypes from the BmanRUS-RE strain.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 10031,
+      "end": 10214,
+      "text": "With these life table data, we tested for trade-offs between lifespan and reproduction and whether relationships between these factors differed among strains and maternal age cohorts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 10215,
+      "end": 10440,
+      "text": "Although previous work on BmanRUS did not find evidence for maternal age-related lifespan-reproduction trade-offs [1,29], we wanted to test whether trade-offs were lacking across the genetically distinct strains studied here.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 10441,
+      "end": 10560,
+      "text": "This work will inform future research on the evolution of variability in maternal age effects within and across clades.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 10560,
+      "end": 10587,
+      "text": "\n\n\n## Materials & Methods\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 10587,
+      "end": 10588,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S63",
+      "start": 10588,
+      "end": 10589,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S64",
+      "start": 10589,
+      "end": 10626,
+      "text": "# Rotifer and phytoplankton culture\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 10626,
+      "end": 10723,
+      "text": "Each rotifer strain was kept in serial culture and fed the chlorophyte algae Tetraselmis suecica.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 10724,
+      "end": 10902,
+      "text": "Algae cultures were maintained in 2 L flasks of bubbled f/2 medium [34], minus silica, made with 15 ppt Instant Ocean Sea Salt (Instant Ocean, Blacksburg, VA) in distilled water.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 10903,
+      "end": 10984,
+      "text": "Both rotifer and algae cultures were grown at 21°C on a 12:12 h light:dark cycle.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 10985,
+      "end": 11172,
+      "text": "Cultures of T. suecica were maintained in semi-continuous log phase growth by the removal of 40% of the culture and replacement with f/2 medium every other day throughout the experiments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 11172,
+      "end": 11175,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S70",
+      "start": 11175,
+      "end": 11176,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S71",
+      "start": 11176,
+      "end": 11177,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S72",
+      "start": 11177,
+      "end": 11251,
+      "text": "# Life table experiments\n\nThe BmanRUS experiment took place in March 2021.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 11252,
+      "end": 11317,
+      "text": "The other three strains were studied simultaneously in July 2021.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 11318,
+      "end": 11365,
+      "text": "The same methods were used for all experiments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 11366,
+      "end": 11553,
+      "text": "To control for maternal and grandmaternal ages of the experimental animals, two generations of maternal age synchronization were conducted before the initiation of life table experiments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 11554,
+      "end": 11774,
+      "text": "Amictic eggs were removed from mature females by vortexing, isolated by micropipette, and allowed to hatch and mature for 5 days in ad libitum food conditions, at which time eggs were again collected from mature females.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 11775,
+      "end": 11902,
+      "text": "After repeating this for two generations, eggs were collected and allowed to hatch for 6 h to initiate the experimental cohort.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 11903,
+      "end": 11993,
+      "text": "Thus, the mothers and grandmothers of our experimental F0 cohorts were all 3 – 5 days old.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 11993,
+      "end": 12196,
+      "text": "\n\nTo initiate and track each cohort, individual neonates were allocated to 1 mL of T. suecica at a concentration of 6 × 105 cells mL−1 in 15 ppt Instant Ocean in 24-well plates (n = 55 to 75 per strain).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 12197,
+      "end": 12426,
+      "text": "Every 24 h, each individual was observed on a Zeiss Stemi 508 microscope, scored as alive or dead, carrying or not carrying eggs (reproductive status), and the number of offspring produced within the previous 24 h was quantified.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 12427,
+      "end": 12515,
+      "text": "The original female was then transferred to a new well with new seawater and T. suecica.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 12516,
+      "end": 12590,
+      "text": "Daily scoring and transfers were conducted until all individuals had died.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 12591,
+      "end": 12660,
+      "text": "This method produced individual-level lifespan and reproduction data.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 12660,
+      "end": 12896,
+      "text": "\n\nTo initiate the F1 generation at young (Y), middle (M), and old (O) maternal ages for each strain, one neonate per mother (hatched within the past 24 h) was pipetted into a well of a new plate with 1 mL of T. suecica in Instant Ocean.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 12897,
+      "end": 13034,
+      "text": "In some cases, multiple neonates were taken from a single mother, particularly if other mothers had no neonates on the day of collection.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 13035,
+      "end": 13135,
+      "text": "These F1 offspring were then tracked for their entire lifetimes in the same manner as their mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 13136,
+      "end": 13281,
+      "text": "For BmanL5 (n = 71 – 72) and BmanRUS-RE (n = 60 – 71), experimental F1 generations were initiated at maternal ages of 3 (Y), 6 (M), and 10 d (O).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 13282,
+      "end": 13385,
+      "text": "For BpL1, maternal ages were 3 (n = 68), 6 (n =69), and 9 days (n =39) because of its shorter lifespan.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 13386,
+      "end": 13486,
+      "text": "The F1 generation of BmanRUS had only two maternal ages: young (3 d; n = 62) and old (11 d; n = 90).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 13486,
+      "end": 13489,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S91",
+      "start": 13489,
+      "end": 13490,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S92",
+      "start": 13490,
+      "end": 13572,
+      "text": "## Statistical analyses\n\nAll data were plotted and analyzed using R v. 4.0.2 [35].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 13573,
+      "end": 13674,
+      "text": "The ‘survival’ and ‘survminer’ packages [36,37] were used to create Kaplan-Meier survivorship curves.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 13675,
+      "end": 13847,
+      "text": "Differences in survivorship curves among maternal age cohorts were tested within each strain using log-rank/Mantel-Haenszel tests implemented within the ‘survival’ package.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 13848,
+      "end": 13994,
+      "text": "For each strain, two separate tests were used to compare Y versus M and Y versus O cohorts (except for BmanRUS, for which there was only Y and O).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 13995,
+      "end": 14097,
+      "text": "The Bonferroni method was used to adjust the critical alpha value to account for multiple comparisons.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 14098,
+      "end": 14208,
+      "text": "Individuals were right-censored if their death was not observed due to accidental loss during daily transfers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 14208,
+      "end": 14418,
+      "text": "\n\nFor lifetime reproductive output (LRO), maximum daily reproduction (MDR), age of 50% LRO, and reproductive period, differences among cohorts were tested within each strain using Kruskal-Wallis rank sum tests.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 14419,
+      "end": 14480,
+      "text": "Pairwise comparisons were made using Wilcoxon rank sum tests.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 14481,
+      "end": 14687,
+      "text": "To test for life history trade-offs, regression models were fit to describe the relationships between lifespan and LRO, reproductive period (in days and as a percentage of lifespan), and the age of 50% LRO.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 14688,
+      "end": 14869,
+      "text": "For each strain, hypothesis tests were conducted to determine whether differences among maternal age cohorts in regression constants and coefficients were statistically significant.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 14870,
+      "end": 14976,
+      "text": "These tests were also conducted to compare strains, after pooling maternal age cohorts within each strain.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 14976,
+      "end": 15088,
+      "text": "\n\n\n\n## Results\n\n### Survivorship:\n\nMaternal age effects on offspring lifespan differed among strains (figure 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 15089,
+      "end": 15259,
+      "text": "For BmanL5, offspring of younger mothers (Y) lived significantly longer than offspring of older mothers (O) (median lifespans of 17 and 13.5 d, respectively; p < 0.0001).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 15260,
+      "end": 15411,
+      "text": "Median lifespan of offspring of middle-aged mothers (15 d) was shorter but not significantly different than that of young-mother offspring (p = 0.128).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 15412,
+      "end": 15698,
+      "text": "Offspring of younger mothers also lived longer than offspring of older mothers for BmanRUS-RE, but this difference was not significant after a Bonferroni correction for multiple comparisons (median lifespans of 12.5 and 11d, respectively; p = 0.047, Bonferroni corrected alpha = 0.025).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 15699,
+      "end": 15827,
+      "text": "For BmanRUS, there was no effect of maternal age on offspring lifespan (p = 0.259); median lifespan for all cohorts was 16 days.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 15828,
+      "end": 15941,
+      "text": "There was also no effect of maternal age on offspring lifespan for BpL1 (Y vs. M: p = 0.913; Y vs. O: p = 0.239).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 15942,
+      "end": 16042,
+      "text": "Median lifespan for BpL1 cohorts ranged from 8–9 days, much shorter than that for the other strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 16043,
+      "end": 16144,
+      "text": "Maximum lifespan (age of 5% survivorship) was similar among cohorts for BmanRUS (Y = 21 d, O = 20 d).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 16145,
+      "end": 16287,
+      "text": "For BmanL5 and BmanRUS-RE, maximum lifespan was shorter in O cohorts (BmanL5: Y and M = 22 d, O = 20 d; BmanRUS-RE: Y and M = 20 d, O = 17 d).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 16288,
+      "end": 16415,
+      "text": "Maximum lifespan was shorter for BpL1 than for other strains across cohorts (Y = 15 d, M = 16 d, O = 14 d; figure 1, table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 16415,
+      "end": 16418,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S114",
+      "start": 16418,
+      "end": 16843,
+      "text": "<figure>\n  <figcaption><strong>Figure 1.</strong> Survivorship curves of the F0 generation (dashed lines) and of the F1 generation from young (Y; black), middle-aged (M; gray), and old (O; blue) mothers, for four Brachionus strains.</figcaption>\n</figure>\n\n\n### Reproduction:\n\nMaternal age affected offspring lifetime reproductive output (LRO) in two of four strains, but these effects were in opposing directions (figure 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 16844,
+      "end": 17104,
+      "text": "For BmanL5, offspring of younger mothers had higher LRO (mean ± SE: 24.8 ± 0.33 neonates ind−1) than did offspring of both middle-aged and older mothers (mean ± SE: 22.1 ± 0.46 and 22.2 ± 0.49 neonates ind−1, respectively; H(3) = 57.04, p < 0.0001; figure 2G).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 17105,
+      "end": 17189,
+      "text": "For BpL1, LRO for all maternal age cohorts was lower than that of the other strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 17190,
+      "end": 17416,
+      "text": "Offspring of young BpL1 mothers had the lowest LRO (mean ± SE: 8.5 ± 0.61 neonates ind−1), compared to older maternal age cohorts that produced just over 10 neonates individual−1 on average (H(3) = 9.33, p = 0.025; figure 2A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 17417,
+      "end": 17799,
+      "text": "For both BmanRUS and BmanRUS-RE, there was no significant effect of maternal age on offspring LRO, although offspring from older mothers tended to have higher reproductive output than offspring from younger mothers on average (BmanRUS: H(2) = 2.52, p = 0.28; BmanRUS-RE: H(3) = 8.3, p = 0.04, no significant pairwise comparisons, Wilcoxon rank sum test; figure 2C and 2E, table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 17799,
+      "end": 18061,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2.</strong> Lifetime reproductive output (LRO; A, C, E, G) and offspring produced per mother per day throughout the lifespan (B, D, F, H), for the BpL1 (A, B), BmanRUS (C, D), BmanRUS-RE (E, F), and BmanL5 (G, H) strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 18062,
+      "end": 18249,
+      "text": "Mean LRO for the F0 generation and young (Y), middle-aged (M), and old (O) mother cohorts of the F1 generation is shown by bold, black points and individual data points are shown in gray.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 18250,
+      "end": 18385,
+      "text": "Significant differences among cohorts are indicated by letters to the right of the mean points (Wilcoxon rank sum tests, alpha = 0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 18386,
+      "end": 18572,
+      "text": "Mean offspring production per mother per day is shown by bold points (± SE), and cohorts are indicated by line color (F0 - dashed, Y- black, M - gray, O - blue).</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 18572,
+      "end": 18662,
+      "text": "Variability in LRO among individuals also differed among strains and maternal age cohorts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 18663,
+      "end": 18787,
+      "text": "In BpL1, ~6% of individuals were sterile, which did not occur in the other strains (variance: Y = 24.9, M = 28.9, O = 40.6).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 18788,
+      "end": 19057,
+      "text": "In BmanL5, variability in LRO was twice as high in M and O cohorts than in the Y cohort (variance: Y = 7.7, M = 14.6, O = 17.2), with some M and O individuals producing very few offspring (minimum LROs of Y, M, and O cohorts, respectively: 16, 4, and 7 neonates ind−1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 19058,
+      "end": 19301,
+      "text": "For BmanRUS-RE, the O cohort had a smaller range in LRO among individuals (17 – 34 neonates ind−1, omitting one non-reproductive individual) versus the Y and M cohorts (9 – 36 and 6 – 35 neonates ind−1; variance: Y = 58.3, M = 37.8, O = 19.2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 19302,
+      "end": 19413,
+      "text": "Variability in LRO was similar between the Y and O cohorts of BmanRUS (variance: Y = 33.1, O = 27.8; table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 19413,
+      "end": 19415,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S129",
+      "start": 19415,
+      "end": 19485,
+      "text": "Reproductive schedule differed among maternal age cohorts and strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 19486,
+      "end": 19748,
+      "text": "For the O cohort of BmanL5, daily reproduction was high in early life (mean maximum daily reproduction (MDR): 4.9 neonates ind−1; H(3) = 105.4, p < 0.0001), but then declined rapidly after 6 d, until most individuals stopped producing neonates at the age of 9 d.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 19749,
+      "end": 19896,
+      "text": "The Y cohort had lower daily reproduction in early life (mean MDR: 4.1 neonates ind−1), but also showed a slower decline in reproduction over time.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 19897,
+      "end": 19999,
+      "text": "Most Y individuals produced neonates until 12 d old, which led to higher LRO than for M and O cohorts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 20000,
+      "end": 20153,
+      "text": "Rotifers in the M and O cohorts reached 50% LRO one day earlier than rotifers in the Y cohort (age 5 d versus 6 d; H(3) = 156.17, p < 0.0001; figure 2H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 20154,
+      "end": 20351,
+      "text": "A similar pattern was observed for BmanRUS-RE, but the difference in maximum daily reproduction between O and Y cohorts was larger (mean MDR: 4.7 vs. 3.7 neonates ind−1; H(3) = 116.15, p < 0.0001).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 20352,
+      "end": 20481,
+      "text": "This led to higher LRO in offspring of older mothers on average, despite a steep decline in reproduction that began at day eight.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 20482,
+      "end": 20573,
+      "text": "Offspring of young mothers produced at least one neonate per day on average through day 13.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 20574,
+      "end": 20704,
+      "text": "Like BmanL5, BmanRUS-RE rotifers in the O cohort reached 50% LRO earlier (age 5 d versus 6 d; H(3) = 38.2, p < 0.0001; figure 2F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 20705,
+      "end": 20807,
+      "text": "For BmanRUS, early peaks in neonate production were not as high as in the other B. manjavacas strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 20808,
+      "end": 20958,
+      "text": "The BmanRUS O cohort peak was higher than the Y peak (mean MDR of O cohort: 3.2 neonates ind−1, Y cohort: 3 neonates ind−1; H(2) = 16.97, p = 0.0002).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 20959,
+      "end": 21051,
+      "text": "After day 13, daily reproduction declined more rapidly in the O cohort than in the Y cohort.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 21052,
+      "end": 21189,
+      "text": "Rotifers in the O cohort reached 50% LRO one day earlier than Y cohort rotifers (age 7 d versus 8 d; H(2) = 33.4, p < 0.0001; figure 2D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 21190,
+      "end": 21291,
+      "text": "For BpL1, the highest mean MDR (3 neonates ind−1) occurred in the M cohort (H(3) = 22.3, p < 0.0001).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 21292,
+      "end": 21436,
+      "text": "There were no significant differences among cohorts in age of 50% LRO (median across cohorts: 4.5 d; H(2) = 1.2, p = 0.55; figure 2B, table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 21436,
+      "end": 21439,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S145",
+      "start": 21439,
+      "end": 21440,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S146",
+      "start": 21440,
+      "end": 21462,
+      "text": "## Reproductive period",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 21462,
+      "end": 21613,
+      "text": "\n\nReproductive period, measured as the percent of lifetime in which mothers carried eggs, was affected by maternal age in different ways among strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 21614,
+      "end": 21783,
+      "text": "For BmanL5 and BmanRUS, Y cohorts had longer reproductive periods than M (BmanL5 only) and O cohorts (BmanL5: H(3) = 32.88, p < 0.0001; BmanRUS: H(2) = 6.04, p = 0.049).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 21784,
+      "end": 21906,
+      "text": "Across maternal age cohorts, BmanRUS had longer mean reproductive periods (71.9 to 75.5%) than did BmanL5 (48.8 to 58.6%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 21907,
+      "end": 22110,
+      "text": "There were no significant differences in mean reproductive periods among maternal age cohorts for BmanRUS-RE, although they were longer on average for the Y cohort (73.2 to 78.6%; H(3) = 6.13, p = 0.11).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 22111,
+      "end": 22289,
+      "text": "For BpL1, the longest reproductive periods were observed in the M cohort (mean of 65.6% versus 54.6 and 56.8% for the Y and O cohorts; H(3) = 7.77, p = 0.05; figure 3, table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 22289,
+      "end": 22538,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 3.</strong> Reproductive period (percent of the lifespan spent carrying eggs) of the F0 generation and young (Y), middle-aged (M), and old (O) mother cohorts of the F1 generation, for four Brachionus strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 22539,
+      "end": 22649,
+      "text": "Mean reproductive periods are shown by bold, black points (± SE) and individual data points are shown in gray.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 22650,
+      "end": 22814,
+      "text": "Significant differences among cohorts are indicated by letters to the right of the mean points (Wilcoxon rank sum tests, alpha = 0.05).</figcaption>\n</figure>\n\n\n###",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 22815,
+      "end": 23001,
+      "text": "Life history trade-offs:\n\nCorrelations between lifespan and four metrics of reproduction differed among strains, but there were few differences among maternal age cohorts within strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 23002,
+      "end": 23176,
+      "text": "LRO increased with lifespan across all strains, but the slope of this relationship was lowest for BmanL5 (slope of 0.39 versus 0.90 – 1.01 for the other strains; figure S1A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 23177,
+      "end": 23324,
+      "text": "For BmanRUS, the relationship between LRO and lifespan was similar between maternal age cohorts (constants: p = 0.13, slopes: p = 0.21; figure 4E).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S158",
+      "start": 23325,
+      "end": 23517,
+      "text": "For the remaining strains, only the regression constants (not slopes) differed among maternal age cohorts (BmanL5: p = 0.0009, BmanRUS-RE: p < 0.0001, BpL1: p = 0.0019; figure 4A, 4I, and 4M).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 23518,
+      "end": 23693,
+      "text": "The length of the reproductive period (d) also increased with lifespan across strains; BmanL5 had the lowest slope (0.24 versus 0.44 – 0.61 for the other strains; figure S1C).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 23694,
+      "end": 23827,
+      "text": "For BmanL5 and BpL1, regression constants differed among maternal age cohorts (BmanL5: p < 0.0001, BpL1: p = 0.03; figure 4O and 4C).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 23828,
+      "end": 24055,
+      "text": "For BmanRUS and BmanRUS-RE, the slope of the relationship between reproductive period and lifespan was steeper in the Y cohort versus the older cohorts (BmanRUS slopes: p = 0.009, BmanRUS-RE slopes: p = 0.02; figure 4G and 4K).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 24055,
+      "end": 24407,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 4.</strong> Relationships between lifespan and lifetime reproductive output (LRO; A, E, I, M), reproductive period (as a percent of the lifespan; B, F, J, N), reproductive period in days (C, G, K, O), and age of 50% LRO (D, H, L, P) for the BpL1 (A-D), BmanRUS (E-H), BmanRUS-RE (I-L), and BmanL5 (M-P) strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 24408,
+      "end": 24535,
+      "text": "Young (Y), middle-aged (M), and old (O) mother cohorts are indicated within each strain by black, gray, and blue, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 24536,
+      "end": 24614,
+      "text": "Note differences between strains in scales of y-axes.</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 24614,
+      "end": 24791,
+      "text": "Reproductive period as a percentage of lifespan decreased with increasing lifespan across strains, except for BpL1, for which there was no significant relationship (figure S1B).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 24792,
+      "end": 24988,
+      "text": "For BmanRUS and BmanRUS-RE, the negative slope of the relationship was steepest in the O cohorts versus younger cohorts (BmanRUS slopes: p = 0.004, BmanRUS-RE slopes: p = 0.026; figure 4F and 4J).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 24989,
+      "end": 25149,
+      "text": "The age of 50% LRO increased with lifespan across strains, but again BmanL5 had the lowest slope (0.076 versus 0.169 – 0.201 for the other strains; figure S1D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 25150,
+      "end": 25257,
+      "text": "For BmanRUS-RE, the slope of this relationship was steepest in the Y cohort (slopes: p = 0.039; figure 4L).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 25258,
+      "end": 25352,
+      "text": "Slopes did not differ among maternal age cohorts in the other strains (figure 4D, 4H, and 4P).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 25352,
+      "end": 25543,
+      "text": "\n\n\n\n## Discussion\n\nMaternal age effects are known to vary among species, in a manner thought to be dependent on large differences in life history strategies among evolutionarily distant taxa.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 25544,
+      "end": 25711,
+      "text": "Here we show unexpected intraspecific differences in the magnitude and direction of maternal age effects on offspring lifespan and reproduction in Brachionus rotifers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 25712,
+      "end": 25884,
+      "text": "Our findings suggest that maternal age effects are genetically determined traits which may differ even among closely related species with identical life history strategies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 25885,
+      "end": 26040,
+      "text": "This work implies that maternal age effects are not simply caused by the age-related accumulation of cellular or DNA damage that is passed on to offspring.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 26041,
+      "end": 26192,
+      "text": "Alternatively, if such damage accumulation does occur, some genotypes may have the capacity to prevent or repair resulting dysfunction in the germline.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 26192,
+      "end": 26308,
+      "text": "\n\nChanges in lifespan and reproduction due to maternal age effects were not due to lifespan-reproduction trade-offs.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 26309,
+      "end": 26462,
+      "text": "BmanL5, which had the longest post-reproductive period (as a percent of the lifespan), displayed the strongest negative effects of advanced maternal age.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 26463,
+      "end": 26563,
+      "text": "Median lifespan of offspring of old mothers was 20% shorter than that of offspring of young mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 26564,
+      "end": 26749,
+      "text": "Offspring of young mothers had higher lifetime reproductive output (LRO), with lower variability among individuals, and longer reproductive periods relative to offspring of old mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 26749,
+      "end": 26999,
+      "text": "\n\nBmanRUS was least affected by maternal age: both lifespan and LRO were similar between young and old mother cohorts, though advanced maternal age in BmanRUS did lead to shorter reproductive periods and the production of more neonates early in life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 27000,
+      "end": 27236,
+      "text": "For BmanRUS-RE, a strain that was initiated with BmanRUS resting eggs from 2016, offspring of younger mothers had a 10% higher median lifespan (though this difference was not significant), and there was no effect of maternal age on LRO.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 27237,
+      "end": 27360,
+      "text": "BmanRUS-RE had the largest difference in early-life reproductive peaks between old and young mother cohorts across strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 27361,
+      "end": 27494,
+      "text": "For all B. manjavacas strains, old mother cohorts produced the majority of their offspring earlier in life than young mother cohorts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 27495,
+      "end": 27670,
+      "text": "For BpL1, the most distantly-related strain with the shortest lifespan and lowest reproduction overall, advanced maternal age led to higher LRO, but had no effect on lifespan.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 27670,
+      "end": 27672,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S185",
+      "start": 27672,
+      "end": 27828,
+      "text": "Intraspecific variability in maternal age effects has been described in only a few other species, the most well-studied of which is Drosophila melanogaster.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S186",
+      "start": 27829,
+      "end": 28062,
+      "text": "A comparison of six lab strains (4 inbred and 2 outbred) showed that older mothers generally produced offspring with shorter lifespans, but in a single strain, Canton-S, advanced maternal age led to longer lifespan in offspring [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 28063,
+      "end": 28168,
+      "text": "We did not observe increased lifespan in old-mother offspring in any rotifer strain in the current study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 28169,
+      "end": 28348,
+      "text": "Lee and colleagues [21] replicated the positive effect of advanced maternal age on offspring lifespan in Canton-S, but saw negative maternal age effects in two additional strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 28349,
+      "end": 28692,
+      "text": "Bloch Qazi and colleagues [4] also studied Canton-S as well as Oregon-R and found that embryo viability (hatching success) and embryo to adult viability were lower in offspring of old mothers, even in the strain with positive effects of advanced maternal age on offspring lifespan, though the magnitude of effects differed between the strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 28693,
+      "end": 28874,
+      "text": "Three D. melanogaster populations collected from distinct environments in Turkey also showed both positive and negative effects of advanced maternal age on offspring longevity [11].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 28875,
+      "end": 29067,
+      "text": "In Daphnia pulex, advanced maternal age decreased offspring lifespan in two of three clones studied, but advanced maternal age led to higher growth rates in offspring in all three clones [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 29068,
+      "end": 29175,
+      "text": "In Daphnia magna, five clones showed positive, negative, and neutral maternal age effects on lifespan [20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 29176,
+      "end": 29410,
+      "text": "Such high intraspecific variability in maternal age effects within these model arthropods and rotifers demonstrates the importance of including multiple strains or populations in future studies of maternal age effects in other clades.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 29410,
+      "end": 29412,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S195",
+      "start": 29412,
+      "end": 29628,
+      "text": "Variability in the direction and magnitude of maternal age effects between species has been attributed to differences in life history strategy that result from varied selective pressures and evolutionary constraints.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 29629,
+      "end": 29730,
+      "text": "Here, we have shown that strains of the same species can also exhibit divergent maternal age effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 29731,
+      "end": 29855,
+      "text": "Intraspecific differences in maternal effects could also be due to differential selective pressures in diverse environments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 29856,
+      "end": 30039,
+      "text": "For example, in the striped ground cricket, Allonemobius fasciatus, populations that span a wide latitudinal cline face different seasonality and have evolved distinct life histories.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 30040,
+      "end": 30275,
+      "text": "Northern populations experiencing short growing seasons only reproduce once in a year (univoltine), while southern populations with longer growing seasons and milder winters can reproduce multiple times per year (bi- and multivoltine).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 30276,
+      "end": 30372,
+      "text": "In univoltine populations, maternal age has no effect on the tendency for diapause in offspring.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 30373,
+      "end": 30527,
+      "text": "At the end of the short growing season, mating adults produce eggs that diapause, overwinter, and hatch in the spring with sufficient time for maturation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 30528,
+      "end": 30772,
+      "text": "In multivoltine populations, the tendency to produce diapausing eggs increases with maternal age, which is advantageous since the probability of producing offspring that will mature before winter decreases as the growing season progresses [23].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 30772,
+      "end": 30774,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S204",
+      "start": 30774,
+      "end": 30962,
+      "text": "The strains studied here were originally isolated from different geographic sites [31], but all have been continuously cultured in the lab under similar serial culture methods for decades.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S205",
+      "start": 30963,
+      "end": 31204,
+      "text": "These strains have been subjected to the same conditions of no predation, a consistent daily light:dark cycle, constant temperature, cycles of high and low food, cycles of high and low population density, and frequent population bottlenecks.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 31205,
+      "end": 31309,
+      "text": "Therefore, all strains have been subjected to the same selective pressures for thousands of generations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 31310,
+      "end": 31626,
+      "text": "Differences in initial genetic composition at the time of culture origin, spontaneous mutation, and genetic drift caused by frequent population bottlenecks all may have contributed to the laboratory evolution of these strains, which could underlie the variation in vital rates and maternal age effects observed here.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 31626,
+      "end": 31628,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S209",
+      "start": 31628,
+      "end": 31845,
+      "text": "BmanRUS-RE, which was initiated from resting eggs of BmanRUS collected in 2016, was included in this study to test whether maternal age effect experiment results in BmanRUS from 2014 – 2018 could be replicated [1,29].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 31846,
+      "end": 32090,
+      "text": "We expected that BmanRUS-RE would be genetically and phenotypically more similar to BmanRUS used in previous studies than to the current continuously cultured BmanRUS strain, potentially due to recent laboratory evolution of the BmanRUS strain.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 32091,
+      "end": 32240,
+      "text": "In previous BmanRUS studies, offspring of old mothers had shorter lifespans than offspring of young mothers by 10 – 25% and lower LRO by ~50% [1,29].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 32241,
+      "end": 32304,
+      "text": "Here, maternal age had no effect on lifespan or LRO in BmanRUS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 32305,
+      "end": 32510,
+      "text": "In BmanRUS-RE, there were also no statistically significant effects of maternal age on lifespan or LRO, but on average, offspring from younger mothers lived 1.5 days longer than offspring from old mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 32511,
+      "end": 32628,
+      "text": "Thus, the previously observed strong negative maternal age effects in BmanRUS were not fully recovered in BmanRUS-RE.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 32629,
+      "end": 32800,
+      "text": "When sexually-produced resting eggs of BmanRUS were collected, stored, and later hatched, it is likely that only a small proportion of the population was randomly sampled.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S216",
+      "start": 32801,
+      "end": 32915,
+      "text": "Therefore BmanRUS-RE may be genetically distinct from BmanRUS in both 2016 and 2021, as a result of genetic drift.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 32916,
+      "end": 33160,
+      "text": "Such variation within a species suggests that maternal age effects are under genetic control rather than due to a passive, age-related accumulation of damage in the germline or to universal resource trade-offs between reproduction and lifespan.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 33160,
+      "end": 33277,
+      "text": "\n\nLife history theory predicts a trade-off between lifespan and reproduction, at least under limiting resources [38].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S219",
+      "start": 33278,
+      "end": 33535,
+      "text": "In the biology of aging literature, this is often interpreted to mean that increased reproduction causes shorter lifespan, or that limiting or delaying reproduction can increase longevity, and that maternal age effects are driven by such trade-offs [13–16].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S220",
+      "start": 33536,
+      "end": 33692,
+      "text": "For example, Plaistow and colleagues [19] attributed the negative lifespan effects of advanced maternal age to earlier reproduction by old mother offspring.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S221",
+      "start": 33693,
+      "end": 33816,
+      "text": "In strains of Daphnia pulex, they found that advanced maternal age led to shorter lifespan in two of three strains studied.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S222",
+      "start": 33817,
+      "end": 33963,
+      "text": "Across all three strains, offspring of older mothers had increased clutch sizes earlier in life and faster growth than offspring of young mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S223",
+      "start": 33964,
+      "end": 34100,
+      "text": "Only in the two strains in which lifespan was reduced in offspring of old mothers did reproductive maturation occur at larger body sizes",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S224",
+      "start": 34100,
+      "end": 34101,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S225",
+      "start": 34102,
+      "end": 34288,
+      "text": "Thus, the authors concluded that increased early life reproduction traded-off with lifespan and that maternal age effects were a result of better offspring provisioning by older mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S226",
+      "start": 34289,
+      "end": 34509,
+      "text": "Similarly, Anderson and colleagues [20] studied multiple strains of Daphnia magna and found an “inverse Lansing Effect” in some strains, in which offspring of older mothers lived longer than offspring of younger mothers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S227",
+      "start": 34510,
+      "end": 34683,
+      "text": "They hypothesized that this inverse effect could be a result of decreased lipid offspring provisioning by older mothers, which could result in embryonic caloric restriction.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S228",
+      "start": 34684,
+      "end": 34885,
+      "text": "The notion of a trade-off between lifespan and reproduction also underlies this hypothesis: decreased lipid stores during development ultimately limits reproduction and subsequently increases lifespan.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 34886,
+      "end": 35096,
+      "text": "Although caloric restriction is a well-documented mechanism of lifespan extension in adult animals, however, embryonic and fetal resource limitation has been shown to cause negative outcomes for offspring [39].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S230",
+      "start": 35096,
+      "end": 35264,
+      "text": "\n\nIn contrast to these other studies, among the B. manjavacas strains examined here, earlier or higher reproduction were not uniformly correlated with shorter lifespan.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S231",
+      "start": 35265,
+      "end": 35430,
+      "text": "Old-mother cohorts of all three strains produced 50% of their LRO one day earlier, and early life maximum daily reproduction was higher than in young-mother cohorts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S232",
+      "start": 35431,
+      "end": 35596,
+      "text": "BmanRUS-RE had the largest difference between maternal age cohorts in early life reproductive peaks, and BmanRUS had the smallest, but still significant, difference.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S233",
+      "start": 35597,
+      "end": 35693,
+      "text": "However, significantly shorter lifespans in the old mother cohort were only observed for BmanL5.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S234",
+      "start": 35694,
+      "end": 35837,
+      "text": "Thus, this study does not provide evidence that a trade-off between increased early life reproduction and lifespan drives maternal age effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S235",
+      "start": 35838,
+      "end": 36000,
+      "text": "Additionally, the effects of maternal age, either positive or negative, could not be explained by trade-offs between reproduction and longevity among the strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S236",
+      "start": 36001,
+      "end": 36179,
+      "text": "This suggests that trade-offs between somatic maintenance and development time or reproductive output are not primary drivers of lifespan, at least under replete food conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 36180,
+      "end": 36348,
+      "text": "This additionally emphasizes the importance of comparing multiple strains before drawing conclusions about the ubiquity of mechanisms controlling life history strategy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S238",
+      "start": 36349,
+      "end": 36635,
+      "text": "Indeed, if we had tested maternal age effects in only BmanL5, in which offspring of older mothers had both shorter lifespans and earlier peaks in reproduction, we might conclude that maternal age effects are driven by life history trade-offs, in a similar manner as the Daphnia studies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S239",
+      "start": 36636,
+      "end": 36862,
+      "text": "Conversely, if BmanRUS had been the sole experimental strain, we might eliminate trade-offs between reproduction and lifespan as a potential mechanism, as reproductive timing was affected by maternal age, but lifespan was not.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S240",
+      "start": 36862,
+      "end": 37082,
+      "text": "\n\nMaternal age effects on offspring lifespan and reproduction are genotype-specific in Brachionus rotifers. Resource trade-offs between lifespan and reproduction likely do not underlie the variable effects observed here.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S241",
+      "start": 37083,
+      "end": 37311,
+      "text": "More studies examining intraspecific variability in maternal age effects are needed to determine whether such high variation is widespread among clades or specific to arthropods and rotifers (the most well-studied taxa to date).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S242",
+      "start": 37312,
+      "end": 37458,
+      "text": "Future work on maternal age effects in rotifers and other species should include more genotypes, ideally spanning diverse life history strategies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S243",
+      "start": 37459,
+      "end": 37652,
+      "text": "For example, comparing multiple strains with a range of tendencies for mixis and varied vital rates could allow for direct tests of the influence of life history traits on maternal age effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S244",
+      "start": 37653,
+      "end": 37855,
+      "text": "Future quantitative trait locus (QTL) analyses or comparative genomics studies of strains with varied maternal age effects may provide insight into the genetic controls of intergenerational inheritance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S245",
+      "start": 37855,
+      "end": 37858,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S246",
+      "start": 37858,
+      "end": 37883,
+      "text": "## Supplementary Material",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S247",
+      "start": 37883,
+      "end": 37886,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=article text | pred=abstract | obj=# Abstract | unit=S2\nB T4 B2 | sub=offspring from older mothers | pred=decrease | obj=Across diverse taxa | unit=S3\nB T4 B3 | sub=Little | pred=know | obj=such | unit=S4\nB T4 B4 | sub=We | pred=compare | obj=maternal age effects among four strains | unit=S5\nB T4 B5 | sub=we | pred=measure | obj=For each strain | unit=S6\nB T4 B6 | sub=We | pred=find | obj=unexpected variability among strains | unit=S7\nB T4 B7 | sub=offspring of young mothers | pred=live | obj=In one strain | unit=S8\nB T4 B8 | sub=advanced maternal age | pred=have | obj=Across strains | unit=S9\nB T4 B9 | sub=older mothers | pred=produce | obj=For all but one strain | unit=S10\nB T4 B10 | sub=Maternal age effects | pred=appear | obj=to be genetically determined traits, not | unit=S11\nB T4 B11 | sub=variability | pred=critical | obj=ubiquity | unit=S12\nB T4 B12 | sub=Maternal age effects, in which a | pred=form | obj=of intergenerational plasticity | unit=S13\nB T4 B13 | sub=mothers | pred=decrease | obj=lifespan | unit=S14\nB T4 B14 | sub=a decrease in lifespan and fecundity | pred=refer | obj=to | unit=S15\nB T4 B15 | sub=advanced maternal age | pred=have | obj=In other species | unit=S16\nB T4 B16 | sub=it | pred=unclear | obj=how they are distributed across species | unit=S17\nB T4 B17 | sub=A recent meta-analysis of 97 animal | pred=show | obj=that Lepidopterans, other invertebrates (including C. | unit=S18\nB T4 B18 | sub=The causes of maternal age effects | pred=clear | obj=age-related | unit=S19\nB T4 B19 | sub=fewer resources | pred=allocate | obj=to somatic maintenance, repair, and growth, | unit=S20\nB T4 B20 | sub=they | pred=shorter-lived | obj=For example | unit=S21\nB T4 B21 | sub=Changes in early life reproductive schedule | pred=think | obj=to impact late-life reproduction | unit=S22\nB T4 B22 | sub=Negative maternal age effects | pred=hypothesize | obj=to be caused by age-related declines | unit=S23\nB T4 B23 | sub=Positive maternal age effects | pred=occur | obj=in organisms with life histories | unit=S24\nB T4 B24 | sub=Both positive and negative maternal age | pred=result | obj=of life history adaptations, such as | unit=S25\nB T4 B25 | sub=there | pred=be | obj=limited | unit=S26\nB T4 B26 | sub=it | pred=difficult | obj=With the currently available studies | unit=S27\nB T4 B27 | sub=it | pred=critical | obj=to understand the evolutionary mechanisms underlying | unit=S28\nB T4 B28 | sub=A promising avenue of investigation | pred=be | obj=to characterize intraspecific variability in maternal | unit=S29\nB T4 B29 | sub=Analyses among species | pred=limit | obj=by multiple confounding variables | unit=S30\nB T4 B30 | sub=Studies of Daphnia [19,20 | pred=provide | obj=examples of high variability in the | unit=S31\nB T4 B31 | sub=additional experimental studies of other clades | pred=need | obj=To understand whether intraspecific variability in | unit=S32\nB T4 B32 | sub=Monogonont rotifers | pred=system | obj=phenotypic | unit=S34\nB T4 B33 | sub=They | pred=animal | obj=that | unit=S35\nB T4 B34 | sub=Rotifers in the Brachionus plicatilis cryptic | pred=have | obj=lifespans | unit=S36\nB T4 B35 | sub=Brachionus spp. | pred=parthenogen | obj=they | unit=S37\nB T4 B36 | sub=genetic diversity of populations | pred=manipulate | obj=resulting in experimental cohorts that are | unit=S38\nB T4 B37 | sub=Phenotypic plasticity and maternal effects in | pred=study | obj=in these rotifers | unit=S39\nB T4 B38 | sub=Brachionus females | pred=produce | obj=Unlike many short-lived invertebrates | unit=S40\nB T4 B39 | sub=This | pred=make | obj=it an interesting species in which | unit=S41\nB T4 B40 | sub=Brachionus | pred=have | obj=externally brooded embryos | unit=S42\nB T4 B41 | sub=Recent studies on the Russian strain | pred=find | obj=that advanced maternal age leads to | unit=S43\nB T4 B42 | sub=the variability in maternal age effects | pred=unknown | obj=While large differences in lifespan and | unit=S44\nB T4 B43 | sub=we | pred=test | obj=for differences in maternal age effects | unit=S46\nB T4 B44 | sub=We | pred=compare | obj=one strain of B. plicatilis (BpL1 | unit=S47\nB T4 B45 | sub=We | pred=compare | obj=BmanRUS | unit=S48\nB T4 B46 | sub=these strains | pred=differ | obj=Despite their genetic similarity | unit=S49\nB T4 B47 | sub=median lifespan | pred=range | obj=Under control conditions (21°C, ad libitum | unit=S50\nB T4 B48 | sub=lifespans of BmanRUS | pred=extend | obj=At lower temperatures (16°C | unit=S51\nB T4 B49 | sub=BmanRUS | pred=have | obj=the highest tendency for mixis (sexual | unit=S52\nB T4 B50 | sub=BmanRUS lifespan | pred=extend | obj=Under chronic caloric restriction | unit=S53\nB T4 B51 | sub=we | pred=want | obj=Given the substantial differences in lifespan, | unit=S54\nB T4 B52 | sub=we | pred=conduct | obj=In this study | unit=S55\nB T4 B53 | sub=we | pred=expect | obj=that it would have different maternal | unit=S56\nB T4 B54 | sub=we | pred=hypothesize | obj=that the BmanRUS line has undergone | unit=S57\nB T4 B55 | sub=we | pred=test | obj=With these life table data | unit=S58\nB T4 B56 | sub=we | pred=want | obj=to test whether trade-offs were lacking | unit=S59\nB T4 B57 | sub=This work | pred=inform | obj=future research | unit=S60\nB T4 B58 | sub=article text | pred=material | obj=Methods | unit=S61\nB T4 B59 | sub=phytoplankton | pred=culture | obj=# Rotifer and phytoplankton culture | unit=S64\nB T4 B60 | sub=Each rotifer strain | pred=keep | obj=in serial culture | unit=S65\nB T4 B61 | sub=Algae cultures | pred=maintain | obj=in 2 L flasks of bubbled | unit=S66\nB T4 B62 | sub=Both rotifer and algae cultures | pred=grow | obj=at 21° | unit=S67\nB T4 B63 | sub=Cultures of T. suecica | pred=maintain | obj=in semi-continuous log phase growth | unit=S68\nB T4 B64 | sub=Life table experiments | pred=take | obj=place | unit=S72\nB T4 B65 | sub=The other three strains | pred=study | obj=in July 2021 | unit=S73\nB T4 B66 | sub=The same methods | pred=use | obj=for all experiments | unit=S74\nB T4 B67 | sub=two generations of maternal age synchronization | pred=conduct | obj=before the initiation of life table | unit=S75\nB T4 B68 | sub=Amictic eggs | pred=remove | obj=from mature females | unit=S76\nB T4 B69 | sub=eggs | pred=collect | obj=6 | unit=S77\nB T4 B70 | sub=the mothers and grandmothers of our | pred=old | obj=Thus, the mothers and grandmothers of | unit=S78\nB T4 B71 | sub=individual neonates | pred=allocate | obj=to 1 mL of T. suecica | unit=S79\nB T4 B72 | sub=Every 24 h | pred=observe | obj=on a Zeiss Stemi 508 microscope | unit=S80\nB T4 B73 | sub=The original female | pred=transfer | obj=to a new well | unit=S81\nB T4 B74 | sub=Daily scoring | pred=conduct | obj=individuals | unit=S82\nB T4 B75 | sub=This method | pred=produce | obj=individual-level lifespan | unit=S83\nB T4 B76 | sub=one neonate per mother (hatched within | pred=pipette | obj=into a well of a new | unit=S84\nB T4 B77 | sub=multiple neonates | pred=take | obj=In some cases | unit=S85\nB T4 B78 | sub=These F1 offspring | pred=track | obj=for their entire lifetimes | unit=S86\nB T4 B79 | sub=experimental F1 generations | pred=initiate | obj=For BmanL5 (n = 71 – | unit=S87\nB T4 B80 | sub=maternal ages | pred=3 | obj=For BpL1 | unit=S88\nB T4 B81 | sub=The F1 generation of BmanRUS | pred=have | obj=only two maternal ages | unit=S89\nB T4 B82 | sub=article text | pred=analysis | obj=data | unit=S92\nB T4 B83 | sub=The ‘survival’ and ‘survminer’ packages [36,37 | pred=use | obj=to create Kaplan-Meier survivorship curves | unit=S93\nB T4 B84 | sub=Differences in survivorship curves among maternal | pred=test | obj=within each strain | unit=S94\nB T4 B85 | sub=two separate tests | pred=use | obj=For each strain | unit=S95\nB T4 B86 | sub=The Bonferroni method | pred=use | obj=to adjust the critical alpha value | unit=S96\nB T4 B87 | sub=Individuals | pred=right-censored | obj=their | unit=S97\nB T4 B88 | sub=differences among cohorts | pred=test | obj=For lifetime reproductive output (LRO | unit=S98\nB T4 B89 | sub=Pairwise comparisons | pred=make | obj=using Wilcoxon rank sum tests | unit=S99\nB T4 B90 | sub=regression models | pred=fit | obj=to describe the relationships between lifespan | unit=S100\nB T4 B91 | sub=hypothesis tests | pred=conduct | obj=For each strain | unit=S101\nB T4 B92 | sub=These tests | pred=conduct | obj=to compare strains | unit=S102\nB T4 B93 | sub=article text | pred=result | obj=Survivorship | unit=S103\nB T4 B94 | sub=offspring of younger mothers (Y | pred=live | obj=For BmanL5 | unit=S104\nB T4 B95 | sub=Median lifespan of offspring of middle-aged | pred=short | obj=than that of young-mother offspring | unit=S105\nB T4 B96 | sub=Offspring of younger mothers | pred=live | obj=than offspring of older mothers | unit=S106\nB T4 B97 | sub=there | pred=be | obj=For BmanRUS | unit=S107\nB T4 B98 | sub=There | pred=be | obj=effect | unit=S108\nB T4 B99 | sub=Median lifespan for BpL1 cohorts | pred=range | obj=from 8–9 days | unit=S109\nB T4 B100 | sub=Maximum lifespan (age of 5% survivorship | pred=similar | obj=among cohorts for BmanRUS | unit=S110\nB T4 B101 | sub=maximum lifespan | pred=short | obj=For BmanL5 | unit=S111\nB T4 B102 | sub=Maximum lifespan | pred=short | obj=for BpL1 | unit=S112\nB T4 B103 | sub=figcaption><strong>Figure 1.</strong> Survivorship curves of the | pred=affect | obj=offspring lifetime reproductive output (LRO | unit=S114\nB T4 B104 | sub=offspring of younger mothers | pred=have | obj=For BmanL5 | unit=S115\nB T4 B105 | sub=LRO for all maternal age cohorts | pred=low | obj=For BpL1 | unit=S116\nB T4 B106 | sub=Offspring of young BpL1 mothers | pred=have | obj=the lowest LRO | unit=S117\nB T4 B107 | sub=there | pred=be | obj=For both BmanRUS | unit=S118\nB T4 B108 | sub=Lifetime | pred=output | obj=for the BpL1 (A, B | unit=S119\nB T4 B109 | sub=Mean LRO for the F0 generation | pred=show | obj=by bold, black points | unit=S120\nB T4 B110 | sub=Significant differences among cohorts | pred=indicate | obj=by letters to the right of | unit=S121\nB T4 B111 | sub=Mean offspring production per mother per | pred=show | obj=by bold points (± SE | unit=S122\nB T4 B112 | sub=Variability in LRO among individuals | pred=differ | obj=among strains | unit=S123\nB T4 B113 | sub=~6% of individuals | pred=sterile | obj=In BpL1 | unit=S124\nB T4 B114 | sub=variability in LRO | pred=high | obj=In BmanL5 | unit=S125\nB T4 B115 | sub=the O cohort | pred=have | obj=For BmanRUS-RE | unit=S126\nB T4 B116 | sub=Variability in LRO | pred=similar | obj=between the Y and O cohorts | unit=S127\nB T4 B117 | sub=Reproductive schedule | pred=differ | obj=among maternal age cohorts | unit=S129\nB T4 B118 | sub=daily reproduction | pred=high | obj=For the O cohort of BmanL5 | unit=S130\nB T4 B119 | sub=The Y cohort | pred=have | obj=lower daily reproduction | unit=S131\nB T4 B120 | sub=Most Y individuals | pred=produce | obj=neonates | unit=S132\nB T4 B121 | sub=Rotifers in the M and O | pred=reach | obj=50% LRO | unit=S133\nB T4 B122 | sub=A similar pattern | pred=observe | obj=for BmanRUS-RE | unit=S134\nB T4 B123 | sub=This | pred=lead | obj=to higher LRO in offspring of | unit=S135\nB T4 B124 | sub=Offspring of young mothers | pred=produce | obj=at least one neonate per day | unit=S136\nB T4 B125 | sub=BmanRUS-RE rotifers in the O cohort | pred=reach | obj=Like BmanL5 | unit=S137\nB T4 B126 | sub=early peaks in neonate production | pred=high | obj=For BmanRUS | unit=S138\nB T4 B127 | sub=The BmanRUS O cohort peak | pred=high | obj=than the Y peak | unit=S139\nB T4 B128 | sub=daily reproduction | pred=decline | obj=After day 13 | unit=S140\nB T4 B129 | sub=Rotifers in the O cohort | pred=reach | obj=50% LRO | unit=S141\nB T4 B130 | sub=the highest mean MDR (3 neonates | pred=occur | obj=For BpL1 | unit=S142\nB T4 B131 | sub=There | pred=be | obj=in age of 50% LRO | unit=S143\nB T4 B132 | sub=article text | pred=period | obj=## Reproductive period | unit=S146\nB T4 B133 | sub=Reproductive period, measured as the percent | pred=affect | obj=by maternal age | unit=S147\nB T4 B134 | sub=Y cohorts | pred=have | obj=For BmanL5 | unit=S148\nB T4 B135 | sub=BmanRUS | pred=have | obj=Across maternal age cohorts | unit=S149\nB T4 B136 | sub=There | pred=be | obj=for BmanRUS-RE | unit=S150\nB T4 B137 | sub=the longest reproductive periods | pred=observe | obj=For BpL1 | unit=S151\nB T4 B138 | sub=figcaption><strong | pred=figure | obj=for four Brachionus strains | unit=S152\nB T4 B139 | sub=Mean reproductive periods | pred=show | obj=by bold | unit=S153\nB T4 B140 | sub=Significant differences among cohorts | pred=indicate | obj=by letters to the right of | unit=S154\nB T4 B141 | sub=history | pred=trade-off | obj=Correlations | unit=S155\nB T4 B142 | sub=LRO | pred=increase | obj=with lifespan | unit=S156\nB T4 B143 | sub=the relationship between LRO | pred=similar | obj=For BmanRUS | unit=S157\nB T4 B144 | sub=only the regression constants (not slopes | pred=differ | obj=For the remaining strains | unit=S158\nB T4 B145 | sub=The length of the reproductive period | pred=increase | obj=with lifespan | unit=S159\nB T4 B146 | sub=regression constants | pred=differ | obj=For BmanL5 | unit=S160\nB T4 B147 | sub=the slope of the relationship between | pred=steep | obj=For BmanRUS | unit=S161\nB T4 B148 | sub=Figure | pred=relationship | obj=between lifespan | unit=S162\nB T4 B149 | sub=Young (Y), middle-aged (M), and old | pred=indicate | obj=within each strain | unit=S163\nB T4 B150 | sub=article text | pred=note | obj=differences between strains | unit=S164\nB T4 B151 | sub=Reproductive period as a percentage of | pred=decrease | obj=with increasing lifespan | unit=S165\nB T4 B152 | sub=the negative slope of the relationship | pred=steep | obj=For BmanRUS | unit=S166\nB T4 B153 | sub=The age of 50% LRO | pred=increase | obj=with lifespan | unit=S167\nB T4 B154 | sub=the slope of this relationship | pred=steep | obj=For BmanRUS-RE | unit=S168\nB T4 B155 | sub=Slopes | pred=differ | obj=among maternal age cohorts in the | unit=S169\nB T4 B156 | sub=Discussion | pred=know | obj=to vary among species | unit=S170\nB T4 B157 | sub=we | pred=show | obj=unexpected intraspecific differences in the magnitude | unit=S171\nB T4 B158 | sub=Our findings | pred=suggest | obj=that maternal age effects are genetically | unit=S172\nB T4 B159 | sub=This work | pred=imply | obj=that maternal age effects are not | unit=S173\nB T4 B160 | sub=some genotypes | pred=have | obj=the capacity to prevent | unit=S174\nB T4 B161 | sub=Changes in lifespan and reproduction due | pred=due | obj=lifespan-reproduction trade-offs | unit=S175\nB T4 B162 | sub=BmanL5, which had the longest post-reproductive | pred=display | obj=the strongest negative effects of advanced | unit=S176\nB T4 B163 | sub=Median lifespan of offspring of old | pred=short | obj=than that of offspring of young | unit=S177\nB T4 B164 | sub=Offspring of young mothers | pred=have | obj=higher lifetime reproductive output (LRO | unit=S178\nB T4 B165 | sub=BmanRUS | pred=affect | obj=by maternal age | unit=S179\nB T4 B166 | sub=offspring of younger mothers | pred=have | obj=For BmanRUS-RE, a strain that was | unit=S180\nB T4 B167 | sub=BmanRUS-RE | pred=have | obj=the largest difference in early-life reproductive | unit=S181\nB T4 B168 | sub=old mother cohorts | pred=produce | obj=For all B. manjavacas strains | unit=S182\nB T4 B169 | sub=advanced maternal age | pred=lead | obj=For BpL1, the most distantly-related strain | unit=S183\nB T4 B170 | sub=Intraspecific variability in maternal age effects | pred=describe | obj=in only a few other species, | unit=S185\nB T4 B171 | sub=A comparison of six lab strains | pred=show | obj=that older mothers generally produced offspring | unit=S186\nB T4 B172 | sub=We | pred=observe | obj=increased lifespan in old-mother offspring | unit=S187\nB T4 B173 | sub=Lee and colleagues [21 | pred=replicate | obj=the positive effect of advanced maternal | unit=S188\nB T4 B174 | sub=Bloch Qazi and colleagues [4 | pred=study | obj=Canton-S | unit=S189\nB T4 B175 | sub=Three D. melanogaster populations collected from | pred=show | obj=both positive and negative effects of | unit=S190\nB T4 B176 | sub=advanced maternal age | pred=decrease | obj=In Daphnia pulex | unit=S191\nB T4 B177 | sub=five clones | pred=show | obj=In Daphnia magna | unit=S192\nB T4 B178 | sub=Such high intraspecific variability in maternal | pred=demonstrate | obj=the importance of including multiple strains | unit=S193\nB T4 B179 | sub=Variability in the direction and magnitude | pred=attribute | obj=to differences in life history strategy | unit=S195\nB T4 B180 | sub=we | pred=show | obj=that strains of the same species | unit=S196\nB T4 B181 | sub=Intraspecific differences in maternal effects | pred=pressure | obj=in diverse environments | unit=S197\nB T4 B182 | sub=populations that span a wide latitudinal | pred=face | obj=For example | unit=S198\nB T4 B183 | sub=Northern populations experiencing short growing seasons | pred=reproduce | obj=year | unit=S199\nB T4 B184 | sub=maternal age | pred=have | obj=In univoltine populations | unit=S200\nB T4 B185 | sub=mating adults | pred=produce | obj=At the end of the short | unit=S201\nB T4 B186 | sub=the tendency to produce diapausing eggs | pred=increase | obj=In multivoltine populations | unit=S202\nB T4 B187 | sub=The strains studied here | pred=isolate | obj=from different geographic sites | unit=S204\nB T4 B188 | sub=These strains | pred=subject | obj=to the same conditions of no | unit=S205\nB T4 B189 | sub=all strains | pred=subject | obj=to the same selective pressures for | unit=S206\nB T4 B190 | sub=Differences in initial genetic composition at | pred=contribute | obj=to the laboratory evolution of these | unit=S207\nB T4 B191 | sub=BmanRUS-RE, which was initiated from resting | pred=include | obj=in this study | unit=S209\nB T4 B192 | sub=We | pred=expect | obj=that BmanRUS-RE would be genetically and | unit=S210\nB T4 B193 | sub=offspring of old mothers | pred=have | obj=In previous BmanRUS studies | unit=S211\nB T4 B194 | sub=maternal age | pred=have | obj=no effect | unit=S212\nB T4 B195 | sub=there | pred=be | obj=In BmanRUS-RE | unit=S213\nB T4 B196 | sub=the previously observed strong negative maternal | pred=recover | obj=in BmanRUS-RE | unit=S214\nB T4 B197 | sub=it | pred=likely | obj=that only a small proportion of | unit=S215\nB T4 B198 | sub=BmanRUS-RE | pred=distinct | obj=from BmanRUS | unit=S216\nB T4 B199 | sub=Such variation within a species | pred=suggest | obj=that maternal age effects are under | unit=S217\nB T4 B200 | sub=Life history theory | pred=predict | obj=a trade-off | unit=S218\nB T4 B201 | sub=this | pred=interpret | obj=In the biology of aging literature | unit=S219\nB T4 B202 | sub=Plaistow and colleagues [19 | pred=attribute | obj=For example | unit=S220\nB T4 B203 | sub=they | pred=find | obj=In strains of Daphnia pulex | unit=S221\nB T4 B204 | sub=offspring of older mothers | pred=increase | obj=Across all three strains | unit=S222\nB T4 B205 | sub=reproductive maturation | pred=occur | obj=Only in the two strains in | unit=S223\nB T4 B206 | sub=the authors | pred=conclude | obj=that increased early life reproduction traded-off | unit=S225\nB T4 B207 | sub=Anderson and colleagues [20 | pred=study | obj=multiple strains of Daphnia magna | unit=S226\nB T4 B208 | sub=They | pred=hypothesize | obj=that this inverse effect could be | unit=S227\nB T4 B209 | sub=The notion of a trade-off between | pred=underlie | obj=this hypothesis | unit=S228\nB T4 B210 | sub=embryonic and fetal resource limitation | pred=show | obj=to cause negative outcomes for offspring | unit=S229\nB T4 B211 | sub=article text | pred=correlate | obj=In contrast to these other studies | unit=S230\nB T4 B212 | sub=Old-mother cohorts of all three strains | pred=produce | obj=50% | unit=S231\nB T4 B213 | sub=BmanRUS-RE | pred=have | obj=the largest difference between maternal age | unit=S232\nB T4 B214 | sub=significantly shorter lifespans in the old | pred=observe | obj=for BmanL5 | unit=S233\nB T4 B215 | sub=this study | pred=provide | obj=evidence that a trade-off between increased | unit=S234\nB T4 B216 | sub=the effects of maternal age, either | pred=explain | obj=by trade-offs between reproduction and longevity | unit=S235\nB T4 B217 | sub=This | pred=suggest | obj=that trade-offs between somatic maintenance and | unit=S236\nB T4 B218 | sub=This | pred=emphasize | obj=the importance of comparing multiple strains | unit=S237\nB T4 B219 | sub=we | pred=conclude | obj=that maternal age effects are driven | unit=S238\nB T4 B220 | sub=we | pred=eliminate | obj=trade-offs between reproduction | unit=S239\nB T4 B221 | sub=Resource trade-offs between lifespan | pred=underlie | obj=the variable effects observed here | unit=S240\nB T4 B222 | sub=More studies examining intraspecific variability in | pred=need | obj=to determine whether such high variation | unit=S241\nB T4 B223 | sub=Future work on maternal age effects | pred=include | obj=more genotypes, ideally spanning diverse life | unit=S242\nB T4 B224 | sub=comparing multiple strains with a range | pred=allow | obj=For example | unit=S243\nB T4 B225 | sub=Future quantitative trait locus (QTL) analyses | pred=provide | obj=insight | unit=S244\nB T4 B226 | sub=article text | pred=material | obj=## Supplementary Material | unit=S246",
+  "expected": {
+    "assertion_count": 226,
+    "minimum_concept_count": 377,
+    "minimum_structural_row_count": 968,
+    "minimum_knowledge_map_node_count": 968,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

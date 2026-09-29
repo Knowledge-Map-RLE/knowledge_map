@@ -1,10 +1,8 @@
 """Provider registry and OpenAI-compatible HTTP client.
 
-The registry maps a model id to the upstream provider that serves it. Lookup order:
-
-1. exact match against a provider's configured ``models`` list;
-2. empty / ``default`` -> the default provider and model;
-3. ``<provider-name>/<model>`` prefix match.
+The catalog resolves a canonical profile from the shared model registry and
+then maps that profile to the upstream provider. Exact model ids remain
+accepted during migration, but unknown ids fail explicitly.
 
 ``list_models`` merges configured models with a live probe of each provider's
 ``GET /v1/models`` (cached briefly) so the UI always shows what is really loaded
@@ -23,7 +21,7 @@ from pathlib import Path
 
 import httpx
 
-from src.config import Provider, load_providers, settings
+from src.config import Provider, load_providers, model_registry, settings
 
 logger = logging.getLogger(__name__)
 
@@ -80,13 +78,13 @@ class HttpProviderClient:
     async def _request_streaming(self, body: dict) -> httpx.Response:
         url = f"{self.base_url}/chat/completions"
         headers = self._headers
-        last_exc: Exception | None = None
+        last_error = "no response received"
 
         for attempt in range(RETRY_ATTEMPTS):
             try:
                 response = await self._client.post(url, json=body, headers=headers)
             except httpx.HTTPError as exc:
-                last_exc = exc
+                last_error = str(exc)
                 delay = min(RETRY_BASE_DELAY * (2 ** attempt), RETRY_MAX_DELAY)
                 logger.warning(
                     "Provider '%s' unreachable (attempt %d/%d): %s — retrying in %.1fs",
@@ -97,6 +95,7 @@ class HttpProviderClient:
 
             if response.status_code >= 500 or response.status_code == 429:
                 detail = (await response.aread()).decode("utf-8", errors="replace")[:500]
+                last_error = f"HTTP {response.status_code}: {detail}"
                 delay = min(RETRY_BASE_DELAY * (2 ** attempt), RETRY_MAX_DELAY)
                 logger.warning(
                     "Provider '%s' HTTP %d (attempt %d/%d): %s — retrying in %.1fs",
@@ -117,7 +116,7 @@ class HttpProviderClient:
 
         raise ProviderError(
             f"Provider '{self.provider.name}' unreachable after "
-            f"{RETRY_ATTEMPTS} attempts: {last_exc}"
+            f"{RETRY_ATTEMPTS} attempts: {last_error}"
         )
 
     async def generate(self, model: str, req: dict) -> dict:
@@ -137,14 +136,85 @@ class HttpProviderClient:
             )
 
     async def stream(self, model: str, req: dict):
-        """Streaming completion → async iterator of raw SSE bytes frames."""
+        """Pass Cloud.ru SSE chunks through immediately and exactly once.
+
+        The provider's ``[DONE]`` frame is consumed here; the public router
+        writes its single terminal frame after this generator returns.  A
+        retry is safe only before the first data frame, otherwise it could
+        duplicate part of a completion.
+        """
         body = {**req, "model": model, "stream": True}
-        response = await self._request_streaming(body)
+        url = f"{self.base_url}/chat/completions"
+        last_error = "no response received"
+
         try:
-            async for chunk in response.aiter_bytes():
-                yield chunk
-        finally:
-            await response.aclose()
+            async with asyncio.timeout(settings.request_timeout):
+                for attempt in range(RETRY_ATTEMPTS):
+                    emitted_frame = False
+                    retryable = False
+                    try:
+                        async with self._client.stream(
+                            "POST", url, json=body, headers=self._headers
+                        ) as response:
+                            if response.status_code >= 400:
+                                detail = (await response.aread()).decode(
+                                    "utf-8", errors="replace"
+                                )[:500]
+                                last_error = f"HTTP {response.status_code}: {detail}"
+                                if response.status_code >= 500 or response.status_code == 429:
+                                    retryable = True
+                                else:
+                                    raise ProviderError(
+                                        f"Provider '{self.provider.name}' returned "
+                                        f"HTTP {response.status_code}: {detail}"
+                                    )
+                            else:
+                                async for raw_line in response.aiter_lines():
+                                    line = raw_line.strip()
+                                    if not line or not line.startswith("data:"):
+                                        continue
+                                    event_data = line.removeprefix("data:").strip()
+                                    if event_data == "[DONE]":
+                                        return
+                                    emitted_frame = True
+                                    yield f"data: {event_data}\n\n".encode("utf-8")
+                                if emitted_frame:
+                                    raise ProviderError(
+                                        f"Provider '{self.provider.name}' closed an SSE stream "
+                                        "without [DONE] after partial output"
+                                    )
+                                last_error = "SSE stream closed without data or [DONE]"
+                                retryable = True
+                    except httpx.HTTPError as exc:
+                        if emitted_frame:
+                            raise ProviderError(
+                                f"Provider '{self.provider.name}' stream failed after partial output: {exc}"
+                            ) from exc
+                        last_error = str(exc)
+                        retryable = True
+
+                    if not retryable:
+                        raise ProviderError(
+                            f"Provider '{self.provider.name}' ended its SSE stream unexpectedly"
+                        )
+                    if attempt + 1 == RETRY_ATTEMPTS:
+                        break
+                    delay = min(RETRY_BASE_DELAY * (2 ** attempt), RETRY_MAX_DELAY)
+                    logger.warning(
+                        "Provider '%s' stream failed before output (attempt %d/%d): %s — retrying in %.1fs",
+                        self.provider.name, attempt + 1, RETRY_ATTEMPTS, last_error, delay,
+                    )
+                    await asyncio.sleep(delay)
+        except TimeoutError as exc:
+            raise ProviderError(
+                f"Provider '{self.provider.name}' stream timed out after "
+                f"{settings.request_timeout} seconds"
+            ) from exc
+
+        raise ProviderError(
+            f"Provider '{self.provider.name}' stream failed before output after "
+            f"{RETRY_ATTEMPTS} attempts: {last_error}"
+        )
 
     async def list_models(self) -> list[ModelEntry]:
         entries: list[ModelEntry] = []
@@ -157,7 +227,11 @@ class HttpProviderClient:
             for item in data.get("data", []):
                 model_id = item.get("id")
                 if model_id:
-                    context_length = item.get("context_length") or settings.default_context_length
+                    context_length = (
+                        item.get("max_model_len")
+                        or item.get("context_length")
+                        or settings.default_context_length
+                    )
                     entries.append(
                         ModelEntry(
                             id=str(model_id),
@@ -170,6 +244,302 @@ class HttpProviderClient:
         except (ValueError, KeyError, TypeError) as exc:
             logger.warning("Unexpected model payload from '%s': %s", self.provider.name, exc)
         return entries
+
+    async def close(self) -> None:
+        await self._client.aclose()
+
+
+@dataclass
+class OpenAIResponsesProviderClient:
+    """OpenAI Responses API adapter exposed through the existing chat gateway.
+
+    Chat Completions is the stable internal contract for Knowledge Map callers;
+    GPT-6 reasoning runs through Responses so reasoning effort and streaming are
+    mapped explicitly without changing local or OpenAI-compatible providers.
+    """
+
+    provider: Provider
+    _client: httpx.AsyncClient = field(init=False, repr=False, default=None)
+
+    def __post_init__(self) -> None:
+        timeout = httpx.Timeout(settings.request_timeout, connect=settings.connect_timeout)
+        self._client = httpx.AsyncClient(timeout=timeout)
+
+    @property
+    def base_url(self) -> str:
+        return self.provider.base_url.rstrip("/")
+
+    @property
+    def _headers(self) -> dict[str, str]:
+        api_key = (self.provider.api_key or "").strip()
+        if not api_key:
+            raise ProviderError(
+                f"Provider '{self.provider.name}' requires its configured API key "
+                "environment variable"
+            )
+        return {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+
+    def _payload(self, model: str, req: dict, *, stream: bool) -> dict:
+        options = self.provider.generation_options.get(model, {})
+        messages = req.get("messages") or []
+        payload = {
+            "model": model,
+            # Preserve the full ordered conversation, including the DSL system
+            # prompt and the entire unchunked article supplied by the caller.
+            "input": [
+                {"role": message["role"], "content": message["content"]}
+                for message in messages
+            ],
+            "stream": stream,
+        }
+        reasoning_effort = options.get("reasoning_effort")
+        if reasoning_effort:
+            payload["reasoning"] = {"effort": reasoning_effort}
+        max_output_tokens = (
+            req.get("max_completion_tokens")
+            or req.get("max_tokens")
+            or options.get("max_tokens")
+        )
+        if max_output_tokens:
+            payload["max_output_tokens"] = int(max_output_tokens)
+        return payload
+
+    @staticmethod
+    def _usage_to_chat(usage: dict | None) -> dict:
+        usage = usage or {}
+        prompt_tokens = int(usage.get("input_tokens") or 0)
+        completion_tokens = int(usage.get("output_tokens") or 0)
+        return {
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": int(usage.get("total_tokens") or prompt_tokens + completion_tokens),
+        }
+
+    @staticmethod
+    def _output_text(response: dict) -> str:
+        text = response.get("output_text")
+        if isinstance(text, str):
+            return text
+        parts: list[str] = []
+        for item in response.get("output") or []:
+            for content in item.get("content") or []:
+                if content.get("type") == "output_text" and isinstance(content.get("text"), str):
+                    parts.append(content["text"])
+        return "".join(parts)
+
+    @staticmethod
+    def _error_message(payload: dict, fallback: str) -> str:
+        error = payload.get("error")
+        if isinstance(error, dict):
+            message = error.get("message")
+            if isinstance(message, str) and message.strip():
+                return message.strip()
+        response = payload.get("response")
+        if isinstance(response, dict):
+            error = response.get("error")
+            if isinstance(error, dict):
+                message = error.get("message")
+                if isinstance(message, str) and message.strip():
+                    return message.strip()
+        return fallback
+
+    async def _post_json(self, payload: dict) -> dict:
+        last_error = "no response received"
+        for attempt in range(RETRY_ATTEMPTS):
+            try:
+                response = await self._client.post(
+                    f"{self.base_url}/responses", json=payload, headers=self._headers
+                )
+            except httpx.HTTPError as exc:
+                last_error = str(exc)
+                retryable = True
+            else:
+                if response.status_code >= 400:
+                    detail = (await response.aread()).decode("utf-8", errors="replace")[:500]
+                    last_error = f"HTTP {response.status_code}: {detail}"
+                    retryable = response.status_code == 429 or response.status_code >= 500
+                    await response.aclose()
+                    if not retryable:
+                        raise ProviderError(
+                            f"Provider '{self.provider.name}' returned {last_error}"
+                        )
+                else:
+                    try:
+                        result = response.json()
+                    except (ValueError, json.JSONDecodeError) as exc:
+                        raise ProviderError(
+                            f"Provider '{self.provider.name}' returned invalid JSON"
+                        ) from exc
+                    finally:
+                        await response.aclose()
+                    return result
+
+            if attempt + 1 == RETRY_ATTEMPTS:
+                break
+            delay = min(RETRY_BASE_DELAY * (2 ** attempt), RETRY_MAX_DELAY)
+            logger.warning(
+                "Provider '%s' Responses request failed before output "
+                "(attempt %d/%d): %s — retrying in %.1fs",
+                self.provider.name, attempt + 1, RETRY_ATTEMPTS, last_error, delay,
+            )
+            await asyncio.sleep(delay)
+        raise ProviderError(
+            f"Provider '{self.provider.name}' Responses request failed after "
+            f"{RETRY_ATTEMPTS} attempts: {last_error}"
+        )
+
+    async def generate(self, model: str, req: dict) -> dict:
+        payload = self._payload(model, req, stream=False)
+        response = await self._post_json(payload)
+        status = response.get("status")
+        if status != "completed":
+            detail = response.get("incomplete_details") or response.get("error") or status
+            raise ProviderError(
+                f"Provider '{self.provider.name}' returned a non-completed response: {detail}"
+            )
+        return {
+            "id": response.get("id") or "chatcmpl-openai",
+            "object": "chat.completion",
+            "created": int(time.time()),
+            "model": response.get("model") or model,
+            "choices": [{
+                "index": 0,
+                "message": {"role": "assistant", "content": self._output_text(response)},
+                "finish_reason": "stop",
+            }],
+            "usage": self._usage_to_chat(response.get("usage")),
+        }
+
+    async def stream(self, model: str, req: dict):
+        payload = self._payload(model, req, stream=True)
+        headers = self._headers
+        last_error = "stream ended before response.completed"
+        for attempt in range(RETRY_ATTEMPTS):
+            emitted_text = False
+            retryable = False
+            completed = False
+            response_id = "chatcmpl-openai"
+            response_model = model
+            usage: dict = {}
+            try:
+                async with self._client.stream(
+                    "POST", f"{self.base_url}/responses", json=payload, headers=headers
+                ) as response:
+                    if response.status_code >= 400:
+                        detail = (await response.aread()).decode("utf-8", errors="replace")[:500]
+                        last_error = f"HTTP {response.status_code}: {detail}"
+                        retryable = response.status_code == 429 or response.status_code >= 500
+                        if not retryable:
+                            raise ProviderError(
+                                f"Provider '{self.provider.name}' returned {last_error}"
+                            )
+                    else:
+                        async for raw_line in response.aiter_lines():
+                            line = raw_line.strip()
+                            if not line.startswith("data:"):
+                                continue
+                            data = line.removeprefix("data:").strip()
+                            if not data or data == "[DONE]":
+                                continue
+                            try:
+                                event = json.loads(data)
+                            except json.JSONDecodeError as exc:
+                                raise ProviderError(
+                                    f"Provider '{self.provider.name}' sent invalid SSE JSON"
+                                ) from exc
+
+                            event_type = event.get("type")
+                            if event_type == "response.created":
+                                upstream_response = event.get("response") or {}
+                                response_id = upstream_response.get("id") or response_id
+                                response_model = upstream_response.get("model") or model
+                            elif event_type == "response.output_text.delta":
+                                delta = event.get("delta")
+                                if isinstance(delta, str) and delta:
+                                    emitted_text = True
+                                    yield _sse_event({
+                                        "id": response_id,
+                                        "object": "chat.completion.chunk",
+                                        "created": int(time.time()),
+                                        "model": response_model,
+                                        "choices": [{
+                                            "index": 0,
+                                            "delta": {"content": delta},
+                                            "finish_reason": None,
+                                        }],
+                                    })
+                            elif event_type == "response.completed":
+                                completed_response = event.get("response") or {}
+                                if completed_response.get("status") != "completed":
+                                    raise ProviderError(
+                                        "OpenAI response did not complete: "
+                                        + str(completed_response.get("incomplete_details")
+                                              or completed_response.get("status"))
+                                    )
+                                response_id = completed_response.get("id") or response_id
+                                response_model = completed_response.get("model") or response_model
+                                usage = self._usage_to_chat(completed_response.get("usage"))
+                                completed = True
+                                yield _sse_event({
+                                    "id": response_id,
+                                    "object": "chat.completion.chunk",
+                                    "created": int(time.time()),
+                                    "model": response_model,
+                                    "choices": [{
+                                        "index": 0,
+                                        "delta": {},
+                                        "finish_reason": "stop",
+                                    }],
+                                    "usage": usage,
+                                })
+                                return
+                            elif event_type in {"error", "response.failed", "response.incomplete"}:
+                                raise ProviderError(
+                                    f"OpenAI Responses stream failed: "
+                                    f"{self._error_message(event, event_type or 'unknown error')}"
+                                )
+                        if not completed and not retryable:
+                            raise ProviderError(
+                                f"Provider '{self.provider.name}' closed its stream "
+                                "without response.completed"
+                            )
+            except httpx.HTTPError as exc:
+                if emitted_text:
+                    raise ProviderError(
+                        f"Provider '{self.provider.name}' stream failed after partial output: {exc}"
+                    ) from exc
+                last_error = str(exc)
+                retryable = True
+
+            if not retryable:
+                break
+            if attempt + 1 == RETRY_ATTEMPTS:
+                break
+            delay = min(RETRY_BASE_DELAY * (2 ** attempt), RETRY_MAX_DELAY)
+            logger.warning(
+                "Provider '%s' Responses stream failed before output "
+                "(attempt %d/%d): %s — retrying in %.1fs",
+                self.provider.name, attempt + 1, RETRY_ATTEMPTS, last_error, delay,
+            )
+            await asyncio.sleep(delay)
+        raise ProviderError(
+            f"Provider '{self.provider.name}' Responses stream failed after "
+            f"{RETRY_ATTEMPTS} attempts: {last_error}"
+        )
+
+    async def list_models(self) -> list[ModelEntry]:
+        return [
+            ModelEntry(
+                id=model,
+                provider=self.provider.name,
+                configured=True,
+                context_length=self.provider.context_length or settings.default_context_length,
+            )
+            for model in self.provider.models
+        ]
 
     async def close(self) -> None:
         await self._client.aclose()
@@ -339,6 +709,8 @@ class Catalog:
         if client is None:
             if provider.use_local:
                 client = LocalGGUFProviderClient(provider)
+            elif provider.kind == "openai_responses":
+                client = OpenAIResponsesProviderClient(provider)
             else:
                 client = HttpProviderClient(provider)
             self._clients[provider.name] = client
@@ -352,25 +724,33 @@ class Catalog:
         (raw HTTP or local GGUF).
         """
         requested = (model or "").strip()
-
-        if requested and requested not in ("default",):
-            for provider in self._providers:
-                if requested in provider.models:
-                    return self._client_for(provider), requested
-            for provider in self._providers:
-                if requested.startswith(provider.name + "/"):
-                    return self._client_for(provider), requested
-            raise ProviderError(f"Unknown model '{requested}'")
-
-        default = self.default_provider()
-        resolved = default.default_model or settings.default_model
-        return self._client_for(default), resolved
+        try:
+            resolved_profile = model_registry.resolve(requested)
+        except ValueError as exc:
+            raise ProviderError(str(exc)) from exc
+        provider = next(
+            (item for item in self._providers if item.name == resolved_profile.provider.name),
+            None,
+        )
+        if provider is None:
+            raise ProviderError(
+                f"Provider '{resolved_profile.provider.name}' for profile "
+                f"'{resolved_profile.profile_name}' is not loaded"
+            )
+        return self._client_for(provider), resolved_profile.model_id
 
     def default_provider(self) -> Provider:
+        try:
+            active = model_registry.profile()
+        except ValueError as exc:
+            raise ProviderError(str(exc)) from exc
         for provider in self._providers:
-            if provider.name == settings.default_provider:
+            if provider.name == active.provider.name:
                 return provider
-        return self._providers[0]
+        raise ProviderError(
+            f"Provider '{active.provider.name}' for active profile "
+            f"'{active.profile_name}' is not loaded"
+        )
 
     async def list_models(self) -> list[ModelEntry]:
         now = time.monotonic()

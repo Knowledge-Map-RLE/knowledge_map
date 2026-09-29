@@ -227,7 +227,9 @@ async def send_message(
         from infrastructure.telemetry import record_llm_request
 
         started = time.monotonic()
-        model = settings.AI_UI_MODEL or ""
+        from infrastructure.config import resolve_model_profile
+
+        model = resolve_model_profile("ui_chat")
         recorded = False
         try:
             async for event in send_ai_message_stream(

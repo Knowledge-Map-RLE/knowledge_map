@@ -109,9 +109,10 @@ export async function deleteDocument(docId: string): Promise<DeleteDocumentRespo
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}`, { method: 'DELETE' });
 }
 
-export async function listDocuments(skip: number = 0, limit: number = 200, signal?: AbortSignal, fullTextOnly: boolean = false): Promise<DocumentsListResponse> {
+export async function listDocuments(skip: number = 0, limit: number = 200, signal?: AbortSignal, fullTextOnly: boolean = false, goldOnly: boolean = false): Promise<DocumentsListResponse> {
   const params = new URLSearchParams({ skip: String(skip), limit: String(limit) });
   if (fullTextOnly) params.set('full_text_only', 'true');
+  if (goldOnly) params.set('gold_only', 'true');
   return fetchJson(`/api/data_extraction/documents?${params}`, { signal });
 }
 

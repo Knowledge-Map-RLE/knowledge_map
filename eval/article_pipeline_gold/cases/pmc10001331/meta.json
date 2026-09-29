@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10001331",
+  "document_uid": "PMC10001331",
+  "article_title": "The Impact of Caregiving on Successful Ageing of Informal Carers: A Qualitative Study among Respiratory Patients’ Caregivers",
+  "doi": "10.3390/healthcare11050715",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10001331/PMC10001331.md"
+  },
+  "article_sha256": "0a93cb25b6f9cce034dd36e6cf76b4879b22de94ceefb18d09ae7e68f0b7c8e2",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

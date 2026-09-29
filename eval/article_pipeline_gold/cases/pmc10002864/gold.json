@@ -1,0 +1,2123 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 453,
+      "text": "# Vitamin D as a Shield against Aging\n\n**Авторы:** Fantini Cristina, Corinaldesi Clarissa, Lenzi Andrea, Migliaccio Silvia, Crescioli Clara\n\n**Журнал:** International Journal of Molecular Sciences (2023)\n\n**DOI:** 10.3390/ijms24054546\n\n\n## Abstract\n\nAging can be seen as a physiological progression of biomolecular damage and the accumulation of defective cellular components, which trigger and amplify the process, toward whole-body function weakening.",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 454,
+      "end": 647,
+      "text": "Senescence initiates at the cellular level and consists in an inability to maintain homeostasis, characterized by the overexpression/aberrant expression of inflammatory/immune/stress responses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S3",
+      "start": 648,
+      "end": 879,
+      "text": "Aging is associated with significant modifications in immune system cells, toward a decline in immunosurveillance, which, in turn, leads to chronic elevation of inflammation/oxidative stress, increasing the risk of (co)morbidities.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 880,
+      "end": 992,
+      "text": "Albeit aging is a natural and unavoidable process, it can be regulated by some factors, like lifestyle and diet.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 993,
+      "end": 1071,
+      "text": "Nutrition, indeed, tackles the mechanisms underlying molecular/cellular aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 1072,
+      "end": 1147,
+      "text": "Many micronutrients, i.e., vitamins and elements, can impact cell function.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 1148,
+      "end": 1382,
+      "text": "This review focuses on the role exerted by vitamin D in geroprotection, based on its ability to shape cellular/intracellular processes and drive the immune response toward immune protection against infections and age-related diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1383,
+      "end": 1511,
+      "text": "To this aim, the main biomolecular paths underlying immunosenescence and inflammaging are identified as biotargets of vitamin D.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1512,
+      "end": 1700,
+      "text": "Topics such as heart and skeletal muscle cell function/dysfunction, depending on vitamin D status, are addressed, with comments on hypovitaminosis D correction by food and supplementation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1701,
+      "end": 1943,
+      "text": "Albeit research has progressed, still limitations exist in translating knowledge into clinical practice, making it necessary to focus attention on the role of vitamin D in aging, especially considering the growing number of older individuals.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1943,
+      "end": 1946,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S12",
+      "start": 1946,
+      "end": 1948,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S13",
+      "start": 1949,
+      "end": 1951,
+      "text": "1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S14",
+      "start": 1952,
+      "end": 2133,
+      "text": "Introduction\n\nThe undeniable increase observed in human life expectancy and longevity in developed countries is too often accompanied by a decrease in the quality of life (QoL) [1].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2134,
+      "end": 2281,
+      "text": "This means that living longer is not living better, thus, the current challenge is how to maintain and improve a good QoL during a longer lifespan.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2282,
+      "end": 2541,
+      "text": "The aging process is a gradual functional decline, that starts early in adulthood, continues throughout the human lifespan, and might end in chronic diseases, e.g., sarcopenia, metabolic disorders, cardiovascular and neurodegenerative diseases, or cancer [2].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 2542,
+      "end": 2878,
+      "text": "These macroscopic age-related alterations reflect the changes occurring at the cellular and molecular levels: mitochondrial dysfunction, damaged protein accumulation, epigenetic alterations, telomere shortening, aberrant intracellular signaling, and altered nutrient sensing are recognized to be the biomolecular pillars of aging [3,4].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 2879,
+      "end": 3108,
+      "text": "Altogether, these molecular alterations converge in frailty, a multidimensional syndrome, clinically marked by decreased physiological reserve and resistance to stressors, leading to a higher rate of disability and mortality [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 3109,
+      "end": 3379,
+      "text": "Frailty is undeniably a multifaceted condition, due to different determinants, however, the reduced capacity in immune defense, known as “immunosenescence”, and the consequent increase in chronic low-grade inflammation, named “inflammaging”, emerge as the main triggers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 3380,
+      "end": 3571,
+      "text": "Whereas aging is a natural and unstoppable process, several adaptable lifestyle factors can favorably impact QoL, by strengthening the immune system and promoting anti-inflammatory processes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 3571,
+      "end": 3658,
+      "text": "\n\nIt is well-known that diet can drive human health status toward wellbeing or disease.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3659,
+      "end": 3793,
+      "text": "Indeed, the nutritional pattern per se plays a pivotal role in promoting healthy aging, by modulating several intracellular processes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 3793,
+      "end": 3962,
+      "text": "\n\nAmong many factors, vitamin D plays an important role as a nutrient capable of affecting the aging process at a cellular/molecular level, with a wide range of actions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 3962,
+      "end": 3964,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S25",
+      "start": 3964,
+      "end": 4291,
+      "text": "Indeed, beside bone defects, insufficient vitamin D is associated with the increased risk of developing a wide range of pathologies, from neurological diseases to cancer, obesity, diabetes and metabolic disturbance, cardiovascular diseases, autoimmune diseases, infections, and menopause-related diseases [6,7,8,9,10,11,12,13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 4291,
+      "end": 4649,
+      "text": "\n\nA clear cause–effect relationship still lacks in many cases, nevertheless hypovitaminosis D is a marker for poor health, especially in the elderly, often characterized by co-morbid conditions [14].\n\nMost of the actions of vitamin D are undoubtedly ascribable to its fine-tuned immunomodulatory properties, impacting immune system function and inflammation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 4650,
+      "end": 4940,
+      "text": "This review aims to provide an overview of some of the cellular biomechanisms and biomolecules engaged in immunosenescence and inflammaging, as biotargets for vitamin D interventions during adult life, or even earlier, in order to maintain a level of health as high as possible while aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4941,
+      "end": 5212,
+      "text": "Particular attention will be given to the ability of vitamin D to shape the human immune status, acting on the immune system or immune-related activity of some tissues, such as skeletal muscle or heart, whose function highly affects QoL during life, including in old age.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 5212,
+      "end": 5215,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S30",
+      "start": 5215,
+      "end": 5216,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S31",
+      "start": 5216,
+      "end": 5219,
+      "text": "# 2",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S32",
+      "start": 5219,
+      "end": 5220,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S33",
+      "start": 5221,
+      "end": 5388,
+      "text": "Aging Is a Cellular and Molecular Matter\n\nHuman aging is a complex process influenced by several factors, including sex, genetics, socioeconomic status, and lifestyle.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 5389,
+      "end": 5638,
+      "text": "Age-related changes are associated with higher susceptibility to diseases, depending on macroscopic modifications in the whole-body physiology and organ function, which, in turn, mirror the changes occurring at the cellular and intracellular levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 5639,
+      "end": 6061,
+      "text": "Accumulating data suggest that dietary pattern, among other factors, can prevent some molecular/cellular changes underlying human aging-related diseases, and maintain the functional abilities associated to wellbeing [World Health Organization Ageing: Healthy Ageing and Functional Ability 2020; https://www.who.int/news-room/questions-and-answers/item/healthy-ageing-and-functional-ability, (accessed on 26 October 2020)].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 6062,
+      "end": 6162,
+      "text": "Some of the main processes triggering and mediating senescence and inflammation are discussed below.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 6162,
+      "end": 6164,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S38",
+      "start": 6164,
+      "end": 6172,
+      "text": "### 2.1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S39",
+      "start": 6173,
+      "end": 6352,
+      "text": "The Cellular Route to Aging\n\nUnderstanding the molecular drivers of age-dependent multimorbidity can help to develop new interventions and strategies to delay this condition [15].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 6352,
+      "end": 6532,
+      "text": "\n\nThe multimodal process of aging includes different biological system remodeling leading to the loss of homeostasis and, consequently, deterioration of several organs and tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 6533,
+      "end": 6696,
+      "text": "In this scenario, age-related biomolecular changes in the immune response and immune cells are acknowledged to play a causal role in driving whole-body aging [16].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 6697,
+      "end": 6984,
+      "text": "In humans, the natural decline in immune system function usually starts in the sixth decade, and tends to continuously progress toward immunosenescence and decreased protection against pathogens; at the same time, the inflammatory response increases, in terms of duration/intensity [17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 6985,
+      "end": 7192,
+      "text": "Age-dependent “re-shaping” of both the innate and adaptive arms of the immune landscape can increase vulnerability to illness, and promote and allow multimorbidity, frailty, and adverse health outcomes [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 7192,
+      "end": 7429,
+      "text": "\n\nIndeed, whereas the adaptive immunity decreases and leads to weakened antigen-specific response and impaired memory formation, the nonspecific innate immunity overreacts, leaving older individuals unprotected from chronic inflammation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 7430,
+      "end": 7503,
+      "text": "The concurrence of these conditions is defined as “inflammaging” [19,20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 7504,
+      "end": 7648,
+      "text": "In turn, inflammaging is an additional risk factor in the elderly, since it amplifies other age-associated modifications related to morbidities.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 7648,
+      "end": 7650,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S48",
+      "start": 7650,
+      "end": 7852,
+      "text": "The macroscopic changes reflect microscopic remodeling at the cellular and subcellular levels, involving significant modifications in intracellular paths, especially in the T cell repertoire [21,22,23].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 7852,
+      "end": 7854,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S50",
+      "start": 7854,
+      "end": 8113,
+      "text": "Cellular senescence combines morphological and molecular characteristics, makes cells modify cyclin-dependent kinases (CDKs) regulation, and undergo permanent cell cycle arrest, in a steady status different from terminal differentiation or quiescence [24,25].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 8114,
+      "end": 8446,
+      "text": "The diluted cytoplasmic domain, the enlarged cell size, and increased β-galactosidase lysosomal activity—mostly used as a senescence cell marker—are the major features of senescent cells, along with an altered DNA and chromatin landscape, a damaged protein and lipid profile, and dysfunctional mitochondria and lysosomes [24,26,27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 8447,
+      "end": 8776,
+      "text": "Remarkably, senescent cells display a “senescence-associated secretory phenotype” (SASP) due to a specific secretory profile or “secretome”, which is characterized by an excessive secretion of proinflammatory molecules, such as cytokines and chemokines, matrix metalloproteinases, and growth and angiogenic modulators [28,29,30].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 8777,
+      "end": 8855,
+      "text": "Figure 1 shows a schematic of the cellular changes associated with senescence.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 8855,
+      "end": 8960,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> The main cellular modification induced by senescence.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 8961,
+      "end": 9371,
+      "text": "Aging induced modifications at the cellular level include morphological, enzymatic, and functional variations.</figcaption>\n</figure>\n\nIn this scenario, the production and release of proinflammatory molecules increase, including interleukin (IL)-6, IL-1, tumor necrosis factor(TNF)α, interferon (IFN)γ, acute-phase proteins, reactive oxygen species (ROS), and autoantibodies constantly increase and accumulate.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 9372,
+      "end": 9534,
+      "text": "These factors function as mediators of signal communication between cells resident within organs/tissues, and immune cells, and thus amplify inflammaging [31,32].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 9534,
+      "end": 9735,
+      "text": "\n\nTo date, several in vitro and in vivo studies show that the senescence-related signature is highly variable, but a robust approach to establishing a senescent secretome profile is still lacking [33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 9736,
+      "end": 9944,
+      "text": "Nevertheless, senescence of the immunocytes is undeniably acknowledged as a critical step in triggering sustained chronic-persistent inflammation, therefore, representing a potential target for interventions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 9944,
+      "end": 9955,
+      "text": "\n\n\n### 2.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S60",
+      "start": 9956,
+      "end": 10003,
+      "text": "Immunosenescence: The First Step toward Aging\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 10003,
+      "end": 10243,
+      "text": "The central defect in immunosenescence is the decline in T cell function, as shown by animal and human studies, leading to overactivity, inflammation, and autoantibody production, with quite predictable consequences on health [34,35,36,37].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 10243,
+      "end": 10521,
+      "text": "\n\nThe main age-dependent changes include a significant decrease in naïve T cells, along with a simultaneous increase in memory cells, impairments in the T cell receptor (TCR) repertoire, defects in NK cells and neutrophil chemotaxis, myeloid skewing, and monocyte dysregulation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 10522,
+      "end": 10852,
+      "text": "Albeit immunosenescence involves most of the immunity-related components, T cells emerge as playing a triggering role in aging, as shown by investigations on rheumatoid arthritis (RA), an autoimmune disease in which the faster progression of this process allowed the characterization of some underlying molecular paths [38,39,40].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 10852,
+      "end": 10982,
+      "text": "\n\nAge-related thymus involution is the first event that triggers impairments and defects in T cell differentiation and maturation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 10983,
+      "end": 11130,
+      "text": "The number of new naïve T cells decreases, and circulating naïve T cells live longer, accumulate defects, and cause a decreased TCR diversity [34].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 11131,
+      "end": 11292,
+      "text": "T cell-TCR signaling activation is required for IL-2 release and T cell expansion, which are known to be critical for mounting an effective immune response [41].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 11293,
+      "end": 11501,
+      "text": "In aging, the downtuning of T regulatory (Treg) cells leads to an unbalanced Th17/Treg ratio, with Th17 upregulation and Treg decrease, ending in polarization of the immune response towards inflammation [42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 11501,
+      "end": 11503,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S69",
+      "start": 11503,
+      "end": 11786,
+      "text": "Furthermore, age-related thymic involution, naïve T cell dysfunction, and aberrant expression of age-associated gene profiles seem to be linked to IL-33/ST2 signaling activation, suggesting that targeting IL-33 or ST2 could be a promising strategy to rejuvenate T cell immunity [43].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 11787,
+      "end": 11913,
+      "text": "IL-33 has been shown to orchestrate the signals within the skeletal muscle/immune system/nervous system in response to injury.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 11914,
+      "end": 12136,
+      "text": "Remarkably, the IL-33/ST2 axis is suggested as a promising potential target in managing age-related sarcopenia and muscle repair due to injury or atrophy, both major problems impacting mobility and QoL in the elderly [44].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 12136,
+      "end": 12494,
+      "text": "\n\nThe dysregulation of T cell signaling includes defects in calcium mobilization, phosphorylation of tyrosine and serine/threonine, mitogen-activated protein kinases (MAPK) activity, and activation of transcription factors such as nuclear factor kB (NF-kB), nuclear factor of activated T cells (NFAT), or activator protein 1 (AP-1) [45,46,47,48,49,50,51,52].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 12494,
+      "end": 12496,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S74",
+      "start": 12496,
+      "end": 12766,
+      "text": "Other age-dependent damage, i.e., the loss of co-stimulatory molecule CD28—which plays a pivotal role in cell activation/proliferation/survival—impacts on the function of B cells (proliferation and Ig production) and the antigenspecific cytotoxic CD8 T cell subset [34].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 12766,
+      "end": 12997,
+      "text": "\n\nIn addition to T cell deregulation, aberrant increases in NF-kB activation and cyclooxygenase (COX)-2 expression, with a higher production of prostaglandin E2 (PGE2) from macrophages, have been reported in the elderly [53,54,55].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 12997,
+      "end": 12999,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S77",
+      "start": 12999,
+      "end": 13184,
+      "text": "Remarkably, NF-kB dysregulation/hyperactivation represents a potential molecular target for intervention, with particular significance in the elderly, as addressed later in this review.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 13184,
+      "end": 13186,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S79",
+      "start": 13186,
+      "end": 13397,
+      "text": "The number of natural killer (NK) cells, which are known to have cytotoxic/lytic activity against cancers and viruses, seems to not vary with aging, whereas cytokine and chemokine production declines [56,57,58].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 13398,
+      "end": 13591,
+      "text": "Like NK, neutrophil number does not change with age, but neutrophil activity, including oxidative burst, phagocytosis, and chemotaxis (all defense mechanisms) is significantly compromised [57].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 13591,
+      "end": 13723,
+      "text": "\n\nIn the complex network of aging, oxidative stress is highly determinant, as suggested by the coined term “oxi-inflamm-aging” [59].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 13724,
+      "end": 14018,
+      "text": "Indeed, the high percentage of polyunsaturated fatty acids present in immune cell plasma makes the cells inclined to lipid peroxidation; any damage in the oxidative process can alter signal transmission within/between several types of immunocytes, ending in a defective immune response [60,61].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 14018,
+      "end": 14156,
+      "text": "\n\nThus far, age-related changes in the immune system expose the elderly to a higher risk of disease, first of all, cancer, and infections.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 14156,
+      "end": 14158,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S85",
+      "start": 14158,
+      "end": 14335,
+      "text": "The significant impact of genetic and environmental factors on immune system function is undeniable, and nutrition emerges as an acknowledged tool to regulate the immune status.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 14336,
+      "end": 14632,
+      "text": "Indeed, age-related immune alterations seem to be associated with a suboptimal nutrient status, so that nutritional interventions with macronutrients (i.e., polyunsatured fatty acids or PUFA) or micronutrients (i.e., vitamins, elements) are highly recommended for ameliorating QoL in the elderly.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 14633,
+      "end": 14995,
+      "text": "Whereas macronutrients provide a substrate for the biosynthesis of molecules engaged in immune response (acute-phase proteins, cytokines, new receptors, amino acids for immunoglobulins), and are fuel for immune cell energy, micronutrients, such as zinc, iron, and vitamins are exquisite regulators of the immune response at the cellular and molecular level [62].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 14995,
+      "end": 15208,
+      "text": "\n\nOverall, this review focuses on vitamin D as a fine-tuned regulator of both the innate and adaptive immune responses, playing a pivotal role in the health of individuals of any age, particularly, in the elderly.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 15208,
+      "end": 15212,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S90",
+      "start": 15212,
+      "end": 15217,
+      "text": "## 3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S91",
+      "start": 15218,
+      "end": 16100,
+      "text": "Vitamin D and Geroprotection\n\nVitamin D has historically been known as the necessary nutrient to guarantee a correct bone metabolism and health. This molecule is classically defined as a steroid hormone, since it shares with steroids the common progenitor molecule (cyclopentanoperhydrophenanthrene). It is synthesized as the precursor molecule in skin exposed to sufficient UV rays, and is transformed into the biologically active compound by two enzymatic hydroxylations in the liver and kidneys (25- and 1-α-hydroxylase, respectively). Therefore, while “vitamin” is considered an imprecise term [63], this molecule is present in food such as fatty fish, i.e., salmon and trout, beef liver, cheese, egg yolk, albeit the latter ones provide small amounts, mushrooms and some vegetables, and is fully identified as an essential micronutrient with critical regulatory functions [64].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 16100,
+      "end": 16102,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S93",
+      "start": 16102,
+      "end": 16290,
+      "text": "Vitamin D deficiency is a worldwide problem, affecting people of all ages, due to several impacting factors, from ethnicity and skin color, to latitude, habits and lifestyle, sex, and age.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 16291,
+      "end": 16645,
+      "text": "It has been reported that the elderly in Europe, the USA, and Australia suffer from insufficient levels of vitamin D, mainly due to less solar exposure, associated with low levels of outdoor activity or with clothing, and also due to reduced synthesis, due to atrophic skin modifications and a lower amount of precursor or reduced renal function [65,66].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 16646,
+      "end": 16811,
+      "text": "Remarkably, a less varied diet, with a lower vitamin D content, is a typical age-associated habit, contributing to vitamin D deficiency in aging populations [67,68].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 16811,
+      "end": 17024,
+      "text": "\n\nThus far, vitamin D intake to a sufficient level is recommended not only for bone homeostasis but to maintain a general status of good heath as well, especially during aging, considering its pleiotropic effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 17025,
+      "end": 17260,
+      "text": "Vitamin D intake from dietary sources, in particular foods enriched or fortified with this nutrient, is considered an excellent strategy to counteract vitamin D deficiency, a condition currently defined as being a “world problem” [69].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 17260,
+      "end": 17437,
+      "text": "\n\nIt is acknowledged that this nutrient exerts such an important effect on the immune response that it can be considered a tool to tackle immunosenescence and oxi-inflamm-aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 17438,
+      "end": 17684,
+      "text": "In general, vitamin D deficiency is associated with a higher risk of infections and autoimmune diseases, involving dysfunctional biological activity of the specific vitamin D receptor (VDR), which is expressed in the majority of immunocytes [70].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 17685,
+      "end": 18022,
+      "text": "Hypovitaminosis D is acknowledged as a pandemic condition, affecting all stages of life, with detrimental consequences on health; but in the elderly, vitamin D deficiency retains even more clinical significance, since this condition often converges with other age-related deficiencies (i.e., hormonal) or diseases, worsening the outcome.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 18022,
+      "end": 18325,
+      "text": "\n\nMost of the immune cells, including T and B cells, dendritic cells (DC), macrophages and monocytes, express VDR and respond to vitamin D with fine-tuned modulations in cell signaling, path activation, and molecule production, with significant consequences on immune response [71,72,73,74,75,76,77,78].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 18325,
+      "end": 18489,
+      "text": "\n\nFurthermore, many immunocytes express 1-α-hydroxylase and can themselves produce the active metabolite and, thus, control the local cell microenvironment [79,80].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 18489,
+      "end": 18491,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S104",
+      "start": 18491,
+      "end": 18644,
+      "text": "In the elderly, adequate vitamin D levels help to counteract the natural decline in immune surveillance by a fine-tuned orchestration of several effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 18644,
+      "end": 18820,
+      "text": "\n\n### 3.1. Vitamin D against Infections\n\nVitamin D strengthens the first line of host defense, that is particularly relevant during aging, when the risk of infection is higher.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 18821,
+      "end": 19083,
+      "text": "Indeed, this molecule can maintain the barrier integrity and induce a set of genes encoding antimicrobial proteins (AMPs), such as cathelicidin, defensins, hepcidin, and neutrophil peptides, which behave as antibiotics against various types of pathogens [81,82].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 19083,
+      "end": 19085,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S108",
+      "start": 19085,
+      "end": 19335,
+      "text": "The vitamin D–cathelicidin axis is the most studied and best characterized among the VDR-dependent signaling engaged in infections and autophagosome formation—the latter one playing a critical role in microorganism clearance and infection resolution.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 19336,
+      "end": 19667,
+      "text": "Clinical studies on human tuberculosis, sepsis, viral infection, peritonitis, and pneumonia, whose incidence rise in the elderly [83], document that, after vitamin D supplementation, serum cathelicidin—human cathelicidin LL-37 or human cationic AMP 18 (hCAP-18)—increases, and correlates with improved clinical outcomes [84,85,86].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 19667,
+      "end": 20081,
+      "text": "\n\nEvidence in human monocytes/macrophages shows that the activation of vitamin D signaling, triggered by toll-like receptor (TLR)2/1 or TLR8, leads to an increase in antimicrobial response, autophagy, antimicrobial peptide expression, and phagosome–lysosome fusion, in association with an increase in IFNγ, which is likely required to strengthen antibacterial activity, together with IL-12 and IL-18 [87,88,89,90].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 20081,
+      "end": 20083,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S112",
+      "start": 20083,
+      "end": 20290,
+      "text": "Furthermore, IFNγ expression, in combination with CD40–CD40 ligand signaling, increases the activity of the hydroxylase converting 25-hydroxyvitamin D (25D) to the active metabolite, in human monocytes [91].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 20290,
+      "end": 20835,
+      "text": "\n\nIn Mycobacterium tuberculosis, the most studied infection, vitamin D-induced cathelicidin acts as a second messenger to activate autophagy genes, such as autophagy related 5 (ATG5) and beclin-1 (BECN1), and triggers a downstream wide signaling cascade, including intracellular calcium (Ca2+) release, Ca2+-dependent kinases, extracellular ATP-gated ion channel, purinergic receptor (P2X) 7, mammalian target of rapamycin (mTOR)/AMP-activated protein kinase (AMPK)/phosphoinositide 3-kinase(PI3K) pathway, and reactive ROS signaling [92,93,94].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 20835,
+      "end": 20837,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S115",
+      "start": 20837,
+      "end": 21057,
+      "text": "During Mycobacterium infection, vitamin D boosts cytokines/chemokines production through the induction of IL-1β, that regulates defensin beta 4 gene (DEFB4), encoding for human beta-defensin-2 (HBD2) in macrophages [95].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 21057,
+      "end": 21234,
+      "text": "\n\nThus far, vitamin D/VDR signaling acts as a fine regulator of AMP-dependent autophagy, cytokines/chemokines production, IFN-dependent signaling, and ROS generation [71,96,97].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 21234,
+      "end": 21513,
+      "text": "\n\nSince ROS mediates TLR2-induced cathelicidin expression in human monocytes/macrophages [98], and ROS-autophagy events are mutually regulated [99], further understanding the function of the vitamin D–cathelicidin axis in redox homeostasis and autophagy activity seems necessary.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 21514,
+      "end": 21696,
+      "text": "The antimicrobial action(s) of host defense proteins induced by vitamin D might be particularly relevant, since infections from drug-resistant pathogens are emerging worldwide [100].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 21696,
+      "end": 21860,
+      "text": "\n\nRemarkably, vitamin D-mediated LL-37 induction is specific in human defense system, as this vitamin D function has been reported to fail in a murine system [101].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 21861,
+      "end": 22018,
+      "text": "This observation is in line with the concept that, results from animals are often not translatable to humans, especially concerning studies on immunity [96].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 22018,
+      "end": 22247,
+      "text": "\n\nHowever, the specific role of the vitamin D–cathelicidin axis in the different infections caused by bacteria, viruses, and parasites goes beyond the aim of this paper, and was exhaustively reported in another recent paper [88].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 22247,
+      "end": 22249,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S123",
+      "start": 22249,
+      "end": 22675,
+      "text": "To date, whereas inflammatory cytokines such as TNF-α and IL-1β are central within vitamin D-mediated antibacterial activity during host defense, alterations in the vitamin D–cathelicidin axis, leading to lower vitamin D and excessive cathelicidin, result in overinflammation, and take part in the pathological setting of chronic inflammatory diseases, such as rosacea, a disease whose prevalence increases with age [102,103].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 22675,
+      "end": 22677,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S125",
+      "start": 22677,
+      "end": 23073,
+      "text": "The paradoxical effect of vitamin D emerges; while this molecule works on the one hand to keep active the macrophage phenotype (M1), associated with proinflammatory/anticancer activity, to preserve physiological integrity, on the other hand, it helps to maintain the pro-tolerogenic/anti-inflammatory phenotype (M2), to counteract inflammaging, that is the route opening to a variety of diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 23074,
+      "end": 23171,
+      "text": "The main anti-inflammaging effects related to vitamin D are addressed in the following paragraph.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 23172,
+      "end": 23314,
+      "text": "Figure 2 depicts the effects of vitamin D against inflammation, as well as some other molecular effects, reported in the following paragraphs.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 23314,
+      "end": 23693,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> The molecular mechanisms involved in the anti-aging effects of vitamin D. An adequate level of vitamin D counteracts age-dependent changes at multi-target biomolecular levels, ending in effects against infections, inflammation, oxidative stress, garbage molecule accumulation, and aberrant mitochondria functioning.</figcaption",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 23693,
+      "end": 23694,
+      "text": ">",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S130",
+      "start": 23694,
+      "end": 23695,
+      "text": "\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S131",
+      "start": 23695,
+      "end": 23715,
+      "text": "</figure>\n\n\n### 3.2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 23716,
+      "end": 23800,
+      "text": "Vitamin D against Inflammaging, Cellular Senescence, and Mitochondrial Dysfunction\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 23800,
+      "end": 23963,
+      "text": "Following the original concept, inflammaging is a consequence of immunosenescence, even if this model has been re-interpreted in favor of a mutual interplay [104].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 23963,
+      "end": 24041,
+      "text": "\n\nThe immunomodulatory role of vitamin D in inflammation is widely recognized.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 24042,
+      "end": 24355,
+      "text": "Substantially, an adequate level of vitamin D counteracts inflammation with multilevel targeting effects, i.e., inhibiting the expression and signaling of TLR2, 4, and 9, reducing the production of cytokines such as TNF-α, IL-6, IL-23, and IL-1, and repressing the activity of T cells recruiting chemokines [105].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 24355,
+      "end": 24701,
+      "text": "\n\nThe main inhibitory effects are on CD4+ and CD8+ T cell proliferation, in particular T helper 1 (Th1) cells (a subset of CD4+ effector T cells), in which vitamin D counteracts the release of cytokines, i.e., IL-2 or IFNγ, capable of activating macrophages, and IL-6, IL-8, IL-12, and TNFα, all molecules characterizing inflammaging [106,107].\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 24701,
+      "end": 25004,
+      "text": "The vitamin D-induced downregulation of the proinflammatory Th17 cell subset, suppression of dendritic cell (DC) maturation from monocytes, and impaired capacity to present antigens, occur together with Treg enhancement and an increase in anti-inflammatory cytokines such as IL-4, IL-5, IL-10, and CCL2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 25005,
+      "end": 25220,
+      "text": "Altogether, these processes are supposed to be the main mechanisms underlying Th2 protolerogenic subset expansion, which, in turn, is able to mitigate inflammaging and autoimmune disorders [108,109,110,111,112,113].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 25220,
+      "end": 25397,
+      "text": "\n\nIn lymphocytes, vitamin D has been documented to inhibit IL-6, a critical factor in stimulating the Th17 cell subset, which plays a pivotal role in autoimmune reactions [114].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 25397,
+      "end": 25399,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S141",
+      "start": 25399,
+      "end": 25733,
+      "text": "From in vitro studies on autoimmune diseases, the vitamin D-induced protolerogenic effect on T cells seems undeniable, but less effectiveness in vivo is hypothesized, maybe related to a different ability of T cells to modify their phenotype in response to vitamin D (more phenotypically committed, less responding to vitamin D) [115].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 25734,
+      "end": 25794,
+      "text": "The precise biomolecular mechanism remains to be elucidated.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 25795,
+      "end": 25972,
+      "text": "Albeit the etiology of autoimmune diseases is complex and undeniably multifactorial, the role of hypovitaminosis D is acknowledged as highly impacting disease development [116].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 25972,
+      "end": 26281,
+      "text": "\n\nIn some autoimmune diseases, such as osteoarthritis, psoriasis-associated osteoporosis, and Guillain–Barré syndrome, a pathogenetic immunological crosstalk between vitamin D and IL-33 may be hypothesized, with the combination of hypovitaminosis D–IL-33/ST2 axis activation converging in deleterious effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 26282,
+      "end": 26426,
+      "text": "Hence, the neutralization of IL-33/ST2 signaling by vitamin D in immunocytes (T cells, DC) is suggested as a therapeutic strategy [117,118,119].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 26426,
+      "end": 26428,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S147",
+      "start": 26428,
+      "end": 26643,
+      "text": "In this scenario, the Th17/Treg ratio tends to decrease simultaneously with a significant increase in the transcription factor fork head box (Fox)P3, the most reliable marker to date for Treg cells, and IL-10 [120].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 26643,
+      "end": 26834,
+      "text": "\n\nRemarkably, IL-10 is the anti-inflammatory cytokine known to keep inflammaging and antigenic stress under control, thus representing a good molecular defense mechanism in the elderly [121].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 26835,
+      "end": 27198,
+      "text": "In line with this concept, the poorer vitamin D status—i.e., due to reduced sunlight exposure, declined ability of the skin to produce vitamin D, malnourishment, or decreased vitamin D intake—observed in elderly people, likely contributes to the higher prevalence of a variety of age-related diseases associated with a compromised immune system [122,123,124,125].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 27199,
+      "end": 27568,
+      "text": "As shown in COVID-19 patients, a wide-epigenetic T cell remodeling, promoting VDR expression and enzyme cytochrome P450, family 27, subfamily B, member 1 (CYP27B1) activation in autocrine/paracrine mode, likely underlies the transition from proinflammatory IFN-γ+ Th1 cells (via STAT3, c-JUN, and BACH2) to suppressive IL-10+ cells (via IL-6–STAT3 signaling) [126,127].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 27569,
+      "end": 27771,
+      "text": "In addition to the effect on immunocytes, vitamin D deficiency increases endothelial senescence, allowing vascular dysfunction and atherosclerosis, both processes that increase in prevalence with aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 27771,
+      "end": 27773,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S153",
+      "start": 27773,
+      "end": 27991,
+      "text": "This effect is undeniably related to vitamin D’s anti-inflammatory action, as inflammation is a recognized trigger of atherosclerosis initiation, progression, and plaque and thrombus formation, also in the young [128].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 27992,
+      "end": 28149,
+      "text": "However, the vitamin D-induced reduction in cholesterol uptake by macrophages and, in turn, suppression of foam-cell formation, emerges as a key event [129].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 28149,
+      "end": 28407,
+      "text": "\n\nSo far, hypovitaminosis D supports increased cellular senescence and arterial aging, characterized by the typical dysfunctions as a gradual loss of vascular smooth muscle cells’ contractility, and increased arterial permeability and intima thickness [130].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 28407,
+      "end": 28937,
+      "text": "\n\nThe delayed cellular senescence by vitamin D/VDR interaction includes different processes, including longer telomere lengths, an increased antioxidant effect via nuclear factor erythroid 2-related factor 2 (Nrf2) transcriptional regulation, decreased oxidative stress, DNA damage, and SASP, downregulation of p16, p53, and p21 (major regulators of the G1/S cell-cycle checkpoint), while upregulating Bmi1(polycomb ring finger oncogene, transcriptional suppressor), whose novel action is reported in cardiac regulation [131,132].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 28937,
+      "end": 28939,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S158",
+      "start": 28939,
+      "end": 29008,
+      "text": "Another important aspect is the regulation of mitochondrial function.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 29009,
+      "end": 29351,
+      "text": "Vitamin D deficiency is associated with disorders of mitochondrial function, such as respiratory chain deregulation, with downregulation of mRNA and proteins involved in mitochondrial respiration, inhibition of sirtuin (SIRT) 1, which plays a pivotal role in mitochondrial biogenesis through PGC-1α, and, e.g., in brain aging delay [133,134].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 29351,
+      "end": 29508,
+      "text": "\n\nThe combination of vitamin D and curcumin, given as a supplement in a continuous way, has been recently hypothesized to counteract neurodegeneration [135].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 29509,
+      "end": 29692,
+      "text": "SIRT signaling and lifespan seem deeply affected by dietary nutrient composition and resveratrol, which suppresses oxidant and inflammatory genes, altering promoter epigenetic status.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 29693,
+      "end": 29767,
+      "text": "The immune system is key to a host’s defense against pathogenic organisms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 29768,
+      "end": 30054,
+      "text": "Aging is associated with changes in the immune system, with a decline in protective components (immunosenescence), increased susceptibility to infectious disease, and a chronic elevation in low-grade inflammation (inflammaging), increasing the risk of multiple noncommunicable diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 30055,
+      "end": 30132,
+      "text": "Nutrition is a determinant of immune cell function and of the gut microbiota.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 30133,
+      "end": 30219,
+      "text": "In turn, the gut microbiota shapes and controls the immune and inflammatory responses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 30220,
+      "end": 30275,
+      "text": "Many older people show changes in their gut microbiota.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 30276,
+      "end": 30450,
+      "text": "Age-related changes in immune competence, low-grade inflammation, and gut dysbiosis may be interlinked, and may relate, at least in part, to age-related changes in nutrition.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 30451,
+      "end": 30589,
+      "text": "A number of micronutrients (vitamins C, D, and E, and zinc and selenium) play roles in supporting the functions of many immune cell types.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 30590,
+      "end": 30765,
+      "text": "Some trials have reported that providing these micronutrients as individual supplements can reverse immune deficits in older people, and/or in those with insufficient intakes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 30766,
+      "end": 30888,
+      "text": "There is inconsistent evidence that this will reduce the risk or severity of infections, including respiratory infections.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 30889,
+      "end": 31284,
+      "text": "Probiotic, prebiotic, or synbiotic strategies, that modulate the gut microbiota, especially by promoting the colonization of lactobacilli and bifidobacteria, have been demonstrated to modulate some immune and inflammatory biomarkers in older people, and in some cases, to reduce the risk and severity of gastrointestinal and respiratory infections, although, again, the evidence is inconsistent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 31285,
+      "end": 31583,
+      "text": "Further research, with well-designed and well-powered trials, in at-risk older populations is required to be more certain about the role of micronutrients and of strategies that modify the gut microbiota–host relationship in protecting against infection, especially respiratory infection [136,137].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 31584,
+      "end": 31768,
+      "text": "COX-2 expression has been shown to be dose-dependently inhibited by vitamin D in murine macrophages, through suppression of the protein kinase B (PKB) or Akt/NF-kB/COX-2 pathway [138].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 31768,
+      "end": 32012,
+      "text": "\n\nThe function of NF-kB is critical in cellular senescence and in inflammaging, since this factor is suggested to serve as a linkage between aging hallmarks in cell–cell communication, and in age-related pathophysiological mechanisms [139,140].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 32013,
+      "end": 32307,
+      "text": "Indeed, while NF-κB unaltered signaling supports the correct interplay between immunocytes and non-immune cells, to maintain a functional host response, NF-kB hyperphosphorylation and enhanced activity are reported in different tissue aging (skin, hypothalamus, and cortical tissues) [141,142].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 32308,
+      "end": 32391,
+      "text": "Similarly, NF-kB constitutive activation is reported in aged skeletal muscle [143].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 32391,
+      "end": 32699,
+      "text": "\n\nTo date, in vivo data in overweight/obese, but otherwise healthy, individuals failed to show any significant difference in NF-kB activity; however, the inadequacy of sample size to detect such a difference as a primary outcome is indicated by the authors as a possible reason for their null findings [144].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 32700,
+      "end": 32859,
+      "text": "Nevertheless, the function of NF-kB as a regulator of inflammation and immunity continues to emerge as being critical for aging and age-related diseases [145].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 32860,
+      "end": 33095,
+      "text": "NF-kB signaling hyperactivation is associated with pro-aging stimuli, and correlates with the development/progression of most aging-related diseases, whereas NF-kB inhibition can delay or even reverse aging processes [146,147,148,149].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 33095,
+      "end": 33236,
+      "text": "\n\nThus far, inflammaging likely primes inflammatory NF-kB signaling, which is involved in a variety of age-related tissue/organ dysfunctions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 33237,
+      "end": 33345,
+      "text": "Interestingly, vitamin D can target hyperphosphorylation of this transcription factor in several cell types.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 33346,
+      "end": 33392,
+      "text": "The following paragraph focuses on this topic.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 33392,
+      "end": 33396,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S184",
+      "start": 33396,
+      "end": 33397,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S185",
+      "start": 33397,
+      "end": 33401,
+      "text": "# 4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S186",
+      "start": 33402,
+      "end": 33673,
+      "text": "Vitamin D-Dependent NF-kB Regulation: A Putative Anti-Aging Strategy\n\nNF-kB can be considered as the central crossroad where many paths and signals, either promoting or delaying aging, converge, by activating or inhibiting this transcriptional factor, respectively [147].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 33674,
+      "end": 33863,
+      "text": "Biomolecular paths promoting aging such as insulin (I)/insulin growth factor (IGF)-1 signaling, activate NF-kB via the PI3K/AKT cascade and mTOR, a known pro-aging factor [146,150,151,152].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 33864,
+      "end": 34022,
+      "text": "In addition, age-dependent DNA damage and telomere shortening are associated with NF-kB aberrant activation, and with increased levels of COX-2 and ROS [153].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 34023,
+      "end": 34303,
+      "text": "NF-kB activation, besides telomere shortening via telomerase reverse transcriptase (TERT) catalytic subunit activation, intensifies inflammation by macrophage polarization to M1 phenotype, and IL-6 and TNFα upregulation [154,155], and increases SASP and cellular senescence [147].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 34304,
+      "end": 34471,
+      "text": "At variance to this, pro-longevity factors, i.e., sirtuin and FOXO, repress NF-kB transcriptional activity, by directly interacting with the p65 subunit [156,157,158].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 34472,
+      "end": 34650,
+      "text": "To date, chronic activation of NF-kB is found in several age-related diseases, e.g., atherosclerosis, osteoporosis, muscular atrophy, and neurodegeneration [159,160,161,162,163].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 34650,
+      "end": 34777,
+      "text": "\n\nQuite remarkably, vitamin D can downregulate and suppress NF-kB expression and activity, significantly limiting inflammation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 34778,
+      "end": 35023,
+      "text": "The mechanism whereby the vitamin D/VDR system targets NF-kB includes a physical interaction between VDR and IκB kinase β (IKKβ), which is enhanced by vitamin D, resulting in IκBα stabilization and p65/p50 nuclear translocation impairment [164].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 35024,
+      "end": 35466,
+      "text": "The blockade of p65 translocation leads to the decrease or suppression of NF-kB activation and transcriptional activity, as shown in different cell types stimulated with TNFα—the prototypic cytokine inducing this nuclear factor—not only in immune cells, i.e., DC or B cells, but also in different types of organ resident cells, like human cardiac cells, skeletal muscle cells, thyrocytes, and nucleus pulposus cells [165,166,167,168,169,170].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 35466,
+      "end": 35468,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S196",
+      "start": 35468,
+      "end": 35702,
+      "text": "Thus far, a well-functioning vitamin D/VDR system represents a helpful tool for tackling inflammation and aging, through the downregulation of the TNF-α/NF-kB/p65 signaling cascade in immune system cells and in different tissue cells.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 35703,
+      "end": 35823,
+      "text": "This effect seems particularly relevant at the level of striated cells, such as cardiomyocytes or skeletal muscle cells.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 35823,
+      "end": 35976,
+      "text": "\n\n### Vitamin D Regulates Heart and Skeletal Muscle Functioning\n\nIt is acknowledged that aging per se is a risk factor for heart dysfunction and disease.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 35977,
+      "end": 36379,
+      "text": "Age-related cardiac reduced function reflects molecular and cellular modifications, both in non-cardiomyocyte-based components, i.e., vascular cells, fibroblasts, and extracellular matrix, and in cardiac cells, which undergo aberrant processes due to oxidative stress, inflammation, defects in metabolism, cellular repair, telomeres, alteration in gene expression, and post-translational modifications.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 36380,
+      "end": 36711,
+      "text": "The dogma that cardiomyocytes are postmitotic cells, terminally differentiated, and unable to undergo cell division, is overcome by the observation that a fraction of cells proliferate and divide in the hearts of the young, adults and the elderly, albeit the cardiomyocyte numbers undeniably decrease with aging, by necrosis [171].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 36711,
+      "end": 36896,
+      "text": "\n\nThe increased number of necrotic cells likely triggers repair-related aberrant inflammation, and a higher chance of autoantigen generation, due to oxidatively modified proteins [172].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 36897,
+      "end": 37115,
+      "text": "Following oxi-inflamm-aging-induced cell death, garbage molecules such as lipoxidation products and advanced glycation end (AGE) products, accumulate from alterations in the protein degradation machinery and autophagy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 37115,
+      "end": 37532,
+      "text": "\n\nConcerning autophagy and apoptosis, it should be mentioned that a functional vitamin D/VDR system—rather than a sufficient vitamin D level alone—can regulate senescence-induced signaling, either by genomic and non-genomic mechanisms, in immunocytes and non-immune cells, retaining the potentiality to be used as a helpful tool against diseases related to inflammation, oxidative stress, or cancer [173,174,175,176].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S204",
+      "start": 37532,
+      "end": 37534,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S205",
+      "start": 37534,
+      "end": 37624,
+      "text": "These processes would impact gene expression toward aging memorization and progress [177].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 37625,
+      "end": 37932,
+      "text": "During cardiac physiological aging, ROS generation is associated with the activation of the inflammasome NOD-like receptor protein 3 (NLRP3), production of biologically active IL-1β and IL-18, and, in turn, pyroptosis, a process causing cell membrane pore formation/rupture and cell death [178,179,180,181].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 37932,
+      "end": 37934,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S208",
+      "start": 37934,
+      "end": 38119,
+      "text": "The activation of NLRP3 is a multistep process, occurring either with or without a priming signal first, denoted as “canonical” or “noncanonical” activation, respectively [182,183,184].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 38120,
+      "end": 38256,
+      "text": "The difference between the canonical/noncanonical mechanisms are exhaustively reported elsewhere, and are beyond the aim of this review.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 38256,
+      "end": 38417,
+      "text": "\n\nIndependent of the mechanism of activation, an aberrant inflammasome is widely involved in aging, and in an extraordinary number of human age-related diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 38418,
+      "end": 38591,
+      "text": "Of note, vitamin D/VDR signaling directly acts as a negative regulator of NLRP3 oligomerization/assembling/activation and IL-1β release, inhibiting pyroptosis [185,186,187].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 38591,
+      "end": 38737,
+      "text": "\n\nThere is evidence for IL-1β and IL-18 increase from VDR knockout macrophages, activated either through the canonical or noncanonical path [187].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 38738,
+      "end": 38926,
+      "text": "Indeed, ligand-activated VDR attenuates NRLP3 deubiquitination, increasing the level of mitochondrial membrane uncoupling protein-2 (UCP2), which can directly prevent ROS production [188].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 38926,
+      "end": 39146,
+      "text": "\n\nAlbeit NLRP3 inflammasome activation is known to play a pivotal role in host defense from viral and bacterial infections, dysregulated or excessive activation of the inflammasome is associated with poor outcomes [189].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 39146,
+      "end": 39148,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S216",
+      "start": 39148,
+      "end": 39412,
+      "text": "Similar to cardiac cells, skeletal muscle cells show age-dependent biomolecular dysregulation, associated with mitochondrial dysfunction, oxi-inflamm-aging, metabolic disturbance protein breakdown, accumulation of senescent cells, and tissue atrophy [190,191,192].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 39412,
+      "end": 39576,
+      "text": "\n\nAge-related decline of skeletal muscle can lead to sarcopenia—not limited to muscle area/mass reduction, but extended to tissue functionality—and frailty [5,193].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 39577,
+      "end": 39678,
+      "text": "In muscle as well, aging-related macroscopic changes reflect biomolecular and cellular modifications.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S219",
+      "start": 39679,
+      "end": 40057,
+      "text": "Indeed, tissue changes and deficit are associated with an increase in several inflammatory cytokines, including TNFα, IL-1α/β, IL-6, IL-8, IFNγ, and their soluble receptors (sR) IL-1Ra, TNFαsR, and IL-6sR, referred to as “gerokines”, which altogether constitute the “aging secretome”, likely playing a causal role (rather than being simply markers) in inflammaging [19,194,195].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S220",
+      "start": 40058,
+      "end": 40440,
+      "text": "Even though there is still much to understand about how oxi-inflamm-aging translates into skeletal muscle decline, it is undeniable that the reduction in type II muscle fiber number and size, promoted by TNFα-induced apoptosis, and the unbalance in protein synthesis/degradation, induced by ROS and oxidative stress, merge into functional and mechanical muscle impairment [196,197].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S221",
+      "start": 40441,
+      "end": 40614,
+      "text": "The rise in TNFα or IL-1β increases fat mass toward an unfavorable muscle/fat ratio, which typically characterizes the elderly, especially those with sedentary habits [197].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S222",
+      "start": 40615,
+      "end": 40858,
+      "text": "To date, some intracellular cascades, particularly the TNFα/NF-kB/ubiquitin–proteasome system (UPS) cascade/Akt signaling, play a large part in skeletal muscle inflammaging, representing important targets to counteract skeletal muscle decline.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S223",
+      "start": 40859,
+      "end": 40995,
+      "text": "Some strategies, such as protein supplementation, can reduce creatine kinase, but cannot affect circulating gerokines [198,199,200,201].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S224",
+      "start": 40996,
+      "end": 41115,
+      "text": "Another feature of aging muscle is the “differential” resistance to I regarding glucose, protein, and lipid metabolism.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S225",
+      "start": 41116,
+      "end": 41484,
+      "text": "Indeed, in the elderly it is common that sensitivity to I concerning glucose is maintained, likely related to reduced utilization of peripheral glucose, while almost simultaneously the so-called “anabolic resistance” to I develops, due to protein synthesis/degradation imbalance (proteostasis loss), a condition preceding clinical manifestations [202,203,204,205,206].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S226",
+      "start": 41484,
+      "end": 41919,
+      "text": "\n\nThe protective function exerted by vitamin D on skeletal muscle is acknowledged: i.e., vitamin D can directly interfere with and counteract the intracellular paths mediating tissue atrophy, such as proto-oncogene tyrosine-protein kinase Src/extracellular signal-regulated kinases 1 and 2 (ERK1/2)/Akt/forkhead box O3 (FOXO3), a signaling cascade, which upon activation, upregulates atrophic markers such as Atrogin-1 and MuRF1 [207].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S227",
+      "start": 41919,
+      "end": 41921,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S228",
+      "start": 41921,
+      "end": 42115,
+      "text": "An adequate intake of vitamin D can delay the aberrant processes associated with aging and age-related diseases, essentially restoring mitochondrial function and counteracting oxi-inflamm-aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 42116,
+      "end": 42362,
+      "text": "In myocytes, vitamin D can limit or even neutralize oxidative stress and ROS generation, and the accumulation and expression of garbage molecules like AGE/AGE receptor (RAGE), and high-fat diet-induced I resistance and myosteatosis [208,209,210].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S230",
+      "start": 42362,
+      "end": 42693,
+      "text": "\n\nSome experimental and human studies have shown that vitamin D is an effective antioxidant, via activation of the Nrf2-Keap1 antioxidant pathway (the main inducible defense against oxidative stress), showing, e.g., higher capacity than vitamin E to reduce zinc-induced oxidative stress in the central nervous system [211,212,213].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S231",
+      "start": 42693,
+      "end": 42695,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S232",
+      "start": 42695,
+      "end": 42913,
+      "text": "Of interest, in skeletal myocytes, vitamin D anti-aging effects are associated with the inhibition of NF-kB, the crossroad where different oxi-inflamm-aging/senescence paths merge, as previously reported [164,167,214].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S233",
+      "start": 42913,
+      "end": 43244,
+      "text": "\n\nThus far, given the evidence on vitamin D’s role in regulating myocyte metabolism/mitochondrial function/ROS generation, vitamin D deficiency (below 25 nmol/l) is of great interest, particularly in the elderly, since this condition is common among community-dwelling elderly, and very common among institutionalized elderly [67].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S234",
+      "start": 43244,
+      "end": 43246,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S235",
+      "start": 43246,
+      "end": 43499,
+      "text": "To date, it should be mentioned that, while undeniably hypovitaminosis D enhances oxi-inflamm-aging and senescence, an overcorrection of vitamin D status may negatively impact on skeletal muscle cell metabolism, similarly to an overdose of antioxidants.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S236",
+      "start": 43500,
+      "end": 43750,
+      "text": "Numerous investigations, indeed, have reported on the potential harmful effects of antioxidant (over)supplementation, especially on muscle fiber formation/muscle regeneration, metabolic homeostasis, and mitochondrial biogenesis [207,215,216,217,218].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 43750,
+      "end": 43754,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S238",
+      "start": 43754,
+      "end": 43755,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S239",
+      "start": 43755,
+      "end": 43759,
+      "text": "# 5.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S240",
+      "start": 43760,
+      "end": 43917,
+      "text": "Conclusions\n\nThe effect of vitamin D deficiency is classically related to reduced musculo-skeletal functions, and increased risk of disability in locomotion.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S241",
+      "start": 43918,
+      "end": 44145,
+      "text": "Besides this undeniable effect, low levels of vitamin D per se strongly affect the aging process, as this molecule regulates cell homeostasis, counteracting oxi-inflamm-aging and cellular senescence with multitargeting actions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S242",
+      "start": 44146,
+      "end": 44220,
+      "text": "In this scenario, the challenge is to restore an adequate vitamin D level.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S243",
+      "start": 44220,
+      "end": 44222,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S244",
+      "start": 44222,
+      "end": 44399,
+      "text": "Some years ago, fortified foods and drinks were introduced, to supplement diet, e.g., some cereals, plant-based beverages like soymilk, orange juice, and some yogurt and cheese.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S245",
+      "start": 44400,
+      "end": 44569,
+      "text": "Fortified flour, cornflakes, and juices are more common in the USA, while in Europe, vitamin D enriched margarine, vegetable oil, and milk are more common [219,220,221].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S246",
+      "start": 44569,
+      "end": 44783,
+      "text": "\n\nHowever, from previous simulation studies, fortified foods seem not to be able to provide sufficient vitamin D to the elderly, therefore, individual supplementation is proposed, often in combination with calcium.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S247",
+      "start": 44784,
+      "end": 44966,
+      "text": "A supply of about 20 µg vitamin D (800 IU) per day to people over 70, with 50 µg/day recommended as the safe level, and 600 IU, are recommended in subjects from 1 to 70 years of age.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S248",
+      "start": 44967,
+      "end": 45184,
+      "text": "Supplementation with 20 µg vitamin D and 1000/1200 mg calcium increases the vitamin D level, suppresses secondary hyperparathyroidism (lowering the parathyroid hormone/PTH), and improves bone and muscle strength [67].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S249",
+      "start": 45185,
+      "end": 45381,
+      "text": "As found in several studies aimed at reducing osteoporotic fractures in the elderly, a lower amount of vitamin D is required (10 µg/day) in the presence of calcium supplementation (1000 mg) [222].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S250",
+      "start": 45381,
+      "end": 45383,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S251",
+      "start": 45383,
+      "end": 45622,
+      "text": "To date, research studies have explored the efficacy of vitamin D supplementation in the prevention and treatment of chronic conditions of aging, nevertheless the translation to standardized application is lacking, for a number of reasons.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S252",
+      "start": 45623,
+      "end": 45759,
+      "text": "There is still an urgent need of clear indications as to what is the best dosage for a supplement, considering, e.g., the comorbidities.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S253",
+      "start": 45760,
+      "end": 46034,
+      "text": "Moreover, the lack of a universally accepted standard for vitamin D assessment, i.e., due to variability in methods, strictly connects with the absence of clarity in vitamin D status definition (sufficiency/insufficiency/deficiency), based on a standardized reference range.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S254",
+      "start": 46035,
+      "end": 46309,
+      "text": "Plasma 25(OH)D (the more stable analyte) is currently used to assess vitamin D status, but it is recognized that the circulating level of this metabolite varies depending upon season, latitude, clothing, dietary habits, race, pigmentation, skin thickness, sex, and age [67].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S255",
+      "start": 46310,
+      "end": 46511,
+      "text": "All the concerns about vitamin D determination and supplementation are exhaustively reported in the latest consensus statement from the 2nd International Conference on Controversies in Vitamin D [223].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S256",
+      "start": 46511,
+      "end": 46921,
+      "text": "\n\nSo far, the role of vitamin D status in immunosenescence, inflammaging, and whole-body aging is based on scientifically documented data, and is fully recognized by the scientific literature, but still there are important limitations to translate knowledge into clinical practice, with important medical and socioeconomic consequences, considering the high and growing number of individuals aged 65 and older.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S257",
+      "start": 46921,
+      "end": 47202,
+      "text": "\n\nThe DO-HEALTH multicenter clinical trial, currently running in 2157 community-dwelling European men and women aged 70 and older, combines vitamin D (2000 IU/day) treatment with omega-3 fatty acids intake (1000 mg/day), and a 30-min physical activity (3 times/week home exercise).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S258",
+      "start": 47203,
+      "end": 47360,
+      "text": "This trial addresses several health domains (cardiovascular, muscle, bone, brain, and immunity) and hopefully will help to implement clinical practice [224].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S259",
+      "start": 47360,
+      "end": 47362,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S260",
+      "start": 47362,
+      "end": 47589,
+      "text": "This review wants to focus as much attention as possible on these aspects, even though some limitations, such as lack of discussion on sex-dependent variability, or differences between active and sedentary elderly, are present.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S261",
+      "start": 47589,
+      "end": 47591,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S262",
+      "start": 47591,
+      "end": 47794,
+      "text": "Given the importance of this topic, more accurate basic and clinical human research is necessary to approach vitamin D status determination, opening the way to future scenarios of personalized treatment.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S263",
+      "start": 47794,
+      "end": 47797,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=Senescence | pred=initiate | obj=at the cellular level | unit=S2\nB T4 B2 | sub=Aging | pred=associate | obj=with significant modifications in immune system | unit=S3\nB T4 B3 | sub=it | pred=regulate | obj=by some factors, like lifestyle | unit=S4\nB T4 B4 | sub=Nutrition | pred=tackle | obj=the mechanisms underlying molecular/cellular aging | unit=S5\nB T4 B5 | sub=Many micronutrients, i.e., vitamins | pred=impact | obj=cell function | unit=S6\nB T4 B6 | sub=This review | pred=focus | obj=on the role exerted by vitamin | unit=S7\nB T4 B7 | sub=the main biomolecular paths underlying immunosenescence | pred=identify | obj=To this aim | unit=S8\nB T4 B8 | sub=Topics such as heart and skeletal | pred=address | obj=with comments on hypovitaminosis D correction | unit=S9\nB T4 B9 | sub=still limitations | pred=exist | obj=making it necessary to focus attention | unit=S10\nB T4 B10 | sub=The undeniable increase observed in human | pred=accompany | obj=by a decrease in the quality | unit=S14\nB T4 B11 | sub=the current challenge | pred=be | obj=This means that living longer is | unit=S15\nB T4 B12 | sub=The aging process | pred=decline | obj=that | unit=S16\nB T4 B13 | sub=These macroscopic age-related alterations | pred=reflect | obj=the changes occurring at the cellular | unit=S17\nB T4 B14 | sub=these molecular alterations | pred=converge | obj=in frailty, a multidimensional syndrome, clinically | unit=S18\nB T4 B15 | sub=Frailty | pred=condition | obj=due to different determinants | unit=S19\nB T4 B16 | sub=several adaptable lifestyle factors | pred=impact | obj=QoL | unit=S20\nB T4 B17 | sub=It | pred=drive | obj=human health status | unit=S21\nB T4 B18 | sub=the nutritional pattern | pred=play | obj=a pivotal role | unit=S22\nB T4 B19 | sub=vitamin D | pred=play | obj=Among many factors | unit=S23\nB T4 B20 | sub=insufficient vitamin D | pred=associate | obj=beside bone defects | unit=S25\nB T4 B21 | sub=A clear cause–effect relationship | pred=lack | obj=in many cases | unit=S26\nB T4 B22 | sub=This review | pred=aim | obj=to provide an overview of some | unit=S27\nB T4 B23 | sub=Particular attention | pred=give | obj=to the ability of vitamin D | unit=S28\nB T4 B24 | sub=Aging | pred=matter | obj=Human | unit=S33\nB T4 B25 | sub=Age-related changes | pred=associate | obj=with higher susceptibility to diseases | unit=S34\nB T4 B26 | sub=Accumulating data | pred=suggest | obj=that dietary pattern, among other factors, | unit=S35\nB T4 B27 | sub=Some of the main processes triggering | pred=discuss | obj=Some of the main processes triggering | unit=S36\nB T4 B28 | sub=The Cellular Route to Aging | pred=help | obj=to develop new interventions and strategies | unit=S39\nB T4 B29 | sub=The multimodal process of aging | pred=include | obj=different biological system remodeling leading to | unit=S40\nB T4 B30 | sub=age-related biomolecular changes in the immune | pred=acknowledge | obj=In this scenario | unit=S41\nB T4 B31 | sub=the natural decline in immune system | pred=start | obj=In humans | unit=S42\nB T4 B32 | sub=Age-dependent “re-shaping” of both the innate | pred=increase | obj=vulnerability to illness | unit=S43\nB T4 B33 | sub=the nonspecific innate immunity | pred=overreact | obj=older | unit=S44\nB T4 B34 | sub=The concurrence of these conditions | pred=define | obj=as “inflammaging | unit=S45\nB T4 B35 | sub=inflammaging | pred=factor | obj=In turn | unit=S46\nB T4 B36 | sub=The macroscopic changes | pred=reflect | obj=microscopic remodeling | unit=S48\nB T4 B37 | sub=Cellular senescence | pred=combine | obj=morphological and molecular characteristics | unit=S50\nB T4 B38 | sub=The diluted cytoplasmic domain | pred=feature | obj=of senescent cells | unit=S51\nB T4 B39 | sub=senescent cells | pred=display | obj=a “senescence-associated secretory phenotype” (SASP | unit=S52\nB T4 B40 | sub=Figure 1 | pred=show | obj=a schematic of the cellular changes | unit=S53\nB T4 B41 | sub=Figure | pred=modification | obj=senescence | unit=S54\nB T4 B42 | sub=Aging induced modifications at the cellular | pred=include | obj=morphological | unit=S55\nB T4 B43 | sub=These factors | pred=function | obj=as mediators of signal communication between | unit=S56\nB T4 B44 | sub=several in vitro and in vivo | pred=show | obj=To date | unit=S57\nB T4 B45 | sub=senescence of the immunocytes | pred=acknowledge | obj=as a critical step in triggering | unit=S58\nB T4 B46 | sub=article text | pred=immunosenescence | obj=First | unit=S60\nB T4 B47 | sub=The central defect in immunosenescence | pred=decline | obj=in T cell function | unit=S61\nB T4 B48 | sub=The main age-dependent changes | pred=include | obj=a significant decrease in naïve T | unit=S62\nB T4 B49 | sub=T cells | pred=emerge | obj=role | unit=S63\nB T4 B50 | sub=Age-related thymus involution | pred=event | obj=that | unit=S64\nB T4 B51 | sub=The number of new naïve T | pred=decrease | obj=naïve | unit=S65\nB T4 B52 | sub=T cell-TCR signaling activation | pred=require | obj=for IL-2 release and T cell | unit=S66\nB T4 B53 | sub=the downtuning of T regulatory (Treg) | pred=lead | obj=In aging | unit=S67\nB T4 B54 | sub=age-related thymic involution | pred=seem | obj=to be linked to IL-33/ST2 signaling | unit=S69\nB T4 B55 | sub=IL-33 | pred=show | obj=to orchestrate the signals within the | unit=S70\nB T4 B56 | sub=the IL-33/ST2 axis | pred=suggest | obj=as a promising potential target in | unit=S71\nB T4 B57 | sub=The dysregulation of T cell signaling | pred=include | obj=defects in calcium mobilization | unit=S72\nB T4 B58 | sub=Other age-dependent damage, i.e., the loss | pred=impact | obj=on the function of B cells | unit=S74\nB T4 B59 | sub=aberrant increases in NF-kB activation and | pred=report | obj=In addition to T cell deregulation | unit=S75\nB T4 B60 | sub=NF-kB dysregulation/hyperactivation | pred=represent | obj=a potential molecular target for intervention | unit=S77\nB T4 B61 | sub=The number of natural killer (NK) | pred=seem | obj=to not vary with aging | unit=S79\nB T4 B62 | sub=neutrophil number | pred=change | obj=Like NK | unit=S80\nB T4 B63 | sub=oxidative stress | pred=determinant | obj=In the complex network of aging | unit=S81\nB T4 B64 | sub=the high percentage of polyunsaturated fatty | pred=make | obj=the cells inclined to lipid peroxidation | unit=S82\nB T4 B65 | sub=age-related changes in the immune system | pred=expose | obj=the elderly | unit=S83\nB T4 B66 | sub=The significant impact of genetic and | pred=undeniable | obj=nutrition | unit=S85\nB T4 B67 | sub=age-related immune alterations | pred=seem | obj=to be associated with a suboptimal | unit=S86\nB T4 B68 | sub=micronutrients, such as zinc | pred=regulator | obj=of the immune response | unit=S87\nB T4 B69 | sub=this review | pred=focus | obj=Overall, this review focuses on vitamin | unit=S88\nB T4 B70 | sub=this molecule | pred=present | obj=Vitamin D and Geroprotection Vitamin D | unit=S91\nB T4 B71 | sub=Vitamin D deficiency | pred=problem | obj=due to several impacting factors, from | unit=S93\nB T4 B72 | sub=It | pred=report | obj=that the elderly in Europe, the | unit=S94\nB T4 B73 | sub=a less varied diet, with a | pred=habit | obj=vitamin | unit=S95\nB T4 B74 | sub=article text | pred=recommend | obj=not only for bone homeostasis | unit=S96\nB T4 B75 | sub=Vitamin D intake from dietary sources, | pred=consider | obj=an excellent strategy to counteract vitamin | unit=S97\nB T4 B76 | sub=article text | pred=acknowledge | obj=that this nutrient exerts such an | unit=S98\nB T4 B77 | sub=vitamin D deficiency | pred=associate | obj=In general | unit=S99\nB T4 B78 | sub=Hypovitaminosis D | pred=acknowledge | obj=as a pandemic condition, affecting all | unit=S100\nB T4 B79 | sub=Most of the immune cells, including | pred=express | obj=VDR | unit=S101\nB T4 B80 | sub=many immunocytes | pred=express | obj=1-α-hydroxylase | unit=S102\nB T4 B81 | sub=adequate vitamin D levels | pred=help | obj=In the elderly | unit=S104\nB T4 B82 | sub=D | pred=line | obj=of host defense | unit=S105\nB T4 B83 | sub=this molecule | pred=maintain | obj=the barrier integrity | unit=S106\nB T4 B84 | sub=cathelicidin | pred=axis | obj=most | unit=S108\nB T4 B85 | sub=Clinical studies on human tuberculosis, sepsis, | pred=document | obj=that, after vitamin D supplementation, serum | unit=S109\nB T4 B86 | sub=Evidence in human monocytes/macrophages | pred=show | obj=that the activation of vitamin D | unit=S110\nB T4 B87 | sub=IFNγ expression, in combination with CD40–CD40 | pred=increase | obj=the activity of the hydroxylase converting | unit=S112\nB T4 B88 | sub=vitamin D-induced cathelicidin | pred=act | obj=In Mycobacterium tuberculosis, the most studied | unit=S113\nB T4 B89 | sub=vitamin D | pred=boost | obj=During Mycobacterium infection | unit=S115\nB T4 B90 | sub=vitamin D/VDR signaling | pred=act | obj=as a fine regulator of AMP-dependent | unit=S116\nB T4 B91 | sub=further understanding the function of the | pred=seem | obj=necessary | unit=S117\nB T4 B92 | sub=The antimicrobial action(s) of host defense | pred=relevant | obj=infections | unit=S118\nB T4 B93 | sub=vitamin D-mediated LL-37 induction | pred=specific | obj=in human defense system | unit=S119\nB T4 B94 | sub=This observation | pred=line | obj=with the concept that, results from | unit=S120\nB T4 B95 | sub=the specific role of the vitamin | pred=go | obj=beyond the aim of this paper | unit=S121\nB T4 B96 | sub=alterations in the vitamin D–cathelicidin axis, | pred=result | obj=To date | unit=S123\nB T4 B97 | sub=The paradoxical effect of vitamin D | pred=emerge | obj=molecule | unit=S125\nB T4 B98 | sub=The main anti-inflammaging effects related to | pred=address | obj=in the following paragraph | unit=S126\nB T4 B99 | sub=Figure 2 | pred=depict | obj=the effects of vitamin D against | unit=S127\nB T4 B100 | sub=article text | pred=counteract | obj=figure> | unit=S128\nB T4 B101 | sub=article text | pred=# | obj=3.2 | unit=S131\nB T4 B102 | sub=Vitamin | pred=d | obj=against Inflammaging | unit=S132\nB T4 B103 | sub=inflammaging | pred=consequence | obj=Following the original concept | unit=S133\nB T4 B104 | sub=The immunomodulatory role of vitamin D | pred=recognize | obj=The immunomodulatory role of vitamin D | unit=S134\nB T4 B105 | sub=an adequate level of vitamin D | pred=counteract | obj=inflammation | unit=S135\nB T4 B106 | sub=Th1 | pred=cell | obj=subset | unit=S136\nB T4 B107 | sub=The vitamin D-induced downregulation of the | pred=occur | obj=with Treg enhancement | unit=S137\nB T4 B108 | sub=these processes | pred=suppose | obj=to be the main mechanisms underlying | unit=S138\nB T4 B109 | sub=vitamin D | pred=document | obj=In lymphocytes | unit=S139\nB T4 B110 | sub=the vitamin D-induced protolerogenic effect on | pred=seem | obj=From in vitro studies on autoimmune | unit=S141\nB T4 B111 | sub=The precise biomolecular mechanism | pred=remain | obj=to be elucidated | unit=S142\nB T4 B112 | sub=the role of hypovitaminosis D | pred=acknowledge | obj=disease | unit=S143\nB T4 B113 | sub=a pathogenetic immunological crosstalk between vitamin | pred=hypothesize | obj=In some autoimmune diseases, such as | unit=S144\nB T4 B114 | sub=the neutralization of IL-33/ST2 signaling by | pred=suggest | obj=as a therapeutic strategy | unit=S145\nB T4 B115 | sub=the Th17/Treg ratio | pred=tend | obj=In this scenario | unit=S147\nB T4 B116 | sub=IL-10 | pred=cytokine | obj=inflammaging | unit=S148\nB T4 B117 | sub=D | pred=status | obj=In line with this concept | unit=S149\nB T4 B118 | sub=a wide-epigenetic T cell remodeling, promoting | pred=underlie | obj=the transition from proinflammatory IFN-γ+ Th1 | unit=S150\nB T4 B119 | sub=vitamin D deficiency | pred=increase | obj=In addition to the effect on | unit=S151\nB T4 B120 | sub=This effect | pred=related | obj=to vitamin D’s anti-inflammatory action | unit=S153\nB T4 B121 | sub=the vitamin D-induced reduction in cholesterol | pred=emerge | obj=as a key event | unit=S154\nB T4 B122 | sub=hypovitaminosis D | pred=support | obj=increased cellular senescence and arterial aging, | unit=S155\nB T4 B123 | sub=The delayed cellular senescence by vitamin | pred=include | obj=different processes, including longer telomere lengths | unit=S156\nB T4 B124 | sub=Another important aspect | pred=regulation | obj=of mitochondrial function | unit=S158\nB T4 B125 | sub=Vitamin D deficiency | pred=associate | obj=with disorders of mitochondrial function, such | unit=S159\nB T4 B126 | sub=The combination of vitamin D and | pred=hypothesize | obj=to counteract neurodegeneration | unit=S160\nB T4 B127 | sub=SIRT signaling | pred=seem | obj=deeply affected by dietary nutrient composition | unit=S161\nB T4 B128 | sub=The immune system | pred=key | obj=to a host’s defense against pathogenic | unit=S162\nB T4 B129 | sub=Aging | pred=associate | obj=with changes in the immune system | unit=S163\nB T4 B130 | sub=Nutrition | pred=determinant | obj=of immune cell function | unit=S164\nB T4 B131 | sub=the gut microbiota | pred=shape | obj=In turn | unit=S165\nB T4 B132 | sub=Many older people | pred=show | obj=changes | unit=S166\nB T4 B133 | sub=Age-related changes in immune competence | pred=interlink | obj=least | unit=S167\nB T4 B134 | sub=A number of micronutrients (vitamins C | pred=play | obj=roles | unit=S168\nB T4 B135 | sub=Some trials | pred=report | obj=that providing these micronutrients as individual | unit=S169\nB T4 B136 | sub=There | pred=be | obj=inconsistent | unit=S170\nB T4 B137 | sub=Probiotic, prebiotic, or synbiotic strategies, that | pred=demonstrate | obj=to modulate some immune and inflammatory | unit=S171\nB T4 B138 | sub=Further research, with well-designed and well-powered | pred=require | obj=to be more certain about the | unit=S172\nB T4 B139 | sub=COX-2 expression | pred=show | obj=to be dose-dependently inhibited by vitamin | unit=S173\nB T4 B140 | sub=The function of NF-kB | pred=critical | obj=in cellular senescence | unit=S174\nB T4 B141 | sub=NF-kB hyperphosphorylation | pred=report | obj=in different tissue aging (skin | unit=S175\nB T4 B142 | sub=NF-kB constitutive activation | pred=report | obj=in aged skeletal muscle | unit=S176\nB T4 B143 | sub=in vivo data in overweight/obese, but | pred=fail | obj=To date | unit=S177\nB T4 B144 | sub=the function of NF-kB as a | pred=continue | obj=to emerge as being critical for | unit=S178\nB T4 B145 | sub=NF-kB signaling hyperactivation | pred=associate | obj=with pro-aging stimuli | unit=S179\nB T4 B146 | sub=inflammaging | pred=prim | obj=inflammatory NF-kB signaling, which is involved | unit=S180\nB T4 B147 | sub=vitamin D | pred=target | obj=hyperphosphorylation of this transcription factor in | unit=S181\nB T4 B148 | sub=The following paragraph | pred=focus | obj=on this topic | unit=S182\nB T4 B149 | sub=NF-kB | pred=regulation | obj=Putative | unit=S186\nB T4 B150 | sub=Biomolecular paths promoting aging such as | pred=activate | obj=NF-kB | unit=S187\nB T4 B151 | sub=age-dependent DNA damage | pred=associate | obj=In addition | unit=S188\nB T4 B152 | sub=NF-kB activation, besides telomere shortening via | pred=intensify | obj=inflammation | unit=S189\nB T4 B153 | sub=pro-longevity factors, i.e., sirtuin | pred=repress | obj=At variance to this | unit=S190\nB T4 B154 | sub=chronic activation of NF-kB | pred=find | obj=To date | unit=S191\nB T4 B155 | sub=vitamin D | pred=downregulate | obj=NF-kB expression | unit=S192\nB T4 B156 | sub=The mechanism whereby the vitamin D/VDR | pred=include | obj=a physical interaction between VDR and | unit=S193\nB T4 B157 | sub=The blockade of p65 translocation | pred=lead | obj=to the decrease or suppression of | unit=S194\nB T4 B158 | sub=a well-functioning vitamin D/VDR system | pred=represent | obj=a helpful tool | unit=S196\nB T4 B159 | sub=This effect | pred=seem | obj=particularly relevant at the level of | unit=S197\nB T4 B160 | sub=article text | pred=acknowledge | obj=that aging per se is a | unit=S198\nB T4 B161 | sub=Age-related cardiac reduced function | pred=reflect | obj=molecular and cellular modifications, both in | unit=S199\nB T4 B162 | sub=The dogma that cardiomyocytes are postmitotic | pred=overcome | obj=by the observation that a fraction | unit=S200\nB T4 B163 | sub=The increased number of necrotic cells | pred=trigger | obj=repair-related aberrant inflammation | unit=S201\nB T4 B164 | sub=garbage molecules such as lipoxidation products | pred=accumulate | obj=Following oxi-inflamm-aging-induced cell death | unit=S202\nB T4 B165 | sub=it | pred=mention | obj=Concerning autophagy | unit=S203\nB T4 B166 | sub=These processes | pred=impact | obj=gene expression | unit=S205\nB T4 B167 | sub=ROS generation | pred=associate | obj=During cardiac physiological aging | unit=S206\nB T4 B168 | sub=The activation of NLRP3 | pred=process | obj=priming | unit=S208\nB T4 B169 | sub=The difference between the canonical/noncanonical mechanisms | pred=report | obj=aim | unit=S209\nB T4 B170 | sub=article text | pred=involve | obj=in aging | unit=S210\nB T4 B171 | sub=vitamin D/VDR signaling | pred=act | obj=Of note | unit=S211\nB T4 B172 | sub=There | pred=be | obj=evidence | unit=S212\nB T4 B173 | sub=ligand-activated VDR | pred=attenuate | obj=NRLP3 deubiquitination | unit=S213\nB T4 B174 | sub=article text | pred=associate | obj=with poor outcomes | unit=S214\nB T4 B175 | sub=skeletal muscle cells | pred=show | obj=age-dependent biomolecular dysregulation, associated with mitochondrial | unit=S216\nB T4 B176 | sub=Age-related decline of skeletal muscle | pred=lead | obj=to sarcopenia—not limited to muscle area/mass | unit=S217\nB T4 B177 | sub=aging-related macroscopic changes | pred=reflect | obj=In muscle as well | unit=S218\nB T4 B178 | sub=tissue changes | pred=associate | obj=with an increase in several inflammatory | unit=S219\nB T4 B179 | sub=it | pred=undeniable | obj=that the reduction in type II | unit=S220\nB T4 B180 | sub=The rise in TNFα | pred=increase | obj=fat mass | unit=S221\nB T4 B181 | sub=some intracellular cascades, particularly the TNFα/NF-kB/ubiquitin–proteasome | pred=play | obj=To date | unit=S222\nB T4 B182 | sub=Some strategies, such as protein supplementation | pred=reduce | obj=creatine kinase | unit=S223\nB T4 B183 | sub=Another feature of aging muscle | pred=resistance | obj=to I | unit=S224\nB T4 B184 | sub=it | pred=common | obj=in the elderly | unit=S225\nB T4 B185 | sub=The protective function exerted by vitamin | pred=acknowledge | obj=vitamin | unit=S226\nB T4 B186 | sub=An adequate intake of vitamin D | pred=delay | obj=the aberrant processes associated with aging | unit=S228\nB T4 B187 | sub=vitamin D | pred=limit | obj=In myocytes | unit=S229\nB T4 B188 | sub=Some experimental and human studies | pred=show | obj=Some experimental and human studies have | unit=S230\nB T4 B189 | sub=vitamin D anti-aging effects | pred=associate | obj=Of interest | unit=S232\nB T4 B190 | sub=vitamin D deficiency (below 25 nmol/l | pred=interest | obj=given the evidence on vitamin D’s | unit=S233\nB T4 B191 | sub=it | pred=mention | obj=To date | unit=S235\nB T4 B192 | sub=Numerous investigations | pred=report | obj=on the potential harmful effects of | unit=S236\nB T4 B193 | sub=The effect of vitamin D deficiency | pred=related | obj=to reduced musculo-skeletal functions | unit=S240\nB T4 B194 | sub=low levels of vitamin D | pred=affect | obj=Besides this undeniable effect | unit=S241\nB T4 B195 | sub=the challenge | pred=restore | obj=In this scenario | unit=S242\nB T4 B196 | sub=fortified foods | pred=introduce | obj=diet | unit=S244\nB T4 B197 | sub=Fortified flour | pred=common | obj=in the USA | unit=S245\nB T4 B198 | sub=individual supplementation | pred=propose | obj=However, from previous simulation studies, fortified | unit=S246\nB T4 B199 | sub=article text | pred=supply | obj=of about 20 µg vitamin D | unit=S247\nB T4 B200 | sub=Supplementation with 20 µg vitamin D | pred=increase | obj=the vitamin D level | unit=S248\nB T4 B201 | sub=a lower amount of vitamin D | pred=require | obj=in the presence of calcium supplementation | unit=S249\nB T4 B202 | sub=research studies | pred=explore | obj=To date | unit=S251\nB T4 B203 | sub=There | pred=be | obj=urgent | unit=S252\nB T4 B204 | sub=the lack of a universally accepted | pred=connect | obj=with the absence of clarity in | unit=S253\nB T4 B205 | sub=Plasma | pred=use | obj=to assess vitamin D status | unit=S254\nB T4 B206 | sub=All the concerns about vitamin D | pred=report | obj=in the latest consensus statement from | unit=S255\nB T4 B207 | sub=the role of vitamin D status | pred=base | obj=on scientifically documented data | unit=S256\nB T4 B208 | sub=The DO-HEALTH multicenter clinical trial, currently | pred=combine | obj=vitamin D (2000 IU/day) treatment with | unit=S257\nB T4 B209 | sub=This trial | pred=address | obj=several health domains (cardiovascular | unit=S258\nB T4 B210 | sub=This review | pred=want | obj=to focus as much attention as | unit=S260\nB T4 B211 | sub=more accurate basic and clinical human | pred=necessary | obj=Given the importance of this topic | unit=S262",
+  "expected": {
+    "assertion_count": 211,
+    "minimum_concept_count": 373,
+    "minimum_structural_row_count": 850,
+    "minimum_knowledge_map_node_count": 850,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

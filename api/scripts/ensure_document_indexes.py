@@ -15,6 +15,9 @@ INDEXES = [
     "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.x, d.y)",
     "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.uid)",
     "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.doi)",
+    "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.has_full_text)",
+    "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.has_full_text, d.uid)",
+    "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source, d.uid)",
 ]
 
 TEXT_INDEXES = [

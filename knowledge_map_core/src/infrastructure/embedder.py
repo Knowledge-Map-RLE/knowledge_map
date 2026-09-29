@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import logging
-from functools import lru_cache
+import asyncio
+from threading import Lock
 
 logger = logging.getLogger(__name__)
 
@@ -17,23 +18,32 @@ class SentenceTransformerEmbedder:
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         self._model_name = model_name
         self._model = None
+        self._load_lock = Lock()
 
     def _load_model(self):
-        if self._model is not None:
-            return
-        try:
-            from sentence_transformers import SentenceTransformer
-            self._model = SentenceTransformer(self._model_name)
-            logger.info("Loaded SentenceTransformer model: %s", self._model_name)
-        except ImportError:
-            logger.error(
-                "sentence-transformers not installed. "
-                "Install with: pip install sentence-transformers"
-            )
-            raise
-        except Exception as e:
-            logger.error("Failed to load model %s: %s", self._model_name, e)
-            raise
+        with self._load_lock:
+            if self._model is not None:
+                return self._model
+            try:
+                from sentence_transformers import SentenceTransformer
+
+                self._model = SentenceTransformer(self._model_name)
+                logger.info("Loaded SentenceTransformer model: %s", self._model_name)
+                return self._model
+            except ImportError:
+                logger.error(
+                    "sentence-transformers not installed. "
+                    "Install it in the Poetry environment."
+                )
+                raise
+            except Exception as e:
+                logger.error("Failed to load model %s: %s", self._model_name, e)
+                raise
+
+    async def _get_model(self):
+        """Load the optional embedding model off the event loop on first use."""
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self._load_model)
 
     def ensure_loaded(self) -> bool:
         """Load model if not yet loaded. Returns True on success, False on failure."""
@@ -44,15 +54,11 @@ class SentenceTransformerEmbedder:
             return False
 
     async def embed(self, text: str) -> list[float]:
-        self._load_model()
-        assert self._model is not None
-
-        import asyncio
-
-        loop = asyncio.get_event_loop()
+        model = await self._get_model()
+        loop = asyncio.get_running_loop()
         embedding = await loop.run_in_executor(
             None,
-            lambda: self._model.encode(
+            lambda: model.encode(
                 text,
                 normalize_embeddings=True,
                 show_progress_bar=False,
@@ -64,15 +70,11 @@ class SentenceTransformerEmbedder:
         if not texts:
             return []
 
-        self._load_model()
-        assert self._model is not None
-
-        import asyncio
-
-        loop = asyncio.get_event_loop()
+        model = await self._get_model()
+        loop = asyncio.get_running_loop()
         embeddings = await loop.run_in_executor(
             None,
-            lambda: self._model.encode(
+            lambda: model.encode(
                 texts,
                 normalize_embeddings=True,
                 show_progress_bar=False,

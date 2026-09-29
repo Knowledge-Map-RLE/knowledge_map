@@ -9,10 +9,11 @@ import json
 
 import anyio
 import pytest
-from httpx import ASGITransport, AsyncClient
+from httpx import ASGITransport, AsyncClient, MockTransport, Response
 
 from src.app import app
-from src.config import settings
+from src.config import Provider, settings
+from src.providers import HttpProviderClient, OpenAIResponsesProviderClient
 
 
 class FakeStream:
@@ -90,7 +91,6 @@ def _sse_chunks(text: str) -> list[bytes]:
             ],
         }
         chunks.append(("data: " + json.dumps(payload) + "\n\n").encode("utf-8"))
-    chunks.append(b"data: [DONE]\n\n")
     return chunks
 
 
@@ -161,8 +161,148 @@ def test_streaming_passthrough(monkeypatch):
     )
     assert status == 200
     assert headers["content-type"].startswith("text/event-stream")
-    assert "data: [DONE]" in body
+    assert body.count("data: [DONE]") == 1
     assert "chat.completion.chunk" in body
+
+
+def test_http_provider_streams_cloudru_sse_without_buffering():
+    observed: dict = {}
+    upstream_events = (
+        b'data: {"id":"chatcmpl-test","object":"chat.completion.chunk",'
+        b'"choices":[{"index":0,"delta":{"content":"B T4 B1"},'
+        b'"finish_reason":null}]}\n\n'
+        b'data: {"id":"chatcmpl-test","object":"chat.completion.chunk",'
+        b'"choices":[{"index":0,"delta":{},"finish_reason":"stop"}],'
+        b'"usage":{"completion_tokens":5}}\n\n'
+        b'data: [DONE]\n\n'
+    )
+
+    async def upstream(request):
+        observed["method"] = request.method
+        observed["path"] = request.url.path
+        observed["body"] = json.loads(request.content)
+        return Response(200, headers={"content-type": "text/event-stream"}, content=upstream_events)
+
+    async def collect():
+        client = HttpProviderClient(
+            Provider(name="cloudru", base_url="https://provider.example/v1", api_key="key")
+        )
+        await client._client.aclose()
+        client._client = AsyncClient(transport=MockTransport(upstream))
+        try:
+            return [frame async for frame in client.stream("deepseek-ai/DeepSeek-V4-Flash", {
+                "messages": [{"role": "user", "content": "DSL only"}],
+                "max_completion_tokens": 64000,
+                "stream_options": {"include_usage": True},
+            })]
+        finally:
+            await client.close()
+
+    frames = anyio.run(collect)
+    forwarded = b"".join(frames).decode("utf-8")
+    assert observed["method"] == "POST"
+    assert observed["path"] == "/v1/chat/completions"
+    assert observed["body"]["stream"] is True
+    assert observed["body"]["stream_options"] == {"include_usage": True}
+    assert observed["body"]["max_completion_tokens"] == 64000
+    assert "B T4 B1" in forwarded
+    assert "data: [DONE]" not in forwarded
+
+
+def test_openai_responses_maps_full_conversation_and_reasoning_settings():
+    observed: dict = {}
+
+    async def upstream(request):
+        observed["path"] = request.url.path
+        observed["authorization"] = request.headers.get("authorization")
+        observed["body"] = json.loads(request.content)
+        return Response(200, json={
+            "id": "resp-smoke",
+            "status": "completed",
+            "model": "gpt-6-luna",
+            "output": [{"type": "message", "role": "assistant", "content": [
+                {"type": "output_text", "text": "Привет! Чем могу помочь?"}
+            ]}],
+            "usage": {"input_tokens": 4, "output_tokens": 9, "total_tokens": 13},
+        })
+
+    async def run():
+        client = OpenAIResponsesProviderClient(Provider(
+            name="openai",
+            base_url="https://api.openai.com/v1",
+            kind="openai_responses",
+            api_key="test-secret",
+            models=["gpt-6-luna"],
+            generation_options={"gpt-6-luna": {
+                "reasoning_effort": "max", "max_tokens": 128000,
+            }},
+            context_length=1050000,
+        ))
+        await client._client.aclose()
+        client._client = AsyncClient(transport=MockTransport(upstream))
+        try:
+            return await client.generate("gpt-6-luna", {
+                "messages": [
+                    {"role": "system", "content": "Complete DSL extraction prompt"},
+                    {"role": "user", "content": "The entire article, without chunking."},
+                ],
+                "max_completion_tokens": 512,
+                "temperature": 0,
+            })
+        finally:
+            await client.close()
+
+    result = anyio.run(run)
+    assert observed["path"] == "/v1/responses"
+    assert observed["authorization"] == "Bearer test-secret"
+    assert observed["body"]["model"] == "gpt-6-luna"
+    assert observed["body"]["input"] == [
+        {"role": "system", "content": "Complete DSL extraction prompt"},
+        {"role": "user", "content": "The entire article, without chunking."},
+    ]
+    assert observed["body"]["reasoning"] == {"effort": "max"}
+    assert observed["body"]["max_output_tokens"] == 512
+    assert "temperature" not in observed["body"]
+    assert result["choices"][0]["message"]["content"] == "Привет! Чем могу помочь?"
+    assert result["usage"] == {
+        "prompt_tokens": 4, "completion_tokens": 9, "total_tokens": 13,
+    }
+
+
+def test_openai_responses_streams_text_deltas_as_chat_chunks():
+    events = [
+        {"type": "response.created", "response": {"id": "resp-stream", "model": "gpt-6-luna"}},
+        {"type": "response.output_text.delta", "delta": "Привет"},
+        {"type": "response.output_text.delta", "delta": "!"},
+        {"type": "response.completed", "response": {
+            "id": "resp-stream", "status": "completed", "model": "gpt-6-luna",
+            "usage": {"input_tokens": 2, "output_tokens": 3, "total_tokens": 5},
+        }},
+    ]
+    sse = "".join("data: " + json.dumps(event, ensure_ascii=False) + "\n\n" for event in events)
+
+    async def upstream(request):
+        return Response(200, headers={"content-type": "text/event-stream"}, content=sse)
+
+    async def run():
+        client = OpenAIResponsesProviderClient(Provider(
+            name="openai", base_url="https://api.openai.com/v1", api_key="test-secret",
+        ))
+        await client._client.aclose()
+        client._client = AsyncClient(transport=MockTransport(upstream))
+        try:
+            return [frame async for frame in client.stream("gpt-6-luna", {
+                "messages": [{"role": "user", "content": "Привет"}],
+            })]
+        finally:
+            await client.close()
+
+    frames = [json.loads(frame.removeprefix("data: ").strip()) for frame in anyio.run(run)]
+    assert [frame["choices"][0]["delta"].get("content") for frame in frames[:-1]] == [
+        "Привет", "!",
+    ]
+    assert frames[-1]["choices"][0]["finish_reason"] == "stop"
+    assert frames[-1]["usage"]["total_tokens"] == 5
 
 
 def test_unknown_model(monkeypatch):

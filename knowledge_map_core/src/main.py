@@ -2,9 +2,14 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 import subprocess
 import sys
 from pathlib import Path
+
+# Let asyncio/Python handle Ctrl+C instead of Intel's Fortran runtime aborting
+# the process before gRPC and its clients can shut down cleanly on Windows.
+os.environ["FOR_DISABLE_CONSOLE_CTRL_HANDLER"] = "1"
 
 # Ensure project root is on sys.path (for python src/main.py without -m)
 _project_root = str(Path(__file__).resolve().parent.parent)
@@ -85,25 +90,6 @@ def _is_port_available(port: int) -> bool:
             return False
 
 
-def _kill_process_on_port(port: int) -> None:
-    import subprocess
-    try:
-        result = subprocess.run(
-            ["netstat", "-ano"],
-            capture_output=True, text=True,
-        )
-        lines = result.stdout.split("\n")
-        for line in lines:
-            if f":{port}" in line and "LISTENING" in line:
-                parts = line.strip().split()
-                if parts:
-                    pid = parts[-1]
-                    logger.warning("Killing process %s on port %s", pid, port)
-                    subprocess.run(["taskkill", "/F", "/PID", pid], capture_output=True)
-    except Exception:
-        pass
-
-
 async def serve() -> None:
     from src import knowledge_language_pb2_grpc
     from src.config import settings
@@ -117,9 +103,11 @@ async def serve() -> None:
     from src.infrastructure.wl_hasher import compute_wl_hash
     from src.neo4j.writer import Neo4jWriter
 
-    # Always kill any previous instance on the port first
-    _kill_process_on_port(settings.grpc_port)
-    await asyncio.sleep(1)
+    if not _is_port_available(settings.grpc_port):
+        raise RuntimeError(
+            f"gRPC port {settings.grpc_port} is already in use. "
+            "Stop the process that owns this configured port before starting the service."
+        )
 
     server = grpc.aio.server(
         options=[
@@ -128,64 +116,76 @@ async def serve() -> None:
         ],
     )
 
-    pipeline = Pipeline()
-
-    # Initialize uniqueness infrastructure
-    embedder = SentenceTransformerEmbedder(settings.embedding_model)
-    if not embedder.ensure_loaded():
-        logger.warning("Embedder failed to load, using default dimension %d", settings.embedding_dimension)
-
-    vector_store = QdrantVectorStore(
-        url=settings.qdrant_url,
-        collection=settings.qdrant_collection,
-        embedding_dimension=settings.embedding_dimension,
-    )
-    await vector_store.connect()
-
-    subgraph_matcher = SubgraphMatcherVF2()
-    frequent_miner = GastonMiner(
-        min_support=settings.uniqueness_fsg_min_support,
-        max_size=settings.uniqueness_fsg_max_size,
-    )
-
-    uniqueness_pipeline = UniquenessPipeline(
-        embedder=embedder,
-        vector_store=vector_store,
-        subgraph_matcher=subgraph_matcher,
-        frequent_miner=frequent_miner,
-        wl_hasher=compute_wl_hash,
-    )
-
-    servicer = KnowledgeLanguageServicer(
-        pipeline=pipeline,
-        uniqueness_pipeline=uniqueness_pipeline,
-    )
-
-    knowledge_language_pb2_grpc.add_KnowledgeLanguageServiceServicer_to_server(
-        servicer, server,
-    )
-
     address = f"{settings.grpc_host}:{settings.grpc_port}"
-    server.add_insecure_port(address)
-    logger.info("Knowledge Language gRPC server starting on %s", address)
-
-    # Ensure Neo4j indexes for uniqueness
+    vector_store = None
+    uniqueness_pipeline = None
+    server_started = False
     try:
-        async with Neo4jWriter() as writer:
-            await writer.ensure_indexes()
-            logger.info("Neo4j uniqueness indexes ensured")
-    except Exception as e:
-        logger.warning("Failed to ensure Neo4j indexes: %s", e)
+        pipeline = Pipeline()
 
-    await server.start()
-    try:
+        # Embeddings are only needed by semantic uniqueness operations. Keep the
+        # model unloaded here so ordinary gRPC startup does not import PyTorch or
+        # synchronously load model artifacts.
+        embedder = SentenceTransformerEmbedder(settings.embedding_model)
+
+        vector_store = QdrantVectorStore(
+            url=settings.qdrant_url,
+            collection=settings.qdrant_collection,
+            embedding_dimension=settings.embedding_dimension,
+        )
+        await vector_store.connect()
+
+        subgraph_matcher = SubgraphMatcherVF2()
+        frequent_miner = GastonMiner(
+            min_support=settings.uniqueness_fsg_min_support,
+            max_size=settings.uniqueness_fsg_max_size,
+        )
+        uniqueness_pipeline = UniquenessPipeline(
+            embedder=embedder,
+            vector_store=vector_store,
+            subgraph_matcher=subgraph_matcher,
+            frequent_miner=frequent_miner,
+            wl_hasher=compute_wl_hash,
+        )
+
+        servicer = KnowledgeLanguageServicer(
+            pipeline=pipeline,
+            uniqueness_pipeline=uniqueness_pipeline,
+        )
+        knowledge_language_pb2_grpc.add_KnowledgeLanguageServiceServicer_to_server(
+            servicer, server,
+        )
+
+        bound_port = server.add_insecure_port(address)
+        if bound_port == 0:
+            raise RuntimeError(f"Could not bind gRPC server to configured address {address}")
+        logger.info("Knowledge Language gRPC server starting on %s", address)
+
+        # Ensure Neo4j indexes for uniqueness.
+        try:
+            async with Neo4jWriter() as writer:
+                await writer.ensure_indexes()
+                logger.info("Neo4j uniqueness indexes ensured")
+        except Exception as e:
+            logger.warning("Failed to ensure Neo4j indexes: %s", e)
+
+        await server.start()
+        server_started = True
+        logger.info("Knowledge Language gRPC server is ready on %s", address)
         await server.wait_for_termination()
-    except KeyboardInterrupt:
-        logger.info("Server stopped by user")
-        await server.stop(0)
+    except asyncio.CancelledError:
+        logger.info("gRPC shutdown requested; draining active calls")
+        raise
     finally:
-        await vector_store.close()
-        await uniqueness_pipeline.close()
+        try:
+            await server.stop(grace=5.0 if server_started else 0)
+        finally:
+            try:
+                if vector_store is not None:
+                    await vector_store.close()
+            finally:
+                if uniqueness_pipeline is not None:
+                    await uniqueness_pipeline.close()
 
 
 def main() -> None:
@@ -195,7 +195,12 @@ def main() -> None:
     )
 
     _ensure_proto_generated()
-    asyncio.run(serve())
+    try:
+        asyncio.run(serve())
+    except KeyboardInterrupt:
+        # asyncio.run translates the cancellation caused by Ctrl+C into this
+        # exception after serve() has completed its asynchronous cleanup.
+        logger.info("Knowledge Language gRPC server stopped")
 
 
 if __name__ == "__main__":

@@ -21,7 +21,9 @@ class Validator(GraphValidator):
             if not stmt.subject_id:
                 errors.append(f"Statement {sid}: empty subject")
 
-            if not stmt.object_id:
+            if stmt.arity not in (1, 2) or (stmt.object is None) != (stmt.arity == 1):
+                errors.append(f"Statement {sid}: predicate arity mismatch")
+            if stmt.arity == 2 and not stmt.object_id:
                 errors.append(f"Statement {sid}: empty object")
 
         return len(errors) == 0, errors

@@ -1,0 +1,130 @@
+version = 1
+active_profile = "openai_gpt6_luna"
+[providers.lm_studio]
+kind = "openai_compatible"
+base_url = "http://127.0.0.1:1234/v1"
+api_key_env = "AI_API_KEY"
+
+[providers.lm_studio.models.qwen38_4b]
+id = "qwen3.8-4b-distill"
+display_name = "Qwen3.8 4B Distill"
+context_length = 262144
+max_tokens = 8192
+temperature = 0.1
+strip_reasoning = true
+
+[providers.lm_studio.models.qwen3_8b]
+id = "qwen/qwen3-8b"
+display_name = "Qwen3 8B"
+context_length = 40960
+max_tokens = 8192
+temperature = 0.1
+strip_reasoning = true
+
+[providers.lm_studio.models.qwen3_4b]
+id = "qwen/qwen3-4b"
+display_name = "Qwen3 4B"
+context_length = 32768
+max_tokens = 8192
+temperature = 0.1
+strip_reasoning = true
+
+[providers.lm_studio.models.qwen38_flash_next]
+id = "qwen3.8-flash-next"
+display_name = "Qwen3.8 Flash Next"
+context_length = 262144
+max_tokens = 8192
+temperature = 0.1
+strip_reasoning = true
+
+[providers.lm_studio.models.smollm3_3b_hf]
+id = "huggingfacetb_smollm3-3b"
+display_name = "SmolLM3 3B (HuggingFaceTB)"
+context_length = 65536
+max_tokens = 8192
+temperature = 0.1
+strip_reasoning = true
+
+[providers.lm_studio.models.smollm3_3b]
+id = "smollm3-3b"
+display_name = "SmolLM3 3B"
+context_length = 65536
+max_tokens = 8192
+temperature = 0.1
+strip_reasoning = true
+
+[providers.cloudru]
+kind = "openai_compatible"
+base_url = "https://foundation-models.api.cloud.ru/v1"
+api_key_env = "CLOUDRU_API_KEY"
+
+[providers.cloudru.models.deepseek_v4_flash]
+id = "deepseek-ai/DeepSeek-V4-Flash"
+display_name = "DeepSeek V4 Flash"
+context_length = 1048576
+max_tokens = 80000
+temperature = 0.1
+strip_reasoning = true
+
+[providers.openai]
+kind = "openai_responses"
+base_url = "https://api.openai.com/v1"
+api_key_env = "OPENAI_API_KEY"
+
+[providers.openai.models.gpt6_luna]
+id = "gpt-6-luna"
+display_name = "OpenAI GPT-6 Luna"
+context_length = 1050000
+max_tokens = 128000
+reasoning_effort = "max"
+
+[profiles.local_qwen38_4b]
+provider = "lm_studio"
+model = "qwen38_4b"
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[profiles.local_qwen3_8b]
+provider = "lm_studio"
+model = "qwen3_8b"
+context_length = 40960
+max_tokens = 8192
+temperature = 0.1
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[profiles.local_qwen3_4b]
+provider = "lm_studio"
+model = "qwen3_4b"
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[profiles.local_qwen38_flash_next]
+provider = "lm_studio"
+model = "qwen38_flash_next"
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[profiles.local_smollm3_3b_hf]
+provider = "lm_studio"
+model = "smollm3_3b_hf"
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[profiles.local_smollm3_3b]
+provider = "lm_studio"
+model = "smollm3_3b"
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[profiles.cloudru_deepseek_v4_flash]
+provider = "cloudru"
+model = "deepseek_v4_flash"
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[profiles.openai_gpt6_luna]
+provider = "openai"
+model = "gpt6_luna"
+context_length = 1050000
+max_tokens = 128000
+reasoning_effort = "max"
+roles = ["ui_chat", "article_extraction", "knowledge_core"]
+
+[roles]
+ui_chat = "openai_gpt6_luna"
+article_extraction = "openai_gpt6_luna"
+knowledge_core = "openai_gpt6_luna"

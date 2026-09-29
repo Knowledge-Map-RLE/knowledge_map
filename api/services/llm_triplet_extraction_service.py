@@ -27,6 +27,7 @@ from src.schemas.block_types import (
     LEGACY_INT_TO_KEY,
 )
 from . import settings
+from infrastructure.config import resolve_model_profile
 from .ai_model_client import get_ai_model_client
 from .llm_triplet_extraction_prompt_en import (
     build_unified_prompt_en,
@@ -35,7 +36,7 @@ from .llm_triplet_extraction_prompt_en import (
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = settings.LLM_EXTRACT_MODEL
+DEFAULT_MODEL = resolve_model_profile("article_extraction")
 DEFAULT_MAX_CHUNK_CHARS = settings.LLM_MAX_CHUNK_CHARS
 DEFAULT_MAX_TOKENS = settings.LLM_MAX_TOKENS
 DEFAULT_TIMEOUT = settings.LLM_TIMEOUT

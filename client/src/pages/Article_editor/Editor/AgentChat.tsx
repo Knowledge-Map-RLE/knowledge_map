@@ -11,7 +11,8 @@ import {
     type AIChatStreamUsage,
     type AIChatSummary,
 } from '../../../services/api/aiChats';
-import { getAgentArticleText, extractBlocksStream } from '../../../services/api/article_editor';
+import PipelineVersions from './PipelineVersions';
+import { getArticleText, getAgentArticleText, extractBlocksStream } from '../../../services/api/article_editor';
 import { statementsToResolvedText } from './blockConverter';
 import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
 import { useAuth, AUTH_GATE_MESSAGE } from '../../../entities/auth';
@@ -67,6 +68,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
     const [sending, setSending] = useState(false);
     const [initializing, setInitializing] = useState(false);
     const [extracting, setExtracting] = useState(false);
+    const [pipelineRefresh, setPipelineRefresh] = useState(0);
     const [extractElapsed, setExtractElapsed] = useState(0);
     const [extractError, setExtractError] = useState<string | null>(null);
     const [attachEnabled, setAttachEnabled] = useState(false);
@@ -282,11 +284,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
         setExtractError(null);
         setExtracting(true);
         try {
-            let text = '';
-            try {
-                text = await loadArticleText();
-            } catch { /* fallback ниже */ }
-            if (!text && editorText) text = editorText;
+            const text = (await getArticleText(articleUuid)).text || '';
             if (!text) {
                 setExtractError('\u041D\u0435\u0442 \u0442\u0435\u043A\u0441\u0442\u0430 \u0441\u0442\u0430\u0442\u044C\u0438 \u0434\u043B\u044F \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u044F');
                 return;
@@ -300,14 +298,19 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                     onStart: () => {},
                     onProgress: () => {},
                     onResult: async (data) => {
-                        if (data?.success && Array.isArray(data.blocks)) {
-                            await onExtracted?.(articleUuid, data.blocks);
+                        if (data?.success && data.version_id) {
+                            setPipelineRefresh(value => value + 1);
                         } else {
                             setExtractError(data?.message || '\u0418\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u043D\u0435 \u0434\u0430\u043B\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430');
                         }
                     },
                     onCancelled: () => setExtractError('\u0418\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E'),
-                    onError: (err) => setExtractError(err),
+                    onError: (err) => {
+                        setExtractError(err);
+                        // A saved run may legitimately finish with coverage_gate error.
+                        // Refresh versions so failed-but-auditable runs remain visible.
+                        setPipelineRefresh(value => value + 1);
+                    },
                 },
             );
         } catch (err) {
@@ -686,6 +689,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
                 </div>
             )}
 
+            {articleUuid && isAuthenticated && <PipelineVersions docId={articleUuid} refresh={pipelineRefresh} />}
             {extractError && (
                 <div className={styles.agentChatErrorBanner}>
                     <span className={styles.agentChatErrorText} title={extractError}>

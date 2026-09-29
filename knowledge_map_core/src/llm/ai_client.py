@@ -7,7 +7,7 @@ import logging
 
 import httpx
 
-from src.config import settings
+from src.config import model_registry, settings
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class AIClient:
         )
 
         payload = {
-            "model": model_id or settings.default_llm_model,
+            "model": model_id or model_registry.profile(role="knowledge_core").profile_name,
             "messages": [{"role": "user", "content": prompt}],
             "stream": False,
             "max_tokens": 512,

@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "article_count": 20,
+  "annotation_scope": "manual_full_text: primary assertion per non-References content paragraph; non-assertional blocks retained",
+  "cases": [
+    {
+      "pmc_id": "PMC10000452",
+      "path": "cases/pmc10000452",
+      "title": "Cretan Aging Cohort-Phase III: Methodology and Descriptive Characteristics of a Long-Term Longitudinal Study on Predictors of Cognitive Decline in Non-Demented Elderly from Crete, Greece"
+    },
+    {
+      "pmc_id": "PMC10000584",
+      "path": "cases/pmc10000584",
+      "title": "Implications of Hypothalamic Neural Stem Cells on Aging and Obesity-Associated Cardiovascular Diseases"
+    },
+    {
+      "pmc_id": "PMC10000897",
+      "path": "cases/pmc10000897",
+      "title": "Bos indicus Carcasses Suspended by the Pelvic Bone Require a Shorter Aging Time to Meet Consumer Expectations Regarding Meat Quality"
+    },
+    {
+      "pmc_id": "PMC10000969",
+      "path": "cases/pmc10000969",
+      "title": "Mitochondria Localized microRNAs: An Unexplored miRNA Niche in Alzheimer’s Disease and Aging"
+    },
+    {
+      "pmc_id": "PMC10001272",
+      "path": "cases/pmc10001272",
+      "title": "Managing Mortality and Aging Risks with a Time-Varying Lee–Carter Model"
+    },
+    {
+      "pmc_id": "PMC10001331",
+      "path": "cases/pmc10001331",
+      "title": "The Impact of Caregiving on Successful Ageing of Informal Carers: A Qualitative Study among Respiratory Patients’ Caregivers"
+    },
+    {
+      "pmc_id": "PMC10001353",
+      "path": "cases/pmc10001353",
+      "title": "Crosstalk between Oxidative Stress and Aging in Neurodegeneration Disorders"
+    },
+    {
+      "pmc_id": "PMC10001413",
+      "path": "cases/pmc10001413",
+      "title": "The Neuroprotective Activities of the Novel Multi-Target Iron-Chelators in Models of Alzheimer’s Disease, Amyotrophic Lateral Sclerosis and Aging"
+    },
+    {
+      "pmc_id": "PMC10001821",
+      "path": "cases/pmc10001821",
+      "title": "The Impact of Digital Coaching Intervention for Improving Healthy Ageing Dimensions among Older Adults during Their Transition from Work to Retirement"
+    },
+    {
+      "pmc_id": "PMC10001833",
+      "path": "cases/pmc10001833",
+      "title": "Anti-Inflammatory Effects of Flavonoids in Common Neurological Disorders Associated with Aging"
+    },
+    {
+      "pmc_id": "PMC10001974",
+      "path": "cases/pmc10001974",
+      "title": "Socioeconomic Background and Self-Reported Sleep Quality in Older Adults during the COVID-19 Pandemic: An Analysis of the English Longitudinal Study of Ageing (ELSA)"
+    },
+    {
+      "pmc_id": "PMC10002395",
+      "path": "cases/pmc10002395",
+      "title": "Biofuel Ash Aging in Acidic Environment and Its Influence on Cd Immobilization"
+    },
+    {
+      "pmc_id": "PMC10002471",
+      "path": "cases/pmc10002471",
+      "title": "Association of homocysteine-related subcortical brain atrophy with white matter lesion volume and cognition in healthy aging"
+    },
+    {
+      "pmc_id": "PMC10002495",
+      "path": "cases/pmc10002495",
+      "title": "Peripheral and Central Iron Measures in Alcohol Use Disorder and Aging: A Quantitative Susceptibility Mapping Pilot Study"
+    },
+    {
+      "pmc_id": "PMC10002543",
+      "path": "cases/pmc10002543",
+      "title": "A Novel Hyaluronic Acid Matrix Ingredient with Regenerative, Anti-Aging and Antioxidant Capacity"
+    },
+    {
+      "pmc_id": "PMC10002641",
+      "path": "cases/pmc10002641",
+      "title": "Maternal age effects on offspring lifespan and reproduction vary within a species"
+    },
+    {
+      "pmc_id": "PMC10002668",
+      "path": "cases/pmc10002668",
+      "title": "Aging Atlas Reveals Cell-Type-Specific Regulation of Pro-longevity Strategies"
+    },
+    {
+      "pmc_id": "PMC10002830",
+      "path": "cases/pmc10002830",
+      "title": "In vivo Brain Estrogen Receptor Expression By Neuroendocrine Aging And Relationships With Gray Matter Volume, Bio-Energetics, and Clinical Symptomatology"
+    },
+    {
+      "pmc_id": "PMC10002864",
+      "path": "cases/pmc10002864",
+      "title": "Vitamin D as a Shield against Aging"
+    },
+    {
+      "pmc_id": "PMC10002910",
+      "path": "cases/pmc10002910",
+      "title": "Female Reproductive Aging and Oxidative Stress: Mesenchymal Stem Cell Conditioned Medium as a Promising Antioxidant"
+    }
+  ]
+}

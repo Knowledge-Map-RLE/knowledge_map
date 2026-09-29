@@ -15,6 +15,7 @@ RUN pip install poetry==1.7.1
 
 # Copy shared-пакет observability (нужен для path-зависимости poetry)
 COPY --from=shared ./observability ../shared/observability
+COPY --from=shared ./knowledge ../shared/knowledge
 
 # Copy dependency files
 COPY pyproject.toml poetry.lock* ./

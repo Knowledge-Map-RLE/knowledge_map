@@ -38,6 +38,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 from neomodel import db
 
 from domain.models.dependency import DependencyEdge, DependencyType, DiscoveryMethod
+from infrastructure.config import resolve_model_profile
 
 logger = logging.getLogger(__name__)
 
@@ -794,7 +795,7 @@ Return JSON only:
 
         try:
             result = client.generate_text(
-                model_id="qwen/qwen3-4b",
+                model_id=resolve_model_profile("knowledge_core"),
                 prompt=prompt,
                 max_tokens=250,
                 temperature=0.0,

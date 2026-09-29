@@ -1,0 +1,2811 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 153,
+      "text": "# Managing Mortality and Aging Risks with a Time-Varying Lee–Carter Model\n\n**Авторы:** Chen Zhongwen, Shi Yanlin, Shu Ao\n\n**Журнал:** Healthcare (2023)\n\n",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 153,
+      "end": 154,
+      "text": "*",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S3",
+      "start": 154,
+      "end": 155,
+      "text": "*",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S4",
+      "start": 155,
+      "end": 158,
+      "text": "DOI",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 158,
+      "end": 160,
+      "text": ":*",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S6",
+      "start": 160,
+      "end": 188,
+      "text": "* 10.3390/healthcare11050743",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 188,
+      "end": 350,
+      "text": "\n\n\n## Abstract\n\nInfluential existing research has suggested that rather than being static, mortality declines decelerate at young ages and accelerate at old ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 351,
+      "end": 488,
+      "text": "Without accounting for this feature, the forecast mortality rates of the popular Lee–Carter (LC) model are less reliable in the long run.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 489,
+      "end": 645,
+      "text": "To provide more accurate mortality forecasting, we introduce a time-varying coefficients extension of the LC model by adopting the effective kernel methods.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 646,
+      "end": 913,
+      "text": "With two frequently used kernel functions, Epanechnikov (LC-E) and Gaussian (LC-G), we demonstrate that the proposed extension is easy to implement, incorporates the rotating patterns of mortality decline and is straightforwardly extensible to multi-population cases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 914,
+      "end": 1178,
+      "text": "Using a large sample of 15 countries over 1950–2019, we show that LC-E and LC-G, as well as their multi-population counterparts, can consistently improve the forecasting accuracy of the competing LC and Li–Lee models in both single- and multi-population scenarios.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 1178,
+      "end": 1181,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S13",
+      "start": 1181,
+      "end": 1186,
+      "text": "## 1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S14",
+      "start": 1187,
+      "end": 1326,
+      "text": "Introduction\n\nThe ongoing improvement of human life expectancy around the world has far-reaching influences on many aspects of our society.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 1327,
+      "end": 1480,
+      "text": "For instance, Maestas et al. [1] highlight the importance of considering demographic changes, including mortality projections, in analyzing labor supply.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 1481,
+      "end": 1734,
+      "text": "Mortality projections are used to predict future changes in the size and age structure of the labor force, which can help inform policy decisions related to workforce development and training, immigration, and other factors that affect the labor market.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 1735,
+      "end": 1904,
+      "text": "For the healthcare system, Fenton et al. [2] indicate the importance of considering changes in mortality projections in analyzing healthcare utilization and expenditure.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 1905,
+      "end": 2022,
+      "text": "Specifically, prediction of future demand for health and medical care services is dependent on mortality projections.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 2023,
+      "end": 2156,
+      "text": "Such predictions may inform policy decisions related to the allocation of resources for healthcare and the design of related systems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 2157,
+      "end": 2321,
+      "text": "The importance of accurate mortality projections is also witnessed in retirement and pensions and the insurance industry (see, for example, ref. [3], among others).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 2321,
+      "end": 2323,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S22",
+      "start": 2323,
+      "end": 2457,
+      "text": "To better model the underlying patterns of mortality improvement is, therefore, essential to enhance accuracy of mortality projection.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 2458,
+      "end": 2583,
+      "text": "Among the existing studies, Lee and Carter [4] is the mostly widely used factor-based mortality model, known as the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 2584,
+      "end": 2686,
+      "text": "Despite its popularity, the LC model assumes constant age-specific mortality decline speeds over time.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 2687,
+      "end": 2833,
+      "text": "Therefore, the LC model produces increasingly large proportional differences in the projected death rates, even at adjacent ages, in the long run.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 2834,
+      "end": 2956,
+      "text": "Specifically, the projected mortality rates of LC are implausibly low for infants and younger ages relative to older ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 2957,
+      "end": 3163,
+      "text": "This is in contrast to the findings in influential studies, including Li et al. [5], that found that mortality declines at younger ages have been slowing while declines at older ages have been accelerating.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 3163,
+      "end": 3287,
+      "text": "\n\nA “rotation” approach of age-specific mortality decline speed was later proposed by Li et al. [5] to enhance the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 3288,
+      "end": 3368,
+      "text": "However, this rotation is of an ad hoc nature rather than being data-driven [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 3369,
+      "end": 3455,
+      "text": "To address this, we investigate a time-varying coefficients extension of the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 3456,
+      "end": 3590,
+      "text": "Simply speaking, we employ a local constant kernel smoothing method [7] to model and forecast dynamic age-specific mortality declines.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 3591,
+      "end": 3776,
+      "text": "In this paper, we consider two commonly adopted kernel functions: Epanechnikov and Gaussian, and the corresponding extensions of the LC model are denoted by LC-E and LC-G, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 3777,
+      "end": 4026,
+      "text": "Technical details of the modelling approach are provided, and our empirical results consider data of 15 low-mortality populations sourced from the famous Human Mortality Database [8], including annual mortality rates of age 0–100 spanning 1950–2019.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 4026,
+      "end": 4028,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S35",
+      "start": 4028,
+      "end": 4074,
+      "text": "The contributions of this paper are threefold.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 4075,
+      "end": 4209,
+      "text": "First, the proposed time-varying coefficients extension of the LC model effectively complements the rotation adopted in Li et al. [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 4210,
+      "end": 4312,
+      "text": "The proposed flexible framework ensures that the speed of rotation is data-driven, rather than ad hoc.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 4313,
+      "end": 4415,
+      "text": "The existence of closed-form solutions further makes the proposed extension computationally efficient.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 4416,
+      "end": 4553,
+      "text": "Secondly, using a comprehensive population dataset, we systematically demonstrate the outstanding performance of the time-varying models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 4554,
+      "end": 4662,
+      "text": "The overall superiority of the LC-E and LC-G models is robust when the age and temporal setting are changed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 4663,
+      "end": 4853,
+      "text": "The analysis of life expectancies up to 2100 further shows that the LC-G model can well address the issue of underestimated mortality improvements at old ages, existing for the LC model [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 4854,
+      "end": 5008,
+      "text": "Thus, the LC-E and LC-G models may provide potentially more accurate forecasts than the LC model in the research regarding long-term mortality projection.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 5009,
+      "end": 5131,
+      "text": "Finally, we describe the multi-population extensions of the employed models and illustrate their forecasting performances.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 5132,
+      "end": 5305,
+      "text": "Consistent with the single-population case, the newly proposed multi-population extensions are still overall the best performing model among all investigated specifications.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 5305,
+      "end": 5353,
+      "text": "\n\nThe rest of this paper is structured as below.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 5354,
+      "end": 5394,
+      "text": "Section 2 describes the data and models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 5395,
+      "end": 5454,
+      "text": "We present empirical results with discussions in Section 3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 5455,
+      "end": 5485,
+      "text": "Section 5 concludes the paper.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 5485,
+      "end": 5649,
+      "text": "\n\n\n## 2. Data and Methods\n\n### 2.1. Database\n\nTo study the mortality rates, the data of this paper are sourced from the famous Human Mortality Database [8], or HMD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 5650,
+      "end": 5734,
+      "text": "HMD provides detailed mortality and population data for over 40 developed countries.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 5735,
+      "end": 5855,
+      "text": "We employ the annual age-specific central mortality rates, which are derived from official statistics from each country.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 5856,
+      "end": 6023,
+      "text": "HMD is maintained by the Max Planck Institute for Demographic Research in Rostock, Germany, and the University of California, Berkeley, United States of America (USA).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 6024,
+      "end": 6267,
+      "text": "As stated in its official website, the purpose of HMD is to make mortality data available for scientific research and to promote research in social sciences, such as actuarial studies, demographics, labor economics, and public health and care.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 6267,
+      "end": 6572,
+      "text": "\n\nIn order to study the consistent mortality declines, we explore 15 low-mortality countries as considered in Li and Lee [9]: Australia (instead of West Germany), Austria, Canada, Denmark, the United Kingdom, Finland, France, Italy, Japan, the Netherlands, Norway, Spain, Sweden, Switzerland, and the USA.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 6573,
+      "end": 6675,
+      "text": "For the low-mortality nature, mortality rates are more likely to consistently decline across all ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 6676,
+      "end": 6796,
+      "text": "This enables one to observe the potential rotating patterns on age-specific mortality rates, as argued by Li et al. [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 6797,
+      "end": 6939,
+      "text": "Following Booth et al. [10], we choose an opportune range of data starting from 1950 to 2019 in order to have a reliable and complete dataset.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 6940,
+      "end": 7022,
+      "text": "The crude uni-sex (total) mortality data for ages 0–100 are studied in this paper.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 7022,
+      "end": 7024,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S60",
+      "start": 7024,
+      "end": 7105,
+      "text": "We present logged mortality rates averaged across the 15 populations in Figure 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 7106,
+      "end": 7171,
+      "text": "Consistent mortality declines are observed at all ages over time.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 7172,
+      "end": 7395,
+      "text": "Appropriate modelling of those patterns is critical to credible mortality projections, which is the key to the accurate actuarial, demographic, and healthcare practices (see, for example, refs. [11,12,13,14], among others).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 7395,
+      "end": 7505,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> Averaged logged mortality rates.</figcaption>\n</figure>\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 7505,
+      "end": 7506,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S65",
+      "start": 7506,
+      "end": 7507,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S66",
+      "start": 7507,
+      "end": 7508,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S67",
+      "start": 7509,
+      "end": 7513,
+      "text": "2.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S68",
+      "start": 7514,
+      "end": 7629,
+      "text": "The Lee–Carter and Related Models\n\nSuppose we have mortality data of N ages, each age with T years of observations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 7630,
+      "end": 7745,
+      "text": "The Lee–Carter (LC) model (1992) ([4]) summarizes the systematic mortality trends of the N ages by a common factor.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 7746,
+      "end": 8175,
+      "text": "Formally, the log central mortality rate at age x in year t, lnmx,t, follows the specification given by:(1)lnmx,t=ax+bxkt+εx,t,\nwhere ax is the mortality level, i.e., the average mortality rate over time at age x, kt is the period effect, i.e., the systematic mortality trend common to all ages, bx is the age effect at x, i.e., the sensitivity of lnmx,t to kt, and εx,t is the normal residual term with mean 0 and variance σεx2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 8176,
+      "end": 8260,
+      "text": "As noted by [4], Equation (1) is not identifiable without normalization constraints.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 8261,
+      "end": 8384,
+      "text": "For example, one could multiply bx with a constant c and divide kt by the same constant and reach the same fitting results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 8385,
+      "end": 8461,
+      "text": "In [4], the following normalization constraints are imposed:∑tkt=0,and∑xbx=1",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 8461,
+      "end": 8462,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S75",
+      "start": 8462,
+      "end": 8551,
+      "text": "\n\nGiven the constraint of kt, ax is set to the mean of lnmx,t over the sample considered.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 8552,
+      "end": 8695,
+      "text": "The LC model is then estimated by singular value decomposition (SVD) instead of the usual ordinary least square approach in the original paper.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 8696,
+      "end": 8790,
+      "text": "(A maximum likelihood estimation method may also be employed to calibrate the parameters [15].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 8791,
+      "end": 8856,
+      "text": "Alternatively, a Bayesian approach is proposed in Li et al. [16].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 8857,
+      "end": 9021,
+      "text": "Compared to those estimation methods, SVD is much more computationally efficient and stable, which is critical to the proposed time-varying framework of this paper.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 9021,
+      "end": 9128,
+      "text": ")\n\nWhile ax and bx are assumed to be constant, the period effect is often modeled by a time-series process.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 9129,
+      "end": 9344,
+      "text": "In particular, ref. [4] assumes a random walk with drift specification, which is adopted by many later studies:(2)kt=kt−1+d+et,\nwhere the drift term d measures the average annual change in kt, and et∼i.i.d.N(0,σe2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 9345,
+      "end": 9479,
+      "text": "Based on the time-series specification in Equation (2), future mortality rates can be projected by extrapolating the period effect kt.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 9480,
+      "end": 9678,
+      "text": "Specifically, the expected h-step-ahead mean forecasts of the period effect and the log central death rate are given by:(3)k^T+h=kT+hd,lnm^x,T+h=a^x+b^xk^T+h,\nwhere T is the last year of the sample.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 9678,
+      "end": 9681,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S85",
+      "start": 9681,
+      "end": 9682,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S86",
+      "start": 9682,
+      "end": 9688,
+      "text": "## 2.3",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S87",
+      "start": 9688,
+      "end": 9689,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S88",
+      "start": 9690,
+      "end": 9910,
+      "text": "Issues with the Lee–Carter Model and Related Literature\n\nFor the long-spanning nature of mortality data, the static parametric structure of the LC model may not be compatible with reliable long-term demographic research.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 9911,
+      "end": 10194,
+      "text": "To see this, the specification of the LC model decomposes mortality improvements into the product of latent non-stationary mortality trend factors (kt), assumed as a random walk with drift, and the corresponding age specific loadings of these trends (bx), assumed constant over time.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 10195,
+      "end": 10426,
+      "text": "Considering the data displayed in Figure 1, we plot the fitted bx using a rolling window of a 30-year width in Figure 2. (There are no available data for the first 29 time points (i.e., 1950–1978) using the rolling window approach.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 10426,
+      "end": 10554,
+      "text": ") Clearly, the fitted bx becomes roughly “flatter” over time, with decreasing (increasing) weights for the younger (older) ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 10555,
+      "end": 10681,
+      "text": "Ignoring such a dynamic pattern therefore reduces the credibility of the forecast mortality rates and life expectancies of LC.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 10682,
+      "end": 10796,
+      "text": "Even when the BMS model is used, the static parametric nature is not necessarily sufficient to address this issue.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 10796,
+      "end": 10898,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> Dynamic age-specific declines b^x,t.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 10898,
+      "end": 10899,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S96",
+      "start": 10899,
+      "end": 10906,
+      "text": "/figure",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 10906,
+      "end": 11009,
+      "text": ">\n\nThe insufficiency of the static bx over time is recognized in the influential work by Li et al. [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 11010,
+      "end": 11167,
+      "text": "To resolve it, a “rotation” approach is proposed, which specifies that the out-of-sample b^x will be dynamic and gradually converge to an ultimate structure.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 11168,
+      "end": 11281,
+      "text": "However, such an ultimate structure is determined by expert (ad hoc) judgments rather than being data-driven [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 11281,
+      "end": 11292,
+      "text": "\n\n\n### 2.4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S101",
+      "start": 11293,
+      "end": 11486,
+      "text": "A Time-Varying Coefficients Extension of the Lee–Carter Model\n\nTo systematically address the ad hoc issue of Li et al. [5], we investigate a time-varying coefficients extension of the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 11487,
+      "end": 11669,
+      "text": "Specifically, we employ a local constant kernel smoothing method [7], also known as the Nadaraya–Watson estimator, to accommodate the dynamics in the age-specific mortality declines.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 11670,
+      "end": 11771,
+      "text": "A novel application of such an estimator in mortality forecasting can be found in Chang and Shi [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 11772,
+      "end": 11905,
+      "text": "This approach allows bx to be time-dependent over both the in-sample (denoted by bx,t) and out-of-sample (denoted by bx,T+h) periods.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 11906,
+      "end": 12091,
+      "text": "In this paper, we consider two commonly adopted kernel functions: Epanechnikov and Gaussian, and the corresponding extensions of the LC model are denoted by LC-E and LC-G, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 12092,
+      "end": 12144,
+      "text": "The technical details are described in this section.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 12144,
+      "end": 12366,
+      "text": "\n\n#### 2.4.1. A Time-Varying Framework Using Kernels\n\nTo incorporate the time-varying coefficients, we extend the LC model as follows:(4)lnmx,t=ax+bx,tkt+εx,t,\nsuch that the age-specific declines are allowed to be dynamic.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 12367,
+      "end": 12458,
+      "text": "This suggests that the relative age-specific mortality decline speed is now time-dependent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 12459,
+      "end": 12630,
+      "text": "In terms of the forecasting, we have that\n(5)lnm^x,T+h=a^x+b^x,T+hk^T+h,\nwhere b^x,T+h is the forecast bx,t at step h, and k^T+h is identically defined as in Equation (3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 12631,
+      "end": 12766,
+      "text": "Consequently, to obtain forecasts of this time-varying framework, one needs to additionally model and forecast the time-dependent bx,t.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 12767,
+      "end": 12818,
+      "text": "(Note that we do not require the assumption bx,t>0.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 12819,
+      "end": 12950,
+      "text": "Negative values mean that mortality rates at certain ages may (temporarily) increase (relative to other ages), rather than decline.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 12951,
+      "end": 13084,
+      "text": "As explained above, since this paper works with low-mortality populations, consistent declines are expected and more likely to occur.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 13084,
+      "end": 13312,
+      "text": "\n\nFor the estimation of the time-varying bx,t, many effective methods have been discussed in the statistics literature, including polynomial splines [20,21], smoothing splines [22,23], and kernel-local polynomial smoothing [24].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 13313,
+      "end": 13469,
+      "text": "Among them, one of the most widely used methods is the kernel-local polynomial smoothing, which includes the local constant and the local linear estimation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 13470,
+      "end": 13608,
+      "text": "In this paper, we illustrate our method using the local constant kernel smoothing method [7], also known as the Nadaraya–Watson estimator.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 13608,
+      "end": 13835,
+      "text": "\n\nTo implement the estimation, at each time t, the usual SVD will be applied once to Kb(τs−τ)lnmx,s, where s=1,2,...,T, τ=t/T and τs=s/T. The resulting estimated “weighted” age-specific declines will be the corresponding b^x,t.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 13836,
+      "end": 13977,
+      "text": "In addition, Kb(τs−τ) is a known kernel function with b known as the bandwidth, and Kb(τs−τ) is essentially a weight for the sth observation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 13978,
+      "end": 14163,
+      "text": "For instance, with the widely employed Gaussian kernel, we have that\nKb(τs−τ)=12πbe−[(τs−τ)/b]22\nwhich is essentially the Gaussian density evaluated at (τs−τ)/b and further scaled by b.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 14164,
+      "end": 14261,
+      "text": "The bandwidth b then determines the weights distributed to each observation when estimating bx,t.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 14262,
+      "end": 14315,
+      "text": "A larger b means weights are more evenly distributed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 14316,
+      "end": 14464,
+      "text": "Other than the Gaussian kernel, we also examine the popular Epanechnikov kernel in this paper, which is specified as\nKb(τs−τ)=0.75b{1−[(τs−τ)/b]2}+.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 14465,
+      "end": 14558,
+      "text": "This kernel is also investigated in various mortality research, including Chang and Shi [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 14559,
+      "end": 14705,
+      "text": "In this paper, we denote the time-varying coefficients LC model estimated by the Gaussian and Epanechnikov kernels as LC-G and LC-E, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 14705,
+      "end": 14707,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S126",
+      "start": 14707,
+      "end": 14872,
+      "text": "We now employ the LC-E and LC-G models to revisit the mortality rates presented in Figure 1, and the resulting fitted b^x,t are plotted in Figure 3a,b, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 14873,
+      "end": 14886,
+      "text": "respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 14887,
+      "end": 14969,
+      "text": "(The bandwidths are chosen in a similar manner as that described in Section 2.4.3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 14970,
+      "end": 15052,
+      "text": "In short, we employ the same hold-out sample strategy for data spanning 1950–2019.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 15053,
+      "end": 15204,
+      "text": "Forecasts of the age-specific mortality declines (b^x,t) are produced using the exponential smoothing state space model discussed in Feng and Shi [27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 15205,
+      "end": 15327,
+      "text": "The bandwidths are then chosen as those minimize the forecasting errors of logged mortality rates in the hold-out sample).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 15328,
+      "end": 15431,
+      "text": "Both the fitted curves and time-varying patterns of the LC-E and LC-G models are similar to each other.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 15432,
+      "end": 15542,
+      "text": "Compared to the preliminary results displayed in Figure 1b with a running window, less randomness is observed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 15543,
+      "end": 15738,
+      "text": "This may be explained by the fact that the entire (weighted) sample is used to produce each individual b^x,t. Roughly speaking, dynamics produced by kernels and the running window are consistent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 15739,
+      "end": 15928,
+      "text": "However, despite that we do observe the rotation of b^x,t over most age groups as argued by Li et al. [5], the mortality declines at very old ages seem to decelerate rather than accelerate.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 15929,
+      "end": 16063,
+      "text": "Thus, an adjustment needs to be adopted before reliable mortality modelling and forecasting can be implemented with the dynamic b^x,t.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 16064,
+      "end": 16231,
+      "text": "Otherwise, the forecast mortality improvements at old ages may gradually decline, leading to a larger gap between mortality rates of relatively younger and older ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 16232,
+      "end": 16421,
+      "text": "This is contrary to the rotation proposed by Li et al. [5] and the concept of (age) coherence studied in the demographic and actuarial literature (see, for example, [6,9,28], among others).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 16421,
+      "end": 17006,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 3</strong> Fitted age-specific declines b^x,t of the averaged population, 1950–2019: (a) Epanechnikov kernel; (b) Gaussian kernel.</figcaption>\n</figure>\n\n\n#### 2.4.2. Coherent Modelling of the Dynamic Age-Specific Mortality Declines\n\nTo adjust b^x,t, we require that forecast mortality rates across ages will not diverge in the long run. This idea, known as age coherence, is much in-line with the rotation argued in Li et al. [5] and is critical to producing biologically reasonable forecasts of mortality rates in the long-term analysis [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 17007,
+      "end": 17056,
+      "text": "The age coherence is formally defined as follows.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 17056,
+      "end": 17253,
+      "text": "\n\nTo accommodate the age coherence in mortality forecasting, it is worth noting that lnmx,t is usually assumed to be a non-stationary I(1) process (see, for example, [6,19,28,29,30], among others).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 17254,
+      "end": 17417,
+      "text": "Thus, let yx,t=lnmx,t−lnmx,t−1, which is known as the mortality improvement of age x at time t, its long-run mean must be time-independent due to the stationarity.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 17418,
+      "end": 17566,
+      "text": "It can then be shown that\nlnm^x,T+h=E(lnmx,T+h|ΩT)=lnmx,T+∑k=1hE(yx,T+k|ΩT)=Op(1)+hμ^x\nwhen h goes large, where ΩT is the information set at time T.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 17567,
+      "end": 17804,
+      "text": "Thus, we have that\n|lnm^i,T+h−lnm^j,T+h|=Op(1)+|h(μ^i−μ^j)|,\nwhere μ^x is the fitted long-run mean of the stationary series yx,t. It can then be seen that the only scenario to ensure the age coherence is that μ^i≡μ^j for all i,j=1,...,N.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 17805,
+      "end": 17925,
+      "text": "From Equation (5), when h→∞, it is easy to see that y^x,T+h=b^x,T+hd, where d is identically defined as in Equation (2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 17926,
+      "end": 18047,
+      "text": "Further, since yx,t is assumed stationary, the condition of μ^i≡μ^j is equivalent to b^i,T+h≡b^j,T+h for all i,j=1,...,N.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 18048,
+      "end": 18178,
+      "text": "With the constraint of the LC model, such that ∑xb^x,T+h=1, we require that b^x,T+h converges to 1/N for all x=1,...,N when h→∞.\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 18178,
+      "end": 18289,
+      "text": "We now discuss an appropriate model to study bx,t such that the age coherence of the forecast rates is ensured.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 18290,
+      "end": 18431,
+      "text": "Note that the condition all b^x,T+h converging to the same constant 1/N implies that bx,t−1/N is a stationary sequence with 0 mean for all x.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 18432,
+      "end": 18574,
+      "text": "Hence, we denote this sequence by bx,t*, an appropriate parametric structure analogous to that discussed in Li and Lu [6] and described below.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 18574,
+      "end": 18809,
+      "text": "\n(6)b1,t*=α1b1,t−1*+ε1,tbb2,t*=α2b2,t−1*+β2b1,t−1*+ε2,tbbi,t*=αibi,t−1*+βibi−1,t−1*+γibi−2,t−1*+εi,tb\nwhere i=3,...,N, and t=1,...,T. Essentially, Equation (6) is a vector autoregressive (VAR) model with constrained coefficient matrix.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 18810,
+      "end": 19027,
+      "text": "According to Li and Lu [6], the constraint is to emphasize the impact of the temporal effect (measured by αi) and those of the cohorts effect (measured by βi for the same cohort and γi for the nearest younger cohort).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 19028,
+      "end": 19159,
+      "text": "The forecasts of b^x,T+h* are produced in the same way as for a usual VAR model, based on which we can derive b^x,T+h=b^x,T+h*+1/N.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 19160,
+      "end": 19484,
+      "text": "It can be seen that as long as the VAR of Equation (6) is stationary (a sufficient condition would be that summations of absolute values of αi, βi, and γi are all smaller than or equal to 1 for all i=1,...,N), b^x,T+h* will converge to 0 for all x in the long run, and thus the forecast mortality rates will be age coherent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 19485,
+      "end": 19600,
+      "text": "In addition, at each forecasting step, we can rescale b^x,T+h to sum up to 1 to satisfy the constraint ∑xb^x,T+h=1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 19600,
+      "end": 19999,
+      "text": "\n\nIn terms of the estimation, Equation (6) can be solved using the penalized least squares (PLS), and its loss function is defined below:(7)LF=∑i=3N∑t=2T[bi,t*−αibi,t−1*−βibi−1,t−1*−γibi−2,t−1*]2+∑t=2T[b2,t*−α2b2,t−1*−β2b1,t−1*]+∑t=2T(b1,t*−α1b1,t−1*)2+λα∑i=2N(αi−αi−1)2+λβ∑i=3N(βi−βi−1)2+λγ∑i=4N(γi−γi−1)2,\nwhere λα, λβ, and λγ are pre-selected smoothing parameters of αi, βi, and γi, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 19999,
+      "end": 20002,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S158",
+      "start": 20002,
+      "end": 20004,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S159",
+      "start": 20004,
+      "end": 20006,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S160",
+      "start": 20007,
+      "end": 20012,
+      "text": "2.4.3",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S161",
+      "start": 20012,
+      "end": 20013,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S162",
+      "start": 20014,
+      "end": 20212,
+      "text": "Tuning Parameters Selection and the Estimation Procedure\n\nThe only outstanding issue now is how to select the tuning parameters, i.e., smoothing penalties of the time-varying coefficients LC models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 20213,
+      "end": 20313,
+      "text": "In a usual case, a cross-validation technique can be employed to prevent the model from overfitting.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 20314,
+      "end": 20515,
+      "text": "It is worth noting that a usual cross-validation technique for time-series data, such as the expanding-window approach explained in Hyndman and Athanasopoulos [31], is not quite applicable in our case.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 20516,
+      "end": 20615,
+      "text": "The reason is that this expanding-window approach normally considers a very short forecasting step.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 20616,
+      "end": 20703,
+      "text": "In contrast, age-coherent adjustment of the LC model emphasizes the long-term forecast.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 20704,
+      "end": 21032,
+      "text": "Thus, we employ a hold-out-sample approach to select the tuning parameters (b and three λ’s), which minimizes\nRMSFE=1N(T/3)∑i=1N∑h=1T/3lnm^i,2T/3+h−lnmi,2T/3+h2,\nwhere RMSFE is the root of mean squared forecasting errors (since logged mortality rates are modeled, the RMSFE also considers the logged rather than original values.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 21033,
+      "end": 21181,
+      "text": "If an exponential transformation is applied, the predicted original mortality rates are unavoidably exposed to the famous Jensen’s inequality issue.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 21182,
+      "end": 21362,
+      "text": "Thus, the accuracy of forecasting is inherently lower than the logged rate is considered), and the evaluation period is given by the last third ([2T/3,T]) of the data in our study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 21363,
+      "end": 21463,
+      "text": "(Note that the choice of the length of the test sample (one-third) is common among existing studies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 21464,
+      "end": 21578,
+      "text": "Adopting other popular alternatives, such as the last fourth, fifth, and tenth sample will lead to robust results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 21578,
+      "end": 22301,
+      "text": ")\n\nIn summary, forecasting with the LC-E and LC-G models can be implemented with the following steps:Fit the original LC model with the full sample to obtain a^x, k^T, and d;For the training sample spanning [1,2T/3−1], use the Epanechnikov (LC-E) or Gaussian (LC-G) kernel to obtain bx,t, based on which the constrained VAR model of Equation (6) is fitted for bx,t*;Select the optimal tuning parameters b, λα, λβ, and λγ via a grid search, such that the RMSFE of the test sample over [2T/3,T] is minimized;With the selected tuning parameters, fit the LC-E or LC-G model for the full sample;Forecast b^x,T+h with the fitted model, and then produce lnm^x,T+h with Equation (5), where a^x and k^T+h=k^T+hd sourced from Step 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 22301,
+      "end": 22451,
+      "text": "\n\nTo study the uncertainties of the forecast, the same procedure of the LC model can be applied for the LC-E and LC-G models proposed in this section.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 22452,
+      "end": 22634,
+      "text": "For instance, assuming that et in Equation (2) follows a Gaussian distribution, the prediction interval (PI) of the estimated life expectancies will be produced based on simulations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 22635,
+      "end": 22811,
+      "text": "More specifically, we use method (I) described in Li [32] to implement the simulation, and a 95% PI is then comprises the 2.5th and 97.5th percentiles of the simulated results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 22811,
+      "end": 23001,
+      "text": "\n\n\n\n### 2.5. Related Mortality Models\n\nOther than the three factors (ax, bx, and kt) used in the LC model, existing research has proposed alternative specifications to model mortality rates.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 23002,
+      "end": 23197,
+      "text": "For instance, Renshaw and Haberman [15], Cairns et al. [33], Renshaw and Haberman [34], and Plat [35] have considered additional factors, such as the cohort impacts and/or other temporal factors.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 23198,
+      "end": 23346,
+      "text": "Brouhns et al. [18], Currie et al. [36], Wang and Lu [37], and Debon et al. [38] calibrate mortality rates with different statistical methodologies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 23347,
+      "end": 23481,
+      "text": "Machine learning techniques are considered in Hainaut [39], Levantesi and Pizzorusso [40], Nigri et al. [41], and Doukhan et al. [42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 23482,
+      "end": 23590,
+      "text": "Other studies, such as [43,44,45], introduce different time-series models to forecast the temporal patterns.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 23591,
+      "end": 23714,
+      "text": "Comprehensively reviewing those models is out of the scope of this paper, and please see specifications therein for details",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 23714,
+      "end": 23715,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S183",
+      "start": 23715,
+      "end": 23719,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S184",
+      "start": 23719,
+      "end": 23720,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S185",
+      "start": 23720,
+      "end": 23724,
+      "text": "# 3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S186",
+      "start": 23725,
+      "end": 23817,
+      "text": "Results and Discussion\n\nWe model the mortality data and present the results in this section.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 23818,
+      "end": 23916,
+      "text": "As demonstrated in Figure 1, on average, the mortality rates consistently decline across all ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 23917,
+      "end": 24056,
+      "text": "This is also true for individual populations, as can be observed in Figure 4, where four countries are inspected for illustrative purposes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 24057,
+      "end": 24223,
+      "text": "Despite the data volatility in some cases (e.g., Sweden, due to its small population size), substantial mortality improvements take place for both young and old ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 24224,
+      "end": 24357,
+      "text": "For instance, the “accidental hump” of ages 20–25 which was outstanding in the 1980s, has been flattening over time in all countries.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 24357,
+      "end": 24512,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 4</strong> Mortality rates (lnmx,t) over 1950–2019:(a) Australia; (b) Canada; (c) Spain; (d) Sweden.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 24512,
+      "end": 24513,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S193",
+      "start": 24513,
+      "end": 24520,
+      "text": "/figure",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 24520,
+      "end": 24696,
+      "text": ">\n\nFollowing the steps described in Section 2, we fit all models over the dataset 1950–2000 as the training set, and forecast mortality rates from 2000 to 2019 as the test set.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 24697,
+      "end": 24775,
+      "text": "The selected bandwidths are displayed in Table 1 for the LC-E and LC-G models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 24776,
+      "end": 24931,
+      "text": "To ensure the validity of the VAR(1) model to study bx,t, the assumptions of stationarity and adequacy of VAR(1) need to be tested for the in-sample b^x,t.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 24932,
+      "end": 25091,
+      "text": "The I(0) feature is tested via the usual augmented Dickey–Fuller (ADF) unit root test, and the adequacy of VAR(1) is tested by the Granger causality (GC) test.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 25092,
+      "end": 25332,
+      "text": "Recall that for each population, we have a total of 101 age groups, and the bx,t is estimated in 2 sets via the LC-E and LC-G. All tests are performed at the 5% level, and the number out of 101 violated assumptions are presented in Table 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 25333,
+      "end": 25439,
+      "text": "It is clear that in the vast majority of cases, both the stationarity and model adequacy assumptions hold.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 25440,
+      "end": 25517,
+      "text": "The actual percentages of negative outcomes are close to expected (i.e., 5%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 25518,
+      "end": 25615,
+      "text": "Those results validate the application of the VAR(1) framework for both the LC-E and LC-G models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 25615,
+      "end": 25617,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S203",
+      "start": 25617,
+      "end": 25618,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S204",
+      "start": 25618,
+      "end": 25620,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S205",
+      "start": 25621,
+      "end": 25660,
+      "text": "3.1. Out-of-Sample Forecasting Analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 25660,
+      "end": 25747,
+      "text": "\n\nWe firstly consider the forecasting performance of the proposed LC-E and LL-G models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 25748,
+      "end": 25851,
+      "text": "In particular, we compare their out-of-sample forecasting accuracy with those of the LC and BMS models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 25852,
+      "end": 26005,
+      "text": "Following Li and Lu [6], Feng et al. [28], and Chang and Shi [19], recall that the training sample is set to 1950–2000, and the test sample is 2001–2019.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 26006,
+      "end": 26210,
+      "text": "To measure the accuracy, the RMSFE is computed as follows, where the mortality data of each country are fitted into each of the four models individually:RMSFEh=1101×h∑i=1101∑s=1hlnm^i,2000+s−lnmi,2000+s2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 26210,
+      "end": 26397,
+      "text": "\n\nThus, RMSFE19 is the overall forecasting accuracy measure covering the entire test period, whereas RMSFEh with 1≤h≤19 is the accumulated forecasting accuracy measure up to the hth step.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 26397,
+      "end": 26399,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S212",
+      "start": 26399,
+      "end": 26504,
+      "text": "Our baseline results, including single-year age mortality rates over 1950–2019, are presented in Table 2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 26505,
+      "end": 26649,
+      "text": "Overall, except for the UK data, the RMSFE19 of LC-E and LC-G are uniformly smaller than those of the LC model for all the examined populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 26650,
+      "end": 26738,
+      "text": "This suggests the improved forecasting performance considering the time-varying b^x,T+h.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 26739,
+      "end": 26893,
+      "text": "The BMS model, with adjustments on both shortened training sample period and estimation of kt, improves the forecasting accuracy of LC in seven countries.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S216",
+      "start": 26894,
+      "end": 27051,
+      "text": "Despite this, except for the UK, Japan, the Netherlands and the USA, both the LC-E and LC-G models consistently outperforms the BMS counterparty in 13 cases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 27052,
+      "end": 27224,
+      "text": "This suggests that appropriately allowing for dynamic age-specific mortality declines is more effective than the two adjustments in BMS to improve the forecasting accuracy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 27225,
+      "end": 27336,
+      "text": "Although the LC-E model outperforms LC-G in six cases, the differences between the two approaches are marginal.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S219",
+      "start": 27337,
+      "end": 27497,
+      "text": "This indicates that the forecasting performance of the time-varying coefficients framework described in Section 2.4 is robust against specific kernel functions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S220",
+      "start": 27498,
+      "end": 27646,
+      "text": "Finally, the RMSFE19 averaged over the fifteen countries of the LC, BMS, LC-E, and LC-G models are 0.2576, 0.2610, 0.2202, and 0.2197, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S221",
+      "start": 27647,
+      "end": 27776,
+      "text": "Thus, on average, BMS cannot improve the forecasting performance of LC, whereas the LC-E and LC-G models can improve it by 14.7%.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S222",
+      "start": 27777,
+      "end": 28008,
+      "text": "From a statistical point of view, if an unknown population is randomly chosen, we expected that LC-E or LC-G is more likely to improve the out-of-sample forecasting, with the forecasting error expected to be reduced by roughly 15%.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S223",
+      "start": 28008,
+      "end": 28010,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S224",
+      "start": 28010,
+      "end": 28148,
+      "text": "To gain more insights of the four models’ performances at different horizons, we plot the RMSFEh at each of the sixteen forecasting steps.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S225",
+      "start": 28149,
+      "end": 28249,
+      "text": "For demonstration purposes, those of Australia, Canada, Spain, and Sweden are presented in Figure 5.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S226",
+      "start": 28250,
+      "end": 28304,
+      "text": "Results of other countries are available upon request.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S227",
+      "start": 28305,
+      "end": 28434,
+      "text": "In the vast majority of cases, we see that the RMSFEs of the LC-E and LC-G models are smaller than those of the other two models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S228",
+      "start": 28435,
+      "end": 28557,
+      "text": "This indicates that LC-G and LC-H are able to generate relatively more accurate forecasting results at different horizons.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 28557,
+      "end": 29114,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 5</strong> RMSFE over forecasting steps: (a) Australia; (b) Canada; (c) Spain; (d) Sweden.</figcaption>\n</figure>\n\nWe now evaluate the robustness of the forecasting results by performing the out-of-sample forecasting analysis under two major variant settings: (1) we follow Li et al. [5] and model the logged mortality rates of the five-year ages instead of the single-year groups; and (2) we consider a shorter training sample over 1970–2000 to avoid fluctuations in 1950–1969 for certain populations (e.g., Spain).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S230",
+      "start": 29115,
+      "end": 29187,
+      "text": "A summary of the RMSFE19 across the 15 countries is reported in Table 3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S231",
+      "start": 29188,
+      "end": 29331,
+      "text": "Overall, we conclude that both LC-E and LC-G are able to produce satisfying forecasting performances that are robust across different settings.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S232",
+      "start": 29332,
+      "end": 29474,
+      "text": "In addition, using different kernel functions in the time-varying framework only leads to marginal differences in the out-of-sample forecasts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S233",
+      "start": 29474,
+      "end": 29477,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S234",
+      "start": 29477,
+      "end": 29478,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S235",
+      "start": 29478,
+      "end": 29480,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S236",
+      "start": 29481,
+      "end": 29623,
+      "text": "3.2. Long-Term Analyses: 2020–2100\n\nWe now conduct long-term analyses beyond the full sample period using the proposed time-varying LC models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 29624,
+      "end": 29738,
+      "text": "Since the produced forecasts are robust against the selected kernels, it is sufficient to focus on one model only.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S238",
+      "start": 29739,
+      "end": 29896,
+      "text": "More specifically, we follow the steps described in Section 2.4.3 to fit the LC-G model using the full sample (1950–2019) and produce b^x,T+h over 2020–2100.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S239",
+      "start": 29897,
+      "end": 29974,
+      "text": "We report the forecasts for Australia, Canada, Spain, and Sweden in Figure 6.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S240",
+      "start": 29975,
+      "end": 30038,
+      "text": "Overall, all b^x,T+h are converging to the long-run mean 1/101.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S241",
+      "start": 30039,
+      "end": 30111,
+      "text": "In other words, all the curves are “rotating” to a flat horizontal line.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S242",
+      "start": 30112,
+      "end": 30245,
+      "text": "The dynamics are consistent with those of Li et al. [5] (see, for example, Figure 5), with younger ages faster and older ages slower.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S243",
+      "start": 30246,
+      "end": 30413,
+      "text": "Unlike in Li et al. [5], the speed of rotation is data-driven for the LC-G model and does not suffer the potential ad hoc issue when determined by expert judgment [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S244",
+      "start": 30414,
+      "end": 30594,
+      "text": "It is worth mentioning that the impact of the so-called “accident hump” is more obvious for the Australian population, since b^25,T+h is lower than b^x,T+h of the neighboring ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S245",
+      "start": 30595,
+      "end": 30701,
+      "text": "Such a difference, however, is much smaller when it is closer to the end of the forecasting period (2100).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S246",
+      "start": 30701,
+      "end": 30891,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 6</strong> Projected rotation of age-specific mortality decline (b^x,T+h), 2020–2100: (a) Australia; (b) Canada; (c) Spain; (d) Sweden.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S247",
+      "start": 30891,
+      "end": 30892,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S248",
+      "start": 30892,
+      "end": 31029,
+      "text": "/figure>\n\nUsing those obtained b^x,T+h, we can derive forecast mortality rates and thus produce the life expectancy using the LC-G model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S249",
+      "start": 31030,
+      "end": 31164,
+      "text": "Since life expectancy at birth (e0) considers mortality rates at all ages, we contrast the forecast e^0 of LC-G and LC over 2020–2100.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S250",
+      "start": 31165,
+      "end": 31267,
+      "text": "Both the point and interval forecasts of Australia, Canada, Spain, and Sweden are plotted in Figure 7.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S251",
+      "start": 31268,
+      "end": 31358,
+      "text": "It can be seen that e^0 generated by LC-G are uniformly larger than those of the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S252",
+      "start": 31359,
+      "end": 31540,
+      "text": "This is consistent with the fact that the LC-G model implements a rotation [5] of b^x, and with the argued age-coherent property of the forecast mortality rates in the long run [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S253",
+      "start": 31541,
+      "end": 31652,
+      "text": "In addition, despite the PIs of LC-G being slightly wider than those of LC, their widths are at similar levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S254",
+      "start": 31653,
+      "end": 31728,
+      "text": "This may be explained by the fact that k^T+h are identical for both models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S255",
+      "start": 31729,
+      "end": 31891,
+      "text": "As of 2100, the point forecast e^0 of LC-G has exceeded the upper bound of the 95% PI of LC for all countries except Australia, implying a significant difference.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S256",
+      "start": 31892,
+      "end": 32130,
+      "text": "More specifically, the point forecast e^0 of LC-G (LC) for Australia, Canada, Spain, and Sweden grow from 83.4, 82.9, 82.9, and 82.7, respectively, in 2020 to 94.4, 94.3, 94.9, and 94.6 (92.3, 91.8, 91.9, and 90.1), respectively, in 2100.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S257",
+      "start": 32130,
+      "end": 32505,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 7</strong> Forecast e0 over 2020–2100, single-population models: (a) Australia; (b) Canada; (c) Spain; (d) Sweden.</figcaption>\n</figure>\n\nTo analyze the reasons contributing to those deviations in e^0 of LC and LC-G in 2100, ranging from 2.1 (Australia) to 4.5 (Sweden) years, we plot the forecast logged mortality rates in Figure 8.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S258",
+      "start": 32506,
+      "end": 32651,
+      "text": "Comparing with the true rates in 2019, it is observed that little improvements are gained at old ages for the forecasts produced by the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S259",
+      "start": 32652,
+      "end": 32804,
+      "text": "In contrast, due to the rotation and age-coherent property, forecasts produced by LC-G demonstrate much more obvious mortality improvements at old ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S260",
+      "start": 32805,
+      "end": 32920,
+      "text": "In addition, since b^x,T+h sum up to one at each step h, less mortality declines are distributed to the young ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S261",
+      "start": 32921,
+      "end": 33033,
+      "text": "This contributes to the rotation-like difference when contrasting the lnm^x,T+h produced by LC-G to those by LC.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S262",
+      "start": 33034,
+      "end": 33235,
+      "text": "Overall, the difference in e^0 produced by LC and LC-G, as presented in Figure 7, may be explained by the potentially large impacts of mortality rates at old ages in the calculation of life expectancy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S263",
+      "start": 33236,
+      "end": 33404,
+      "text": "Nevertheless, due to the influence of the smoothing penalties in (7), the long-run forecast logged mortality rates of LC-G are much smoother than those of the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S264",
+      "start": 33404,
+      "end": 33551,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 8</strong> Forecast lnmx,t over 2020–2100: (a) Australia; (b) Canada; (c) Spain; (d) Sweden.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S265",
+      "start": 33551,
+      "end": 33564,
+      "text": "</figure>\n\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S266",
+      "start": 33564,
+      "end": 33569,
+      "text": "## 4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S267",
+      "start": 33570,
+      "end": 33735,
+      "text": "Extensions to the Multi-Population Modelling: An Illustrative Example\n\nA multi-population extension of the LC model is studied in the seminal work of Li and Lee [9].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S268",
+      "start": 33736,
+      "end": 33863,
+      "text": "An additional common factor which controls the relationships between populations is included in the proposed Li–Lee (LL) model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S269",
+      "start": 33864,
+      "end": 34248,
+      "text": "Specifically, the logged mortality rate is modeled as:(8)lnmx,t,j=ax,j+BxKt+bx,jkt,j+εx,t,j,\nwhere ax,j represents the average of the age-specific mortality level for the jth population, Bx and Kt represent the age effect and period effect of the common factor, kt,j is the time component of the ith population with age response bx,j, and εx,t,j is the population-specific error term.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S270",
+      "start": 34249,
+      "end": 34329,
+      "text": "The common factor BxKt describes the mortality trend of all modeled populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S271",
+      "start": 34330,
+      "end": 34493,
+      "text": "To obtain the estimates, in this paper, we follow Li and Lee [9] to apply a usual LC model to the logged mortality rates averaged over all the fifteen populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S272",
+      "start": 34494,
+      "end": 34554,
+      "text": "Consistent with LC, a^x,j is the average of lnmx,t,j over t.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S273",
+      "start": 34555,
+      "end": 34675,
+      "text": "The population-specific factor bx,ikt,i can be estimated by applying SVD to the residual matrix (lnmx,t,j−a^x,j−B^xK^t).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S274",
+      "start": 34675,
+      "end": 34818,
+      "text": "\n\nSimilar to the case under LC, the common mortality index Kt is assumed non-stationary and can be modeled as a random walk with drift process.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S275",
+      "start": 34819,
+      "end": 35080,
+      "text": "In contrast, the group-specific time component kt,i is fitted by a stationary autoregressive process (set to AR(1) in this paper, as considered in Li and Lee [9]), such that long-term forecasts are coherent (i.e., non-divergent) across the included populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S276",
+      "start": 35081,
+      "end": 35245,
+      "text": "Given the data observed in the last year T, the h-step-ahead forecast of the logged mortality rate is given as follows:(9)lnm^x,T+h,j=a^x,j+B^xK^T+h+b^x,jk^T+h,j.\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S277",
+      "start": 35245,
+      "end": 35350,
+      "text": "Despite its desirable coherence among populations, lnm^x,T+h,j of the LL model is still not age coherent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S278",
+      "start": 35351,
+      "end": 35544,
+      "text": "To see this, without identical B^x across ages, the non-stationary temporal term K^T+h in Equation (9) can lead to divergent long-run forecasts even for neighboring ages of the same population.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S279",
+      "start": 35544,
+      "end": 35635,
+      "text": "\n\nThe multi-population extensions of the BMS, LC-E, and LC-G are straightforward to derive.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S280",
+      "start": 35636,
+      "end": 35783,
+      "text": "Essentially, instead of fitting an LC model to forecast the common trend B^xK^T+h, BMS, LC-E, and LC-G models can be fitted for the averaged rates.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S281",
+      "start": 35784,
+      "end": 35867,
+      "text": "Consequently, forecasts of their multi-population extensions can be produced below.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S282",
+      "start": 35867,
+      "end": 36159,
+      "text": "\n(10)lnm^x,T+h,jB=a^x,j+B^xK^T+hB+b^x,jk^T+h,jlnm^x,T+h,jE=a^x,j+B^x,T+hEK^T+h+b^x,jk^T+h,jlnm^x,T+h,jG=a^x,j+B^x,T+hGK^T+h+b^x,jk^T+h,j\nwhere the superscripts B, E, and G indicate the forecast of the multi-population extension of the BMS (LL-BMS), LC-E (LL-E), and LC-G (LL-G), respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S283",
+      "start": 36160,
+      "end": 36311,
+      "text": "It can be seen that in all cases, the population-specific average rate a^x,j and stationary trend b^x,jk^T+h,j are unchanged from that of the LL model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S284",
+      "start": 36312,
+      "end": 36522,
+      "text": "For the LL-BMS, the same two adjustments, selecting an optimal sample period and using a Poisson model to obtain K^T+hB, as considered in the single-population BMS model are adopted for the averaged population.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S285",
+      "start": 36523,
+      "end": 36718,
+      "text": "For the LL-E and LL-G models, B^x,T+hE and B^x,T+hG will be forecast using the constrained VAR model as for the single-population case described in Equation (6), based on the averaged population.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S286",
+      "start": 36719,
+      "end": 36886,
+      "text": "The tuning parameters will be selected in the same way as described in Section 2.4.3, which will minimize the RMSFE of the averaged population for the hold-out sample.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S287",
+      "start": 36886,
+      "end": 37036,
+      "text": "\n\nWithout imposing a long-run restriction, LL-BMS will lead to population-coherent forecasts as the LL, which are, however, not age coherent when h→∞.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S288",
+      "start": 37037,
+      "end": 37148,
+      "text": "In contrast, following the discussions in Section 2.4, B^x,T+hE and B^x,T+hG are age invariant in the long run.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S289",
+      "start": 37149,
+      "end": 37242,
+      "text": "Since k^T+h,j is a stationary process, b^x,jk^T+h,j will converge to a constant for all ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S290",
+      "start": 37243,
+      "end": 37388,
+      "text": "Thus, the logged mortality rates forecast by LL-E and LL-G are both age- and population-coherent in the long run across all ages and populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S291",
+      "start": 37388,
+      "end": 37521,
+      "text": "\n\nFor illustration purposes, we consider the baseline results only as in Section 3.1 and Section 3.2 for the multi-population models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S292",
+      "start": 37522,
+      "end": 37609,
+      "text": "The RMSFE19 of the out-of-sample forecasts for each population are reported in Table 4.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S293",
+      "start": 37610,
+      "end": 37887,
+      "text": "First, contrasting the results of Table 2 and Table 4, it is worth noting that in 10, 12, 8, and 9 out of the 15 countries, respectively, the forecasting performances of the LL, LL-BMS, LL-E, and LL-G are superior to those of the corresponding single-population counterparties.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S294",
+      "start": 37888,
+      "end": 37960,
+      "text": "Second, LL-E and LL-G outperform the LL model in all the 15 populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S295",
+      "start": 37961,
+      "end": 38049,
+      "text": "Compared to the LL-BMS model, LL-G and LL-H lead to more accurate forecasts in 11 cases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S296",
+      "start": 38050,
+      "end": 38200,
+      "text": "Finally, although LL-G beats LL-E in all cases except for Japan, the differences between the two time-varying models are still marginal in most cases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S297",
+      "start": 38201,
+      "end": 38305,
+      "text": "On average, LL-E and LL-G improve the forecasting performance of the LL by 9.1% and 11.3%, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S298",
+      "start": 38306,
+      "end": 38548,
+      "text": "Thus, those results are very consistent with the single-population out-of-sample forecasting metrics, suggesting that allowing for dynamic age-specific mortality declines can produce the best-performing forecasts in the multi-population case.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S299",
+      "start": 38548,
+      "end": 38550,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S300",
+      "start": 38550,
+      "end": 38618,
+      "text": "We now examine the forecast life expectancy at birth over 2020–2100.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S301",
+      "start": 38619,
+      "end": 38782,
+      "text": "In Figure 9, for the datasets of Australia, Canada, Spain, and Sweden, we present the point forecasts together with the 95% PIs produced by the LL and LL-G models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S302",
+      "start": 38783,
+      "end": 38877,
+      "text": "Consistent with Figure 7, the e^0 generated by LL-G are uniformly larger than those by the LL.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S303",
+      "start": 38878,
+      "end": 38964,
+      "text": "This can still be explained by the desirable age-coherence property of the LL-G model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S304",
+      "start": 38965,
+      "end": 39132,
+      "text": "In addition, all point forecasts of the LL-G model are above the corresponding upper bounds of the 95% PIs of the LC counterparty, suggesting a significant difference.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S305",
+      "start": 39133,
+      "end": 39272,
+      "text": "Nevertheless, due to the population coherence, LL leads to similar forecasts of e0 in 2100, ranging from 91.2 (Sweden) to 91.8 (Australia).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S306",
+      "start": 39273,
+      "end": 39414,
+      "text": "For the same reason, the forecast e0 in 2100 are also close to each other for the LL-G model, which vary from 93.0 (Sweden) to 94.8 (Canada).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S307",
+      "start": 39415,
+      "end": 39572,
+      "text": "Nevertheless, for both the LL and LL-H models, the widths of the resulting PIs are narrower than those observed in Figure 7 for the single-population models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S308",
+      "start": 39573,
+      "end": 39755,
+      "text": "This can be attributed to the fact that more information is used in the multi-population framework, which can therefore reduce the uncertainty of the unexplained random disturbances.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S309",
+      "start": 39755,
+      "end": 39923,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 9</strong> Forecast e0 over 2020–2100, Multi-population models: (a) Australia; (b) Canada; (c) Spain; (d) Sweden.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S310",
+      "start": 39923,
+      "end": 39924,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S311",
+      "start": 39924,
+      "end": 39940,
+      "text": "/figure>\n\n\n## 5.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S312",
+      "start": 39941,
+      "end": 40052,
+      "text": "Concluding Remarks\n\nThis paper investigates a time-varying coefficients extension of the Lee–Carter (LC) model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S313",
+      "start": 40053,
+      "end": 40176,
+      "text": "As argued in the influential work of Li et al. [5], mortality declines decelerate at young ages and accelerate at old ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S314",
+      "start": 40177,
+      "end": 40305,
+      "text": "The lack of considering such dynamics makes the LC model less accurate in forecasting mortality rates in the long-term analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S315",
+      "start": 40305,
+      "end": 40307,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S316",
+      "start": 40307,
+      "end": 40498,
+      "text": "To effectively resolve this issue without imposing computationally intensive burdens, we employ the kernel time-varying parametric approach as examined in a recent work of Chang and Shi [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S317",
+      "start": 40499,
+      "end": 40628,
+      "text": "Specifically, in-sample time-dependent bx,t are first estimated using the Epanechnikov (LC-E) and Gaussian (LC-G) kernel methods.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S318",
+      "start": 40629,
+      "end": 40747,
+      "text": "To project the out-of-sample b^x,T+h, a VAR-type model similar to that considered in Li and Lu [6] is further adopted.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S319",
+      "start": 40748,
+      "end": 40850,
+      "text": "The forecasting of logged mortality rates is therefore conducted analogously to that for the LC model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S320",
+      "start": 40851,
+      "end": 40937,
+      "text": "For the proposed LC-E and LC-G models, we can draw five key conclusions in this paper.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S321",
+      "start": 40938,
+      "end": 41056,
+      "text": "First, the long-run age-specific patterns of mortality declines are forced (asymptotically) identical across all ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S322",
+      "start": 41057,
+      "end": 41148,
+      "text": "This ensures the desirable age coherence as proposed in the recent literature [6,19,28,29].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S323",
+      "start": 41149,
+      "end": 41228,
+      "text": "Second, the LC-E and LC-G models are computationally efficient and data-driven.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S324",
+      "start": 41229,
+      "end": 41328,
+      "text": "Specifically, both models adopt the penalized least square, which results in closed-form solutions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S325",
+      "start": 41329,
+      "end": 41560,
+      "text": "In addition, the parameters and smoothing penalties relevant to the speeds of rotation in b^x,T+h are estimated/determined in a data-driven fashion, which is different from the ad hoc judgment of the rotation used in Li et al. [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S326",
+      "start": 41561,
+      "end": 41736,
+      "text": "Thirdly, using a large sample of uni-sex data of 15 countries over 1950–2019, we demonstrate the outstanding out-of-sample forecasting performance of the LC-E and LC-G models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S327",
+      "start": 41737,
+      "end": 41812,
+      "text": "The differences in the selection of the kernel function is deemed marginal.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S328",
+      "start": 41813,
+      "end": 41959,
+      "text": "This conclusion is robust when a five-year instead of a one-year age mortality rate is modeled, and the training period is shortened to 1970–2000.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S329",
+      "start": 41960,
+      "end": 42095,
+      "text": "Therefore, we recommend modelling and forecasting mortality rates with the time-varying coefficients LC model in demographic practices.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S330",
+      "start": 42096,
+      "end": 42220,
+      "text": "Fourthly, our long-term analysis supports the effectiveness of the age-coherent forecasts produced by the recommended model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S331",
+      "start": 42221,
+      "end": 42429,
+      "text": "When forecast to 2100, significantly longer life expectancies at birth are generated by the LC-G model in most illustrated cases, which may be caused by its larger forecast mortality improvements at old ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S332",
+      "start": 42430,
+      "end": 42609,
+      "text": "Finally, multi-population extensions of the LC-E (LL-E) and LC-G (LL-G) are straightforward to derive, which are based on the specification of the Li–Lee (LL) model Li and Lu [9].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S333",
+      "start": 42610,
+      "end": 42780,
+      "text": "On one hand, our proposed extension can achieve coherence across both ages and populations, whereas LL can only forecast non-divergent mortality rates across populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S334",
+      "start": 42781,
+      "end": 42871,
+      "text": "On the other hand, consistent conclusions hold as those in the single-population scenario.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S335",
+      "start": 42872,
+      "end": 43028,
+      "text": "Such conclusions include the more accurate out-of-sample forecasts and larger long-range projections of life expectancies led by the LL-G than the LL model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S336",
+      "start": 43028,
+      "end": 43101,
+      "text": "\n\nThere are some directions that are worth examining for future research.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S337",
+      "start": 43102,
+      "end": 43181,
+      "text": "First, it is of interest to investigate female and male populations separately.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S338",
+      "start": 43182,
+      "end": 43379,
+      "text": "For each country, differences between the selected tuning parameters of the LC-E and LC-G models may indicate important variations of the short-term speeds of mortality rotations for the two sexes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S339",
+      "start": 43380,
+      "end": 43554,
+      "text": "In addition, recent studies, including Vekas [46], have outlined that the rotation proposed by Li et al. [5] is notably more prevalent in populations of women than among men.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S340",
+      "start": 43555,
+      "end": 43641,
+      "text": "This strongly motivates the exploration of sex differences using LC-E and LC-G models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S341",
+      "start": 43642,
+      "end": 43741,
+      "text": "Secondly, the fitted d in modelling the temporal patterns of kt may be made further time-dependent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S342",
+      "start": 43742,
+      "end": 43857,
+      "text": "Third, it is worth exploring the applicability of our specification to alternative models as listed in Section 2.5.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S343",
+      "start": 43858,
+      "end": 43985,
+      "text": "For factor-based models, such as Renshaw and Haberman [34], our time-varying specification may be straightforwardly extensible.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S344",
+      "start": 43986,
+      "end": 44058,
+      "text": "It will be more challenging to incorporate dynamics in other frameworks.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S345",
+      "start": 44059,
+      "end": 44178,
+      "text": "Fourth, in the multi-population case, we may allow the population-specific bx,i to be dynamic in the forecasting steps.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S346",
+      "start": 44179,
+      "end": 44342,
+      "text": "This more flexible specification might further improve the forecasting accuracy and provide additional information on the population-specific rotation of the bx,i.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S347",
+      "start": 44343,
+      "end": 44451,
+      "text": "Finally, impacts of COVID-19 may have significantly delayed mortality declines, especially for the old ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S348",
+      "start": 44452,
+      "end": 44629,
+      "text": "After more data become available, our kernel-based models can be used to study how such shocks evolve and whether they are short-lived (and if so, when they eventually die out).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S349",
+      "start": 44629,
+      "end": 44632,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=article text | pred=doi | obj=DOI | unit=S4\nB T4 B2 | sub=article text | pred=10.3390/healthcare11050743 | obj=* 10.3390/healthcare11050743 | unit=S6\nB T4 B3 | sub=Influential existing research | pred=suggest | obj=that rather than being static, mortality | unit=S7\nB T4 B4 | sub=the forecast mortality rates of the | pred=reliable | obj=in the long run | unit=S8\nB T4 B5 | sub=we | pred=introduce | obj=a time-varying coefficients extension of the | unit=S9\nB T4 B6 | sub=we | pred=demonstrate | obj=With two frequently used kernel functions, | unit=S10\nB T4 B7 | sub=we | pred=show | obj=that LC-E and LC-G, as well | unit=S11\nB T4 B8 | sub=Introduction | pred=have | obj=far-reaching influences | unit=S14\nB T4 B9 | sub=Maestas et al. [1 | pred=highlight | obj=For instance | unit=S15\nB T4 B10 | sub=Mortality projections | pred=use | obj=to predict future changes in the | unit=S16\nB T4 B11 | sub=Fenton et al. [2 | pred=indicate | obj=For the healthcare system | unit=S17\nB T4 B12 | sub=prediction of future demand for health | pred=dependent | obj=on mortality projections | unit=S18\nB T4 B13 | sub=Such predictions | pred=inform | obj=policy decisions related to the allocation | unit=S19\nB T4 B14 | sub=The importance of accurate mortality projections | pred=witness | obj=in retirement | unit=S20\nB T4 B15 | sub=To better model the underlying patterns | pred=essential | obj=to enhance accuracy of mortality projection | unit=S22\nB T4 B16 | sub=Lee and Carter [4 | pred=model | obj=Among the existing studies | unit=S23\nB T4 B17 | sub=the LC model | pred=assume | obj=Despite its popularity | unit=S24\nB T4 B18 | sub=the LC model | pred=produce | obj=increasingly large proportional differences in the | unit=S25\nB T4 B19 | sub=the projected mortality rates of LC | pred=low | obj=for infants | unit=S26\nB T4 B20 | sub=This | pred=contrast | obj=to the findings in influential studies, | unit=S27\nB T4 B21 | sub=A “rotation” approach of age-specific mortality | pred=propose | obj=by Li et al. | unit=S28\nB T4 B22 | sub=this rotation | pred=nature | obj=data-driven | unit=S29\nB T4 B23 | sub=article text | pred=address | obj=this | unit=S30\nB T4 B24 | sub=we | pred=employ | obj=a local constant kernel smoothing method | unit=S31\nB T4 B25 | sub=we | pred=consider | obj=In this paper | unit=S32\nB T4 B26 | sub=Technical details of the modelling approach | pred=provide | obj=our | unit=S33\nB T4 B27 | sub=The contributions of this paper | pred=threefold | obj=The contributions of this paper are | unit=S35\nB T4 B28 | sub=the proposed time-varying coefficients extension of | pred=complement | obj=the rotation adopted in Li et | unit=S36\nB T4 B29 | sub=The proposed flexible framework | pred=ensure | obj=that the speed of rotation is | unit=S37\nB T4 B30 | sub=The existence of closed-form solutions | pred=make | obj=the proposed extension computationally efficient | unit=S38\nB T4 B31 | sub=we | pred=demonstrate | obj=the outstanding performance of the time-varying | unit=S39\nB T4 B32 | sub=The overall superiority of the LC-E | pred=robust | obj=age | unit=S40\nB T4 B33 | sub=The analysis of life expectancies up | pred=show | obj=that the LC-G model can well | unit=S41\nB T4 B34 | sub=the LC-E and LC-G models | pred=provide | obj=potentially more accurate forecasts than the | unit=S42\nB T4 B35 | sub=we | pred=describe | obj=the multi-population extensions of the employed | unit=S43\nB T4 B36 | sub=the newly proposed multi-population extensions | pred=model | obj=among all investigated specifications | unit=S44\nB T4 B37 | sub=The rest of this paper | pred=structure | obj=The rest of this paper is | unit=S45\nB T4 B38 | sub=Section 2 | pred=describe | obj=the data | unit=S46\nB T4 B39 | sub=We | pred=present | obj=empirical results | unit=S47\nB T4 B40 | sub=Section 5 | pred=conclude | obj=the paper | unit=S48\nB T4 B41 | sub=Database | pred=source | obj=from the famous Human Mortality Database | unit=S49\nB T4 B42 | sub=HMD | pred=provide | obj=detailed mortality and population data | unit=S50\nB T4 B43 | sub=We | pred=employ | obj=the annual age-specific central mortality rates, | unit=S51\nB T4 B44 | sub=HMD | pred=maintain | obj=by the Max Planck Institute for | unit=S52\nB T4 B45 | sub=the purpose of HMD | pred=make | obj=mortality data available for scientific research | unit=S53\nB T4 B46 | sub=we | pred=explore | obj=In order to study the consistent | unit=S54\nB T4 B47 | sub=mortality rates | pred=likely | obj=For the low-mortality nature | unit=S55\nB T4 B48 | sub=This | pred=enable | obj=one | unit=S56\nB T4 B49 | sub=we | pred=choose | obj=Following Booth et al. [10 | unit=S57\nB T4 B50 | sub=The crude uni-sex (total) mortality data | pred=study | obj=in this paper | unit=S58\nB T4 B51 | sub=We | pred=present | obj=logged mortality rates averaged across the | unit=S60\nB T4 B52 | sub=Consistent mortality declines | pred=observe | obj=at all ages | unit=S61\nB T4 B53 | sub=Appropriate modelling of those patterns | pred=critical | obj=to credible mortality projections, which is | unit=S62\nB T4 B54 | sub=article text | pred=figure | obj=Figure | unit=S63\nB T4 B55 | sub=The Lee–Carter | pred=suppose | obj=we have mortality data of N | unit=S68\nB T4 B56 | sub=The Lee–Carter (LC) model (1992) ([4 | pred=summarize | obj=the systematic mortality trends of the | unit=S69\nB T4 B57 | sub=the log central mortality rate at | pred=follow | obj=the specification given | unit=S70\nB T4 B58 | sub=Equation (1 | pred=identifiable | obj=without normalization constraints | unit=S71\nB T4 B59 | sub=one | pred=multiply | obj=For example | unit=S72\nB T4 B60 | sub=the following normalization constraints | pred=imposed:∑tkt 0,and∑xbx 1 | obj=In [4 | unit=S73\nB T4 B61 | sub=ax | pred=set | obj=Given the constraint of kt | unit=S75\nB T4 B62 | sub=The LC model | pred=estimate | obj=by singular value decomposition (SVD | unit=S76\nB T4 B63 | sub=A maximum likelihood estimation method | pred=employ | obj=to calibrate the parameters | unit=S77\nB T4 B64 | sub=a Bayesian approach | pred=propose | obj=in Li et al. [16 | unit=S78\nB T4 B65 | sub=SVD | pred=efficient | obj=stable | unit=S79\nB T4 B66 | sub=the period effect | pred=model | obj=) While ax and bx are | unit=S80\nB T4 B67 | sub=ref. [4 | pred=assume | obj=In particular | unit=S81\nB T4 B68 | sub=future mortality rates | pred=project | obj=period | unit=S82\nB T4 B69 | sub=the expected h-step-ahead mean forecasts of | pred=give | obj=by:(3)k^T+h | unit=S83\nB T4 B70 | sub=Issues with the Lee–Carter Model | pred=compatible | obj=For the long-spanning nature of mortality | unit=S88\nB T4 B71 | sub=the specification of the LC model | pred=decompose | obj=mortality improvements | unit=S89\nB T4 B72 | sub=we | pred=plot | obj=the fitted bx | unit=S90\nB T4 B73 | sub=the fitted bx | pred=become | obj=roughly “flatter” over time | unit=S91\nB T4 B74 | sub=Ignoring such a dynamic pattern | pred=reduce | obj=the credibility of the forecast mortality | unit=S92\nB T4 B75 | sub=the static parametric nature | pred=sufficient | obj=to address this issue | unit=S93\nB T4 B76 | sub=Figure | pred=decline | obj=b^x | unit=S94\nB T4 B77 | sub=article text | pred=/figure | obj=/figure | unit=S96\nB T4 B78 | sub=The insufficiency of the static bx | pred=recognize | obj=in the influential work by Li | unit=S97\nB T4 B79 | sub=a “rotation” approach | pred=propose | obj=out-of-sample | unit=S98\nB T4 B80 | sub=such an ultimate structure | pred=determine | obj=by expert (ad hoc) judgments | unit=S99\nB T4 B81 | sub=we | pred=investigate | obj=A Time-Varying Coefficients Extension of the | unit=S101\nB T4 B82 | sub=we | pred=employ | obj=a local constant kernel smoothing method | unit=S102\nB T4 B83 | sub=A novel application of such an | pred=find | obj=in Chang and Shi [19 | unit=S103\nB T4 B84 | sub=This approach | pred=allow | obj=bx to be time-dependent over both | unit=S104\nB T4 B85 | sub=we | pred=consider | obj=In this paper | unit=S105\nB T4 B86 | sub=The technical details | pred=describe | obj=in this section | unit=S106\nB T4 B87 | sub=we | pred=extend | obj=### 2.4.1. A Time-Varying Framework Using | unit=S107\nB T4 B88 | sub=This | pred=suggest | obj=that the relative age-specific mortality decline | unit=S108\nB T4 B89 | sub=we | pred=have | obj=In terms of the forecasting | unit=S109\nB T4 B90 | sub=one | pred=need | obj=to additionally model and forecast the | unit=S110\nB T4 B91 | sub=article text | pred=note | obj=that we do not require the | unit=S111\nB T4 B92 | sub=Negative values | pred=mean | obj=that mortality rates at certain ages | unit=S112\nB T4 B93 | sub=consistent declines | pred=expect | obj=likely | unit=S113\nB T4 B94 | sub=many effective methods | pred=discuss | obj=For the estimation of the time-varying | unit=S114\nB T4 B95 | sub=one of the most widely used | pred=smoothing | obj=Among them | unit=S115\nB T4 B96 | sub=we | pred=illustrate | obj=In this paper | unit=S116\nB T4 B97 | sub=the usual SVD | pred=apply | obj=to Kb(τs−τ)lnmx,s | unit=S117\nB T4 B98 | sub=Kb(τs−τ | pred=function | obj=In addition | unit=S118\nB T4 B99 | sub=we | pred=have | obj=For instance | unit=S119\nB T4 B100 | sub=The bandwidth b | pred=determine | obj=the weights distributed to each observation | unit=S120\nB T4 B101 | sub=A larger b | pred=mean | obj=weights are more evenly distributed | unit=S121\nB T4 B102 | sub=we | pred=examine | obj=the popular Epanechnikov kernel in this | unit=S122\nB T4 B103 | sub=This kernel | pred=investigate | obj=in various mortality research, including Chang | unit=S123\nB T4 B104 | sub=we | pred=denote | obj=In this paper | unit=S124\nB T4 B105 | sub=We now employ the LC-E and | pred=plot | obj=in Figure 3a | unit=S126\nB T4 B106 | sub=article text | pred=respectively | obj=respectively. | unit=S127\nB T4 B107 | sub=The bandwidths | pred=choose | obj=in a similar manner as that | unit=S128\nB T4 B108 | sub=we | pred=employ | obj=In short | unit=S129\nB T4 B109 | sub=Forecasts of the age-specific mortality declines | pred=produce | obj=using the exponential smoothing state space | unit=S130\nB T4 B110 | sub=The bandwidths | pred=choose | obj=as those | unit=S131\nB T4 B111 | sub=Both the fitted curves and time-varying | pred=similar | obj=to each other | unit=S132\nB T4 B112 | sub=less randomness | pred=observe | obj=Compared to the preliminary results displayed | unit=S133\nB T4 B113 | sub=This | pred=explain | obj=by the fact that the entire | unit=S134\nB T4 B114 | sub=the mortality declines at very old | pred=seem | obj=to decelerate rather than accelerate | unit=S135\nB T4 B115 | sub=an adjustment | pred=need | obj=to be adopted before reliable mortality | unit=S136\nB T4 B116 | sub=the forecast mortality improvements at old | pred=decline | obj=larger | unit=S137\nB T4 B117 | sub=This | pred=contrary | obj=to the rotation proposed by Li | unit=S138\nB T4 B118 | sub=Figure | pred=decline | obj=of the averaged population | unit=S139\nB T4 B119 | sub=The age coherence | pred=define | obj=follows | unit=S140\nB T4 B120 | sub=it | pred=worth | obj=noting that lnmx,t is usually assumed | unit=S141\nB T4 B121 | sub=article text | pred=let | obj=yx,t=lnmx,t−lnmx,t−1, which is known as the | unit=S142\nB T4 B122 | sub=It | pred=show | obj=that | unit=S143\nB T4 B123 | sub=we | pred=have | obj=that | unit=S144\nB T4 B124 | sub=it | pred=easy | obj=From Equation (5 | unit=S145\nB T4 B125 | sub=the condition of μ^i≡μ^j | pred=equivalent | obj=to b^i,T+h≡b^j,T+h | unit=S146\nB T4 B126 | sub=we | pred=require | obj=With the constraint of the LC | unit=S147\nB T4 B127 | sub=We | pred=discuss | obj=an appropriate model to study bx,t | unit=S148\nB T4 B128 | sub=article text | pred=note | obj=that the condition all b^x,T+h converging | unit=S149\nB T4 B129 | sub=we | pred=denote | obj=this sequence | unit=S150\nB T4 B130 | sub=Equation (6 | pred=model | obj=with constrained coefficient matrix | unit=S151\nB T4 B131 | sub=the constraint | pred=emphasize | obj=According to Li and Lu [6 | unit=S152\nB T4 B132 | sub=The forecasts of b^x,T+h | pred=produce | obj=in the same way as for | unit=S153\nB T4 B133 | sub=It | pred=see | obj=that as long as the VAR | unit=S154\nB T4 B134 | sub=we | pred=rescale | obj=In addition | unit=S155\nB T4 B135 | sub=article text | pred=solve | obj=In terms of the estimation | unit=S156\nB T4 B136 | sub=Parameters | pred=selection | obj=Estimation | unit=S162\nB T4 B137 | sub=a cross-validation technique | pred=employ | obj=In a usual case | unit=S163\nB T4 B138 | sub=It | pred=worth | obj=noting that a usual cross-validation technique | unit=S164\nB T4 B139 | sub=The reason | pred=be | obj=that this expanding-window approach normally considers | unit=S165\nB T4 B140 | sub=age-coherent adjustment of the LC model | pred=emphasize | obj=In contrast | unit=S166\nB T4 B141 | sub=we | pred=employ | obj=a hold-out-sample approach | unit=S167\nB T4 B142 | sub=the predicted original mortality rates | pred=expose | obj=to the famous Jensen’s inequality issue | unit=S168\nB T4 B143 | sub=the accuracy of forecasting | pred=low | obj=rate | unit=S169\nB T4 B144 | sub=article text | pred=note | obj=that the choice of the length | unit=S170\nB T4 B145 | sub=Adopting other popular alternatives, such as | pred=lead | obj=to robust results | unit=S171\nB T4 B146 | sub=forecasting with the LC-E | pred=implement | obj=) In summary, forecasting with the | unit=S172\nB T4 B147 | sub=the same procedure of the LC | pred=apply | obj=for the LC-E and LC-G models | unit=S173\nB T4 B148 | sub=the prediction interval (PI) of the | pred=produce | obj=For instance | unit=S174\nB T4 B149 | sub=we | pred=use | obj=method (I) described in Li [32 | unit=S175\nB T4 B150 | sub=existing research | pred=propose | obj=alternative specifications | unit=S176\nB T4 B151 | sub=Renshaw and Haberman [15], Cairns et | pred=consider | obj=For instance | unit=S177\nB T4 B152 | sub=Brouhns et al. [18 | pred=calibrate | obj=mortality rates | unit=S178\nB T4 B153 | sub=Machine learning techniques | pred=consider | obj=in Hainaut [39], Levantesi and Pizzorusso | unit=S179\nB T4 B154 | sub=Other studies, such as [43,44,45 | pred=introduce | obj=different time-series models | unit=S180\nB T4 B155 | sub=models | pred=out | obj=of the scope of this paper | unit=S181\nB T4 B156 | sub=We | pred=model | obj=the mortality data | unit=S186\nB T4 B157 | sub=the mortality rates | pred=decline | obj=on average | unit=S187\nB T4 B158 | sub=This | pred=true | obj=for individual populations | unit=S188\nB T4 B159 | sub=substantial mortality improvements | pred=take | obj=Despite the data volatility in some | unit=S189\nB T4 B160 | sub=the “accidental hump” of ages 20–25 | pred=flatten | obj=For instance | unit=S190\nB T4 B161 | sub=Mortality | pred=rate | obj=over 1950–2019:(a | unit=S191\nB T4 B162 | sub=article text | pred=/figure | obj=/figure | unit=S193\nB T4 B163 | sub=we | pred=fit | obj=Following the steps described in Section | unit=S194\nB T4 B164 | sub=The selected bandwidths | pred=display | obj=in Table 1 | unit=S195\nB T4 B165 | sub=the assumptions of stationarity | pred=need | obj=to be tested for the in-sample | unit=S196\nB T4 B166 | sub=The I(0) feature | pred=test | obj=via the usual augmented Dickey–Fuller (ADF) | unit=S197\nB T4 B167 | sub=article text | pred=recall | obj=that for each population, we have | unit=S198\nB T4 B168 | sub=It | pred=clear | obj=that in the vast majority of | unit=S199\nB T4 B169 | sub=The actual percentages of negative outcomes | pred=close | obj=to expected (i.e., 5% | unit=S200\nB T4 B170 | sub=Those results | pred=validate | obj=the application of the VAR(1) framework | unit=S201\nB T4 B171 | sub=Forecasting | pred=analysis | obj=3.1. Out-of-Sample Forecasting Analysis | unit=S205\nB T4 B172 | sub=We | pred=consider | obj=the forecasting performance of the proposed | unit=S206\nB T4 B173 | sub=we | pred=compare | obj=their out-of-sample forecasting accuracy | unit=S207\nB T4 B174 | sub=Shi | pred=recall | obj=Following Li and Lu [6 | unit=S208\nB T4 B175 | sub=the RMSFE | pred=compute | obj=follows | unit=S209\nB T4 B176 | sub=RMSFE19 | pred=measure | obj=entire | unit=S210\nB T4 B177 | sub=Our baseline results, including single-year age | pred=present | obj=in Table 2 | unit=S212\nB T4 B178 | sub=the RMSFE19 of LC-E | pred=small | obj=except for the UK data | unit=S213\nB T4 B179 | sub=This | pred=suggest | obj=the improved forecasting performance considering the | unit=S214\nB T4 B180 | sub=The BMS model, with adjustments on | pred=improve | obj=the forecasting accuracy of LC in | unit=S215\nB T4 B181 | sub=both the LC-E and LC-G models | pred=outperform | obj=Despite this, except for the UK | unit=S216\nB T4 B182 | sub=This | pred=suggest | obj=that appropriately allowing for dynamic age-specific | unit=S217\nB T4 B183 | sub=the differences between the two approaches | pred=marginal | obj=Although the LC-E model outperforms LC-G | unit=S218\nB T4 B184 | sub=This | pred=indicate | obj=that the forecasting performance of the | unit=S219\nB T4 B185 | sub=the RMSFE19 averaged over the fifteen | pred=0.2576 | obj=0.2610 | unit=S220\nB T4 B186 | sub=BMS | pred=improve | obj=on average | unit=S221\nB T4 B187 | sub=we | pred=expect | obj=From a statistical point of view | unit=S222\nB T4 B188 | sub=we | pred=plot | obj=the RMSFEh | unit=S224\nB T4 B189 | sub=those of Australia | pred=present | obj=For demonstration purposes | unit=S225\nB T4 B190 | sub=Results of other countries | pred=available | obj=upon request | unit=S226\nB T4 B191 | sub=we | pred=see | obj=In the vast majority of cases | unit=S227\nB T4 B192 | sub=This | pred=indicate | obj=that LC-G and LC-H are able | unit=S228\nB T4 B193 | sub=We | pred=evaluate | obj=the robustness of the forecasting results | unit=S229\nB T4 B194 | sub=A summary of the RMSFE19 across | pred=report | obj=in Table 3 | unit=S230\nB T4 B195 | sub=we | pred=conclude | obj=that both LC-E and LC-G are | unit=S231\nB T4 B196 | sub=using different kernel functions in the | pred=lead | obj=In addition | unit=S232\nB T4 B197 | sub=article text | pred=analysis | obj=2020–2100 | unit=S236\nB T4 B198 | sub=it | pred=sufficient | obj=to focus on one model only | unit=S237\nB T4 B199 | sub=we | pred=follow | obj=the steps described in Section 2.4.3 | unit=S238\nB T4 B200 | sub=We | pred=report | obj=the forecasts for Australia | unit=S239\nB T4 B201 | sub=all b^x | pred=converge | obj=to the long-run mean 1/101 | unit=S240\nB T4 B202 | sub=all the curves | pred=rotate | obj=In other words | unit=S241\nB T4 B203 | sub=The dynamics | pred=consistent | obj=with those of Li et al. | unit=S242\nB T4 B204 | sub=the speed of rotation | pred=data-driven | obj=Unlike in Li et al. [5 | unit=S243\nB T4 B205 | sub=It | pred=worth | obj=mentioning | unit=S244\nB T4 B206 | sub=Such a difference | pred=small | obj=it | unit=S245\nB T4 B207 | sub=Figure | pred=rotation | obj=of age-specific mortality decline | unit=S246\nB T4 B208 | sub=we | pred=derive | obj=forecast mortality rates | unit=S248\nB T4 B209 | sub=we | pred=contrast | obj=the forecast e^0 of LC-G | unit=S249\nB T4 B210 | sub=Both the point | pred=plot | obj=in Figure 7 | unit=S250\nB T4 B211 | sub=It | pred=see | obj=that e^0 generated by LC-G are | unit=S251\nB T4 B212 | sub=This | pred=consistent | obj=with the fact that the LC-G | unit=S252\nB T4 B213 | sub=their widths | pred=level | obj=In addition | unit=S253\nB T4 B214 | sub=This | pred=explain | obj=by the fact that k^T+h are | unit=S254\nB T4 B215 | sub=the point forecast e^0 of LC-G | pred=exceed | obj=As of 2100 | unit=S255\nB T4 B216 | sub=the point forecast e^0 of LC-G | pred=grow | obj=from 83.4, 82.9, 82.9, and 82.7, | unit=S256\nB T4 B217 | sub=article text | pred=plot | obj=the forecast logged mortality rates | unit=S257\nB T4 B218 | sub=it | pred=observe | obj=that little improvements are gained at | unit=S258\nB T4 B219 | sub=forecasts produced by LC-G | pred=demonstrate | obj=In contrast | unit=S259\nB T4 B220 | sub=less mortality declines | pred=distribute | obj=In addition | unit=S260\nB T4 B221 | sub=This | pred=contribute | obj=to the rotation-like difference | unit=S261\nB T4 B222 | sub=the difference in e^0 produced by | pred=explain | obj=by the potentially large impacts of | unit=S262\nB T4 B223 | sub=the long-run forecast logged mortality rates | pred=smooth | obj=due to the influence of the | unit=S263\nB T4 B224 | sub=Forecast | pred=lnmx | obj=t | unit=S264\nB T4 B225 | sub=article text | pred=> | obj=</figure> | unit=S265\nB T4 B226 | sub=Extensions to the Multi-Population Modelling: An | pred=study | obj=in the seminal work of Li | unit=S267\nB T4 B227 | sub=An additional common factor which controls | pred=include | obj=in the proposed Li–Lee (LL) model | unit=S268\nB T4 B228 | sub=the logged mortality rate | pred=model | obj=as:(8)lnmx,t | unit=S269\nB T4 B229 | sub=The common factor BxKt | pred=describe | obj=the mortality trend of all modeled | unit=S270\nB T4 B230 | sub=article text | pred=obtain | obj=the estimates | unit=S271\nB T4 B231 | sub=a^x,j | pred=average | obj=of lnmx,t,j | unit=S272\nB T4 B232 | sub=The population-specific factor bx,ikt,i | pred=estimate | obj=SVD | unit=S273\nB T4 B233 | sub=article text | pred=assume | obj=Similar to the case under LC | unit=S274\nB T4 B234 | sub=the group-specific time component kt,i | pred=fit | obj=In contrast | unit=S275\nB T4 B235 | sub=the h-step-ahead forecast of the logged | pred=give | obj=Given the data observed in the | unit=S276\nB T4 B236 | sub=age | pred=coherent | obj=Despite its desirable coherence among populations, | unit=S277\nB T4 B237 | sub=the non-stationary temporal term K^T+h in | pred=lead | obj=without identical B^x across ages | unit=S278\nB T4 B238 | sub=The multi-population extensions of the BMS | pred=straightforward | obj=to derive | unit=S279\nB T4 B239 | sub=instead of fitting an LC model | pred=fit | obj=for the averaged rates | unit=S280\nB T4 B240 | sub=forecasts of their multi-population extensions | pred=produce | obj=Consequently, forecasts of their multi-population extensions | unit=S281\nB T4 B241 | sub=(10)lnm^x,T+h,jB | pred=states | obj=a^x | unit=S282\nB T4 B242 | sub=It | pred=see | obj=that in all cases, the population-specific | unit=S283\nB T4 B243 | sub=the same two adjustments, selecting an | pred=adopt | obj=For the LL-BMS | unit=S284\nB T4 B244 | sub=B^x | pred=forecast | obj=For the LL-E and LL-G models | unit=S285\nB T4 B245 | sub=The tuning parameters | pred=select | obj=in the same way as described | unit=S286\nB T4 B246 | sub=LL-BMS | pred=lead | obj=to population-coherent forecasts | unit=S287\nB T4 B247 | sub=B^x | pred=invariant | obj=In contrast, following the discussions in | unit=S288\nB T4 B248 | sub=b^x,jk^T+h,j | pred=converge | obj=to a constant | unit=S289\nB T4 B249 | sub=the logged mortality rates forecast by | pred=age- | obj=in the long run | unit=S290\nB T4 B250 | sub=we | pred=consider | obj=For illustration purposes | unit=S291\nB T4 B251 | sub=The RMSFE19 of the out-of-sample forecasts | pred=report | obj=in Table 4 | unit=S292\nB T4 B252 | sub=it | pred=worth | obj=noting that in 10, 12, 8, | unit=S293\nB T4 B253 | sub=LL-E | pred=outperform | obj=the LL model | unit=S294\nB T4 B254 | sub=LL-G | pred=lead | obj=to more accurate forecasts in 11 | unit=S295\nB T4 B255 | sub=the differences between the two time-varying | pred=marginal | obj=in most cases | unit=S296\nB T4 B256 | sub=LL-E | pred=improve | obj=On average | unit=S297\nB T4 B257 | sub=those results | pred=consistent | obj=with the single-population out-of-sample forecasting metrics | unit=S298\nB T4 B258 | sub=We | pred=examine | obj=the forecast life expectancy at birth | unit=S300\nB T4 B259 | sub=we | pred=present | obj=In Figure 9 | unit=S301\nB T4 B260 | sub=the e^0 generated by LL-G | pred=large | obj=than those by the LL | unit=S302\nB T4 B261 | sub=This | pred=explain | obj=by the desirable age-coherence property of | unit=S303\nB T4 B262 | sub=all point forecasts of the LL-G | pred=bound | obj=In addition | unit=S304\nB T4 B263 | sub=LL | pred=lead | obj=due to the population coherence | unit=S305\nB T4 B264 | sub=the forecast e0 in 2100 | pred=close | obj=For the same reason | unit=S306\nB T4 B265 | sub=the widths of the resulting PIs | pred=narrow | obj=for both the LL | unit=S307\nB T4 B266 | sub=This | pred=attribute | obj=to the fact that more information | unit=S308\nB T4 B267 | sub=Figure | pred=forecast | obj=e0 | unit=S309\nB T4 B268 | sub=article text | pred=# | obj=5 | unit=S311\nB T4 B269 | sub=Concluding Remarks | pred=investigate | obj=a time-varying coefficients extension of the | unit=S312\nB T4 B270 | sub=As argued in the influential work | pred=decelerate | obj=at young ages | unit=S313\nB T4 B271 | sub=The lack of considering such dynamics | pred=make | obj=the LC model less accurate in | unit=S314\nB T4 B272 | sub=article text | pred=resolve | obj=this issue | unit=S316\nB T4 B273 | sub=in-sample time-dependent bx,t | pred=estimate | obj=using the Epanechnikov (LC-E) and Gaussian | unit=S317\nB T4 B274 | sub=article text | pred=project | obj=the out-of-sample b^x,T+h | unit=S318\nB T4 B275 | sub=The forecasting of logged mortality rates | pred=conduct | obj=to that for the LC model | unit=S319\nB T4 B276 | sub=we | pred=draw | obj=For the proposed LC-E and LC-G | unit=S320\nB T4 B277 | sub=the long-run age-specific patterns of mortality | pred=force | obj=identical | unit=S321\nB T4 B278 | sub=This | pred=ensure | obj=the desirable age coherence | unit=S322\nB T4 B279 | sub=the LC-E | pred=efficient | obj=data-driven | unit=S323\nB T4 B280 | sub=both models | pred=adopt | obj=the penalized least square, which results | unit=S324\nB T4 B281 | sub=the parameters and smoothing penalties relevant | pred=estimated/determine | obj=In addition | unit=S325\nB T4 B282 | sub=article text | pred=use | obj=a large sample of uni-sex data | unit=S326\nB T4 B283 | sub=The differences in the selection of | pred=deem | obj=marginal | unit=S327\nB T4 B284 | sub=This conclusion | pred=robust | obj=five-year | unit=S328\nB T4 B285 | sub=we | pred=recommend | obj=modelling and forecasting mortality rates with | unit=S329\nB T4 B286 | sub=our long-term analysis | pred=support | obj=the effectiveness of the age-coherent forecasts | unit=S330\nB T4 B287 | sub=significantly longer life expectancies at birth | pred=generate | obj=by the LC-G model | unit=S331\nB T4 B288 | sub=multi-population extensions of the LC-E (LL-E | pred=straightforward | obj=to derive | unit=S332\nB T4 B289 | sub=our proposed extension | pred=achieve | obj=On one hand | unit=S333\nB T4 B290 | sub=consistent conclusions | pred=hold | obj=On the other hand | unit=S334\nB T4 B291 | sub=Such conclusions | pred=include | obj=the more accurate out-of-sample forecasts | unit=S335\nB T4 B292 | sub=There | pred=be | obj=directions | unit=S336\nB T4 B293 | sub=it | pred=interest | obj=to investigate female and male populations | unit=S337\nB T4 B294 | sub=differences between the selected tuning parameters | pred=indicate | obj=For each country | unit=S338\nB T4 B295 | sub=recent studies, including Vekas [46 | pred=outline | obj=In addition | unit=S339\nB T4 B296 | sub=This | pred=motivate | obj=the exploration of sex differences | unit=S340\nB T4 B297 | sub=the fitted d in modelling the | pred=make | obj=further time-dependent | unit=S341\nB T4 B298 | sub=it | pred=worth | obj=exploring the applicability of our specification | unit=S342\nB T4 B299 | sub=our time-varying specification | pred=extensible | obj=For factor-based models, such as Renshaw | unit=S343\nB T4 B300 | sub=It | pred=challenging | obj=to incorporate dynamics in other frameworks | unit=S344\nB T4 B301 | sub=we | pred=allow | obj=in the multi-population case | unit=S345\nB T4 B302 | sub=This more flexible specification | pred=improve | obj=the forecasting accuracy | unit=S346\nB T4 B303 | sub=impacts of COVID-19 | pred=delay | obj=mortality declines | unit=S347\nB T4 B304 | sub=our kernel-based models | pred=use | obj=to study how such shocks evolve | unit=S348",
+  "expected": {
+    "assertion_count": 304,
+    "minimum_concept_count": 469,
+    "minimum_structural_row_count": 1044,
+    "minimum_knowledge_map_node_count": 1044,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

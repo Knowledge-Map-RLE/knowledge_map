@@ -1,0 +1,1731 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 284,
+      "text": "# Aging Atlas Reveals Cell-Type-Specific Regulation of Pro-longevity Strategies\n\n**Авторы:** Gao Shihong Max, Qi Yanyan, Zhang Qinghao, Mohammed Aaron S., Lee Yi-Tang, Guan Youchen, Li Hongjie, Fu Yusi, Wang Meng C.\n\n**Журнал:** bioRxiv (2023)\n\n**DOI:** 10.1101/2023.02.28.530490\n\n\n##",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 285,
+      "end": 439,
+      "text": "Abstract\n\nOrganism aging occurs at the multicellular level; however, how pro-longevity mechanisms slow down aging in different cell types remains unclear.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S3",
+      "start": 440,
+      "end": 606,
+      "text": "We generated single-cell transcriptomic atlases across the lifespan of Caenorhabditis elegans under different pro-longevity conditions (http://mengwanglab.org/atlas).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 607,
+      "end": 750,
+      "text": "We found cell-specific, age-related changes across somatic and germ cell types and developed transcriptomic aging clocks for different tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 751,
+      "end": 926,
+      "text": "These clocks enabled us to determine tissue-specific aging-slowing effects of different pro-longevity mechanisms, and identify major cell types sensitive to these regulations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 927,
+      "end": 1134,
+      "text": "Additionally, we provided a systemic view of alternative polyadenylation events in different cell types, as well as their cell-type-specific changes during aging and under different pro-longevity conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 1135,
+      "end": 1279,
+      "text": "Together, this study provides molecular insights into how aging occurs in different cell types and how they respond to pro-longevity strategies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1279,
+      "end": 1384,
+      "text": "\n\nAging in multicellular organisms involves functional declines in both somatic and reproductive tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1385,
+      "end": 1503,
+      "text": "However, how age-related molecular changes differ in various tissues at cellular resolution remains poorly understood.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1504,
+      "end": 1708,
+      "text": "On the other hand, multiple pro-longevity strategies have been discovered in multicellular organisms ranging from C. elegans to mice, and some of them display high tissue-specificity in their regulations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1709,
+      "end": 2008,
+      "text": "For example, the reduction of insulin/IGF-1 signaling is a well-conserved mechanism in prolonging lifespan 1,2, and in C. elegans and Drosophila melanogaster, fat storage tissues (intestine in worms and fat body in fruit flies) and neurons are two crucial sites for this pro-longevity mechanism 3,4.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 2009,
+      "end": 2282,
+      "text": "Similarly, the reduction of TOR (target of rapamycin) signaling by either genetic or pharmacological interventions increases lifespan in a variety of organisms 5; and in C. elegans, this longevity-promoting effect has been linked with neuronal or intestinal regulation 6–8.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 2283,
+      "end": 2573,
+      "text": "In addition, our studies discovered that a lysosomal acid lipase LIPL-4 in the intestine of C. elegans induces specific lipid signals to activate nuclear transcription cell-autonomously and up-regulate the neuropeptide pathway cell non-autonomously, both leading to lifespan extension 9,10.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 2574,
+      "end": 2747,
+      "text": "Despite their well-characterized roles in prolonging lifespan, whether and how these strategies slow aging of different tissues in distinct manners are yet to be determined.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2747,
+      "end": 2750,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S16",
+      "start": 2750,
+      "end": 3111,
+      "text": "## Generating the adult C. elegans cell atlas during aging\n\nIn recent years, single-cell and single-nucleus RNA sequencing (scRNA-seq and snRNA-seq) have proven to be effective ways to systemically profile transcriptomes at the single-cell resolution and have facilitated the discovery of cell-type-specific transcriptomic signatures in different tissues 11–17.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 3112,
+      "end": 3362,
+      "text": "Recent studies showed that snRNA-seq is less biased for tissue sampling in atlas studies compared to scRNA-seq, because certain cell types (e.g., muscle and epidermal cells) cannot be efficiently isolated using single cell dissociation methods 18,19.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 3363,
+      "end": 3519,
+      "text": "Thus, we have developed an snRNA-seq pipeline for systemically profiling transcriptomic changes in adult C. elegans at the single-cell resolution (Fig. 1A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 3520,
+      "end": 3582,
+      "text": "For each condition, we harvested and homogenized ~2,000 worms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 3583,
+      "end": 3757,
+      "text": "Nuclei were isolated using fluorescence-activated cell sorting (FACS) based on the DNA content signal (fig. S1A), and snRNA-seq was performed using the 10× Genomics platform.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 3758,
+      "end": 3899,
+      "text": "For each condition, 10,000 nuclei were sequenced to capture the transcriptome of 959 somatic cells and ~2,000 germ cells in adult C. elegans.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3900,
+      "end": 4001,
+      "text": "After pre-processing and cell filtering, we generated 177,733 single-nuclei gene expression profiles.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 4002,
+      "end": 4346,
+      "text": "From this dataset, we were able to build an adult cell atlas that covers 15 major cell classes, including neurons, glia, hypodermis, intestine, muscle, pharynx, coelomocyte, gonadal sheath cells, vulva and uterus, uterine seam cells, distal tip cells and excretory gland cells, germline, sperms, spermatheca and embryonic cells (Fig. 1B and C).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 4347,
+      "end": 4504,
+      "text": "Note that adult C. elegans consists of various fully differentiated somatic cells and carries germ cells at different developmental stages and early embryos.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 4505,
+      "end": 4611,
+      "text": "Sub-clustering of these major cell classes further revealed many more different cell types for each class.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 4612,
+      "end": 4738,
+      "text": "For neurons, 71 subclusters were identified, which account for 104 of all 114 neuron classes in adult C. elegans (Fig. 1D) 20.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 4739,
+      "end": 4910,
+      "text": "For the hypodermis, we further distinguished seam cells, rectal and vulval epithelium, and four tail tip hypodermal cells (hyp8–11) from other hypodermal cells (fig. S1B).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4911,
+      "end": 5047,
+      "text": "For the muscle, we discovered four subclusters, including body wall muscle, head muscle, nonstriated muscle and vulva muscle (fig. S1C).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 5047,
+      "end": 5221,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Fig. 1.</strong> (A) Schematics of single-cell transcriptome profiling in adult C. elegans. (B) Adult C. elegans anatomy with major tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 5222,
+      "end": 5404,
+      "text": "(C) UMAP visualization of the single cells from adult C. elegans cell atlas, clusters corresponding to major tissues are shown, and tissues marked with * can be further subclustered.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 5405,
+      "end": 5488,
+      "text": "(D) Zoom-in UMAP visualization of neuron sub-clustering into 72 subsets of neurons.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 5489,
+      "end": 5612,
+      "text": "(E) Dot plot showing the cell-type-specific expression pattern of known and newly identified markers for each major tissue.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 5613,
+      "end": 5752,
+      "text": "(F) Heatmaps showing the transcription factors (right) with the expression of their target genes (left) enriched explicitly in each tissue.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 5753,
+      "end": 5890,
+      "text": "(G, H) Heatmaps showing tissue-specific protein families based on InterPro (G) and KEGG pathways enrichment (H).</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 5890,
+      "end": 6064,
+      "text": "These large-scale profiling and clustering analyses revealed cell-type-specific transcriptional signatures that are supported by previously identified gene markers (Fig. 1E).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 6065,
+      "end": 6217,
+      "text": "Importantly, we identified several new cell-type-specific gene markers, which showed comparable or better specificity than well-known markers (Fig. 1E).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 6218,
+      "end": 6356,
+      "text": "We further conducted DNA binding motif analysis to search for transcription factors that could mediate cell-type-specific gene expression.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 6357,
+      "end": 6655,
+      "text": "We identified a number of transcription factors whose target genes are enriched in specific tissues, including mxl-3 for gonad sheath cells, sma-3 for the hypodermis, mab-3 for glia, ceh-24 and hlh-1 for the muscle, efl-1, hmg-12 and atph-1 for germline/sperms, and pha-4 for the pharynx (Fig. 1F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 6656,
+      "end": 6763,
+      "text": "Accordingly, the expression of these transcription factors exhibited the same tissue specificity (Fig. 1F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 6764,
+      "end": 6899,
+      "text": "Together, these snRNA-seq data sets provide a systemic overview of cell-type-specific transcriptional signatures and their regulations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 6899,
+      "end": 6901,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S42",
+      "start": 6901,
+      "end": 7074,
+      "text": "Next, we utilized InterPro and KEGG classification to analyze these cell-type-specific transcriptome profiles and discovered distinct functional features for each cell type.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 7075,
+      "end": 7122,
+      "text": "Some of these functional features are expected.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 7123,
+      "end": 7463,
+      "text": "For example, based on the annotation of InterPro classification, the G protein-coupled receptor family (GPCR_Rhodpsn_7TM) that represents crucial molecular sensors was enriched explicitly in neurons, and the myosin head motor domain family (Myosin_head_motor_dom) that is required for muscle contraction was specially enriched in the muscle",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 7464,
+      "end": 7473,
+      "text": "(Fig. 1G)",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 7473,
+      "end": 7474,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S47",
+      "start": 7475,
+      "end": 7709,
+      "text": "The gene module analysis for KEGG pathway enrichment revealed that alpha-linolenic acid metabolism and unsaturated fatty acid biosynthesis categories are enriched in the intestine, the major fat storage tissue of C. elegans (Fig. 1H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 7710,
+      "end": 7808,
+      "text": "DNA replication and mismatch repair categories were enriched in the germline and sperms (Fig. 1H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 7809,
+      "end": 7908,
+      "text": "We also uncovered several tissue-specific functional signatures that were not characterized before.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 7909,
+      "end": 8226,
+      "text": "For example, in glial cells, we discovered the specific enrichment of glycosyltransferase 2-like family (Glyco_trans_2_like) and mucin-type O-glycan biosynthesis based on annotation from InterPro (Fig. 1G) and KEGG (Fig. 1H), respectively, which together suggest the importance of O-glycosylation in glial physiology.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 8227,
+      "end": 8520,
+      "text": "InterPro and KEGG analyses also revealed that the α/β hydrolase superfamily (AB_hydrolase_1, Fig. 1G) and Arginine, Phenylamine, Tyrosine and Tryptophan biosynthesis (Fig. 1H) are specifically enriched in the hypodermis, indicating the active involvement of this tissue in metabolic processes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 8520,
+      "end": 8666,
+      "text": "\n\nNext, we focused on establishing the aging cell atlas to comprehensively understand age-related transcriptomic changes at the single-cell level.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 8667,
+      "end": 8851,
+      "text": "We first analyzed data from wild type (WT) worms at four different adult ages, day 1, day 6, day 12 and day 14 when the survival rate is 100%, 99%, 61% and 14%, respectively (Fig. 2A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 8852,
+      "end": 8910,
+      "text": "We were able to construct aging cell atlases (fig. S2A–D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 8911,
+      "end": 9115,
+      "text": "We found that the relative number of cells in different somatic tissue clusters remain the same during the aging process (fig. S2E), confirming that our snRNA-seq pipeline did not introduce sampling bias.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 9116,
+      "end": 9216,
+      "text": "However, we did observe the number of cells in the germline cluster decreases with aging (fig. S2F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 9217,
+      "end": 9342,
+      "text": "Notably, we aged WT adult worms under normal physiological conditions, without interfering with their reproductive processes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 9343,
+      "end": 9459,
+      "text": "This experimental setup enabled us to investigate transcriptomic changes during both somatic and reproductive aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 9459,
+      "end": 9750,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Fig. 2.</strong> (A) Schematic (left) of aging sample preparation under physiological conditions without interrupting worm reproduction. The survival curve (right) of worm samples used for nuclei collection at four time points to build the aging cell atlas.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 9751,
+      "end": 9805,
+      "text": "(B) Germ cell trajectory pseudotime presented in UMAP.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 9806,
+      "end": 9869,
+      "text": "(C) Germ cell trajectory PAGA map showing cell fate commitment.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 9870,
+      "end": 9978,
+      "text": "(D) Density plots showing the distribution of germline nuclei number along the pseudotime at different ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 9979,
+      "end": 10115,
+      "text": "(E) Heatmaps showing that gene expression temporal patterns along the developmental progression of germ cells were disrupted with aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 10116,
+      "end": 10235,
+      "text": "(F) Jitter plots showing the correlation between the true age and the predicted age from the age clock for each tissue.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 10236,
+      "end": 10323,
+      "text": "(G) UpSet plot showing the overlap between aging clock genes identified in each tissue.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 10324,
+      "end": 10419,
+      "text": "Genes identified in more than one tissue-specific aging clock are highlighted in colored boxes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 10420,
+      "end": 10539,
+      "text": "(H) Heatmaps showing neuron- and intestine-specific GO terms enrichment changes during aging.</figcaption>\n</figure>\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 10539,
+      "end": 10540,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S69",
+      "start": 10540,
+      "end": 10541,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S70",
+      "start": 10542,
+      "end": 10760,
+      "text": "Mapping germ cell fate trajectories during aging\n\nTo systematically understand transcriptomic changes in germ cells during aging, we generated germ cell fate trajectory maps and conducted pseudotime inference analyses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 10761,
+      "end": 10928,
+      "text": "In order to minimize the impact of analysis bias, we utilized two different computational methods: the Slingshot package 21 and RNA velocity-based scVelo algorithm 22.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 10929,
+      "end": 11005,
+      "text": "The results obtained from these two methods were consistent with each other.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 11006,
+      "end": 11230,
+      "text": "These trajectory maps depicted the progression of germ cells, as they undergo proliferation and differentiation from germline stem cells, through mitotic cells and meiotic cells, towards mature oocytes (Fig 2B, C, fig. S3A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 11231,
+      "end": 11468,
+      "text": "The unsupervised scVelo model computed the initial and terminal states within the trajectory and identified cell clusters at the root and the endpoints, which correspond to germline stem cells and mature oocytes, respectively (fig. S3B).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 11469,
+      "end": 11752,
+      "text": "Furthermore, directed partition-based graph abstraction (PAGA) provided a quantitative assessment of cell fate probabilities for the initial, intermediate and terminal states (Fig. 2C), consistent with the developmental order from germline stem cells to fully differentiated oocytes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 11752,
+      "end": 11889,
+      "text": "\n\nImportantly, the computational trajectory allowed us to construct a pseudotemporal order and analyze age-related changes in germ cells.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 11890,
+      "end": 12112,
+      "text": "We observed a drastic decrease in the number of germline stem cells as the worm aged from day 1 to day 12, while the number of germ cells in the mitotic-meiotic transition peaked at day 6 and decreased at day 12 (Fig. 2D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 12113,
+      "end": 12231,
+      "text": "In contrast, the number of mature oocytes showed no changes between day 1 and day 6 but decreased at day 12 (Fig. 2D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 12232,
+      "end": 12384,
+      "text": "These results suggest that various groups of germ cells undergo unique changes as organisms age, implying divergent aging processes within the germline.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 12384,
+      "end": 12682,
+      "text": "\n\nTo gain a molecular insight into these age-related changes, we identified hundreds of genes that display specific expression patterns within different germ cell groups and that show significant changes in their expression patterns during aging (top 500 genes highlighted in Fig. 2E and Table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 12683,
+      "end": 12844,
+      "text": "These analyses reveal the molecular signatures for germ cells at various stages, and provide a comprehensive view of germline molecular alterations during aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 12844,
+      "end": 12847,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S83",
+      "start": 12847,
+      "end": 12848,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S84",
+      "start": 12848,
+      "end": 13045,
+      "text": "# Tissue-specific aging clocks and functional analyses\n\nNext, we leveraged tissue-specific transcriptomic changes during aging to build age-prediction models – aging clocks – for different tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 13046,
+      "end": 13293,
+      "text": "Using machine learning, we constructed regression-based tissue-specific aging clocks that accurately predicted true chronological ages with correlations (R2) greater than 0.96 for tissues with more than 50 cells in the cluster (Fig. 2F, fig. S3C).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 13294,
+      "end": 13528,
+      "text": "Surprisingly, we found that those aging-clock genes are mostly tissue-specific and exhibit very little overlap between them (Fig. 2G), suggesting that different tissues may age differently with their unique transcriptional signatures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 13528,
+      "end": 13746,
+      "text": "\n\nTo gain a more comprehensive understanding of functional changes associated with somatic aging in a tissue-specific manner, we have profiled cell-type-specific gene ontology (GO) term enrichment changes during aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 13747,
+      "end": 13950,
+      "text": "Our analysis discovered a series of GO terms whose enrichment levels in specific tissues showed a consistent trend of increasing or decreasing as age increases (age-related GO terms) (Fig. 2H, fig. S3D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 13951,
+      "end": 14081,
+      "text": "Notably, we found that these age-related GO terms specific to neurons undergo expression increases from day 1 to day 14 (Fig. 2H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 14082,
+      "end": 14294,
+      "text": "These include diverse gene categories crucial for neural functions, such as neurogenesis, dense core granule transport, axonal transport and guidance, and protein localization to the cilium and synapse (Fig. 2H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 14295,
+      "end": 14446,
+      "text": "At the level of signal transduction, positive regulation of JUN kinase and GTPase activities also exhibited age-related increases in neurons (Fig. 2H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 14447,
+      "end": 14517,
+      "text": "These changes suggest that neurons become hyperactivated during aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 14518,
+      "end": 14699,
+      "text": "Interestingly, neural hyperactivity has been linked with age-related neurodegeneration 23–25 and lifespan reduction 26; while suppressing neuronal hyperactivity extends lifespan 26.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 14700,
+      "end": 15034,
+      "text": "In contrast, those age-related GO terms specific to the intestine showed age-related decreases in expression, including a variety of metabolic pathways, such as ATP production, branched chain amino acid catabolism, fatty acid unsaturation, elongation and oxidation, sphingolipid metabolism, and hydrogen peroxide metabolism (Fig. 2H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 15035,
+      "end": 15203,
+      "text": "The intestine is a major metabolic tissue in C. elegans, and our snRNA-seq analysis provides a systemic, molecular understanding of its functional decline during aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 15203,
+      "end": 15206,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S97",
+      "start": 15206,
+      "end": 15207,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S98",
+      "start": 15207,
+      "end": 15392,
+      "text": "# Aging clocks predicting pro-longevity effects in different tissues\n\nMultiple strategies have been discovered that extend lifespan in various organisms ranging from C. elegans to mice.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 15393,
+      "end": 15497,
+      "text": "How do different pro-longevity mechanisms affect age-related transcriptomic changes in specific tissues?",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 15498,
+      "end": 15809,
+      "text": "To address this question, we performed snRNA-seq analysis on three different long-lived strains at two different ages (day 1 and day 6 when survival rates are close to 100%, to focus on early changes that could contribute to longevity and minimize the impact of confounding factors related to organismal death).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 15810,
+      "end": 15976,
+      "text": "The lipl-4 transgenic strain (lipl-4 Tg) constitutively expresses the LIPL-4 lysosomal acid lipase in the intestine, which extends lifespan by 40%-60% (Fig. 3A) 9,27.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 15977,
+      "end": 16110,
+      "text": "DAF-2 is the C. elegans homolog of the insulin/IGF-1 receptor, and its loss-of-function (lf) mutant doubles the lifespan (Fig. 3B) 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 16111,
+      "end": 16256,
+      "text": "The rsks-1 gene encodes S6 kinase in C. elegans and the rsks-1(lf) mutant reduces TOR signaling and shows 20–30% lifespan extension (Fig. 3C) 28.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 16257,
+      "end": 16542,
+      "text": "We systematically profiled genes that showed differential expression between WT and long-lived strains in different cell clusters (Fig. 3D, 3E, Table S2), revealing tissue-specific transcriptome signatures that underscore the distinct pro-longevity mechanisms at the single-cell level.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 16543,
+      "end": 16857,
+      "text": "When compared to WT worms, we observed that the three long-lived strains exhibit the largest difference in the number of differentially expressed genes (DEGs) in the hypodermis (Fig. 3D, 3E), which can be attributed to the highest proportion of hypodermal cells among the recovered somatic nuclei (~30%, fig. S2E).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 16858,
+      "end": 17038,
+      "text": "The second largest DEG difference was found in neurons, where we observed substantial transcriptome differences in the daf-2(lf) and the rsks-1(lf) strains compared to WT at day 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 17039,
+      "end": 17116,
+      "text": "Notably, these differences were significantly reduced at day 6 (Fig. 3D, 3E).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 17117,
+      "end": 17274,
+      "text": "On the other hand, the lipl-4 Tg strain exhibited minor changes in the neural transcriptome on day 1 but displayed a large difference on day 6 (Fig. 3D, 3E).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 17275,
+      "end": 17411,
+      "text": "These results suggest that diverse tissues are affected by different pro-longevity mechanisms in distinct ways during the aging process.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 17411,
+      "end": 17648,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Fig. 3.</strong> (A-C) Lifespans of long-lived lipl-4 transgenic strain (lipl-4 Tg) (A), daf-2 loss-of-function mutant (daf-2(lf)) (B), and rsks-1 loss-of-function mutant (rsks-1(lf)) (C) compared to WT.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 17649,
+      "end": 17789,
+      "text": "(D, E) Bar graph showing the difference in the number of DEGs in major tissues between WT and long-lived strains at day 1 (D) and day 6 (E).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 17790,
+      "end": 17897,
+      "text": "Bars above or below zero representing higher or lower expression in long-lived worms than WT, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 17898,
+      "end": 18078,
+      "text": "(F) Boxplots showing the predicted biological ages of different tissues in three long-lived strains at the chronological age of day 6 (red lines) with tissue-specific aging clocks.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 18079,
+      "end": 18228,
+      "text": "(G) Boxplots displaying maximum mean discrepancy (MMD) between cells from day 1 and day 6 across different tissues, for both WT and long-lived worms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 18229,
+      "end": 18368,
+      "text": "(H) Heatmaps showing the enrichment change of neuron- and intestine-specific GO terms between day 1 and day 6 in WT and long-lived strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 18369,
+      "end": 18624,
+      "text": "(I) Circos plots showing conserved co-expression modules (Fisher’s exact test, P < 0.01) that were significantly correlated with aging (Pearson’s correlation, P < 0.001 and R2 > 0.2) in neurons (left) and the intestine (right) between different genotypes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 18625,
+      "end": 18936,
+      "text": "Blue ribbons connected conserved models that were both negatively correlated with aging in different genotypes, green ribbons connected conserved models that were both positively correlated with aging, and red ribbons connected conserved models that were oppositely correlated with aging in different genotypes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 18937,
+      "end": 19113,
+      "text": "(J, K) UMAP visualization of the consensus co-expression network for aging-related modules (Pearson’s correlation, P < 0.001 and R2 > 0.2) in neurons (J) and the intestine (K).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 19114,
+      "end": 19185,
+      "text": "Dots represented genes and were colored by the module they belonged to.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 19186,
+      "end": 19232,
+      "text": "Edges represented co-expression between genes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 19233,
+      "end": 19443,
+      "text": "(L, M) Correlations between consensus co-expression modules with aging, with significant modules (Pearson’s correlation, P < 0.001 and R2 > 0.2) marked by arrows representing the way they correlated with aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 19444,
+      "end": 19665,
+      "text": "Bar graphs in dashed boxes showed the KEGG pathway enrichment analysis (Fisher’s exact test, BH adjusted P < 0.01) for the blue module in neurons (L) and the turquoise module in the intestine (M).</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 19665,
+      "end": 19951,
+      "text": "To quantitatively assess the effects of these pro-longevity mechanisms on tissue-specific aging processes, we utilized the tissue-specific aging clocks trained in WT worms to predict the biological ages of different tissues in these long-lived strains at the chronological age of day 6.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 19952,
+      "end": 20117,
+      "text": "Our analysis revealed that both the lipl-4 Tg and daf-2(lf) strains exhibit younger predicted ages for all tissues than day 6, ranging from day 2 to day 5 (Fig. 3F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 20118,
+      "end": 20227,
+      "text": "However, in the rsks-1(lf) strain, only hypodermal cells showed a predicted age younger than day 6 (Fig. 3F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 20228,
+      "end": 20431,
+      "text": "Interestingly, while the daf-2(lf) strain has a stronger lifespan extension than the lipl-4 Tg strain, the latter showed a stronger effect on slowing down the aging clocks in different tissues (Fig. 3F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 20432,
+      "end": 20617,
+      "text": "In parallel, we calculated the distance drift in the transcriptome of different tissues from day 1 to day 6 in WT and the long-lived worms using scMMD (maximum mean discrepancy) method.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 20618,
+      "end": 20818,
+      "text": "We found that in WT worms, neurons exhibited the biggest transcriptome drift from day 1 to day 6, followed by intestinal cells, which were largely attenuated in the three long-lived strains (Fig. 3G).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 20819,
+      "end": 21032,
+      "text": "These results suggest that these two tissues are more sensitive to aging than the other somatic tissues and play crucial roles in the endocrine regulation of longevity, as supported by previous genetic studies 29.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 21033,
+      "end": 21162,
+      "text": "Furthermore, these results highlight the diverse impact of the three pro-longevity mechanisms on tissue-specific aging processes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 21162,
+      "end": 21165,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S132",
+      "start": 21165,
+      "end": 21166,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S133",
+      "start": 21166,
+      "end": 21244,
+      "text": "# Molecular regulation of tissue aging by different pro-longevity mechanisms\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 21244,
+      "end": 21445,
+      "text": "At the functional level, we found that the rsks-1(lf) and the daf-2(lf) mutant strains showed similar increases for the neuron-specific, age-related GO terms, like those observed in WT worms (Fig. 2H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 21446,
+      "end": 21653,
+      "text": "In contrast, the lipl-4 Tg strain presented an opposite decreasing trend (Fig. 3H), which is in accordance with its strong aging-slowing effect in neurons based on the tissue-specific aging clocks (Fig. 3F).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 21654,
+      "end": 21792,
+      "text": "Meanwhile, we found that different pro-longevity mechanisms selectively suppress the decrease in intestine-specific, age-related GO terms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 21793,
+      "end": 22098,
+      "text": "For example, tetrahydrofolate interconversion and UDP metabolic process did not show age-related decrease only in the lipl-4 Tg strain, while the glycosylceramide, kynurenine and L-phenylalanine processes remained unchanged during aging in the daf-2(lf) strain but were increased in the rsks-1(lf) strain.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 22099,
+      "end": 22228,
+      "text": "Additionally, the rsks-1(lf) strain specifically reversed the age-related decrease in the steroid biosynthesis process (Fig. 3H).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 22229,
+      "end": 22352,
+      "text": "These findings reveal the varying impact of distinct pro-longevity mechanisms on tissue functions during the aging process.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 22352,
+      "end": 22518,
+      "text": "\n\nTo gain a systematic understanding of the molecular-level tissue-specific regulations, we further performed weighted gene co-expression network analysis (WGCNA) 30.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 22519,
+      "end": 22817,
+      "text": "Initially, we constructed consensus co-expression networks for each tissue and identified co-expression modules that showed significant correlation with aging, either negatively (in blue) or positively (in green), in different genotypes including WT and three long-lived strains (Fig. 3I, fig S4A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 22818,
+      "end": 23033,
+      "text": "We observed that modules negatively correlated with aging were preserved across genotypes in both neural and intestinal cells, while modules positively correlated with aging tended to be genotype-specific (Fig. 3I).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 23034,
+      "end": 23321,
+      "text": "Furthermore, we constructed consensus co-expression networks that reveal the co-expression connections between genes in each specific tissue (Fig. 3J, 3K, fig S4B) and demonstrated how the co-expression modules change with aging in different genotypes and tissues (Fig. 3L, 3M, fig S4C).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 23322,
+      "end": 23494,
+      "text": "Interestingly, we found that in neural cells, the blue module exhibits an age-related decrease in WT, but the decrease was absent in all three long-lived strains (Fig. 3L).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 23495,
+      "end": 23593,
+      "text": "KEGG pathway analysis further revealed the enrichment of the spliceosome in this module (Fig. 3L).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 23594,
+      "end": 23821,
+      "text": "Similarly, in intestinal cells, we observed the enrichment of the spliceosome in the turquoise module, which was decreased in both WT and the rsks-1(lf) strain, but not in the daf-2(lf) strain or the lipl-4 Tg strain (Fig. 3M).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 23822,
+      "end": 23984,
+      "text": "Together, these findings indicate that the splicing pathway may be involved in the regulation of aging and longevity, in a cell-type and genotype specific manner.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 23984,
+      "end": 23987,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S149",
+      "start": 23987,
+      "end": 23988,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S150",
+      "start": 23988,
+      "end": 23989,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S151",
+      "start": 23990,
+      "end": 24199,
+      "text": "Age-related APA changes and their regulation by pro-longevity pathways\n\nAlternative splicing and alternative polyadenylation (APA) are two critical RNA-processing mechanisms that are frequently interconnected.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 24200,
+      "end": 24460,
+      "text": "While alternative splicing has been linked to longevity regulation in a variety of organisms, including C. elegans\n31, it is currently unclear whether APA undergoes age-related changes in different cell types and whether pro-longevity mechanisms influence APA.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 24461,
+      "end": 24678,
+      "text": "To obtain a systemic view of APA changes during aging in different cell types, we utilized the polyApipe tool to calculate the type of APA of pre-mRNAs (Fig. 4A) at the single-cell resolution in various cell clusters.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 24679,
+      "end": 24809,
+      "text": "Our analysis identified 851 candidate genes that showed a tissue-specific preference in their use of APA sites (Method, Table S3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 24810,
+      "end": 24903,
+      "text": "Subsequently, we selected 55 genes that were highly expressed in over 20% of cells (Fig. 4B).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 24904,
+      "end": 25066,
+      "text": "Interestingly, germline cells and sperms exhibited a clear preference toward using the distal APA sites, which was not present in somatic cell clusters (Fig. 4B).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 25067,
+      "end": 25220,
+      "text": "A previous study demonstrated that ret-1, which encodes C. elegans Reticulon homologue, exhibits two different splicing forms in muscle and intestine 32.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S158",
+      "start": 25221,
+      "end": 25374,
+      "text": "Consistently, we found that ret-1 in muscle and intestine cell clusters preferentially utilize proximal and distal APA sites, respectively (Fig. 4C, 4D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 25375,
+      "end": 25522,
+      "text": "Moreover, we found that in hypodermis and germline cell clusters, ret-1 exhibits the opposite preference for two different APA types (Fig. 4C, 4D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 25523,
+      "end": 25643,
+      "text": "The previous study also reported that the splicing preference of ret-1 in intestine and muscle is reduced with aging 32.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 25644,
+      "end": 25878,
+      "text": "Similarly, we observed that as age increases, the APA site preference of ret-1 in the intestine shifted from distal to proximal (Fig. 4D), and in the germline, the proportion of cells with the distal APA site also decreased (Fig. 4D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 25879,
+      "end": 25988,
+      "text": "However, the proximal APA site preference in muscle and hypodermis cells was not affected by aging (Fig. 4D).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 25988,
+      "end": 26135,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Fig. 4.</strong> (A) Schematics of APA site preference towards the proximal or distal polyadenylation site (PAS).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 26136,
+      "end": 26209,
+      "text": "(B) Heatmaps showing genes with tissue-specific preference for APA sites.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 26210,
+      "end": 26262,
+      "text": "(C) The APA preference of ret-1 across four tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 26263,
+      "end": 26349,
+      "text": "(D) UMAPs showing APA site preference of ret-1 among all cell types at different ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 26350,
+      "end": 26476,
+      "text": "Age-related APA changes in the intestine cluster (circle) are highlighted with arrowheads (red for proximal; blue for distal).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 26477,
+      "end": 26571,
+      "text": "(E-L) For each tissue, six examples of genes exhibiting age-related changes in APA site usage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 26572,
+      "end": 26693,
+      "text": "(M) Percentage of genes showing age-related shift towards the distal APA site (purple) or the proximal APA site (orange).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 26694,
+      "end": 26751,
+      "text": "(N) The APA preference of Y105E8A.25 across four tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 26752,
+      "end": 26843,
+      "text": "(O) UMAPs showing APA site preference of Y105E8A.25 among all cell types at different ages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 26844,
+      "end": 26970,
+      "text": "Age-related APA changes in the intestine cluster (circle) are highlighted with arrowheads (red for proximal; blue for distal).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 26971,
+      "end": 27127,
+      "text": "(P) The APA site preference shift of ret-1 in the intestine from day 1 to day 6 suppressed in lipl-4 Tg and daf-2(lf) but not rsks-1(lf) long-lived strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 27128,
+      "end": 27129,
+      "text": "*",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S175",
+      "start": 27129,
+      "end": 27130,
+      "text": "*",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S176",
+      "start": 27130,
+      "end": 27295,
+      "text": "** p<0.0001, *** p<0.001, n.s. p>0.05 (Q) The APA site preference shift of mlk-1 in the intestine from day 1 to day 6 was suppressed in all three long-lived strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 27296,
+      "end": 27298,
+      "text": "**",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S178",
+      "start": 27298,
+      "end": 27347,
+      "text": "** p<0.0001, n.s. p>0.05</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 27347,
+      "end": 27750,
+      "text": "After a systematic search for genes displaying age-related APA changes in different cell clusters, we identified a total of 272 genes in the intestine, 226 genes in neurons, 196 genes in the hypodermis, 133 genes in the muscle, 122 genes in the vulva/uterus, 96 genes in the pharynx, 50 gene in the spermatheca, and 502 genes in the germline (Fig. 4 E–L with 6 examples shown for each tissue, Table S4).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 27751,
+      "end": 27954,
+      "text": "This suggests that during aging, various types of somatic and germ cells exhibit changes in APA site preference, and many genes show age-related changes in APA site preference across multiple cell types.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 27955,
+      "end": 28217,
+      "text": "Furthermore, we found that in somatic cell clusters including the intestine, muscle, hypodermis, pharynx and neurons, over 80% of the genes exhibiting age-related APA changes decrease their utilization of the proximal APA sites from day 1 to day 12/14 (Fig. 4M).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 28218,
+      "end": 28391,
+      "text": "As an example, we identified Y105E8A.25, which encodes the C. elegans Rho/Rac guanine nucleotide exchange factor, with tissue-specific APA site preference (Fig. 4B, 4N, 4O).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 28392,
+      "end": 28519,
+      "text": "During aging, the APA site preference of Y105E8A.25 changed in intestine, muscle, and germline cell clusters (Fig. 4O, 4E, 4L).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 28519,
+      "end": 28521,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S185",
+      "start": 28521,
+      "end": 28790,
+      "text": "To investigate whether and how pro-longevity mechanisms affect age-related APA changes, we focused on APAs that exhibited significant differences between day 1 and day 6 in WT worms and determined whether their age-related changes were suppressed in long-lived strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S186",
+      "start": 28791,
+      "end": 29113,
+      "text": "We found that most age-related APA changes in somatic cell types were suppressed by at least one pro-longevity mechanism, with suppression rates of 97.1% in the intestine, 95.4% in neurons, 92.3% in the muscle, 83.4% in the hypodermis, 100% in the pharynx, 96.7% in the vulva/uterus, and 100% in the spermatheca (fig. S5).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 29114,
+      "end": 29246,
+      "text": "Furthermore, these age-related APA changes exhibited different suppression patterns in three long-lived strains (fig. S5, Table S5).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 29247,
+      "end": 29787,
+      "text": "For example, the shift in the preference from the distal to proximal APA site in intestinal ret-1 from day 1 to day 6 was suppressed in the lipl-4 Tg and the daf-2(lf) strains, but not in the rsks-1(lf) strain (Fig. 4P); In another example, the age-related shift in the preference from the proximal to distal APA site in intestinal mlk-1, which encodes mitogen-activated protein kinase kinase kinase, was fully suppressed in the rsks-1(lf) strain, but was only reduced by less than half in the lipl-4 Tg and the daf-2(lf) strains (Fig. 4Q).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 29788,
+      "end": 29948,
+      "text": "These results suggest that APA undergoes age-related changes in different cell types, which can be specifically regulated by different pro-longevity mechanisms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 29948,
+      "end": 29951,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S191",
+      "start": 29951,
+      "end": 29952,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S192",
+      "start": 29952,
+      "end": 30183,
+      "text": "# Discussion\n\nTogether, our studies provide adult aging cell atlases for multicellular organisms, leading to the discovery of transcriptomic signatures and functional features for different cell types in adulthood and during aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 30184,
+      "end": 30442,
+      "text": "Our machine-learning-based cell-type-specific transcriptomic aging clocks pave the way for understanding the anti-aging effect of different pro-longevity interventions in different cell types and gaining molecular insights into these tissue-specific effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 30443,
+      "end": 30656,
+      "text": "Lysosomal lipid signaling, IIS and TOR signaling have been examined in this study and more regulatory mechanisms can be investigated in future studies using the open-access platform (http://mengwanglab.org/atlas).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 30657,
+      "end": 30843,
+      "text": "Through these analyses, the intestine and neurons emerge as major tissues that are sensitive to age-related changes and exhibit differential responses to different long-lived conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 30844,
+      "end": 31042,
+      "text": "As the main site to receive external inputs in C. elegans, these two tissues are directly influenced by environmental insults and can produce endocrine signals to dynamically feedback other tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 31043,
+      "end": 31113,
+      "text": "Thus, these two tissues stand out as key hubs of longevity regulation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 31113,
+      "end": 31283,
+      "text": "\n\nReproductive senescence is a hallmark of aging, which disturbs not only reproductive health but also causes somatic dysfunctions through cell-non-autonomous mechanisms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 31284,
+      "end": 31386,
+      "text": "Here we build the first germline-specific trajectory map and transcriptomic aging clock in C. elegans.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 31387,
+      "end": 31550,
+      "text": "This map allowed us to systematically uncover the molecular characteristics of germ cells at distinctive developmental stages as well as their age-related changes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 31551,
+      "end": 31791,
+      "text": "It is interesting to note that the transcriptomic aging in the germline continues to progress even after reproductive cessation, and the progression is attenuated in the lipl-4 Tg and the daf-2(lf) but not the rsks-1(lf) long-lived strains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 31792,
+      "end": 32045,
+      "text": "The newly identified genes that are specific to each germ cell stage and undergo age-related changes offer a valuable resource for future studies aimed at understanding the molecular mechanism underlying reproductive aging and its role in somatic aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 32045,
+      "end": 32047,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S204",
+      "start": 32047,
+      "end": 32190,
+      "text": "APA is an RNA processing mechanism that plays a crucial role in the control of mRNA metabolism, gene regulation and protein diversification 33.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S205",
+      "start": 32191,
+      "end": 32326,
+      "text": "Our study provides the first systematic profiling of APA changes during aging and its regulation by different pro-longevity mechanisms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 32327,
+      "end": 32519,
+      "text": "Interestingly, APA events exhibit tissue-specific distribution, undergo significant changes during the aging process, and can be differentially regulated by different pro-longevity mechanisms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 32520,
+      "end": 32614,
+      "text": "These tissue-specific events and their regulations may be overlooked in bulk RNA-seq analyses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 32615,
+      "end": 32720,
+      "text": "Interestingly, during aging, somatic cells shift the preference from the proximal to the distal APA site.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 32721,
+      "end": 32890,
+      "text": "Previous studies revealed that APA is globally regulated, and the usage of the distal APA site is inversely correlated with the level of core polyadenylation factors 34.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 32891,
+      "end": 33090,
+      "text": "Our finding thus suggests that the level of core polyadenylation factors may decrease with aging in somatic tissues, which can consequently lead to changes in mRNA stability and alternative splicing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 33091,
+      "end": 33350,
+      "text": "Through the open-access platform, future studies could focus on specific APA events to understand their regulatory mechanisms in different cell types and could also systematically explore new APA events under various physiological and pathological conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 33351,
+      "end": 33561,
+      "text": "Our studies offer resources for understanding the diversity of longevity-promoting mechanisms at the tissue-specific level, which will facilitate future development of anti-aging and rejuvenation interventions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 33562,
+      "end": 33885,
+      "text": "We openly share these resources using a user-friendly data portal, which will enable other groups to search for cell-type specific transcriptional signatures at different ages and utilize snRNA-seq for analyzing germline differentiation and maintenance, tissue-specific transcriptomic rejuvenation, and APA site preference.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 33885,
+      "end": 33916,
+      "text": "\n\n\n## Supplementary Material\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=Organism aging | pred=occur | obj=at the multicellular level | unit=S2\nB T4 B2 | sub=We | pred=generate | obj=single-cell transcriptomic atlases | unit=S3\nB T4 B3 | sub=We | pred=find | obj=cell-specific, age-related changes across somatic and | unit=S4\nB T4 B4 | sub=These clocks | pred=enable | obj=us | unit=S5\nB T4 B5 | sub=we | pred=provide | obj=a systemic view of alternative polyadenylation | unit=S6\nB T4 B6 | sub=this study | pred=provide | obj=molecular insights | unit=S7\nB T4 B7 | sub=Aging in multicellular organisms | pred=involve | obj=functional declines | unit=S8\nB T4 B8 | sub=age-related molecular changes | pred=differ | obj=in various tissues | unit=S9\nB T4 B9 | sub=multiple pro-longevity strategies | pred=discover | obj=On the other hand | unit=S10\nB T4 B10 | sub=the reduction of insulin/IGF-1 signaling | pred=mechanism | obj=For example | unit=S11\nB T4 B11 | sub=the reduction of TOR (target of | pred=increase | obj=lifespan | unit=S12\nB T4 B12 | sub=our studies | pred=discover | obj=In addition | unit=S13\nB T4 B13 | sub=these strategies | pred=slow | obj=Despite their well-characterized roles in prolonging | unit=S14\nB T4 B14 | sub=single-cell and single-nucleus RNA sequencing (scRNA-seq | pred=prove | obj=to be effective ways to systemically | unit=S16\nB T4 B15 | sub=Recent studies | pred=show | obj=that snRNA-seq is less biased for | unit=S17\nB T4 B16 | sub=we | pred=develop | obj=an snRNA-seq pipeline for systemically profiling | unit=S18\nB T4 B17 | sub=we | pred=harvest | obj=For each condition | unit=S19\nB T4 B18 | sub=Nuclei | pred=isolate | obj=using fluorescence-activated cell sorting (FACS) based | unit=S20\nB T4 B19 | sub=10,000 nuclei | pred=sequence | obj=For each condition | unit=S21\nB T4 B20 | sub=we | pred=generate | obj=After pre-processing | unit=S22\nB T4 B21 | sub=we | pred=able | obj=From this dataset | unit=S23\nB T4 B22 | sub=article text | pred=note | obj=that adult C. elegans consists of | unit=S24\nB T4 B23 | sub=Sub-clustering of these major cell classes | pred=reveal | obj=many more different cell types for | unit=S25\nB T4 B24 | sub=71 subclusters | pred=identify | obj=For neurons | unit=S26\nB T4 B25 | sub=we | pred=distinguish | obj=For the hypodermis | unit=S27\nB T4 B26 | sub=we | pred=discover | obj=For the muscle | unit=S28\nB T4 B27 | sub=profiling | pred=anatomy | obj=figure> <figcaption><strong>Fig. 1.</strong> (A) Schematics of | unit=S29\nB T4 B28 | sub=UMAP visualization of the single cells | pred=show | obj=tissues | unit=S30\nB T4 B29 | sub=UMAP | pred=visualization | obj=of neuron sub-clustering into 72 subsets | unit=S31\nB T4 B30 | sub=Dot | pred=plot | obj=cell-type-specific | unit=S32\nB T4 B31 | sub=article text | pred=heatmap | obj=transcription | unit=S33\nB T4 B32 | sub=H | pred=heatmap | obj=tissue-specific | unit=S34\nB T4 B33 | sub=These large-scale profiling and clustering analyses | pred=reveal | obj=cell-type-specific transcriptional signatures that are supported | unit=S35\nB T4 B34 | sub=we | pred=identify | obj=several new cell-type-specific gene markers, which | unit=S36\nB T4 B35 | sub=We | pred=conduct | obj=DNA binding motif analysis | unit=S37\nB T4 B36 | sub=We | pred=identify | obj=a number of transcription factors whose | unit=S38\nB T4 B37 | sub=the expression of these transcription factors | pred=exhibit | obj=the same tissue specificity | unit=S39\nB T4 B38 | sub=these snRNA-seq data sets | pred=provide | obj=a systemic overview of cell-type-specific transcriptional | unit=S40\nB T4 B39 | sub=we | pred=utilize | obj=InterPro and KEGG classification | unit=S42\nB T4 B40 | sub=Some of these functional features | pred=expect | obj=Some of these functional features are | unit=S43\nB T4 B41 | sub=the G protein-coupled receptor family (GPCR_Rhodpsn_7TM) | pred=enrich | obj=For example | unit=S44\nB T4 B42 | sub=article text | pred=fig. | obj=1 | unit=S45\nB T4 B43 | sub=The gene module analysis for KEGG | pred=reveal | obj=that alpha-linolenic acid metabolism and unsaturated | unit=S47\nB T4 B44 | sub=DNA replication and mismatch repair categories | pred=enrich | obj=in the germline | unit=S48\nB T4 B45 | sub=We | pred=uncover | obj=several tissue-specific functional signatures that were | unit=S49\nB T4 B46 | sub=we | pred=discover | obj=For example | unit=S50\nB T4 B47 | sub=InterPro and KEGG analyses | pred=reveal | obj=that the α/β hydrolase superfamily (AB_hydrolase_1, | unit=S51\nB T4 B48 | sub=article text | pred=focus | obj=aging | unit=S52\nB T4 B49 | sub=We | pred=analyze | obj=data from wild type (WT) worms | unit=S53\nB T4 B50 | sub=We | pred=able | obj=to construct aging cell atlases | unit=S54\nB T4 B51 | sub=We | pred=find | obj=that the relative number of cells | unit=S55\nB T4 B52 | sub=we | pred=observe | obj=the number of cells in the | unit=S56\nB T4 B53 | sub=we | pred=age | obj=WT adult worms | unit=S57\nB T4 B54 | sub=This experimental setup | pred=enable | obj=us | unit=S58\nB T4 B55 | sub=survival | pred=curve | obj=of worm samples used for nuclei | unit=S59\nB T4 B56 | sub=trajectory | pred=pseudotime | obj=UMAP | unit=S60\nB T4 B57 | sub=PAGA | pred=map | obj=cell | unit=S61\nB T4 B58 | sub=Density | pred=plot | obj=distribution | unit=S62\nB T4 B59 | sub=article text | pred=heatmap | obj=gene | unit=S63\nB T4 B60 | sub=Jitter | pred=plot | obj=correlation | unit=S64\nB T4 B61 | sub=UpSet | pred=plot | obj=overlap | unit=S65\nB T4 B62 | sub=Genes identified in more than one | pred=highlight | obj=in colored boxes | unit=S66\nB T4 B63 | sub=article text | pred=heatmap | obj=during aging.</figcaption | unit=S67\nB T4 B64 | sub=article text | pred=map | obj=germ cell fate trajectories | unit=S70\nB T4 B65 | sub=we | pred=utilize | obj=two different computational methods: the Slingshot | unit=S71\nB T4 B66 | sub=The results obtained from these two | pred=consistent | obj=with each other | unit=S72\nB T4 B67 | sub=These trajectory maps | pred=depict | obj=the progression of germ cells | unit=S73\nB T4 B68 | sub=The unsupervised scVelo model | pred=compute | obj=the initial and terminal states | unit=S74\nB T4 B69 | sub=directed partition-based graph abstraction (PAGA | pred=provide | obj=a quantitative assessment of cell fate | unit=S75\nB T4 B70 | sub=article text | pred=allow | obj=us | unit=S76\nB T4 B71 | sub=We | pred=observe | obj=a drastic decrease in the number | unit=S77\nB T4 B72 | sub=the number of mature oocytes | pred=show | obj=In contrast | unit=S78\nB T4 B73 | sub=These results | pred=suggest | obj=that various groups of germ cells | unit=S79\nB T4 B74 | sub=we | pred=identify | obj=hundreds of genes that display specific | unit=S80\nB T4 B75 | sub=These analyses | pred=reveal | obj=the molecular signatures for germ cells | unit=S81\nB T4 B76 | sub=Tissue-specific aging clocks | pred=leverage | obj=tissue-specific transcriptomic changes during aging | unit=S84\nB T4 B77 | sub=we | pred=construct | obj=regression-based tissue-specific aging clocks that accurately | unit=S85\nB T4 B78 | sub=we | pred=find | obj=that those aging-clock genes are mostly | unit=S86\nB T4 B79 | sub=we | pred=profile | obj=cell-type-specific gene ontology (GO) term enrichment | unit=S87\nB T4 B80 | sub=Our analysis | pred=discover | obj=a series of GO terms whose | unit=S88\nB T4 B81 | sub=we | pred=find | obj=that these age-related GO terms specific | unit=S89\nB T4 B82 | sub=These | pred=include | obj=diverse gene categories crucial for neural | unit=S90\nB T4 B83 | sub=positive regulation of JUN kinase | pred=exhibit | obj=At the level of signal transduction | unit=S91\nB T4 B84 | sub=These changes | pred=suggest | obj=that neurons become hyperactivated during aging | unit=S92\nB T4 B85 | sub=neural hyperactivity | pred=link | obj=with age-related neurodegeneration 23–25 | unit=S93\nB T4 B86 | sub=those age-related GO terms specific to | pred=show | obj=In contrast | unit=S94\nB T4 B87 | sub=The intestine | pred=tissue | obj=in C. elegans | unit=S95\nB T4 B88 | sub=Aging clocks predicting pro-longevity effects in | pred=discover | obj=that extend lifespan in various organisms | unit=S98\nB T4 B89 | sub=different pro-longevity mechanisms | pred=affect | obj=age-related transcriptomic changes in specific tissues | unit=S99\nB T4 B90 | sub=we | pred=perform | obj=snRNA-seq analysis | unit=S100\nB T4 B91 | sub=The lipl-4 transgenic strain (lipl-4 Tg | pred=express | obj=the LIPL-4 lysosomal acid lipase | unit=S101\nB T4 B92 | sub=DAF-2 | pred=homolog | obj=of the insulin/IGF-1 receptor | unit=S102\nB T4 B93 | sub=The rsks-1 gene | pred=encode | obj=S6 kinase | unit=S103\nB T4 B94 | sub=We | pred=profile | obj=genes that showed differential expression between | unit=S104\nB T4 B95 | sub=we | pred=observe | obj=that the three long-lived strains exhibit | unit=S105\nB T4 B96 | sub=The second largest DEG difference | pred=find | obj=in neurons, where we observed substantial | unit=S106\nB T4 B97 | sub=these differences | pred=reduce | obj=at day 6 | unit=S107\nB T4 B98 | sub=the lipl-4 Tg strain | pred=exhibit | obj=On the other hand | unit=S108\nB T4 B99 | sub=These results | pred=suggest | obj=that diverse tissues are affected by | unit=S109\nB T4 B100 | sub=A-C | pred=lifespan | obj=of long-lived lipl-4 transgenic strain (lipl-4 | unit=S110\nB T4 B101 | sub=Bar | pred=graph | obj=difference | unit=S111\nB T4 B102 | sub=article text | pred=bar | obj=above or below zero | unit=S112\nB T4 B103 | sub=article text | pred=boxplot | obj=with tissue-specific aging clocks | unit=S113\nB T4 B104 | sub=article text | pred=boxplot | obj=for both WT | unit=S114\nB T4 B105 | sub=article text | pred=heatmap | obj=enrichment | unit=S115\nB T4 B106 | sub=Circos | pred=plot | obj=co-expression | unit=S116\nB T4 B107 | sub=Blue ribbons | pred=connect | obj=conserved models that were both negatively | unit=S117\nB T4 B108 | sub=UMAP | pred=visualization | obj=of the consensus co-expression network for | unit=S118\nB T4 B109 | sub=Dots | pred=represent | obj=genes | unit=S119\nB T4 B110 | sub=Edges | pred=represent | obj=co-expression between genes | unit=S120\nB T4 B111 | sub=M | pred=correlation | obj=between consensus co-expression modules with aging | unit=S121\nB T4 B112 | sub=Bar graphs in dashed boxes | pred=show | obj=the KEGG pathway enrichment analysis (Fisher’s | unit=S122\nB T4 B113 | sub=article text | pred=assess | obj=the effects of these pro-longevity mechanisms | unit=S123\nB T4 B114 | sub=Our analysis | pred=reveal | obj=that both the lipl-4 Tg and | unit=S124\nB T4 B115 | sub=only hypodermal cells | pred=show | obj=in the rsks-1(lf) strain | unit=S125\nB T4 B116 | sub=the latter | pred=show | obj=a stronger effect | unit=S126\nB T4 B117 | sub=we | pred=calculate | obj=In parallel | unit=S127\nB T4 B118 | sub=We | pred=find | obj=that in WT worms, neurons exhibited | unit=S128\nB T4 B119 | sub=These results | pred=suggest | obj=that these two tissues are more | unit=S129\nB T4 B120 | sub=these results | pred=highlight | obj=the diverse impact of the three | unit=S130\nB T4 B121 | sub=article text | pred=regulation | obj=of tissue aging | unit=S133\nB T4 B122 | sub=we | pred=find | obj=At the functional level | unit=S134\nB T4 B123 | sub=the lipl-4 Tg strain | pred=present | obj=In contrast | unit=S135\nB T4 B124 | sub=we | pred=find | obj=that different pro-longevity mechanisms selectively suppress | unit=S136\nB T4 B125 | sub=tetrahydrofolate interconversion | pred=show | obj=For example | unit=S137\nB T4 B126 | sub=the rsks-1(lf) strain | pred=reverse | obj=the age-related decrease in the steroid | unit=S138\nB T4 B127 | sub=These findings | pred=reveal | obj=the varying impact of distinct pro-longevity | unit=S139\nB T4 B128 | sub=we | pred=perform | obj=weighted gene co-expression network analysis (WGCNA) | unit=S140\nB T4 B129 | sub=we | pred=construct | obj=consensus co-expression networks for each tissue | unit=S141\nB T4 B130 | sub=We | pred=observe | obj=that modules negatively correlated with aging | unit=S142\nB T4 B131 | sub=we | pred=construct | obj=consensus co-expression networks that reveal the | unit=S143\nB T4 B132 | sub=we | pred=find | obj=that in neural cells, the blue | unit=S144\nB T4 B133 | sub=KEGG pathway analysis | pred=reveal | obj=the enrichment of the spliceosome in | unit=S145\nB T4 B134 | sub=we | pred=observe | obj=in intestinal cells | unit=S146\nB T4 B135 | sub=these findings | pred=indicate | obj=that the splicing pathway may be | unit=S147\nB T4 B136 | sub=APA | pred=change | obj=their | unit=S151\nB T4 B137 | sub=it | pred=unclear | obj=whether APA undergoes age-related changes in | unit=S152\nB T4 B138 | sub=article text | pred=obtain | obj=a systemic view of APA changes | unit=S153\nB T4 B139 | sub=Our analysis | pred=identify | obj=851 candidate genes that showed a | unit=S154\nB T4 B140 | sub=we | pred=select | obj=55 genes that were highly expressed | unit=S155\nB T4 B141 | sub=germline cells | pred=exhibit | obj=a clear preference toward using the | unit=S156\nB T4 B142 | sub=A previous study | pred=demonstrate | obj=that ret-1, which encodes C. elegans | unit=S157\nB T4 B143 | sub=we | pred=find | obj=that ret-1 in muscle and intestine | unit=S158\nB T4 B144 | sub=we | pred=find | obj=that in hypodermis and germline cell | unit=S159\nB T4 B145 | sub=The previous study | pred=report | obj=that the splicing preference of ret-1 | unit=S160\nB T4 B146 | sub=we | pred=observe | obj=that as age increases, the APA | unit=S161\nB T4 B147 | sub=the proximal APA site preference in | pred=affect | obj=by aging | unit=S162\nB T4 B148 | sub=preference | pred=proximal | obj=distal | unit=S163\nB T4 B149 | sub=article text | pred=heatmap | obj=genes | unit=S164\nB T4 B150 | sub=APA | pred=preference | obj=of ret-1 | unit=S165\nB T4 B151 | sub=article text | pred=umap | obj=APA | unit=S166\nB T4 B152 | sub=Age-related APA changes in the intestine | pred=highlight | obj=with arrowheads (red for proximal; blue | unit=S167\nB T4 B153 | sub=tissue | pred=example | obj=For each tissue | unit=S168\nB T4 B154 | sub=article text | pred=percentage | obj=of genes showing age-related shift towards | unit=S169\nB T4 B155 | sub=APA | pred=preference | obj=of Y105E8A.25 | unit=S170\nB T4 B156 | sub=article text | pred=umap | obj=APA | unit=S171\nB T4 B157 | sub=Age-related APA changes in the intestine | pred=highlight | obj=with arrowheads (red for proximal; blue | unit=S172\nB T4 B158 | sub=The APA site preference shift of | pred=suppress | obj=in lipl-4 Tg | unit=S173\nB T4 B159 | sub=The APA site preference shift of | pred=suppress | obj=in all three long-lived strains | unit=S176\nB T4 B160 | sub=article text | pred=p<0.0001 | obj=n.s | unit=S178\nB T4 B161 | sub=we | pred=identify | obj=After a systematic search for genes | unit=S179\nB T4 B162 | sub=This | pred=suggest | obj=that during aging, various types of | unit=S180\nB T4 B163 | sub=we | pred=find | obj=that in somatic cell clusters including | unit=S181\nB T4 B164 | sub=we | pred=identify | obj=As an example | unit=S182\nB T4 B165 | sub=the APA site preference of Y105E8A.25 | pred=change | obj=During aging | unit=S183\nB T4 B166 | sub=article text | pred=investigate | obj=pro-longevity | unit=S185\nB T4 B167 | sub=We | pred=find | obj=that most age-related APA changes in | unit=S186\nB T4 B168 | sub=these age-related APA changes | pred=exhibit | obj=different suppression patterns | unit=S187\nB T4 B169 | sub=the shift in the preference from | pred=suppress | obj=For example | unit=S188\nB T4 B170 | sub=These results | pred=suggest | obj=that APA undergoes age-related changes in | unit=S189\nB T4 B171 | sub=# Discussion | pred=provide | obj=adult aging cell atlases for multicellular | unit=S192\nB T4 B172 | sub=Our machine-learning-based cell-type-specific transcriptomic aging clocks | pred=pave | obj=the way | unit=S193\nB T4 B173 | sub=Lysosomal lipid signaling | pred=examine | obj=in this study | unit=S194\nB T4 B174 | sub=the intestine | pred=emerge | obj=Through these analyses | unit=S195\nB T4 B175 | sub=these two tissues | pred=influence | obj=As the main site to receive | unit=S196\nB T4 B176 | sub=these two tissues | pred=stand | obj=as key hubs of longevity regulation | unit=S197\nB T4 B177 | sub=Reproductive senescence | pred=hallmark | obj=of aging | unit=S198\nB T4 B178 | sub=we | pred=build | obj=the first germline-specific trajectory map and | unit=S199\nB T4 B179 | sub=This map | pred=allow | obj=us | unit=S200\nB T4 B180 | sub=It | pred=interesting | obj=to note that the transcriptomic aging | unit=S201\nB T4 B181 | sub=The newly identified genes that are | pred=offer | obj=a valuable resource for future studies | unit=S202\nB T4 B182 | sub=APA | pred=mechanism | obj=that | unit=S204\nB T4 B183 | sub=Our study | pred=provide | obj=the first systematic profiling of APA | unit=S205\nB T4 B184 | sub=APA events | pred=exhibit | obj=tissue-specific distribution | unit=S206\nB T4 B185 | sub=These tissue-specific events | pred=overlook | obj=in bulk RNA-seq analyses | unit=S207\nB T4 B186 | sub=somatic cells | pred=shift | obj=during aging | unit=S208\nB T4 B187 | sub=Previous studies | pred=reveal | obj=that APA is globally regulated | unit=S209\nB T4 B188 | sub=Our finding | pred=suggest | obj=that the level of core polyadenylation | unit=S210\nB T4 B189 | sub=future studies | pred=focus | obj=Through the open-access platform | unit=S211\nB T4 B190 | sub=Our studies | pred=offer | obj=resources for understanding the diversity of | unit=S212\nB T4 B191 | sub=We | pred=share | obj=these resources | unit=S213\nB T4 B192 | sub=article text | pred=material | obj=## Supplementary Material | unit=S214",
+  "expected": {
+    "assertion_count": 192,
+    "minimum_concept_count": 286,
+    "minimum_structural_row_count": 724,
+    "minimum_knowledge_map_node_count": 724,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

@@ -57,12 +57,21 @@ message StatementProto {
     float confidence = 9;
     string sentence_text = 10;
     int64 created_at = 11;
+    string status = 12;
+    uint32 arity = 13;
+    bool negated = 14;
+    string modality = 15;
+    string context_json = 16;
+    string provenance_json = 17;
+    string metadata_json = 18;
+    bool object_absent = 19;
 }
 
 message ConceptProto {
     string id = 1;
     string text = 2;
     string normalized_text = 3;
+    string provenance_json = 4;
 }
 
 message KnowledgeGraphResponse {
@@ -73,6 +82,8 @@ message KnowledgeGraphResponse {
     int32 total_concepts = 5;
     string message = 6;
     string doc_id = 7;
+    uint32 schema_version = 8;
+    string extraction_json = 9;
 }
 
 message HealthCheckRequest {

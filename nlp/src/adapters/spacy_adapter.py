@@ -223,6 +223,7 @@ class SpacyAdapter(BaseAdapter):
             end_char=native_sentence.end_char,
             tokens=tokens,
             dependencies=dependencies,
+            phrases=self.extract_noun_chunks(native_sentence, tokens) + self.extract_verb_phrases(native_sentence, tokens),
             entities=entities,
             root_idx=root_idx,
             confidence=confidence,

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { BlockDataValue, BlockFieldDef } from '../../model';
 import { withBase } from '../../../../services/api/http';
-import { useWysiwygApi } from './WysiwygContext';
+import { useWysiwygApi, type UuidRef } from './WysiwygContext';
 import RefChip from './RefChip';
 import { isUuid } from './resolveTree';
 import { useAutoWidth } from './useAutoWidth';
@@ -11,6 +11,7 @@ interface InlineFieldProps {
     lineId: string;
     field: BlockFieldDef;
     value: BlockDataValue;
+    readOnly?: boolean;
 }
 
 const HIERARCHY_SEPS = new Set(['sequence', 'steps', 'findings']);
@@ -26,7 +27,61 @@ function parseJsonArray(value: BlockDataValue): string[] {
     }
 }
 
-const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value }) => {
+function renderReadOnlyValue(field: BlockFieldDef, value: BlockDataValue, refs: UuidRef[]): React.ReactNode {
+    const scalarStr = typeof value === 'string'
+        ? value
+        : typeof value === 'number' ? String(value) : '';
+    const shortId = (id: string): string => {
+        const ref = refs.find((r) => r.id === id);
+        return ref ? (ref.label || id) : id;
+    };
+    switch (field.inputType) {
+        case 'checkbox':
+            return value === true || value === 'true' ? '✓' : '—';
+        case 'select': {
+            const opts = field.options ?? [];
+            return opts.includes(scalarStr) ? scalarStr : (scalarStr || null);
+        }
+        case 'uuid-ref':
+            return scalarStr ? shortId(scalarStr) : null;
+        case 'uuid-list': {
+            const items = parseJsonArray(value);
+            return items.length > 0 ? items.map(shortId).join(' · ') : null;
+        }
+        case 'pair-list': {
+            let pairs: Array<{ groupRef: string; interventionRef: string }> = [];
+            try {
+                const parsed = JSON.parse(typeof value === 'string' ? value : '') as unknown;
+                if (Array.isArray(parsed)) pairs = parsed as typeof pairs;
+            } catch { /* empty */ }
+            const pairText = pairs
+                .filter((p) => p.groupRef || p.interventionRef)
+                .map((p) => `${p.groupRef ? shortId(p.groupRef) : ''}${p.groupRef && p.interventionRef ? ' + ' : ''}${p.interventionRef ? shortId(p.interventionRef) : ''}`)
+                .join('; ');
+            return pairText || null;
+        }
+        case 'text-list': {
+            const items = (scalarStr ? scalarStr.split('\n') : []).map((s) => s.trim()).filter(Boolean);
+            return items.length > 0 ? items.join(', ') : null;
+        }
+        case 'tag-list':
+        case 'key-value-list': {
+            const raw = typeof value === 'string'
+                ? value
+                : value && typeof value === 'object' && !Array.isArray(value)
+                    ? Object.entries(value as Record<string, unknown>).map(([k, v]) => `${k}: ${v}`).join('\n')
+                    : '';
+            const items = raw.split('\n').map((s) => s.trim()).filter(Boolean);
+            return items.length > 0 ? items.join('; ') : null;
+        }
+        case 'image-upload':
+            return scalarStr ? `[image: ${scalarStr}]` : null;
+        default:
+            return scalarStr || null;
+    }
+}
+
+const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value, readOnly = false }) => {
     const api = useWysiwygApi();
     const [editingTagIdx, setEditingTagIdx] = useState<number | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -66,6 +121,20 @@ const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value }) => {
         el.style.height = 'auto';
         el.style.height = `${Math.min(el.scrollHeight, 480)}px`;
     });
+
+    if (readOnly) {
+        const rendered = renderReadOnlyValue(field, value, api.refs);
+        return (
+            <span className={styles.wyWord} data-wy-line={lineId} data-wy-field={field.key}>
+                <span
+                    className={`${styles.wyInputProse} ${styles.wyReadOnlyValue}`}
+                    title={`${field.label}${field.helpText ? ` — ${field.helpText}` : ''}`}
+                >
+                    {rendered ?? ''}
+                </span>
+            </span>
+        );
+    }
 
     const commonProps = {
         'data-wy-line': lineId,

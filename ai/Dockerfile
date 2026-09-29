@@ -14,6 +14,8 @@ RUN pip install poetry==1.7.1
 
 # Copy shared-пакет observability (нужен для path-зависимости poetry)
 COPY --from=shared ./observability ../shared/observability
+COPY --from=shared ./model_registry ../shared/model_registry
+COPY --from=config ./config/models.toml ./config/models.toml
 
 # Copy dependency files
 COPY pyproject.toml poetry.lock* ./
@@ -40,6 +42,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD curl -fsS http://localhost:50059/health || exit 1
 
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/shared/model_registry
 ENV AI_HOST=0.0.0.0
 ENV AI_PORT=50059
 

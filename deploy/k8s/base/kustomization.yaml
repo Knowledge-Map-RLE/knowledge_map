@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - configmap-common.yaml
+  - configmap-article-pipeline-model.yaml
   - configmap-layout.yaml
   - configmap-nginx-client.yaml
 

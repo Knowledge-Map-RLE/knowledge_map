@@ -29,6 +29,7 @@ interface WysiwygEditorProps {
     blocks: ArticleBlockData[];
     statements: KnowledgeStatement[];
     articleUuid?: string;
+    readOnly?: boolean;
     onApply: (next: ArticleBlockData[]) => void;
     onUploadImage?: (key: string, file: File) => Promise<string>;
 }
@@ -124,6 +125,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
     blocks,
     statements,
     articleUuid,
+    readOnly = false,
     onApply,
     onUploadImage,
 }) => {
@@ -228,7 +230,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
     }, [virtualItems, flushPendingFocus]);
 
     const insertBelow = useCallback((anchorLineId: string, designation?: string): void => {
-        if (!requireAuth()) return;
+        if (readOnly || !requireAuth()) return;
         const currentLines = linesRef.current;
         const anchorIndex = anchorLineId
             ? currentLines.findIndex((b) => b.instanceId === anchorLineId)
@@ -240,12 +242,12 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         const { next, instanceId } = insertBlock(currentLines, { afterIndex, blockType: newType });
         commit(next);
         requestFocus(instanceId);
-    }, [requireAuth, commit, requestFocus]);
+    }, [requireAuth, commit, requestFocus, readOnly]);
 
     // Вставка новой строки по абсолютной позиции в списке. Используется
     // hover-разделителями между строками и клавишами A/B в command mode.
     const insertAtIndex = useCallback((index: number): void => {
-        if (!requireAuth()) return;
+        if (readOnly || !requireAuth()) return;
         const currentLines = linesRef.current;
         const at = Math.max(0, Math.min(index, currentLines.length));
         const neighbour = currentLines[at] ?? currentLines[at - 1];
@@ -254,13 +256,13 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         const { next, instanceId } = insertBlock(currentLines, { afterIndex: at - 1, blockType: newType });
         commit(next);
         requestFocus(instanceId);
-    }, [requireAuth, commit, requestFocus]);
+    }, [requireAuth, commit, requestFocus, readOnly]);
 
     // Создаёт новую дочернюю строку прямо из uuid-list поля родителя:
     // вставляется после последнего ребёнка этого списка и сразу попадает
     // в список (отступ под родителем выводится автоматически из ссылки).
     const appendChildLine = useCallback((parentLineId: string, fieldKey: string) => {
-        if (!requireAuth()) return;
+        if (readOnly || !requireAuth()) return;
         const currentLines = linesRef.current;
         const parentIdx = currentLines.findIndex((b) => b.instanceId === parentLineId);
         if (parentIdx < 0) return;
@@ -287,26 +289,26 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         commit(setBlockField(withChild, parentLineId, fieldKey, JSON.stringify([...ids, instanceId])));
         setFocusedLineId(instanceId);
         requestFocus(instanceId);
-    }, [requireAuth, commit, requestFocus]);
+    }, [requireAuth, commit, requestFocus, readOnly]);
 
     const removeLineById = useCallback((lineId: string) => {
-        if (!requireAuth()) return;
+        if (readOnly || !requireAuth()) return;
         const currentLines = linesRef.current;
         const idx = currentLines.findIndex((b) => b.instanceId === lineId);
         const prev = idx > 0 ? currentLines[idx - 1] : null;
         commit(removeBlocks(currentLines, [lineId]));
         if (prev) requestFocus(prev.instanceId, undefined, 999);
-    }, [requireAuth, commit, requestFocus]);
+    }, [requireAuth, commit, requestFocus, readOnly]);
 
     const duplicateLineById = useCallback((lineId: string) => {
-        if (!requireAuth()) return;
+        if (readOnly || !requireAuth()) return;
         const { next, instanceId } = duplicateBlock(linesRef.current, lineId);
         commit(next);
         requestFocus(instanceId);
-    }, [requireAuth, commit, requestFocus]);
+    }, [requireAuth, commit, requestFocus, readOnly]);
 
     const moveLineByDelta = useCallback((lineId: string, delta: -1 | 1) => {
-        if (!requireAuth()) return;
+        if (readOnly || !requireAuth()) return;
         const currentLines = linesRef.current;
         const idx = currentLines.findIndex((b) => b.instanceId === lineId);
         if (idx < 0) return;
@@ -314,7 +316,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         if (target < 0 || target >= currentLines.length) return;
         commit(moveBlock(currentLines, idx, target));
         requestFocus(lineId);
-    }, [requireAuth, commit, requestFocus]);
+    }, [requireAuth, commit, requestFocus, readOnly]);
 
     const jumpToLine = useCallback((lineId: string) => {
         const idx = linesRef.current.findIndex((b) => b.instanceId === lineId);
@@ -334,6 +336,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
     }, []);
 
     const applySlashCommand = useCallback((cmd: SlashCommand) => {
+        if (readOnly) return;
         const anchor = slashRef.current;
         if (!anchor) return;
         setSlash(null);
@@ -360,7 +363,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         } else {
             insertBelow(anchor.lineId, cmd.designation);
         }
-    }, [recentTypes, isLineEmpty, commit, requestFocus, insertBelow]);
+    }, [recentTypes, isLineEmpty, commit, requestFocus, insertBelow, readOnly]);
 
     const navigateFields = useCallback((lineId: string, fieldKey: string, dir: -1 | 1) => {
         const rootEl = scrollRef.current;
@@ -397,6 +400,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
     }, []);
 
     const fieldKeyDown = useCallback((e: React.KeyboardEvent<HTMLElement>, info: FieldKeyInfo) => {
+        if (readOnly) return;
         const mod = e.ctrlKey || e.metaKey;
 
         if (mod && e.shiftKey && (e.key === 'U' || e.key === 'u')) {
@@ -463,7 +467,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                 removeLineById(info.lineId);
             }
         }
-    }, [toggleUids, undo, redo, duplicateLineById, moveLineByDelta, navigateFields, navigateLines, insertBelow, removeLineById]);
+    }, [toggleUids, undo, redo, duplicateLineById, moveLineByDelta, navigateFields, navigateLines, insertBelow, removeLineById, readOnly]);
 
     useEffect(() => {
         if (!slash) return;
@@ -509,9 +513,9 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
 
     const apiRef = useRef<WysiwygApi>({} as WysiwygApi);
     apiRef.current.setField = useCallback((lineId: string, fieldKey: string, value: BlockDataValue) => {
-        if (!requireAuth()) return;
+        if (readOnly || !requireAuth()) return;
         commit(setBlockField(linesRef.current, lineId, fieldKey, value), `${lineId}:${fieldKey}`);
-    }, [requireAuth, commit]);
+    }, [readOnly, requireAuth, commit]);
     apiRef.current.requestFocus = requestFocus;
     apiRef.current.insertBelow = insertBelow;
     apiRef.current.removeLine = removeLineById;
@@ -519,6 +523,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
     apiRef.current.moveLine = moveLineByDelta;
     apiRef.current.jumpToLine = jumpToLine;
     apiRef.current.openSlashMenu = useCallback(({ lineId, fieldKey, rect }: { lineId: string; fieldKey: string; rect: DOMRect | null }) => {
+        if (readOnly) return;
         setSlash({
             lineId,
             fieldKey,
@@ -526,7 +531,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
             top: rect ? rect.bottom + 4 : 200,
             left: rect ? rect.left : 200,
         });
-    }, []);
+    }, [readOnly]);
     apiRef.current.fieldKeyDown = fieldKeyDown;
     apiRef.current.appendChildLine = appendChildLine;
     apiRef.current.beginFieldEdit = useCallback((lineId: string) => {
@@ -545,16 +550,22 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
     }, [focusedLineId, tree, availableRefs]);
 
     const handleDragOverLine = useCallback((e: React.DragEvent, instanceId: string) => {
-        if (!dragIdRef.current || dragIdRef.current === instanceId) return;
+        if (readOnly || !dragIdRef.current || dragIdRef.current === instanceId) return;
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         const rect = e.currentTarget.getBoundingClientRect();
         const side: 'before' | 'after' = e.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
         setDropTarget((prev) => (prev && prev.id === instanceId && prev.side === side ? prev : { id: instanceId, side }));
-    }, []);
+    }, [readOnly]);
 
     const handleDropLine = useCallback((e: React.DragEvent, instanceId: string) => {
         e.preventDefault();
+        if (readOnly) {
+            dragIdRef.current = null;
+            setDraggingId(null);
+            setDropTarget(null);
+            return;
+        }
         const fromId = dragIdRef.current;
         dragIdRef.current = null;
         setDraggingId(null);
@@ -569,17 +580,19 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         if (side === 'after') toIdx += 1;
         const adjusted = fromIdx < toIdx ? toIdx - 1 : toIdx;
         if (adjusted !== fromIdx) commit(moveBlock(currentLines, fromIdx, adjusted));
-    }, [dropTarget, commit]);
+    }, [dropTarget, commit, readOnly]);
 
     const promptRowOpenSlash = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        if (readOnly) return;
         const rect = e.currentTarget.getBoundingClientRect();
         setSlash({ lineId: '__append__', fieldKey: '__append__', query: '', top: rect.top - 4, left: rect.left });
-    }, []);
+    }, [readOnly]);
 
     // Command mode как в Jupyter-нотбуках VSCode: когда фокус не в поле ввода,
     // клавиша A вставляет строку над текущей, B — под текущей. Текущей считается
     // последняя сфокусированная строка; без неё A/B работают с началом/концом.
     useEffect(() => {
+        if (readOnly) return;
         if (slash || draggingId) return;
         const onKeyDown = (e: KeyboardEvent): void => {
             if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
@@ -603,7 +616,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
         };
         document.addEventListener('keydown', onKeyDown);
         return () => document.removeEventListener('keydown', onKeyDown);
-    }, [slash, draggingId, focusedLineId, insertAtIndex]);
+    }, [slash, draggingId, focusedLineId, insertAtIndex, readOnly]);
 
     return (
         <WysiwygApiContext.Provider value={apiRef.current}>
@@ -625,24 +638,28 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                         ))}
                     </div>
                     <div className={styles.wyToolbarActions}>
-                        <button
-                            type="button"
-                            className={styles.wyToolbarBtn}
-                            onClick={undo}
-                            disabled={!canUndo}
-                            title="Отменить (Ctrl+Z)"
-                        >
-                            ↶
-                        </button>
-                        <button
-                            type="button"
-                            className={styles.wyToolbarBtn}
-                            onClick={redo}
-                            disabled={!canRedo}
-                            title="Повторить (Ctrl+Y)"
-                        >
-                            ↷
-                        </button>
+                        {!readOnly && (
+                            <>
+                                <button
+                                    type="button"
+                                    className={styles.wyToolbarBtn}
+                                    onClick={undo}
+                                    disabled={!canUndo}
+                                    title="Отменить (Ctrl+Z)"
+                                >
+                                    ↶
+                                </button>
+                                <button
+                                    type="button"
+                                    className={styles.wyToolbarBtn}
+                                    onClick={redo}
+                                    disabled={!canRedo}
+                                    title="Повторить (Ctrl+Y)"
+                                >
+                                    ↷
+                                </button>
+                            </>
+                        )}
                         <button
                             type="button"
                             className={`${styles.wyToolbarBtn} ${showUids ? styles.wyToolbarBtnOn : ''}`}
@@ -658,9 +675,11 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                         {lines.length === 0 ? (
                             <div className={styles.wyEmptyState}>
                                 <p>Структурных строк пока нет.</p>
-                                <button type="button" className={styles.wyPromptBtn} onClick={promptRowOpenSlash}>
-                                    Нажмите <b>/</b> или щёлкните здесь, чтобы добавить первую строку
-                                </button>
+                                {!readOnly && (
+                                    <button type="button" className={styles.wyPromptBtn} onClick={promptRowOpenSlash}>
+                                        Нажмите <b>/</b> или щёлкните здесь, чтобы добавить первую строку
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
@@ -668,7 +687,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                                     const block = lines[vi.index];
                                     return (
                                         <React.Fragment key={vi.key}>
-                                            {!draggingId && (
+                                            {!readOnly && !draggingId && (
                                                 <div
                                                     style={{
                                                         position: 'absolute',
@@ -702,6 +721,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                                                     dropSide={dropTarget?.id === block.instanceId ? dropTarget.side : null}
                                                     highlight={highlightLineId === block.instanceId}
                                                     focused={focusedLineId === block.instanceId}
+                                                    readOnly={readOnly}
                                                     onDragStartLine={(id) => { dragIdRef.current = id; setDraggingId(id); }}
                                                     onDragEndLine={() => { dragIdRef.current = null; setDraggingId(null); setDropTarget(null); }}
                                                     onDragOverLine={handleDragOverLine}
@@ -711,7 +731,7 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                                         </React.Fragment>
                                     );
                                 })}
-                                {virtualItems.some((vi) => vi.index === lines.length - 1) && !draggingId && (
+                                {!readOnly && virtualItems.some((vi) => vi.index === lines.length - 1) && !draggingId && (
                                     <div
                                         style={{
                                             position: 'absolute',
@@ -727,11 +747,13 @@ const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                                 )}
                             </div>
                         )}
-                        <div className={styles.wyPromptRow}>
-                            <button type="button" className={styles.wyPromptBtn} onClick={promptRowOpenSlash}>
-                                + Введите / для команды
-                            </button>
-                        </div>
+                        {!readOnly && (
+                            <div className={styles.wyPromptRow}>
+                                <button type="button" className={styles.wyPromptBtn} onClick={promptRowOpenSlash}>
+                                    + Введите / для команды
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
                 {slash && (

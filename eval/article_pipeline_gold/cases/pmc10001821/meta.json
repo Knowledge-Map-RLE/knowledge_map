@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10001821",
+  "document_uid": "PMC10001821",
+  "article_title": "The Impact of Digital Coaching Intervention for Improving Healthy Ageing Dimensions among Older Adults during Their Transition from Work to Retirement",
+  "doi": "10.3390/ijerph20054034",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10001821/PMC10001821.md"
+  },
+  "article_sha256": "6aa007f870725b89840ea397dea6fd12237ea4f0624b9d2b80de14b9c407051d",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

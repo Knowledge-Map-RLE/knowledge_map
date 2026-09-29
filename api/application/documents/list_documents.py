@@ -19,10 +19,16 @@ def list_documents(
     skip: int = 0,
     limit: Optional[int] = None,
     full_text_only: bool = False,
+    gold_standard_only: bool = False,
 ) -> Tuple[List[Document], int]:
-    docs = repo.list_all(skip=skip, limit=limit, full_text_only=full_text_only)
+    docs = repo.list_all(
+        skip=skip,
+        limit=limit,
+        full_text_only=full_text_only,
+        gold_standard_only=gold_standard_only,
+    )
     if full_text_only:
-        total = repo.count_full_text()
+        total = repo.count_full_text(gold_standard_only=gold_standard_only)
     else:
         total = repo.count_by_sources()
     return docs, total

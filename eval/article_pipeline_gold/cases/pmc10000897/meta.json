@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10000897",
+  "document_uid": "PMC10000897",
+  "article_title": "Bos indicus Carcasses Suspended by the Pelvic Bone Require a Shorter Aging Time to Meet Consumer Expectations Regarding Meat Quality",
+  "doi": "10.3390/foods12050930",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10000897/PMC10000897.md"
+  },
+  "article_sha256": "d5d359db5d7c2dd3742eec3da569dab703e3654cf353a75f3050839db50c411d",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

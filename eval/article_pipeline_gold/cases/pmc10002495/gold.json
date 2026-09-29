@@ -1,0 +1,1459 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 424,
+      "text": "# Peripheral and Central Iron Measures in Alcohol Use Disorder and Aging: A Quantitative Susceptibility Mapping Pilot Study\n\n**Авторы:** Adams Aiden R., Li Xinyi, Byanyima Juliana I., Vesslee Sianneh A., Nguyen Thanh D., Wang Yi, Moon Brianna, Pond Timothy, Kranzler Henry R., Witschey Walter R., Shi Zhenhao, Wiers Corinde E.\n\n**Журнал:** International Journal of Molecular Sciences (2023)\n\n**DOI:** 10.3390/ijms24054461\n\n\n",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 424,
+      "end": 425,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S3",
+      "start": 425,
+      "end": 426,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S4",
+      "start": 427,
+      "end": 570,
+      "text": "Abstract\n\nChronic excessive alcohol use has neurotoxic effects, which may contribute to cognitive decline and the risk of early-onset dementia.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 571,
+      "end": 736,
+      "text": "Elevated peripheral iron levels have been reported in individuals with alcohol use disorder (AUD), but its association with brain iron loading has not been explored.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 737,
+      "end": 917,
+      "text": "We evaluated whether (1) serum and brain iron loading are higher in individuals with AUD than non-dependent healthy controls and (2) serum and brain iron loading increase with age.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 918,
+      "end": 1090,
+      "text": "A fasting serum iron panel was obtained and a magnetic resonance imaging scan with quantitative susceptibility mapping (QSM) was used to quantify brain iron concentrations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1091,
+      "end": 1231,
+      "text": "Although serum ferritin levels were higher in the AUD group than in controls, whole-brain iron susceptibility did not differ between groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1232,
+      "end": 1366,
+      "text": "Voxel-wise QSM analyses revealed higher susceptibility in a cluster in the left globus pallidus in individuals with AUD than controls.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1367,
+      "end": 1514,
+      "text": "Whole-brain iron increased with age and voxel-wise QSM indicated higher susceptibility with age in various brain areas including the basal ganglia.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1515,
+      "end": 1608,
+      "text": "This is the first study to analyze both serum and brain iron loading in individuals with AUD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 1609,
+      "end": 1820,
+      "text": "Larger studies are needed to examine the effects of alcohol use on iron loading and its associations with alcohol use severity, structural and functional brain changes, and alcohol-induced cognitive impairments.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 1820,
+      "end": 1823,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S14",
+      "start": 1823,
+      "end": 1828,
+      "text": "## 1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S15",
+      "start": 1829,
+      "end": 2023,
+      "text": "Introduction\n\nIron is an essential cofactor for many cellular enzymes involved in metabolic pathways including DNA synthesis, oxygen transport in the blood, and neurotransmitter synthesis [1,2].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2024,
+      "end": 2144,
+      "text": "However, iron can also promote oxidative damage by catalyzing free radical reactions that denature DNA and proteins [3].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 2145,
+      "end": 2350,
+      "text": "Excess iron deposition in the brain plays a significant role in the pathology of neurodegenerative diseases, such as Alzheimer’s disease (AD), Parkinson’s disease (PD), and Huntington’s disease (HD) [4,5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 2351,
+      "end": 2532,
+      "text": "Serum and brain iron loading have also been reported in individuals with alcohol use disorder (AUD) [6], but its impact on the clinical course of the disease is not well understood.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 2532,
+      "end": 2702,
+      "text": "\n\nPeripheral iron status is monitored clinically with serum iron level, percent saturation of the iron transporter protein transferrin, and iron storage protein ferritin.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 2703,
+      "end": 2899,
+      "text": "We recently reported that serum transferrin saturation was higher in individuals with AUD than non-dependent healthy controls and positively correlated with the severity of alcohol withdrawal [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 2900,
+      "end": 3089,
+      "text": "Excessive alcohol consumption was also linked to increased levels of peripheral ferritin, which may contribute to the toxic effects of alcohol on tissues, including the liver and brain [8].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3090,
+      "end": 3164,
+      "text": "As such, ferritin levels increased with the severity of liver disease [8].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 3165,
+      "end": 3392,
+      "text": "Brain iron concentrations can be quantified by magnetic resonance imaging (MRI) quantitative susceptibility mapping (QSM), which infers local tissue susceptibility secondary to the presence of iron and other minerals [9,10,11].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 3393,
+      "end": 3574,
+      "text": "One previous study demonstrated higher brain iron levels in the basal ganglia in AUD participants than healthy controls through retrospective functional MRI (fMRI) QSM analysis [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 3575,
+      "end": 3788,
+      "text": "The means by which iron accumulates in the brain in the context of AUD is not well understood, but one theory postulates that chronic neuroinflammation from AUD leads to a “leakier” blood brain barrier (BBB) [12].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 3789,
+      "end": 3870,
+      "text": "This may allow iron to cross the BBB more easily and accumulate in brain tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 3870,
+      "end": 4039,
+      "text": "\n\nIron deposition in individuals with AUD may contribute to neurodegeneration similar to that observed with aging and neurodegenerative diseases, such as AD and PD [13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4040,
+      "end": 4121,
+      "text": "Peripheral iron levels are abnormally high early in the course of AD and PD [14].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 4122,
+      "end": 4309,
+      "text": "QSM analysis of brain iron corroborated the serum findings showing brain iron accumulation in brain regions associated with motor and cognitive impairment in patients with AD and PD [15].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 4310,
+      "end": 4605,
+      "text": "Higher iron accumulation was positively associated with positron emission tomography (PET) measures of amyloid and tau, biomarkers of AD, in the basal ganglia, suggesting that high magnetic susceptibility in certain deep gray nuclei may reflect iron’s role as a marker of cognitive decline [16].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 4606,
+      "end": 4749,
+      "text": "Sequestration of iron through dietary modulation or iron chelation was effective in attenuating brain iron build-up and cognitive decline [17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 4749,
+      "end": 4751,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S33",
+      "start": 4751,
+      "end": 4811,
+      "text": "Brain iron loading has also been implicated in normal aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 4812,
+      "end": 5069,
+      "text": "Results from both early post-mortem studies and recent in vivo QSM studies indicated that elderly subjects had significantly higher brain iron concentrations than younger ones in various subcortical regions including the putamen and globus pallidus [18,19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 5070,
+      "end": 5296,
+      "text": "Other MRI studies have revealed significant age-related iron differences in cortical gray matter and motor/premotor cortices using both traditional R2* (transverse relaxation-dephasing rate) and the more novel QSM method [20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 5297,
+      "end": 5507,
+      "text": "A recent study also showed that abnormal function of the glymphatic system, which is responsible for waste clearance in the central nervous system, may be associated with age-related brain iron deposition [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 5507,
+      "end": 5509,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S38",
+      "start": 5509,
+      "end": 5609,
+      "text": "Few studies have examined the role of iron in mediating AUD- and aging-associated neurodegeneration.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 5610,
+      "end": 5778,
+      "text": "In this study, we utilize QSM to (1) investigate serum and brain iron loading in individuals with AUD and (2) examine the effects of age on serum and brain iron levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 5779,
+      "end": 5939,
+      "text": "We hypothesized elevated blood ferritin and brain levels of iron in individuals with AUD compared with controls and significant effects of age on both measures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 5940,
+      "end": 6211,
+      "text": "We also performed a re-analysis of iron panel data from AUD participants (n = 583) and controls (n = 470) from the National Institutes of Health (NIH) Clinical Center (Unit and Clinic Evaluation, Screening, Assessment, and Management) [7] to assess serum ferritin levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 6211,
+      "end": 6214,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S43",
+      "start": 6214,
+      "end": 6219,
+      "text": "## 2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S44",
+      "start": 6220,
+      "end": 6532,
+      "text": "Results\n\n### 2.1. Higher Serum Ferritin Level and Concentration in Individuals with AUD Than Controls\n\nData from the NIH Clinical Center showed the AUD group to have higher serum ferritin levels (mean ± SD = 252.4 ± 282.0 n = 583) than the HC group (91.0 ± 112.1; t794.7 = 12.6, n = 470, p < 0.0001) (Figure 1A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 6533,
+      "end": 6736,
+      "text": "A linear regression model demonstrated that AUD status was a significant predictor of serum ferritin level (β = 0.256, p < 0.001) after controlling for age, sex, BMI, and C-reactive protein (CRP) levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 6737,
+      "end": 6859,
+      "text": "Age (41.3 ± 12.9, range = 18–77 years old) was also a predictor of serum ferritin level (β = 0.080, p = 0.002) (Table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 6859,
+      "end": 6915,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> (A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 6916,
+      "end": 7113,
+      "text": "Serum ferritin levels were higher in inpatients with alcohol use disorder (AUD; n = 583) than healthy controls (HCs; n = 470) in the sample from the National Institutes of Health (NIH) (p < 0.001).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 7114,
+      "end": 7237,
+      "text": "(B) Serum ferritin levels were also higher in individuals with AUD (n = 10) than HCs (n = 8) in the Penn sample (p < 0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 7238,
+      "end": 7239,
+      "text": "*",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S51",
+      "start": 7239,
+      "end": 7530,
+      "text": "** p  <  0.001, * p < 0.05.</figcaption>\n</figure>\n\nDemographic and clinical characteristics of the AUD (n = 10) and healthy control (n = 8) cohorts from the University of Pennsylvania (Penn) sample, who underwent both laboratory testing and neuroimaging with QSM, are summarized in Table 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 7531,
+      "end": 7597,
+      "text": "Participants were a mean of 35.2 ± 12.9 years old (range = 22–62).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 7598,
+      "end": 7755,
+      "text": "The results from Penn also indicated that serum ferritin levels were higher in individuals with AUD than healthy controls (t16 = 2.5, p = 0.023) (Figure 1B).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 7756,
+      "end": 7926,
+      "text": "A linear regression model also indicated that AUD status was a significant predictor of ferritin (β = 0.523, p = 0.049) when controlling for age, sex, and BMI (Table S2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 7927,
+      "end": 8027,
+      "text": "However, age did not significantly predict serum ferritin in the Penn sample (β = −0.325, p = 0.14).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 8028,
+      "end": 8108,
+      "text": "Group means and comparisons of other iron panel measures are listed in Table S3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 8108,
+      "end": 8111,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S58",
+      "start": 8111,
+      "end": 8119,
+      "text": "### 2.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S59",
+      "start": 8120,
+      "end": 8296,
+      "text": "Associations of AUD and Age with Global Brain Iron Susceptibility\n\nPenn participants underwent a 3 Tesla MRI scan with QSM to non-invasively quantify brain iron concentrations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 8297,
+      "end": 8409,
+      "text": "QSM analysis was performed using the MEDI toolbox and global brain susceptibility was extracted (see Section 4).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 8410,
+      "end": 8457,
+      "text": "No outliers (>2SD from the mean) were detected.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 8458,
+      "end": 8712,
+      "text": "Linear regression analysis demonstrated that age (β = 0.618, p = 0.020) and sex (β = −0.491, p = 0.047) significantly predicted global brain susceptibility (Figure 2 and Table 2), with older age and male sex predicting higher global brain susceptibility.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 8713,
+      "end": 8860,
+      "text": "However, neither AUD (β = −0.775, p = 0.45) nor serum ferritin (β = 0.357, p = 0.21) significantly predicted global brain susceptibility (Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 8860,
+      "end": 9017,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> Age significantly predicted whole-brain quantitative susceptibility (β = 0.618, p = 0.020).</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 9017,
+      "end": 9018,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S66",
+      "start": 9018,
+      "end": 9037,
+      "text": "/figure>\n\n\n### 2.3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 9038,
+      "end": 9073,
+      "text": "Whole-Brain Voxel-Wise QSM Analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 9073,
+      "end": 9231,
+      "text": "\n\nThere were no significant associations of age or AUD with brain quantitative susceptibility using a family-wise error (FWE)-corrected p-value (PFWE < 0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 9232,
+      "end": 9564,
+      "text": "Exploratory analyses with a more liberal threshold of voxel-level uncorrected-p < 0.005 combined with cluster extent k > 50 demonstrated higher brain quantitative susceptibility in the left globus pallidus in AUD individuals than controls (peak voxel coordinates = [−26, −21, 6], k = 89, Z = 2.90, uncorrected-p = 0.002; Figure 3A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 9565,
+      "end": 9916,
+      "text": "Moreover, age was positively correlated with brain quantitative susceptibility in the precuneus, bilateral dorsolateral prefrontal cortex (dlPFC), orbitofrontal cortex (OFC), bilateral midbrain, bilateral fusiform gyrus/parahippocampal gyrus, left thalamus, and right caudate (all at voxel-level uncorrected-p < 0.005, k > 50, Figure 3B and Table S3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 9916,
+      "end": 10152,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 3</strong> (A) Positive association between AUD and brain quantitative susceptibility in the left globus pallidus (peak = [−26, −21, 6], voxel-level uncorrected-p < 0.005, cluster extent k = 89).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 10153,
+      "end": 10243,
+      "text": "The bar graph depicts the peak susceptibility of the globus pallidus cluster for AUD > HC.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 10244,
+      "end": 10599,
+      "text": "(B) Positive association between age and brain quantitative susceptibility across participants, covering clusters in the precuneus, bilateral dorsolateral prefrontal cortex (dlPFC), orbitofrontal cortex (OFC), bilateral midbrain, bilateral fusiform gyrus/parahippocampal gyrus, left thalamus, and right caudate (voxel-level uncorrected-p < 0.005, k > 50).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 10600,
+      "end": 10694,
+      "text": "Abbreviations: AUD, alcohol use disorder; HC, healthy control.</figcaption>\n</figure>\n\n\n\n## 3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 10695,
+      "end": 10705,
+      "text": "Discussion",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 10705,
+      "end": 10843,
+      "text": "\n\nWe found significantly higher serum ferritin levels in the AUD group than in healthy controls in two independent cohorts (NIH and Penn).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 10844,
+      "end": 11090,
+      "text": "Although whole-brain quantitative susceptibility did not differ between the AUD and control group, a preliminary voxel-wise QSM analysis revealed higher brain susceptibility in the left globus pallidus in AUD individuals than in healthy controls.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 11091,
+      "end": 11331,
+      "text": "Age correlated positively with whole-brain iron accumulation and further voxel-wise analysis showed correlations in the precuneus, bilateral dlPFC, OFC, bilateral midbrain, precentral gyrus, fusiform gyrus, left thalamus, and right caudate.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 11331,
+      "end": 11477,
+      "text": "\n\nOur findings of higher serum ferritin and greater globus pallidus brain iron in AUD are in line with that reported in previous studies [6,7,22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 11478,
+      "end": 11745,
+      "text": "Evidence suggests that the globus pallidus is involved in inhibitory control and a positive association was found between globus pallidus functional connectivity and clinical measures of impulsivity (i.e., Barratt Impulsiveness Scale and UPPS-P Impulsive Scale) [23].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 11746,
+      "end": 11847,
+      "text": "Impulsivity has been associated with an increased risk of problematic drinking behavior and AUD [24].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 11848,
+      "end": 11971,
+      "text": "Therefore, iron loading in the globus pallidus could contribute to altered neuronal functioning and the development of AUD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 11972,
+      "end": 12165,
+      "text": "Serum ferritin is widely accepted as a sensitive marker of systemic iron stores and ferritin is commonly used in clinical practice as a diagnostic test for iron deficiency and overload [25,26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 12166,
+      "end": 12302,
+      "text": "Low serum or plasma ferritin levels indicate iron deficiency, while elevated ferritin levels reflect potential iron overload [25,26,27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 12303,
+      "end": 12483,
+      "text": "Elevated peripheral iron measures, including serum ferritin and transferrin saturation, have been associated with brain iron stores in published human neuroimaging studies [28,29].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 12484,
+      "end": 12706,
+      "text": "Serum ferritin is limited as a clinical marker of total iron body stores insofar as it is an acute-phase protein that is elevated by inflammation and infection, including HIV, pregnancy, and late-stage kidney disease [26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 12707,
+      "end": 12886,
+      "text": "Despite having excluded participants with these conditions from our sample, alcohol-induced chronic inflammation may have elevated ferritin and brain iron levels in the AUD group.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 12887,
+      "end": 13000,
+      "text": "Kroll et al. found elevated levels of CRP, a marker of inflammation, in the AUD group compared with controls [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 13001,
+      "end": 13100,
+      "text": "In the NIH sample, CRP levels were positively associated with serum ferritin levels (see Table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 13101,
+      "end": 13239,
+      "text": "However, controlling for CRP in the regression model did not influence the significant effects of AUD on serum ferritin levels (Table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 13240,
+      "end": 13486,
+      "text": "While chronic hepatitis has been associated with elevated brain iron deposition [30], hepatitis likely did not play a role in this neuroimaging study because individuals with abnormal liver enzyme panel results and/or liver disease were excluded.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 13486,
+      "end": 13569,
+      "text": "\n\nWe found no significant group differences in brain iron at the whole-brain level.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 13570,
+      "end": 13771,
+      "text": "Previous QSM studies showed increased brain iron in the globus pallidus, as well as the caudate nucleus, dentate nucleus, putamen, and substantia nigra in AUD individuals compared with controls [6,22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 13772,
+      "end": 14003,
+      "text": "Discrepancies in study findings may be attributable to our small sample size (i.e., n = 18 participants in our study versus n = 35 in [6] and n = 20,729 U.K. Biobank participants in [22]), and differences in the acquisition of QSM.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 14004,
+      "end": 14183,
+      "text": "Our study acquired detailed, four-echo three-dimensional images of tissue magnetic susceptibility, which allow for more accurate and precise measurement than other MRI techniques.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 14184,
+      "end": 14264,
+      "text": "Previous studies utilized T2*-weighted imaging of only one or two echoes [6,22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 14265,
+      "end": 14448,
+      "text": "Furthermore, the greater brain iron reported by Juhás et al. [6] was obtained in male inpatients with AUD, whereas our AUD population included non-treatment-seeking males and females.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 14449,
+      "end": 14592,
+      "text": "This is particularly relevant because male sex was associated with higher peripheral ferritin levels and global brain iron levels in our study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 14593,
+      "end": 14756,
+      "text": "Topiwala et al. [22] found an association between alcohol consumption and striatal (putamen and caudate) iron levels, an association mediated by liver iron levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 14757,
+      "end": 14934,
+      "text": "However, we found no association between serum ferritin and total brain iron, suggesting that there is regulation of brain iron by the BBB and iron transporter proteins [31,32].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 14935,
+      "end": 15090,
+      "text": "The link between blood and brain iron levels requires further elucidation as the physiological mechanism behind iron loading in humans is not well studied.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 15091,
+      "end": 15233,
+      "text": "Exploring the relationship among serum, liver, and brain iron measures could enhance our understanding of the disease progression of AUD [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 15233,
+      "end": 15361,
+      "text": "\n\nThe age-associated brain iron accumulation observed in our studies is consistent with that found in prior QSM studies [20,33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 15362,
+      "end": 15485,
+      "text": "Excessive iron deposition elicits oxidative stress, which facilitates neurodegeneration and impairs neuronal function [34].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 15486,
+      "end": 15693,
+      "text": "Although the mechanisms underlying brain iron accumulation remain largely unknown, it appears to be region-specific and some brain regions are more efficient in maintaining iron homeostasis than others [34].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 15694,
+      "end": 15954,
+      "text": "Here, we found significant associations between aging and iron in brain regions involved in motor and cognitive functioning [35,36], in line with previous studies that associated brain iron concentration with age-related cognitive and motor decline [37,38,39].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 15955,
+      "end": 16087,
+      "text": "The variations in brain regions affected by age-related iron loading reported here have also been observed in other studies [20,33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 16088,
+      "end": 16259,
+      "text": "These differences may be attributable to study differences in QSM analysis, the age distribution of participants, or the severity of AUD, all of which require elucidation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 16260,
+      "end": 16418,
+      "text": "Our study consisted of mostly non-treatment-seeking individuals who were diagnosed by the Mini-International Neuropsychiatric Interview (MINI) for DSM-5 [40].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 16419,
+      "end": 16529,
+      "text": "The severity of the AUD group was equally divided between mild (n = 5) and moderate (n = 3) or severe (n = 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 16530,
+      "end": 16643,
+      "text": "Previous research has found a positive association between drinking levels and brain and blood iron loading [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 16644,
+      "end": 16743,
+      "text": "Thus, we expect that evaluation of a more severe AUD group would show greater accumulation of iron.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 16743,
+      "end": 16745,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S114",
+      "start": 16745,
+      "end": 16949,
+      "text": "Our study found evidence for sex differences in serum and brain iron levels: women demonstrated significantly lower levels of serum iron (NIH sample) and lower brain susceptibility (Penn sample) than men.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 16950,
+      "end": 17089,
+      "text": "These findings are in line with previous studies reporting lower serum and brain iron loading in women than men at all life stages [41,42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 17090,
+      "end": 17188,
+      "text": "Testosterone decreases hepcidin expression, which may result in elevated iron loading in men [43].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 17189,
+      "end": 17360,
+      "text": "Moreover, menstrual blood reduces serum iron levels in women, which may additionally contribute to sex differences in brain iron accumulation in pre-menopausal women [44].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 17360,
+      "end": 17396,
+      "text": "\n\nOur study has several limitations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 17397,
+      "end": 17614,
+      "text": "Foremost among these is the small sample size of the Penn sample, which may explain the failure to detect whole-brain and region-specific differences in iron concentration between AUD individuals and healthy controls.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 17615,
+      "end": 17826,
+      "text": "Although our findings of age-related brain iron accumulation are consistent with previous QSM studies, a wider age range could provide greater clarity regarding the interaction between age and iron accumulation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 17827,
+      "end": 18113,
+      "text": "Nevertheless, our pilot study is unique in that it measured four-echo three-dimensional images of tissue magnetic susceptibility, which allow for more accurate and precise measurement of brain iron loading than the MRI techniques used in previous QSM studies in AUD participants [6,22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 18114,
+      "end": 18243,
+      "text": "Further, our study did not include genetic variation of the HFE gene, which is the main cause of hereditary hemochromatosis [45].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 18244,
+      "end": 18479,
+      "text": "The HFE gene mediated peripheral iron loading (% saturation) in individuals with AUD [7] and healthy volunteers [46], and menstrual status in women has been found to be protective against phenotypic expression of haemochromatosis [47].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 18480,
+      "end": 18749,
+      "text": "While our QSM study was underpowered to perform a genetic analysis of HFE, we found that, in the NIH sample, the main effect of AUD on serum ferritin remained significant when controlling for HFE rs1799945 (see details of the genetic analysis in Supplemental Material).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 18750,
+      "end": 18862,
+      "text": "Moreover, our screening process excluded participants with iron-related disorders such as anemia and hemophilia.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 18863,
+      "end": 18983,
+      "text": "Therefore, our findings of AUD on serum ferritin and brain iron loading were unlikely to be confounded by HFE rs1799945.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 18984,
+      "end": 19298,
+      "text": "Additional studies are needed to explore the use of QSM in combination with other neuroimaging techniques, such as diffusion tensor imaging (DTI), fMRI [48], and PET measures of brain glucose metabolism, which would provide a more comprehensive picture of brain structure and function in relation to AUD and aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 19299,
+      "end": 19448,
+      "text": "Assessment of neurocognitive and motor functioning is needed to better understand the clinical implications of iron accumulation in the brain in AUD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 19449,
+      "end": 19634,
+      "text": "Another limitation is the lack of an assessment of nutritional status of participants, as differences in dietary iron intake may affect serum and brain levels of ferritin and iron [17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 19635,
+      "end": 19767,
+      "text": "Moreover, individuals with AUD could have altered micronutrient intake and absorption [49], which could have confounded our results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 19768,
+      "end": 19923,
+      "text": "However, a nutrient-poor diet in conjunction with impaired absorption would be expected to reduce iron levels, which was not observed in the present study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 19924,
+      "end": 20030,
+      "text": "Future study on serum and brain iron should aim to correct for nutritional status and dietary iron levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 20031,
+      "end": 20189,
+      "text": "Another direction for future study is the investigation of cognitive performance in relation to region-specific brain iron deposition in individuals with AUD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 20190,
+      "end": 20413,
+      "text": "A systematic review of regional associations between brain iron and cognition [50] showed that iron accumulation in the globus pallidus correlated significantly with general cognition/IQ, motor function, and reaction times.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 20414,
+      "end": 20517,
+      "text": "Moreover, pallida iron levels correlated with memory in one study [51], but not in a second study [37].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 20517,
+      "end": 20620,
+      "text": "\n\nIn sum, our pilot study provided evidence for elevated serum and brain iron loading in AUD and aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 20621,
+      "end": 20807,
+      "text": "However, studies of larger samples are required to determine the potential clinical applications of QSM in the diagnosis and treatment of AUD and age-related neurodegenerative disorders.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 20808,
+      "end": 21057,
+      "text": "A fuller understanding of the interaction of chronic heavy drinking and aging on iron accumulation in brain could provide a basis for the development of iron-mediated therapies (such as iron chelators) to mitigate potential neurodegeneration in AUD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 21057,
+      "end": 21097,
+      "text": "\n\n\n## 4. Materials and Methods\n\n### 4.1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 21098,
+      "end": 21525,
+      "text": "Participants\n\n#### 4.1.1. NIH Sample\n\nA total of 1053 participants (583 individuals with AUD; 470 healthy non-dependent controls) who completed a natural history protocol at the NIH Clinical Center (Unit and Clinic Evaluation, Screening, Assessment, and Management, ClinicalTrials.gov Identifier: NCT02231840) between September 2011 and March 2020, and for whom serum ferritin levels were available, were included in the study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 21526,
+      "end": 21616,
+      "text": "Clinical and demographic characteristics of the sample have been published previously [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 21617,
+      "end": 21709,
+      "text": "AUD participants were admitted to the NIH Clinical Center inpatient unit for detoxification.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 21710,
+      "end": 21908,
+      "text": "Withdrawal symptoms were monitored using the Clinical Institute Withdrawal Assessment for Alcohol—Revised (CIWA-Ar) [52] and, if severe, patients were treated with a benzodiazepine by medical staff.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 21909,
+      "end": 22096,
+      "text": "All participants provided written informed consent and the study protocol was approved by the Institutional Review Board at the National Institutes of Health (protocol number 14-AA-0181).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 22096,
+      "end": 22110,
+      "text": "\n\n\n#### 4.1.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S146",
+      "start": 22111,
+      "end": 22122,
+      "text": "Penn Sample",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 22122,
+      "end": 22773,
+      "text": "\n\nStudy participants were recruited for study protocol NCT04616781 or NCT05015881 via online advertisements (BuildClinical, iConnect) and underwent the following screening assessment: Mini International Neuropsychiatric Interview (MINI) for DSM-5 diagnosis for AUD and other neuropsychiatric disorders [40]; 30-day Timeline Follow-back (TLFB) for daily drinking patterns [53]; Lifetime Drinking History (LDH) [54]; Alcohol Use Disorders Identification Test (AUDIT) for hazardous drinking behavior [55]; Fagerström Test for Nicotine Dependence [56]; and Shipley Institute of Living Scale-2 (Shipley-2) test for crystallized and fluid intelligence [57].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 22774,
+      "end": 23096,
+      "text": "Inclusion criteria for the AUD group included the following: (1) meeting DSM-5 criteria for current AUD; (2) self-report of an average of at least 15 standard drinks per week in the last month; (3) self-report of having greater than a 1 y history of heavy drinking; and (4) having had a drink within 1 week of study visit.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 23097,
+      "end": 23222,
+      "text": "Healthy controls were included if they demonstrated an AUDIT score of <6 and consumed less than 15 standard drinks per month.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 23223,
+      "end": 23916,
+      "text": "Exclusion criteria for both groups included the following: (1) current DSM-5 diagnosis of a major psychiatric disorder other than alcohol dependence in the AUD group, and intake of psychoactive medication within 24 h of study participation; (2) history of seizures; (3) HIV seropositivity; (4) a history of head trauma with loss of consciousness for more than 30 min or associated skull fracture/abnormal MRI; (5) any contraindication for MRI (e.g., presence of ferromagnetic objects or claustrophobia); and (6) a current, clinically significant physical disease or abnormality detected by medical history, physical examination, or routine laboratory evaluation that can impact brain function.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 23917,
+      "end": 24055,
+      "text": "Medical history, physical examination, and routine laboratory results of the screen were evaluated by physicians prior to study inclusion.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 24056,
+      "end": 24230,
+      "text": "Ten individuals with AUD (3 female; 37.30 ± 15.72 years old) and eight matched non-dependent healthy volunteers (4 female; 32.50 ± 8.30 years old) were included in the study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 24231,
+      "end": 24316,
+      "text": "Baseline demographics and alcohol-related clinical measures are presented in Table 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 24317,
+      "end": 24375,
+      "text": "The AUD cohort had a significantly higher BMI (p = 0.025).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 24376,
+      "end": 24693,
+      "text": "As anticipated, AUD participants reported greater alcohol consumption across various drinking behavior metrics than controls, including age at first drink (14.6 vs. 18.0), standard drinks per week (25.12 vs. 0.52), total lifetime alcohol intake (190,596.00 g vs. 8557.50 g), and AUDIT score (14.8 vs. 1.75) (Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 24693,
+      "end": 24697,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S157",
+      "start": 24697,
+      "end": 24705,
+      "text": "### 4.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S158",
+      "start": 24706,
+      "end": 24861,
+      "text": "Quantitative Susceptibility Mapping (QSM)\n\nOn the day of study screening, Penn participants completed a serum iron panel (Labcorp) after an overnight fast.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 24862,
+      "end": 24986,
+      "text": "On a separate study day, participants completed a 3T MRI scan with QSM to quantify brain iron concentrations non-invasively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 24987,
+      "end": 25077,
+      "text": "Participants were instructed to eat a light meal 2–3 h before the MRI scanning procedures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 25078,
+      "end": 25166,
+      "text": "MRI was performed on a Siemens Prisma 3T system (Siemens Healthcare, Erlangen, Germany).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 25167,
+      "end": 25504,
+      "text": "QSM images were acquired using a 3D multi-echo sequence with the following parameters: repetition time (TR) = 35 ms, echo time (TE) = 7.5/15/22.5/30 ms, flip angle (FA) = 15°, field of view (FOV)= 180 × 240 mm, number of slices = 96, voxel size = 1.5 × 1.5 × 1.5 mm, readout bandwidth = 200 Hz/pixel, and scan time = approximately 5 min.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 25505,
+      "end": 25674,
+      "text": "QSM images were reconstructed by the morphology-enabled dipole inversion algorithm zero-referenced to the ventricular cerebrospinal fluid using the MEDI toolbox [58,59].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 25675,
+      "end": 25944,
+      "text": "To allow group-level analysis, QSM images were normalized to the Montreal Neurological Institute (MNI) space with 1 mm isotropic voxels and spatially smoothed with 8 mm full-width at half-maximum (FWHM) using SPM 12 (Wellcome Trust Center for Neuroimaging, London, UK).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 25944,
+      "end": 25947,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S166",
+      "start": 25947,
+      "end": 25955,
+      "text": "### 4.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S167",
+      "start": 25956,
+      "end": 26052,
+      "text": "Statistical Analyses\n\nAll statistical analyses were completed using SPSS (IBM, Armonk, NY, USA).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 26053,
+      "end": 26241,
+      "text": "Two-sample t-tests were used to compare groups on continuous variables; Chi-square tests were used to compare groups on categorical variables (sex, self-reported race, and smoking status).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 26241,
+      "end": 26243,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S170",
+      "start": 26243,
+      "end": 26399,
+      "text": "We performed a linear regression analysis with ferritin as the dependent variable and AUD, age, BMI, and sex as predictors in both the NIH and Penn samples.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 26400,
+      "end": 26493,
+      "text": "In the NIH sample, we added C-reactive protein values, to correct for levels of inflammation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 26493,
+      "end": 26495,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S173",
+      "start": 26495,
+      "end": 26695,
+      "text": "Global brain quantitative susceptibility was calculated for each Penn participant as the average of all brain voxels in the preprocessed QSM images identified using the tissue probability maps in SPM.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 26696,
+      "end": 26835,
+      "text": "Linear regression was performed with global brain iron as the dependent variable with AUD, age, BMI, sex, and serum ferritin as predictors.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 26835,
+      "end": 26837,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S176",
+      "start": 26837,
+      "end": 27182,
+      "text": "The preprocessed QSM images were subjected to whole-brain voxel-wise analysis to examine the following: (1) the difference in quantitative susceptibility between the AUD and HC cohorts using a two-sample t-test, while correcting for age as a covariate; and (2) the association between quantitative susceptibility and age using linear regression.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 27183,
+      "end": 27276,
+      "text": "Significant clusters were explored using a cluster-level FWE-corrected threshold of p < 0.05.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 27277,
+      "end": 27490,
+      "text": "Moreover, a preliminary threshold of voxel-level uncorrected p < 0.005 combined with cluster extent k > 50 was used for exploratory analyses on the effects of AUD and age on voxel-wise quantitative susceptibility.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 27491,
+      "end": 27585,
+      "text": "Anatomical labels of the identified regions were determined based on the Harvard-Oxford Atlas.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 27585,
+      "end": 27589,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=Chronic excessive alcohol use | pred=have | obj=Abstract | unit=S4\nB T4 B2 | sub=Elevated peripheral iron levels | pred=report | obj=in individuals with alcohol use disorder | unit=S5\nB T4 B3 | sub=We | pred=evaluate | obj=whether (1) serum and brain iron | unit=S6\nB T4 B4 | sub=A fasting serum iron panel | pred=obtain | obj=magnetic | unit=S7\nB T4 B5 | sub=whole-brain iron susceptibility | pred=differ | obj=between groups | unit=S8\nB T4 B6 | sub=Voxel-wise QSM analyses | pred=reveal | obj=higher susceptibility in a cluster in | unit=S9\nB T4 B7 | sub=Whole-brain iron | pred=increase | obj=with age | unit=S10\nB T4 B8 | sub=This | pred=study | obj=serum | unit=S11\nB T4 B9 | sub=Larger studies | pred=need | obj=to examine the effects of alcohol | unit=S12\nB T4 B10 | sub=Iron | pred=cofactor | obj=for many cellular enzymes involved in | unit=S15\nB T4 B11 | sub=iron | pred=promote | obj=oxidative damage | unit=S16\nB T4 B12 | sub=Excess iron deposition in the brain | pred=play | obj=a significant role | unit=S17\nB T4 B13 | sub=Serum | pred=report | obj=in individuals with alcohol use disorder | unit=S18\nB T4 B14 | sub=Peripheral iron status | pred=monitor | obj=with serum iron level | unit=S19\nB T4 B15 | sub=We | pred=report | obj=that serum transferrin saturation was higher | unit=S20\nB T4 B16 | sub=Excessive alcohol consumption | pred=link | obj=to increased levels of peripheral ferritin, | unit=S21\nB T4 B17 | sub=ferritin levels | pred=increase | obj=with the severity of liver disease | unit=S22\nB T4 B18 | sub=Brain iron concentrations | pred=quantify | obj=by magnetic resonance imaging (MRI) quantitative | unit=S23\nB T4 B19 | sub=One previous study | pred=demonstrate | obj=higher brain iron levels in the | unit=S24\nB T4 B20 | sub=The means by which iron accumulates | pred=understand | obj=one | unit=S25\nB T4 B21 | sub=This | pred=allow | obj=iron | unit=S26\nB T4 B22 | sub=Iron deposition in individuals with AUD | pred=contribute | obj=to neurodegeneration similar to that observed | unit=S27\nB T4 B23 | sub=Peripheral iron levels | pred=high | obj=in the course of AD | unit=S28\nB T4 B24 | sub=QSM analysis of brain iron | pred=corroborate | obj=the serum findings showing brain iron | unit=S29\nB T4 B25 | sub=Higher iron accumulation | pred=associate | obj=with positron emission tomography (PET) measures | unit=S30\nB T4 B26 | sub=Sequestration of iron through dietary modulation | pred=effective | obj=brain | unit=S31\nB T4 B27 | sub=Brain iron loading | pred=implicate | obj=in normal aging | unit=S33\nB T4 B28 | sub=Results from both early post-mortem studies | pred=indicate | obj=that elderly subjects had significantly higher | unit=S34\nB T4 B29 | sub=Other MRI studies | pred=reveal | obj=significant age-related iron differences in cortical | unit=S35\nB T4 B30 | sub=A recent study | pred=show | obj=that abnormal function of the glymphatic | unit=S36\nB T4 B31 | sub=Few studies | pred=examine | obj=the role of iron in mediating | unit=S38\nB T4 B32 | sub=we | pred=utilize | obj=In this study | unit=S39\nB T4 B33 | sub=We | pred=hypothesize | obj=elevated blood ferritin and brain levels | unit=S40\nB T4 B34 | sub=We | pred=perform | obj=a re-analysis of iron panel data | unit=S41\nB T4 B35 | sub=article text | pred=result | obj=# | unit=S44\nB T4 B36 | sub=A linear regression model | pred=demonstrate | obj=that AUD status was a significant | unit=S45\nB T4 B37 | sub=Age (41.3 ± 12.9, range = | pred=predictor | obj=of serum ferritin level | unit=S46\nB T4 B38 | sub=Figure | pred=a | obj=<figure> <figcaption><strong>Figure 1</strong> (A). | unit=S47\nB T4 B39 | sub=Serum ferritin levels | pred=high | obj=in inpatients with alcohol use disorder | unit=S48\nB T4 B40 | sub=Serum ferritin levels | pred=high | obj=in individuals with AUD | unit=S49\nB T4 B41 | sub=p | pred=summarize | obj=in Table 1 | unit=S51\nB T4 B42 | sub=Participants | pred=mean | obj=of 35.2 ± 12.9 years old | unit=S52\nB T4 B43 | sub=The results from Penn | pred=indicate | obj=that serum ferritin levels were higher | unit=S53\nB T4 B44 | sub=A linear regression model | pred=indicate | obj=that AUD status was a significant | unit=S54\nB T4 B45 | sub=age | pred=predict | obj=serum ferritin in the Penn sample | unit=S55\nB T4 B46 | sub=Group means | pred=list | obj=in Table S3 | unit=S56\nB T4 B47 | sub=article text | pred=association | obj=of AUD | unit=S59\nB T4 B48 | sub=QSM analysis | pred=perform | obj=using the MEDI toolbox | unit=S60\nB T4 B49 | sub=No outliers (>2SD from the mean | pred=detect | obj=No outliers (>2SD from the mean) | unit=S61\nB T4 B50 | sub=Linear regression analysis | pred=demonstrate | obj=that age (β = 0.618, p | unit=S62\nB T4 B51 | sub=neither AUD (β = −0.775, p | pred=predict | obj=global brain susceptibility | unit=S63\nB T4 B52 | sub=article text | pred=predict | obj=whole-brain quantitative susceptibility | unit=S64\nB T4 B53 | sub=/figure | pred=2.3 | obj=/figure> ### 2.3. | unit=S66\nB T4 B54 | sub=QSM | pred=analysis | obj=Whole-Brain Voxel-Wise QSM Analysis | unit=S67\nB T4 B55 | sub=There | pred=be | obj=with brain quantitative susceptibility | unit=S68\nB T4 B56 | sub=Exploratory analyses with a more liberal | pred=demonstrate | obj=higher brain quantitative susceptibility in the | unit=S69\nB T4 B57 | sub=age | pred=correlate | obj=with brain quantitative susceptibility in the | unit=S70\nB T4 B58 | sub=Figure | pred=association | obj=between AUD | unit=S71\nB T4 B59 | sub=The bar graph | pred=depict | obj=the peak susceptibility of the globus | unit=S72\nB T4 B60 | sub=article text | pred=association | obj=between age | unit=S73\nB T4 B61 | sub=Abbreviations | pred=aud | obj=alcohol | unit=S74\nB T4 B62 | sub=article text | pred=discussion | obj=Discussion | unit=S75\nB T4 B63 | sub=We | pred=find | obj=significantly higher serum ferritin levels | unit=S76\nB T4 B64 | sub=a preliminary voxel-wise QSM analysis | pred=reveal | obj=higher brain susceptibility in the left | unit=S77\nB T4 B65 | sub=Age | pred=correlate | obj=with whole-brain iron accumulation | unit=S78\nB T4 B66 | sub=Our findings of higher serum ferritin | pred=line | obj=with that reported in previous studies | unit=S79\nB T4 B67 | sub=Evidence | pred=suggest | obj=that the globus pallidus is involved | unit=S80\nB T4 B68 | sub=Impulsivity | pred=associate | obj=with an increased risk of problematic | unit=S81\nB T4 B69 | sub=iron loading in the globus pallidus | pred=contribute | obj=to altered neuronal functioning | unit=S82\nB T4 B70 | sub=Serum ferritin | pred=accept | obj=as a sensitive marker of systemic | unit=S83\nB T4 B71 | sub=Low serum or plasma ferritin levels | pred=indicate | obj=iron deficiency | unit=S84\nB T4 B72 | sub=Elevated peripheral iron measures, including serum | pred=associate | obj=with brain iron stores | unit=S85\nB T4 B73 | sub=Serum ferritin | pred=limited | obj=as a clinical marker of total | unit=S86\nB T4 B74 | sub=alcohol-induced chronic inflammation | pred=have | obj=elevated ferritin and brain iron levels | unit=S87\nB T4 B75 | sub=Kroll et al. | pred=find | obj=elevated levels of CRP, a marker | unit=S88\nB T4 B76 | sub=CRP levels | pred=associate | obj=In the NIH sample | unit=S89\nB T4 B77 | sub=controlling for CRP in the regression | pred=influence | obj=the significant effects of AUD on | unit=S90\nB T4 B78 | sub=hepatitis | pred=play | obj=a role | unit=S91\nB T4 B79 | sub=We | pred=find | obj=no significant group differences in brain | unit=S92\nB T4 B80 | sub=Previous QSM studies | pred=show | obj=increased brain iron in the globus | unit=S93\nB T4 B81 | sub=Discrepancies in study findings | pred=attributable | obj=to our small sample size (i.e., | unit=S94\nB T4 B82 | sub=Our study | pred=acquire | obj=detailed, four-echo three-dimensional images of tissue | unit=S95\nB T4 B83 | sub=Previous studies | pred=utilize | obj=T2*-weighted imaging of only one or | unit=S96\nB T4 B84 | sub=the greater brain iron reported by | pred=obtain | obj=in male inpatients with AUD | unit=S97\nB T4 B85 | sub=This | pred=relevant | obj=male | unit=S98\nB T4 B86 | sub=Topiwala et al. [22 | pred=find | obj=an association between alcohol consumption and | unit=S99\nB T4 B87 | sub=we | pred=find | obj=no association | unit=S100\nB T4 B88 | sub=The link between blood and brain | pred=require | obj=further elucidation | unit=S101\nB T4 B89 | sub=Exploring the relationship among serum | pred=enhance | obj=our understanding of the disease progression | unit=S102\nB T4 B90 | sub=The age-associated brain iron accumulation observed | pred=consistent | obj=with that found in prior QSM | unit=S103\nB T4 B91 | sub=Excessive iron deposition | pred=elicit | obj=oxidative stress, which facilitates neurodegeneration | unit=S104\nB T4 B92 | sub=it | pred=appear | obj=to be region-specific | unit=S105\nB T4 B93 | sub=we | pred=find | obj=significant associations between aging | unit=S106\nB T4 B94 | sub=The variations in brain regions affected | pred=observe | obj=in other studies | unit=S107\nB T4 B95 | sub=These differences | pred=attributable | obj=to study differences in QSM analysis | unit=S108\nB T4 B96 | sub=Our study | pred=consist | obj=of mostly non-treatment-seeking individuals who were | unit=S109\nB T4 B97 | sub=The severity of the AUD group | pred=divide | obj=between mild (n = 5 | unit=S110\nB T4 B98 | sub=Previous research | pred=find | obj=a positive association between drinking levels | unit=S111\nB T4 B99 | sub=we | pred=expect | obj=that evaluation of a more severe | unit=S112\nB T4 B100 | sub=Our study | pred=find | obj=evidence for sex differences in serum | unit=S114\nB T4 B101 | sub=These findings | pred=line | obj=with previous studies reporting lower serum | unit=S115\nB T4 B102 | sub=Testosterone | pred=decrease | obj=hepcidin expression | unit=S116\nB T4 B103 | sub=menstrual blood | pred=reduce | obj=serum iron levels in women | unit=S117\nB T4 B104 | sub=Our study | pred=have | obj=several limitations | unit=S118\nB T4 B105 | sub=article text | pred=foremost | obj=among these | unit=S119\nB T4 B106 | sub=a wider age range | pred=provide | obj=greater clarity regarding the interaction between | unit=S120\nB T4 B107 | sub=our pilot study | pred=unique | obj=it | unit=S121\nB T4 B108 | sub=our study | pred=include | obj=genetic variation of the HFE gene, | unit=S122\nB T4 B109 | sub=The HFE gene | pred=mediate | obj=peripheral iron loading (% saturation | unit=S123\nB T4 B110 | sub=we | pred=find | obj=that, in the NIH sample, the | unit=S124\nB T4 B111 | sub=our screening process | pred=exclude | obj=participants with iron-related disorders such as | unit=S125\nB T4 B112 | sub=our findings of AUD on serum | pred=unlikely | obj=to be confounded by HFE rs1799945 | unit=S126\nB T4 B113 | sub=Additional studies | pred=need | obj=to explore the use of QSM | unit=S127\nB T4 B114 | sub=Assessment of neurocognitive and motor functioning | pred=need | obj=to better understand the clinical implications | unit=S128\nB T4 B115 | sub=Another limitation | pred=lack | obj=of an assessment of nutritional status | unit=S129\nB T4 B116 | sub=individuals with AUD | pred=have | obj=altered micronutrient intake | unit=S130\nB T4 B117 | sub=a nutrient-poor diet in conjunction with | pred=expect | obj=to reduce iron levels, which was | unit=S131\nB T4 B118 | sub=Future study on serum | pred=aim | obj=to correct for nutritional status | unit=S132\nB T4 B119 | sub=Another direction for future study | pred=investigation | obj=of cognitive performance in relation to | unit=S133\nB T4 B120 | sub=A systematic review of regional associations | pred=show | obj=that iron accumulation in the globus | unit=S134\nB T4 B121 | sub=pallida iron levels | pred=correlate | obj=with memory | unit=S135\nB T4 B122 | sub=our pilot study | pred=provide | obj=In sum | unit=S136\nB T4 B123 | sub=studies of larger samples | pred=require | obj=to determine the potential clinical applications | unit=S137\nB T4 B124 | sub=A fuller understanding of the interaction | pred=provide | obj=a basis for the development of | unit=S138\nB T4 B125 | sub=article text | pred=material | obj=Methods | unit=S139\nB T4 B126 | sub=Participants #### 4.1.1. NIH Sample | pred=include | obj=in the study | unit=S140\nB T4 B127 | sub=Clinical and demographic characteristics of the | pred=publish | obj=7 | unit=S141\nB T4 B128 | sub=AUD participants | pred=admit | obj=to the NIH Clinical Center inpatient | unit=S142\nB T4 B129 | sub=Withdrawal symptoms | pred=monitor | obj=using the Clinical Institute Withdrawal Assessment | unit=S143\nB T4 B130 | sub=All participants | pred=provide | obj=written informed consent | unit=S144\nB T4 B131 | sub=Penn | pred=sample | obj=Penn Sample | unit=S146\nB T4 B132 | sub=Study participants | pred=recruit | obj=for study protocol NCT04616781 | unit=S147\nB T4 B133 | sub=Inclusion criteria for the AUD group | pred=include | obj=the following | unit=S148\nB T4 B134 | sub=Healthy controls | pred=include | obj=they | unit=S149\nB T4 B135 | sub=Exclusion criteria for both groups | pred=include | obj=the following | unit=S150\nB T4 B136 | sub=Medical history | pred=evaluate | obj=by physicians | unit=S151\nB T4 B137 | sub=Ten individuals with AUD (3 female; | pred=include | obj=in the study | unit=S152\nB T4 B138 | sub=Baseline demographics | pred=present | obj=in Table 1 | unit=S153\nB T4 B139 | sub=The AUD cohort | pred=have | obj=a significantly higher BMI (p = | unit=S154\nB T4 B140 | sub=AUD participants | pred=report | obj=greater alcohol consumption across various drinking | unit=S155\nB T4 B141 | sub=Quantitative Susceptibility Mapping (QSM | pred=complete | obj=On the day of study screening | unit=S158\nB T4 B142 | sub=participants | pred=complete | obj=On a separate study day | unit=S159\nB T4 B143 | sub=Participants | pred=instruct | obj=to eat a light meal 2–3 | unit=S160\nB T4 B144 | sub=MRI | pred=perform | obj=on a Siemens Prisma 3T system | unit=S161\nB T4 B145 | sub=QSM images | pred=acquire | obj=using a 3D multi-echo sequence with | unit=S162\nB T4 B146 | sub=QSM images | pred=reconstruct | obj=by the morphology-enabled dipole inversion algorithm | unit=S163\nB T4 B147 | sub=QSM images | pred=normalize | obj=to the Montreal Neurological Institute (MNI) | unit=S164\nB T4 B148 | sub=Statistical Analyses | pred=complete | obj=using SPSS (IBM, Armonk, NY, USA | unit=S167\nB T4 B149 | sub=Two-sample t-tests | pred=use | obj=to compare groups on continuous variables | unit=S168\nB T4 B150 | sub=We | pred=perform | obj=a linear regression analysis | unit=S170\nB T4 B151 | sub=we | pred=add | obj=In the NIH sample | unit=S171\nB T4 B152 | sub=Global brain quantitative susceptibility | pred=calculate | obj=for each Penn participant | unit=S173\nB T4 B153 | sub=Linear regression | pred=perform | obj=with global brain iron | unit=S174\nB T4 B154 | sub=The preprocessed QSM images | pred=subject | obj=to whole-brain voxel-wise analysis | unit=S176\nB T4 B155 | sub=Significant clusters | pred=explore | obj=using a cluster-level FWE-corrected threshold of | unit=S177\nB T4 B156 | sub=a preliminary threshold of voxel-level uncorrected | pred=use | obj=for exploratory analyses on the effects | unit=S178\nB T4 B157 | sub=Anatomical labels of the identified regions | pred=determine | obj=Harvard-Oxford | unit=S179",
+  "expected": {
+    "assertion_count": 157,
+    "minimum_concept_count": 274,
+    "minimum_structural_row_count": 744,
+    "minimum_knowledge_map_node_count": 744,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

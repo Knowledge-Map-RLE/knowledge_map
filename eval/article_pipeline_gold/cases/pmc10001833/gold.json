@@ -1,0 +1,2675 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 408,
+      "text": "# Anti-Inflammatory Effects of Flavonoids in Common Neurological Disorders Associated with Aging\n\n**Авторы:** Martínez-Coria Hilda, Arrieta-Cruz Isabel, Gutiérrez-Juárez Roger, López-Valdés Héctor Eduardo\n\n**Журнал:** International Journal of Molecular Sciences (2023)\n\n**DOI:** 10.3390/ijms24054297\n\n\n## Abstract\n\nAging reduces homeostasis and contributes to increasing the risk of brain diseases and death.",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 409,
+      "end": 578,
+      "text": "Some of the principal characteristics are chronic and low-grade inflammation, a general increase in the secretion of proinflammatory cytokines, and inflammatory markers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S3",
+      "start": 579,
+      "end": 725,
+      "text": "Aging-related diseases include focal ischemic stroke and neurodegenerative diseases such as Alzheimer’s disease (AD) and Parkinson’s disease (PD).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 726,
+      "end": 838,
+      "text": "Flavonoids are the most common class of polyphenols and are abundantly found in plant-based foods and beverages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 839,
+      "end": 1273,
+      "text": "A small group of individual flavonoid molecules (e.g., quercetin, epigallocatechin-3-gallate, and myricetin) has been used to explore the anti-inflammatory effect in vitro studies and in animal models of focal ischemic stroke and AD and PD, and the results show that these molecules reduce the activated neuroglia and several proinflammatory cytokines, and also, inactivate inflammation and inflammasome-related transcription factors.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 1274,
+      "end": 1332,
+      "text": "However, the evidence from human studies has been limited.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 1333,
+      "end": 1658,
+      "text": "In this review article, we highlight the evidence that individual natural molecules can modulate neuroinflammation in diverse studies from in vitro to animal models to clinical studies of focal ischemic stroke and AD and PD, and we discuss future areas of research that can help researchers to develop new therapeutic agents.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1658,
+      "end": 1666,
+      "text": "\n\n\n## 1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S9",
+      "start": 1667,
+      "end": 1843,
+      "text": "Introduction\n\nThe most common aging-related diseases include focal ischemic stroke and neurodegenerative diseases such as Alzheimer’s disease (AD) and Parkinson’s disease (PD).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1844,
+      "end": 2068,
+      "text": "Aging is a progressive, irreversible, and inevitable process that involves a distinctive decline in physiological functions and physical appearance, resulting from tissue degeneration and the dysfunction of vital organs [1].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 2069,
+      "end": 2247,
+      "text": "A focal ischemic stroke is caused by the occlusion of a cerebral artery and is the most frequent type of cerebrovascular disease, and aging is its most nonmodifiable risk factor.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 2248,
+      "end": 2386,
+      "text": "Neurodegenerative diseases have no cure and are caused by progressive degeneration and/or neuron death to produce debilitating conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 2387,
+      "end": 2531,
+      "text": "Neurodegenerative diseases also include Lewy body dementia, vascular dementia, amyotrophic lateral sclerosis, and frontotemporal dementia [2,3].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 2532,
+      "end": 2716,
+      "text": "Meanwhile, the components of the human diet, such as vegetables, cereals, tea, wine, and fruits, contain different compounds including flavonoids, which are a class of polyphenols [4].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2717,
+      "end": 2936,
+      "text": "Many recent studies have shown that these compounds have a beneficial effect on the primary cell culture of glial and neurons and pre-clinical animal models of human focal ischemic stroke and neurodegenerative diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2937,
+      "end": 3172,
+      "text": "The active compounds and their mechanism of action for most flavonoids in the human diet and herbal medicine are still not well defined because they contain multiple bioactive molecules that can modulate multiple pharmacologic targets.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 3173,
+      "end": 3460,
+      "text": "To obtain more significant information, the scientific research has concentrated mainly on known biological activities of purified single compounds to offer an evidence base for the rationale of traditional practice but also to support their integration into modern medical practice [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 3460,
+      "end": 3983,
+      "text": "\n\nIn the sections below, we will describe the basic knowledge of natural flavonoids, neuroinflammation, aging, focal ischemic stroke, AD, and PD, and we will summarize the evidence relating to the anti-inflammatory effects of single flavonoids in different model systems of those diseases and clinical studies, and finally, we will suggest future areas of research to improve our understanding of single flavonoids molecules to help to establish more solid bases to facilitate their future use as a therapeutic alternative.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 3983,
+      "end": 3991,
+      "text": "\n\n\n## 2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S20",
+      "start": 3992,
+      "end": 4095,
+      "text": "Flavonoids\n\nFlavonoids are present in all vascular plants and are the most common class of polyphenols.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 4096,
+      "end": 4327,
+      "text": "In the plant, flavonoids are secondary metabolites that have a wide range of biochemical, physiological, and ecological functions, such as the coloration of petals and flowers, protection against ultraviolet light, and cell growth.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 4328,
+      "end": 4398,
+      "text": "Moreover, a single plant often contains many different flavonoids [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 4399,
+      "end": 4681,
+      "text": "In nature, flavonoids are broadly distributed in the plant kingdom and are the main phytochemicals found in more than 6000 species of plants, and they also are abundantly found in plant-based foods and beverages, including vegetables, tea, fruits, grains roots, cocoa, and wine [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 4682,
+      "end": 4903,
+      "text": "Flavonoids are low-molecular-weight compounds that can be divided into subclasses such as: anthocyanins, chalcones, flavanols (or catechins), flavones, flavanones, flavonols, flavanonols, and isoflavonoids (Figure 1) [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 4904,
+      "end": 5082,
+      "text": "Except for catechins, all flavonoids contained in foods and beverages are in the form of glycosides, which must be removed to be absorbed from the small intestine upon ingestion.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 5083,
+      "end": 5379,
+      "text": "Flavonoid aglycones undergo conjugation reactions before passing into the bloodstream, and these reactions form sulphates, glucuronides, and/or methylates metabolites (conjugates), which can be subjected to additional phase II metabolism in the liver, and then returned to the circulatory system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 5380,
+      "end": 5467,
+      "text": "Moreover, some conjugates may be exported into the bile duct or excreted by the kidney.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 5468,
+      "end": 5551,
+      "text": "Flavonoids not absorbed from the small intestine will be degraded in the colon [8].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 5552,
+      "end": 5661,
+      "text": "Except from catechins, the rest of the flavonoids present in plasma and urine are primarily conjugated forms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 5662,
+      "end": 5804,
+      "text": "Consequently, cells in the body are usually exposed to apparently less active flavonoid metabolites and conjugates, rather than aglycones [9].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 5805,
+      "end": 5869,
+      "text": "However, there is evidence that deconjugation may occur in situ.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 5870,
+      "end": 6227,
+      "text": "An in vivo study has shown that glucuronidated quercetin metabolites were deconjugated in their aglycone form in the mesenteric vasculature of rats by the action of β-glucuronidase, and this effect was inhibited when an inhibitor of that enzyme was present [10], which suggests that deconjugation may occur in situ to produce a more effective aglycone form.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 6228,
+      "end": 6457,
+      "text": "The absorption and distribution of flavonoids around the body, as well as their excretion in urine, are carried out by members of ATP-binding cassette (ABC) transport systems, which translocate solutes across cell membranes [11].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 6458,
+      "end": 6632,
+      "text": "The physicochemical properties (such as molecular size and lipophilicity, solubility, configuration, and pKa value) of each flavonoid determine the degree of absorption [12].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 6633,
+      "end": 7004,
+      "text": "Flavonoids show great variability in the velocity and magnitude of absorption, plasma half-life, bioavailability, and plasma kinetics, but in general, they show rapid urinary and biliary excretion and low bioavailability, and it has been suggested that after the consumption of 10–100 mg of a single phenolic compound, their plasma concentration rarely exceeds 1 μM [13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 7005,
+      "end": 7327,
+      "text": "Moreover, Manach et al. [14] analyzed 97 bioavailability studies in humans and found that plasma concentrations of total metabolites ranged from 0 to 4 µmol/L with an intake of 50 mg aglycone equivalents, and the relative urinary excretion ranged from 0.3% to 43% of the ingested dose depending on the specific polyphenol.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 7328,
+      "end": 7581,
+      "text": "They also found that among all of the compounds analyzed, isoflavones and gallic acid had the best rate of absorption, followed by catechins, flavanones, and quercetin glycosides, and that proanthocyanidins and anthocyanins had very low bioavailability.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 7582,
+      "end": 7767,
+      "text": "Some evidence suggests that some flavonoids and/or their metabolites such as anthocyanins and (−)-epicatechin and some of their metabolites can cross the blood–brain barrier [15,16,17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 7768,
+      "end": 8046,
+      "text": "Flavonoids have pleiotropic effects that can produce health benefits, as shown in several diseases including cardiovascular diseases, neurological disorders, and cancer, and these benefits are seen in antiviral, antioxidant, and anti-inflammatory mechanisms, among others [6,8].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 8046,
+      "end": 8219,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> Basic flavonoid share a C6–C3–C6 structure containing two aromatic rings (A and B rings) linked by a three-carbon bridge.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 8220,
+      "end": 8304,
+      "text": "Some representative compounds are shown below each flavonoid subgroup.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 8304,
+      "end": 8305,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S43",
+      "start": 8305,
+      "end": 8312,
+      "text": "/figure",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 8312,
+      "end": 8321,
+      "text": ">\n\n\n## 3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S45",
+      "start": 8322,
+      "end": 8507,
+      "text": "Neuroinflammation\n\nAn inflammatory reaction in the central nervous system (CNS) or neuroinflammation are generally induced when innate immune cells detect tissue damage or an infection.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 8508,
+      "end": 8630,
+      "text": "This response is critical to isolate damaged tissue from uninjured areas and to repair and clean the extracellular matrix.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 8631,
+      "end": 8818,
+      "text": "Acute inflammation is beneficial and promotes regeneration, but chronic and excessive, as well as stable, low-grade, inflammation can produce the onset or exacerbation of cell injury [3].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 8819,
+      "end": 8958,
+      "text": "It is generally accepted that low-grade neuroinflammation is the main factor in the onset and development of several neurological diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 8959,
+      "end": 9258,
+      "text": "In aging, the major source for low-grade, chronic inflammation is the accumulation of endogenous host-derived cell debris due to both increased production and impaired elimination, and also immunosenescence, but these alterations are not commonly the initiating factor of neurodegenerative diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 9259,
+      "end": 9423,
+      "text": "However, they contribute to amplifying the disease state, which would suggest that neuroinflammation plays an important role in neuronal dysfunction and death [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 9423,
+      "end": 9608,
+      "text": "\n\nGlial cells in the CNS carry out different activities during neuroinflammation and can promote protection or damage, depending on the particular environments of inflammation and time.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 9609,
+      "end": 9722,
+      "text": "All glial cells play a role in the immune response, but the most important ones are the microglia and astrocytes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 9723,
+      "end": 9768,
+      "text": "Microglia is the main immune cell in the CNS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 9769,
+      "end": 9910,
+      "text": "These cells continuously scan the microenvironment of the parenchyma and are the first cells to respond to the occurrence of any damage [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 9911,
+      "end": 10352,
+      "text": "In addition to being the most numerous cell type in the CNS, astrocytes have varied homeostatic functions, for example, they control the extracellular pH, antioxidant functions, neurotransmitter uptake, and the recycling of glutamate and GABA, regulate the cerebral blood flow and the blood–brain barrier (BBB), promote synaptogenesis, supply energy metabolites to the neurons, and they form part of the innate immune system of the CNS [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 10352,
+      "end": 10723,
+      "text": "\n\nIn neurological disease, glial cells can recognize endogenous molecules released by damaged or dead cells (damage-associated molecular patterns: DAMPs) and molecules present in pathogens (pathogen-associated molecular patterns: PAMPs) through pattern recognition receptors (PRR), which are formed by several subfamilies including the Toll-like receptors (TLRs) [18,20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 10724,
+      "end": 10898,
+      "text": "TLRs are type 1 transmembrane glycoproteins that are extensively expressed in microglia and astrocytes, with specific subtypes expressed in neurons and oligodendrocytes [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 10899,
+      "end": 11120,
+      "text": "Each TLR subtype recognizes different PAMPs or DAMPs, for example, TLR4 recognizes lipopolysaccharide (LPS), and also, accumulated, misfolded proteins, including Aβ and α-synuclein present in AD and PD, respectively [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 11121,
+      "end": 11497,
+      "text": "DAMPs comprise an extensive range of molecules such as uric acid, cytokine IL-1α, ATP, and nuclear and cytoplasmic proteins released during necrosis, and it has also been suggested that some members of the extended IL-1 cytokine family including IL-1β, IL-18, IL-33, IL-36α, IL-36β, and IL-36γ also act as DAMPs and stimulate the sterile inflammation induced by necrosis [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 11498,
+      "end": 11737,
+      "text": "The interaction of ligands with the TLR of the host cell activates an intracellular signaling cascade that causes the release of inflammatory cytokines and other immune modulators as a protective mechanism and to repair the damaged tissue.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 11738,
+      "end": 11944,
+      "text": "However, excessive TLR activation disrupts immune homeostasis, causing constant proinflammatory cytokine and chemokine production, which contributes to the development and progression of many diseases [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 11945,
+      "end": 12591,
+      "text": "After the initial interaction of the ligand and TLR, the latter one activates one of the several signal transduction pathways such as phosphoinositide 3-kinase/protein kinase B (PI3K/AKT), mammalian target of rapamycin (mTOR), or mitogen-activated protein kinase (MAPK), which leads to the activation of different transcription factors such as activator protein 1 (AP-1), nuclear factor kappa-B (NF-κB), nitric oxide synthase (iNOS), interferon regulatory factor 3 (IRF3), and cyclooxygenase-2 (COX-2), which mediate the production of proinflammatory cytokines, chemokines, and inducible enzymes, all of which result in neuroinflammation [23,24].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 12592,
+      "end": 13011,
+      "text": "The activation of the PI3K/AKT/mTOR pathway can activate the transcription factor NF-κB and induce the expression of proinflammatory molecules (e.g., IL-6 and TNF-α), iNOS, and COX-2, while other TLRs can activate the MAPK (p38 MAPK or SAPK/JNK) pathway, which then activates the transcription factor AP-1 and promotes the expression of proinflammatory molecules, including cytokines (e.g., IL-6, iNOS, and COX-2) [24].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 13012,
+      "end": 13413,
+      "text": "The NOD subfamily is another well-known PRR member, which is part of the inflammasome NLRP3, together with the adaptor protein apoptosis-associated speck-like protein comprising a caspase recruitment domain (ASC) and procaspase 1, which together form an oligomer when the stimuli activate the receptor, and thus, induce the active precursors of proinflammatory cytokines, such as IL-1β and IL-18 [25].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 13414,
+      "end": 13724,
+      "text": "Cytokines are the main communication mechanism used by the immune system and consist of polypeptides and glycoproteins synthetized by immune cells such as chemokines, lymphokines, interleukins (IL), tumor necrosis factor (TNF), and interferons (IFN), which can act as pro- and anti-inflammatory molecules [26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 13725,
+      "end": 13783,
+      "text": "Cytokines can have both anti- and proinflammatory effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 13784,
+      "end": 14012,
+      "text": "Anti-inflammatory cytokines include: IL-4, IL-6, IL-10, IL-11, IL-13, IL-1 receptor antagonist (IL-1RA), and TGF-β, while the proinflammatory cytokines include IL-1β, IL-6, IL-8, IL-12, TNF-α, and interferons, among others [26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 14013,
+      "end": 14272,
+      "text": "After secretion to the extracellular space, these molecules interact with cytokine receptors to initiate cytokine intracellular signaling, which modulates a diverse range of biological functions, and most cytokine receptors activate the JAK-STAT pathway [27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 14273,
+      "end": 14508,
+      "text": "The primary proinflammatory cytokines, such as TNF-α, IL-1α, and IL-6, contribute significantly to inflammaging in healthy elderly people and play a major role in several age-related diseases, including neurodegenerative diseases [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 14509,
+      "end": 14751,
+      "text": "Furthermore, TNF-α also induces apoptosis by activating receptors such as tumor necrosis factor receptor 1 (TNFR1), 2 (p75), and CD95 (APO-1/Fas), which contain a homologous cytoplasmic sequence identifying an intracellular death domain [24].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 14752,
+      "end": 14979,
+      "text": "Microglia and astrocytes can release anti- and proinflammatory cytokines, but the type of secretion seems to be related to the specific phenotypes of the glial cells, their interaction with each other, and the specific context.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 14980,
+      "end": 15136,
+      "text": "Glial cells show different phenotypes that are the result of transcriptional and functional changes that are generally known as activation or reaction ones.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 15137,
+      "end": 15460,
+      "text": "Several different phenotypes have been observed, but M1 for harmful and neurotoxic inflammation functions and M2 for pro-reparative and anti-inflammation functions are considered to be opposite states of reactive microglia, but the microglia can switch between these two phenotypes according to different environments [28].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 15461,
+      "end": 15592,
+      "text": "Similarly, for astrocytes, the A1 phenotype is toxic to neurons and oligodendrocytes, while the A2 phenotype is protective [29,30].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 15593,
+      "end": 15810,
+      "text": "In human neurodegenerative illnesses such as PD and AD, M1 microglia, as well as astrocyte A1, are highly present, and it has been proposed that M1 microglia induces the A1 astrocyte phenotype in these illnesses [31].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 15811,
+      "end": 16169,
+      "text": "M1 microglia and A1 astrocytes secrete proinflammatory cytokines, which can induce apoptosis through the activation of extrinsic pathways and also induce the overproduction of ROS, mitochondrial dysfunction, DNA damage, and the production of more inflammatory mediators that contribute to cell aging, and also, induce the permeabilization of the BBB [32,33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 16170,
+      "end": 16293,
+      "text": "Most types of CNS diseases have a neuroinflammatory component, and activated microglia and astrocytes have been found [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 16293,
+      "end": 16296,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S79",
+      "start": 16296,
+      "end": 16297,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S80",
+      "start": 16297,
+      "end": 16301,
+      "text": "# 4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S81",
+      "start": 16302,
+      "end": 16307,
+      "text": "Aging",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 16307,
+      "end": 16490,
+      "text": "\n\nAging is a complex and inevitable process that results from the interaction of environmental epigenetic and genetic factors that produce a gradual reduction of homeostasis with age.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 16491,
+      "end": 16665,
+      "text": "This change is characterized by the progressive degeneration of tissue and functions in several organs, which contributes to increasing the risk of disease and death [34,35].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 16666,
+      "end": 16964,
+      "text": "In the brain, aging affects different cell types and regions differently, and the individual variability is broad, but in general terms, there is a reduction of white and grey matter density, volume loss, cortical thinning, and the atrophy of specific brain regions, including the hippocampus [36].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 16965,
+      "end": 17185,
+      "text": "Age-related diseases or aging-related diseases group different illnesses together, including arthritis, cancer, hypertension, type 2 diabetes, focal ischemic stroke, and many neurodegenerative diseases such as AD and PD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 17186,
+      "end": 17288,
+      "text": "In normal aging, alterations occur in the nervous system to produce functional and structural changes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 17289,
+      "end": 17480,
+      "text": "Functional changes include a decrease in blood flow and a reduction of synapses and neurotransmitter release and several areas, but the area that is most commonly affected is the hippocampus.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 17481,
+      "end": 17603,
+      "text": "On the other hand, structural changes include the enlargement of the ventricles, cerebral atrophy, and neuronal loss [37].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 17604,
+      "end": 17840,
+      "text": "It is important to note that endothelial dysfunction is a significant contributor to cerebrovascular aging, which promotes oxidative stress and neuroinflammation in age-related disorders such as dementias and focal ischemic stroke [38].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 17841,
+      "end": 18108,
+      "text": "There is a noticeable change in altered intercellular communication known as ‘inflammaging’, which is characterized by a process of chronic and low-grade inflammation, and a general increase in the secretion of proinflammatory cytokines and inflammatory markers [39].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 18109,
+      "end": 18348,
+      "text": "Additionally, another feature is the presence of cellular senescence in tissues and organs, including the immune system (immunosenescence), producing reduced humoral and cellular responses for both the innate and adaptative immune systems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 18349,
+      "end": 18632,
+      "text": "Senescent cells show increased activity of senescence-associated β-galactosidase (SA-β-GAL), a failure to re-enter the cell cycle in response to mitogenic stimuli, resistance to cell death, and a proinflammatory secretome called senescence-associated secretory phenotype (SASP) [32].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 18633,
+      "end": 18928,
+      "text": "Some alterations such as neuroinflammation, DNA damage, and oxidative stress that are present in neurodegenerative diseases and focal ischemic stroke can induce cellular senescence, and it has been suggested that cellular senescence contributes to the pathophysiology of these disorders [40,41].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 18928,
+      "end": 19318,
+      "text": "\n\nMany of the inflammaging characteristics can be found in the blood, for example high levels of proinflammatory cytokines (e.g., IL-1β, IL-6, IL-8, and IL-10) in sera or plasma [26], monocytes and macrophages with impaired phagocytosis and ability to heal injuries, the presence of senescent T cells, impaired macrophage polarization, and antibody production by the activated B cells [42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 19319,
+      "end": 19580,
+      "text": "In age-related diseases, systemic inflammation may contribute to neuroinflammation because circulating proinflammatory molecules can interact with endothelial cells from cerebral vasculature and induce the release of more cytokines to cause BBB impairment [43].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 19581,
+      "end": 19666,
+      "text": "Oxidative stress is another factor present in neurodegenerative age-related diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 19667,
+      "end": 19883,
+      "text": "This alteration is due to the excessive production of unstable molecules that contain oxygen called reactive oxygen species (ROS), and also, because the antioxidant system in the cells is not able to neutralize them.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 19884,
+      "end": 20107,
+      "text": "This mitochondrial dysfunction produces DAMPs in the cell, which initiate several inflammatory cascades, causing the activation of the innate immune system and NLRP3 inflammasome, which results in chronic inflammation [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 20107,
+      "end": 20110,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S100",
+      "start": 20110,
+      "end": 20111,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S101",
+      "start": 20111,
+      "end": 20115,
+      "text": "# 5.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S102",
+      "start": 20116,
+      "end": 20184,
+      "text": "Basic Physiopathology of Focal Ischemic Stroke, AD, and PD\n\n### 5.1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 20185,
+      "end": 20206,
+      "text": "Focal Ischemic Stroke",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 20206,
+      "end": 20380,
+      "text": "\n\nIschemic strokes or cerebrovascular accidents are the most frequent types of cerebrovascular diseases and are one of the main causes of death and disability worldwide [44].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 20381,
+      "end": 20519,
+      "text": "The main type of strokes is the focal ischemic, which is due to an obstruction of the arterial blood flow to a specific brain region [45].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 20520,
+      "end": 20778,
+      "text": "Aging is considered to be the most important nonmodifiable risk factor, and the risk of a stroke occurring doubles every 10 years after the person reaches the age of 55, and approximately three quarters of all strokes occur in persons aged ≥65 years [46,47].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 20779,
+      "end": 21027,
+      "text": "It is important to highlight that modifiable risk factors such as diabetes and high blood pressure steadily increase with age, and it has been shown that these chronic conditions are very highly prevalent in persons that have suffered strokes [47].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 21028,
+      "end": 21402,
+      "text": "In most countries, the approved treatments for an acute focal ischemic stroke are the endovascular thrombectomy and intravenous recombinant tissue plasminogen activator (rtPA), which focus on removing the occlusion in the artery and saving the penumbra cells to reduce the infarct core enlargement [45], but several conditions must be met to obtain the therapeutic benefits.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 21403,
+      "end": 21593,
+      "text": "Endovascular thrombectomy shows benefits when it is applied within the first six hours and rtPA shows benefits when it is applied within the first four and a half hours of stroke onset [48].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 21593,
+      "end": 22054,
+      "text": "\n\nThe cessation of or decrease in cerebral blood flow may produce different levels of damage depending on several factors such as the time elapsed, cell resistance, and the magnitude of the ischemia, which results in the activation of very complex cascades of cellular and molecular events with a temporal overlapping profile that evolves over minutes, hours, or days, inducing transient-to-irreversible injuries (e.g., cell death) in all cell types and damage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 22055,
+      "end": 22153,
+      "text": "The pathologic cascades produce damage in two different areas: the ischemic core and the penumbra.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 22154,
+      "end": 22290,
+      "text": "In the ischemic core, the abrupt decrease in cerebral blood flow leads to permanent damage in the cell and rapid cell death by necrosis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 22291,
+      "end": 22403,
+      "text": "The size of the necrotic area will depend mainly on the location of the stroke, its duration, and its magnitude.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 22404,
+      "end": 22562,
+      "text": "The penumbra surrounding the core area is perfused by collateral blood vessels, which help to keep the cell structures intact, but functionally weakened [45].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 22563,
+      "end": 22796,
+      "text": "After a few minutes of cerebral blood vessel occlusion, the first pathological event is activated due to the reduction of oxygen and glucose, which leads to a failure to produce high-energy molecules to maintain cellular homeostasis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 22797,
+      "end": 23087,
+      "text": "This event sets off several mechanisms, which include ionic imbalance, cytotoxic and vasogenic edemas, excitotoxicity, calcium overload, excitotoxicity, oxidative and nitrosative stress, peri-infarct depolarization, blood–brain barrier (BBB) disruption, apoptosis, and inflammation [45,49].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 23088,
+      "end": 23228,
+      "text": "Inflammation responses occur after the damaged cells release DAMPs, which interact with Toll-like receptors in the microglia and astrocytes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 23229,
+      "end": 23330,
+      "text": "After this interaction, the microglia become reactive and accumulate at the lesion core and penumbra.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 23331,
+      "end": 23691,
+      "text": "During the first hours after the damage, these reactive microglia have an anti-inflammatory profile, but after this period, they switch to a proinflammatory profile, and several of the proinflammatory mediators (e.g., reactive oxygen species, cytokines, and tumor necrosis factor-α) released can induce astrogliosis from 4 to 24 h after stimulation [50,51,52].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 23692,
+      "end": 23870,
+      "text": "M2 microglia found around the lesion site migrate towards the lesion core and in the penumbra, and following cell death, they begin the phagocytic removal of cell debris [53,54].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 23871,
+      "end": 24249,
+      "text": "Proinflammatory cytokines (e.g., IL-1, IL-6, and TNF-α) released by M1 microglia promote a gradual alteration in the BBB and allow the infiltration of circulating leucocytes, which eventually release proinflammatory cytokines (e.g., interleukin-1β and interferon-γ) to damage the cell structures directly or indirectly and contribute to the enlargement of the lesion [55,56,57].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 24250,
+      "end": 24935,
+      "text": "Cytokines released by M1 microglia and other glial cells and neurons promote astrogliosis, and these reactive astrocytes participate in many protective mechanisms after a stroke (e.g., neurotransmitter uptake, pH regulation, the anti-inflammatory release of cytokines, and glial scar formation), but they also have detrimental effects including the release of several detrimental factors such as proinflammatory cytokines (e.g., TNF-α and IL-1), matrix metalloproteinases (e.g., the degradation of the matrix protein), and proteoglycans (e.g., these cause inhibition of axon regeneration and myelination), which can contribute to expanding the lesion and/or decreased recovery [58,59].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 24936,
+      "end": 25163,
+      "text": "Around 6 days after the injury, glial scar formation starts, and involves a subset of reactive astrocytes and other cells (e.g., reactive microglia and NG2 cells) and is completed between 2 and 4 weeks after the stroke [60,61].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 25164,
+      "end": 25434,
+      "text": "Even after the glial scar, which serves as a protective barrier, has been formed, the cells in the penumbra are still exposed to several deleterious mechanisms, such as vasogenic edema, apoptosis, astrogliosis, and inflammation, which can last many months or even years.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 25435,
+      "end": 25672,
+      "text": "However, neurons and other cell types are viable and have a long-term potential for remodeling the tissue and forming new circuits to sustain a functional recovery [45,62], and this also the main target for any therapeutic interventions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 25672,
+      "end": 25675,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S127",
+      "start": 25675,
+      "end": 25676,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S128",
+      "start": 25676,
+      "end": 25683,
+      "text": "## 5.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S129",
+      "start": 25684,
+      "end": 25877,
+      "text": "Alzheimer’s Disease (AD)\n\nAD is a progressive disease that is generally manifested by a loss of memory and difficulties with communicating, behaving correctly, and using problem-solving skills.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 25878,
+      "end": 26061,
+      "text": "AD is a neurodegenerative disorder that results in neuronal loss and brain atrophy in extensive areas of the hippocampus and cerebral cortex, synapse loss, and ultimately, death [63].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 26062,
+      "end": 26145,
+      "text": "AD is generally divided into familial AD (FAD) and idiopathic or sporadic AD (SAD).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 26146,
+      "end": 26333,
+      "text": "FAD is caused by dominant genetic mutations in presenilin 1 (PSEN1), presenilin 2 (PSEN2), and amyloid-beta A4 precursor protein (APP), and it accounts for 3% of the reported cases of AD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 26334,
+      "end": 26407,
+      "text": "SAD has no single genetic cause, and it represents over 95% of all cases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 26408,
+      "end": 26617,
+      "text": "Since age is considered to be the main risk factor for AD, there is another classification that takes into account the age at which the disease began, and this is divided into early-onset and late-onset types.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 26618,
+      "end": 26687,
+      "text": "Early onset occurs before the age of 65, and most cases are FAD ones.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 26688,
+      "end": 26771,
+      "text": "Most late-onset cases are SAD one, and it has a mean onset age of 80 years [64,65].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 26772,
+      "end": 26895,
+      "text": "In addition to APP, PSEN1, and PSEN2 genes, the ε4 allele of apolipoprotein E (APOE) is another genetic risk factor for AD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 26896,
+      "end": 27069,
+      "text": "APOE is a protein related to lipid metabolism and is immunochemically colocalized to vascular amyloid deposits, neurofibrillary tangles (NFT), and senile plaques in AD [66].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 27070,
+      "end": 27273,
+      "text": "AD is related to the accumulation of insoluble forms of amyloid-β (Aβ) in plaques and the intraneuronal deposition of neurofibrillary tangles (NFT), which are composed of hyperphosphorylated tau protein.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 27274,
+      "end": 27398,
+      "text": "The amyloid hypothesis of AD suggests that alterations to APP metabolism and Aβ accumulation are the main events in AD [67].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 27399,
+      "end": 27654,
+      "text": "On the other hand, the tau hypothesis of AD suggests that aggregates of misfolded and fibrillar hyperphosphorylated NFT accumulate inside the neurons and propagate through cells in a prion-like way, eventually disseminating into the brains of AD patients.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 27655,
+      "end": 27887,
+      "text": "The neuropathologic hallmarks of AD are Aβ plaques and NFTs, but generally, they are accompanied by neuronal and synaptic loss, reactive astrocytes, microglial activation, the blood–brain barrier alterations, and brain atrophy [68].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 27888,
+      "end": 28180,
+      "text": "Moreover, it is noteworthy that a high percentage of patients with AD also have cerebral amyloid angiopathy, a condition characterized by an accumulation of amyloids in the cerebral vasculature, which can lead to intracerebral hemorrhages and microbleeds, and these events accelerate AD [64].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 28181,
+      "end": 28319,
+      "text": "In AD, the microglia and astrocytes play an important role in the neuroinflammatory response, and also, in the development of the disease.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 28320,
+      "end": 28544,
+      "text": "Aβ can interact with the microglia through the NLRP3 inflammatory complex and CD36-TLR4-TLR6 receptor complex, causing immune responses, cell damage, and the release of inflammation-inducing factors, such as IL-1β and TNF-α.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 28545,
+      "end": 28668,
+      "text": "Moreover, high levels of proinflammatory cytokines IL-1β and Il-6 are elevated in the peripheral blood of AD patients [69].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 28669,
+      "end": 28857,
+      "text": "Activated microglia release the proinflammatory cytokines IL-1α, C1q, and TNF-α that can induce the A1 proinflammatory astrocytes, which can produce a secondary inflammatory response [31].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 28858,
+      "end": 29172,
+      "text": "The evidence from postmortem analyses of AD patients shows alterations in microglia morphology such as reduced branching and arborized areas and immunoreactivity to ionized calcium-binding adaptor molecule 1 (Iba 1), which is a microglia/macrophage-specific protein that is upregulated in activated microglia [70].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 29173,
+      "end": 29322,
+      "text": "Activated microglia were observed in the entorhinal, temporoparietal, and cingulate cortices in positron emission tomography (PET) studies in humans.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 29323,
+      "end": 29536,
+      "text": "These PET studies use the selective marker 11PK11195, which labels the target translocator protein (TSPO) on the external mitochondrial membrane that increases its density in active microglia and the regions [71].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 29537,
+      "end": 29759,
+      "text": "Additionally, the occurrence of microglia activation was confirmed using different markers alone (e.g., 11PK11195 and 11 PBR28) or in combination with tau (e.g., 18 F-AV145) or Aβ plaques markers (e.g., 18 F-flutemetamol).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 29760,
+      "end": 30006,
+      "text": "One study found that AD patients have increased microglial activation and amyloid in the frontal, temporal, parietal, occipital, and cingulate cortices [72], while another study found activated microglia in the occipital lobe in AD patients [73].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 30007,
+      "end": 30164,
+      "text": "Additionally, it was reported that microglial activation, tau aggregation, and amyloid deposition were found in similar areas of the association cortex [74].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 30165,
+      "end": 30464,
+      "text": "A longitudinal PET study (14 months) evaluated the change in microglia activation in AD patients with mild cognitive impairment (MCI), and the results show that patients with MCI demonstrated reduced activated microglia levels, which is in contrast to AD patients with more activated microglia [75].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 30465,
+      "end": 30735,
+      "text": "Another study used PET (11PK11195) in combination with structural magnetic resonance imaging (structural MRI) to investigate brain atrophy, and they found activated microglia in the anterior temporal region, tau in the temporoparietal area, and grey matter atrophy [76].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 30736,
+      "end": 30872,
+      "text": "A similar study found that activated microglia in temporal cortices are related to parieto-occipital atrophy and cortical thinning [77].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 30873,
+      "end": 30958,
+      "text": "All of these studies confirm the presence of activated microglia in patients with AD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S158",
+      "start": 30958,
+      "end": 30961,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S159",
+      "start": 30961,
+      "end": 30962,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S160",
+      "start": 30962,
+      "end": 30969,
+      "text": "## 5.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S161",
+      "start": 30970,
+      "end": 31251,
+      "text": "Parkinson’s Disease (PD)\n\nPD is an age-related neurodegenerative disease with a multifactorial etiology that causes tremors at rest, bradykinesia symptoms, and rigidity, and it shares these characteristics with other clinical syndromes referred to as “Parkinsonism” disorders [78].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 31252,
+      "end": 31463,
+      "text": "The other main characteristics of PD are the degeneration of neurons in the substantia nigra pars compacta (one of the basal ganglia), intraneuronal protein aggregates called Lewy bodies, and Lewy neurites [79].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 31464,
+      "end": 31598,
+      "text": "In addition to those mentioned, PD patients may also present other alterations such as sleep disorders, depression, and dementia [80].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 31599,
+      "end": 31877,
+      "text": "A few cases of PD seem to have a genetic origin, and the majority of them correspond to the idiopathic form, for which the risk factors include aging and behavioral and environmental factors such as a history of melanoma, traumatic brain injury, and exposure to pesticides [79].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 31878,
+      "end": 32155,
+      "text": "The monogenic mutation in several genes that encode different proteins constitute the genetic forms of PD, including the α-synuclein, in which gene duplications and triplications, as well as mutations, have been found, and this comprises the main component of Lewy bodies [79].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 32156,
+      "end": 32415,
+      "text": "In physiological conditions, the neuronal protein α-synuclein participates in several activities, such as dopamine synthesis and vesicle trafficking, and it has two conformations, a soluble unfolded monomer and a multimeric membrane-bound helical α-synuclein.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 32416,
+      "end": 32610,
+      "text": "Meanwhile, in pathological conditions, the soluble unfolded monomer forms β-sheet-like oligomers named protofibrils, which transform into amyloid fibrils and ultimately deposit into Lewy bodies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 32611,
+      "end": 32720,
+      "text": "Moreover, the protofibrils and fibrils may propagate by a transcellular mechanism from neuron to neuron [79].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 32721,
+      "end": 32999,
+      "text": "Lewy body inclusions, in addition to being present in neurons of the substantia nigra, also are present in structures such as raphe nuclei, the basal nucleus of Meynert, the neocortex, and the amygdala, and also, in oligodendrocytes from the midbrain and the basal ganglia [81].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 32999,
+      "end": 33102,
+      "text": "\n\nThe contribution of neuroinflammation to cellular damage in PD has been confirmed in several studies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 33103,
+      "end": 33460,
+      "text": "A positron emission tomography (PET) study in PD patients using a marker for active microglia showed that the rate of the activation of the microglia was increased in the substantia nigra, the caudate nucleus, the pre- and postcentral gyrus, the frontal lobe, and the putamen, which agrees well with the known distribution of neuropathological changes [82].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 33461,
+      "end": 33656,
+      "text": "Additionally, increased proinflammatory mediators (e.g., TNF-β) and active astrocytes and microglia have been found in the substantia nigra in post-mortem studies on PD patient brains [83,84,85].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 33657,
+      "end": 33892,
+      "text": "Moreover, the animal model of PD MPTP (1-methyl-4-phenyl-1,2,3,6 tetrahydropyridine), as well as human brains, exhibited an increase in the proinflammatory molecules (e.g., COX-2) in dopaminergic neurons from the substantia nigra [86].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 33893,
+      "end": 34134,
+      "text": "Furthermore, some evidence suggests that the adaptive immune system also participates in the pathology, for example, the presence of CD4+ and CD8+ T cells in the substantia nigra from postmortem studies of PD patients and animal models [87].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 34135,
+      "end": 34317,
+      "text": "Neuronal cell culture studies also show that IL-1 increases the α-synuclein [88] and that α-synuclein induces microglial activation and increases the production of TNF and IL1β [89].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 34318,
+      "end": 34441,
+      "text": "When it is analyzed together, this information shows that inflammatory responses are involved in the pathophysiology of PD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 34441,
+      "end": 34554,
+      "text": "\n\nFigure 2 show the main characteristic of inflammatory responses that share focal ischemic stroke, AD and PD.\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 34554,
+      "end": 34637,
+      "text": "<figure>\n  <figcaption><strong>Figure 2</strong> Basic neuroinflammatory responses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 34638,
+      "end": 34811,
+      "text": "In homeostatic conditions, microglia and astrocytes support several brain cell functions, but during aging and in brain diseases, they change their morphology and secretome.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 34812,
+      "end": 35618,
+      "text": "Damage-associated molecular patterns (DAMPs) released in pathologic conditions interact with homeostatic microglia, and specific signaling occurs to induce a pro-inflammatory phenotype, which results in a decreases phagocytic effect and the release of several molecules that change homeostatic astrocytes functions towards a proinflammatory state to exacerbate inflammation and worsened the functional recovery.</figcaption>\n</figure>\n\n\n\n## 6. Anti-Inflammatory Effects of Flavonoids in Focal Ischemic Stroke, AD, and PD\n\nThe general neuroprotective and neuroplastic effects of flavonoids are related to anti-inflammatory activity, which can increase the protection of neurons and glial cells against neurotoxins-induced injury and improve the endogenous mechanism of neuroplasticity to gain CNS functions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 35619,
+      "end": 36054,
+      "text": "The effects of flavonoids in the modulation of molecular pathways involved in neuroinflammation have been mainly described in cell cultures using primary cells exposed to oxygen-glucose deprivation as the main model of ischemic stroke and lipopolysaccharides as a model of neuroinflammation in neurodegenerative disease, but animal models and clinical studies have also provided strong evidence of the beneficial effects of flavonoids.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 36055,
+      "end": 36241,
+      "text": "In the next sections, you will find a narrative description of the anti-inflammatory effects of the most used flavonoids on each disease in cellular, animal models, and clinical studies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 36241,
+      "end": 36348,
+      "text": "\n\n### 6.1. Anti-Inflammatory Effects of Flavonoids in Focal Ischemic Stroke\n\n#### 6.1.1. In Vitro Studies\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 36348,
+      "end": 36659,
+      "text": "Oxygen glucose deprivation (OGD) is an in vitro model used for the study of the cellular and molecular pathway associated with stroke, and usually, the cells are incubated in a glucose-free medium in a deoxygenated atmosphere for different durations of exposure to these conditions depending on the preparation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S185",
+      "start": 36660,
+      "end": 36879,
+      "text": "Sometimes, after the OGD, the cells are returned to the pre-deprivation conditions to model the focal ischemic reperfusion injury that occurs after the blood supply is restored, and this variant is called OGD/R [90,91].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S186",
+      "start": 36880,
+      "end": 37114,
+      "text": "Myricetin showed a significant protective effect against inflammation in human brain microvessel endothelial cells (HBMECs) in OGD/R conditions by decreasing the number of proinflammatory cytokines such as TNF-α, IL-1β, and IL-6 [92].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 37115,
+      "end": 37229,
+      "text": "Quercetin inhibits inflammation that is mediated by TLR4/MyD88/NF-κB, signaling BV2 microglial cells in mice [93].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 37230,
+      "end": 37463,
+      "text": "Isoquercetin, a glucoside derivative of quercetin, has neuroprotective effects in rat cortical neurons in OGD/R conditions by inhibiting the protein expression of TLR4 and nuclear NF-κB and the mRNA expression of TNF-α and IL-6 [94].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 37464,
+      "end": 37814,
+      "text": "Moreover, in rat hippocampal neurons in OGD/R conditions, isoquercetin inhibits the activation of Toll-like receptor 4 (TLR4), nuclear factor-kappa B (NF-κB), and caspase-1; the phosphorylation of ERK1/2, JNK1/2, and p38 mitogen-activated protein kinase (MAPK); the secretion of tumor necrosis factor-α (TNF-α), interleukin-1β (IL-1β), and IL-6 [95].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 37815,
+      "end": 37963,
+      "text": "Furthermore, cortical neurons in similar conditions inhibit the protein expression of TLR4 and NF-κB and the mRNA expression of TNF-α and IL-6 [94].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 37964,
+      "end": 38515,
+      "text": "Baicalin could effectively downregulate the expression of the NOD2 receptor (protein associated with inflammatory reactions) and TNFα at both the mRNA and protein levels in BV2 microglial cells in OGD conditions [96], inhibit the NLRP3 inflammasome IL-1β, and IL-18 expression in cortical neurons in OGD/R conditions [97], and also, decrease the secretion of TNF-α, IL-1β, IL-6 and inhibit the NF-κB signaling pathway in the brain microvascular endothelial cells (BMECs) in OGD conditions [98] and the BV2 microglia cell line in OGD/R conditions [99].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 38516,
+      "end": 38976,
+      "text": "Moreover, baicalin inhibits the proinflammatory microglial polarization through the inhibition of the TLR4/NF-κB pathway and the downregulation of phosphorylated STAT1 in a microglia-neuron co-culture system in OGD conditions [100] and in human brain microvascular endothelial cells (HBMEC) in OGD conditions, it inhibits the expression of TLR4, MYD88, and p-NF-κB and decreases the release of inflammatory factors IL-6, IL-1α, IL-1β, IL8, and TNF-α [101,102].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 38977,
+      "end": 39108,
+      "text": "Baicalin also decreases the release of TNF-α, IL-1β, IL-6, and IL-8, and Tlr4 mRNA expression in microglia in OGD conditions [102].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 39109,
+      "end": 39249,
+      "text": "Icariin applied before the OGD/R-reduced protein level expression of IL-1β, IL-6, and TNF-α in OGD/R conditions injured the microglia [103].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 39250,
+      "end": 39356,
+      "text": "Casticin reduced the expression of TLR4, NF-κB p65, and NF-κB p50 in PC12 cells in OGD/R conditions [104].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 39357,
+      "end": 39518,
+      "text": "Pratensein in HT22 cells in OGD/R conditions suppresses NLRP3 inflammasome activation through Nrf2 activation, resulting in reduced inflammatory responses [105].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 39519,
+      "end": 39638,
+      "text": "Tectorigenin inhibited ROS inflammatory cytokines IL-1β, IL-6, and TNF-α production in OGD/R-induced HT-22 cells [106].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 39639,
+      "end": 39759,
+      "text": "Astilbin inhibits NLRP3 inflammasome and decreases the release of IL-1β and IL-18 in PC12 cells in OGD conditions [107].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 39760,
+      "end": 39872,
+      "text": "Anthocyanin significantly reduced the secretion of TNF-α, IL-1β, and IL-6 in SH-SY5Y cells exposed to OGD [108].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 39873,
+      "end": 40001,
+      "text": "In the mouse neuroblastoma cells N2a, tricin, an O-methylated flavone, decreases the expression of TNF-α, IL-6, and IL-1β [109].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 40002,
+      "end": 40135,
+      "text": "Diosmetin inhibits the NLRP3 inflammasome pathway and inflammatory cytokines IL-1β and IL-18 in PC12 cells in OGD/R conditions [110].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 40136,
+      "end": 40241,
+      "text": "Schaftoside inhibits the expression of TLR4, IL-1β, IL-6, and TNF-α in OGD-simulated BV2 microglia [111].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 40241,
+      "end": 40244,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S204",
+      "start": 40244,
+      "end": 40245,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S205",
+      "start": 40245,
+      "end": 40248,
+      "text": "###",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S206",
+      "start": 40249,
+      "end": 40268,
+      "text": "6.1.2. Animal Model",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 40268,
+      "end": 40348,
+      "text": "\n\nThe most commonly used animals in preclinic stroke research are rats and mice.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 40349,
+      "end": 40438,
+      "text": "Animal models for ischemic stroke can be divided into global, focal, and multifocal ones.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 40439,
+      "end": 40603,
+      "text": "There are several global ischemic stroke models, and the most common ones are cardiac arrest, the four-vessel occlusion model, and systemic hypotension and hypoxia.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 40604,
+      "end": 40793,
+      "text": "Animal models for focal ischemic strokes have been developed to induce damage within the territory irrigated by the middle cerebral artery (MCA) region to mimic a common clinical situation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 40794,
+      "end": 41067,
+      "text": "There are different approaches to achieve this, but the most common ones are the intraluminal suture middle cerebral artery occlusion model without reperfusion (MCAO) and with reperfusion (MCAO/R), the photothrombotic model, and the endothelin-1 induced stroke model [112].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 41068,
+      "end": 41251,
+      "text": "In this section, we will analyze only the studies that applied flavonoids after vessel occlusion with or without reperfusion because these models are more similar to clinical strokes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 41252,
+      "end": 41482,
+      "text": "In a rat MCAO/R model, kaempferol-3-O-rutinoside (KRS) and kaempferol-3-O-glucoside (KGS) reduced the neurological deficits and infarct volume and inhibited the proinflammatory mediators (STAT3 and NF-κB) and interleukin 1β [113].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 41483,
+      "end": 41722,
+      "text": "In the same model, kaempferol administered for 7 days after stroke also decreased the NF-κB and pro-inflammatory cytokines such as IL-5, TNF-α, IL-1β, and IL-6, but the reduction of last three cytokines only occurred with high doses [114].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 41723,
+      "end": 41940,
+      "text": "Fisetin applied 3 h after the onset of ischemia to the MCAO/R mice model significantly reduced the infarct size and decreased TNF-α production in the microglia and the infiltration of leukocytes and macrophages [115].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S216",
+      "start": 41941,
+      "end": 42314,
+      "text": "A morin treatment for 7 days after MCAO in rats reduced the neurological deficits and inhibited the proinflammatory cytokine mRNA expression of TNF-α and IL-6 [116], and in the MCAO/R rat model, it decreased the rates of pNF-κB, TNF-α, IL-1β, and TLR4 expression and improved the tight junctions of the BBB by significantly increasing occludin and claudin expression [117].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 42315,
+      "end": 42515,
+      "text": "(−)-Epigallocatechin-3-gallate (EGCG) decreased the infarct volume, TNF-α, IL-1β, and IL-6, and also, inhibited NF-κB/p65 in a MCAO/R rat model when it was applied immediately after reperfusion [118].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 42516,
+      "end": 42701,
+      "text": "Luteolin administered intraperitoneally after MCAO/R in rats suppressed hippocampus inflammation, reduced the infarct volume, and decreased the astrocyte and microglia activation [119].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S219",
+      "start": 42702,
+      "end": 42865,
+      "text": "Luteoloside decreased the infarct volume, TNF-α, and IL-1β when this molecule was intraperitoneally injected immediately and 12 h after MCAO surgery in rats [120].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S220",
+      "start": 42866,
+      "end": 43016,
+      "text": "MCOA/R rats treated with nobiletin after reperfusion resulted in improved neurological deficits and decreased brain swelling and infarct volume [121].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S221",
+      "start": 43017,
+      "end": 43170,
+      "text": "Eriodictyol applied after stroke improves neurological deficits in the MCAO mice model and also decreases infarct volume TNF-α and GFAP expression [122].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S222",
+      "start": 43171,
+      "end": 43306,
+      "text": "Tricin applied by oral administration 2 h, 4 h, and 6 h after MCA/R resulted in decreased serum levels of TNF-α, IL-6, and IL-1β [109].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S223",
+      "start": 43307,
+      "end": 43467,
+      "text": "Eupatilin administered to mice 5 h after MCAO/R showed a reduction of the activated microglia in the peri-ischemic tissue and inhibited the NF-κB pathway [123].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S224",
+      "start": 43467,
+      "end": 43469,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S225",
+      "start": 43469,
+      "end": 43470,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S226",
+      "start": 43470,
+      "end": 43471,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S227",
+      "start": 43471,
+      "end": 43473,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S228",
+      "start": 43473,
+      "end": 43706,
+      "text": "# Synergistic Effect of Flavonoids with rtPA\n\nThe simultaneous treatment of EGCG and rt-PA 4 h after MCAO significantly reversed the neurobehavioral deficit, brain infarction, cerebral edema, and blood–brain barrier disruption [124].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 43706,
+      "end": 43709,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S230",
+      "start": 43709,
+      "end": 43712,
+      "text": "###",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S231",
+      "start": 43712,
+      "end": 44027,
+      "text": "## Preventive Treatment with Flavonoids\n\nRats treated with naringenin once daily for 21 days, and then subjected to MCOA/R, resulted in a significant decrease in the infarct volume, the expression of NF-κB, TNF-α, IL-1β, and GFAP in the astrocytes, and Iba1 in the microglia, and improved neurologic deficits [125].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S232",
+      "start": 44028,
+      "end": 44200,
+      "text": "Moreover, rats treated with the same molecule for 4 days before MCAO also showed a decrease in NF-κB, the infarct volume, and improvements to the neurologic deficits [126].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S233",
+      "start": 44201,
+      "end": 44335,
+      "text": "Moreover, the same molecule applied 7 days before MCAO/R in rats decreased the expression of TNF-α and IL-6 in the brain tissue [126].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S234",
+      "start": 44336,
+      "end": 44498,
+      "text": "Rats treated with hesperidin for 15 days followed by MCAO showed an improvement of the neurological deficits, infarct volume, and decreased levels of IL-1β [127].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S235",
+      "start": 44499,
+      "end": 44688,
+      "text": "In a rat model of global stroke, a pinocembrin treatment administered daily for 7 days before a stroke decreased the infarct size and NF-κB, TNF-α, and IL-6 in the hippocampal tissue [128].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S236",
+      "start": 44689,
+      "end": 44868,
+      "text": "In an MCAO mice model, a fourteen-day-long genistein treatment before a stroke reduced the infarct volume, improved the neurological deficit, and inhibited NF-κB activation [129].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 44869,
+      "end": 45019,
+      "text": "Sanggenon administered intragastrically in rats seven days before MCAO/R surgery resulted in a decrease in the levels of TNF-α, IL-1β, and IL-6 [130].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S238",
+      "start": 45020,
+      "end": 45160,
+      "text": "Astilbin applied 3 days before the MCAO in rats inhibited NLRP3 inflammasome and decreased the serum concentration of IL-1β and IL-18 [107].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S239",
+      "start": 45161,
+      "end": 45289,
+      "text": "Chrysin applied for 7 days before the MCAO in rats decreased the release of inflammatory cytokines IL-6, IL-1β, and TNF-α [131].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S240",
+      "start": 45290,
+      "end": 45418,
+      "text": "Baicalin applied 4 days before the MCAO in rats decreased the expression level of the NLRP3 inflammasome, IL-1β, and IL-18 [97].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S241",
+      "start": 45419,
+      "end": 45531,
+      "text": "Eupafolin applied for 7 days before the MCAO/R in rats decreased TLR-4, TNF-α, IL-1β, and IL-6 expression [132].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S242",
+      "start": 45532,
+      "end": 45670,
+      "text": "Rats were treated with Biochanin A for 14 days before the MCAO in rats decreased the protein and gene expression of TNF-α and IL-1β [133].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S243",
+      "start": 45670,
+      "end": 45685,
+      "text": "\n\n\n\n#### 6.1.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S244",
+      "start": 45686,
+      "end": 46469,
+      "text": "Clinical\n\nThough no clinical studies using flavonoids as a post-stroke treatment could be found, some human studies suggest that flavonoids can be useful in the treatment of this condition. A study using the flavonol fisetin combined with rt-PA in stroke patients shows that the addition of this flavonoid extends the therapeutic window of rt-PA treatment and dramatically improves the neurological deficits evaluated by the National Institutes of Health Stroke Scale (NIHSS) and decreases the plasma levels of C-reactive protein (CRP) and matrix metalloproteinases (MMP)-2 and -9 [134]. In a similar study, EGCG also extends the therapeutic window of the rt-PA treatment and improves the NIHSS scale, while decreasing plasma levels of matrix metalloproteinases (MMP)-2 and -9 [135].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S245",
+      "start": 46469,
+      "end": 46473,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S246",
+      "start": 46473,
+      "end": 46481,
+      "text": "### 6.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S247",
+      "start": 46482,
+      "end": 46688,
+      "text": "Anti-Inflammatory Effects of Flavonoids in AD\n\n#### 6.2.1. In Vitro Studies\n\nNumerous in vitro studies have evaluated the effects of different flavonoids in the Aβ oligomer and its assembly into aggregates.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S248",
+      "start": 46689,
+      "end": 46989,
+      "text": "EGCG inhibits the fibrillogenesis of Aβ [136], modifies Aβ fibrils into smaller protein aggregates that are nontoxic to mammalian cells [137], and in cultured hippocampal neuronal cells, it has protective effects against Aβ-induced neuronal apoptosis through scavenging reactive oxygen species [138].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S249",
+      "start": 46990,
+      "end": 47172,
+      "text": "Quercetin used as a pretreatment with primary hippocampal cultures significantly decreases Aβ (1–42)-induced cytotoxicity, lipid peroxidation, protein oxidation, and apoptosis [139].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S250",
+      "start": 47173,
+      "end": 47277,
+      "text": "Luteolin and diosmetin decrease Aβ (1–40 and 1–42) in primary neuronal cells and SweAPP N2a cells [140].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S251",
+      "start": 47278,
+      "end": 47329,
+      "text": "Myricetin prevents the fibrillogenesis of Aβ [141].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S252",
+      "start": 47330,
+      "end": 47457,
+      "text": "Cyanidin 3-O-β-glucopyranoside in neuroblastoma SH-SY5Y cells reduces the cytotoxicity of Aβ (25–35) and its aggregation [142].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S253",
+      "start": 47458,
+      "end": 47537,
+      "text": "In the same cells, wogonin reduces Aβ aggregation and phosphorylated Tau [143].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S254",
+      "start": 47538,
+      "end": 47673,
+      "text": "Through different biochemical techniques, it has been found that Baicalein prevents the aggregation of the human tau protein [144,145].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S255",
+      "start": 47674,
+      "end": 47826,
+      "text": "Quercetin and rutin prevent the formation of Aβ fibrils and disaggregate Aβ fibrils in a cell system overexpressing APP Swedish mutation (APPswe) [146].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S256",
+      "start": 47826,
+      "end": 47829,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S257",
+      "start": 47829,
+      "end": 47831,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S258",
+      "start": 47831,
+      "end": 47833,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S259",
+      "start": 47834,
+      "end": 48225,
+      "text": "6.2.2. Animal Model Studies\n\nAnimal models for AD include chemically induced ones (e.g., amyloid infusion and streptozotocin), spontaneous ones (e.g., senescence-accelerated mouse), and several transgenic mice and a few transgenic rats that express mutant human genes related to the production of amyloid plaques and neurofibrillary tangles (e.g., 3XTg and 5XFAD, TG2576, and APP/PS1) [147].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S260",
+      "start": 48226,
+      "end": 48582,
+      "text": "These transgenic animals model familial AD and partly recapitulate the idiopathic forms and they express amyloid plaques and neurofibrillary tangles and all of the manifested deficits in memory, but the majority the animals do not present with neurodegeneration, and this is one of the aspects that limits their use in neuroinflammation research [147,148].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S261",
+      "start": 48583,
+      "end": 48819,
+      "text": "Since these animal models do not present with neurodegeneration, the main interest of flavonoids in the research in these animal models has been focused on the effects of the Aβ aggregation and the impairment of the cognition functions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S262",
+      "start": 48820,
+      "end": 49118,
+      "text": "In the chemical mouse model of memory deficits induced by scopolamine, isorhamnetin inhibits learning and memory deficits, and also, induces an increase in brain-derived neurotrophic factor (BDNF) levels in the prefrontal cortex and hippocampus [149], while naringin and rutin improve memory [150].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S263",
+      "start": 49119,
+      "end": 49275,
+      "text": "In another chemical model (streptozotocin), kaempferol increases the density of intact neurons in the CA1 area of the hippocampus and improves memory [151].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S264",
+      "start": 49276,
+      "end": 49441,
+      "text": "Luteolin improves memory [152] and a hesperidin pretreatment decreases inflammatory markers, such as NF-κB, iNOS, COX-2, and astrogliosis, and improves memory [153].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S265",
+      "start": 49442,
+      "end": 49573,
+      "text": "Nobiletin in APP-SL 7-5 transgenic mice reduces the quantity of soluble Aβ (1–40 and 1–42) and Aβ plaques in the hippocampus [154].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S266",
+      "start": 49574,
+      "end": 49684,
+      "text": "In 3XTg mice, diosmin and its bioactive metabolites decrease tau hyperphosphorylation and Aβ generation [155].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S267",
+      "start": 49685,
+      "end": 49888,
+      "text": "In transgenic APP/PS1 mice, hesperidin reduces Aβ plaque in the cortex and the hippocampus, decreases astrogliosis and microglial activation, and restores the ability to perform social interaction [156].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S268",
+      "start": 49889,
+      "end": 49978,
+      "text": "In transgenic h-APPswe, h-Tau P301L, and h-PS1 M146V mice, wogonin improves memory [143].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S269",
+      "start": 49979,
+      "end": 50068,
+      "text": "In the Tg2576 transgenic mouse model, diosmin and luteolin reduce Aβ 1–40 and 1–42 [140].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S270",
+      "start": 50069,
+      "end": 50576,
+      "text": "In APPsw transgenic mice, EGCG reduces the amount of soluble Aβ (1–40 and 1–42) and Aβ deposits in different cortical brain regions and the hippocampus [157], and in the Aβ infusion model, it prevents memory dysfunction and reduces the Aβ (1–42) and alpha-secretase levels and increases beta- and gamma-secretase in both the cortex and hippocampus, and similar results were obtained in the presenilin 2 (PS2) mutant mice [158], while in the APPsw transgenic mouse model, diosmin shows improved memory [159].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S271",
+      "start": 50577,
+      "end": 50784,
+      "text": "Nobiletin reduces Aβ plaques in the hippocampus and improves memory deficits in APP-SL 7-5 transgenic mice [154], and in 3XTg mice, it reversed the damage to memory and decreased the levels of Aβ 1–40 [160].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S272",
+      "start": 50785,
+      "end": 50884,
+      "text": "Nobiletin reverses memory impairment in the hippocampus in senescence-accelerated mice SAMP8 [161].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S273",
+      "start": 50885,
+      "end": 51024,
+      "text": "In 3XTg mice, quercetin reduces the plaques of Aβ and hyperphosphorylated tau in the CA1 area of the hippocampus and improves memory [162].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S274",
+      "start": 51025,
+      "end": 51234,
+      "text": "Cyanidin 3-O-glucoside decreases tau phosphorylation in the hippocampus and reverses memory impairment in Aβ infusion rats [163] and in the APP(swe)/PS1(ΔE9) mouse model, it improved memory and learning [142].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S275",
+      "start": 51235,
+      "end": 51474,
+      "text": "Fisetin in APPswe/PS1dE9 double transgenic mice inhibits the development of memory and learning problems through the modulation of cyclin-dependent kinase 5 (Cdk5), where hyperactivity induces neuroinflammation and neurodegeneration [164].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S276",
+      "start": 51475,
+      "end": 51685,
+      "text": "In two different transgenic mouse models (TG2576 and TG-SwDI), a dihydromyricetin treatment improves exploratory and locomotor activities, decreases anxiety, improves memory, and reverses Aβ accumulation [165].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S277",
+      "start": 51686,
+      "end": 51857,
+      "text": "As you may note, the majority of the studies mentioned focused on the effects of flavonoids on amyloidopathy and cognitive deficits, while studies on tauopathy are scarce.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S278",
+      "start": 51857,
+      "end": 51860,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S279",
+      "start": 51860,
+      "end": 51861,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S280",
+      "start": 51861,
+      "end": 51862,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S281",
+      "start": 51862,
+      "end": 51871,
+      "text": "## 6.2.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S282",
+      "start": 51872,
+      "end": 51880,
+      "text": "Clinical",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S283",
+      "start": 51880,
+      "end": 52114,
+      "text": "\n\nThere are no clinical studies with a single flavonoid molecule, but we can illustrate the potential of these molecules using the results obtained with cocoa flavanol, which is a mixture of flavanols, mainly catechin and epicatechin.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S284",
+      "start": 52115,
+      "end": 52318,
+      "text": "Cocoa flavanol consumption for 8 weeks improved cognitive functions in patients with mild cognitive impairment [166], and a double-blind study showed improved cognitive functions in aging subjects [167].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S285",
+      "start": 52319,
+      "end": 52565,
+      "text": "Moreover, the consumption of these flavanols by healthy 50–69-year-old subjects over 3 months improves the dentate gyrus functions evaluated by a high-resolution variant of functional magnetic resonance imaging (fMRI) and cognitive testing [168].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S286",
+      "start": 52565,
+      "end": 52569,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S287",
+      "start": 52569,
+      "end": 52570,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S288",
+      "start": 52570,
+      "end": 52572,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S289",
+      "start": 52573,
+      "end": 52874,
+      "text": "6.3. Anti-Inflammatory Effects of Flavonoids in PD\n\n#### 6.3.1. In Vitro Studies\n\nSome in vitro studies have evaluated the effects of different flavonoids on the formation of α-synuclein oligomers and their assembly into aggregates and found that flavonoids inhibit oligomer formation and aggregation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S290",
+      "start": 52875,
+      "end": 52998,
+      "text": "These flavonoids include: apigenin, baicalein myricetin, genistein, morin, quercetin, EGCG, and scutellarein [169,170,171].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S291",
+      "start": 52999,
+      "end": 53191,
+      "text": "In activated microglia induced by the LPS model, nobiletin prevents the release of the proinflammatory cytokines TNF-α and IL-1β [172], and apigenin and luteolin decrease TNF-α and IL-6 [173].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S292",
+      "start": 53192,
+      "end": 53382,
+      "text": "Naringenin inhibits NF-κB, iNOS, and COX-2, and induces the expression of the suppressor of cytokine signaling 3 (SOCS-2), a negative regulator of cytokines in activated microglia [174,175].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S293",
+      "start": 53383,
+      "end": 53600,
+      "text": "Diadzein downregulates the activation of NF-κB and the production of IL-6 and [176], and its metabolite Equol (7-hydroxy-3-(4′-hydroxyphenyl)-chroman) prevents the secretion of TNF-α, IL-6, and NF-κB activation [177].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S294",
+      "start": 53601,
+      "end": 53845,
+      "text": "In PC12 cells exposed to the neurotoxic MPP+, morin reduces cell apoptosis and mortality [178] and decreases the rate of astrogliosis and the nuclear translocation of NF-κB in primary cultured astrocytes exposed to the same neurotoxicity [179].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S295",
+      "start": 53846,
+      "end": 54130,
+      "text": "Butein, butin, fisetin, fustin, and sulfuretin protect the murine hippocampal HT22 cells against glutamate-induced neurotoxicity and reduce the induced nitric oxide (NO) production in BV2 cells microglial cell lines, and also, butein suppresses the expression of iNOS and COX-2 [180].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S296",
+      "start": 54131,
+      "end": 54248,
+      "text": "Genkwanin suppressed the MPP+-induced activation of the TLR4/MyD88/NLRP3 inflammasome pathway in SH-SY5Y cells [181].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S297",
+      "start": 54248,
+      "end": 54354,
+      "text": "\n\n\n#### 6.3.2. Animal Model Studies\n\nChemically induced animal models of PD are the most widely used ones.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S298",
+      "start": 54355,
+      "end": 54493,
+      "text": "Rat or mice models of 1-methyl-4-phenyl-1,2,3,6-tetrahydropyridine (MPTP) and 6-hydroxydopamine (6-OHDA) are two of the most common types.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S299",
+      "start": 54494,
+      "end": 54619,
+      "text": "MPTP is the precursor to the neurotoxic 1-methyl-4-phenyl-2,3-dihydropyridinium (MPDP+), which is converted into glial cells.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S300",
+      "start": 54620,
+      "end": 54720,
+      "text": "Both MPDP+ and 6-OHDA are neurotoxic to dopaminergic neurons and elicit a motor phenotype [182,183].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S301",
+      "start": 54721,
+      "end": 54824,
+      "text": "Additionally, the rotenone model of PD also shows the main pathological hallmarks of the disease [184].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S302",
+      "start": 54825,
+      "end": 54960,
+      "text": "In this last model, baicalein reduced the formation and accumulation of α-synuclein oligomers and protected dopaminergic neurons [185].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S303",
+      "start": 54961,
+      "end": 55248,
+      "text": "In the MPP+ rat model, this flavonoid attenuates α-synuclein aggregation, inhibits inflammasome activation [186], improves the motor ability, decreases the number of activated microglia and astrocytes, and increases dopamine and serotonin neurotransmitters in the striatum [187,188,189].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S304",
+      "start": 55249,
+      "end": 55445,
+      "text": "Apigenin in the rotenone rat model decreases the expression of NF-κB, increases the expression of dopamine D2 receptor (D2R), and decreases α-synuclein aggregation in the rat rotenone model [190].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S305",
+      "start": 55446,
+      "end": 55718,
+      "text": "Nobiletin in the MPP+ rat model preserved the expression of the glial-cell-line-derived neurotrophic factor (GDNF), inhibited microglial activation [191] and increased the dopamine contents in the striatum and hippocampal CA1 region, and improved the motor deficits [192].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S306",
+      "start": 55719,
+      "end": 55885,
+      "text": "In the MPP+ rat model, naringin increased the GDNF level in the substantia nigra, reduced TNF-α expression [193], and protected the nigrostriatal DA projection [194].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S307",
+      "start": 55886,
+      "end": 56086,
+      "text": "In the MPDP+ mice model, EGCG reduced the dopamine neuronal loss in the substantia nigra [195], and the same flavonoid in the rotenone rat model inhibited TNF-α, IL-1β, and IL-6 in the striatum [196].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S308",
+      "start": 56087,
+      "end": 56204,
+      "text": "Quercetin increased the striatal dopamine level and reduced dopaminergic neuronal loss in the 6-OHDA rat model [197].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S309",
+      "start": 56205,
+      "end": 56370,
+      "text": "The same flavonoid in the MitoPark transgenic mouse models of PD reversed dopaminergic neuronal loss, striatal dopamine depletion, and the behavioral deficits [198].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S310",
+      "start": 56371,
+      "end": 56489,
+      "text": "Quercetin and kaempferol in an MTPT mouse model improved striatal dopamine secretion and motor coordination [199,200].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S311",
+      "start": 56490,
+      "end": 56611,
+      "text": "In the same model, hesperidin reduced the expression of IL-1β, TNF-α, and IL-6 and improved motor coordination [201,202].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S312",
+      "start": 56612,
+      "end": 56980,
+      "text": "In the 6-OHDA rat model, tangeretin protected the striatal dopaminergic neurons [203], rutin protected dopaminergic neurons and improved motor coordination [204], troxerutin reduced neuronal loss, astrogliosis, and striatal lipoperoxidation [205], and myricitrin inhibited the expression of TNF-α and protected the dopaminergic neurons from the substantia nigra [206].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S313",
+      "start": 56981,
+      "end": 57225,
+      "text": "In the MPTP mouse model, a pretreatment with morin reduced dopaminergic neuronal death, behavioral deficits, and striatal dopamine depletion [178]; it reduced the dopaminergic neuronal losses, astrogliosis, and improved motor dysfunction [179].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S314",
+      "start": 57226,
+      "end": 57341,
+      "text": "In the MPTP mouse model, icariin inhibited NLRP3 inflammasome and decreased the IL-1β and TNF-α serum levels [207].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S315",
+      "start": 57342,
+      "end": 57450,
+      "text": "Europinidin in the rotenone rat model decreased the IL-6, IL-1β, and TNF-α levels in the brain tissue [208].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S316",
+      "start": 57451,
+      "end": 57544,
+      "text": "Diosmin in a rotenone rat model decreased the expression of NF-κB and the TNF-α levels [209].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S317",
+      "start": 57544,
+      "end": 57551,
+      "text": "\n\n\n####",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S318",
+      "start": 57552,
+      "end": 57558,
+      "text": "6.3.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S319",
+      "start": 57559,
+      "end": 57567,
+      "text": "Clinical",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S320",
+      "start": 57567,
+      "end": 57760,
+      "text": "\n\nWe did not find any clinical study using a single flavonoid molecule, but research using flavonoid-rich pure cocoa in patients with PD could illustrate the possible benefits for this disease.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S321",
+      "start": 57761,
+      "end": 57910,
+      "text": "A randomized (1:1), double-blind, placebo-controlled feasibility study with 30 patients with PD showed a reduction of fatigue and fatigability [210].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S322",
+      "start": 57910,
+      "end": 58028,
+      "text": "\n\nTable 1, Table 2 and Table 3 show the main anti-inflammatory effects in models of focal ischemic stroke, AD, and PD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S323",
+      "start": 58028,
+      "end": 58038,
+      "text": "\n\n\n\n\n## 7.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S324",
+      "start": 58039,
+      "end": 58202,
+      "text": "Conclusions and Future Directions\n\nFlavonoids have pleiotropic effects, which are demonstrated mainly through in vitro and animal models of diverse human diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S325",
+      "start": 58203,
+      "end": 58336,
+      "text": "The best-known mechanism is antioxidants, but in the last two decades, our knowledge of their effects on neuroinflammation has grown.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S326",
+      "start": 58337,
+      "end": 58743,
+      "text": "Many in vitro and animal model studies highlight the anti-inflammatory effect of flavonoids by decreasing the activated microglia and astrocytes, and also, by decreasing the proinflammatory cytokines such as TNF-α, IL-1β, IL-6, COX-2, and iNOS, either by the indirect or direct inactivation of transcription factors such as NF-κB and AP-1, and also, through the inactivation of the inflammasome (Figure 3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S327",
+      "start": 58744,
+      "end": 59056,
+      "text": "On the other hand, several studies have found that flavonoids can downregulate other pathological pathways, and some human studies show that after consuming flavonoid-rich foods and beverages, there is a significant reduction of the proinflammatory molecules, including C-reactive protein and IL-6 [211,212,213].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S328",
+      "start": 59057,
+      "end": 59527,
+      "text": "Searching the clinical trial data set from ClinicalTrails.gov revealed the interest of the scientific community in the beneficial effects of flavonoids for human health, as several ongoing studies are focused on topics related to ischemic strokes and neurodegenerative diseases, such as cognition performance, cognitive aging, the risk of dementia, and endothelial dysfunction, suggesting a growing interest in translating the preclinical knowledge into clinical trials.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S329",
+      "start": 59527,
+      "end": 59618,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 3</strong> Anti-inflammatory effect of flavonoids.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S330",
+      "start": 59619,
+      "end": 59827,
+      "text": "Flavonoids act as inhibitors of the activity of several transcription factors and regulatory enzymes to decrease the synthesis and release of different the pro-inflammatory cytokines.</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S331",
+      "start": 59827,
+      "end": 60364,
+      "text": "Although there have been substantial achievements in the bioavailability of flavonoids, for example, the cutaneous delivery system and application of the nanoencapsulation of bioactive compounds [214,215], we still need to improve our knowledge about aspects such as metabolic transformation, the identification of active molecules (parent molecule and/or their metabolites), the mechanism to cross the blood-brain barrier, and toxicology to find single flavonoids for the future therapy for neurological disorders associated with aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S332",
+      "start": 60364,
+      "end": 60367,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=Some of the principal characteristics | pred=chronic | obj=low-grade | unit=S2\nB T4 B2 | sub=Aging-related diseases | pred=include | obj=focal ischemic stroke | unit=S3\nB T4 B3 | sub=Flavonoids | pred=class | obj=of polyphenols | unit=S4\nB T4 B4 | sub=A small group of individual flavonoid | pred=use | obj=to explore the anti-inflammatory effect in | unit=S5\nB T4 B5 | sub=the evidence from human studies | pred=limit | obj=However, the evidence from human studies | unit=S6\nB T4 B6 | sub=we | pred=highlight | obj=In this review article | unit=S7\nB T4 B7 | sub=Introduction | pred=include | obj=focal ischemic stroke | unit=S9\nB T4 B8 | sub=Aging | pred=process | obj=that | unit=S10\nB T4 B9 | sub=A focal ischemic stroke | pred=cause | obj=by the occlusion of a cerebral | unit=S11\nB T4 B10 | sub=Neurodegenerative diseases | pred=have | obj=no cure | unit=S12\nB T4 B11 | sub=Neurodegenerative diseases | pred=include | obj=Lewy body dementia | unit=S13\nB T4 B12 | sub=the components of the human diet, | pred=contain | obj=different compounds including flavonoids, which are | unit=S14\nB T4 B13 | sub=Many recent studies | pred=show | obj=that these compounds have a beneficial | unit=S15\nB T4 B14 | sub=The active compounds and their mechanism | pred=define | obj=they | unit=S16\nB T4 B15 | sub=the scientific research | pred=concentrate | obj=mainly on known biological activities of | unit=S17\nB T4 B16 | sub=we | pred=describe | obj=In the sections below | unit=S18\nB T4 B17 | sub=Flavonoids | pred=present | obj=in all vascular plants | unit=S20\nB T4 B18 | sub=flavonoids | pred=metabolite | obj=In the plant | unit=S21\nB T4 B19 | sub=a single plant | pred=contain | obj=many different flavonoids | unit=S22\nB T4 B20 | sub=flavonoids | pred=distribute | obj=In nature | unit=S23\nB T4 B21 | sub=Flavonoids | pred=compound | obj=that | unit=S24\nB T4 B22 | sub=all flavonoids contained in foods | pred=form | obj=Except for catechins | unit=S25\nB T4 B23 | sub=Flavonoid aglycones | pred=undergo | obj=conjugation reactions | unit=S26\nB T4 B24 | sub=some conjugates | pred=export | obj=into the bile duct | unit=S27\nB T4 B25 | sub=Flavonoids not absorbed from the small | pred=degrade | obj=in the colon | unit=S28\nB T4 B26 | sub=the rest of the flavonoids present | pred=form | obj=Except from catechins | unit=S29\nB T4 B27 | sub=cells in the body | pred=expose | obj=to apparently less active flavonoid metabolites | unit=S30\nB T4 B28 | sub=there | pred=be | obj=evidence | unit=S31\nB T4 B29 | sub=An in vivo study | pred=show | obj=that glucuronidated quercetin metabolites were deconjugated | unit=S32\nB T4 B30 | sub=The absorption and distribution of flavonoids | pred=carry | obj=by members of ATP-binding cassette (ABC) | unit=S33\nB T4 B31 | sub=The physicochemical properties (such as molecular | pred=determine | obj=the degree of absorption | unit=S34\nB T4 B32 | sub=Flavonoids | pred=show | obj=great variability | unit=S35\nB T4 B33 | sub=Manach et al. [14 | pred=analyze | obj=97 bioavailability studies in humans | unit=S36\nB T4 B34 | sub=They | pred=find | obj=that among all of the compounds | unit=S37\nB T4 B35 | sub=Some evidence | pred=suggest | obj=that some flavonoids and/or their metabolites | unit=S38\nB T4 B36 | sub=Flavonoids | pred=have | obj=pleiotropic effects that can produce health | unit=S39\nB T4 B37 | sub=rings | pred=a | obj=B | unit=S40\nB T4 B38 | sub=Some representative compounds | pred=show | obj=below each flavonoid subgroup.</figcaption> | unit=S41\nB T4 B39 | sub=article text | pred=/figure | obj=/figure | unit=S43\nB T4 B40 | sub=Neuroinflammation | pred=induce | obj=innate | unit=S45\nB T4 B41 | sub=This response | pred=critical | obj=to isolate damaged tissue from uninjured | unit=S46\nB T4 B42 | sub=Acute inflammation | pred=beneficial | obj=regeneration | unit=S47\nB T4 B43 | sub=It | pred=accept | obj=that low-grade neuroinflammation is the main | unit=S48\nB T4 B44 | sub=the major source | pred=accumulation | obj=In aging | unit=S49\nB T4 B45 | sub=they | pred=contribute | obj=disease | unit=S50\nB T4 B46 | sub=Glial cells in the CNS | pred=carry | obj=different activities | unit=S51\nB T4 B47 | sub=All glial cells | pred=play | obj=a role | unit=S52\nB T4 B48 | sub=Microglia | pred=cell | obj=in the CNS | unit=S53\nB T4 B49 | sub=These cells | pred=scan | obj=the microenvironment of the parenchyma | unit=S54\nB T4 B50 | sub=astrocytes | pred=have | obj=varied homeostatic functions | unit=S55\nB T4 B51 | sub=glial cells | pred=recognize | obj=In neurological disease | unit=S56\nB T4 B52 | sub=TLRs | pred=glycoprotein | obj=that | unit=S57\nB T4 B53 | sub=Each TLR subtype | pred=recognize | obj=different PAMPs | unit=S58\nB T4 B54 | sub=DAMPs | pred=comprise | obj=an extensive range of molecules such | unit=S59\nB T4 B55 | sub=The interaction of ligands with the | pred=activate | obj=an intracellular signaling cascade that causes | unit=S60\nB T4 B56 | sub=excessive TLR activation | pred=disrupt | obj=immune homeostasis | unit=S61\nB T4 B57 | sub=the latter one | pred=activate | obj=After the initial interaction of the | unit=S62\nB T4 B58 | sub=The activation of the PI3K/AKT/mTOR pathway | pred=activate | obj=the transcription factor NF-κB | unit=S63\nB T4 B59 | sub=The NOD subfamily | pred=member | obj=together with the adaptor protein apoptosis-associated | unit=S64\nB T4 B60 | sub=Cytokines | pred=mechanism | obj=immune | unit=S65\nB T4 B61 | sub=Cytokines | pred=have | obj=both anti- and proinflammatory effects | unit=S66\nB T4 B62 | sub=Anti-inflammatory cytokines | pred=include | obj=IL-4 | unit=S67\nB T4 B63 | sub=these molecules | pred=interact | obj=After secretion to the extracellular space | unit=S68\nB T4 B64 | sub=The primary proinflammatory cytokines, such as | pred=contribute | obj=to inflammaging in healthy elderly people | unit=S69\nB T4 B65 | sub=TNF-α | pred=induce | obj=apoptosis | unit=S70\nB T4 B66 | sub=Microglia | pred=release | obj=anti- and proinflammatory cytokines | unit=S71\nB T4 B67 | sub=Glial cells | pred=show | obj=different phenotypes that are the result | unit=S72\nB T4 B68 | sub=Several different phenotypes | pred=observe | obj=M1 | unit=S73\nB T4 B69 | sub=the A1 phenotype | pred=toxic | obj=for astrocytes | unit=S74\nB T4 B70 | sub=M1 microglia | pred=present | obj=In human neurodegenerative illnesses such as | unit=S75\nB T4 B71 | sub=M1 microglia | pred=secrete | obj=proinflammatory cytokines | unit=S76\nB T4 B72 | sub=Most types of CNS diseases | pred=have | obj=a neuroinflammatory component | unit=S77\nB T4 B73 | sub=article text | pred=aging | obj=Aging | unit=S81\nB T4 B74 | sub=Aging | pred=process | obj=that | unit=S82\nB T4 B75 | sub=This change | pred=characterize | obj=by the progressive degeneration of tissue | unit=S83\nB T4 B76 | sub=aging | pred=affect | obj=In the brain | unit=S84\nB T4 B77 | sub=Age-related diseases | pred=group | obj=different illnesses | unit=S85\nB T4 B78 | sub=alterations | pred=occur | obj=In normal aging | unit=S86\nB T4 B79 | sub=Functional changes | pred=include | obj=a decrease in blood flow | unit=S87\nB T4 B80 | sub=structural changes | pred=include | obj=On the other hand | unit=S88\nB T4 B81 | sub=It | pred=important | obj=to note that endothelial dysfunction is | unit=S89\nB T4 B82 | sub=There | pred=be | obj=noticeable | unit=S90\nB T4 B83 | sub=another feature | pred=presence | obj=of cellular senescence | unit=S91\nB T4 B84 | sub=Senescent cells | pred=show | obj=increased activity of senescence-associated β-galactosidase (SA-β-GAL | unit=S92\nB T4 B85 | sub=Some alterations such as neuroinflammation | pred=induce | obj=cellular senescence | unit=S93\nB T4 B86 | sub=Many of the inflammaging characteristics | pred=find | obj=in the blood | unit=S94\nB T4 B87 | sub=systemic inflammation | pred=contribute | obj=In age-related diseases | unit=S95\nB T4 B88 | sub=Oxidative stress | pred=factor | obj=present | unit=S96\nB T4 B89 | sub=This alteration | pred=production | obj=of unstable molecules that contain oxygen | unit=S97\nB T4 B90 | sub=This mitochondrial dysfunction | pred=produce | obj=DAMPs | unit=S98\nB T4 B91 | sub=article text | pred=physiopathology | obj=of Focal Ischemic Stroke | unit=S102\nB T4 B92 | sub=article text | pred=stroke | obj=Focal Ischemic Stroke | unit=S103\nB T4 B93 | sub=Ischemic strokes | pred=type | obj=of cerebrovascular diseases | unit=S104\nB T4 B94 | sub=The main type of strokes | pred=ischemic | obj=due | unit=S105\nB T4 B95 | sub=Aging | pred=consider | obj=to be the most important nonmodifiable | unit=S106\nB T4 B96 | sub=It | pred=important | obj=to highlight that modifiable risk factors | unit=S107\nB T4 B97 | sub=the approved treatments for an acute | pred=thrombectomy | obj=In most countries | unit=S108\nB T4 B98 | sub=Endovascular thrombectomy | pred=show | obj=benefits | unit=S109\nB T4 B99 | sub=The cessation of or decrease in | pred=produce | obj=different levels of damage | unit=S110\nB T4 B100 | sub=The pathologic cascades | pred=produce | obj=damage | unit=S111\nB T4 B101 | sub=the abrupt decrease in cerebral blood | pred=lead | obj=In the ischemic core | unit=S112\nB T4 B102 | sub=The size of the necrotic area | pred=depend | obj=mainly on the location of the | unit=S113\nB T4 B103 | sub=The penumbra surrounding the core area | pred=perfuse | obj=by collateral blood vessels, which help | unit=S114\nB T4 B104 | sub=the first pathological event | pred=activate | obj=After a few minutes of cerebral | unit=S115\nB T4 B105 | sub=This event | pred=set | obj=several mechanisms, which include ionic imbalance, | unit=S116\nB T4 B106 | sub=Inflammation responses | pred=occur | obj=cells | unit=S117\nB T4 B107 | sub=the microglia | pred=become | obj=After this interaction | unit=S118\nB T4 B108 | sub=these reactive microglia | pred=have | obj=During the first hours after the | unit=S119\nB T4 B109 | sub=M2 microglia found around the lesion | pred=migrate | obj=towards the lesion core | unit=S120\nB T4 B110 | sub=Proinflammatory cytokines (e.g., IL-1, IL-6, and | pred=promote | obj=a gradual alteration in the BBB | unit=S121\nB T4 B111 | sub=Cytokines released by M1 microglia | pred=promote | obj=astrogliosis | unit=S122\nB T4 B112 | sub=glial scar formation | pred=start | obj=Around 6 days after the injury | unit=S123\nB T4 B113 | sub=the cells in the penumbra | pred=expose | obj=to several deleterious mechanisms, such as | unit=S124\nB T4 B114 | sub=neurons | pred=viable | obj=long-term | unit=S125\nB T4 B115 | sub=Alzheimer’s Disease (AD) AD | pred=disease | obj=that | unit=S129\nB T4 B116 | sub=AD | pred=disorder | obj=that | unit=S130\nB T4 B117 | sub=AD | pred=divide | obj=into familial AD (FAD | unit=S131\nB T4 B118 | sub=FAD | pred=cause | obj=by dominant genetic mutations in presenilin | unit=S132\nB T4 B119 | sub=SAD | pred=have | obj=no single genetic cause | unit=S133\nB T4 B120 | sub=there | pred=be | obj=classification | unit=S134\nB T4 B121 | sub=Early onset | pred=occur | obj=before the age of 65 | unit=S135\nB T4 B122 | sub=Most late-onset cases | pred=one | obj=it | unit=S136\nB T4 B123 | sub=the ε4 allele of apolipoprotein E | pred=factor | obj=In addition to APP | unit=S137\nB T4 B124 | sub=APOE | pred=protein | obj=related | unit=S138\nB T4 B125 | sub=AD | pred=related | obj=to the accumulation of insoluble forms | unit=S139\nB T4 B126 | sub=The amyloid hypothesis of AD | pred=suggest | obj=that alterations to APP metabolism and | unit=S140\nB T4 B127 | sub=the tau hypothesis of AD | pred=suggest | obj=On the other hand | unit=S141\nB T4 B128 | sub=The neuropathologic hallmarks of AD | pred=plaque | obj=NFTs | unit=S142\nB T4 B129 | sub=it | pred=noteworthy | obj=that a high percentage of patients | unit=S143\nB T4 B130 | sub=the microglia | pred=play | obj=In AD | unit=S144\nB T4 B131 | sub=Aβ | pred=interact | obj=with the microglia | unit=S145\nB T4 B132 | sub=high levels of proinflammatory cytokines IL-1β | pred=elevated | obj=in the peripheral blood of AD | unit=S146\nB T4 B133 | sub=Activated microglia | pred=release | obj=the proinflammatory cytokines IL-1α, C1q, and | unit=S147\nB T4 B134 | sub=The evidence from postmortem analyses of | pred=show | obj=alterations in microglia morphology such as | unit=S148\nB T4 B135 | sub=Activated microglia | pred=observe | obj=in the entorhinal, temporoparietal, and cingulate | unit=S149\nB T4 B136 | sub=These PET studies | pred=use | obj=the selective marker 11PK11195, which labels | unit=S150\nB T4 B137 | sub=the occurrence of microglia activation | pred=confirm | obj=using different markers alone | unit=S151\nB T4 B138 | sub=One study | pred=find | obj=that AD patients have increased microglial | unit=S152\nB T4 B139 | sub=it | pred=report | obj=that microglial activation, tau aggregation, and | unit=S153\nB T4 B140 | sub=A longitudinal PET study (14 months | pred=evaluate | obj=the change in microglia activation in | unit=S154\nB T4 B141 | sub=Another study | pred=use | obj=PET (11PK11195 | unit=S155\nB T4 B142 | sub=A similar study | pred=find | obj=that activated microglia in temporal cortices | unit=S156\nB T4 B143 | sub=All of these studies | pred=confirm | obj=the presence of activated microglia in | unit=S157\nB T4 B144 | sub=PD | pred=disease | obj=with a multifactorial etiology that causes | unit=S161\nB T4 B145 | sub=The other main characteristics of PD | pred=degeneration | obj=of neurons in the substantia nigra | unit=S162\nB T4 B146 | sub=PD patients | pred=present | obj=In addition to those mentioned | unit=S163\nB T4 B147 | sub=A few cases of PD | pred=seem | obj=to have a genetic origin | unit=S164\nB T4 B148 | sub=The monogenic mutation in several genes | pred=constitute | obj=the genetic forms of PD, including | unit=S165\nB T4 B149 | sub=the neuronal protein α-synuclein | pred=participate | obj=In physiological conditions | unit=S166\nB T4 B150 | sub=the soluble unfolded monomer | pred=form | obj=in pathological conditions | unit=S167\nB T4 B151 | sub=the protofibrils | pred=propagate | obj=by a transcellular mechanism | unit=S168\nB T4 B152 | sub=Lewy body inclusions, in addition | pred=present | obj=in neurons of the substantia nigra | unit=S169\nB T4 B153 | sub=The contribution of neuroinflammation to cellular | pred=confirm | obj=in several studies | unit=S170\nB T4 B154 | sub=A positron emission tomography (PET) study | pred=show | obj=that the rate of the activation | unit=S171\nB T4 B155 | sub=increased proinflammatory mediators (e.g., TNF-β | pred=find | obj=in the substantia nigra | unit=S172\nB T4 B156 | sub=the animal model of PD MPTP | pred=exhibit | obj=an increase in the proinflammatory molecules | unit=S173\nB T4 B157 | sub=some evidence | pred=suggest | obj=that the adaptive immune system also | unit=S174\nB T4 B158 | sub=Neuronal cell culture studies | pred=show | obj=that IL-1 increases the α-synuclein [88] | unit=S175\nB T4 B159 | sub=this information | pred=show | obj=that inflammatory responses are involved in | unit=S176\nB T4 B160 | sub=that | pred=stroke | obj=AD | unit=S177\nB T4 B161 | sub=Figure | pred=response | obj=<figure> <figcaption><strong>Figure 2</strong> Basic neuroinflammatory responses. | unit=S178\nB T4 B162 | sub=microglia | pred=support | obj=In homeostatic conditions | unit=S179\nB T4 B163 | sub=Damage-associated molecular patterns (DAMPs) released in | pred=interact | obj=with homeostatic microglia | unit=S180\nB T4 B164 | sub=The effects of flavonoids in the | pred=describe | obj=in cell cultures | unit=S181\nB T4 B165 | sub=you | pred=find | obj=In the next sections | unit=S182\nB T4 B166 | sub=article text | pred=effect | obj=of Flavonoids | unit=S183\nB T4 B167 | sub=Oxygen glucose deprivation (OGD | pred=model | obj=study | unit=S184\nB T4 B168 | sub=the cells | pred=return | obj=after the OGD | unit=S185\nB T4 B169 | sub=Myricetin | pred=show | obj=a significant protective effect | unit=S186\nB T4 B170 | sub=Quercetin | pred=inhibit | obj=inflammation that is mediated by TLR4/MyD88/NF-κB | unit=S187\nB T4 B171 | sub=Isoquercetin, a glucoside derivative of quercetin | pred=have | obj=neuroprotective effects | unit=S188\nB T4 B172 | sub=isoquercetin | pred=inhibit | obj=in rat hippocampal neurons in OGD/R | unit=S189\nB T4 B173 | sub=cortical neurons in similar conditions | pred=inhibit | obj=the protein expression of TLR4 | unit=S190\nB T4 B174 | sub=Baicalin | pred=downregulate | obj=the expression of the NOD2 receptor | unit=S191\nB T4 B175 | sub=baicalin | pred=inhibit | obj=the proinflammatory microglial polarization through the | unit=S192\nB T4 B176 | sub=Baicalin | pred=decrease | obj=the release of TNF-α | unit=S193\nB T4 B177 | sub=Icariin | pred=apply | obj=before the OGD/R-reduced protein level expression | unit=S194\nB T4 B178 | sub=Casticin | pred=reduce | obj=the expression of TLR4, NF-κB p65, | unit=S195\nB T4 B179 | sub=Pratensein in HT22 cells in OGD/R | pred=suppress | obj=NLRP3 inflammasome activation | unit=S196\nB T4 B180 | sub=Tectorigenin | pred=inhibit | obj=ROS inflammatory cytokines IL-1β | unit=S197\nB T4 B181 | sub=Astilbin | pred=inhibit | obj=NLRP3 inflammasome | unit=S198\nB T4 B182 | sub=Anthocyanin | pred=reduce | obj=the secretion of TNF-α, IL-1β, and | unit=S199\nB T4 B183 | sub=tricin, an O-methylated flavone | pred=decrease | obj=In the mouse neuroblastoma cells N2a | unit=S200\nB T4 B184 | sub=Diosmetin | pred=inhibit | obj=the NLRP3 inflammasome pathway | unit=S201\nB T4 B185 | sub=Schaftoside | pred=inhibit | obj=the expression of TLR4, IL-1β, IL-6, | unit=S202\nB T4 B186 | sub=Animal | pred=model | obj=6.1.2. Animal Model | unit=S206\nB T4 B187 | sub=The most commonly used animals in | pred=rat | obj=mice | unit=S207\nB T4 B188 | sub=Animal models for ischemic stroke | pred=divide | obj=into global, focal, and multifocal ones | unit=S208\nB T4 B189 | sub=There | pred=be | obj=several | unit=S209\nB T4 B190 | sub=Animal models for focal ischemic strokes | pred=develop | obj=to induce damage within the territory | unit=S210\nB T4 B191 | sub=There | pred=be | obj=different | unit=S211\nB T4 B192 | sub=we | pred=analyze | obj=In this section | unit=S212\nB T4 B193 | sub=kaempferol-3-O-rutinoside (KRS | pred=reduce | obj=In a rat MCAO/R model | unit=S213\nB T4 B194 | sub=kaempferol administered for 7 days after | pred=decrease | obj=In the same model | unit=S214\nB T4 B195 | sub=Fisetin applied 3 h after the | pred=reduce | obj=the infarct size | unit=S215\nB T4 B196 | sub=A morin treatment for 7 days | pred=reduce | obj=the neurological deficits | unit=S216\nB T4 B197 | sub=(−)-Epigallocatechin-3-gallate (EGCG | pred=decrease | obj=the infarct volume | unit=S217\nB T4 B198 | sub=Luteolin administered intraperitoneally after MCAO/R in | pred=suppress | obj=hippocampus inflammation | unit=S218\nB T4 B199 | sub=Luteoloside | pred=decrease | obj=the infarct volume | unit=S219\nB T4 B200 | sub=MCOA/R rats treated with nobiletin after | pred=result | obj=in improved neurological deficits | unit=S220\nB T4 B201 | sub=Eriodictyol applied after stroke | pred=improve | obj=neurological deficits in the MCAO mice | unit=S221\nB T4 B202 | sub=Tricin applied by oral administration 2 | pred=result | obj=in decreased serum levels of TNF-α | unit=S222\nB T4 B203 | sub=Eupatilin administered to mice 5 h | pred=show | obj=a reduction of the activated microglia | unit=S223\nB T4 B204 | sub=Synergistic Effect of Flavonoids with rtPA | pred=reverse | obj=the neurobehavioral deficit | unit=S228\nB T4 B205 | sub=expression | pred=nf-κb | obj=in the astrocytes | unit=S231\nB T4 B206 | sub=rats treated with the same molecule | pred=show | obj=a decrease in NF-κB | unit=S232\nB T4 B207 | sub=the same molecule applied 7 days | pred=decrease | obj=the expression of TNF-α and IL-6 | unit=S233\nB T4 B208 | sub=Rats treated with hesperidin for 15 | pred=show | obj=an improvement of the neurological deficits | unit=S234\nB T4 B209 | sub=a pinocembrin treatment administered daily for | pred=decrease | obj=In a rat model of global | unit=S235\nB T4 B210 | sub=a fourteen-day-long genistein treatment before a | pred=reduce | obj=In an MCAO mice model | unit=S236\nB T4 B211 | sub=Sanggenon administered intragastrically in rats seven | pred=result | obj=in a decrease in the levels | unit=S237\nB T4 B212 | sub=Astilbin applied 3 days before the | pred=inhibit | obj=NLRP3 inflammasome | unit=S238\nB T4 B213 | sub=Chrysin applied for 7 days before | pred=decrease | obj=the release of inflammatory cytokines IL-6 | unit=S239\nB T4 B214 | sub=Baicalin applied 4 days before the | pred=decrease | obj=the expression level of the NLRP3 | unit=S240\nB T4 B215 | sub=Eupafolin applied for 7 days before | pred=decrease | obj=TLR-4, TNF-α, IL-1β, and IL-6 expression | unit=S241\nB T4 B216 | sub=Rats | pred=treat | obj=with Biochanin A | unit=S242\nB T4 B217 | sub=Clinical Though no clinical studies using | pred=extend | obj=In a similar study | unit=S244\nB T4 B218 | sub=article text | pred=effect | obj=of Flavonoids | unit=S247\nB T4 B219 | sub=EGCG | pred=inhibit | obj=the fibrillogenesis of Aβ | unit=S248\nB T4 B220 | sub=Quercetin used as a pretreatment with | pred=decrease | obj=Aβ (1–42)-induced cytotoxicity | unit=S249\nB T4 B221 | sub=Luteolin | pred=decrease | obj=Aβ (1–40 and 1–42) in primary | unit=S250\nB T4 B222 | sub=Myricetin | pred=prevent | obj=the fibrillogenesis of Aβ | unit=S251\nB T4 B223 | sub=Cyanidin 3-O-β-glucopyranoside in neuroblastoma SH-SY5Y cells | pred=reduce | obj=the cytotoxicity of Aβ (25–35 | unit=S252\nB T4 B224 | sub=wogonin | pred=reduce | obj=In the same cells | unit=S253\nB T4 B225 | sub=it | pred=find | obj=Through different biochemical techniques | unit=S254\nB T4 B226 | sub=Quercetin | pred=prevent | obj=the formation of Aβ fibrils | unit=S255\nB T4 B227 | sub=6.2.2. Animal Model Studies | pred=include | obj=chemically induced ones (e.g., amyloid infusion | unit=S259\nB T4 B228 | sub=These transgenic animals | pred=model | obj=familial AD | unit=S260\nB T4 B229 | sub=the main interest of flavonoids in | pred=focus | obj=on the effects of the Aβ | unit=S261\nB T4 B230 | sub=isorhamnetin | pred=inhibit | obj=In the chemical mouse model of | unit=S262\nB T4 B231 | sub=kaempferol | pred=increase | obj=In another chemical model (streptozotocin | unit=S263\nB T4 B232 | sub=Luteolin | pred=improve | obj=memory | unit=S264\nB T4 B233 | sub=Nobiletin in APP-SL 7-5 transgenic mice | pred=reduce | obj=the quantity of soluble Aβ (1–40 | unit=S265\nB T4 B234 | sub=diosmin | pred=decrease | obj=In 3XTg mice | unit=S266\nB T4 B235 | sub=hesperidin | pred=reduce | obj=In transgenic APP/PS1 mice | unit=S267\nB T4 B236 | sub=wogonin | pred=improve | obj=In transgenic h-APPswe | unit=S268\nB T4 B237 | sub=diosmin | pred=reduce | obj=In the Tg2576 transgenic mouse model | unit=S269\nB T4 B238 | sub=EGCG | pred=reduce | obj=In APPsw transgenic mice | unit=S270\nB T4 B239 | sub=Nobiletin | pred=reduce | obj=Aβ plaques in the hippocampus | unit=S271\nB T4 B240 | sub=Nobiletin | pred=reverse | obj=memory impairment in the hippocampus in | unit=S272\nB T4 B241 | sub=quercetin | pred=reduce | obj=In 3XTg mice | unit=S273\nB T4 B242 | sub=it | pred=improve | obj=Cyanidin 3-O-glucoside decreases tau phosphorylation in | unit=S274\nB T4 B243 | sub=Fisetin in APPswe/PS1dE9 double transgenic mice | pred=inhibit | obj=the development of memory and learning | unit=S275\nB T4 B244 | sub=a dihydromyricetin treatment | pred=improve | obj=In two different transgenic mouse models | unit=S276\nB T4 B245 | sub=the majority of the studies mentioned | pred=focus | obj=on the effects of flavonoids on | unit=S277\nB T4 B246 | sub=article text | pred=clinical | obj=Clinical | unit=S282\nB T4 B247 | sub=There | pred=be | obj=with a single flavonoid molecule | unit=S283\nB T4 B248 | sub=Cocoa flavanol consumption for 8 weeks | pred=improve | obj=cognitive functions | unit=S284\nB T4 B249 | sub=the consumption of these flavanols by | pred=improve | obj=the dentate gyrus functions evaluated by | unit=S285\nB T4 B250 | sub=6.3. Anti-Inflammatory Effects of Flavonoids in | pred=evaluate | obj=the effects of different flavonoids on | unit=S289\nB T4 B251 | sub=These flavonoids | pred=include | obj=apigenin | unit=S290\nB T4 B252 | sub=nobiletin | pred=prevent | obj=In activated microglia induced by the | unit=S291\nB T4 B253 | sub=Naringenin | pred=inhibit | obj=NF-κB | unit=S292\nB T4 B254 | sub=Diadzein | pred=downregulate | obj=the activation of NF-κB | unit=S293\nB T4 B255 | sub=morin | pred=reduce | obj=In PC12 cells exposed to the | unit=S294\nB T4 B256 | sub=Butein | pred=protect | obj=the murine hippocampal HT22 cells | unit=S295\nB T4 B257 | sub=Genkwanin | pred=suppress | obj=the MPP+-induced activation of the TLR4/MyD88/NLRP3 | unit=S296\nB T4 B258 | sub=Model | pred=study | obj=animal | unit=S297\nB T4 B259 | sub=models | pred=1-methyl-4-phenyl-1,2,3,6-tetrahydropyridine | obj=MPTP | unit=S298\nB T4 B260 | sub=MPTP | pred=precursor | obj=to the neurotoxic 1-methyl-4-phenyl-2,3-dihydropyridinium (MPDP+), which | unit=S299\nB T4 B261 | sub=Both MPDP+ | pred=neurotoxic | obj=to dopaminergic neurons | unit=S300\nB T4 B262 | sub=the rotenone model of PD | pred=show | obj=the main pathological hallmarks of the | unit=S301\nB T4 B263 | sub=baicalein | pred=reduce | obj=In this last model | unit=S302\nB T4 B264 | sub=this flavonoid | pred=attenuate | obj=In the MPP+ rat model | unit=S303\nB T4 B265 | sub=Apigenin in the rotenone rat model | pred=decrease | obj=the expression of NF-κB | unit=S304\nB T4 B266 | sub=Nobiletin in the MPP+ rat model | pred=preserve | obj=the expression of the glial-cell-line-derived neurotrophic | unit=S305\nB T4 B267 | sub=naringin | pred=increase | obj=In the MPP+ rat model | unit=S306\nB T4 B268 | sub=EGCG | pred=reduce | obj=In the MPDP+ mice model | unit=S307\nB T4 B269 | sub=Quercetin | pred=increase | obj=the striatal dopamine level | unit=S308\nB T4 B270 | sub=The same flavonoid in the MitoPark | pred=reverse | obj=dopaminergic neuronal loss | unit=S309\nB T4 B271 | sub=Quercetin and kaempferol in an MTPT | pred=improve | obj=striatal dopamine secretion | unit=S310\nB T4 B272 | sub=hesperidin | pred=reduce | obj=In the same model | unit=S311\nB T4 B273 | sub=tangeretin | pred=protect | obj=In the 6-OHDA rat model | unit=S312\nB T4 B274 | sub=a pretreatment with morin | pred=reduce | obj=In the MPTP mouse model | unit=S313\nB T4 B275 | sub=icariin | pred=inhibit | obj=In the MPTP mouse model | unit=S314\nB T4 B276 | sub=Europinidin in the rotenone rat model | pred=decrease | obj=the IL-6, IL-1β, and TNF-α levels | unit=S315\nB T4 B277 | sub=Diosmin in a rotenone rat model | pred=decrease | obj=the expression of NF-κB | unit=S316\nB T4 B278 | sub=article text | pred=clinical | obj=Clinical | unit=S319\nB T4 B279 | sub=We | pred=find | obj=any clinical study using a single | unit=S320\nB T4 B280 | sub=A randomized (1:1), double-blind, placebo-controlled feasibility | pred=show | obj=a reduction of fatigue | unit=S321\nB T4 B281 | sub=Table 1 | pred=show | obj=the main anti-inflammatory effects in models | unit=S322\nB T4 B282 | sub=Conclusions | pred=have | obj=pleiotropic effects | unit=S324\nB T4 B283 | sub=The best-known mechanism | pred=antioxidant | obj=last | unit=S325\nB T4 B284 | sub=Many in vitro and animal model | pred=highlight | obj=the anti-inflammatory effect of flavonoids | unit=S326\nB T4 B285 | sub=several studies | pred=find | obj=On the other hand | unit=S327\nB T4 B286 | sub=Searching the clinical trial data set | pred=reveal | obj=the interest of the scientific community | unit=S328\nB T4 B287 | sub=Figure | pred=effect | obj=of flavonoids | unit=S329\nB T4 B288 | sub=Flavonoids | pred=act | obj=as inhibitors of the activity of | unit=S330\nB T4 B289 | sub=we | pred=need | obj=to improve our knowledge about aspects | unit=S331",
+  "expected": {
+    "assertion_count": 289,
+    "minimum_concept_count": 506,
+    "minimum_structural_row_count": 1216,
+    "minimum_knowledge_map_node_count": 1216,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

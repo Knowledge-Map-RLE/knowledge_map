@@ -67,13 +67,14 @@ class DocumentRepositoryProtocol(Protocol):
         skip: int = 0,
         limit: Optional[int] = None,
         full_text_only: bool = False,
+        gold_standard_only: bool = False,
     ) -> List[Document]: ...
 
     def count_all(self) -> int:
         """Общее количество документов — для пагинации."""
         ...
 
-    def count_full_text(self) -> int:
+    def count_full_text(self, gold_standard_only: bool = False) -> int:
         """Количество документов с полным текстом (не только abstract)."""
         ...
 

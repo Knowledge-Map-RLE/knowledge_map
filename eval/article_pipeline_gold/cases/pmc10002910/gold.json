@@ -1,0 +1,1707 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 282,
+      "text": "# Female Reproductive Aging and Oxidative Stress: Mesenchymal Stem Cell Conditioned Medium as a Promising Antioxidant\n\n**Авторы:** Ra Kihae, Park Se Chang, Lee Byeong Chun\n\n**Журнал:** International Journal of Molecular Sciences (2023)\n\n**DOI:** 10.3390/ijms24055053\n\n\n## Abstract\n\n",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 282,
+      "end": 432,
+      "text": "The recent tendency to delay pregnancy has increased the incidence of age-related infertility, as female reproductive competence decreases with aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S3",
+      "start": 433,
+      "end": 576,
+      "text": "Along with aging, a lowered capacity of antioxidant defense causes a loss of normal function in the ovaries and uterus due to oxidative damage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 577,
+      "end": 750,
+      "text": "Therefore, advancements have been made in assisted reproduction to resolve infertility caused by reproductive aging and oxidative stress, following an emphasis on their use.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 751,
+      "end": 1142,
+      "text": "The application of mesenchymal stem cells (MSCs) with intensive antioxidative properties has been extensively validated as a regenerative therapy, and proceeding from original cell therapy, the therapeutic effects of stem cell conditioned medium (CM) containing paracrine factors secreted during cell culture have been reported to be as effective as that of direct treatment of source cells.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 1143,
+      "end": 1371,
+      "text": "In this review, we summarized the current understanding of female reproductive aging and oxidative stress and present MSC-CM, which could be developed as a promising antioxidant intervention for assisted reproductive technology.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 1371,
+      "end": 1374,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S8",
+      "start": 1374,
+      "end": 1375,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S9",
+      "start": 1375,
+      "end": 1379,
+      "text": "# 1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S10",
+      "start": 1380,
+      "end": 1548,
+      "text": "Introduction\n\nFor the success of reproduction, normal functioning of the ovaries and uterus is essential in both natural fertilization and in vitro fertilization (IVF).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1549,
+      "end": 1657,
+      "text": "First, from a healthy ovary, oocytes are matured and ovulated with the appropriate quantity and quality [1].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 1658,
+      "end": 1801,
+      "text": "Then, the oocytes are inseminated with sperm, and the fertilized zygotes are developed in fallopian tubes or under in vitro culture conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 1802,
+      "end": 1985,
+      "text": "Both in vitro and in vivo developed embryos should be implanted, which means attaching to uterine tissue, and, finally, the pregnancy should be maintained with a receptive uterus [2].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 1986,
+      "end": 2137,
+      "text": "However, aging leads to various abnormal phenotypes and dysfunctions in the ovaries and uterus, which increases age-related reproductive disorders [3].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2138,
+      "end": 2360,
+      "text": "Age-related infertility decreases the success rate of assisted reproduction, especially IVF, resulting from reproductive disorders such as polycystic ovarian syndrome [4], endometriosis [5], and other uterine diseases [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2360,
+      "end": 2362,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S17",
+      "start": 2362,
+      "end": 2536,
+      "text": "Reactive oxygen species (ROS) are essential regulators of various cellular processes, and, in a normal state, the number of free radicals and antioxidants are in balance [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 2537,
+      "end": 2674,
+      "text": "However, when excessive free radicals are produced, the antioxidant defense fails, and healthy cells are damaged by oxidative stress [8].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 2675,
+      "end": 2900,
+      "text": "Oxidative stress leads to mitochondrial damage [9], protein oxidation [10], lipid peroxidation [11], and DNA damage and mutation [12], all of which deteriorate biological functions and finally trigger the aging of cells [13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 2901,
+      "end": 2981,
+      "text": "Interactively, the incidence of oxidative damage also increases with aging [14].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 2982,
+      "end": 3118,
+      "text": "It is widely acknowledged that oxidative stress brings detrimental consequences to the ovaries, uterus, oocytes, and embryos (Figure 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3119,
+      "end": 3326,
+      "text": "In the ovaries, oxidative stress restricts follicle and oocyte maturation, which leads to a decreased number and competence of oocytes and an abnormal increase of the follicle-stimulating hormone [15,16,17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 3327,
+      "end": 3548,
+      "text": "In the uterus, implantation is prevented, and pregnancy complications arise, such as endometriosis [18], pre-eclampsia [19], and placentation failure [20], finally leading to fetal growth restriction and miscarriage [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 3549,
+      "end": 3712,
+      "text": "Oxidative damage to the oocytes causes DNA fragmentation, mitochondrial dysfunction, aneuploidy, and, accordingly, a decrease in the fertilization rate [22,23,24].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 3713,
+      "end": 3857,
+      "text": "Even after embryos are produced, oxidative stress can cause their apoptosis [25] and a decrease in the quantity and quality of blastocysts [26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 3858,
+      "end": 3972,
+      "text": "In general, oxidative stress on embryos developed in vivo is caused by aging and other environmental factors [27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 3973,
+      "end": 4250,
+      "text": "There are an additional number of stressors for embryos in the case of in vitro production, such as oxygen concentration, visible light, pH, temperature, and, especially, suboptimal culture medium, which significantly impairs the developmental competence of embryos [28,29,30].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4251,
+      "end": 4532,
+      "text": "Consequently, these challenging circumstances, associated with numerous factors for oxidative stress to which embryos are exposed, are driving the need to evolve the efficient application of antioxidants for the improvement of female reproductive competence and embryo development.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 4532,
+      "end": 4690,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> Detrimental effects of oxidative stress on female reproductive organs, oocytes, and embryos.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 4690,
+      "end": 4691,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S31",
+      "start": 4691,
+      "end": 4957,
+      "text": "/figure>\n\nMesenchymal stem cells (MSCs) can be ethically obtained from various sources, and they are safe, easy to harvest, and highly available [31,32]; therefore, they have been studied as regenerative medicine, and their therapeutic effects are widely known [33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 4958,
+      "end": 5108,
+      "text": "In particular, the potential of MSCs to alleviate oxidative damage caused by an array of diverse diseases has recently received significant attention.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 5109,
+      "end": 5207,
+      "text": "Stem cell conditioned medium (CM) was developed following the direct administration of stem cells.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 5208,
+      "end": 5314,
+      "text": "Comparing MSCs and MSC-CM, MSC-CM is considered more advantageous in terms of safety and convenience [34].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 5315,
+      "end": 5574,
+      "text": "The therapeutic effect of CM is known to be comparable to stem cells themselves as paracrine factors, which are growth factors and cytokines [35], are secreted into the culture medium by stem cells, and these secretory factors are then present in the CM [36].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 5575,
+      "end": 5770,
+      "text": "The purpose of this review is to summarize the impact of aging and oxidative stress on female reproduction and to discuss the recent findings of MSCs and MSC-CM, which are promising antioxidants.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 5770,
+      "end": 5773,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S38",
+      "start": 5773,
+      "end": 5777,
+      "text": "## 2",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S39",
+      "start": 5777,
+      "end": 5778,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S40",
+      "start": 5779,
+      "end": 5957,
+      "text": "Reproductive Aging\n\nAging is defined as the age-related deterioration of the physiological functions required for the survival and fertility of all individuals of a species [37].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 5958,
+      "end": 6220,
+      "text": "In particular, female reproductive competence decreases with aging, which has distinct implications in light of the contemporary trend to postpone childbearing following the development of contraceptive methods and the global flow of social and economic changes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 6221,
+      "end": 6537,
+      "text": "Women of advanced maternal age (AMA) who get pregnant at the age of 35 or over have a risk of adverse obstetric outcomes such as miscarriage, low birth weight, pre- or post-term delivery, pre-eclampsia, gestational hypertension, neonates that are small or large for gestational age, and cesarean delivery [38,39,40].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 6538,
+      "end": 6737,
+      "text": "Due to the general tendencies stated above, an increasing number of women attempting to conceive are experiencing female infertility and consequently depend on assisted reproductive technology (ART).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 6738,
+      "end": 6977,
+      "text": "Considering the importance of oocyte quality and embryo implantation in the process of unassisted reproduction, the condition of the ovaries and uterus in aged females should be considered in order to increase the success rate of ART [41].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 6977,
+      "end": 6979,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S46",
+      "start": 6979,
+      "end": 6980,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S47",
+      "start": 6980,
+      "end": 6982,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S48",
+      "start": 6983,
+      "end": 6987,
+      "text": "2.1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S49",
+      "start": 6988,
+      "end": 7191,
+      "text": "Aging of the Ovaries\n\nThe ovaries are the most seriously affected by aging among the types of tissues in the female body, which leads to a negative correlation between age and reproductive capacity [42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 7192,
+      "end": 7379,
+      "text": "The general definition of physiologic ovarian aging is age-dependent declines of the functional ovarian reserve within expected ranges, which determines the loss of female fertility [43].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 7380,
+      "end": 7526,
+      "text": "Primordial follicles are formed during fetal life and contain immature oocytes until puberty starts and then reach maturity in adult females [44].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 7527,
+      "end": 7681,
+      "text": "Follicular atresia occurs until reproductive senescence, and this becomes progressively accelerated in the late reproductive period before menopause [45].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 7682,
+      "end": 7896,
+      "text": "The decrease in follicles with aging gives rise to the elevation of follicular stimulation hormone (FSH), a stimulant currently used for ovarian stimulation and follicular development in assisted reproduction [46].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 7897,
+      "end": 8065,
+      "text": "Increased levels of FSH results in the maturation of granulosa cells becoming unsynchronized with premature oocytes, which causes follicular atresia and apoptosis [42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 8066,
+      "end": 8271,
+      "text": "In addition to FSH, inhibin-B and anti-Mullerian hormone are recognized as sensitive markers of ovarian aging, with respect to the follicle population, which can be used to predict the results of ART [47].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 8271,
+      "end": 8448,
+      "text": "\n\nAs aging progresses, the quality of oocytes—the main determinant of embryo developmental competence—deteriorates, along with a gradual decrease in the ovarian follicular pool.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 8449,
+      "end": 8731,
+      "text": "Genetic defects in aged oocytes, which eventually affect female fertility, have been revealed as follows: Deletion of mitochondrial DNA [48], decrease in antioxidant enzymes [49], and facilitation of apoptosis in oocytes [50], observed in studies of granulosa cells from aged women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 8732,
+      "end": 8919,
+      "text": "Compared to young oocytes, old oocytes exhibit mitochondrial dysfunction that results in abnormal calcium oscillation signals [51], spindle formation [52], and chromosomal alignment [53].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 8920,
+      "end": 9118,
+      "text": "In particular, the high incidence of aneuploidy, which is the leading cause of spontaneous abortion and fecundity decline, has been found in oocytes and preimplantation embryos from aged women [54].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 9119,
+      "end": 9231,
+      "text": "The activity of telomerase also decreases with aging, which could damage the intact chromosomes in oocytes [55].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 9232,
+      "end": 9351,
+      "text": "Regarding the microenvironment, the production of ROS increases during aging and affects the outcomes of ovarian aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 9352,
+      "end": 9544,
+      "text": "The correlation between oxidative stress and ovarian aging is associated with abnormal mitochondrial functions and mutations in oocytes whose antioxidant defense weakens with aging [56,57,58].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 9545,
+      "end": 9639,
+      "text": "In fact, mitochondrial antioxidant gene expression is diminished in aged oocytes in mice [59].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 9640,
+      "end": 9832,
+      "text": "This is not only true of mitochondria; it is also known that oxidative stress in lipids, proteins, enzymes, and DNA in aged oocytes causes the deterioration of the quality of the oocytes [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 9833,
+      "end": 10108,
+      "text": "In summary, ovarian aging can be characterized as a decrease in follicular recruitment, number of follicles, oocyte, and embryo quality, and available numbers of oocytes and embryos for ART and pregnancy rates with an increase in aneuploidy and poorly qualified oocytes [60].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 10108,
+      "end": 10111,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S67",
+      "start": 10111,
+      "end": 10112,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S68",
+      "start": 10112,
+      "end": 10119,
+      "text": "## 2.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S69",
+      "start": 10120,
+      "end": 10324,
+      "text": "Aging of the Uterus\n\nThe uterus is a reproductive organ that acts as an essential site for the process of pregnancy—from embryonic development, through implantation and placentation, to fetal development.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 10325,
+      "end": 10507,
+      "text": "Nevertheless, the effect of uterine factors on age-related infertility is uncertain in contrast to accumulating evidence showing the impact of ovarian aging on female fertility [61].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 10508,
+      "end": 10820,
+      "text": "The irrelevance of uterine aging to reproductive competence has been assisted by a report that when embryos are transferred using oocytes from a young donor, the rate of implantation is not affected by the age of the recipients, and the uterus of aged recipients is capable of supporting an early pregnancy [62].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 10821,
+      "end": 11136,
+      "text": "However, the results of studies on young oocyte and old uterine recipients are controversial in that the implantation rates are similar, regardless of the recipient’s age after in vitro fertilized embryos of equivalent quality are transferred; however, the rate of pregnancy loss increases in older recipients [63].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 11136,
+      "end": 11138,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S74",
+      "start": 11138,
+      "end": 11223,
+      "text": "The uterus is an aging organ required to support a developing fetus during pregnancy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 11224,
+      "end": 11473,
+      "text": "Aging of the uterus is associated with a decline in the sensitivity to hormones such as progesterone and endometrial receptivity with compromised uterine blood flow, with an increase in the occurrence of uterine fibroids and endometrial polyps [64].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 11474,
+      "end": 11632,
+      "text": "In addition, aging of the uterus downregulates the genes involved in cell proliferation in mice, indicating impaired proliferation in aged uterine cells [65].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 11633,
+      "end": 11871,
+      "text": "On the contrary, age-related upregulation of the immune and inflammatory response pathway has been observed in rat uterine horns [66], and inflammation and interferon-signaling pathways are activated in aged bovine endometrial cells [67].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 11872,
+      "end": 12047,
+      "text": "Furthermore, inadequate placentation, which occurs in aged uteruses, is concerning, with complications in late pregnancy such as miscarriage and fetal growth restriction [68].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 12048,
+      "end": 12236,
+      "text": "Increasing reports indicate that the competence of the uterus is influenced by aging, which could lead to infertility and reproductive complications, especially when considering pregnancy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 12236,
+      "end": 12240,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S81",
+      "start": 12240,
+      "end": 12241,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S82",
+      "start": 12241,
+      "end": 12245,
+      "text": "# 3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S83",
+      "start": 12246,
+      "end": 12536,
+      "text": "Oxidative Stress in Female Reproduction\n\nBiological ROS, including superoxide anions, hydroxyl radicals, peroxyl, alkoxyl, and hydroperoxyl, are produced by incomplete reduction of oxygen in the process of mitochondrial oxidative metabolism and cellular responses to exogenous sources [69].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 12537,
+      "end": 12719,
+      "text": "ROS are known as essential regulators that activate and modulate various signaling pathways, including those involved in cell growth, differentiation, metabolism, and apoptosis [70].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 12720,
+      "end": 12926,
+      "text": "Even though ROS plays a crucial role in human physiological and pathophysiological processes as signaling molecules, cellular damage, and dysfunction can be induced by ROS at immoderate concentrations [71].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 12926,
+      "end": 13050,
+      "text": "\n\nAny substance that substantially inhibits the oxidation of the oxidizable substrate can be defined as an antioxidant [72].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 13051,
+      "end": 13148,
+      "text": "In general, endogenous antioxidants are classified into enzymatic and non-enzymatic antioxidants.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 13149,
+      "end": 13395,
+      "text": "Superoxide dismutase (SOD), glutathione peroxidase (GPx), and catalase (CAT), all of which are enzymatic antioxidants, collectively function in the primary defense mechanism to neutralize free radicals and prevent their additional formation [73].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 13396,
+      "end": 13540,
+      "text": "In detail, SOD catalyzes superoxide anion dismutation to produce hydrogen peroxide and oxygen, and then CAT removes excessive hydrogen peroxide.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 13541,
+      "end": 13664,
+      "text": "Assisted by glutathione (GSH) as a co-substrate, GPx catalyzes the reduction of hydrogen peroxide to water and oxygen [74].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 13665,
+      "end": 13898,
+      "text": "Non-enzymatic antioxidants are involved in the primary defense against ROS but also act as a secondary defense by scavenging free radicals from the antioxidants, imparting from their electrons, resulting in harmless radicals [73,75].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 13899,
+      "end": 14061,
+      "text": "Glutathione is the most abundant non-enzymatic antioxidant synthesized in cells, which preserves cells from oxidative damage and maintains redox homeostasis [76].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 14062,
+      "end": 14201,
+      "text": "It is also engaged in the repair processes of protein molecules, nucleic acids, and lipids in cells damaged in peroxidation processes [77].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 14201,
+      "end": 14203,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S95",
+      "start": 14203,
+      "end": 14508,
+      "text": "Cells in a normal state have a defense system against oxidative stress, sustained by an appropriate balance between ROS and antioxidants; however, oxidative stress occurs when an excessive amount of ROS are produced or antioxidants’ defense capacity is weakened, finally resulting in their imbalance [78].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 14509,
+      "end": 14604,
+      "text": "Oxidative stress impairs essential cell signaling cascades, and it accumulates with aging [79].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 14605,
+      "end": 14814,
+      "text": "Reversely, the oxidative stress theory of aging has been proposed, stating that the age-associated loss of biological functions is due to the accumulation of oxidative damage to lipids, DNA, and proteins [80].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 14815,
+      "end": 14925,
+      "text": "However, besides aging, a variety of endogenous and exogenous factors together contribute to oxidative stress.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 14925,
+      "end": 14927,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S100",
+      "start": 14927,
+      "end": 14928,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S101",
+      "start": 14928,
+      "end": 14935,
+      "text": "## 3.1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S102",
+      "start": 14936,
+      "end": 15061,
+      "text": "Oxidative Stress in the Ovaries and Uterus\n\nBoth positive and negative effects are brought about by ROS in mammalian ovaries.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 15062,
+      "end": 15291,
+      "text": "ROS affects various physiological and pathological functions of the ovaries, such as ovarian steroid genesis, follicular growth, oocyte maturation, ovulation, fertilization, implantation, and luteal maintenance in pregnancy [74].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 15292,
+      "end": 15509,
+      "text": "In the ovaries, ROS generated during an inflammatory reaction from macrophages, leukocytes, and cytokines in the follicular fluid induce oocyte maturation and then follicle rupture, all required for ovulation [17,81].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 15510,
+      "end": 15743,
+      "text": "Therefore, ROS produced at an appropriate level by preovulatory follicles are critical inducers of ovulation processes, which is supported by a report that the inhibition of ROS using enzymatic antioxidants suppresses ovulation [82].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 15744,
+      "end": 15924,
+      "text": "However, excessive ROS leading to oxidative stress involves abnormalities in female reproduction, representing premature ovarian failure (POF) and polycystic ovary syndrome (PCOS).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 15925,
+      "end": 16184,
+      "text": "The early cessation of menstruation before the age of 40, known as POF, is associated with prematurely injured ovarian function due to impaired development or abnormal depletion of follicles as a result of accelerated apoptosis caused by high ROS levels [83].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 16185,
+      "end": 16330,
+      "text": "One of the most prevalent reproductive disorders, PCOS, is characterized by hyperandrogenism, ovulatory dysfunction, and polycystic ovaries [84].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 16331,
+      "end": 16561,
+      "text": "In contrast, a decline of total antioxidant levels and an elevation of oxidative stress in PCOS patients affect the abnormal formation of cysts and ovarian extracellular remodeling, which leads to anovulation and infertility [85].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 16561,
+      "end": 16563,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S111",
+      "start": 16563,
+      "end": 16676,
+      "text": "After ovulation, ROS are generated in the corpus luteum, which plays a major role in progesterone synthesis [86].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 16677,
+      "end": 16964,
+      "text": "In the endometrium, progesterone is essential for the development of the uterine environment in that it modulates growth factors, cytokines, proteins, and other hormones—the critical regulators of conceptus implantation, survival, growth, and, finally, the progression of pregnancy [87].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 16965,
+      "end": 17170,
+      "text": "Nevertheless, when ROS are produced excessively, oxidative damage to the corpus luteum impairs the generation of progesterone, which can be detrimental to embryo development and pregnancy maintenance [88].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 17170,
+      "end": 17493,
+      "text": "\n\nIn the uterus, responsible for proper ROS function levels in angiogenesis, regeneration of the endometrium during reproductive cycles, and continuance of pregnancy unless imbalanced, oxidative stress influences the structure and functions of the uterus, including endometrial shedding and prevention of implantation [89].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 17494,
+      "end": 17673,
+      "text": "During pregnancy, oxidative stress can lead to early pregnancy loss, as implantation of the embryo may be impeded, and normal immune functioning may be altered in the uterus [74].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 17674,
+      "end": 17917,
+      "text": "Oxidative stress from damaged antioxidant systems interrupts the decidualization of the endometrium, which is critical for successful implantation [90], and pre-eclampsia and endometriosis caused by endothelial cell dysfunction can occur [91].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 17918,
+      "end": 18067,
+      "text": "Pre-eclampsia, a hypertension disorder with maternal and neonatal mortality if seriously progressed, is also connected to abnormal placentation [92].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 18068,
+      "end": 18264,
+      "text": "The environment of the pregnant uterus influences placental development, and oxidative stress induced in the placenta is associated with intrauterine fetal growth restriction and miscarriage [93].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 18264,
+      "end": 18267,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S120",
+      "start": 18267,
+      "end": 18268,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S121",
+      "start": 18268,
+      "end": 18269,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S122",
+      "start": 18269,
+      "end": 18275,
+      "text": "# 3.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S123",
+      "start": 18276,
+      "end": 18550,
+      "text": "Oxidative Stress in the In Vitro Production of Embryos\n\nAn embryo is a rapidly developing organism with an energy demand, which is supplied by ATP produced through mitochondrial oxidative phosphorylation and glycolysis, leading to the continuous modulation of a redox state.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 18551,
+      "end": 18722,
+      "text": "In particular, in the developmental processes of an embryo, the generation of ROS surges at points of embryonic genome activation, embryonic compaction, and hatching [28].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 18723,
+      "end": 18845,
+      "text": "The balance of ROS and antioxidants is maintained at physiologically normal levels in in vivo female reproductive systems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 18846,
+      "end": 19033,
+      "text": "On the contrary, protection is lost when fertilization is attempted outside the reproductive system in in vitro circumstances, resulting in an increase in exposure to oxidative risk [94].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 19034,
+      "end": 19262,
+      "text": "During ART, numerous external factors generating oxidative stress are present from the technique of ART to environmental sources, such as oxygen concentration, temperature, visible light, pollutants, media, and supplements [28].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 19263,
+      "end": 19396,
+      "text": "Excessive levels of ROS have a deleterious impact on embryo quality and subsequently block or delay early embryonic development [95].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 19397,
+      "end": 19596,
+      "text": "In fact, an increase in ROS in embryos cultured under in vitro conditions can be connected to negative outcomes of ART, including embryo development and, lastly, pregnancies compared to in vivo [96].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 19596,
+      "end": 19881,
+      "text": "\n\nTo reduce oxidative stress during the in vitro production of embryos, the temperature of gametes and embryo incubation is recommended to be controlled as close to that of the in vivo state as possible, as an improper temperature could cause heat stress-induced oxidative damage [97].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 19882,
+      "end": 20087,
+      "text": "The oxygen concentration provided for embryo incubation is more appropriate at a reduced level (5%) than at an atmospheric level (20%) to prevent the generation of ROS and consequent oxidative stress [98].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 20088,
+      "end": 20390,
+      "text": "Among others, the application of antioxidants in procedures using ART can be an effective intervention to counteract oxidative damage to gametes and embryos, considering that the composition of culture media can directly affect the quality of in vitro-produced embryos and the success rate of ART [99].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 20391,
+      "end": 20575,
+      "text": "For this reason, a number of publications have demonstrated their findings with respect to the beneficial effects of antioxidant supplementation on the embryo culture medium (Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 20576,
+      "end": 20720,
+      "text": "In addition to the antioxidant compounds above, cytokines and growth factors can also be treated in the embryo culture medium [100,101,102,103].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 20720,
+      "end": 20724,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S136",
+      "start": 20724,
+      "end": 20729,
+      "text": "## 4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S137",
+      "start": 20730,
+      "end": 20752,
+      "text": "Mesenchymal Stem Cells",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 20752,
+      "end": 20910,
+      "text": "\n\nStem cells are defined as cells with the ability to self-renew and can differentiate into specialized cells with multilineages in a controlled manner [111].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 20911,
+      "end": 21006,
+      "text": "Stem cells are generally categorized into embryonic, adult, and induced pluripotent stem cells.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 21007,
+      "end": 21257,
+      "text": "Even though the biological and clinical importance of stem cells has been recognized for decades, limitations exist with respect to the ethical issues of embryonic stem cells and the risk of teratoma formation of induced pluripotent stem cells [112].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 21258,
+      "end": 21622,
+      "text": "Accordingly, adult MSCs, first named by their ability to differentiate into lineages of cells developed from mesoderm, have received attention in that MSCs are multipotent, highly accessible, and available in in vitro cultures with genomic stability, and are safe from ethical issues, all of which emphasize the importance of MSCs as a regenerative medicine [113].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 21623,
+      "end": 22044,
+      "text": "The International Society for Cellular Therapy clarified the standard for the characterization of MSCs as follows: (1) Plastic adherence and morphology resembling fibroblasts, (2) multipotential and multilineage differentiation ability, and (3) expression of specific phenotypic markers, including a cluster of differentiation (CD) 73, CD90, and CD 105 but not lineage-specific markers such as CD14, CD34, and CD45 [114].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 22045,
+      "end": 22388,
+      "text": "The treatment of MSCs is known to be effective on autoimmune, inflammatory, and degenerative diseases, with its therapeutic mechanisms including homing efficiency to the damaged target site, differentiation ability, availability of tissue-engineered manipulation, immunomodulation, and abundant production of paracrine signaling factors [112].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 22389,
+      "end": 22673,
+      "text": "Over the past few decades, research on MSCs has been actively developed, resulting in more than half a million publications, and their medical potential has been explored in approximately a thousand clinical trials registered with the United States Food and Drug Administration [115].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 22673,
+      "end": 23046,
+      "text": "\n\nPresent in most of the tissues in the body, MSCs have been isolated from multiple tissues such as bone marrow [116], skeletal muscle [117], umbilical blood [118], dental pulp [119], peripheral blood [120], synovium [121], adipose tissue [122], amniotic fluid [123], articular cartilage [124], placenta [125], lung [126], umbilical cord [127], and amniotic membrane [128].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 23047,
+      "end": 23204,
+      "text": "Among these, MSCs derived from bone marrow (BMSCs), and adipose tissue (ASCs) are the most representative and verified with their regenerative ability [129].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 23205,
+      "end": 23489,
+      "text": "Both BMSCs and ASCs possess the strong potential of in vitro differentiation into osteocytes, chondrocytes, adipocytes, hepatocytes, cardiomyocytes, pancreatic cells, and neuronal cells, but the differential differentiation capacities between them have only recently been found [130].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 23490,
+      "end": 23766,
+      "text": "Compared to BMSCs isolated by an invasive surgical procedure with a certain level of pain and danger, ASCs are isolated from subcutaneous liposuction with greater ease and less pain, and 100–500-fold more stem cells can be harvested from adipose tissue than bone marrow [131].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 23767,
+      "end": 24009,
+      "text": "It is widely considered that ASCs are effective regenerative medicine for the treatment of numerous symptoms, including pathological wound healing, refractory acute graft-versus-host disease, and hematologic and immunological disorders [132].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 24010,
+      "end": 24134,
+      "text": "Most of all, the prominent property of ASCs is their antioxidative effect on various diseases and species [133,134,135,136].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 24135,
+      "end": 24427,
+      "text": "Meanwhile, MSCs derived from the amniotic membrane (AMSCs) have emerged prospectively in the field of regenerative medicine due to their simple and abundant acquisition, reduced damage of donor, multipotency, low immune response, and the minimal ethical issue associated with their use [137].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 24428,
+      "end": 24715,
+      "text": "The amniotic membrane is a component of the placenta that protects the fetus during pregnancy, with its structure of thick collagen layers and function of nutrient supplementation, but it is generally discarded post-partum and infrequently utilized compared to other types of MSCs [138].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 24716,
+      "end": 24893,
+      "text": "To date, the amniotic membrane is a relatively new source of MSCs and has been identified as having anti-inflammatory, antiangiogenic, and anti-immunogenic properties [137,138].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 24894,
+      "end": 25158,
+      "text": "In addition, AMSCs have the capability of differentiating all three germ layers, including ectodermal lineage cells, mesodermal lineage cells, and endodermal lineage cells [139], reiterating their value as a recommendable candidate for novel regenerative medicine.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 25158,
+      "end": 25352,
+      "text": "\n\nIt has been demonstrated that the transplantation of MSCs attenuates oxidative stress in in vitro models by upregulating the expression of the antioxidant enzymes SOD, CAT, GPx, and GSH [140].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 25353,
+      "end": 25509,
+      "text": "In detail, MSCs efficiently manage oxidative stress-induced injury in vitro in neurons [141], renal cells [142], immune cells [143], islet cells [144], etc.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 25510,
+      "end": 26092,
+      "text": "Antioxidant effects have not only been reported in in vitro models; in MSC therapy, these effects have been reported through decreased oxidative stress markers and functional recovery in numerous disease models as follows: (1) Diabetic injury on the kidneys, retina, sensory neurons, brain, and bone formation; (2) chemotherapy- or radiation-induced injury on the lungs, gonads, aorta, and brain; (3) ischemic injury on the brain, heart, kidneys, and liver; (4) traumatic injury on the spine and testes, cognitive disorders, gastrointestinal inflammation, and septic injuries [145].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S158",
+      "start": 26093,
+      "end": 26219,
+      "text": "In particular, the transplantation of MSCs functions effectively in oxidative stress related to aging and female reproduction.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 26220,
+      "end": 26363,
+      "text": "Mouse BMSCs reduce lipid peroxidation and ameliorate oxidative stress in mitochondria in aged mice as a part of the antiaging mechanisms [146].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 26364,
+      "end": 26528,
+      "text": "Mouse AMSCs decrease oxidative stress by reducing ROS levels and activating antioxidants, consequently inhibiting DNA damage in a premature aging mouse model [147].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 26529,
+      "end": 26654,
+      "text": "In an aging-induced mouse model, mouse ASCs showed an antioxidative effect by regulating senescence-associated markers [148].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 26655,
+      "end": 26824,
+      "text": "Mouse fetal liver-derived MSCs protected the POF mouse model from oxidative damage, contributing to the restoration of ovarian function and follicular development [149].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 26825,
+      "end": 27042,
+      "text": "In the POF rat model, human umbilical cord-derived mesenchymal stem cells (UMSCs) restored ovarian function, connected with decreased autophagy-induced apoptosis and oxidative stress in theca-interstitial cells [150].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 27043,
+      "end": 27241,
+      "text": "Not only in chemically-induced POF models but ovarian function was recovered by placenta-derived MSCs in an ovariectomized rat model due to the reduction of oxidative stress-induced apoptosis [151].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 27242,
+      "end": 27633,
+      "text": "Most previous research has explored the effect of MSCs using direct transplantation, but the antioxidative effects of MSCs are also exerted in the paracrine method and, accordingly, the treatment of MSC-conditioned medium (CM) in recent years has resulted in the reduction of oxidative stress, suggesting the therapeutic effect of paracrine factors as an antioxidant defense mechanism [145].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 27633,
+      "end": 27636,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S167",
+      "start": 27636,
+      "end": 27637,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S168",
+      "start": 27637,
+      "end": 27641,
+      "text": "# 5.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S169",
+      "start": 27642,
+      "end": 27682,
+      "text": "Mesenchymal Stem Cell Conditioned Medium",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 27682,
+      "end": 27944,
+      "text": "\n\nA wide range of paracrine factors are secreted by MSCs, which are composed of an extracellular matrix, proteins involved in the adhesion process, enzymes and their activators and inhibitors, growth factors and binding proteins, cytokines, and chemokines [152].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 27945,
+      "end": 28148,
+      "text": "These MSC-derived secreted factors are referred to as secretomes, microvesicles, or exosomes and are contained in the medium in which the cells are cultured, which is called the conditioned medium [153].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 28149,
+      "end": 29348,
+      "text": "The presence of growth factors and other cytokines with regenerative effects in MSC-CM has been identified by protein detection analysis in various studies and are summarized by as follows: Vascular endothelial-derived growth factor, platelet-derived growth factor, epidermal growth factor, insulin like growth factor I and II, hepatocyte growth factor, fibroblast growth factor 2/basic fibroblast growth factor, keratinocyte growth factor/fibroblast growth factor 7, platelet-derived endothelial cell growth factor, heparin-binding epidermal growth factor, placenta growth factor, neural growth factor, and brain-derived neurotrophic factor; as inflammation-regulatory factors, TGF𝛽1, interleukin (IL)-10, IL-27, IL-17E, IL-13, IL-12p70, and IL-1 receptor antagonists, IL-8/CXCL-8, IL-9, and IL-1b; lastly, as other cytokines, leptin, angiogenin, granulocyte colony-stimulating factor (CSF), granulocyte macrophage CSF, macrophage CSF, fractalkine, monocyte chemotactic protein, serpin E-1, endostatin/collagen XVIII, UPA, thrombospondins 1 and 2, tissue inhibitor of metalloproteinase-1, IGF-binding protein stem cell-derived factor 1/CXCL-12, adrenomedullin, Dickkopf-1, and a few receptors [36].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 29348,
+      "end": 29350,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S174",
+      "start": 29350,
+      "end": 29747,
+      "text": "Comparable therapeutic effects of its original cells on various diseases have been shown by MSC-CM, including myocardial infarction [154], stroke [155], spinal cord injury [156], brain injury [157], acute and chronic wounds [158], liver injury [159], kidney injury [160], periodontal injury [161,162], bone defects [163], musculoskeletal damage [164] skin disease [165] and male infertility [166].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 29748,
+      "end": 29920,
+      "text": "Furthermore, clinical improvements from MSC-CM treatment have recently been reported in hair regeneration [167], inflammatory arthritis [168], and multiple sclerosis [169].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 29921,
+      "end": 30074,
+      "text": "Above all therapeutic properties, accumulating studies have demonstrated the antioxidative effect of MSC-CM on in vitro and in vivo disease models [145].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 30075,
+      "end": 30209,
+      "text": "Antioxidative ability has been displayed in MSC-CM from various types of MSCs, regardless of intra- or inter-specific treatment [145].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 30209,
+      "end": 30211,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S179",
+      "start": 30211,
+      "end": 30547,
+      "text": "Especially in studies on reproduction, MSC-CM improves reproductive outcomes and exerts its antioxidative effects as follows: Human ASC-CM administered intravenously also improves mouse embryo development and implantation by increasing expression levels of antioxidant genes in reproductive organs against age-related infertility [170].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 30548,
+      "end": 30776,
+      "text": "Not only can it be used as an in vivo treatment, but human ASC-CM can be employed as a supplement during in vitro culture, promoting mouse embryo developmental competence and reducing oxidative stress in developed embryos [171].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 30777,
+      "end": 31010,
+      "text": "Along with ASC-CM, mouse preimplantation embryo development is enhanced, and intracellular oxidative stress is inhibited as the culture conditions improve after supplementation with human AMSC-CM as an antioxidant intervention [172].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 31011,
+      "end": 31193,
+      "text": "The CM of human UCMSCs treated in in vitro maturation media increases the maturation and development of human oocytes, which shows promoted antioxidant gene expression as well [173].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 31194,
+      "end": 31429,
+      "text": "Furthermore, intraperitoneal injection of human UCMSC-CM can alleviate follicle depletion against ovarian injury and upregulate gene expression, which suppresses oxidative stress-induced cell apoptosis in granulosa cells in mice [174].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 31430,
+      "end": 31606,
+      "text": "Human UCMSC-CM injected peritoneally into a POF mouse model also protected injured ovaries and restored ovarian reserve by attenuating oxidative stress-induced apoptosis [174].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S185",
+      "start": 31607,
+      "end": 31887,
+      "text": "In addition to ovarian damage, mouse BMSC-CM supplemented during in vitro maturation (IVM) of oocytes from an endometriosis mouse model has been shown to enhance oocyte maturation and oxidative defense from nitric oxide, consequently improving fertilized embryo development [175].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S186",
+      "start": 31888,
+      "end": 32123,
+      "text": "The effect of MSC-CM is not restricted to humans and mice in that the treatment of equine amniotic fluid MSC-CM in porcine oocyte IVM media upregulates antioxidant enzymes in a culture environment and supports embryo development [176].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 32123,
+      "end": 32463,
+      "text": "\n\nPromising potential has been shown by MSC-CM without the original cell from which it is derived, with reliability and reproducibility as a cell-free therapeutic, in that it can be easily manufactured, freeze-dried, packaged, and transported and does not need to match the donor and the recipient to avoid immune rejection [36] (Figure 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 32464,
+      "end": 32709,
+      "text": "In addition, compared to stem cells, MSC-CM possesses distinctive advantages with a lower production time and cost, a higher shelf life, controlled environmental conditions for application, and a sensitive storage method not being required [34].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 32710,
+      "end": 32875,
+      "text": "Of note is that MSC-CM can be harvested from various types of cells and different culture conditions, which may regulate the level and function of secretory factors.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 32876,
+      "end": 33038,
+      "text": "Evaluation of MSC-CM from different sources has been conducted, demonstrating differences in the composition and subsequent effects [177,178,179,180,181,182,183].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 33039,
+      "end": 33184,
+      "text": "For example, comparing CM from human ASCs and placental stem cells, the antiaging index improved more significantly after ASC-CM treatment [184].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 33185,
+      "end": 33342,
+      "text": "In the field of assisted reproduction, human AMSC-CM is more effective than ASC-CM in supporting antioxidative conditions for mouse embryo development [172].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 33343,
+      "end": 33541,
+      "text": "Interestingly, one study indicated that although human ASC-CM and BMSC-CM showed similar protective effects in rat hypoxia-induced injury, their action mechanisms were significantly different [185].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 33542,
+      "end": 33734,
+      "text": "Even in the same type of cells, the level of growth factors can vary depending on culture conditions, number of cells, and concentration process used in the making of the MSC-CM [186,187,188].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 33735,
+      "end": 33837,
+      "text": "Basal culture media could be one of the representative variables for the culture conditions of MSC-CM.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 33838,
+      "end": 34176,
+      "text": "It has been demonstrated that human ASC-CM based on Dulbecco′s modified Eagle′s medium is more antioxidative and antiapoptotic for mouse preimplantation embryo development than keratinocyte serum-free medium [171], which indicates that the basal medium used for MSC-CM collection can be a critical determinant of the capability of MSC-CM.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 34177,
+      "end": 34308,
+      "text": "As well as the production of MSC-CM, the treatment method of MSC-CM should be effectively considered to optimize its effectiveness.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 34309,
+      "end": 34481,
+      "text": "One study evaluated the efficacy of mouse ASC-CM in diabetic mice injected intravenously or intraperitoneally, which was more beneficial than systemic administration [189].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 34482,
+      "end": 34665,
+      "text": "In addition, regarding the frequency of treatment, a higher frequency of human ASC-CM injections for aged female mice is more effective for embryo development and antioxidation [170].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 34666,
+      "end": 34859,
+      "text": "Comprehensively, variables, including cell sources and protocols for production and application, need to be validated for the optimal effect of MSC-CM according to the purpose of its treatment.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 34859,
+      "end": 35063,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> Representative advantages of mesenchymal stem cell conditioned medium, which contains secreted factors from source stem cells.</figcaption>\n</figure>\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 35063,
+      "end": 35064,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S203",
+      "start": 35064,
+      "end": 35065,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S204",
+      "start": 35066,
+      "end": 35067,
+      "text": "6",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S205",
+      "start": 35067,
+      "end": 35068,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S206",
+      "start": 35069,
+      "end": 35264,
+      "text": "Conclusions\n\nThe decreased defense capacity of antioxidants, which occurs concurrently with aging, results in a loss of normal functions of the female reproductive system due to oxidative damage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 35265,
+      "end": 35403,
+      "text": "Accordingly, assisted reproductive techniques need to be developed to solve infertility caused by reproductive aging and oxidative stress.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 35404,
+      "end": 35545,
+      "text": "The application of MSCs, including ASCs and AMSCs, in regenerative therapy, has been widely verified, with their strong antioxidant capacity.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 35546,
+      "end": 35821,
+      "text": "In addition to conventional cell therapy, the therapeutic and antioxidative efficacy of MSC-CM has been successfully reported to be as effective as the method of directly using the cells from which CM is derived, depending on the conditions of its production and application.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 35822,
+      "end": 36007,
+      "text": "In conclusion, further development of MSC-CM as a promising antioxidant is highly expected to improve assisted reproduction research, with its optimal treatment methods being confirmed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 36007,
+      "end": 36010,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=The recent tendency to delay pregnancy | pred=increase | obj=the incidence of age-related infertility | unit=S2\nB T4 B2 | sub=a lowered capacity of antioxidant defense | pred=cause | obj=Along with aging | unit=S3\nB T4 B3 | sub=advancements | pred=make | obj=in assisted reproduction | unit=S4\nB T4 B4 | sub=The application of mesenchymal stem cells | pred=validate | obj=as a regenerative therapy | unit=S5\nB T4 B5 | sub=we | pred=summarize | obj=In this review | unit=S6\nB T4 B6 | sub=normal functioning of the ovaries | pred=essential | obj=For the success of reproduction | unit=S10\nB T4 B7 | sub=oocytes | pred=mature | obj=from a healthy ovary | unit=S11\nB T4 B8 | sub=the oocytes | pred=inseminate | obj=with sperm | unit=S12\nB T4 B9 | sub=developed embryos | pred=implant | obj=uterine | unit=S13\nB T4 B10 | sub=aging | pred=lead | obj=to various abnormal phenotypes and dysfunctions | unit=S14\nB T4 B11 | sub=Age-related infertility | pred=decrease | obj=the success rate of assisted reproduction, | unit=S15\nB T4 B12 | sub=Reactive oxygen species (ROS | pred=regulator | obj=of various cellular processes | unit=S17\nB T4 B13 | sub=the antioxidant defense | pred=fail | obj=healthy | unit=S18\nB T4 B14 | sub=Oxidative stress | pred=lead | obj=to mitochondrial damage [9], protein oxidation | unit=S19\nB T4 B15 | sub=the incidence of oxidative damage | pred=increase | obj=with aging | unit=S20\nB T4 B16 | sub=It | pred=acknowledge | obj=that oxidative stress brings detrimental consequences | unit=S21\nB T4 B17 | sub=oxidative stress | pred=restrict | obj=In the ovaries | unit=S22\nB T4 B18 | sub=implantation | pred=prevent | obj=In the uterus | unit=S23\nB T4 B19 | sub=Oxidative damage to the oocytes | pred=cause | obj=DNA fragmentation, mitochondrial dysfunction, aneuploidy, and, | unit=S24\nB T4 B20 | sub=oxidative stress | pred=cause | obj=their apoptosis [25 | unit=S25\nB T4 B21 | sub=oxidative stress on embryos developed in | pred=cause | obj=In general | unit=S26\nB T4 B22 | sub=There | pred=be | obj=additional | unit=S27\nB T4 B23 | sub=these challenging circumstances, associated with numerous | pred=drive | obj=the need to evolve the efficient | unit=S28\nB T4 B24 | sub=stress | pred=organ | obj=oocytes | unit=S29\nB T4 B25 | sub=Mesenchymal stem cells (MSCs | pred=obtain | obj=from various sources | unit=S31\nB T4 B26 | sub=the potential of MSCs to alleviate | pred=receive | obj=In particular | unit=S32\nB T4 B27 | sub=Stem cell conditioned medium (CM | pred=develop | obj=following the direct administration of stem | unit=S33\nB T4 B28 | sub=MSC-CM | pred=consider | obj=more advantageous in terms of safety | unit=S34\nB T4 B29 | sub=The therapeutic effect of CM | pred=know | obj=to be comparable to stem cells | unit=S35\nB T4 B30 | sub=The purpose of this review | pred=be | obj=to summarize the impact of aging | unit=S36\nB T4 B31 | sub=Aging | pred=define | obj=as the age-related deterioration of the | unit=S40\nB T4 B32 | sub=female reproductive competence | pred=decrease | obj=In particular | unit=S41\nB T4 B33 | sub=Women of advanced maternal age (AMA) | pred=have | obj=a risk of adverse obstetric outcomes | unit=S42\nB T4 B34 | sub=an increasing number of women attempting | pred=experience | obj=Due to the general tendencies stated | unit=S43\nB T4 B35 | sub=the condition of the ovaries and | pred=consider | obj=order | unit=S44\nB T4 B36 | sub=Aging of the Ovaries | pred=affect | obj=by aging among the types of | unit=S49\nB T4 B37 | sub=The general definition of physiologic ovarian | pred=decline | obj=of the functional ovarian reserve | unit=S50\nB T4 B38 | sub=Primordial follicles | pred=form | obj=during fetal life | unit=S51\nB T4 B39 | sub=Follicular atresia | pred=occur | obj=until reproductive senescence | unit=S52\nB T4 B40 | sub=The decrease in follicles with aging | pred=give | obj=rise | unit=S53\nB T4 B41 | sub=Increased levels of FSH | pred=result | obj=in the maturation of granulosa cells | unit=S54\nB T4 B42 | sub=inhibin-B | pred=recognize | obj=In addition to FSH | unit=S55\nB T4 B43 | sub=article text | pred=deteriorate | obj=along with a gradual decrease in | unit=S56\nB T4 B44 | sub=Genetic defects in aged oocytes, which | pred=reveal | obj=Deletion | unit=S57\nB T4 B45 | sub=old oocytes | pred=exhibit | obj=mitochondrial dysfunction that results in abnormal | unit=S58\nB T4 B46 | sub=the high incidence of aneuploidy, which | pred=find | obj=In particular | unit=S59\nB T4 B47 | sub=The activity of telomerase | pred=decrease | obj=with aging | unit=S60\nB T4 B48 | sub=the production of ROS | pred=increase | obj=Regarding the microenvironment | unit=S61\nB T4 B49 | sub=The correlation between oxidative stress | pred=associate | obj=with abnormal mitochondrial functions and mutations | unit=S62\nB T4 B50 | sub=mitochondrial antioxidant gene expression | pred=diminish | obj=In fact | unit=S63\nB T4 B51 | sub=This is not only | pred=true | obj=of mitochondria | unit=S64\nB T4 B52 | sub=ovarian aging | pred=characterize | obj=In summary | unit=S65\nB T4 B53 | sub=Aging of the Uterus | pred=organ | obj=that | unit=S69\nB T4 B54 | sub=the effect of uterine factors on | pred=uncertain | obj=in contrast to accumulating evidence showing | unit=S70\nB T4 B55 | sub=The irrelevance of uterine aging to | pred=assist | obj=by a report that when embryos | unit=S71\nB T4 B56 | sub=the results of studies on young | pred=controversial | obj=implantation | unit=S72\nB T4 B57 | sub=The uterus | pred=organ | obj=fetus | unit=S74\nB T4 B58 | sub=Aging of the uterus | pred=associate | obj=with a decline in the sensitivity | unit=S75\nB T4 B59 | sub=aging of the uterus | pred=downregulate | obj=In addition | unit=S76\nB T4 B60 | sub=age-related upregulation of the immune and | pred=observe | obj=On the contrary | unit=S77\nB T4 B61 | sub=inadequate placentation, which occurs in aged | pred=concern | obj=with complications in late pregnancy such | unit=S78\nB T4 B62 | sub=Increasing reports | pred=indicate | obj=that the competence of the uterus | unit=S79\nB T4 B63 | sub=Oxidative Stress in Female Reproduction | pred=produce | obj=by incomplete reduction of oxygen | unit=S83\nB T4 B64 | sub=ROS | pred=know | obj=as essential regulators that activate and | unit=S84\nB T4 B65 | sub=ROS | pred=play | obj=a crucial role | unit=S85\nB T4 B66 | sub=Any substance that substantially inhibits the | pred=define | obj=as an antioxidant | unit=S86\nB T4 B67 | sub=endogenous antioxidants | pred=classify | obj=In general | unit=S87\nB T4 B68 | sub=Superoxide dismutase (SOD), glutathione peroxidase (GPx), | pred=function | obj=in the primary defense mechanism | unit=S88\nB T4 B69 | sub=SOD | pred=catalyze | obj=In detail | unit=S89\nB T4 B70 | sub=GPx | pred=catalyze | obj=the reduction of hydrogen peroxide to | unit=S90\nB T4 B71 | sub=Non-enzymatic antioxidants | pred=involve | obj=in the primary defense against ROS | unit=S91\nB T4 B72 | sub=Glutathione | pred=antioxidant | obj=cells | unit=S92\nB T4 B73 | sub=It | pred=engage | obj=in the repair processes of protein | unit=S93\nB T4 B74 | sub=Cells in a normal state | pred=have | obj=a defense system | unit=S95\nB T4 B75 | sub=Oxidative stress | pred=impair | obj=essential cell signaling cascades | unit=S96\nB T4 B76 | sub=the oxidative stress theory of aging | pred=propose | obj=stating that the age-associated loss of | unit=S97\nB T4 B77 | sub=a variety of endogenous and exogenous | pred=contribute | obj=besides aging | unit=S98\nB T4 B78 | sub=Oxidative Stress in the Ovaries | pred=bring | obj=by ROS | unit=S102\nB T4 B79 | sub=ROS | pred=affect | obj=various physiological and pathological functions of | unit=S103\nB T4 B80 | sub=ROS generated during an inflammatory reaction | pred=induce | obj=In the ovaries | unit=S104\nB T4 B81 | sub=ROS produced at an appropriate level | pred=inducer | obj=of ovulation processes | unit=S105\nB T4 B82 | sub=excessive ROS leading to oxidative stress | pred=involve | obj=abnormalities in female reproduction | unit=S106\nB T4 B83 | sub=The early cessation of menstruation before | pred=associate | obj=with prematurely injured ovarian function | unit=S107\nB T4 B84 | sub=One of the most prevalent reproductive | pred=characterize | obj=by hyperandrogenism | unit=S108\nB T4 B85 | sub=a decline of total antioxidant levels | pred=affect | obj=In contrast | unit=S109\nB T4 B86 | sub=ROS | pred=generate | obj=After ovulation | unit=S111\nB T4 B87 | sub=progesterone | pred=essential | obj=In the endometrium | unit=S112\nB T4 B88 | sub=oxidative damage to the corpus luteum | pred=impair | obj=the generation of progesterone | unit=S113\nB T4 B89 | sub=oxidative stress | pred=influence | obj=In the uterus, responsible for proper | unit=S114\nB T4 B90 | sub=oxidative stress | pred=lead | obj=During pregnancy | unit=S115\nB T4 B91 | sub=Oxidative stress from damaged antioxidant systems | pred=interrupt | obj=the decidualization of the endometrium, which | unit=S116\nB T4 B92 | sub=Pre-eclampsia, a hypertension disorder with maternal | pred=connect | obj=to abnormal placentation | unit=S117\nB T4 B93 | sub=The environment of the pregnant uterus | pred=influence | obj=placental development | unit=S118\nB T4 B94 | sub=article text | pred=stress | obj=in the In Vitro Production of | unit=S123\nB T4 B95 | sub=the generation of ROS | pred=surge | obj=In particular | unit=S124\nB T4 B96 | sub=The balance of ROS | pred=maintain | obj=at physiologically normal levels | unit=S125\nB T4 B97 | sub=protection | pred=lose | obj=On the contrary | unit=S126\nB T4 B98 | sub=numerous external factors generating oxidative stress | pred=present | obj=During ART | unit=S127\nB T4 B99 | sub=Excessive levels of ROS | pred=have | obj=a deleterious impact | unit=S128\nB T4 B100 | sub=an increase in ROS in embryos | pred=connect | obj=In fact | unit=S129\nB T4 B101 | sub=the temperature of gametes | pred=recommend | obj=to be controlled as close to | unit=S130\nB T4 B102 | sub=The oxygen concentration provided for embryo | pred=appropriate | obj=at a reduced level (5% | unit=S131\nB T4 B103 | sub=the application of antioxidants in procedures | pred=intervention | obj=Among others | unit=S132\nB T4 B104 | sub=a number of publications | pred=demonstrate | obj=For this reason | unit=S133\nB T4 B105 | sub=cytokines | pred=treat | obj=In addition | unit=S134\nB T4 B106 | sub=Stem | pred=cell | obj=Mesenchymal Stem Cells | unit=S137\nB T4 B107 | sub=Stem cells | pred=define | obj=as cells with the ability to | unit=S138\nB T4 B108 | sub=Stem cells | pred=categorize | obj=into embryonic | unit=S139\nB T4 B109 | sub=limitations | pred=exist | obj=with respect to the ethical issues | unit=S140\nB T4 B110 | sub=adult MSCs, first named by their | pred=receive | obj=attention | unit=S141\nB T4 B111 | sub=The International Society for Cellular Therapy | pred=clarify | obj=the standard for the characterization of | unit=S142\nB T4 B112 | sub=The treatment of MSCs | pred=know | obj=to be effective on autoimmune, inflammatory, | unit=S143\nB T4 B113 | sub=research on MSCs | pred=develop | obj=Over the past few decades | unit=S144\nB T4 B114 | sub=MSCs | pred=isolate | obj=from multiple tissues such as bone | unit=S145\nB T4 B115 | sub=MSCs derived from bone marrow (BMSCs | pred=representative | obj=Among these | unit=S146\nB T4 B116 | sub=Both BMSCs | pred=possess | obj=the strong potential of in vitro | unit=S147\nB T4 B117 | sub=ASCs | pred=isolate | obj=Compared to BMSCs isolated by an | unit=S148\nB T4 B118 | sub=It | pred=consider | obj=that ASCs are effective regenerative medicine | unit=S149\nB T4 B119 | sub=the prominent property of ASCs | pred=effect | obj=on various diseases | unit=S150\nB T4 B120 | sub=MSCs derived from the amniotic membrane | pred=emerge | obj=in the field of regenerative medicine | unit=S151\nB T4 B121 | sub=The amniotic membrane | pred=component | obj=of the placenta | unit=S152\nB T4 B122 | sub=the amniotic membrane | pred=source | obj=To date | unit=S153\nB T4 B123 | sub=AMSCs | pred=have | obj=In addition | unit=S154\nB T4 B124 | sub=article text | pred=demonstrate | obj=that the transplantation of MSCs attenuates | unit=S155\nB T4 B125 | sub=MSCs | pred=manage | obj=In detail | unit=S156\nB T4 B126 | sub=Antioxidant effects | pred=report | obj=in in vitro models | unit=S157\nB T4 B127 | sub=the transplantation of MSCs | pred=function | obj=In particular | unit=S158\nB T4 B128 | sub=Mouse BMSCs | pred=reduce | obj=lipid peroxidation | unit=S159\nB T4 B129 | sub=Mouse AMSCs | pred=decrease | obj=oxidative stress | unit=S160\nB T4 B130 | sub=mouse ASCs | pred=show | obj=In an aging-induced mouse model | unit=S161\nB T4 B131 | sub=Mouse fetal liver-derived MSCs | pred=protect | obj=the POF mouse model | unit=S162\nB T4 B132 | sub=human umbilical cord-derived mesenchymal stem cells | pred=restore | obj=In the POF rat model | unit=S163\nB T4 B133 | sub=POF | pred=model | obj=ovarian | unit=S164\nB T4 B134 | sub=Most previous research | pred=explore | obj=the effect of MSCs | unit=S165\nB T4 B135 | sub=Cell | pred=medium | obj=Mesenchymal Stem Cell Conditioned Medium | unit=S169\nB T4 B136 | sub=A wide range of paracrine factors | pred=secrete | obj=by MSCs, which are composed of | unit=S170\nB T4 B137 | sub=These MSC-derived secreted factors | pred=refer | obj=to | unit=S171\nB T4 B138 | sub=The presence of growth factors and | pred=identify | obj=by protein detection analysis | unit=S172\nB T4 B139 | sub=Comparable therapeutic effects of its original | pred=show | obj=by MSC-CM, including myocardial infarction [154], | unit=S174\nB T4 B140 | sub=clinical improvements from MSC-CM treatment | pred=report | obj=in hair regeneration [167 | unit=S175\nB T4 B141 | sub=accumulating studies | pred=demonstrate | obj=Above all therapeutic properties | unit=S176\nB T4 B142 | sub=Antioxidative ability | pred=display | obj=in MSC-CM from various types of | unit=S177\nB T4 B143 | sub=MSC-CM | pred=improve | obj=Especially in studies on reproduction | unit=S179\nB T4 B144 | sub=Not only | pred=use | obj=as an in vivo treatment | unit=S180\nB T4 B145 | sub=mouse preimplantation embryo development | pred=enhance | obj=Along with ASC-CM | unit=S181\nB T4 B146 | sub=The CM of human UCMSCs treated | pred=increase | obj=the maturation and development of human | unit=S182\nB T4 B147 | sub=intraperitoneal injection of human UCMSC-CM | pred=alleviate | obj=follicle depletion against ovarian injury | unit=S183\nB T4 B148 | sub=Human UCMSC-CM injected peritoneally into a | pred=protect | obj=injured ovaries | unit=S184\nB T4 B149 | sub=mouse BMSC-CM supplemented during in vitro | pred=show | obj=In addition to ovarian damage | unit=S185\nB T4 B150 | sub=The effect of MSC-CM | pred=restricted | obj=to humans | unit=S186\nB T4 B151 | sub=Promising potential | pred=show | obj=by MSC-CM | unit=S187\nB T4 B152 | sub=MSC-CM | pred=possess | obj=In addition | unit=S188\nB T4 B153 | sub=note | pred=be | obj=Of note | unit=S189\nB T4 B154 | sub=Evaluation of MSC-CM from different sources | pred=conduct | obj=demonstrating differences in the composition | unit=S190\nB T4 B155 | sub=the antiaging index | pred=improve | obj=For example | unit=S191\nB T4 B156 | sub=human AMSC-CM | pred=effective | obj=In the field of assisted reproduction | unit=S192\nB T4 B157 | sub=one study | pred=indicate | obj=that although human ASC-CM and BMSC-CM | unit=S193\nB T4 B158 | sub=the level of growth factors | pred=vary | obj=Even in the same type of | unit=S194\nB T4 B159 | sub=Basal culture media | pred=one | obj=of the representative variables for the | unit=S195\nB T4 B160 | sub=It | pred=demonstrate | obj=that human ASC-CM based on Dulbecco′s | unit=S196\nB T4 B161 | sub=the treatment method of MSC-CM | pred=consider | obj=As well as the production of | unit=S197\nB T4 B162 | sub=One study | pred=evaluate | obj=the efficacy of mouse ASC-CM in | unit=S198\nB T4 B163 | sub=a higher frequency of human ASC-CM | pred=effective | obj=In addition | unit=S199\nB T4 B164 | sub=variables, including cell sources and protocols | pred=need | obj=to be validated for the optimal | unit=S200\nB T4 B165 | sub=Figure | pred=advantage | obj=of mesenchymal stem cell conditioned medium, | unit=S201\nB T4 B166 | sub=article text | pred=conclusion | obj=defense | unit=S206\nB T4 B167 | sub=assisted reproductive techniques | pred=need | obj=to be developed to solve infertility | unit=S207\nB T4 B168 | sub=The application of MSCs, including ASCs | pred=verify | obj=with their strong antioxidant capacity | unit=S208\nB T4 B169 | sub=the therapeutic and antioxidative efficacy of | pred=report | obj=In addition to conventional cell therapy | unit=S209\nB T4 B170 | sub=further development of MSC-CM as a | pred=expect | obj=In conclusion | unit=S210",
+  "expected": {
+    "assertion_count": 170,
+    "minimum_concept_count": 306,
+    "minimum_structural_row_count": 699,
+    "minimum_knowledge_map_node_count": 699,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

@@ -17,6 +17,10 @@ RUN for i in 1 2 3; do \
 
 # 2) Копируем shared-пакет observability (нужен для path-зависимости poetry)
 COPY --from=shared ./observability ../shared/observability
+COPY --from=shared ./knowledge ../shared/knowledge
+COPY --from=shared ./model_registry ../shared/model_registry
+COPY --from=core ./pipeline ../knowledge_map_core/pipeline
+COPY --from=config ./config/models.toml ./config/models.toml
 
 # 3) Копируем pyproject и lock-файл
 COPY pyproject.toml poetry.lock* ./
@@ -60,6 +64,7 @@ RUN sed -i "s/^import layout_pb2 as layout__pb2$/from . import layout_pb2 as lay
 
 # 9) Открываем порт
 EXPOSE 8000
+ENV PYTHONPATH=/shared/model_registry
 
 # 10) Команда запуска
 CMD ["python", "-m", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -43,7 +43,7 @@ class AIModelClient:
         Generate text using the AI model.
 
         Args:
-            model_id: Model identifier (e.g., "qwen/qwen3-4b")
+            model_id: Model profile or model identifier from the shared registry
             prompt: Input prompt for text generation
             max_tokens: Maximum number of tokens to generate
             temperature: Sampling temperature (0.0 to 2.0)

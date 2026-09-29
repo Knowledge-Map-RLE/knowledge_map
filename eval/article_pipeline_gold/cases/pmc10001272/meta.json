@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10001272",
+  "document_uid": "PMC10001272",
+  "article_title": "Managing Mortality and Aging Risks with a Time-Varying Lee–Carter Model",
+  "doi": "10.3390/healthcare11050743",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10001272/PMC10001272.md"
+  },
+  "article_sha256": "f4461b9485851625047b3beec7282cd56d367fab9d5409f814f85725605598d1",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

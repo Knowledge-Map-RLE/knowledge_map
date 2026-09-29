@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type ArticleEditorTab = 'editor' | 'graph' | 'patterns' | 'chat';
+export type ArticleEditorTab = 'editor' | 'text' | 'graph' | 'patterns' | 'pipeline' | 'chat';
 
 export type BlockType = 'sentence' | 'image' | 'table' | 'separator' | 'code' | 'formula' | 'paragraph';
 
@@ -100,6 +100,7 @@ export interface BlockTypeDef {
 export type BlockDataValue = string | boolean | number | Record<string, string> | null;
 
 export interface ArticleBlockData {
+    schemaVersion?: number;
     instanceId: string;
     blockType: string;
     data: Record<string, BlockDataValue>;
@@ -114,7 +115,7 @@ export interface DerivedTriplet {
     object_text: string;
     sourceBlockId: string;
     sourceBlockType: string;
-    type: 'FACT' | 'META';
+    type: 'FACT' | 'META' | 'EXTRACTED';
     subject_type: 'concept' | 'statement';
     object_type: 'concept' | 'statement' | 'literal';
     confidence: number;

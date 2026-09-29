@@ -117,6 +117,14 @@ async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONR
     а не реальный статус 500. Регистрация handler для Exception гарантирует,
     что ответ формируется внутри ExceptionMiddleware и проходит через CORS middleware.
     """
+    msg = str(exc)
+    if "state is ERROR" in msg or "Can't send data" in msg:
+        logging.getLogger(__name__).debug(
+            "Транспортная ошибка (клиент отключился): %s %s — %s",
+            request.method, request.url.path, exc.__class__.__name__,
+        )
+        return JSONResponse(status_code=499, content={"detail": "Client disconnected"})
+
     logging.getLogger(__name__).exception(
         "Необработанное исключение: %s %s", request.method, request.url.path
     )

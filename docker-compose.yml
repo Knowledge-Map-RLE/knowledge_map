@@ -90,6 +90,8 @@ services:
       dockerfile: Dockerfile
       additional_contexts:
         shared: ./shared
+        core: ./knowledge_map_core
+        config: .
     container_name: knowledge_map_api
     restart: unless-stopped
     ports:
@@ -104,8 +106,12 @@ services:
       - AUTH_SERVICE_PORT=50057
       - AI_MODEL_SERVICE_HOST=ai
       - AI_MODEL_SERVICE_PORT=50059
-      - AI_UI_MODEL=${AI_UI_MODEL:-deepseek-ai/DeepSeek-V4-Flash}
-      - LLM_EXTRACT_MODEL=${LLM_EXTRACT_MODEL:-deepseek-ai/DeepSeek-V4-Flash}
+      - MODEL_CONFIG_PATH=/app/config/models.toml
+      - MODEL_PROFILE=${MODEL_PROFILE:-}
+      - AI_UI_PROFILE=${AI_UI_PROFILE:-}
+      - LLM_EXTRACT_PROFILE=${LLM_EXTRACT_PROFILE:-}
+      - LLM_CONTEXT_LENGTH=${LLM_CONTEXT_LENGTH:-1050000}
+      - LLM_MAX_TOKENS=${LLM_MAX_TOKENS:-128000}
       - CLOUDRU_BASE_INPUT_PRICE=${CLOUDRU_BASE_INPUT_PRICE:-0.00001853}
       - CLOUDRU_BASE_OUTPUT_PRICE=${CLOUDRU_BASE_OUTPUT_PRICE:-0.00003708}
       - NLP_SERVICE_HOST=nlp
@@ -162,6 +168,7 @@ services:
       dockerfile: Dockerfile
       additional_contexts:
         shared: ./shared
+        config: .
     container_name: knowledge_map_billing
     restart: unless-stopped
     ports:
@@ -204,6 +211,7 @@ services:
       dockerfile: Dockerfile
       additional_contexts:
         shared: ./shared
+        config: .
     container_name: knowledge_map_ai
     restart: unless-stopped
     ports:
@@ -212,8 +220,12 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-production}
       - AI_HOST=0.0.0.0
       - AI_PORT=50059
-      - DEFAULT_PROVIDER=${AI_DEFAULT_PROVIDER:-cloudru}
-      - DEFAULT_MODEL=${AI_DEFAULT_MODEL:-deepseek-ai/DeepSeek-V4-Flash}
+      - MODEL_CONFIG_PATH=/app/config/models.toml
+      - MODEL_PROFILE=${MODEL_PROFILE:-}
+      - AI_BASE_URL=${AI_BASE_URL:-http://127.0.0.1:1234/v1}
+      - AI_REQUEST_TIMEOUT=3600
+      - AI_CONTEXT_LENGTH=${AI_CONTEXT_LENGTH:-1050000}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - CLOUDRU_API_KEY=${CLOUDRU_API_KEY:-}
       - CLOUDRU_MODEL=${CLOUDRU_MODEL:-deepseek-ai/DeepSeek-V4-Flash}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}

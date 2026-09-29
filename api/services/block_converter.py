@@ -844,6 +844,11 @@ def blocks_to_statements(
     ``existing_statements`` — сохранённые стейтменты статьи (с полем ``id``),
     для сохранения стабильных id при повторных конвертациях.
     """
+    if any(b.get("schemaVersion") == 2 for b in blocks):
+        if not all(b.get("schemaVersion") == 2 for b in blocks):
+            raise ValueError("Mixed structural schema versions")
+        from knowledge_pipeline.compat import statements
+        return statements(list(blocks), resolve_refs=resolve_refs)
     id_map: Dict[str, List[str]] = {}
     if existing_statements:
         for stmt in existing_statements:

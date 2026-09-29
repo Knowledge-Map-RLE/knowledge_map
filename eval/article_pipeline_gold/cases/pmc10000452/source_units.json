@@ -1,0 +1,1252 @@
+{
+  "schema_version": 1,
+  "article_id": "live-eval-PMC10000452",
+  "source_revision_id": "1f906f05-0758-5da9-adc2-44fc354a0889",
+  "source_sha256": "3e00cc1e8c49266a91f86c65a342ef3b7620a02f4851a8b97acdbe8b51d5e158",
+  "source_text_length": 34966,
+  "coordinate_space": "pipeline_source_after_reference_stripping",
+  "offset_encoding": "unicode_codepoints",
+  "references_removed": {
+    "start_char": 34969,
+    "heading": "## References",
+    "removed_chars": 12126
+  },
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 388,
+      "text": "# Cretan Aging Cohort-Phase III: Methodology and Descriptive Characteristics of a Long-Term Longitudinal Study on Predictors of Cognitive Decline in Non-Demented Elderly from Crete, Greece\n\n**Авторы:** Basta Maria, Skourti Eleni, Alexopoulou Christina, Zampetakis Alexandros, Ganiaris Andronikos, Aligizaki Marina, Simos Panagiotis, Vgontzas Alexandros N.\n\n**Журнал:** Healthcare (2023)\n\n"
+    },
+    {
+      "id": "S2",
+      "start": 388,
+      "end": 389,
+      "text": "*"
+    },
+    {
+      "id": "S3",
+      "start": 389,
+      "end": 390,
+      "text": "*"
+    },
+    {
+      "id": "S4",
+      "start": 390,
+      "end": 393,
+      "text": "DOI"
+    },
+    {
+      "id": "S5",
+      "start": 393,
+      "end": 395,
+      "text": ":*"
+    },
+    {
+      "id": "S6",
+      "start": 395,
+      "end": 423,
+      "text": "* 10.3390/healthcare11050703"
+    },
+    {
+      "id": "S7",
+      "start": 423,
+      "end": 576,
+      "text": "\n\n\n## Abstract\n\nIdentifying modifiable factors that may predict long-term cognitive decline in the elderly with adequate daily functionality is critical."
+    },
+    {
+      "id": "S8",
+      "start": 577,
+      "end": 748,
+      "text": "Such factors may include poor sleep quality and quantity, sleep-related breathing disorders, inflammatory cytokines and stress hormones, as well as mental health problems."
+    },
+    {
+      "id": "S9",
+      "start": 749,
+      "end": 949,
+      "text": "This work reports the methodology and descriptive characteristics of a long-term, multidisciplinary study on modifiable risk factors for cognitive status progression, focusing on the 7-year follow-up."
+    },
+    {
+      "id": "S10",
+      "start": 950,
+      "end": 1070,
+      "text": "Participants were recruited from a large community-dwelling cohort residing in Crete, Greece (CAC; Cretan Aging Cohort)."
+    },
+    {
+      "id": "S11",
+      "start": 1071,
+      "end": 1205,
+      "text": "Baseline assessments were conducted in 2013–2014 (Phase I and II, circa 6-month time interval) and follow-up in 2020–2022 (Phase III)."
+    },
+    {
+      "id": "S12",
+      "start": 1206,
+      "end": 1267,
+      "text": "In total, 151 individuals completed the Phase III evaluation."
+    },
+    {
+      "id": "S13",
+      "start": 1268,
+      "end": 1398,
+      "text": "Of those, 71 were cognitively non-impaired (CNI group) in Phase II and 80 had been diagnosed with mild cognitive impairment (MCI)."
+    },
+    {
+      "id": "S14",
+      "start": 1399,
+      "end": 1681,
+      "text": "In addition to sociodemographic, lifestyle, medical, neuropsychological, and neuropsychiatric data, objective sleep was assessed based on actigraphy (Phase II and III) and home polysomnography (Phase III), while inflammation markers and stress hormones were measured in both phases."
+    },
+    {
+      "id": "S15",
+      "start": 1682,
+      "end": 1912,
+      "text": "Despite the homogeneity of the sample in most sociodemographic indices, MCI persons were significantly older (mean age = 75.03 years, SD = 6.34) and genetically predisposed for cognitive deterioration (APOE ε4 allele carriership)."
+    },
+    {
+      "id": "S16",
+      "start": 1913,
+      "end": 2106,
+      "text": "Also, at follow-up, we detected a significant increase in self-reported anxiety symptoms along with a substantial rise in psychotropic medication use and incidence of major medical morbidities."
+    },
+    {
+      "id": "S17",
+      "start": 2107,
+      "end": 2281,
+      "text": "The longitudinal design of the CAC study may provide significant data on possible modifiable factors in the course of cognitive progression in the community-dwelling elderly."
+    },
+    {
+      "id": "S18",
+      "start": 2281,
+      "end": 2394,
+      "text": "\n\n\n## 1. Introduction\n\nAs life expectancy increases, cognitive impairment becomes an inextricable facet of aging."
+    },
+    {
+      "id": "S19",
+      "start": 2395,
+      "end": 2626,
+      "text": "Worldwide, it is estimated that over 55 million people live with dementia, a number that is about to rise to 139 million people by 2050, while a substantial percentage of dementia patients has yet to receive a formal diagnosis [1]."
+    },
+    {
+      "id": "S20",
+      "start": 2627,
+      "end": 2852,
+      "text": "In contrast, normal cognitive aging comprises predictable age-related cognitive changes, as indicated by age and education-adjusted domain-specific scores that fall within 1.5 standard deviations from the population mean [2]."
+    },
+    {
+      "id": "S21",
+      "start": 2853,
+      "end": 3093,
+      "text": "Persons who display domain-specific (i.e., not global) cognitive impairment, which is not considered serious mental disorder and does not interfere with daily functioning, are likely to be diagnosed with mild cognitive impairment (MCI) [3]."
+    },
+    {
+      "id": "S22",
+      "start": 3094,
+      "end": 3262,
+      "text": "Individuals with MCI are considered at high risk of progression to dementia [4], with conversion rates ranging from 6 to 44.8%, according to a recent meta-analysis [5]."
+    },
+    {
+      "id": "S23",
+      "start": 3263,
+      "end": 3367,
+      "text": "MCI incidence rates increase from 22.5% for ages 75–79 to 60.1% for individuals beyond 85 years old [6]."
+    },
+    {
+      "id": "S24",
+      "start": 3368,
+      "end": 3465,
+      "text": "In Greece specifically, MCI prevalence ranges from 13.11% [7] to 32.4% (Cretan Aging Cohort) [8]."
+    },
+    {
+      "id": "S25",
+      "start": 3465,
+      "end": 3685,
+      "text": "\n\nAs a prodromal stage of dementia pathology, MCI constitutes a critical “window” for early intervention, and consequently, several studies have focused on identifying modifiable risk factors for cognitive deterioration."
+    },
+    {
+      "id": "S26",
+      "start": 3686,
+      "end": 3876,
+      "text": "Sleep disturbances are a frequent, yet potentially modifiable, comorbid condition in the elderly, which appears to contribute significantly to cognitive impairment and disease prognosis [9]."
+    },
+    {
+      "id": "S27",
+      "start": 3877,
+      "end": 4182,
+      "text": "According to a recent meta-analysis, sleep quality, measured by dysregulation in sleep architecture, was found to differentiate cognitively intact and MCI persons, with the latter group exhibiting increased sleep latency and less Cyclic Alternating Pattern expression compared to healthy individuals [10]."
+    },
+    {
+      "id": "S28",
+      "start": 4183,
+      "end": 4479,
+      "text": "Findings regarding the association between sleep duration and cognitive impairment are rather controversial [11], with some studies indicating greater risk for cognitive decline among short (<6 h) and long sleepers (>8 h), or both [12,13], whilst other studies fail to report such an association."
+    },
+    {
+      "id": "S29",
+      "start": 4480,
+      "end": 4860,
+      "text": "Cross-sectional analyses from the Cretan Aging Cohort (CAC) revealed significant associations between objective long sleep duration and executive deficits among persons diagnosed with MCI and cognitively non-impaired individuals [11], whereas long sleep duration in MCI and Alzheimer’s Disease (AD) patients may be driven by the presence of APOE (Apolipoprotein E) ε4 allele [14]."
+    },
+    {
+      "id": "S30",
+      "start": 4860,
+      "end": 5051,
+      "text": "\n\nOther biomarkers (including genetic factors, pro-inflammatory cytokines and stress hormones) contribute to disease progression and differentiate between clinical categories (MCI, dementia)."
+    },
+    {
+      "id": "S31",
+      "start": 5052,
+      "end": 5178,
+      "text": "The APOE ε4 allele is an established risk factor for dementia, incident MCI, and rate of conversion from MCI to dementia [15]."
+    },
+    {
+      "id": "S32",
+      "start": 5179,
+      "end": 5410,
+      "text": "Dysregulation of inflammatory response (a condition also known as “inflamm-aging”) seems to play a critical role in the pathogenesis of neurodegenerative diseases, although the underlying mechanisms are not clearly understood [16]."
+    },
+    {
+      "id": "S33",
+      "start": 5411,
+      "end": 5665,
+      "text": "Elevated cerebrospinal fluid and plasma levels of Tumor Necrosis Factor-alpha (TNFa) and Interleukin-6 (IL-6) in AD patients [17] predict further cognitive decline [18] and have been linked to worse cognitive performance in both MCI and AD patients [19]."
+    },
+    {
+      "id": "S34",
+      "start": 5666,
+      "end": 5803,
+      "text": "Impaired regulation of pro-inflammatory cytokine secretion has been found in sleep-related disorders and acute sleep deprivation [20,21]."
+    },
+    {
+      "id": "S35",
+      "start": 5804,
+      "end": 5957,
+      "text": "Moreover, increased IL-6 plasma levels predict poor sleep quality [22] and relate to excessive daytime sleepiness in the cognitively intact elderly [23]."
+    },
+    {
+      "id": "S36",
+      "start": 5958,
+      "end": 6265,
+      "text": "Elevated cerebrospinal fluid and plasma cortisol levels have been detected in both MCI and dementia patients, whereas increased cortisol may exert deleterious effects on memory recall via biphasic activation of specific receptors in the hippocampus, leading to downregulation of Long-Term Potentiation [24]."
+    },
+    {
+      "id": "S37",
+      "start": 6266,
+      "end": 6451,
+      "text": "Additionally, overexpression of cortisol receptors in prefrontal areas may be associated with executive deficits emerging from irregular activity patterns in the prefrontal cortex [25]."
+    },
+    {
+      "id": "S38",
+      "start": 6452,
+      "end": 6610,
+      "text": "The two processes may be interrelated, as impaired executive function mediates the relationship between basal cortisol levels and impaired memory recall [26]."
+    },
+    {
+      "id": "S39",
+      "start": 6610,
+      "end": 6756,
+      "text": "\n\nNeuropsychiatric symptoms and mental morbidities are particularly common among elderly with and without neurocognitive disorders or MCI [27,28]."
+    },
+    {
+      "id": "S40",
+      "start": 6757,
+      "end": 6984,
+      "text": "Depression prevalence among MCI patients may be as high as 32% [29] and is considered a risk factor for dementia progression [30] and accelerated rate of cognitive deterioration (possibly moderated by APOE ε4 carriership) [31]."
+    },
+    {
+      "id": "S41",
+      "start": 6985,
+      "end": 7180,
+      "text": "Patients with persistent depressive symptomatology are more likely to present hippocampal atrophy [32], whereas depression diagnosis is often accompanied by pronounced amyloid abnormalities [33]."
+    },
+    {
+      "id": "S42",
+      "start": 7181,
+      "end": 7340,
+      "text": "Anxiety is another frequent comorbid condition (although not as extensively studied as depression), with prevalence rates reaching 21% among MCI patients [34]."
+    },
+    {
+      "id": "S43",
+      "start": 7341,
+      "end": 7471,
+      "text": "Significant anxiety symptoms can compromise daily functioning in MCI patients and increase the risk for dementia progression [35]."
+    },
+    {
+      "id": "S44",
+      "start": 7472,
+      "end": 7698,
+      "text": "A trend towards reduced cognitive performance is present in patients with concurrent anxiety and depressive manifestations, although the contribution of anxiety symptoms on the observed cognitive deficits remains unclear [35]."
+    },
+    {
+      "id": "S45",
+      "start": 7699,
+      "end": 7900,
+      "text": "Anxiety symptoms are also linked to elevated pro-inflammatory cytokines and hypercortisolemia, a condition that leads to dementia-associated brain atrophy due to long-term glucocorticoid exposure [36]."
+    },
+    {
+      "id": "S46",
+      "start": 7901,
+      "end": 8087,
+      "text": "Last but not least, sleep dysregulation is a core depression symptom, and sleep-associated disturbances (insomnia symptoms, poor sleep quality) are overexpressed among MCI patients [37]."
+    },
+    {
+      "id": "S47",
+      "start": 8087,
+      "end": 8383,
+      "text": "\n\nThe CAC was established in 2013 to investigate sociodemographic, medical, lifestyle, inflammation and neuroendocrine, sleep-related, genetic, cognitive and neuropsychiatric characteristics of the elderly residing in mostly rural areas of the Heraklion prefecture in the island of Crete, Greece."
+    },
+    {
+      "id": "S48",
+      "start": 8384,
+      "end": 8648,
+      "text": "The present report describes the protocol of a 7-year follow-up study on a subset of CAC participants, aimed to identify potentially modifiable predictors of cognitive deterioration among persons who were either cognitively non-impaired or were diagnosed with MCI."
+    },
+    {
+      "id": "S49",
+      "start": 8649,
+      "end": 9048,
+      "text": "Similar large-scale prospective studies are being conducted in Greece and focus on sociodemographic information, medical and mental health indices, lifestyle factors and biomarkers (SHARE; Survey of Health, Ageing and Retirement in Europe [38,39]), as well as nutrition and neuropsychological markers of cognitive progression (HELIAD study; Hellenic Longitudinal Investigation of Aging & Diet [40])."
+    },
+    {
+      "id": "S50",
+      "start": 9049,
+      "end": 9379,
+      "text": "However, to our knowledge, up to now, this is the first longitudinal cohort study conducted in Greece and among few worldwide with a relatively large, well-defined sample—including MCI patients—with a special focus on objective sleep, inflammation, stress and neuropsychiatric symptoms as possible modifiable factors for dementia."
+    },
+    {
+      "id": "S51",
+      "start": 9379,
+      "end": 9382,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S52",
+      "start": 9382,
+      "end": 9384,
+      "text": "##"
+    },
+    {
+      "id": "S53",
+      "start": 9385,
+      "end": 9419,
+      "text": "2. Materials and Methods\n\n### 2.1."
+    },
+    {
+      "id": "S54",
+      "start": 9420,
+      "end": 9445,
+      "text": "Study Design\n\n#### 2.1.1."
+    },
+    {
+      "id": "S55",
+      "start": 9446,
+      "end": 9464,
+      "text": "Phase I–Phase II\n\n"
+    },
+    {
+      "id": "S56",
+      "start": 9464,
+      "end": 9622,
+      "text": "During Phase I, 3140 community-dwelling participants (mean age 73.7 ± 7.8 years) [8] from rural areas of Heraklion, Crete (Cretan Aging Cohort) were examined."
+    },
+    {
+      "id": "S57",
+      "start": 9623,
+      "end": 9899,
+      "text": "Eligible participants were those aged ≥60 years old who visited Primary Health Care Centers (staffed by physicians participating in the Primary Health Care research network of the CAC study) in both rural and urban areas of Heraklion and consented to participate in the study."
+    },
+    {
+      "id": "S58",
+      "start": 9900,
+      "end": 10013,
+      "text": "Patients with acute symptomatology (terminal illnesses, severe movement impairment) were excluded from the study."
+    },
+    {
+      "id": "S59",
+      "start": 10014,
+      "end": 10196,
+      "text": "Data from the 2011 national census were utilized in order to compare CAC participants to the whole Greek and Cretan population of similar age (for a more thorough analysis, see [8])."
+    },
+    {
+      "id": "S60",
+      "start": 10197,
+      "end": 10339,
+      "text": "Demographic information and medical data were collected, and all participants were administered the Mini Mental State Examination (MMSE) test."
+    },
+    {
+      "id": "S61",
+      "start": 10340,
+      "end": 10649,
+      "text": "Participants who had scored <24 points on MMSE (n = 636) were invited to a comprehensive neuropsychological and neuropsychiatric examination (Phase II), and a total of 344 consenting persons (comparable in terms of demographic and anthropometric measurements to the 636 participants) completed the evaluation."
+    },
+    {
+      "id": "S62",
+      "start": 10650,
+      "end": 10850,
+      "text": "A control group (n = 181) of persons scoring ≥24 points on MMSE during Phase I was also formed using a proportional stratification process to match the low MMSE group on gender and place of residence."
+    },
+    {
+      "id": "S63",
+      "start": 10851,
+      "end": 10926,
+      "text": "Of those, 161 persons consented and took part in Phase II examination [11]."
+    },
+    {
+      "id": "S64",
+      "start": 10927,
+      "end": 11284,
+      "text": "During Phase II (2013–2014), all participants underwent full neuropsychological/neuropsychiatric/neurological evaluation, 3-day, 24-h actigraphy recording, and blood sampling (to measure baseline morning cortisol, pro-inflammatory cytokines and genetic biomarkers); medical history, sleep complaints and general functionality information were also recorded."
+    },
+    {
+      "id": "S65",
+      "start": 11285,
+      "end": 11494,
+      "text": "Consensus clinical diagnoses for dementia and MCI were based upon the Diagnostic & Statistical Manual of Mental Disorders (DSM, 4th Edition) and the International Working Group (IWG) criteria, accordingly [8]."
+    },
+    {
+      "id": "S66",
+      "start": 11495,
+      "end": 11612,
+      "text": "In total, 146 persons were found cognitively intact, whilst 231 participants were diagnosed with MCI of any type [8]."
+    },
+    {
+      "id": "S67",
+      "start": 11612,
+      "end": 11615,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S68",
+      "start": 11615,
+      "end": 11616,
+      "text": "#"
+    },
+    {
+      "id": "S69",
+      "start": 11616,
+      "end": 11619,
+      "text": "###"
+    },
+    {
+      "id": "S70",
+      "start": 11620,
+      "end": 11626,
+      "text": "2.1.2."
+    },
+    {
+      "id": "S71",
+      "start": 11627,
+      "end": 11638,
+      "text": "Phase III\n\n"
+    },
+    {
+      "id": "S72",
+      "start": 11638,
+      "end": 11816,
+      "text": "The participant pool for the 7-year follow up study (Phase III) comprised all CNI persons (n = 146) and individuals who met the formal criteria for MCI (n = 231) during Phase II."
+    },
+    {
+      "id": "S73",
+      "start": 11817,
+      "end": 11957,
+      "text": "Patients diagnosed with dementia were excluded from Phase III testing, which took place between October 2020 and August 2022 (see Figure 1)."
+    },
+    {
+      "id": "S74",
+      "start": 11958,
+      "end": 12207,
+      "text": "In total, 103 participants (27.3%) had passed away in the intervening years, 56 persons (14.9%) could not be located, and 63 persons (16.7%) refused to participate, raising the total attrition rate (inability to participate for any reason) to 58.9%."
+    },
+    {
+      "id": "S75",
+      "start": 12208,
+      "end": 12271,
+      "text": "In total, 149 MCI and 73 CNI individuals could not be retested."
+    },
+    {
+      "id": "S76",
+      "start": 12272,
+      "end": 12461,
+      "text": "From the 274 survivors, 155 individuals completed the evaluation, although data from four participants were not included in the analyses due to severe medical comorbidities or sensory loss."
+    },
+    {
+      "id": "S77",
+      "start": 12462,
+      "end": 12506,
+      "text": "Thus, the final response rate reached 55.1%."
+    },
+    {
+      "id": "S78",
+      "start": 12507,
+      "end": 12620,
+      "text": "All participants were contacted by telephone and came from 11 different districts in the prefecture of Heraklion."
+    },
+    {
+      "id": "S79",
+      "start": 12621,
+      "end": 12783,
+      "text": "Testing procedures were similar to those followed in Phase IΙ, permitting direct quantitative comparisons between the two time points on the majority of measures."
+    },
+    {
+      "id": "S80",
+      "start": 12784,
+      "end": 13060,
+      "text": "Examination was conducted at participants’ homes and included medical history and physical examination, neuropsychological testing, a night of polysomnography recording and a 7-day, 24-h actigraphy, as well as a morning blood draw to assess stress and inflammatory biomarkers."
+    },
+    {
+      "id": "S81",
+      "start": 13061,
+      "end": 13169,
+      "text": "The study was approved by the Ethics Committee of the University of Crete (number of approval: 61/9-3-2020)."
+    },
+    {
+      "id": "S82",
+      "start": 13170,
+      "end": 13233,
+      "text": "A detailed description of the study protocol is provided below."
+    },
+    {
+      "id": "S83",
+      "start": 13234,
+      "end": 13285,
+      "text": "Figure 1 presents a flow chart of the entire study."
+    },
+    {
+      "id": "S84",
+      "start": 13285,
+      "end": 13405,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> Flow diagram of Phases I, II & III of the Cretan Aging Cohort study."
+    },
+    {
+      "id": "S85",
+      "start": 13406,
+      "end": 13539,
+      "text": "Phases I & II were conducted within approximately six months in 2013, whereas Phase III assessments were conducted between 2020–2022."
+    },
+    {
+      "id": "S86",
+      "start": 13540,
+      "end": 13600,
+      "text": "Participant diagnostic status during Phase II is also shown."
+    },
+    {
+      "id": "S87",
+      "start": 13601,
+      "end": 13845,
+      "text": "Abbreviations; MMSE: Mini Mental State Examination, MCI: mild cognitive impairment, CNI: cognitively non-impaired, PSG: polysomnography.</figcaption>\n</figure>\n\n\n\n### 2.2. Measurements\n\n#### 2.2.1. Sleep Measurements\n\n- (i)Polysomnography (PSG)"
+    },
+    {
+      "id": "S88",
+      "start": 13845,
+      "end": 13887,
+      "text": "\n\nWe collected data from 144 participants."
+    },
+    {
+      "id": "S89",
+      "start": 13888,
+      "end": 14070,
+      "text": "Each participant underwent one night home sleep study ad libitum using a portable Type II7 16 channel polysomnography device (Alice, PDx, Philips, Respironics, Murrysville, PA, USA)."
+    },
+    {
+      "id": "S90",
+      "start": 14071,
+      "end": 14488,
+      "text": "The sleep study registered the following parameters: oral-nasal airflow via pressure cannula and thermistor, respiratory effort via the abdominal and chest belts, arterial oxygen saturation level via the pulse oximeter (oxygen saturation and pulse rate), body position detection (supine or non-supine), cardiac electrical activity, C3M2 and C4M1 electroencephalogram, electrooculogram and chin and leg electromyogram."
+    },
+    {
+      "id": "S91",
+      "start": 14489,
+      "end": 14635,
+      "text": "Scoring was performed manually from a sleep expert physician according to the American Association Sleep Medicine scoring manual version 2.6.2020."
+    },
+    {
+      "id": "S92",
+      "start": 14636,
+      "end": 14778,
+      "text": "Apnea/Hypopnea episodes followed the standard procedures (AASM, 2007) and Obstructive Sleep Apnea was defined as an Apnea/Hypopnea Index ≥ 15."
+    },
+    {
+      "id": "S93",
+      "start": 14779,
+      "end": 14978,
+      "text": "Additional sleep variables, such as Sleep Latency, Total Sleep Time, Total Time in Bed, Sleep Efficiency and Wake Time after Sleep Onset were also scored according to the standard AASM 2007 criteria."
+    },
+    {
+      "id": "S94",
+      "start": 14978,
+      "end": 14980,
+      "text": "\n\n"
+    },
+    {
+      "id": "S95",
+      "start": 14980,
+      "end": 15250,
+      "text": "- (ii)Actigraphy\n\nThe majority of participants (n = 110) completed a 7-day, 24-h wrist actigraphy recording (Actigraph, GT3XP model, Pensacola, FL, USA) as a complementary means to estimate sleep duration and quality, using the same procedures followed in Phase II [11]."
+    },
+    {
+      "id": "S96",
+      "start": 15251,
+      "end": 15494,
+      "text": "Sleep–wake cycle estimation was based on epochs of movement (peaks of activity) or movement absence (relatively quiet periods of activity) using the ActLife 6 software (ActLife v6.9.5 LLC, Pensacola, FL, USA) and complemented by sleep diaries."
+    },
+    {
+      "id": "S97",
+      "start": 15495,
+      "end": 15798,
+      "text": "Data were collected and averaged for the 7-day and 3-day period separately, and specific variables of interest were calculated: night and 24-h total sleep time, night and 24-h total time in bed, sleep latency and efficiency, wake time after sleep onset, and number and mean duration of night awakenings."
+    },
+    {
+      "id": "S98",
+      "start": 15799,
+      "end": 15892,
+      "text": "For 104 participants, actigraphy took place simultaneously or within 24 h from PSG recording."
+    },
+    {
+      "id": "S99",
+      "start": 15893,
+      "end": 16002,
+      "text": "Six participants underwent actigraphy recording within 1–4 months from PSG recording due to technical issues."
+    },
+    {
+      "id": "S100",
+      "start": 16002,
+      "end": 16005,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S101",
+      "start": 16005,
+      "end": 16007,
+      "text": "##"
+    },
+    {
+      "id": "S102",
+      "start": 16007,
+      "end": 16009,
+      "text": "##"
+    },
+    {
+      "id": "S103",
+      "start": 16010,
+      "end": 16016,
+      "text": "2.2.2."
+    },
+    {
+      "id": "S104",
+      "start": 16017,
+      "end": 16253,
+      "text": "Inflammatory Biomarkers\n\nSingle morning blood samples were collected (between 10:00 am and 12:00 pm) to assess inflammatory markers (IL-6, TNFa and C-Reactive Protein, n = 119) and plasma cortisol levels (available for116 participants)."
+    },
+    {
+      "id": "S105",
+      "start": 16254,
+      "end": 16391,
+      "text": "Blood samples were transferred to EDTA-containing tubes, refrigerated, centrifuged for plasma isolation and kept in deep freeze (−80 °C)."
+    },
+    {
+      "id": "S106",
+      "start": 16392,
+      "end": 16565,
+      "text": "Plasma TNFa and IL-6 were measured using the ELISA technique (Human TNF-alpha Quantikine HS ELISA and Human IL-6 Quantikine HS ELISA kits, R&D Systems Europe, Abington, UK)."
+    },
+    {
+      "id": "S107",
+      "start": 16566,
+      "end": 16666,
+      "text": "Plasma cortisol levels were measured using the ELISA technique (Cusabio Technology LLC, Texas, USA)."
+    },
+    {
+      "id": "S108",
+      "start": 16667,
+      "end": 16769,
+      "text": "The same procedure was followed at Phase II, rendering results comparable between the two phases [41]."
+    },
+    {
+      "id": "S109",
+      "start": 16769,
+      "end": 16772,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S110",
+      "start": 16772,
+      "end": 16773,
+      "text": "#"
+    },
+    {
+      "id": "S111",
+      "start": 16773,
+      "end": 16783,
+      "text": "### 2.2.3."
+    },
+    {
+      "id": "S112",
+      "start": 16784,
+      "end": 16953,
+      "text": "Diagnosis of Neurocognitive Impairment\n\n- (i)Neuropsychological assessment\n\nAll participants underwent a thorough neuropsychological examination (mean duration ≤ 2.5 h)."
+    },
+    {
+      "id": "S113",
+      "start": 16954,
+      "end": 17432,
+      "text": "Domains evaluated included memory (episodic and verbal memory: Greek Memory Scale and Rey Auditory Verbal Learning Test, respectively; spatial memory: Taylor Complex Figure and working memory: Digits Reverse), language (naming ability: Boston Naming Test-short version and verbal fluency: the Semantic Verbal Fluency test) and attention/executive function (processing speed: Symbol Digits Modality test and visuomotor speed, task shifting and selective attention: Trails A & B)."
+    },
+    {
+      "id": "S114",
+      "start": 17433,
+      "end": 17593,
+      "text": "Raw scores were transformed into age and education-standardized values (based on normative values), and average z-scores on each cognitive domain were computed."
+    },
+    {
+      "id": "S115",
+      "start": 17594,
+      "end": 17714,
+      "text": "Impaired performance on a given domain was considered if the average z-score was at least 1.5 SD below normative values."
+    },
+    {
+      "id": "S116",
+      "start": 17715,
+      "end": 17933,
+      "text": "For the diagnosis of MCI, impaired performance in two or more tests within a given cognitive domain and intact functionality level (based on an Independent Activities of Daily Living (IADL) score > 0.78) were required."
+    },
+    {
+      "id": "S117",
+      "start": 17934,
+      "end": 18014,
+      "text": "In cases of severe cognitive impairment, the MMSE test was administered instead."
+    },
+    {
+      "id": "S118",
+      "start": 18015,
+      "end": 18194,
+      "text": "A Clinical Dementia Rating score was also calculated to aid cognitive status classification, especially in cases of severe cognitive impairment and significant sensory limitation."
+    },
+    {
+      "id": "S119",
+      "start": 18194,
+      "end": 18737,
+      "text": "\n\n- (ii)Informant scales\n\nClose relatives or caregivers were asked to complete scales measuring daily functioning (the 13-item Greek Independent Activities of Daily Living scale), current cognitive and neuropsychiatric symptoms (Cambridge Behavioral Inventory) and symptoms indicative of Lewy-body dementia (4-item Mayo Fluctuations Scale). An average IADL score < 0.78 points (range 0 to 1.00) was considered as indicative of significant functional impairment, a core criterion of severe cognitive impairment diagnosis (Dementia of any type)."
+    },
+    {
+      "id": "S120",
+      "start": 18738,
+      "end": 18878,
+      "text": "According to the IWG criteria, MCI diagnosis requires intact basic daily activities and relatively preserved instrumental daily functioning."
+    },
+    {
+      "id": "S121",
+      "start": 18879,
+      "end": 19041,
+      "text": "Therefore, an IADL score > 0.78 points serves as a marker of adequate/preserved daily functionality in persons with mild cognitive impairment and CNI individuals."
+    },
+    {
+      "id": "S122",
+      "start": 19041,
+      "end": 19044,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S123",
+      "start": 19044,
+      "end": 19055,
+      "text": "#### 2.2.4."
+    },
+    {
+      "id": "S124",
+      "start": 19056,
+      "end": 19457,
+      "text": "Semi-Structured Interview\n\nA comprehensive medical history was taken, including the following domains that were initially assessed at baseline:-Current and past medical conditions, with emphasis on illnesses and operations occurring during the follow-up period, including Traumatic Brain Injury (TBI), stroke and pharmacotherapy (any type of treatment with a special focus on psychotropic substances)."
+    },
+    {
+      "id": "S125",
+      "start": 19458,
+      "end": 20236,
+      "text": "We then calculated total number of major medical morbidities (hypertension, diabetes, heart/pulmonary/hematological/liver diseases, gastrointestinal conditions, hyper/hypothyroidism, cancer, arthritis).-Mental morbidities (i.e., depression and anxiety diagnosis) were assessed according to the DSM-5 criteria, based on a clinical interview, neuropsychological evaluation, and existing diagnosis following the same procedures described previously [28].-Anthropometric measurements: weight, height, and Body Mass Index were assessed as previously described [8].-A frailty composite index was calculated based on level of physical activity, self-reported symptoms of exhaustion and decreased appetite, and objectively assessed upper limb weakness (using a dynamometer measurement)."
+    },
+    {
+      "id": "S126",
+      "start": 20237,
+      "end": 21511,
+      "text": "Frailty level was then recorded into 3 classes (absence of frailty, pre-frailty, frailty).-Overall subjective memory difficulties were assessed via a single question (“Do you have any memory problems?”), requiring a yes/no response, whereas domain-specific memory complaints (difficulty recalling recent information, words and names) were assessed using single questions requiring a binary response (WHICAP medical package: Medical Conditions and WHICAP survey).-Sleep problems: we used a shortened version of the Penn State Sleep Questionnaire comprising 12 items (answered on a 4-point Likert scale ranging from 0 = absence of symptoms to 3 = serious symptomatology) in order to assess presence and severity of self-reported sleep complaints, sleep duration and napping throughout the day (apnea, snoring, excessive movements during sleep, difficulty falling/staying asleep, early awakening, overall quality of sleep and, lastly, average night sleep duration and time required for falling asleep, as well as napping frequency and duration, if applicable) [41].-Lifestyle habits: we recorded current smoking and drinking habits (number of cigarettes if a current smoker, smoking cessation and year of quitting, as well as frequency of alcohol consumption on a daily basis)."
+    },
+    {
+      "id": "S127",
+      "start": 21512,
+      "end": 22209,
+      "text": "We also estimated level of physical activity during the previous week (including frequency of participation in particular activities such as gardening, housework, handiwork, shopping), as well as based on participants’ responses to the question “How many days did you walk for more than 10 min in a row in a brisk manner during the last week?”, as previously described in detail [41].-Social support and frequency of social contacts: we calculated the total number of social contacts (close relatives and friends) reported by participants during the last month, the availability of emotional and practical support, using two questions adapted from the Social Support Questionnaire–Short Form [42]:"
+    },
+    {
+      "id": "S128",
+      "start": 22210,
+      "end": 22375,
+      "text": "“Is there anyone you can really count on when you need help? Is there anyone you can really count on to help you feel more relaxed when you are under pressure/stress"
+    },
+    {
+      "id": "S129",
+      "start": 22375,
+      "end": 22376,
+      "text": "?"
+    },
+    {
+      "id": "S130",
+      "start": 22376,
+      "end": 22476,
+      "text": "” and the quality of perceived support (“How satisfied are you with the level of support you receive"
+    },
+    {
+      "id": "S131",
+      "start": 22476,
+      "end": 22477,
+      "text": "?"
+    },
+    {
+      "id": "S132",
+      "start": 22477,
+      "end": 22479,
+      "text": "”)"
+    },
+    {
+      "id": "S133",
+      "start": 22479,
+      "end": 22572,
+      "text": ", answered on a 5-point Likert scale ranging from 0 (not at all) to 4 (completely satisfied)."
+    },
+    {
+      "id": "S134",
+      "start": 22572,
+      "end": 22575,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S135",
+      "start": 22575,
+      "end": 22577,
+      "text": "##"
+    },
+    {
+      "id": "S136",
+      "start": 22577,
+      "end": 22586,
+      "text": "## 2.2.5."
+    },
+    {
+      "id": "S137",
+      "start": 22587,
+      "end": 22614,
+      "text": "Neuropsychiatric Evaluation"
+    },
+    {
+      "id": "S138",
+      "start": 22614,
+      "end": 22823,
+      "text": "\n\nSelf-reported symptoms of anxiety and depression were assessed using the 7-item Hamilton Depression and Anxiety Scale-Anxiety subscale (HADS-A) and the 15-item Geriatric Depression Scale (GDS), respectively."
+    },
+    {
+      "id": "S139",
+      "start": 22824,
+      "end": 23235,
+      "text": "Diagnosis of depression and anxiety during Phase III followed the same procedure as in Phase II, according to the DSM-5 criteria established through a clinical interview conducted by a specially trained physician and psychologist, scores on the aforementioned scales (using 7 and 4 points as cutoffs, respectively) and prescription of psychotropic medication(antidepressants/anxiolytics or antipsychotics) [28]."
+    },
+    {
+      "id": "S140",
+      "start": 23236,
+      "end": 23496,
+      "text": "Furthermore, in Phase III, we recorded retrospectively major stressful events that occurred within the 7-year interval and calculated a new binary variable to indicate the presence of at least one major stressor in the period preceding the examination process."
+    },
+    {
+      "id": "S141",
+      "start": 23497,
+      "end": 23790,
+      "text": "Major stressors included significant medical conditions (severe eyesight/hearing loss, cancer), death or illness of close relatives and finally, survival from natural disasters (there was consecutive severe and frequent earthquake activity in Crete in the time preceding Phase III assessment)."
+    },
+    {
+      "id": "S142",
+      "start": 23790,
+      "end": 24238,
+      "text": "\n\nFollowing the same procedures as in Phase II, all relevant information (cognitive performance by domain, IADL score, neuropsychiatric symptoms) was evaluated by a certified psychiatrist (M.B), neurologist (C.C.) and neuropsychologist (P.S) to reach a consensus diagnosis according to theDSM-4 and DSM-5 criteria (for Phase II and III accordingly) for the diagnosis of Major Neurocognitive Disorder and the IWG criteria for the MCI diagnosis [43]."
+    },
+    {
+      "id": "S143",
+      "start": 24239,
+      "end": 24657,
+      "text": "Dementia differential diagnosis was made on the basis of the following criteria: for the diagnosis of probable AD, vascular Dementia, Lewy Body Dementia, behavioral variant FTD and other types of Frontotemporal Dementia, the NINCDS-ADRDA, the NINDS-AIREN, the DLB Consortium, the International Consortium on behavioral variant Frontotemporal Dementia and the Neary criteria were utilized, accordingly [44,45,46,47,48]."
+    },
+    {
+      "id": "S144",
+      "start": 24658,
+      "end": 24788,
+      "text": "Diagnosis of mixed dementia was made in cases of co-occurrence of signs suggestive of both probable AD and vascular dementia [49]."
+    },
+    {
+      "id": "S145",
+      "start": 24788,
+      "end": 24792,
+      "text": "\n\n\n\n"
+    },
+    {
+      "id": "S146",
+      "start": 24792,
+      "end": 24793,
+      "text": "#"
+    },
+    {
+      "id": "S147",
+      "start": 24793,
+      "end": 24800,
+      "text": "## 2.3."
+    },
+    {
+      "id": "S148",
+      "start": 24801,
+      "end": 24879,
+      "text": "Statistical Analysis\n\nSPSS 28.0 (IBM; 2022) was used for statistical analyses."
+    },
+    {
+      "id": "S149",
+      "start": 24880,
+      "end": 25173,
+      "text": "In view of significant deviation from normality for a number of variables (as indicated by p < 0.05 on the Kolmogorov–Smirnov test), non-parametric tests (Wilcoxon signed-rank test and Mann–Whitney U test) were used to assess change over time and group differences at each Phase, respectively."
+    },
+    {
+      "id": "S150",
+      "start": 25174,
+      "end": 25240,
+      "text": "The Chi square test was used to assess differences in proportions."
+    },
+    {
+      "id": "S151",
+      "start": 25241,
+      "end": 25475,
+      "text": "The final sample size was sufficient to ensure 85% power for detecting small-to-medium effect size group differences at p < 0.05 and also sufficient to ensure 95% power for detecting small effect sizes of change over time at p < 0.05."
+    },
+    {
+      "id": "S152",
+      "start": 25475,
+      "end": 25479,
+      "text": "\n\n\n\n"
+    },
+    {
+      "id": "S153",
+      "start": 25479,
+      "end": 25480,
+      "text": "#"
+    },
+    {
+      "id": "S154",
+      "start": 25480,
+      "end": 25484,
+      "text": "# 3."
+    },
+    {
+      "id": "S155",
+      "start": 25485,
+      "end": 25652,
+      "text": "Results\n\nSeventy-one CNI and 80 participants previously diagnosed with MCI in Phase II were re-evaluated in Phase III at an average interval of 7.12 years (SD = 0.92)."
+    },
+    {
+      "id": "S156",
+      "start": 25653,
+      "end": 25922,
+      "text": "Compared to the total participant pool (all persons in the CNI and MCI groups in Phase II, n = 377), those who were followed up were younger (72.8 vs. 77.2 years, p < 0.001), more likely to be women (77.5% vs. 63.3%, p = 0.004) and less likely to live alone (p = 0.03)."
+    },
+    {
+      "id": "S157",
+      "start": 25923,
+      "end": 26037,
+      "text": "There was a non significant tendency for followed-up persons to have achieved more years of education (p = 0.059)."
+    },
+    {
+      "id": "S158",
+      "start": 26038,
+      "end": 26206,
+      "text": "The total group and followed-up subgroup were comparable in terms of geographic origin (p = 0.4), major medical morbidities (p = 0.9) and previous occupation (p = 0.1)."
+    },
+    {
+      "id": "S159",
+      "start": 26207,
+      "end": 26434,
+      "text": "As evident in Table 1, the majority of participants in the current cohort were rural residents (84.1%), previously occupied in domestic/agricultural work (63.6%) and having attained 6 or fewer years of formal education (92.1%)."
+    },
+    {
+      "id": "S160",
+      "start": 26434,
+      "end": 26436,
+      "text": "\n\n"
+    },
+    {
+      "id": "S161",
+      "start": 26436,
+      "end": 26847,
+      "text": "In Phase II, the two diagnostic groups (i.e., CNI, MCI) were comparable in Body Mass Index, gender ratio, lifestyle habits, previous occupation, frequency of persons living alone, overall health (as indexed by the number of current major medical morbidities), and family history of dementia (see Table 1), with the exception of age (CNI < MCI, p < 0.001) and frequency of APOE ε4 carriers (CNI < MCI, p = 0.04)."
+    },
+    {
+      "id": "S162",
+      "start": 26848,
+      "end": 27081,
+      "text": "Moreover, the two diagnostic groups did not differ in psychiatric manifestations (severity of self-reported anxiety and depression symptoms, depression and anxiety diagnosis) or frequency of psychotropic medication use (see Table 2)."
+    },
+    {
+      "id": "S163",
+      "start": 27082,
+      "end": 27142,
+      "text": "In Phase III, the two groups were comparablein all variables"
+    },
+    {
+      "id": "S164",
+      "start": 27142,
+      "end": 27143,
+      "text": "."
+    },
+    {
+      "id": "S165",
+      "start": 27144,
+      "end": 27360,
+      "text": "Occurrence of major stressors during the follow-up period was also very similar between the two groups, as was the frequency of persistent depression diagnosis (21.1 vs. 17.5% for CNI and MCI, respectively, p = 0.6)."
+    },
+    {
+      "id": "S166",
+      "start": 27360,
+      "end": 27362,
+      "text": "\n\n"
+    },
+    {
+      "id": "S167",
+      "start": 27362,
+      "end": 27603,
+      "text": "Over the follow-up period, participants in both groups reported increased anxiety symptoms (p < 0.001), although the frequency of anxiety diagnosis did not vary significantly (p = 0.6 and p = 0.2 within the CNI and MCI groups, respectively)."
+    },
+    {
+      "id": "S168",
+      "start": 27604,
+      "end": 27814,
+      "text": "This trend was paralleled by a concurrent increase in the use of at least one psychotropic medication, which reached significance in both groups (p < 0.001 and p = 0.005 in the CNI and MCI group, respectively)."
+    },
+    {
+      "id": "S169",
+      "start": 27815,
+      "end": 28109,
+      "text": "Whereas self-reported depression symptoms did not vary significantly across the two time points between CNI and MCI groups, the frequency of depression diagnosis changed significantly over time within diagnostic groups (increasing trend, statistically significant among CNI persons, p < 0.001)."
+    },
+    {
+      "id": "S170",
+      "start": 28110,
+      "end": 28195,
+      "text": "Alcohol use was reduced (p = 0.028 and p = 0.023 in CNI and MCI group, respectively)."
+    },
+    {
+      "id": "S171",
+      "start": 28196,
+      "end": 28445,
+      "text": "Finally, there was an increase in those living alone within the CNI group (p = 0.003) and in the average number of major medical morbidities in both groups (p = 0.001 and p < 0.001 in CNI and MCI groups, respectively), possibly as a result of aging."
+    },
+    {
+      "id": "S172",
+      "start": 28445,
+      "end": 28448,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S173",
+      "start": 28448,
+      "end": 28449,
+      "text": "#"
+    },
+    {
+      "id": "S174",
+      "start": 28449,
+      "end": 28453,
+      "text": "# 4."
+    },
+    {
+      "id": "S175",
+      "start": 28454,
+      "end": 28728,
+      "text": "Discussion\n\nIn this paper, we outline the study protocol and the sociodemographic, medical and mental health characteristics of the sample of a 7-year longitudinal study on aging, aiming to identify predictors of cognitive decline in community-dwelling elderly participants."
+    },
+    {
+      "id": "S176",
+      "start": 28729,
+      "end": 28914,
+      "text": "The sample derived from the CAC included persons averaging 72.9 (range: 60–89) years old at baseline who either met criteria for MCI or were cognitively intact upon initial examination."
+    },
+    {
+      "id": "S177",
+      "start": 28915,
+      "end": 29150,
+      "text": "Considering the age range of participants, we achieved satisfactory response rate (55.1%) in this well-characterized, culturally homogeneous, mainly rural (84.1%), low-literacy sample (92.1% had completed ≤6 years of formal education)."
+    },
+    {
+      "id": "S178",
+      "start": 29151,
+      "end": 29471,
+      "text": "This longitudinal study is rather unique as it involves multimodal measurements of a wide range of factors, which could act as either direct predictors of cognitive decline or as moderators of the impact of other variables on long-term cognitive status progression in this well-defined community-dwelling elderly sample."
+    },
+    {
+      "id": "S179",
+      "start": 29471,
+      "end": 29473,
+      "text": "\n\n"
+    },
+    {
+      "id": "S180",
+      "start": 29473,
+      "end": 29812,
+      "text": "Few studies have investigated the interplay between sleep abnormalities, mental and physical comorbid disorders, inflammatory biomarkers, stress-related hormones, behavioral/psychological symptoms and domain-specific cognitive performance among persons diagnosed with different levels of cognitive and functional impairment longitudinally."
+    },
+    {
+      "id": "S181",
+      "start": 29813,
+      "end": 29955,
+      "text": "Until recently, the majority of actigraphy and polysomnography studies recruited small groups of cognitively intact and MCI participants [10]."
+    },
+    {
+      "id": "S182",
+      "start": 29956,
+      "end": 30493,
+      "text": "To our knowledge, this is the first longitudinal study conducted in Greece and among few studies worldwide that uses several qualitative and quantitative measures, providing an objective, integrative assessment of sleep patterns, sleep-related disorders (Obstructive Sleep Apnea) and sleep macrostructure, as well as their interplay with cognitive performance and possible confounding factors (inflammatory and genetic biomarkers, mental and physical comorbidities, sociodemographic and lifestyle conditions)in a relatively large sample."
+    },
+    {
+      "id": "S183",
+      "start": 30493,
+      "end": 30495,
+      "text": "\n\n"
+    },
+    {
+      "id": "S184",
+      "start": 30495,
+      "end": 30745,
+      "text": "The two diagnostic groups (CNI and MCI) were relatively similar in sociodemographic, medical and emotional conditions at baseline, including family history of dementia, except that MCI persons were older and more likely to be APOE ε4 allele carriers."
+    },
+    {
+      "id": "S185",
+      "start": 30746,
+      "end": 30873,
+      "text": "At follow-up, we noted a significant increase in the number of major medical morbidities, which is expected with advancing age."
+    },
+    {
+      "id": "S186",
+      "start": 30874,
+      "end": 31374,
+      "text": "In terms of mental health, both groups reported increased severity of anxiety symptoms and use of psychotropic medications (anti-depressants and anxiolytics), possibly as a consequence of aging as well as the long-term and ongoing effects of two consecutive crises, namely the Greek financial crisis of 2009–2019, which resulted in further income reductions and increased unemployment, and the global pandemic crisis, which caused insecurity and exacerbated feelings of distress among Greeks [50,51]."
+    },
+    {
+      "id": "S187",
+      "start": 31375,
+      "end": 31574,
+      "text": "Furthermore, depression diagnosis (based on the clinical interview and antidepressant prescription criteria) was notably increased at re-evaluation, especially among cognitively non-impaired persons."
+    },
+    {
+      "id": "S188",
+      "start": 31575,
+      "end": 31877,
+      "text": "It should be stressed, though, that subjectively assessed depressive symptomatology remained relatively stable between the two measurement points (as opposed to increased frequency of depression diagnosis), assumingly due to increased anti-depressant use, which led to symptom alleviation at follow-up."
+    },
+    {
+      "id": "S189",
+      "start": 31878,
+      "end": 32051,
+      "text": "Depression and anxiety are frequent comorbid conditions among the elderly, and their co-occurrence increases the chance of somatic symptoms and cognitive deterioration [52]."
+    },
+    {
+      "id": "S190",
+      "start": 32052,
+      "end": 32210,
+      "text": "Development of depression and anxiety symptomatology is closely related to multimorbidity [35], presence of chronic illnesses, and stressful life events [52]."
+    },
+    {
+      "id": "S191",
+      "start": 32211,
+      "end": 32373,
+      "text": "The number of medical morbidities increased in Phase III, and at the same time, one out of three participants reported at least one type of major stressful event."
+    },
+    {
+      "id": "S192",
+      "start": 32374,
+      "end": 32549,
+      "text": "Major stressors that trigger feelings of threat or undermine functional independence (as in the case of severe sensory loss) predict both depressive and anxiety symptoms [53]."
+    },
+    {
+      "id": "S193",
+      "start": 32549,
+      "end": 32900,
+      "text": "\n\nGiven the demographic characteristics of the current population (low educational level and rural residence), lack of familiarity with the utilized techniques (actigraphy and polysomnography), the time-consuming nature of the study procedures and the lack of personal incentives (i.e., remuneration), the response rate can be considered satisfactory."
+    },
+    {
+      "id": "S194",
+      "start": 32901,
+      "end": 33201,
+      "text": "Our project was delayed for 7 months due to COVID-19 pandemic restrictions, whereas excessive worrying about COVID infection during examination and/or inconsistent information about the effectiveness of protective measures against coronavirus expansion may have negatively affected the response rate."
+    },
+    {
+      "id": "S195",
+      "start": 33202,
+      "end": 33358,
+      "text": "However, despite the adverse conditions and the insurmountable challenges posited by the pandemic, the Phase III response rate (51.1%) was among the highest"
+    },
+    {
+      "id": "S196",
+      "start": 33359,
+      "end": 33436,
+      "text": "compared to similar studies conducted in Greece [40] and Southern Europe [54]"
+    },
+    {
+      "id": "S197",
+      "start": 33436,
+      "end": 33437,
+      "text": "."
+    },
+    {
+      "id": "S198",
+      "start": 33437,
+      "end": 33508,
+      "text": "\n\nLastly, some limitations of the current protocol should be discussed."
+    },
+    {
+      "id": "S199",
+      "start": 33509,
+      "end": 33925,
+      "text": "Despite the fact that all testing procedures took place in participants’ homes to reduce the inconvenience of a hospital visit and to increase ecological validity, we could not control for the presence of environmental distractors during neuropsychological testing (although we opted for a distraction-free environment), fatigue or reduced compliance with the instructions pertaining to the polysomnographic process."
+    },
+    {
+      "id": "S200",
+      "start": 33926,
+      "end": 34119,
+      "text": "In addition, although home PSG is a well-validated process for sleep assessment, it is associated with artifacts and data loss due to lack of continuous monitoring by overnight technical staff."
+    },
+    {
+      "id": "S201",
+      "start": 34119,
+      "end": 34122,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S202",
+      "start": 34122,
+      "end": 34123,
+      "text": "#"
+    },
+    {
+      "id": "S203",
+      "start": 34123,
+      "end": 34127,
+      "text": "# 5."
+    },
+    {
+      "id": "S204",
+      "start": 34128,
+      "end": 34322,
+      "text": "Conclusions\n\nThe current study aimed to identify modifiable risk factors for cognitive deterioration by embracing a comprehensive, multidisciplinary approach, utilizing user-friendly techniques."
+    },
+    {
+      "id": "S205",
+      "start": 34323,
+      "end": 34514,
+      "text": "This is important given the high progression rates from MCI to dementia, the urgent need for timely interventions, as well as the complex interplay between risk factors for cognitive decline."
+    },
+    {
+      "id": "S206",
+      "start": 34515,
+      "end": 34966,
+      "text": "Strengths of this study include the longitudinal design, the relatively large number of MCI patients recruited, the particular socio-economic and cultural characteristics of the current sample, the long follow-up interval and methodological advantages (presence of a control group), which we expect to result in scientifically valid and clinically useful findings in terms of modifiable factors predisposing to cognitive progression among the elderly."
+    }
+  ]
+}

@@ -698,12 +698,17 @@ const converters: Record<string, ConverterFn> = {
 // Основная функция: блоки → триплеты
 // ═══════════════════════════════════════════════════════════════════
 
+import { canonicalStatements } from './canonicalBlocks';
+
 export function blocksToStatements(
     blocks: ArticleBlockData[],
     articleUuid?: string,
     existingStatements?: KnowledgeStatement[],
     opts?: { resolveRefs?: boolean },
 ): DerivedTriplet[] {
+    if (blocks.some(b => b.schemaVersion === 2)) {
+        return canonicalStatements(blocks).map(s => ({ ...s, sourceBlockId: s.id, sourceBlockType: 'statement', confidence: 1, type: 'EXTRACTED', subject_type: 'concept', object_type: 'concept' }));
+    }
     const idMap = new Map<string, string[]>();
     if (existingStatements) {
         for (const stmt of existingStatements) {

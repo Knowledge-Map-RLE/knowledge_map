@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10002830",
+  "document_uid": "PMC10002830",
+  "article_title": "In vivo Brain Estrogen Receptor Expression By Neuroendocrine Aging And Relationships With Gray Matter Volume, Bio-Energetics, and Clinical Symptomatology",
+  "doi": "10.21203/rs.3.rs-2573335/v1",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10002830/PMC10002830.md"
+  },
+  "article_sha256": "ecd933565d015647c9145a88a2d2a99424c6239a84c25a60860d8a202ffce392",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

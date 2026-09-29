@@ -4,6 +4,7 @@ import styles from '../../Article_editor.module.css';
 interface YamlHeadingProps {
     value: string;
     placeholder?: string;
+    readOnly?: boolean;
     onChange: (value: string) => void;
 }
 
@@ -13,7 +14,7 @@ interface YamlHeadingProps {
  * но во время фокуса внешние обновления не перезаписывают текст,
  * чтобы не сбивать позицию каретки.
  */
-const YamlHeading: React.FC<YamlHeadingProps> = ({ value, placeholder, onChange }) => {
+const YamlHeading: React.FC<YamlHeadingProps> = ({ value, placeholder, readOnly = false, onChange }) => {
     const ref = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
@@ -26,13 +27,13 @@ const YamlHeading: React.FC<YamlHeadingProps> = ({ value, placeholder, onChange 
         <h1
             ref={ref}
             className={styles.wyYamlHeading}
-            contentEditable
+            contentEditable={!readOnly}
             suppressContentEditableWarning
             spellCheck={false}
             data-placeholder={placeholder}
-            onInput={(e) => onChange(e.currentTarget.textContent ?? '')}
-            onBlur={(e) => onChange((e.currentTarget.textContent ?? '').trim())}
-            onKeyDown={(e) => {
+            onInput={readOnly ? undefined : (e) => onChange(e.currentTarget.textContent ?? '')}
+            onBlur={readOnly ? undefined : (e) => onChange((e.currentTarget.textContent ?? '').trim())}
+            onKeyDown={readOnly ? undefined : (e) => {
                 if (e.key === 'Enter' || e.key === 'Escape') {
                     e.preventDefault();
                     e.currentTarget.blur();

@@ -2,7 +2,7 @@
 
 Примеры:
     python tools/llm_extract/run.py extract --out extracted_baseline.json
-    python tools/llm_extract/run.py extract --out extracted.json --model qwen/qwen3-4b
+    python tools/llm_extract/run.py extract --out extracted.json --model openai_gpt6_luna
     python tools/llm_extract/run.py extract --out extracted_en.json --lang en
     python tools/llm_extract/run.py metrics extracted.json
     python tools/llm_extract/run.py full --out extracted.json   # extract + metrics

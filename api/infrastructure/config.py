@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from model_registry import ModelRegistry
 
 
 def _resolve_env_file() -> str:
@@ -79,16 +80,16 @@ class Settings(BaseSettings):
     # Единая директория логов сервиса (от рабочей директории процесса).
     LOG_DIR: str = "logs"
 
-    # Модель для UI-чата: всегда фиксированная (cloud.ru), чтобы переключение
-    # DEFAULT_PROVIDER в микросервисе ai НЕ влияло на интерфейс. Пусто — шлюз
-    # использует свой DEFAULT_PROVIDER.
-    AI_UI_MODEL: str = ""
+    MODEL_CONFIG_PATH: str = ""
+    MODEL_PROFILE: str = ""
+    AI_UI_PROFILE: str = ""
+    LLM_EXTRACT_PROFILE: str = ""
 
-    # LLM Extraction (triplet extraction from articles)
-    LLM_EXTRACT_MODEL: str = "deepseek-ai/DeepSeek-V4-Flash"
+    # LLM extraction limits are upper bounds; the selected profile may be stricter.
+    LLM_CONTEXT_LENGTH: int = 1050000
     LLM_MAX_CHUNK_CHARS: int = 3500
-    LLM_MAX_TOKENS: int = 80000
-    LLM_TIMEOUT: int = 1800
+    LLM_MAX_TOKENS: int = 128000
+    LLM_TIMEOUT: int = 3600
     LLM_TEMPERATURE: float = 0.1
     LLM_MAX_RETRIES: int = 2
     LLM_SEQ_REF_RATIO: float = 0.7788
@@ -170,3 +171,21 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+model_registry = ModelRegistry(settings.MODEL_CONFIG_PATH or None)
+
+
+def resolve_model_profile(role: str, explicit: str = "") -> str:
+    """Return the canonical profile name for a logical API role."""
+    role_override = {
+        "ui_chat": settings.AI_UI_PROFILE,
+        "article_extraction": settings.LLM_EXTRACT_PROFILE,
+    }.get(role, "")
+    return model_registry.resolve(explicit or role_override or settings.MODEL_PROFILE, role=role).profile_name
+
+
+def resolve_model_context(role: str, explicit: str = "") -> int:
+    return model_registry.profile(resolve_model_profile(role, explicit)).profile.context_length
+
+
+def resolve_model_max_tokens(role: str, explicit: str = "") -> int:
+    return model_registry.profile(resolve_model_profile(role, explicit)).profile.max_tokens

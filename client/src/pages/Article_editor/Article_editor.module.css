@@ -2421,6 +2421,14 @@
     appearance: textfield;
 }
 
+/* Read-only значение поля: статичный текст без рамок ввода */
+.wyReadOnlyValue {
+    cursor: default;
+    user-select: text;
+    white-space: pre-wrap;
+    min-width: 0;
+}
+
 /* Прозаическая textarea: абзац на всю ширину */
 .wyTextareaProse {
     display: block;
@@ -2954,4 +2962,151 @@
 
 .wyInsertBtn:hover {
     background: #eef2ff;
+}
+
+/* ── Pipeline v2: structural lines в стиле документа (wyLine) ───── */
+
+.pipelineRows {
+    max-height: 60vh;
+    overflow: auto;
+    padding: 4px 12px 40px 8px;
+}
+
+.pipelineRow {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    min-height: 30px;
+    padding: 2px 0 2px var(--pad, 52px);
+    border-radius: 4px;
+}
+
+.pipelineRow:hover {
+    background: #fafbff;
+}
+
+.pipelineBar {
+    position: absolute;
+    left: calc(var(--pad, 52px) - 13px);
+    top: 7px;
+    bottom: 7px;
+    width: 5px;
+    border-radius: 3px;
+    background: var(--wy-chip-color, #94a3b8);
+    opacity: .45;
+    transition: opacity 120ms ease;
+}
+
+.pipelineRow:hover .pipelineBar {
+    opacity: .85;
+}
+
+.pipelineGutter {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--pad, 52px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 24px;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 2;
+}
+
+.pipelineTypeName {
+    font-size: 10px;
+    line-height: 1.2;
+    color: #a3aab8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+    user-select: none;
+}
+
+.pipelineContent {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 .45em;
+    color: #1f2937;
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 30px;
+}
+
+.pipelineWord {
+    display: inline-flex;
+    align-items: baseline;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.pipelineWordValue {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.pipelineWordStrong {
+    font-weight: 650;
+    color: #111827;
+}
+
+.pipelineWordMuted {
+    color: #7b8492;
+    font-size: 13px;
+}
+
+.pipelineWordKey {
+    flex: none;
+    color: #0f766e;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    margin-right: .4em;
+}
+
+.pipelineArrow {
+    color: #b6bcc7;
+    font-size: 12px;
+    align-self: center;
+}
+
+.pipelineFoot {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin-left: .8em;
+    padding-left: .6em;
+    border-left: 1px solid #eef0f4;
+    color: #a0a8b5;
+    font-size: 10px;
+}
+
+.pipelineFoot code,
+.pipelineFoot span {
+    white-space: nowrap;
+}
+
+.pipelineFoot button {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #6366f1;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.pipelineFoot button:hover:not(:disabled) {
+    text-decoration: underline;
+}
+
+.pipelineFoot button:disabled {
+    cursor: default;
+    opacity: .5;
 }

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10002864",
+  "document_uid": "PMC10002864",
+  "article_title": "Vitamin D as a Shield against Aging",
+  "doi": "10.3390/ijms24054546",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "markdown/PMC10002864.md"
+  },
+  "article_sha256": "26eea8fcfa1f5d5e08771fc67b55709f99ea5ffc207953501ac741723243e88c",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

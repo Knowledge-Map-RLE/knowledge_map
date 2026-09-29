@@ -246,6 +246,10 @@ export interface ExtractBlocksRequest {
 }
 
 export interface ExtractBlocksResult {
+    version_id?: string;
+    run_id?: string;
+    status?: string;
+    saved?: boolean;
     success?: boolean;
     blocks?: ArticleBlockData[];
     message?: string;

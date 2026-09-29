@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "knowledge-map-pipeline"
+version = "0.1.0"
+description = "Framework independent scientific article extraction"
+authors = ["Knowledge Map"]
+packages = [{include = "knowledge_pipeline"}]
+
+[tool.poetry.dependencies]
+jsonschema = "^4.23"
+python = ">=3.12,<4.0"
+knowledge-map-contracts = {path = "../../shared/knowledge", develop = true}
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10001974",
+  "document_uid": "PMC10001974",
+  "article_title": "Socioeconomic Background and Self-Reported Sleep Quality in Older Adults during the COVID-19 Pandemic: An Analysis of the English Longitudinal Study of Ageing (ELSA)",
+  "doi": "10.3390/ijerph20054534",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10001974/PMC10001974.md"
+  },
+  "article_sha256": "2846f2d3a02e8d64f66215b57ab316b9c73cb696447e8a39e9e3d752c9b2108f",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

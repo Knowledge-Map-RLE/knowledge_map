@@ -16,6 +16,7 @@ interface LineRowProps {
     dropSide: 'before' | 'after' | null;
     highlight: boolean;
     focused: boolean;
+    readOnly?: boolean;
     onDragStartLine: (instanceId: string) => void;
     onDragEndLine: () => void;
     onDragOverLine: (e: React.DragEvent, instanceId: string) => void;
@@ -88,6 +89,7 @@ const LineRowInner: React.FC<LineRowProps> = ({
     dropSide,
     highlight,
     focused,
+    readOnly = false,
     onDragStartLine,
     onDragEndLine,
     onDragOverLine,
@@ -97,18 +99,20 @@ const LineRowInner: React.FC<LineRowProps> = ({
     const def: BlockTypeDef | undefined = getBlockTypeDef(block.blockType);
 
     const handleTypeBarClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        if (readOnly) return;
         const rect = e.currentTarget.getBoundingClientRect();
         api.openSlashMenu({ lineId: block.instanceId, fieldKey: '__type__', rect });
-    }, [api, block.instanceId]);
+    }, [api, block.instanceId, readOnly]);
 
     const handleRowClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        if (readOnly) return;
         if (e.target !== e.currentTarget) return;
         const fields = queryLineFieldEls(e.currentTarget, block.instanceId)
             .filter((el): el is HTMLInputElement | HTMLTextAreaElement =>
                 el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement);
         const empty = fields.find((f) => !f.value.trim());
         (empty ?? fields[0])?.focus();
-    }, [block.instanceId]);
+    }, [block.instanceId, readOnly]);
 
     const rowClass = [
         styles.wyLine,
@@ -150,33 +154,37 @@ const LineRowInner: React.FC<LineRowProps> = ({
                 <span className={styles.wyTypeName} title={def.name}>
                     {def.name}
                 </span>
-                <button
-                    type="button"
-                    className={styles.wyDragHandle}
-                    draggable
-                    onDragStart={(e) => {
-                        e.dataTransfer.effectAllowed = 'move';
-                        e.dataTransfer.setData('text/plain', block.instanceId);
-                        onDragStartLine(block.instanceId);
-                    }}
-                    onDragEnd={onDragEndLine}
-                    title="Перетащите, чтобы переместить строку"
-                >
-                    ⠿
-                </button>
-                <DeleteLineButton instanceId={block.instanceId} />
+                {!readOnly && (
+                    <button
+                        type="button"
+                        className={styles.wyDragHandle}
+                        draggable
+                        onDragStart={(e) => {
+                            e.dataTransfer.effectAllowed = 'move';
+                            e.dataTransfer.setData('text/plain', block.instanceId);
+                            onDragStartLine(block.instanceId);
+                        }}
+                        onDragEnd={onDragEndLine}
+                        title="Перетащите, чтобы переместить строку"
+                    >
+                        ⠿
+                    </button>
+                )}
+                {!readOnly && <DeleteLineButton instanceId={block.instanceId} />}
                 <UuidCopyButton instanceId={block.instanceId} chainText={chainText} />
             </div>
             {Array.from({ length: depth }).map((_, i) => (
                 <span key={i} className={styles.wyGuide} style={{ left: PAD_BASE - 9 + i * PAD_STEP }} />
             ))}
-            <button
-                type="button"
-                className={styles.wyTypeBarBtn}
-                onClick={handleTypeBarClick}
-                title={typeTitle}
-                aria-label={`Тип: ${def.name}`}
-            />
+            {!readOnly && (
+                <button
+                    type="button"
+                    className={styles.wyTypeBarBtn}
+                    onClick={handleTypeBarClick}
+                    title={typeTitle}
+                    aria-label={`Тип: ${def.name}`}
+                />
+            )}
             {def.layout === 'yaml' ? (
                 <div className={styles.wyYamlWrap}>
                     <pre className={styles.wyYaml} data-wy-line={block.instanceId}>
@@ -184,7 +192,7 @@ const LineRowInner: React.FC<LineRowProps> = ({
                             <span key={f.key} className={styles.wyYamlLine}>
                                 <span className={styles.wyYamlKey}>{`${f.key}:`}</span>
                                 <span className={styles.wyYamlValue}>
-                                    <InlineField lineId={block.instanceId} field={f} value={block.data[f.key] ?? ''} />
+                                    <InlineField lineId={block.instanceId} field={f} value={block.data[f.key] ?? ''} readOnly={readOnly} />
                                 </span>
                             </span>
                         ))}
@@ -192,13 +200,14 @@ const LineRowInner: React.FC<LineRowProps> = ({
                     <YamlHeading
                         value={typeof block.data.title === 'string' ? block.data.title : ''}
                         placeholder="Название статьи"
+                        readOnly={readOnly}
                         onChange={(v) => api.setField(block.instanceId, 'title', v)}
                     />
                 </div>
             ) : (
                 <div className={styles.wyFields}>
                     {def.fields.map((f) => (
-                        <InlineField key={f.key} lineId={block.instanceId} field={f} value={block.data[f.key] ?? ''} />
+                        <InlineField key={f.key} lineId={block.instanceId} field={f} value={block.data[f.key] ?? ''} readOnly={readOnly} />
                     ))}
                 </div>
             )}

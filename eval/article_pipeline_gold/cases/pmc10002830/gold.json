@@ -1,0 +1,3387 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 560,
+      "text": "# In vivo Brain Estrogen Receptor Expression By Neuroendocrine Aging And Relationships With Gray Matter Volume, Bio-Energetics, and Clinical Symptomatology\n\n**Авторы:** Mosconi Lisa, Jett Steven, Nerattini Matilde, Andy Caroline, Yepez Camila Boneu, Zarate Camila, Carlton Caroline, Kodancha Vibha, Schelbaum Eva, Williams Schantel, Pahlajani Silky, Loeb-Zeitlin Susan, Havryliuk Yelena, Andrews Randolph, Pupi Alberto, Ballon Douglas, Kelly James, Osborne Joseph, Nehmeh Sadek, Fink Matthew, Berti Valentina, Matthews Dawn, Dyke Jonathan, Brinton Roberta Diaz",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 560,
+      "end": 648,
+      "text": "\n\n**Журнал:** Research Square (2023)\n\n**DOI:** 10.21203/rs.3.rs-2573335/v1\n\n\n## Abstract",
+      "decision": "non_assertional",
+      "reason": "bibliographic_metadata"
+    },
+    {
+      "id": "S3",
+      "start": 648,
+      "end": 858,
+      "text": "\n\n17β-estradiol,the most biologically active estrogen, exerts wide-ranging effects in brain through its action on estrogen receptors (ERs), influencing higher-order cognitive function and neurobiological aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 859,
+      "end": 975,
+      "text": "However, our knowledge of ER expression and regulation by neuroendocrine aging in the living human brain is limited.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 976,
+      "end": 1149,
+      "text": "This in vivo multi-modality neuroimaging study of healthy midlife women reveals progressively higher ER density over the menopause transition in estrogen-regulated networks.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 1150,
+      "end": 1303,
+      "text": "Effects were independent of age and plasma estradiol levels, and were highly consistent, correctly classifying all women as being post-menopausal or not.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 1304,
+      "end": 1482,
+      "text": "Higher ER density was generally associated with lower gray matter volume and blood flow, and with higher mitochondria ATP production, possibly reflecting compensatory mechanisms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1483,
+      "end": 1575,
+      "text": "Additionally, ER density predicted changes in thermoregulation, mood, cognition, and libido.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1576,
+      "end": 1751,
+      "text": "Our data provide evidence that ER density impacts brainstructure, perfusion and energy production during female endocrine aging, with clinical implications for women’s health.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1751,
+      "end": 1896,
+      "text": "\n\n\n## Introduction\n\nEstrogen is a class of steroid hormones that play a key role in the development and regulation of female reproductive system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1897,
+      "end": 2142,
+      "text": "Additionally, burgeoning evidence documents that 17β-estradiol (E2), the most biologically active estrogen, exerts wide-ranging effects on neurological and cognitive functions1,2, as well as neurodevelopmental and neurodegenerative processes2,3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 2142,
+      "end": 2144,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S13",
+      "start": 2144,
+      "end": 2386,
+      "text": "E2 signals through estrogen receptors (ERs) that are ubiquitously distributed in brain1,2 where they coordinate neuroprotective signaling cascades4 and modulate cerebral blood flow, energy metabolism, inflammation, and oxidative processes5,6.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 2387,
+      "end": 2594,
+      "text": "This is fundamental for humans, as all women experience a dramatic drop in circulating estradiol as they undergo menopause either through the natural endocrine aging process or through medical intervention7.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2595,
+      "end": 2827,
+      "text": "Given the extraordinary integrative power of E2 for brain function1,2, it is not surprising that many of the symptoms of menopause are neurological in origin, manifesting as changes in thermoregulation, mood, sleep and cognition3,8.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2827,
+      "end": 2829,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S17",
+      "start": 2829,
+      "end": 3036,
+      "text": "Hypoestrogenic post-menopausal women are also more vulnerable to brain injury, affective disorders, and neurodegenerative conditions such as Alzheimer's disease (AD)9, which are influenced by ER regulation4.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 3037,
+      "end": 3274,
+      "text": "In translational brain imaging studies, the menopause transition is associated with reduced gray matter volume (GMV) and glucose metabolism10-12, as well as emergence of amyloid-beta (Aβ) plaques, a hallmark of AD, in midlife women11,13.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 3275,
+      "end": 3456,
+      "text": "Post-menopausal GMV and metabolic declines are attenuated by estrogen therapy14,15, suggesting that ER-mediated neurological processes retain dynamic properties well into menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 3456,
+      "end": 3670,
+      "text": "\n\nDespite preclinical evidence of the importance of ERs for neural function and the increasing use of estrogen therapies in clinical practice, our direct knowledge of ER activity in the human brain is very limited.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 3670,
+      "end": 3672,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S22",
+      "start": 3672,
+      "end": 3824,
+      "text": "Positron emission tomography (PET) with selective ER ligands is the only technique currently available that enables in vivo assessment of ER expression.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 3825,
+      "end": 4035,
+      "text": "16α-18F-fluoro-17β-estradiol (18F-FES) is the most utilized ER ligand in oncology, exhibiting high binding affinity for ERs, especially ERα16, and excellent signal correlation with ER expression in tumors17,18.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 4036,
+      "end": 4095,
+      "text": "18F-FES studies of brain ER expression are instead, scarce.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 4096,
+      "end": 4307,
+      "text": "Animal studies indicate high 18F-FES uptake in brain ER-rich regions, mainly pituitary gland and hypothalamus19-21 and lower yet measurable signal in preoptic area, striatum, amygdala, hippocampus, and cortex22.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 4308,
+      "end": 4397,
+      "text": "This pattern is consistent with the reported distribution of ERs in vitro and ex vivo1,2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 4398,
+      "end": 4493,
+      "text": "Currently, the only 18F-FES PET study of human brain was conducted in breast cancer patients21.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4494,
+      "end": 4662,
+      "text": "This study provided important evidence of high tracer uptake in pituitary, with trends toward higher levels in post-menopausal as compared to pre-menopausal patients21.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 4663,
+      "end": 4810,
+      "text": "A few case studies also reported specific 18F-FES signal in pituitary and hypothalamus of breast cancer patients and post-menopausal controls23,24.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 4810,
+      "end": 4812,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S31",
+      "start": 4812,
+      "end": 4994,
+      "text": "Herein, we took a translational approach to systematically investigate brain ER density and its modulation by neuroendocrine aging using in vivo\n18F-FES PET in healthy midlife women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 4995,
+      "end": 5335,
+      "text": "Additionally, we: (i) conducted multi-modality brain imaging to test for associations of ER density with gray matter volume (GMV), cerebral blood flow (CBF) and mitochondrial adenosine triphosphate (ATP) production in estrogenic regions; and (ii) examined the relationships between ER density and menopausal symptoms of neurological origin.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 5335,
+      "end": 5338,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S34",
+      "start": 5338,
+      "end": 5629,
+      "text": "## Results\n\n### ER density by menopause status\n\nTo characterize ER distribution and modulation by neuroendocrine aging, we performed 18F-FES PET imaging on midlife women, ages 40-65 years, balanced by menopausal stage: pre-menopause (scanned at midcycle), peri-menopause, and post-menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 5630,
+      "end": 5728,
+      "text": "Demographic information on the sample is provided in the Online Methods and Supplementary Table 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 5729,
+      "end": 5822,
+      "text": "Image analysis was performed using regions-of-interest (ROI)25,26 and voxel-based analysis27.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 5823,
+      "end": 6006,
+      "text": "18F-FES standardized uptake volume ratios (SUVR) were calculated relative to cerebellar gray matter uptake and validated against distribution volume ratios (DVR) (see Online Methods).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 6007,
+      "end": 6122,
+      "text": "Results are corrected for multiple comparisons, and adjusted for age, plasma E2, and modality-specific confounders.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 6122,
+      "end": 6125,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S40",
+      "start": 6125,
+      "end": 6128,
+      "text": "###",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S41",
+      "start": 6129,
+      "end": 6141,
+      "text": "ROI analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 6141,
+      "end": 6463,
+      "text": "\n\nOn multivariate regression analysis, there was a significant overall effect of menopause status on ER density in a priori selected ER-rich ROI (pituitary, hypothalamus, nucleus accumbens, amygdala, hippocampus, striatum, thalamus, cingulate, middle and orbital frontal cortex) (multi-variable adjusted p<0.001; Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 6464,
+      "end": 6693,
+      "text": "In these regions, ER density generally increased in a menopause-stage dependent fashion, e.g., was highest in the post-menopausal group, intermediate in the peri-menopausal group, and lowest in the pre-menopausal group (Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 6694,
+      "end": 6861,
+      "text": "On post-hoc examination, the post-menopausal group exhibited higher ER density than the pre-menopausal group in all regions (multi-variable adjusted p=0.007; Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 6862,
+      "end": 7002,
+      "text": "Overall differences between peri-menopausal and pre-menopausal groups did not reach significance (multi-variable adjusted p=0.238; Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 7002,
+      "end": 7005,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S47",
+      "start": 7005,
+      "end": 7006,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S48",
+      "start": 7006,
+      "end": 7007,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S49",
+      "start": 7007,
+      "end": 7029,
+      "text": "# Voxel-based analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 7029,
+      "end": 7179,
+      "text": "\n\nVoxel-based analysis detected progressively higher ER density from pre-menopausal to post-menopausal stages, consistent with ROI results (Figure 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 7180,
+      "end": 7334,
+      "text": "As compared to the ROI approach, voxel-based analysis enhanced detection of menopause-stage effects and identified some effects of hemispheric laterality.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 7335,
+      "end": 7599,
+      "text": "Peak clusters of overall associations between menopause status and ER density were located in medial and middle frontal gyrus, bilaterally, as well as putamen, cingulate, orbitofrontal gyrus, and precuneus of the left hemisphere (pFWE≤0.042, Figure 1 and Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 7600,
+      "end": 7797,
+      "text": "On post-hoc analysis, the post-menopausal group exhibited higher ER density in all of these regions as compared to both pre-menopausal and peri-menopausal groups (pFWE≤0.026, Figure 1 and Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 7798,
+      "end": 8053,
+      "text": "The peri-menopausal group exhibited higher ER density in cingulate cortex, putamen, and precuneus, bilaterally, and in amygdala and inferior parietal lobule of the left hemisphere, as compared to the pre-menopausal group (pFWE≤0.049 Figure 1 and Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 8053,
+      "end": 8387,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> (A) Surface maps of regional 18F-FES estrogen receptor (ER) density differences between pre-menopausal, peri-menopausal and post-menopausal groups (N=15 each), at family-wise error (FWE) corrected cluster-level P<0.05, adjusted by age, plasma estradiol levels and cerebellar uptake.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 8388,
+      "end": 8492,
+      "text": "Statistical parametric maps are represented on a spectrum color-coded scale with corresponding Z scores.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 8493,
+      "end": 8590,
+      "text": "Statistics are reported in Table 2.</figcaption>\n</figure>\n\n\n### Prediction of group membership\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 8590,
+      "end": 8855,
+      "text": "On a regional basis, ER density in hypothalamus, nucleus accumbens, medial and superior frontal cortex, anterior cingulate, and putamen yielded the largest effect size in differentiating post-menopausal from pre-menopausal participants (Cohen’s d’s ≥1.8, Figure 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 8856,
+      "end": 9001,
+      "text": "ER density in these regions resulted in 100% predictive accuracy in classifying participants as being post-menopausal or pre-menopausal (p<0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 9001,
+      "end": 9336,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> (A) Standardized pairwise mean estrogen receptor (ER) density differences in pre-specified regions of interest (left) and voxel-based analysis clusters (right) between menopause statuses are expressed as Cohen’s d coefficients, where d≥0.8 reflects a large effect size.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 9336,
+      "end": 9337,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S62",
+      "start": 9337,
+      "end": 9434,
+      "text": "/figure>\n\n\n### Associations of ER density with brain structure, function, and energy metabolism\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 9434,
+      "end": 9852,
+      "text": "To test whether ERs exert in vivo modulatory actions on neuronal density, cerebral perfusion and energy metabolism, we performed multimodality neuroimaging on the same participants to test for associations of ER density with (i) GMV assessed via volumetric Magnetic Resonance Imaging (MRI), (ii) CBF via Arterial Spin Labeling (ASL), and (iii) ATP production via 31Phosphorus Magnetic Resonance Spectroscopy (31P-MRS).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 9852,
+      "end": 9855,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S65",
+      "start": 9855,
+      "end": 9857,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S66",
+      "start": 9857,
+      "end": 9858,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S67",
+      "start": 9859,
+      "end": 10118,
+      "text": "ER density and Gray Matter Volume\n\nCorrelations between ER density and GMV in ER-rich regions exhibited a generally negative pattern, which was driven by the post-menopausal group and nearly absent in the peri-menopausal and pre-menopausal groups (Figure 3a).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 10118,
+      "end": 10646,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 3</strong> (A) Covariate-adjusted associations between estrogen receptor (ER) density and gray matter volume (GMV) in the full regions-of-interest panel, and corresponding partial correlation r coefficients.</figcaption>\n</figure>\n\nAs shown in Figure 3b, GMV in ER-rich regions was progressively lower from pre-menopausal to post-menopausal stages, with peak clusters localized in limbic lobe, posterior cingulate, inferior temporal and fusiform gyri (pFWE≤0.026; Supplementary Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 10647,
+      "end": 10812,
+      "text": "Additionally, the post-menopausal group showed lower GMV in frontal regions and putamen as compared to the peri-menopausal group (pFWE≤0.037; Supplementary Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 10813,
+      "end": 11107,
+      "text": "The frontal cortex exhibited the strongest negative associations between ER density and GMV, with peak clusters in superior and middle frontal gyrus of the right hemisphere (Brodmann area 9; cluster extent 21 voxels; peak coordinates x=17, y=45, z=23; Z=3.93, r = −.710, pFWE=0.004; Figure 3c).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 11107,
+      "end": 11110,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S72",
+      "start": 11110,
+      "end": 11150,
+      "text": "### ER density and Cerebral Blood Flow\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 11150,
+      "end": 11310,
+      "text": "Overall correlations between ER density and ROI CBF exhibited a generally negative pattern, which were more pronounced at the post-menopausal stage (Figure 4a).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 11310,
+      "end": 11313,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S75",
+      "start": 11313,
+      "end": 12049,
+      "text": "<figure>\n  <figcaption><strong>Figure 4</strong> (A) Covariate-adjusted associations between estrogen receptor (ER) density and cerebral blood flow (CBF) in the full regions-of-interest panel, and corresponding partial correlation r coefficients.</figcaption>\n</figure>\n\nAs shown in Figure 4b, CBF in ER-rich regions was progressively lower from pre-menopausal to post-menopausal stages, with peak clusters located in superior frontal and cingulate cortex, striatum and thalamus (pFWE≤0.037; Figure 4a and Supplementary Table 3). On post-hoc examination, the postmenopausal group showed lower CBF in these regions, as well as in inferior and medial frontal regions, as compared to peri-menopausal and pre-menopausal groups (pFWE≤0.046).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 12050,
+      "end": 12206,
+      "text": "The post-menopausal group also exhibited lower CBF in hippocampus as compared to the pre-menopausal group (pFWE=0.044; Figure 4a and Supplementary Table 3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 12207,
+      "end": 12506,
+      "text": "The frontal cortex exhibited the strongest negative associations between ER density and CBF, with peak clusters in middle and superior frontal gyrus of the right hemisphere (Brodmann area 46/10; cluster extent 22 voxels; peak coordinates x=37, y=35, z=12; Z=3.41, r = −0.423, pFWE=0.002; Figure 4c).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 12506,
+      "end": 12509,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S79",
+      "start": 12509,
+      "end": 12510,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S80",
+      "start": 12510,
+      "end": 12544,
+      "text": "## ER density and ATP production\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 12544,
+      "end": 12731,
+      "text": "As shown in Figure 5, overall correlations between ER density and the ratio of phosphocreatine to ATP (PCr/ATP), reflecting higher ATP utilization, exhibited a generally positive pattern.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 12731,
+      "end": 12887,
+      "text": "On examination of each menopausal group, these correlations were more pronounced at the peri-menopausal stage and less pronounced post-menopause (Figure 5).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 12888,
+      "end": 13036,
+      "text": "In the peri-menopausal group, the strongest positive regional associations were in fusiform, inferior parietal lobe, and thalamus (r≥0.395, p<0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 13037,
+      "end": 13142,
+      "text": "In the post-menopausal group, the strongest effects were in fusiform gyrus and putamen (r≥0.256, p<0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 13142,
+      "end": 13507,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 5</strong> Covariate-adjusted associations between estrogen receptor (ER) density and phosphocreatine to ATP (PCr/ATP) measures in the full regions-of-interest panel, and corresponding partial correlation coefficients overall (N=42), and separately for peri-menopausal (N=14) and post-menopausal groups (N=13).</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 13507,
+      "end": 13729,
+      "text": "</figure>\n\n\n### Associations of ER density with Menopause Symptoms\n\nWe then tested for associations between ER density and self-reported changes in thermoregulation (vasomotor symptoms), mood, sleep, cognition, and libido.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 13729,
+      "end": 14071,
+      "text": "\n\nER density was positively associated with a composite menopause symptom severity score in inferior frontal gyrus and precuneus, bilaterally; superior frontal gyrus, anterior cingulate and precentral gyrus of the left hemisphere; and middle and orbitofrontal gyrus of the right hemisphere (pFWE≤0.050; Figure 6a,b and Supplementary Table 4).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 14071,
+      "end": 14074,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S89",
+      "start": 14074,
+      "end": 14300,
+      "text": "<figure>\n  <figcaption><strong>Figure 6</strong> (A) Surface maps of regional associations between estrogen receptor (ER) density and menopause symptom scores, at cluster-level PFWE<0.05, adjusted by age and cerebellar uptake.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 14301,
+      "end": 14396,
+      "text": "Statistical parametric maps are represented on a color-coded scale with corresponding Z scores.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 14397,
+      "end": 14471,
+      "text": "Statistics are reported in Supplementary Table 4.</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 14471,
+      "end": 14713,
+      "text": "In examination of menopause symptom clusters, associations between ER density in voxel-based clusters showing menopause effects and symptom presence were more pronounced in the peri-menopausal group, and attenuated post-menopause (Figure 6c).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 14714,
+      "end": 14996,
+      "text": "In the peri-menopausal group, ER density significantly predicted changes inlibido (odds ratios, OR=9.5, 95% confidence interval, 4.2-10), mood changes (OR=7.9, 95% CI, 0.7-10), difficulty concentrating (OR=6.5, 95% CI, 4.1-10), and hot flashes (OR=6.1, 95% CI, 0.39-10) (Figure 6c).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 14997,
+      "end": 15317,
+      "text": "In the post-menopausal group, ER density in the same clusters also predicted changes inlibido (OR=5.8, 95% CI, 0.2-10), tearfulness (OR=7.3, 95% CI, 0.43-10), difficulty concentrating (OR=5.5, 95% CI, 0.2-10), and hot flashes (OR=5.2, 95% CI, 0.2-10), as well as memory difficulties (OR=4.8, 95% CI, 0.6-10) (Figure 6c).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 15317,
+      "end": 15587,
+      "text": "\n\nSimilar results were found using ROI measures, with anterior brain regions, chiefly frontal cortex, anterior cingulate and basal ganglia, predicting most menopause symptoms at the peri-menopausal stage, and less so at the post-menopausal stage (Supplementary Table 5).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 15588,
+      "end": 15779,
+      "text": "Additionally, ER density in hypothalamus and amygdala predicted presence of peri-menopausal night sweats (OR=10, 95% CI, 0.3-10, and 8.7, 95% CI, 0.1-10, respectively, Supplementary Table 5).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 15780,
+      "end": 15977,
+      "text": "ER density in hypothalamus predicted presence of post-menopausal hot flashes and night sweats (OR=10 and 5.2, respectively, 95% CI, 0.2-10), as well as sleep disturbances (OR= 5.9, 95% CI, 0.2-10).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 15977,
+      "end": 16198,
+      "text": "\n\n\n\n## Discussion\n\nThis in vivo multi-modality imaging study demonstrates progressively higher brain ER density over the menopause transition, with associated alterations in brain volume, perfusion, and energy metabolism.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 16199,
+      "end": 16434,
+      "text": "Results demonstrate high anatomical overlap with estrogen-regulated brain networks involved in both reproductive function and higher-order cognitive functions, and were independent of chronological age and plasma estradiol (E2) levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 16435,
+      "end": 16532,
+      "text": "Elevations in ER density were highly consistent, correctly classifying all post-menopausal women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 16533,
+      "end": 16662,
+      "text": "Finally, ER density predicted presence of menopause symptoms, chiefly changes in libido, mood, cognition, and vasomotor symptoms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 16662,
+      "end": 16664,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S103",
+      "start": 16664,
+      "end": 16798,
+      "text": "For decades, the classic view of estrogen action in brain was confined to regulation of ovulation and female reproductive behavior1,2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 16799,
+      "end": 16977,
+      "text": "Later studies challenged this paradigm, identifying E2 as the “master regulator” of neurological function in female brain due to its broad impact on multiple neural processes2\n3.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 16978,
+      "end": 17259,
+      "text": "Further advances led to discovery that E2 actions are mediated by specialized brain ERs, including classical ER alpha (ERα) and beta (ERβ), which are found in neurons, glial cells, astrocytes; and G protein-coupled estrogen receptor 1 (GPER1) mainly located in plasma membranes1,2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 17260,
+      "end": 17466,
+      "text": "ERs modulate synaptic plasticity, adult neurogenesis, and DNA repair4, as well as expression of a wide variety of genes linked to lipid metabolism, vasodilatation, synaptic potentiation, and myelination1,2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 17467,
+      "end": 17668,
+      "text": "Major projection neurons such as cholinergic, serotonergic, and dopaminergic systems are also responsive to ER activity5,6, further highlighting the importance of ER-mediated activity for brain health.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 17669,
+      "end": 17751,
+      "text": "However, our knowledge of ER expression in the living human brain is very limited.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 17751,
+      "end": 17753,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S110",
+      "start": 17753,
+      "end": 17855,
+      "text": "PET imaging with ER ligands is the only technique currently available to assess ER expression in vivo.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 17856,
+      "end": 18062,
+      "text": "18F-FES is the most utilized ER tracer thanks to extensive pharmacological validation of its binding properties against biopsy material assayed by in vitro radioligand binding and immunohistochemistry17,18.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 18063,
+      "end": 18180,
+      "text": "As 18F-FES exhibits higher affinity for ERα than other ERs19, the signal originates mostly from ERα-expressing areas.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 18180,
+      "end": 18250,
+      "text": "\n\nBrain 18F-FES PET studies are however scarce, and mostly in animals.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 18251,
+      "end": 18457,
+      "text": "Preclinical studies have been instrumental in demonstrating high tracer binding in regions with known ERα expression, chiefly pituitary and hypothalamus19-21, as well as striatum, limbic lobe, and cortex22.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 18458,
+      "end": 18664,
+      "text": "In female rats, oophorectomy provoked a marked increase in pituitary and hypothalamic ER density relative to non-oophorectomized controls20,21, as well as smaller increases in amygdala and frontal cortex22.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 18665,
+      "end": 18926,
+      "text": "This indicates that E2 declines following oophorectomy (surgical menopause) prompt an increase in ER expression, which could be reduced by pre-surgical administration of estradiol.20\n22\n\nWhether similar mechanisms are active in human endocrine aging is unknown.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 18927,
+      "end": 19132,
+      "text": "Currently, the only brain 18F-FES study in women was conducted on de novo breast cancer patients, showing a trend toward higher pituitary uptake in post-menopausal as compared to pre-menopausal patients21.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 19133,
+      "end": 19403,
+      "text": "The pre-menopausal group was substantially smaller than the post-menopausal group, as expected in a breast cancer cohort, and PET imaging in the pre-menopausal group was not standardized to the menstrual cycle21, which may have reduced power to detect group differences.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 19404,
+      "end": 19650,
+      "text": "Additionally, delineation of the pituitary region was based on tracer uptake rather than MRI-guided tracing, and pituitary uptake was normalized to frontal cortex21, a known ER site28-31, which may have confounded detection of menopausal effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 19650,
+      "end": 19827,
+      "text": "\n\nThe present brain 18F-FES PET study examined a prospective cohort of healthy midlife women ages 40-65 years, divided into three size-matched groups based on menopausal status.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 19828,
+      "end": 19954,
+      "text": "All post-menopausal women had undergone menopause spontaneously, and pre-menopausal participants were scanned around midcycle.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 19955,
+      "end": 20179,
+      "text": "We used state-of-the-art ROI and voxel-based analysis to examine 18F-FES data normalized to a statistically-validated cerebellar reference region developed via supervised clustering algorithms (see Online Methods and below).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 20180,
+      "end": 20378,
+      "text": "Using these procedures, our results show a pattern of brain ER distribution which maps onto estrogen-regulated neural systems3, and is consistent with preclinical ex vivo28-31 and in vivo work19-21.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 20379,
+      "end": 20575,
+      "text": "Consistent with the above breast cancer study21, the pituitary gland showed the strongest tracer uptake, which was highest post-menopause, intermediate in peri-menopause, and lowest pre-menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 20576,
+      "end": 20806,
+      "text": "Hypothalamus as well as other ERα-abundant brain regions, mainly thalamus, striatum, midbrain, cingulate, frontal cortex, and medial temporal lobe, also exhibited progressively higher ER density from pre-to post-menopausal stages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 20807,
+      "end": 20944,
+      "text": "These effects were independent of age and highly consistent, correctly identifying all post-menopausal women vs. pre-menopausal controls.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 20945,
+      "end": 21135,
+      "text": "Additionally, by focusing on spontaneous menopause, we were able to detect alterations in ER density at the peri-menopausal stage, chiefly in frontal cortex, cingulate, amygdala and putamen.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 21136,
+      "end": 21427,
+      "text": "Overall, these findings provide novel evidence that female endocrine aging is associated with progressively higher ER expression in E2-regulated areas involved in various higher-cognitive functions including mood, memory, stress, pain, and fine motor skills1,2, with onset in peri-menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 21427,
+      "end": 21730,
+      "text": "\n\nHigher 18F-FES binding post-menopause may be due to either the near-absence of endogenous E2 competing for receptor occupancy, or to an estrogen depletion-induced positive feedback loop triggering ER over-expression as a compensatory response aimed at preserving neural function in E2-reliant regions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 21731,
+      "end": 21851,
+      "text": "While dilution effects cannot be fully excluded, several lines of evidence support presence of a compensatory mechanism.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 21852,
+      "end": 22124,
+      "text": "First, the surgical histology studies described above provide an important part of the basis for concluding that increased tracer uptake post-menopause reflects increased ER density, rather than another possible explanation such as less competition from available E219-21.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 22125,
+      "end": 22368,
+      "text": "Secondly, studies in rodents have shown that brain ER expression is in part negatively associated with E2 levels during the menstrual cycle32, which supports evidence for increased post-menopausal expression once E2 levels are permanently low.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 22369,
+      "end": 22561,
+      "text": "Third, in terms of tracer kinetics, preclinical studies have shown that delivery of 18F-FES to the brain may be affected by circulating E2 whereas its binding to ERs is less or not impacted20.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 22562,
+      "end": 22770,
+      "text": "Hormonal differences between female rats and women notwithstanding, studies of breast cancer patients also reported mild or non-significant effects of circulating E2 on 18F-FES uptake in peripheral tissues33.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 22771,
+      "end": 22938,
+      "text": "In the present study, tracer uptake did not significantly correlate with plasma E2, and group differences in tracer uptake remained significant adjusting by E2 levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 22938,
+      "end": 23080,
+      "text": "\n\nWhile E2 can regulate its own receptor gene expression in the adult brain33, other factors control ERα mRNA in addition to circulating E234.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 23081,
+      "end": 23178,
+      "text": "For instance, E2 is mainly produced in the ovary, but it is also locally synthesized in brain1,2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 23179,
+      "end": 23375,
+      "text": "Brain steroidogenesis is regulated independently of peripheral steroidogenesis, and plasma steroid levels do not directly reflect brain steroid levels4, which may have contributed to our findings.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 23376,
+      "end": 23568,
+      "text": "Further, after oophorectomy in female rats, the brain adapts the levels of steroid synthesis as a compensatory adaptation of brain steroidogenesis in response to gonadal steroid deprivation35.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 23569,
+      "end": 23716,
+      "text": "Although aromatase activity is reduced with aging, the brain retains the ability to synthesize E2 locally under conditions of neurological stress4.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 23717,
+      "end": 23918,
+      "text": "In response to brain injury and stroke, endogenous E2 synthesis and ER expression are both upregulated in neurons, and de novo synthesis is induced in astrocytes, independent of ovarian E2 production4.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 23919,
+      "end": 24023,
+      "text": "It is possible that neurological stress during the menopause transition might trigger similar responses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 24024,
+      "end": 24149,
+      "text": "Additionally, estrone (E3, the most prevalent type of estrogen post-menopause) can both bind to ERα and be converted into E2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 24150,
+      "end": 24214,
+      "text": "This may further justify the need for an increase in ER density.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 24215,
+      "end": 24393,
+      "text": "Overall, elevations in brain ER density independent of menopause-induced plasma E2 fluctuations are in line with a compensatory neurophysiological response to loss of ovarian E2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 24393,
+      "end": 24541,
+      "text": "\n\nOur correlational analysis of multimodality imaging outcomes also supports the notion that ER overexpression may occur as a compensatory reaction.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 24542,
+      "end": 24679,
+      "text": "In fact, higher ER density was generally associated with lower GMV and CBF in ER-rich regions, with peak effects noted in frontal cortex.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 24680,
+      "end": 24878,
+      "text": "These associations were more pronounced at the post-menopausal stage, consistent with observations that E2 declines prompt decreases in synaptic density and in CBF through its actions on ERs1,2,5,6.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 24879,
+      "end": 25289,
+      "text": "Previous imaging studies of midlife women also report lower frontal GMV and functional activity in post-menopausal and peri-menopausal women as compared to pre-menopausal controls and age-controlled men.10-13\n\nOn the other hand, ER density was associated with higher ATP production in estrogen-dependent regions - - an effect that was more pronounced at the peri-menopausal stage and attenuated post-menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 25290,
+      "end": 25408,
+      "text": "ERs are found in mitochondria, which are a site of both E2 synthesis and estrogen-inducible neuroprotective actions36.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 25409,
+      "end": 25602,
+      "text": "Acting on ERs, E2 regulates cerebral glucose metabolism (CMRglc), the tricarboxylic acid cycle-coupled oxidative phosphorylation and ATP generation in mitochondria of neurons and glial cells36.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 25603,
+      "end": 25806,
+      "text": "In mechanistic analyses, ER protein synthesis is unchanged during peri-menopause, whereas transcription mechanisms are impaired, reflecting a disassembly between ER and cerebral metabolic systems3,37,38.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 25807,
+      "end": 25986,
+      "text": "The resulting loss of estrogenic-controlled glucose metabolism triggers a compensatory bioenergetic adaptive response to utilize lipids as an auxiliary fuel to restore ATP3,37,38.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 25987,
+      "end": 26254,
+      "text": "As midlife women exhibit declining CMRglc during the menopause transition10-13., present results of greater ER-related ATP utilization are consistent with a compensatory reaction to altered cerebral bioenergetic processes, as well as to declines in GMV and perfusion.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 26255,
+      "end": 26375,
+      "text": "The raise in ATP may also reflect the energetic cost of sustaining ER over-expression, warranting further investigation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 26375,
+      "end": 26377,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S157",
+      "start": 26377,
+      "end": 26567,
+      "text": "Another novel finding was the association of ER density with presence of menopausal symptoms of neurological origin, chiefly vasomotor symptoms, mood changes, low sex drive, and ‘brain fog’.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S158",
+      "start": 26568,
+      "end": 26704,
+      "text": "Declines in circulating sex hormones, chiefly E2, are assumed to account for these changes8, thought direct evidence of this is lacking.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 26705,
+      "end": 26890,
+      "text": "Present results indicate that increasing ER levels in estrogen-regulated regions are associated with an over 5-fold increase in the odds of experiencing the above neurological symptoms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 26891,
+      "end": 27108,
+      "text": "These associations were stronger at the perimenopausal stage and attenuated post-menopause, consistent with clinical observations that menopausal symptoms tend to subside a few years after the final menstrual period8.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 27108,
+      "end": 27338,
+      "text": "\n\nMoreover, mounting evidence identifies deprivation of estrogenic effects following menopause as a key biological mechanism underlying women’s greater vulnerability to brain conditions such as mood disorders, AD, and stroke39,40.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 27339,
+      "end": 27596,
+      "text": "Because ERs mediate estrogen actions, and ERs may themselves participate in disease development, ER-PET imaging represents an essential advance in our ability to develop and test estrogen-based therapies for prevention and treatment of many brain disorders.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 27596,
+      "end": 27691,
+      "text": "\n\nEstrogen is the recommended short-term treatment for menopausal symptoms such as hot flashes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 27692,
+      "end": 27840,
+      "text": "Menopause hormone therapy (HT) also holds promise for attenuation of neuronal injury and cell death resulting from neurodegenerative insults9,40,41.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 27841,
+      "end": 28141,
+      "text": "However clinical studies have produced mixed results, as observational studies generally report decreased neurological risk in women taking HT for menopausal symptoms as compared with non-users, whereas clinical trials of on older post-menopausal women have produced negative or null results15,41,42.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 28142,
+      "end": 28308,
+      "text": "Experts argue that HT is best started early in the course of menopause, as therapy has no clear beneficial effects once neurological disease is clearly established43.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 28308,
+      "end": 28310,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S168",
+      "start": 28310,
+      "end": 28548,
+      "text": "Therefore, as women approach midlife, there seems to be a critical window of opportunity not only to detect signs of neurological risk but to then intercede with strategies to reduce or prevent that risk by ameliorating estrogen levels44.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 28549,
+      "end": 28637,
+      "text": "Long-term E2 deprivation has been shown to lead to degradation of ERα in some regions45.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 28638,
+      "end": 28826,
+      "text": "Present neuroimaging findings indicate that the brain is undergoing estrogenic and biochemical adjustments starting in perimenopause, which are still active in early post-menopausal women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 28827,
+      "end": 29023,
+      "text": "These results help hone in on the window of opportunity for therapeutical intervention, and provide biological markers of neurological vulnerability for future clinical trials of estrogen therapy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 29023,
+      "end": 29056,
+      "text": "\n\n\n## Strengths And Limitations\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 29056,
+      "end": 29058,
+      "text": "To",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 29059,
+      "end": 29183,
+      "text": "our knowledge, this is the first in vivo brain imaging study to investigate ER modulation by neuroendocrine aging in humans.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 29184,
+      "end": 29361,
+      "text": "We focused on carefully screened, healthy midlife women ages 40-65 years, with complete clinical and cognitive exams, laboratory tests, menopause assessments, and brain imaging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 29362,
+      "end": 29490,
+      "text": "Our extensive exclusion criteria ensured absence of confounding factors such as cancer, oophorectomy / hysterectomy, and HT use.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 29491,
+      "end": 29661,
+      "text": "From a methodological perspective, we examined women at different menopausal stages, paired with age correction procedures, as a natural experiment of estrogenic decline.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 29662,
+      "end": 29845,
+      "text": "We used a combination of state-of-the-art ROI and voxel-based analysis while taking a translational approach to ensure that our results were both statistically and biologically valid.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 29846,
+      "end": 30045,
+      "text": "Results were significant after a stringent correction for multiple comparisons and multi-variable correction for age, modality-specific confounders, and plasma E2 levels immediately prior to imaging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 30046,
+      "end": 30205,
+      "text": "We chose a cross-sectional design because the timing of menopause is highly variable, with a median age at menopause of 51 years and distribution 40-58 years8.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 30206,
+      "end": 30315,
+      "text": "Longitudinal studies may require 10-15 years of follow-ups to capture changes in brain ERs in the same women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 30316,
+      "end": 30430,
+      "text": "While oophorectomy ideally reduces follow-up times, the procedure yields different neurophysiological outcomes7,8.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 30431,
+      "end": 30613,
+      "text": "Nonetheless, given the cross-sectional and observational nature of this study, a temporal and causal relationships between exposures and outcomes cannot be unequivocally established.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 30614,
+      "end": 30807,
+      "text": "Longitudinal studies are warranted to characterize the temporal trajectories of ER changes in relation to endocrine aging, and to test for differences between induced and spontaneous menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S185",
+      "start": 30807,
+      "end": 30809,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S186",
+      "start": 30809,
+      "end": 30962,
+      "text": "While the perimenopausal group exhibited slightly lower cognitive scores than the other groups, cognitive performance did not differ by menopause status.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 30963,
+      "end": 31204,
+      "text": "This is consistent with clinical observations that, while self-reports of poor memory and concentration are common in women of menopausal age, especially in perimenopause, menopause itself isn’t associated with objective cognitive deficits8.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 31205,
+      "end": 31330,
+      "text": "However, lack of variability in cognitive measures prevented us from examining associations between ER density and cognition.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 31331,
+      "end": 31484,
+      "text": "Overall, we caution that present results are obtained from small samples of carefully screened research participants with at least 12 years of education.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 31485,
+      "end": 31605,
+      "text": "Replication in community-based populations with diverse educational, racial or socio-economical background is warranted.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 31605,
+      "end": 31607,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S192",
+      "start": 31607,
+      "end": 31709,
+      "text": "Kinetic modeling with absolute quantification remains the gold-standard for PET neuroreceptor studies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 31710,
+      "end": 31868,
+      "text": "Kinetic 18F-FES studies in animals report high specific binding in pituitary and hypothalamus19-22, which was confirmed by preliminary reports in humans23,24.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 31869,
+      "end": 32031,
+      "text": "Absolute quantification is however invasive due to the need for continuous arterial blood sampling, while also being subject to error-prone metabolite analysis46.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 32032,
+      "end": 32268,
+      "text": "Herein, we used graphic reference-tissue Logan plots47 to derive 18F-FES distribution volume ratios (DVR), and then used statistical procedures to determine that SUVR yielded comparable results to DVR in target regions (Online Methods).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 32269,
+      "end": 32425,
+      "text": "SUVR are preferred for clinical studies because of shorter scan duration, no need for arterial cannulation or dynamic imaging, and computational simplicity.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 32426,
+      "end": 32527,
+      "text": "A major limitation of the SUVR approach is that it can overestimate receptor binding relative to DVR.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 32528,
+      "end": 32671,
+      "text": "In animal studies, oophorectomy provoked a 1.7-fold increase in ER binding in pituitary and hypothalamus as compared to the control group20,21.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 32672,
+      "end": 32889,
+      "text": "In our study, the post-menopausal group exhibited 12% and 11% higher SUVR than the pre-menopausal group in those regions, respectively, which seems physiologically plausible for women undergoing spontaneous menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 32890,
+      "end": 32961,
+      "text": "Furthermore, overestimation would affect all menopausal groups equally.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 32961,
+      "end": 32963,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S202",
+      "start": 32963,
+      "end": 33042,
+      "text": "Another limitation of SUVR relies on the choice of a suitable reference region.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 33043,
+      "end": 33252,
+      "text": "As described in Online Methods, our reference ROI was selected based on preclinical ex vivo and in vivo evidence that cerebellar crus II gray matter generally does not express, or minimally expresses ERα28-31.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S204",
+      "start": 33253,
+      "end": 33475,
+      "text": "The ROI was further optimized by means of supervised clustering algorithms (SCA) to ensure that tracer uptake was both low and invariant by exposure (e.g. menopause status), which is a key prerequisite for normalization48.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S205",
+      "start": 33476,
+      "end": 33686,
+      "text": "SCA methods are commonly used to extract pseudo-reference regions for non-invasive quantification of PET tracers with low intracerebral uptake, such as activated microglia TSPO (translocator protein) ligands49.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 33687,
+      "end": 33780,
+      "text": "Nonetheless, it is possible that we may have underestimated ER density in the cerebellar ROI.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 33781,
+      "end": 33860,
+      "text": "This would however conservatively reduce power in detecting ER density effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 33861,
+      "end": 34237,
+      "text": "Given the high anatomical agreement between the observed brain ER distribution and preclinical literature; the robust effect size resulting from group comparisons; and the biological plausibility of correlational patterns with additional brain biomarkers, we attribute our results to cerebral ER expression in response to ovarian E2 declines in midlife female endocrine aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 34238,
+      "end": 34348,
+      "text": "More studies using fully kinetic modeling with absolute quantification are needed to replicate these findings.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 34348,
+      "end": 34409,
+      "text": "\n\nFinally, 18F-FES signal is limited by non-specific binding.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 34410,
+      "end": 34584,
+      "text": "Novel ER ligands with lower nonspecific signal and better contrast than 18F-FES PET are being developed, such as 4-fluoro-11β-methoxy-16α-18F-fluoroestradiol (18F-4FMFES) 21.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 34585,
+      "end": 34851,
+      "text": "PET tracers with high selectivity for ERβ, such as 2-[18F]-fluoro-6-(6-hydroxynaphthalen-2-yl)pyridin-3-ol (18F-FHNP), as well as progesterone receptor (PRs) ligands such as 18F-fluoro-furanyl-norprogesterone (18F-FFNP) are of considerable interest for neuroscience.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 34851,
+      "end": 35297,
+      "text": "\n\nOverall, because ERs mediate estrogen actions, and changes in ER expression themselves participate in cognitive function, mental health and disease development, ER-PET imaging represents an essential advance in our understanding of sex hormones’ impact in brain -- while also opening the possibility of using ER ligands to promote neuroprotection, and predicting the efficacy of estrogen treatment in clinical trials and on an individual basis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 35297,
+      "end": 35489,
+      "text": "\n\n\n## Conclusion\n\nThese data provide novel evidence for invivo ER-mediated estrogenic effects on brain structure, perfusion and energy production, with clinical implications for midlife women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 35490,
+      "end": 35664,
+      "text": "Findings provide a neurobiological substrate to the neurological vulnerability reported in menopausal women, and identify a window of opportunity for preventative strategies.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S216",
+      "start": 35664,
+      "end": 35977,
+      "text": "\n\n\n## Online Methods\n\n### Participants\n\nThis is a natural history, non-interventional study of 45 consecutive clinically and cognitively normal midlife women at different endocrine stages, including equal proportions of pre-menopausal (standardized to midcycle), peri-menopausal, and post-menopausal participants.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 35978,
+      "end": 36246,
+      "text": "Participants were recruited at Weill Cornell Medicine (WCM) between 2021-2022 from multiple community sources, including individuals interested in research participation, family members and caregivers of impaired patients at our institution, and by word of mouth10-13.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 36246,
+      "end": 36608,
+      "text": "\n\nAll participants gave written informed consent to participate in this 18F-fluoroestradiol (18F-FES) positron emission tomography (PET) study,which was approved by the WCM Institutional Review Board. Use of 18F-FES was carried out under WCM Radioactive Drug Research Committee and National Cancer Institute (NCI) Investigational New Drug (IND) #146703 approval.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S219",
+      "start": 36608,
+      "end": 36610,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S220",
+      "start": 36610,
+      "end": 36884,
+      "text": "Participants were 40-65 year-old women with ≥12 years of education and a diagnosis of normal cognition per physician’s assessment, with Montreal Cognitive Assessment (MoCA) scores ≥26 and cognitive test performance within normative values for age and education10-1312,50,51.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S221",
+      "start": 36885,
+      "end": 37894,
+      "text": "Pre-established exclusion criteria included: (i) any significant neurological disease, such as dementia, normal pressure hydrocephalus, brain tumor, progressive supranuclear palsy, seizure disorder, subdural hematoma, multiple sclerosis, or history of significant head trauma followed by persistent neurologic deficits or known structural brain abnormalities; (ii) any significant psychiatric disease, such as major depression, bipolar disorder, schizophrenia, or psychotic features; (iii) T2 and/or FLAIR MRI brain scan evidence of infarction, lacunes or demyelination disease; (iii) systemic illnesses, unstable medical conditions or major medical complications such as treatment for neoplastic disease, unmanaged cardiovascular disease, diabetes, renal or liver disorder; (iv) history of drug or alcohol dependence; (v) current use of psychoactive medications (e.g. benzodiazepines, cholinesterase inhibitors, psychostimulants, etc.) or investigational agents; (vi) contraindications to MRI or PET imaging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S222",
+      "start": 37895,
+      "end": 38036,
+      "text": "Additional exclusion criteria included: (vii) history of oophorectomy or hysterectomy; (viii) use of hormonal therapy; (ix) active pregnancy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S223",
+      "start": 38036,
+      "end": 38038,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S224",
+      "start": 38038,
+      "end": 38262,
+      "text": "All participants underwent clinical examinations including medical history, neurological exams, neuropsychological testing, blood analysis including genetics and sex steroid hormones, multi-modal MRI and 18F-FES PET imaging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S225",
+      "start": 38263,
+      "end": 38311,
+      "text": "The patients’ sex was determined by self-report.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S226",
+      "start": 38311,
+      "end": 38409,
+      "text": "\n\nHerein, we capitalized on the menopause transition as a natural experiment of estradiol decline.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S227",
+      "start": 38410,
+      "end": 38796,
+      "text": "Participants were enrolled into three size-matched groups according to menopausal status based on the Stages of Reproductive Aging Workshop (STRAW)52 with hormone laboratory assessments as supportive criteria (pre-menopause: no change in menstrual regularity in the past 12 months; peri-menopause: no menses in the past 3–11 months; post-menopause: no menses for the past ≥12 months)52.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S228",
+      "start": 38797,
+      "end": 38857,
+      "text": "Participants were therefore not randomly assigned to groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 38858,
+      "end": 38996,
+      "text": "Sex steroid hormone levels, including estradiol (E2), were measured by a commercial laboratory (Boston Heart Diagnostics, Framingham, MA).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S230",
+      "start": 38996,
+      "end": 39372,
+      "text": "\n\nAll participants were asked to report the date of their last two menstrual periods for diagnostic purposes. PET studies of pre-menopausal participants were scheduled to coincide with the next nearest midcycle, when plasma E2 levels are highest. Cycle irregularities in peri-menopausal women prevented scheduling their PET scans according to a specific menstrual cycle phase.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S231",
+      "start": 39373,
+      "end": 39452,
+      "text": "However, plasma E2 levels were included as a covariate in statistical analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S232",
+      "start": 39453,
+      "end": 39611,
+      "text": "Blood samples were taken on the day of the PET study for all participants except two who did the blood draw the day prior, and one that was done a week later.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S233",
+      "start": 39612,
+      "end": 39813,
+      "text": "To test whether tracer binding at midcycle was impacted by tracer competition with endogenous E2, we included E2 as a covariate, which only enhanced differences in ER density between menopausal groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S234",
+      "start": 39814,
+      "end": 39885,
+      "text": "Results remained unchanged excluding E2 data from the last participant.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S235",
+      "start": 39885,
+      "end": 39887,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S236",
+      "start": 39887,
+      "end": 40117,
+      "text": "Our final study cohort included 45 consecutive participants, divided into three size-matched groups of 15 participants each according to menopause status: 15 pre-menopausal, 15 peri-menopausal, and 15 post-menopausal participants.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 40118,
+      "end": 40347,
+      "text": "Three of the original 45 participants had to be excluded due to conditions encountered in the MRI scan (demyelination; 1 pre-menopausal and 1 post-menopausal participant) or positive pregnancy test (1 pre-menopausal participant).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S238",
+      "start": 40348,
+      "end": 40424,
+      "text": "As such, 3 additional participants were enrolled in those respective groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S239",
+      "start": 40425,
+      "end": 40508,
+      "text": "Participant characteristics of the final sample are shown in Supplementary Table 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S240",
+      "start": 40509,
+      "end": 40684,
+      "text": "Unless explicitly stated otherwise (in case of analyses including measures only available for a subset of the participants), these represent the sample sizes used in analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S241",
+      "start": 40684,
+      "end": 40686,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S242",
+      "start": 40686,
+      "end": 40938,
+      "text": "There were no differences in demographic measures between menopausal groups, except for an expected age difference between the pre-menopausal and post-menopausal groups (Supplementary Table 1), which was addressed according to published protocols12,53.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S243",
+      "start": 40939,
+      "end": 41162,
+      "text": "Briefly, we used box plots and frequency diagrams to ensure that we had sufficient age overlap among different menopause statuses, which enabled us to test for effects of endocrine aging separately from chronological aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S244",
+      "start": 41163,
+      "end": 41211,
+      "text": "Age was then set as a covariate in all analyses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S245",
+      "start": 41211,
+      "end": 41213,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S246",
+      "start": 41213,
+      "end": 41404,
+      "text": "All participants completed menopause questionnaires, including rating scales for symptom clusters including presence of vasomotor symptoms, changes in mood, sleep, libido, and cognition10-13.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S247",
+      "start": 41405,
+      "end": 41533,
+      "text": "A composite menopause symptom score was calculated as the sum of individual scores, with higher values reflecting more symptoms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S248",
+      "start": 41534,
+      "end": 41691,
+      "text": "These scores were higher in the post-menopausal (4.5±3.18) and peri-menopausal groups (5.3±3.1) as compared to the pre-menopausal group (1.7±1.3; p’s≤0.010).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S249",
+      "start": 41692,
+      "end": 41778,
+      "text": "Menopause symptom scores and symptom presence were examined as correlational outcomes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S250",
+      "start": 41778,
+      "end": 41781,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S251",
+      "start": 41781,
+      "end": 41782,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S252",
+      "start": 41782,
+      "end": 41784,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S253",
+      "start": 41785,
+      "end": 42285,
+      "text": "Cognitive Testing\n\nParticipants underwent a cognitive testing battery assessing general cognitive functioning, memory [Rey Auditory Verbal Learning Test (RAVLT) total, immediate and delayed recall; Wechsler Memory Scale logical memory immediate and delayed recall], executive function [Trail Making Test (TMT)-B; FAS], and language [animal naming; WAIS object naming]10-13,50,51. We then calculated a composite verbal memory score by z-scoring both delayed recall tests and averaging across measures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S254",
+      "start": 42286,
+      "end": 42419,
+      "text": "Additionally, a global cognition score was obtained by z-scoring each of the remaining tests and averaging within and across domains.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S255",
+      "start": 42420,
+      "end": 42474,
+      "text": "TMT-B scores were first inverted by multiplying by −1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S256",
+      "start": 42475,
+      "end": 42653,
+      "text": "Descriptive assessment of cognitive scores across menopause statuses showed no significant differences, adjusting by age and years of education (p’s>0.69; Supplementary table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S257",
+      "start": 42654,
+      "end": 42861,
+      "text": "As cognitive scores differed by less than 1 standard deviation between menopause groups, the variance in these measures was deemed too small to enable meaningful assessment of correlations with 18F-FES data.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S258",
+      "start": 42861,
+      "end": 42864,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S259",
+      "start": 42864,
+      "end": 42866,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S260",
+      "start": 42866,
+      "end": 42983,
+      "text": "# Brain Imaging\n\n#### Acquisition\n\nAll participants received MRI and PET scans following standardized protocols10-13.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S261",
+      "start": 42984,
+      "end": 43119,
+      "text": "Scans were performed on consecutive days, except for 9 participants who completed FES an average of 0.8±1.9 months before or after MRI.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S262",
+      "start": 43120,
+      "end": 43218,
+      "text": "Adjusting by time between scans as a covariate did not significantly impact correlational results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S263",
+      "start": 43218,
+      "end": 43412,
+      "text": "\n\nAll MR sequences were acquired on a 3.0 T MR750 Discovery scanner (General Electric, Waukesha, WI) using a 32-channel head coil in a single imaging session, including:\n\n##### Volumetric MRI:\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S264",
+      "start": 43412,
+      "end": 43414,
+      "text": "3D",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S265",
+      "start": 43415,
+      "end": 43605,
+      "text": "volumetric T1-weighted MRI [BRAVO; 1x1x1 mm resolution, 8.2 ms repetition time (TR), 3.2 ms echo time (TE), 12° flip angle, 25.6 cm field of view (FOV), 256x256 matrix with ARC acceleration]",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S266",
+      "start": 43605,
+      "end": 43606,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S267",
+      "start": 43606,
+      "end": 43609,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S268",
+      "start": 43609,
+      "end": 43611,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S269",
+      "start": 43611,
+      "end": 43613,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S270",
+      "start": 43613,
+      "end": 43646,
+      "text": "# Arterial Spin Labeling (ASL):\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S271",
+      "start": 43646,
+      "end": 43654,
+      "text": "acquired",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S272",
+      "start": 43655,
+      "end": 43832,
+      "text": "using a pseudo-continuous technique [4851 ms TR, 10.6 ms TE, 4 averages, 24 cm FOV, 2.0x2.0x3.8 mm resolution] to estimate cerebral blood flow (CBF) from arterial blood water54.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S273",
+      "start": 43833,
+      "end": 43915,
+      "text": "One post-menopausal participant did not complete the scan due to technical issues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S274",
+      "start": 43915,
+      "end": 44097,
+      "text": "\n\n\n##### 31Phosphorus Magnetic Resonance Spectroscopy (31P-MRS):\n\nacquired on the same scanner using a dual tuned 31P/1H quadrature head coil (Clinical MR Solutions, Brookfield, WI).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S275",
+      "start": 44098,
+      "end": 44242,
+      "text": "Prior to MRS scanning, shimming was performed using a 1H single voxel technique placed over the entire brain avoiding the air-tissue interfaces.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S276",
+      "start": 44243,
+      "end": 44429,
+      "text": "Multiple 2D slices were acquired resulting in an 8x8x8 grid with a 24 cm FOV [2048 points, 5000 Hz sweep width, 2000 ms TR, 2 averages, 55° flip angle at 51.3 MHz] in the sagittal plane.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S277",
+      "start": 44430,
+      "end": 44701,
+      "text": "An 8 slice sagittal T1-Fluid Attenuated Inversion Recovery sequence [FLAIR; 2200 ms TR, 12 ms TE, 780 ms inversion time (TI), 24 cm FOV, 0.94x0.94 mm] was acquired with a 5 mm slice thickness at exactly the same position as the center of each 31P MRS slice for reference.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S278",
+      "start": 44702,
+      "end": 44818,
+      "text": "The central 4 slices were coregistered to MRI by using the 8-slice concordant image set acquired at the time of MRS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S279",
+      "start": 44819,
+      "end": 44939,
+      "text": "Two peri-menopausal and one post-menopausal participants did not complete the 31P-MRS procedure due to technical issues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S280",
+      "start": 44939,
+      "end": 44980,
+      "text": "\n\n\n##### 18F-Fluoroestradiol PET imaging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S281",
+      "start": 44980,
+      "end": 45242,
+      "text": "\n\n16α-[18F]fluoro-17β-estradiol (18F-FES) was prepared by the WCM PET Radiochemistry Group using established methods for synthesis and quality assurance55,56 [https://imaging.cancer.gov/programs_resources/cancer-tracer-synthesis-resources/FES_documentation.htm].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S282",
+      "start": 45243,
+      "end": 45387,
+      "text": "18F-FES scans were acquired using a Siemens BioGraph mCT 64-slice PET/CT scanner [70 cm transverse FOV, 16.2 cm axial FOV] operating in 3D mode.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S283",
+      "start": 45388,
+      "end": 45463,
+      "text": "All scans were performed after a 4-hour fasting to decrease biliary uptake.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S284",
+      "start": 45464,
+      "end": 45560,
+      "text": "One hour before PET imaging, an antecubital venous catheter was positioned for tracer injection.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S285",
+      "start": 45561,
+      "end": 45602,
+      "text": "No arterial blood sampling was performed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S286",
+      "start": 45603,
+      "end": 45719,
+      "text": "Participants lied down on the scanner bed with eyes closed and ears unplugged, in the quiet and dimly lit scan room.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S287",
+      "start": 45720,
+      "end": 45944,
+      "text": "Following a low-dose CT scan, a dose of approximately 6 mCi (222 MBq) of 18F-FES was infused intravenously in a volume of 20 mL isotonic phosphate buffered saline containing less than 15% of ethanol by volume over 2 minutes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S288",
+      "start": 45945,
+      "end": 46063,
+      "text": "Dynamic imaging was performed for 90 minutes, and consisting of 30 frames: 4x15, 4x30, 3x60, 2x120, 5x240, 12x300 sec.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S289",
+      "start": 46064,
+      "end": 46137,
+      "text": "All images were corrected for attenuation, scatter and radioactive decay.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S290",
+      "start": 46137,
+      "end": 46142,
+      "text": "\n\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S291",
+      "start": 46142,
+      "end": 46144,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S292",
+      "start": 46144,
+      "end": 46162,
+      "text": "# 18F-FES analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S293",
+      "start": 46162,
+      "end": 46211,
+      "text": "\n\n#### Regions of Interest\n\n##### Target regions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S294",
+      "start": 46211,
+      "end": 46312,
+      "text": "\n\nWhile ERs are widely expressed throughout the brain, their density varies by isoform and region1,2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S295",
+      "start": 46313,
+      "end": 46498,
+      "text": "As 18F-FES selectively binds ERα, and tracer uptake in white matter is confounded by non-specific binding23,24, we focused on predominantly gray matter regions with high ERα expression.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S296",
+      "start": 46499,
+      "end": 46640,
+      "text": "These included pituitary, hypothalamus, thalamus, hippocampus, amygdala, midbrain, striatum, cingulate, medial and orbitofrontal cortex28-31.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S297",
+      "start": 46641,
+      "end": 46692,
+      "text": "These regions were carried into hypothesis testing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S298",
+      "start": 46693,
+      "end": 46992,
+      "text": "Additionally, we examined regions with lower ERα expression but known E2-related effects: superior, middle, inferior and precentral frontal cortex; precuneus; entorhinal cortex, parahippocampal gyrus; inferior, middle and superior temporal gyri; fusiform; superior and inferior parietal lobule28-31.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S299",
+      "start": 46992,
+      "end": 46995,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S300",
+      "start": 46995,
+      "end": 47018,
+      "text": "##### Reference region.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S301",
+      "start": 47018,
+      "end": 47138,
+      "text": "\n\nWe chose the cerebellum as the anatomical reference region based on evidence that it is generally void of ERα17,20-22.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S302",
+      "start": 47139,
+      "end": 48007,
+      "text": "We then developed a probabilistic cluster-based cerebellar ROI, using the following procedures, detailed in Supplementary Figure 1: (i) to be maximally conservative, as ERβ and GPER-1 are expressed in the innermost portion of cerebellar white matter and adjacent gray matter (corresponding to human middle cerebellar peduncle, culmen, arbor vitae, dentate nucleus, and medullary cortex)17,20-22, the cerebellar ROI was restricted to the outermost portion of cerebellar crus II gray matter, which is generally free of ERs; (ii) voxel-based machine learning with intensive iterative data resampling implemented in NPAIRS (nonparametric prediction, activation, influence, and reproducibility resampling)57 identified the inferior portion of cerebellar crus II as showing invariant tracer uptake across menopause classes, which is a pre-requisite for data normalization48.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S303",
+      "start": 48008,
+      "end": 48074,
+      "text": "The final cerebellar ROI is illustrated in Supplementary Figure 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S304",
+      "start": 48074,
+      "end": 48078,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S305",
+      "start": 48078,
+      "end": 48079,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S306",
+      "start": 48079,
+      "end": 48142,
+      "text": "### Kinetic modeling and simplified reference-tissue analysis\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S307",
+      "start": 48142,
+      "end": 48412,
+      "text": "18F-FES data were examined as distribution volume ratios (DVR) and standardized uptake value ratios (SUVR) using ROIs based upon anatomical labeling atlas (AAL3)58 ROIs restricted to grey matter using a smoothed gray segment image from each participant’s volumetric MRI.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S308",
+      "start": 48413,
+      "end": 48589,
+      "text": "The pituitary ROI was manually delineated on the coregistered anatomical MRI by two expert raters (A.P. and L.M.) using a 1 cm radius sphere, according to published criteria59.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S309",
+      "start": 48590,
+      "end": 48683,
+      "text": "ROI placement, thresholding, and sampling were conducted using PMOD v4.1 (PMOD Technologies).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S310",
+      "start": 48683,
+      "end": 48685,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S311",
+      "start": 48685,
+      "end": 48686,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S312",
+      "start": 48686,
+      "end": 48688,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S313",
+      "start": 48688,
+      "end": 48718,
+      "text": "## Distribution volume ratios.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S314",
+      "start": 48718,
+      "end": 48720,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S315",
+      "start": 48720,
+      "end": 48895,
+      "text": "ROIs were applied to motion-corrected dynamic PET images to obtain regional time activity curves (TAC, mCi/mL) of tissue radioactivity concentration across all slices sampled.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S316",
+      "start": 48896,
+      "end": 49149,
+      "text": "Graphic reference-tissue Logan plots47 were used to estimate 18F-FES DVR (1+BP binding potential) as the concentration of the radioligand in each target region relative to tracer concentration in the cerebellar reference ROI, as implemented in PMOD 4.1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S317",
+      "start": 49149,
+      "end": 49152,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S318",
+      "start": 49152,
+      "end": 49153,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S319",
+      "start": 49153,
+      "end": 49157,
+      "text": "####",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S320",
+      "start": 49158,
+      "end": 49191,
+      "text": "Standardized uptake value ratios.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S321",
+      "start": 49191,
+      "end": 49527,
+      "text": "\n\nFor comparisons with previous work21, and to assess whether brain ER expression could be estimated from a single, late-scan static PET image, summed PET images corresponding to 30-90, 30-60, and 50-70 minutes of 18F-FES data were converted to standardized uptake values [SUV = activity (Bq/g)/[injected activity (Bq)/body weight (g)].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S322",
+      "start": 49528,
+      "end": 49690,
+      "text": "SUVMax were extracted from pituitary ROI, and average SUV (SUVMean) from other regions, and normalized to cerebellar cortex ROI to obtain SUVR for each timeframe.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S323",
+      "start": 49691,
+      "end": 49739,
+      "text": "SUVR are more suitable for clinical application.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S324",
+      "start": 49739,
+      "end": 49742,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S325",
+      "start": 49742,
+      "end": 49743,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S326",
+      "start": 49743,
+      "end": 49768,
+      "text": "#### Reliability analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S327",
+      "start": 49768,
+      "end": 49769,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S328",
+      "start": 49769,
+      "end": 49926,
+      "text": "\n\nDVR and SUVR values were compared in SPSS v.28 (IBM) using Intra-class Correlation Coefficients (ICC) with Cronbach’s Alpha as reporting criterion, p<0.05.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S329",
+      "start": 49927,
+      "end": 50123,
+      "text": "SUVR50-70 measures yielded comparable estimates to DVR, with ICC=0.89 (SD 0.03), range 0.82 in medial frontal cortex to 0.93 in putamen (p’s<0.001; Supplementary Figure 1b, Supplementary Table 6).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S330",
+      "start": 50124,
+      "end": 50334,
+      "text": "Across brain regions, the mean difference was 6%±3%, which was comparable between menopausal groups (pre-menopause: 4%±3%, peri-menopause 6%±3%, post-menopause 7%±3%), and was deemed physiologically acceptable.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S331",
+      "start": 50335,
+      "end": 50492,
+      "text": "This time window is also consistent with previous studies and observations that 18F-FES returns to sub-physiologic levels within ~1 hour post-injection21,60.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S332",
+      "start": 50493,
+      "end": 50609,
+      "text": "Subsequent analyses are obtained using SUVR ROI data and voxel-wise SUVR50-70 images generated for all participants.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S333",
+      "start": 50609,
+      "end": 50960,
+      "text": "\n\n\n\n#### Multiparametric Analysis\n\nImage processing was performed using a semi-automated pipeline10-13. 18F-FES PET, ASL and MRS images were realigned to the corresponding T1-weighted MRI using the surface-fitting Normalized Mutual Information algorithm implemented in SPM1227 running on Matlab 2021 (MathWorks; Natick.MA) to enable accurate sampling.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S334",
+      "start": 50960,
+      "end": 50962,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S335",
+      "start": 50962,
+      "end": 50963,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S336",
+      "start": 50963,
+      "end": 50964,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S337",
+      "start": 50964,
+      "end": 50987,
+      "text": "### Regions-of-interest",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S338",
+      "start": 50987,
+      "end": 50988,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S339",
+      "start": 50988,
+      "end": 51203,
+      "text": "\n\nAll ROIs except the manually delineated pituitary were quantified from MRI-coregistered 18F-FES images using the segmentation tools implemented in FreeSurfer 7.2 and Desikan-Killiany Atlas25,26 applied to the MRI.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S340",
+      "start": 51204,
+      "end": 51271,
+      "text": "FreeSurfer was also used to derive total intracranial volume (TIV).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S341",
+      "start": 51272,
+      "end": 51346,
+      "text": "Given its small size, the pituitary was only examined for 18F-FES effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S342",
+      "start": 51347,
+      "end": 51624,
+      "text": "31P-MRS data was processed via our proprietary XSOS written in IDL (Excelis Visual, Boulder, CO) using Hamming and Fermi k-space filters, a 7.5 mm center voxel shift, 20 Hz exponential filtering and zero-filling in time, x and y-domains prior to 3D Fast Fourier Transformation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S343",
+      "start": 51625,
+      "end": 51735,
+      "text": "A fixed first order phase of 4200° was applied to all spectra and data was automatically phased in zero order.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S344",
+      "start": 51736,
+      "end": 51897,
+      "text": "The phospho-creatine (PCr) peak was set at 0.0 ppm and the central spectrum set as a reference, and susceptibility corrections performed throughout the data set.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S345",
+      "start": 51898,
+      "end": 52026,
+      "text": "Baseline correction was applied to all other voxels in the chemical shift imaging (CSI) dataset by an experienced analyst (JPD).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S346",
+      "start": 52027,
+      "end": 52325,
+      "text": "Peak area integration was performed around four well-resolved resonance peaks yielding PCr and total ATP (sum of α, β and γ-ATP moieties) expressed as percent area of the total phosphorous signal in the corresponding spectrum, and the PCr/ATP ratio (e.g. a marker of ATP re-synthesis) was computed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S347",
+      "start": 52326,
+      "end": 52466,
+      "text": "For31P-MRS analysis, medial temporal lobe regions were averaged, while hypothalamus and accumbens were excluded, due to size considerations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S348",
+      "start": 52466,
+      "end": 52469,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S349",
+      "start": 52469,
+      "end": 52470,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S350",
+      "start": 52470,
+      "end": 52471,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S351",
+      "start": 52471,
+      "end": 52474,
+      "text": "###",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S352",
+      "start": 52475,
+      "end": 52495,
+      "text": "Voxel-based analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S353",
+      "start": 52495,
+      "end": 52496,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S354",
+      "start": 52496,
+      "end": 52903,
+      "text": "\n\nMRI scans were spatially normalized to the template-normalized tissue probabilistic map (TPM) image included in SPM12 conforming to the Montreal Neurological Institute (MNI) space, and processed using voxel-based morphometry (VBM) including image segmentation, Jacobian modulation, high-dimensional warping (DARTEL) of the segments, and application of an 8mm full-width at half maximum smoothing kernel27.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S355",
+      "start": 52904,
+      "end": 52977,
+      "text": "Gray matter volume (GMV) segments were retained for statistical analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S356",
+      "start": 52978,
+      "end": 53157,
+      "text": "The MRI-coregistered 18F-FES SUVR and ASL scans were spatially normalized to the TPM image using MRI-derived subject-specific transformation matrices and smoothed at 10-mm FWHM27.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S357",
+      "start": 53157,
+      "end": 53161,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S358",
+      "start": 53161,
+      "end": 53164,
+      "text": "###",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S359",
+      "start": 53164,
+      "end": 53347,
+      "text": "# Covariates\n\nBrain imaging analyses were adjusted by age and modality-specific confounders (cerebellar 18F-FES uptake; MRI total intracranial volume; global ASL blood flow; PCr/ATP).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S360",
+      "start": 53348,
+      "end": 53404,
+      "text": "18F-FES analyses were also adjusted by plasma E2 levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S361",
+      "start": 53404,
+      "end": 53407,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S362",
+      "start": 53407,
+      "end": 53409,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S363",
+      "start": 53409,
+      "end": 53411,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S364",
+      "start": 53412,
+      "end": 53492,
+      "text": "Statistical Analysis\n\nAnalyses were performed in SPSS v.25, R v.4.2.0 and SPM12.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S365",
+      "start": 53493,
+      "end": 53588,
+      "text": "Clinical measures were examined with general linear models or chi-squared tests as appropriate.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S366",
+      "start": 53589,
+      "end": 53691,
+      "text": "Our primary outcome was examination of 18F-FES SUVR (e.g. ER density) differences by menopause status.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S367",
+      "start": 53692,
+      "end": 53812,
+      "text": "Additional outcomes included correlational analysis of 18F-FES SUVR with GMV, CBF, PCr/ATP and menopause symptom scores.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S368",
+      "start": 53812,
+      "end": 53815,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S369",
+      "start": 53815,
+      "end": 53817,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S370",
+      "start": 53817,
+      "end": 53818,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S371",
+      "start": 53818,
+      "end": 53871,
+      "text": "# ER density by menopause status\n\n##### ROI analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S372",
+      "start": 53871,
+      "end": 54167,
+      "text": "\n\nMultivariate analysis of variance was used to test the statistical significance of the effect of menopause status (pre-, peri-, or post-menopausal) on 18F-FES SUVR in the set of target ROIs: pituitary, hypothalamus, accumbens, amygdala, hippocampus, cingulate, orbital and middle frontal gyrus.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S373",
+      "start": 54168,
+      "end": 54310,
+      "text": "Post-hoc testing was performed to identify which pairwise comparisons in menopause status significantly differed across brain region measures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S374",
+      "start": 54311,
+      "end": 54511,
+      "text": "Regression models were constructed to obtain global P values for multivariate pair-wise outcomes across brain regions, followed by forest plot analysis for assessment of individual regions, at p<0.05.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S375",
+      "start": 54512,
+      "end": 54621,
+      "text": "For completeness, SUVR in exploratory regions are provided in Supplementary Table 7 for descriptive purposes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S376",
+      "start": 54621,
+      "end": 54624,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S377",
+      "start": 54624,
+      "end": 54650,
+      "text": "##### Voxel-based analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S378",
+      "start": 54650,
+      "end": 54651,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S379",
+      "start": 54651,
+      "end": 54802,
+      "text": "\n\nWe used factorial models with post-hoc t-contrasts to test for 18F-FES differences between menopause groups, adjusting for age and cerebellar uptake.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S380",
+      "start": 54803,
+      "end": 55089,
+      "text": "Statistical maps were constructed by applying a stringent voxel-level Gaussian random field theory–based threshold of p<0.05, cluster-level corrected for Family-Wise Type Error (FWE) within a binary masking image consisting of the full set of a priori defined regions used for sampling.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S381",
+      "start": 55090,
+      "end": 55143,
+      "text": "Only clusters ≥16 voxels were considered significant.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S382",
+      "start": 55144,
+      "end": 55262,
+      "text": "Anatomical location of significant clusters was described using Talairach coordinates after conversion from MNI space.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S383",
+      "start": 55263,
+      "end": 55516,
+      "text": "Clusters of significant associations between ER density and menopause status were saved as binary masks (FESmask), and SUVR data were extracted from peak clusters using MarsBar 0.45 [https://marsbar-toolbox.github.io/download.html] for further analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S384",
+      "start": 55516,
+      "end": 55519,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S385",
+      "start": 55519,
+      "end": 55521,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S386",
+      "start": 55521,
+      "end": 55523,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S387",
+      "start": 55523,
+      "end": 55682,
+      "text": "# Prediction of menopause status:\n\n(a) Standardized ROI and VBA-derived cluster SUVR were examined for menopause status separation using Cohen’s d effect size.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S388",
+      "start": 55683,
+      "end": 55857,
+      "text": "After adjustment by age, the standardized pairwise mean differences between any two levels were expressed as Cohen’s d coefficients, where d≥0.8 reflects a large effect size.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S389",
+      "start": 55858,
+      "end": 55974,
+      "text": "We used a conservative cut-off of 1.5 to identify the regions yielding the largest effect size in separating groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S390",
+      "start": 55975,
+      "end": 56224,
+      "text": "(b) To gauge the degree to which ER density in these regions was predictive of menopause status, predictive models by means of multivariable logistic regressions were trained on a random 80% of the study sample, with 20% withheld as the testing set.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S391",
+      "start": 56225,
+      "end": 56297,
+      "text": "Each model contained the binary outcome, pre- vs. post-menopause status.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S392",
+      "start": 56298,
+      "end": 56425,
+      "text": "Our primary outcome was % accuracy in the testing set, defined as the proportion of correct predictions over total predictions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S393",
+      "start": 56426,
+      "end": 56496,
+      "text": "Global likelihood ratio tests were performed for each model at p<0.05.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S394",
+      "start": 56496,
+      "end": 56500,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S395",
+      "start": 56500,
+      "end": 56501,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S396",
+      "start": 56501,
+      "end": 56746,
+      "text": "### Associations of ER density with brain biomarker measures\n\nTo characterize the relationship between ER density and additional imaging outcomes, correlation graphs are presented both for the overall study sample as well as by menopause status.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S397",
+      "start": 56747,
+      "end": 56882,
+      "text": "The stratified analysis was performed to investigate hypothesized differences in the strength of the correlations throughout menopause.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S398",
+      "start": 56883,
+      "end": 56992,
+      "text": "Stratification by menopause status also mitigates the effects of its confounding on the overall correlations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S399",
+      "start": 56992,
+      "end": 56994,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S400",
+      "start": 56994,
+      "end": 56995,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S401",
+      "start": 56995,
+      "end": 57013,
+      "text": "#### ROI analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S402",
+      "start": 57013,
+      "end": 57188,
+      "text": "\n\nWe used multiple linear regressions to test for associations of regional ER density with GMV, CBF, and PCr/ATP adjusting by age and modality-specific confounders, at p<0.05.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S403",
+      "start": 57188,
+      "end": 57191,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S404",
+      "start": 57191,
+      "end": 57192,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S405",
+      "start": 57192,
+      "end": 57218,
+      "text": "#### Voxel-based analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S406",
+      "start": 57218,
+      "end": 57220,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S407",
+      "start": 57220,
+      "end": 57485,
+      "text": "We used multiple linear regressions to test for voxel-wise associations of ER density with GMV and CBF in regions impacted by menopause status, and within peak clusters identified in analysis of menopause status, adjusting for age and modality-specific confounders.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S408",
+      "start": 57486,
+      "end": 57676,
+      "text": "The latter analysis was done via the inclusive masking option at the t-map generation step, which allowed us to test for associations of ER density with GMV and CBF within the FESmask image.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S409",
+      "start": 57677,
+      "end": 57883,
+      "text": "For completeness, we used factorial analysis to test for voxel-wise associations of menopause status with GMV and CBF in the a priori masking image, thus independently of their associations with ER density.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S410",
+      "start": 57884,
+      "end": 57987,
+      "text": "Results are reported in brain regions that survive the masking and the multiple comparisons adjustment.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S411",
+      "start": 57987,
+      "end": 57991,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S412",
+      "start": 57991,
+      "end": 57992,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S413",
+      "start": 57992,
+      "end": 57993,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S414",
+      "start": 57993,
+      "end": 57994,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S415",
+      "start": 57994,
+      "end": 58047,
+      "text": "# Associations of ER density and menopause symptoms\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S416",
+      "start": 58047,
+      "end": 58534,
+      "text": "We used a two-step approach to test for associations between ER density and menopause symptoms: (i) We computed voxel-wise linear regressionswith post-hoc t testsassessing associations between menopause symptom scores and ER density at p<0.05, cluster-level corrected within the masking image; (ii) we developed multivariable logistic regression models with menopause symptom occurrence as the binary outcome variable, and ER density as the exposure of interest, with age as a covariate.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S417",
+      "start": 58535,
+      "end": 58616,
+      "text": "This analysis used both SUVR from peak clusters identified in (i) and target ROI.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S418",
+      "start": 58617,
+      "end": 58720,
+      "text": "Analyses were performed across the entire cohort and within peri-menopausal and post-menopausal groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S419",
+      "start": 58721,
+      "end": 58866,
+      "text": "Odds ratios (OR) were estimated, where a positive value denotes a positive association between ER density and presence of each menopause symptom.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S420",
+      "start": 58867,
+      "end": 58970,
+      "text": "OR that exceeded 10 were capped at 10 to ensure visibility of positive associations < 10 in the figure.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S421",
+      "start": 58970,
+      "end": 58975,
+      "text": "\n\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=17β-estradiol,the most biologically active estrogen | pred=exert | obj=wide-ranging effects | unit=S3\nB T4 B2 | sub=our knowledge of ER expression and | pred=limited | obj=However, our knowledge of ER expression | unit=S4\nB T4 B3 | sub=This in vivo multi-modality neuroimaging study | pred=reveal | obj=progressively higher ER density over the | unit=S5\nB T4 B4 | sub=Effects | pred=independent | obj=of age | unit=S6\nB T4 B5 | sub=Higher ER density | pred=associate | obj=with lower gray matter volume | unit=S7\nB T4 B6 | sub=ER density | pred=predict | obj=changes in thermoregulation | unit=S8\nB T4 B7 | sub=Our data | pred=provide | obj=evidence that ER density impacts brainstructure, | unit=S9\nB T4 B8 | sub=Estrogen | pred=class | obj=of steroid hormones that play a | unit=S10\nB T4 B9 | sub=burgeoning evidence | pred=document | obj=that 17β-estradiol (E2), the most biologically | unit=S11\nB T4 B10 | sub=E2 | pred=signal | obj=through estrogen receptors (ERs) that are | unit=S13\nB T4 B11 | sub=This | pred=fundamental | obj=for humans | unit=S14\nB T4 B12 | sub=it | pred=surprising | obj=Given the extraordinary integrative power of | unit=S15\nB T4 B13 | sub=Hypoestrogenic post-menopausal women | pred=vulnerable | obj=to brain injury, affective disorders, and | unit=S17\nB T4 B14 | sub=the menopause transition | pred=associate | obj=In translational brain imaging studies | unit=S18\nB T4 B15 | sub=Post-menopausal GMV | pred=attenuate | obj=by estrogen therapy14,15 | unit=S19\nB T4 B16 | sub=our direct knowledge of ER activity | pred=limited | obj=Despite preclinical evidence of the importance | unit=S20\nB T4 B17 | sub=Positron emission tomography (PET) with selective | pred=technique | obj=available | unit=S22\nB T4 B18 | sub=16α-18F-fluoro-17β-estradiol (18F-FES | pred=ligand | obj=in oncology | unit=S23\nB T4 B19 | sub=18F-FES studies of brain ER expression | pred=scarce | obj=18F-FES studies of brain ER expression | unit=S24\nB T4 B20 | sub=Animal studies | pred=indicate | obj=high 18F-FES uptake in brain ER-rich | unit=S25\nB T4 B21 | sub=This pattern | pred=consistent | obj=with the reported distribution of ERs | unit=S26\nB T4 B22 | sub=the only 18F-FES PET study of | pred=conduct | obj=in breast cancer patients21 | unit=S27\nB T4 B23 | sub=This study | pred=provide | obj=important evidence of high tracer uptake | unit=S28\nB T4 B24 | sub=A few case studies | pred=report | obj=specific 18F-FES signal in pituitary and | unit=S29\nB T4 B25 | sub=we | pred=take | obj=a translational approach to systematically investigate | unit=S31\nB T4 B26 | sub=we | pred=conduct | obj=multi-modality brain imaging | unit=S32\nB T4 B27 | sub=article text | pred=result | obj=ER | unit=S34\nB T4 B28 | sub=Demographic information on the sample | pred=provide | obj=in the Online Methods | unit=S35\nB T4 B29 | sub=Image analysis | pred=perform | obj=using regions-of-interest (ROI)25,26 | unit=S36\nB T4 B30 | sub=18F-FES standardized uptake volume ratios (SUVR | pred=calculate | obj=relative | unit=S37\nB T4 B31 | sub=Results | pred=correct | obj=for multiple comparisons | unit=S38\nB T4 B32 | sub=ROI | pred=analysis | obj=ROI analysis | unit=S41\nB T4 B33 | sub=there | pred=be | obj=On multivariate regression analysis | unit=S42\nB T4 B34 | sub=ER density | pred=increase | obj=In these regions | unit=S43\nB T4 B35 | sub=the post-menopausal group | pred=exhibit | obj=On post-hoc examination | unit=S44\nB T4 B36 | sub=Overall differences between peri-menopausal and pre-menopausal | pred=reach | obj=significance | unit=S45\nB T4 B37 | sub=article text | pred=analysis | obj=# Voxel-based analysis | unit=S49\nB T4 B38 | sub=Voxel-based analysis | pred=detect | obj=progressively higher ER density | unit=S50\nB T4 B39 | sub=voxel-based analysis | pred=enhance | obj=detection of menopause-stage effects | unit=S51\nB T4 B40 | sub=Peak clusters of overall associations between | pred=located | obj=in medial and middle frontal gyrus, | unit=S52\nB T4 B41 | sub=the post-menopausal group | pred=exhibit | obj=On post-hoc analysis | unit=S53\nB T4 B42 | sub=The peri-menopausal group | pred=exhibit | obj=higher ER density | unit=S54\nB T4 B43 | sub=Surface | pred=map | obj=of regional 18F-FES estrogen receptor (ER) | unit=S55\nB T4 B44 | sub=Statistical parametric maps | pred=represent | obj=on a spectrum color-coded scale | unit=S56\nB T4 B45 | sub=Statistics | pred=report | obj=in Table | unit=S57\nB T4 B46 | sub=ER density in hypothalamus, nucleus accumbens, | pred=yield | obj=On a regional basis | unit=S58\nB T4 B47 | sub=ER density in these regions | pred=result | obj=in 100% predictive accuracy in classifying | unit=S59\nB T4 B48 | sub=article text | pred=express | obj=as Cohen’s d coefficients, where d≥0.8 | unit=S60\nB T4 B49 | sub=article text | pred=association | obj=of ER density | unit=S62\nB T4 B50 | sub=we | pred=perform | obj=multimodality neuroimaging on the same participants | unit=S63\nB T4 B51 | sub=ER density and Gray Matter Volume | pred=exhibit | obj=a generally negative pattern, which was | unit=S67\nB T4 B52 | sub=Figure | pred=association | obj=between estrogen receptor (ER) density | unit=S68\nB T4 B53 | sub=the post-menopausal group | pred=show | obj=lower GMV in frontal regions | unit=S69\nB T4 B54 | sub=The frontal cortex | pred=exhibit | obj=the strongest negative associations between ER | unit=S70\nB T4 B55 | sub=ER | pred=density | obj=Cerebral | unit=S72\nB T4 B56 | sub=Overall correlations between ER density | pred=exhibit | obj=a generally negative pattern, which were | unit=S73\nB T4 B57 | sub=CBF in ER-rich regions | pred=low | obj=from pre-menopausal | unit=S75\nB T4 B58 | sub=The post-menopausal group | pred=exhibit | obj=lower CBF | unit=S76\nB T4 B59 | sub=The frontal cortex | pred=exhibit | obj=the strongest negative associations between ER | unit=S77\nB T4 B60 | sub=ER | pred=density | obj=ATP | unit=S80\nB T4 B61 | sub=overall correlations between ER density and | pred=exhibit | obj=a generally positive pattern | unit=S81\nB T4 B62 | sub=these correlations | pred=pronounced | obj=On examination of each menopausal group | unit=S82\nB T4 B63 | sub=the strongest positive regional associations | pred=fusiform | obj=In the peri-menopausal group | unit=S83\nB T4 B64 | sub=the strongest effects | pred=gyrus | obj=In the post-menopausal group | unit=S84\nB T4 B65 | sub=Figure | pred=association | obj=between estrogen receptor (ER) density | unit=S85\nB T4 B66 | sub=article text | pred=association | obj=of ER density | unit=S86\nB T4 B67 | sub=ER density | pred=associate | obj=with a composite menopause symptom severity | unit=S87\nB T4 B68 | sub=Surface | pred=map | obj=of regional associations between estrogen receptor | unit=S89\nB T4 B69 | sub=Statistical parametric maps | pred=represent | obj=on a color-coded scale | unit=S90\nB T4 B70 | sub=Statistics | pred=report | obj=in Supplementary Table | unit=S91\nB T4 B71 | sub=associations between ER density in voxel-based | pred=pronounced | obj=In examination of menopause symptom clusters | unit=S92\nB T4 B72 | sub=ER density | pred=predict | obj=In the peri-menopausal group | unit=S93\nB T4 B73 | sub=ER density in the same clusters | pred=predict | obj=In the post-menopausal group | unit=S94\nB T4 B74 | sub=Similar results | pred=find | obj=using ROI measures | unit=S95\nB T4 B75 | sub=ER density in hypothalamus | pred=predict | obj=presence of peri-menopausal night sweats (OR=10, | unit=S96\nB T4 B76 | sub=ER density in hypothalamus | pred=predict | obj=presence of post-menopausal hot flashes and | unit=S97\nB T4 B77 | sub=## Discussion | pred=demonstrate | obj=progressively higher brain ER density | unit=S98\nB T4 B78 | sub=Results | pred=demonstrate | obj=high anatomical overlap with estrogen-regulated brain | unit=S99\nB T4 B79 | sub=Elevations in ER density | pred=consistent | obj=correctly classifying all post-menopausal women | unit=S100\nB T4 B80 | sub=ER density | pred=predict | obj=presence of menopause symptoms, chiefly changes | unit=S101\nB T4 B81 | sub=the classic view of estrogen action | pred=confine | obj=For decades | unit=S103\nB T4 B82 | sub=Later studies | pred=challenge | obj=this paradigm | unit=S104\nB T4 B83 | sub=Further advances | pred=lead | obj=to discovery that E2 actions are | unit=S105\nB T4 B84 | sub=ERs | pred=modulate | obj=synaptic plasticity | unit=S106\nB T4 B85 | sub=Major projection neurons such as cholinergic, | pred=responsive | obj=to ER activity5,6 | unit=S107\nB T4 B86 | sub=our knowledge of ER expression in | pred=limited | obj=However, our knowledge of ER expression | unit=S108\nB T4 B87 | sub=PET imaging with ER ligands | pred=technique | obj=available | unit=S110\nB T4 B88 | sub=18F-FES | pred=tracer | obj=thanks to extensive pharmacological validation of | unit=S111\nB T4 B89 | sub=the signal | pred=originate | obj=mostly from ERα-expressing areas | unit=S112\nB T4 B90 | sub=Brain 18F-FES PET studies | pred=scarce | obj=animals | unit=S113\nB T4 B91 | sub=Preclinical studies | pred=instrumental | obj=high | unit=S114\nB T4 B92 | sub=oophorectomy | pred=provoke | obj=In female rats | unit=S115\nB T4 B93 | sub=This | pred=indicate | obj=that E2 declines following oophorectomy (surgical | unit=S116\nB T4 B94 | sub=the only brain 18F-FES study in | pred=conduct | obj=on de novo breast cancer patients | unit=S117\nB T4 B95 | sub=The pre-menopausal group | pred=small | obj=than the post-menopausal group | unit=S118\nB T4 B96 | sub=delineation of the pituitary region | pred=base | obj=on tracer uptake | unit=S119\nB T4 B97 | sub=The present brain 18F-FES PET study | pred=examine | obj=a prospective cohort of healthy midlife | unit=S120\nB T4 B98 | sub=All post-menopausal women | pred=undergo | obj=menopause | unit=S121\nB T4 B99 | sub=We | pred=use | obj=state-of-the-art ROI | unit=S122\nB T4 B100 | sub=our results | pred=show | obj=a pattern of brain ER distribution | unit=S123\nB T4 B101 | sub=the pituitary gland | pred=show | obj=the strongest tracer uptake, which was | unit=S124\nB T4 B102 | sub=Hypothalamus | pred=exhibit | obj=progressively higher ER density | unit=S125\nB T4 B103 | sub=These effects | pred=independent | obj=of age | unit=S126\nB T4 B104 | sub=we | pred=able | obj=to detect alterations in ER density | unit=S127\nB T4 B105 | sub=these findings | pred=provide | obj=novel evidence that female endocrine aging | unit=S128\nB T4 B106 | sub=Higher 18F-FES binding post-menopause | pred=near-absence | obj=of endogenous E2 competing for receptor | unit=S129\nB T4 B107 | sub=several lines of evidence | pred=support | obj=presence of a compensatory mechanism | unit=S130\nB T4 B108 | sub=the surgical histology studies described above | pred=provide | obj=an important part of the basis | unit=S131\nB T4 B109 | sub=studies in rodents | pred=show | obj=that brain ER expression is in | unit=S132\nB T4 B110 | sub=preclinical studies | pred=show | obj=in terms of tracer kinetics | unit=S133\nB T4 B111 | sub=studies of breast cancer patients | pred=report | obj=mild or non-significant effects of circulating | unit=S134\nB T4 B112 | sub=tracer uptake | pred=correlate | obj=In the present study | unit=S135\nB T4 B113 | sub=other factors | pred=control | obj=ERα mRNA | unit=S136\nB T4 B114 | sub=E2 | pred=produce | obj=For instance | unit=S137\nB T4 B115 | sub=Brain steroidogenesis | pred=regulate | obj=of peripheral steroidogenesis | unit=S138\nB T4 B116 | sub=the brain | pred=adapt | obj=after oophorectomy in female rats | unit=S139\nB T4 B117 | sub=the brain | pred=retain | obj=the ability to synthesize E2 locally | unit=S140\nB T4 B118 | sub=endogenous E2 synthesis | pred=upregulate | obj=In response to brain injury | unit=S141\nB T4 B119 | sub=It | pred=possible | obj=that neurological stress during the menopause | unit=S142\nB T4 B120 | sub=estrone (E3, the most prevalent type | pred=bind | obj=to ERα | unit=S143\nB T4 B121 | sub=This | pred=justify | obj=the need for an increase in | unit=S144\nB T4 B122 | sub=elevations in brain ER density independent | pred=line | obj=with a compensatory neurophysiological response to | unit=S145\nB T4 B123 | sub=Our correlational analysis of multimodality imaging | pred=support | obj=the notion that ER overexpression may | unit=S146\nB T4 B124 | sub=higher ER density | pred=associate | obj=In fact | unit=S147\nB T4 B125 | sub=These associations | pred=pronounced | obj=at the post-menopausal stage | unit=S148\nB T4 B126 | sub=Previous imaging studies of midlife women | pred=report | obj=lower frontal GMV and functional activity | unit=S149\nB T4 B127 | sub=ERs | pred=find | obj=in mitochondria, which are a site | unit=S150\nB T4 B128 | sub=E2 | pred=regulate | obj=cerebral glucose metabolism (CMRglc), the tricarboxylic | unit=S151\nB T4 B129 | sub=ER protein synthesis | pred=unchanged | obj=In mechanistic analyses | unit=S152\nB T4 B130 | sub=The resulting loss of estrogenic-controlled glucose | pred=trigger | obj=a compensatory bioenergetic adaptive response to | unit=S153\nB T4 B131 | sub=present results of greater ER-related ATP | pred=consistent | obj=with a compensatory reaction to altered | unit=S154\nB T4 B132 | sub=The raise in ATP | pred=reflect | obj=the energetic cost of sustaining ER | unit=S155\nB T4 B133 | sub=Another novel finding | pred=association | obj=of ER density | unit=S157\nB T4 B134 | sub=Declines in circulating sex hormones, chiefly | pred=assume | obj=to account for these changes8 | unit=S158\nB T4 B135 | sub=Present results | pred=indicate | obj=that increasing ER levels in estrogen-regulated | unit=S159\nB T4 B136 | sub=These associations | pred=strong | obj=at the perimenopausal stage | unit=S160\nB T4 B137 | sub=mounting evidence | pred=identify | obj=deprivation of estrogenic effects following menopause | unit=S161\nB T4 B138 | sub=ER-PET imaging | pred=represent | obj=an essential advance in our ability | unit=S162\nB T4 B139 | sub=Estrogen | pred=treatment | obj=for menopausal symptoms such as hot | unit=S163\nB T4 B140 | sub=Menopause hormone therapy (HT | pred=hold | obj=promise | unit=S164\nB T4 B141 | sub=clinical studies | pred=produce | obj=mixed results | unit=S165\nB T4 B142 | sub=Experts | pred=argue | obj=that HT is best started early | unit=S166\nB T4 B143 | sub=there | pred=seem | obj=to be a critical window of | unit=S168\nB T4 B144 | sub=Long-term E2 deprivation | pred=show | obj=to lead to degradation of ERα | unit=S169\nB T4 B145 | sub=Present neuroimaging findings | pred=indicate | obj=that the brain is undergoing estrogenic | unit=S170\nB T4 B146 | sub=These results | pred=help | obj=hone in on the window of | unit=S171\nB T4 B147 | sub=article text | pred=strength | obj=Limitations | unit=S172\nB T4 B148 | sub=article text | pred=to | obj=To | unit=S173\nB T4 B149 | sub=this | pred=study | obj=our knowledge | unit=S174\nB T4 B150 | sub=We | pred=focus | obj=on carefully screened, healthy midlife women | unit=S175\nB T4 B151 | sub=Our extensive exclusion criteria | pred=ensure | obj=absence of confounding factors such as | unit=S176\nB T4 B152 | sub=we | pred=examine | obj=From a methodological perspective | unit=S177\nB T4 B153 | sub=We | pred=use | obj=a combination of state-of-the-art ROI | unit=S178\nB T4 B154 | sub=Results | pred=significant | obj=after a stringent correction for multiple | unit=S179\nB T4 B155 | sub=We | pred=choose | obj=a cross-sectional design | unit=S180\nB T4 B156 | sub=Longitudinal studies | pred=require | obj=10-15 years of follow-ups | unit=S181\nB T4 B157 | sub=the procedure | pred=yield | obj=different neurophysiological outcomes7,8 | unit=S182\nB T4 B158 | sub=a temporal and causal relationships between | pred=establish | obj=given the cross-sectional and observational nature | unit=S183\nB T4 B159 | sub=Longitudinal studies | pred=warrant | obj=to characterize the temporal trajectories of | unit=S184\nB T4 B160 | sub=cognitive performance | pred=differ | obj=by menopause status | unit=S186\nB T4 B161 | sub=This | pred=consistent | obj=with clinical observations that, while self-reports | unit=S187\nB T4 B162 | sub=lack of variability in cognitive measures | pred=prevent | obj=us | unit=S188\nB T4 B163 | sub=we | pred=caution | obj=that present results are obtained from | unit=S189\nB T4 B164 | sub=Replication in community-based populations with diverse | pred=warrant | obj=Replication in community-based populations with diverse | unit=S190\nB T4 B165 | sub=Kinetic modeling with absolute quantification | pred=remain | obj=the gold-standard | unit=S192\nB T4 B166 | sub=Kinetic 18F-FES studies in animals | pred=report | obj=high specific binding in pituitary and | unit=S193\nB T4 B167 | sub=Absolute quantification | pred=invasive | obj=due to the need for continuous | unit=S194\nB T4 B168 | sub=we | pred=use | obj=graphic reference-tissue Logan plots47 | unit=S195\nB T4 B169 | sub=SUVR | pred=prefer | obj=for clinical studies | unit=S196\nB T4 B170 | sub=A major limitation of the SUVR | pred=be | obj=that it can overestimate receptor binding | unit=S197\nB T4 B171 | sub=oophorectomy | pred=provoke | obj=In animal studies | unit=S198\nB T4 B172 | sub=the post-menopausal group | pred=exhibit | obj=In our study | unit=S199\nB T4 B173 | sub=overestimation | pred=affect | obj=all menopausal groups | unit=S200\nB T4 B174 | sub=Another limitation of SUVR | pred=rely | obj=on the choice of a suitable | unit=S202\nB T4 B175 | sub=our reference ROI | pred=select | obj=preclinical | unit=S203\nB T4 B176 | sub=The ROI | pred=optimize | obj=by means of supervised clustering algorithms | unit=S204\nB T4 B177 | sub=SCA methods | pred=use | obj=to extract pseudo-reference regions for non-invasive | unit=S205\nB T4 B178 | sub=it | pred=possible | obj=that we may have underestimated ER | unit=S206\nB T4 B179 | sub=This | pred=reduce | obj=power | unit=S207\nB T4 B180 | sub=we | pred=attribute | obj=Given the high anatomical agreement between | unit=S208\nB T4 B181 | sub=More studies using fully kinetic modeling | pred=need | obj=to replicate these findings | unit=S209\nB T4 B182 | sub=18F-FES signal | pred=limit | obj=by non-specific binding | unit=S210\nB T4 B183 | sub=Novel ER ligands with lower nonspecific | pred=develop | obj=such as 4-fluoro-11β-methoxy-16α-18F-fluoroestradiol (18F-4FMFES) 21 | unit=S211\nB T4 B184 | sub=PET tracers with high selectivity for | pred=interest | obj=for neuroscience | unit=S212\nB T4 B185 | sub=ER-PET imaging | pred=represent | obj=an essential advance | unit=S213\nB T4 B186 | sub=These data | pred=provide | obj=novel evidence for invivo ER-mediated estrogenic | unit=S214\nB T4 B187 | sub=Findings | pred=provide | obj=a neurobiological substrate | unit=S215\nB T4 B188 | sub=This | pred=study | obj=of 45 consecutive clinically and cognitively | unit=S216\nB T4 B189 | sub=Participants | pred=recruit | obj=at Weill Cornell Medicine (WCM | unit=S217\nB T4 B190 | sub=Use of 18F-FES | pred=carry | obj=under WCM Radioactive Drug Research Committee | unit=S218\nB T4 B191 | sub=Participants | pred=woman | obj=with ≥12 years of education and | unit=S220\nB T4 B192 | sub=Pre-established exclusion criteria | pred=include | obj=i) any significant neurological disease, such | unit=S221\nB T4 B193 | sub=Additional exclusion criteria | pred=include | obj=vii) history of oophorectomy | unit=S222\nB T4 B194 | sub=All participants | pred=undergo | obj=clinical examinations including medical history | unit=S224\nB T4 B195 | sub=The patients’ sex | pred=determine | obj=by self-report | unit=S225\nB T4 B196 | sub=article text | pred=capitalize | obj=on the menopause transition | unit=S226\nB T4 B197 | sub=Participants | pred=enrol | obj=into three size-matched groups according to | unit=S227\nB T4 B198 | sub=Participants | pred=assign | obj=to groups | unit=S228\nB T4 B199 | sub=Sex steroid hormone levels, including estradiol | pred=measure | obj=by a commercial laboratory (Boston Heart | unit=S229\nB T4 B200 | sub=participants | pred=midcycle | obj=plasma | unit=S230\nB T4 B201 | sub=plasma E2 levels | pred=include | obj=as a covariate | unit=S231\nB T4 B202 | sub=Blood samples | pred=take | obj=on the day of the PET | unit=S232\nB T4 B203 | sub=article text | pred=test | obj=whether tracer binding at midcycle was | unit=S233\nB T4 B204 | sub=Results | pred=remain | obj=unchanged | unit=S234\nB T4 B205 | sub=Our final study cohort | pred=include | obj=45 consecutive participants | unit=S236\nB T4 B206 | sub=Three of the original 45 participants | pred=have | obj=to be excluded due to conditions | unit=S237\nB T4 B207 | sub=3 additional participants | pred=enrol | obj=in those respective groups | unit=S238\nB T4 B208 | sub=Participant characteristics of the final sample | pred=show | obj=in Supplementary Table 1 | unit=S239\nB T4 B209 | sub=these | pred=represent | obj=the sample sizes used in analysis | unit=S240\nB T4 B210 | sub=There | pred=be | obj=between menopausal groups | unit=S242\nB T4 B211 | sub=we | pred=use | obj=box plots | unit=S243\nB T4 B212 | sub=Age | pred=set | obj=as a covariate | unit=S244\nB T4 B213 | sub=All participants | pred=complete | obj=menopause questionnaires, including rating scales for | unit=S246\nB T4 B214 | sub=A composite menopause symptom score | pred=calculate | obj=as the sum of individual scores | unit=S247\nB T4 B215 | sub=These scores | pred=high | obj=in the post-menopausal (4.5±3.18) and peri-menopausal | unit=S248\nB T4 B216 | sub=Menopause symptom scores | pred=examine | obj=as correlational outcomes | unit=S249\nB T4 B217 | sub=Learning | pred=test | obj=RAVLT | unit=S253\nB T4 B218 | sub=a global cognition score | pred=obtain | obj=tests | unit=S254\nB T4 B219 | sub=TMT-B scores | pred=invert | obj=−1 | unit=S255\nB T4 B220 | sub=Descriptive assessment of cognitive scores across | pred=show | obj=no significant differences | unit=S256\nB T4 B221 | sub=the variance in these measures | pred=deem | obj=too small to enable meaningful assessment | unit=S257\nB T4 B222 | sub=Brain Imaging #### Acquisition | pred=receive | obj=MRI and PET scans | unit=S260\nB T4 B223 | sub=Scans | pred=perform | obj=on consecutive days | unit=S261\nB T4 B224 | sub=Adjusting by time between scans as | pred=impact | obj=correlational results | unit=S262\nB T4 B225 | sub=All MR sequences | pred=acquire | obj=on a 3.0 T MR750 Discovery | unit=S263\nB T4 B226 | sub=article text | pred=3d | obj=3D | unit=S264\nB T4 B227 | sub=article text | pred=mri | obj=BRAVO | unit=S265\nB T4 B228 | sub=Spin | pred=labeling | obj=ASL | unit=S270\nB T4 B229 | sub=article text | pred=acquire | obj=acquired | unit=S271\nB T4 B230 | sub=article text | pred=use | obj=a pseudo-continuous technique [4851 ms TR, | unit=S272\nB T4 B231 | sub=One post-menopausal participant | pred=complete | obj=the scan | unit=S273\nB T4 B232 | sub=Resonance | pred=spectroscopy | obj=31P-MRS | unit=S274\nB T4 B233 | sub=shimming | pred=perform | obj=Prior to MRS scanning | unit=S275\nB T4 B234 | sub=Multiple 2D slices | pred=acquire | obj=resulting in an 8x8x8 grid with | unit=S276\nB T4 B235 | sub=An 8 slice sagittal T1-Fluid Attenuated | pred=acquire | obj=with a 5 mm slice thickness | unit=S277\nB T4 B236 | sub=The central 4 slices | pred=coregistere | obj=to MRI | unit=S278\nB T4 B237 | sub=Two peri-menopausal and one post-menopausal participants | pred=complete | obj=the 31P-MRS procedure | unit=S279\nB T4 B238 | sub=PET | pred=imaging | obj=##### 18F-Fluoroestradiol PET imaging. | unit=S280\nB T4 B239 | sub=16α-[18F]fluoro-17β-estradiol (18F-FES | pred=prepare | obj=by the WCM PET Radiochemistry Group | unit=S281\nB T4 B240 | sub=18F-FES scans | pred=acquire | obj=using a Siemens BioGraph mCT 64-slice | unit=S282\nB T4 B241 | sub=All scans | pred=perform | obj=after a 4-hour fasting | unit=S283\nB T4 B242 | sub=an antecubital venous catheter | pred=position | obj=before PET imaging | unit=S284\nB T4 B243 | sub=No arterial blood sampling | pred=perform | obj=No arterial blood sampling was performed. | unit=S285\nB T4 B244 | sub=Participants | pred=lie | obj=on the scanner bed | unit=S286\nB T4 B245 | sub=a dose of approximately 6 mCi | pred=infuse | obj=Following a low-dose CT scan | unit=S287\nB T4 B246 | sub=Dynamic imaging | pred=perform | obj=for 90 minutes | unit=S288\nB T4 B247 | sub=All images | pred=correct | obj=for attenuation | unit=S289\nB T4 B248 | sub=18F-FES | pred=analysis | obj=# 18F-FES analysis | unit=S292\nB T4 B249 | sub=article text | pred=region | obj=of Interest | unit=S293\nB T4 B250 | sub=their density | pred=vary | obj=by isoform | unit=S294\nB T4 B251 | sub=we | pred=focus | obj=on predominantly gray matter regions with | unit=S295\nB T4 B252 | sub=These | pred=include | obj=pituitary, hypothalamus, thalamus, hippocampus, amygdala, midbrain, | unit=S296\nB T4 B253 | sub=These regions | pred=carry | obj=into hypothesis testing | unit=S297\nB T4 B254 | sub=we | pred=examine | obj=regions with lower ERα expression | unit=S298\nB T4 B255 | sub=Reference | pred=region | obj=##### Reference region. | unit=S300\nB T4 B256 | sub=We | pred=choose | obj=the cerebellum | unit=S301\nB T4 B257 | sub=We | pred=develop | obj=a probabilistic cluster-based cerebellar ROI | unit=S302\nB T4 B258 | sub=The final cerebellar ROI | pred=illustrate | obj=in Supplementary Figure 1 | unit=S303\nB T4 B259 | sub=article text | pred=modeling | obj=reference-tissue | unit=S306\nB T4 B260 | sub=18F-FES data | pred=examine | obj=as distribution volume ratios (DVR | unit=S307\nB T4 B261 | sub=The pituitary ROI | pred=delineate | obj=on the coregistered anatomical MRI | unit=S308\nB T4 B262 | sub=ROI placement | pred=conduct | obj=using PMOD v4.1 (PMOD Technologies | unit=S309\nB T4 B263 | sub=volume | pred=ratio | obj=## Distribution volume ratios. | unit=S313\nB T4 B264 | sub=ROIs | pred=apply | obj=to motion-corrected dynamic PET images | unit=S315\nB T4 B265 | sub=Graphic reference-tissue Logan plots47 | pred=use | obj=to estimate 18F-FES DVR (1+BP binding | unit=S316\nB T4 B266 | sub=value | pred=ratio | obj=Standardized uptake value ratios. | unit=S320\nB T4 B267 | sub=summed PET images corresponding to 30-90, | pred=convert | obj=For comparisons with previous work21 | unit=S321\nB T4 B268 | sub=SUVMax | pred=extract | obj=from pituitary ROI | unit=S322\nB T4 B269 | sub=SUVR | pred=suitable | obj=for clinical application | unit=S323\nB T4 B270 | sub=Reliability | pred=analysis | obj=#### Reliability analysis | unit=S326\nB T4 B271 | sub=Correlation | pred=coefficient | obj=with Cronbach’s Alpha | unit=S328\nB T4 B272 | sub=SUVR50-70 measures | pred=yield | obj=comparable estimates | unit=S329\nB T4 B273 | sub=the mean difference | pred=% | obj=Across brain regions | unit=S330\nB T4 B274 | sub=This time window | pred=consistent | obj=with previous studies | unit=S331\nB T4 B275 | sub=Subsequent analyses | pred=obtain | obj=using SUVR ROI data | unit=S332\nB T4 B276 | sub=18F-FES PET, ASL and MRS images | pred=enable | obj=accurate sampling | unit=S333\nB T4 B277 | sub=article text | pred=regions-of-interest | obj=### Regions-of-interest | unit=S337\nB T4 B278 | sub=All ROIs except the manually delineated | pred=quantify | obj=from MRI-coregistered 18F-FES images | unit=S339\nB T4 B279 | sub=FreeSurfer | pred=use | obj=to derive total intracranial volume (TIV | unit=S340\nB T4 B280 | sub=the pituitary | pred=examine | obj=Given its small size | unit=S341\nB T4 B281 | sub=31P-MRS data | pred=process | obj=via our proprietary XSOS written in | unit=S342\nB T4 B282 | sub=A fixed first order phase of | pred=apply | obj=to all spectra | unit=S343\nB T4 B283 | sub=The phospho-creatine (PCr) peak | pred=set | obj=at 0.0 ppm | unit=S344\nB T4 B284 | sub=Baseline correction | pred=apply | obj=to all other voxels in the | unit=S345\nB T4 B285 | sub=Peak area integration | pred=perform | obj=around four well-resolved resonance peaks yielding | unit=S346\nB T4 B286 | sub=medial temporal lobe regions | pred=average | obj=For31P-MRS analysis | unit=S347\nB T4 B287 | sub=article text | pred=analysis | obj=Voxel-based analysis | unit=S352\nB T4 B288 | sub=MRI scans | pred=normalize | obj=to the template-normalized tissue probabilistic map | unit=S354\nB T4 B289 | sub=Gray matter volume (GMV) segments | pred=retain | obj=for statistical analysis | unit=S355\nB T4 B290 | sub=The MRI-coregistered 18F-FES SUVR and ASL | pred=normalize | obj=to the TPM image | unit=S356\nB T4 B291 | sub=Covariates | pred=adjust | obj=by age | unit=S359\nB T4 B292 | sub=18F-FES analyses | pred=adjust | obj=by plasma E2 levels | unit=S360\nB T4 B293 | sub=SPSS | pred=v.25 | obj=R | unit=S364\nB T4 B294 | sub=Clinical measures | pred=examine | obj=with general linear models | unit=S365\nB T4 B295 | sub=Our primary outcome | pred=examination | obj=of 18F-FES SUVR (e.g. ER density) | unit=S366\nB T4 B296 | sub=Additional outcomes | pred=include | obj=correlational analysis of 18F-FES SUVR with | unit=S367\nB T4 B297 | sub=ER | pred=density | obj=by menopause status | unit=S371\nB T4 B298 | sub=Multivariate analysis of variance | pred=use | obj=to test the statistical significance of | unit=S372\nB T4 B299 | sub=Post-hoc testing | pred=perform | obj=to identify which pairwise comparisons in | unit=S373\nB T4 B300 | sub=Regression models | pred=construct | obj=to obtain global P values for | unit=S374\nB T4 B301 | sub=SUVR in exploratory regions | pred=provide | obj=For completeness | unit=S375\nB T4 B302 | sub=article text | pred=analysis | obj=##### Voxel-based analysis | unit=S377\nB T4 B303 | sub=We | pred=use | obj=factorial models | unit=S379\nB T4 B304 | sub=Statistical maps | pred=construct | obj=stringent | unit=S380\nB T4 B305 | sub=clusters ≥16 voxels | pred=consider | obj=significant | unit=S381\nB T4 B306 | sub=Anatomical location of significant clusters | pred=describe | obj=using Talairach coordinates after conversion from | unit=S382\nB T4 B307 | sub=Clusters of significant associations between ER | pred=save | obj=as binary masks (FESmask | unit=S383\nB T4 B308 | sub=article text | pred=prediction | obj=of menopause status | unit=S387\nB T4 B309 | sub=the standardized pairwise mean differences between | pred=express | obj=After adjustment by age | unit=S388\nB T4 B310 | sub=We | pred=use | obj=a conservative cut-off of 1.5 | unit=S389\nB T4 B311 | sub=predictive models by means of multivariable | pred=train | obj=on a random 80% of the | unit=S390\nB T4 B312 | sub=Each model | pred=contain | obj=the binary outcome, pre- vs. post-menopause | unit=S391\nB T4 B313 | sub=Our primary outcome | pred=accuracy | obj=in the testing set | unit=S392\nB T4 B314 | sub=Global likelihood ratio tests | pred=perform | obj=for each model | unit=S393\nB T4 B315 | sub=## Associations of ER density with | pred=present | obj=both for the overall study sample | unit=S396\nB T4 B316 | sub=The stratified analysis | pred=perform | obj=to investigate hypothesized differences in the | unit=S397\nB T4 B317 | sub=Stratification by menopause status | pred=mitigate | obj=the effects of its confounding on | unit=S398\nB T4 B318 | sub=ROI | pred=analysis | obj=#### ROI analysis. | unit=S401\nB T4 B319 | sub=We | pred=use | obj=multiple linear regressions | unit=S402\nB T4 B320 | sub=article text | pred=analysis | obj=#### Voxel-based analysis. | unit=S405\nB T4 B321 | sub=We | pred=use | obj=multiple linear regressions | unit=S407\nB T4 B322 | sub=The latter analysis | pred=do | obj=via the inclusive masking option | unit=S408\nB T4 B323 | sub=we | pred=use | obj=For completeness | unit=S409\nB T4 B324 | sub=Results | pred=report | obj=in brain regions that survive the | unit=S410\nB T4 B325 | sub=article text | pred=association | obj=of ER density | unit=S415\nB T4 B326 | sub=We | pred=use | obj=a two-step approach to test for | unit=S416\nB T4 B327 | sub=This analysis | pred=use | obj=both SUVR from peak clusters identified | unit=S417\nB T4 B328 | sub=Analyses | pred=perform | obj=across the entire cohort | unit=S418\nB T4 B329 | sub=Odds ratios (OR | pred=estimate | obj=where a positive value denotes a | unit=S419\nB T4 B330 | sub=OR that exceeded 10 | pred=cap | obj=at 10 | unit=S420",
+  "expected": {
+    "assertion_count": 330,
+    "minimum_concept_count": 555,
+    "minimum_structural_row_count": 1372,
+    "minimum_knowledge_map_node_count": 1372,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

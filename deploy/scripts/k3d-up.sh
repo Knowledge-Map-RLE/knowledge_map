@@ -17,13 +17,13 @@ fi
 
 echo ">> Сборка образов сервисов (dev)..."
 docker build -t auth:latest -f auth/Dockerfile --build-context shared=./shared auth &
-docker build -t api:latest -f api/Dockerfile --build-context shared=./shared api &
+docker build -t api:latest -f api/Dockerfile --build-context shared=./shared --build-context core=./knowledge_map_core --build-context config=. api &
 docker build -t billing:latest -f billing/Dockerfile --build-context shared=./shared billing &
-docker build -t ai:latest -f ai/Dockerfile --build-context shared=./shared ai &
+docker build -t ai:latest -f ai/Dockerfile --build-context shared=./shared --build-context config=. ai &
 docker build -t nlp:latest -f nlp/Dockerfile --build-context shared=./shared nlp &wait
 
 docker build -t laying:latest -f laying/Dockerfile laying &
-docker build -t knowledge_map_core:latest -f knowledge_map_core/Dockerfile knowledge_map_core &
+docker build -t knowledge_map_core:latest -f knowledge_map_core/Dockerfile --build-context shared=./shared --build-context config=. knowledge_map_core &
 docker build -t pdf_to_md:latest -f pdf_to_md/Dockerfile pdf_to_md &
 docker build -t client:latest -f client/Dockerfile client &
 wait

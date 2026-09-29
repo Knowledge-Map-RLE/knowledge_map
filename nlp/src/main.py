@@ -438,7 +438,10 @@ class NLPServicer(nlp_pb2_grpc.NLPServiceServicer):
                 )
 
             # Фильтруем front-matter, HTML-блоки и References, строим карту смещений
-            analyze_text, offset_map = self._filter_text_for_analysis(request.text)
+            if request.preserve_source:
+                analyze_text, offset_map = request.text, None
+            else:
+                analyze_text, offset_map = self._filter_text_for_analysis(request.text)
             if len(analyze_text) < len(request.text):
                 logger.info(f"Текст после фильтрации: {len(request.text)} -> {len(analyze_text)} символов")
 

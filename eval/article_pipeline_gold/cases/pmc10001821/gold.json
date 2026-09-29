@@ -1,0 +1,2235 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 402,
+      "text": "# The Impact of Digital Coaching Intervention for Improving Healthy Ageing Dimensions among Older Adults during Their Transition from Work to Retirement\n\n**Авторы:** Santini Sara, Fabbietti Paolo, Galassi Flavia, Merizzi Alessandra, Kropf Johannes, Hungerländer Niklas, Stara Vera\n\n**Журнал:** International Journal of Environmental Research and Public Health (2023)\n\n**DOI:** 10.3390/ijerph20054034\n\n\n",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 402,
+      "end": 403,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S3",
+      "start": 403,
+      "end": 404,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S4",
+      "start": 405,
+      "end": 1246,
+      "text": "Abstract\n\nRetirement is a critical step in older adults’ lives, so it is important to motivate them to stay physically active, mentally healthy, and socially connected in the transition from work to retirement, including through digital health coaching programs. This study aims to: evaluate the impact of a digital coaching intervention to enhance three healthy ageing dimensions, i.e., physical activity, mental well-being, and socialization of a group of adults near retirement; understand the users’ experience; and identify the system strengths and weaknesses. This longitudinal mixed-methods study, carried out in 2021 in Italy and the Netherlands, enrolled 62 individuals. In the first 5 weeks of the trial, participants used a digital coach with the support of human coaches, and then they continued autonomously for another 5 weeks.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 1247,
+      "end": 1427,
+      "text": "The use of the digital coach improved the participants’ physical activity, mental well-being and self-efficacy during the first period and only the physical activity in the second.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 1428,
+      "end": 1491,
+      "text": "An effective coaching system should be flexible and attractive.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 1492,
+      "end": 1771,
+      "text": "High levels of personalization remain the golden key to aligning the health program to the physical, cognitive and social status of the intended target, thus increasing the user-system interaction, usability, and acceptability, as well as enhancing adherence to the intervention.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1771,
+      "end": 1774,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S9",
+      "start": 1774,
+      "end": 1779,
+      "text": "## 1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S10",
+      "start": 1780,
+      "end": 1853,
+      "text": "Introduction\n\nWe are witnessing the rapid ageing of the world population.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1854,
+      "end": 2015,
+      "text": "The extension of life expectancy often means a prolonged disability condition in later life that is placing questions on long-term care systems across the world.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 2016,
+      "end": 2141,
+      "text": "The ageing of the population also entails the transition of many older adults from the status of workers to that of retirees.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 2142,
+      "end": 2294,
+      "text": "The literature now agrees that retirement is a critical step in people’s lives, full of opportunities and, at the same time, fraught with dangers [1,2].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 2295,
+      "end": 2669,
+      "text": "In fact, alongside the greater availability of free time and the opportunity to use it in many activities, e.g., cultural and physical, the loss of meaningful relationships and interests can creep in, forcing older individuals to re-organize their daily schedule, re-negotiate their roles in the family and in society, and re-design, at least partly, their own identity [3].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2669,
+      "end": 2836,
+      "text": "\n\nThus, the transition to retirement can represent the tipping point for healthy ageing or its opposite, based on the individuals’ response to this existential change.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2837,
+      "end": 3150,
+      "text": "Healthy ageing is defined as “the process of developing and maintaining the functional ability (i.e., people’s capabilities of being and doing what they have reason to value) that enables well-being in older age” [4], whose main predictors are physical activity, mental well-being, and social participation [5,6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 3150,
+      "end": 3268,
+      "text": "\n\nThere is a lack of consensus on how the retirement transition can affect older adults’ physical activity [7,8,9,10].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 3269,
+      "end": 3383,
+      "text": "On the one hand, according to the activity theory, retirement may be an opportunity to increase physical activity.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 3384,
+      "end": 3650,
+      "text": "On the other hand, the literature underlines that during the retirement transition [11], there could be a fluctuation in the levels of intensity of, and in the motivation to do, physical activity, and a change in their types, which may be affected by gender as well.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 3651,
+      "end": 3825,
+      "text": "For example, according to a recent qualitative longitudinal study, the main driver of physical activity seems to be body shaping among men and socialization [12] among women.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 3825,
+      "end": 3906,
+      "text": "\n\nRetirement can also influence individuals’ mental well-being and socialization.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3907,
+      "end": 4136,
+      "text": "In fact, weaker and rarer meaningful social relationships, or a change in self-image, self-esteem, and self-efficacy [3] due to the end of the working life, can lead to social isolation, emotional discomfort, and depression [13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 4136,
+      "end": 4444,
+      "text": "\n\nConsidering the above, it is very important to motivate older adults in the transition to retirement to stay physically active, mentally healthy, and socially connected so that they can age healthily and re-shape their own role in society without negative repercussions on their physical and mental health.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 4444,
+      "end": 4446,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S25",
+      "start": 4446,
+      "end": 4668,
+      "text": "Health coaching interventions led by human coaches can motivate older adults to have healthier lifestyles in later life, for example, by eating more vegetables, practicing physical activity, and reducing cigarette smoking.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 4669,
+      "end": 4878,
+      "text": "Such programs often target individuals with chronic diseases and are aimed at helping patients determine and work toward their goals so that they become more compliant with the health program [14,15,16,17,18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 4879,
+      "end": 5185,
+      "text": "Health coaching programs, regardless of whether they are led by humans and/or by digital systems, mainly address older adults with chronic diseases, and only a few of them are conceived from a preventive perspective, targeting older adults in good health conditions and/or in transition to retirement [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 5186,
+      "end": 5495,
+      "text": "On the contrary, healthy ageing strategies, including, for example, self-management capabilities, goal setting, personalised feedback and health literacy, as well as emotional support, reminders and alerts, could be highly effective for such a group of older adults, especially if in transition to retirement.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 5496,
+      "end": 5746,
+      "text": "Nevertheless, such strategies cannot often be managed by healthcare professionals because the available workforce cannot be devoted to education and prevention, being on the frontline of assistance to older patients with acute and chronic care needs.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 5747,
+      "end": 5998,
+      "text": "Thus, digital coaching technologies can offer an innovative way to overcome this lack of assistance and care as dialogue systems that sense relevant context, determine users’ intent, and provide feedback to improve users’ overall quality of life [20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 5999,
+      "end": 6351,
+      "text": "Therefore, digital coaching systems could be any computer program that supports spoken, text-based or multimodal conversational interactions with humans, such as personal digital assistants, virtual personal assistants, conversational agents or chats [21], reinforces and sustains healthy behavioural habits, and continuously monitors daily activities.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 6352,
+      "end": 6667,
+      "text": "There is still scant literature on the experience of older adults with digital coaching systems, but recent research showed that relatively young older adults may perceive digital coaching as a potential to motivate them towards physical activity by providing instructive information and motivational feedback [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 6668,
+      "end": 6903,
+      "text": "Unfortunately, the efficacy of personal health coaching systems for adults over 55 remains unclear, and few examples are mapped in the field for older adults and even less for older people in transition from work to retirement [19,20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 6904,
+      "end": 7140,
+      "text": "This study is part of the AgeWell project aimed at co-designing and developing a digital coaching system (hereafter also referred to as Digital Coach-DC) targeting older adults aged 55 and over in the transition from work to retirement.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 7141,
+      "end": 7396,
+      "text": "The study aims to evaluate the impact of a digital coaching intervention to enhance physical activity, mental well-being, and socialization as three healthy ageing dimensions and help a meaningful retirement process as a factor influencing healthy ageing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 7397,
+      "end": 7589,
+      "text": "It represents a novel contribution to assessing the value of digital coaching systems in a target population often overlooked by research on the development of this kind of technical solution.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 7590,
+      "end": 7963,
+      "text": "The purpose of the study was to answer three research questions: (1) To what extent can the AgeWell digital coach improve physical activity, mental well-being, social networking and the retirement process of older adults switching from work to retirement? (2) What was the experience of users with the digital coach? (3) What are the strengths and weaknesses of the system?",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 7963,
+      "end": 7966,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S39",
+      "start": 7966,
+      "end": 7995,
+      "text": "## 2. Materials and Methods\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 7995,
+      "end": 7996,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S41",
+      "start": 7996,
+      "end": 8014,
+      "text": "## 2.1. The System",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 8014,
+      "end": 8607,
+      "text": "\n\nThe main aim of the system was to improve users’ healthy ageing attitudes and behaviours by providing them with a series of information and activities grouped into four areas: 1. physical activity; 2. social life; 3. emotional well-being; 4. good retirement. The system was tested as a mobile application (Android App) on a smartphone. For the study, participants were equipped with appropriate devices (Android Smartphone with Android version 8 and upwards), or they used their own devices when preferred and when the user’s private smartphone fulfilled the system’s technical requirements.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 8608,
+      "end": 8792,
+      "text": "The software used for the trial consisted of an avatar-based frontend (see Figure 1 below) running on a smartphone and a server component providing the content and collecting the data.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 8793,
+      "end": 9059,
+      "text": "Communication between the frontend and the backend was established over the Internet, using secure communication channels with an event-based technology (MQTT—Mosquitto MQTT Server v1.6.8 (Eclipse Foundation, Inc, Ottawa, ON, Canada) following MQTT protocol v3.1.1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 9060,
+      "end": 9179,
+      "text": "The backend server ran within the facilities of one of the project consortium partners, to ensure privacy and security.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 9180,
+      "end": 9244,
+      "text": "No personal data were stored in the cloud or with third parties.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 9244,
+      "end": 9339,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> Home of the avatar-based app.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 9339,
+      "end": 9340,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S49",
+      "start": 9340,
+      "end": 9348,
+      "text": "/figure>",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 9348,
+      "end": 9455,
+      "text": "\n\nAuthentication was implemented using an OAuth2 broker service (www.auth0.com, accessed on 15 March 2020).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 9456,
+      "end": 9739,
+      "text": "The server components (see Figure 2 below) were implemented using the Karaf Java OSGi Framework and two databases: a NoSQL database (MongoDB, v3.6.8, MongoDB Inc., New York City, NY, USA) was used to store the user data gathered during App usage and to maintain the user preferences.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 9740,
+      "end": 9936,
+      "text": "In contrast, a SQL database (MariaDB, v10.1.29, MariaDB Corp., Espoo, Finland) (Eclipse Foundation, Inc, Ottawa, ON, Canada) was used for static content, e.g., the activities provided via the app.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 9937,
+      "end": 10026,
+      "text": "The server components ran on a Linux Virtual Machine (Ubuntu 18.04) (see Figure 3 below).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 10026,
+      "end": 10125,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> Overall components of the system.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 10125,
+      "end": 10126,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S56",
+      "start": 10126,
+      "end": 10133,
+      "text": "/figure",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 10133,
+      "end": 10233,
+      "text": ">\n\n\n<figure>\n  <figcaption><strong>Figure 3</strong> Components of the AgeWell server.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 10233,
+      "end": 10608,
+      "text": "</figure>\n\nThe digital coach was co-designed with users through a user-centred design methodology that shaped the realization of four main functional areas stimulating and motivating older adults nearing retirement to improve their physical activity, mental well-being, socialization, and retirement process, as extensively reported in the Supplementary Materials (Table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 10608,
+      "end": 10726,
+      "text": "\n\nAmong the physical activities to choose from, the app included: walking, tennis, swimming, dancing, and many others.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 10727,
+      "end": 10848,
+      "text": "The avatar asked users to choose the preferred activity to be inserted in a weekly plan and to decide on a personal goal.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 10849,
+      "end": 11148,
+      "text": "Thereafter, it sent motivational messages to help users reach such a goal, e.g., “Why stop now? You have already achieved so much” or “Once you really get into an exercise schedule, it just gets easier!”, and “Congratulations on making the commitment to exercise! Your body will thank you for it!”\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 11148,
+      "end": 11272,
+      "text": "The mental well-being function included three sub-functions: “Mind and body”; “Thought and action”; “Emotions and memories”.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 11273,
+      "end": 11462,
+      "text": "In the realm of “Mind and body”, the avatar proposed activities that promoted psycho-bodily well-being and were accompanied by links and/or video tutorials that facilitated their execution.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 11463,
+      "end": 11645,
+      "text": "They dealt with the ability to relax, calm down or even find dormant energies through meditation exercises or even more creative or expressive activities such as dancing and singing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 11645,
+      "end": 11647,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S66",
+      "start": 11647,
+      "end": 11948,
+      "text": "In the sub-realms of “Thought and action”, there were suggestions for activities that stimulated the subject to make plans and stick to them, to put themselves at the centre of their lives, or to remain flexible and see things from different points of view, e.g., the activity named “Bite your tongue!",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 11948,
+      "end": 12041,
+      "text": "”, which invited users not to complain and pay attention to the positive events of their life",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 12041,
+      "end": 12042,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S69",
+      "start": 12042,
+      "end": 12364,
+      "text": "\n\nFinally, in the sub-realm called “Emotions and memories”, there were some suggestions for activities that connect the person to his or her memories and ultimately give a sense of meaning and significance to one’s life, e.g., “Spend some time thinking about your success!” or “Strengthen the relationship with yourself!”.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 12364,
+      "end": 12366,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S71",
+      "start": 12366,
+      "end": 12570,
+      "text": "The system also included activities for stimulating users’ new social contacts and improving the quality of their relationships, e.g., “Making new contacts!” and “Increase the quality of your friendships!",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 12570,
+      "end": 12761,
+      "text": "”\n\nFinally, the “Good retirement” function included three sub-functions: “Activities for retirement”; “Suggestions” on how to make retirement more meaningful; and “Information on retirement”.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 12762,
+      "end": 13177,
+      "text": "In this case, the avatar suggested specific activities that could help people leave the workplace in a healthy way, such as having a retirement party with colleagues or passing on to other younger colleagues their experience gained from years of work, as well as advice on how to garner information about the rights of retirees or even about the activities and facilities offered by one’s municipality of residence.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 13177,
+      "end": 13430,
+      "text": "\n\n\n### 2.2. Study Design\n\nIn order to answer the three research questions, the study followed a mixed-methods design in which both qualitative (QUANT) and quantitative (QUAL) data were collected at three measurement times during the 10-week field trial.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 13431,
+      "end": 13685,
+      "text": "A concurrent equal status interactive mixed-methods research was adopted, where the QUANT and QUAL data components collection and analyses were executed simultaneously, having, therefore, the same value and being in constant interaction [23,24,25,26,27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 13686,
+      "end": 13800,
+      "text": "Two parallel QUANT and QUAL strands were integrated into meta-inferences after separate analyses were carried out.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 13801,
+      "end": 13888,
+      "text": "Thereafter, QUANT and QUAL results were brought together in the overall interpretation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 13889,
+      "end": 14095,
+      "text": "The QUANT analysis was aimed at highlighting the effects of the digital coach on the physical health, mental well-being, socialization and retirement transition of participants (research questions 1 and 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 14096,
+      "end": 14249,
+      "text": "The QUAL analysis aimed at shedding light on the strengths and weaknesses of both the digital coach contents and technical aspects (research question 3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 14250,
+      "end": 14543,
+      "text": "The point of integration of the two analyses was reached when the QUAL findings were added and integrated into the QUANT in order to explain to what extent the digital coach influenced users’ lifestyles and how much such an influence can be attributed to the system’s weaknesses and strengths.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 14543,
+      "end": 14865,
+      "text": "\n\nAs shown in Figure 4, in the first 5 weeks (Phase 1), participants were trained to use the digital coach by two human coaches, i.e., facilitators who constantly offered motivation, supported users’ confidence with the technology, provided technical skills and knowledge, and were responsible for the engagement of users.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 14866,
+      "end": 14986,
+      "text": "After the first 5 weeks (Phase 2), study participants continued to use the system without any help from the human coach.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 14987,
+      "end": 15131,
+      "text": "They could ask content-related questions and point out technical issues to their coaches via WhatsApp in Italy and via email in the Netherlands.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 15131,
+      "end": 15221,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 4</strong> Study design.</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 15221,
+      "end": 15442,
+      "text": "During the 5th and 10th weeks of usage, the human coaches administered two online group sessions for gathering users’ impressions about their experience with the system and three online questionnaires on system usability.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 15442,
+      "end": 15728,
+      "text": "\n\nSince the COVID-19 pandemic was at the end of its second wave when the study started (May 2021), the study protocol was adapted in accordance with the global health crisis and the social restrictions for limiting the spread of the virus in the countries where the study was conducted.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 15729,
+      "end": 15864,
+      "text": "Thus, online questionnaires were adopted, and the link to them was sent to respondents by email instead of face-to-face administration.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 15865,
+      "end": 16118,
+      "text": "Moreover, several questions were added, e.g., on being infected with the virus and self-perception of the impact of the outbreak on individuals’ physical and mental health, in order to bring such variables under control as potential confounding factors.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 16118,
+      "end": 16120,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S90",
+      "start": 16120,
+      "end": 16223,
+      "text": "The study started with the selection and enrolment of participants in every pilot site (Section 2.2.1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 16224,
+      "end": 16372,
+      "text": "Then, the enrolled individuals were asked to answer an online questionnaire at baseline, after 5 weeks, and after 10 weeks of use of the technology.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 16373,
+      "end": 16614,
+      "text": "Along with the pilot, participants were also asked to attend three online group sessions led by a human coach, during which they were asked to answer some open-ended questions to describe their experience with the technology (Section 2.2.2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 16615,
+      "end": 16758,
+      "text": "Then, the data collected were analysed, with QUANT data being analysed statistically and QUAL data being analysed thematically (Section 2.2.3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 16758,
+      "end": 16818,
+      "text": "\n\n#### 2.2.1. Inclusion Criteria and Recruitment Procedure\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 16818,
+      "end": 16959,
+      "text": "According to the AgeWell project activities, a sample of 100 participants was planned to be enrolled (50 in Italy and 50 in the Netherlands).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 16960,
+      "end": 17294,
+      "text": "Participants were contacted by phone in Italy and by email in the Netherlands, and they were screened through a battery of questions to check whether they met the inclusion criteria, i.e., being 55 or older, being three years before or three years after retirement, and feeling physically and cognitively healthy (see Figure 5 below).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 17295,
+      "end": 17843,
+      "text": "Although the statutory pension age is very similar in the two countries, i.e., 67 years in Italy and 66 years and four months in the Netherlands, without gender differences [28], the participants’ inclusion criteria were quite wide to also include all individuals who were exceptions to the general rule for different reasons, such as because they did demanding jobs such as those in the health sector or because the governments put in place extraordinary measures to facilitate the early exit from the labour market of certain workers’ categories.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 17843,
+      "end": 17942,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 5</strong> Recruitment Procedure.</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 17942,
+      "end": 18103,
+      "text": "In Italy, users were recruited through the research organization’s Human Resources office, voluntary associations and NGOs, private companies, and word of mouth.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 18104,
+      "end": 18253,
+      "text": "In the Netherlands, users were contacted by means of the NGO members carrying out the trial and other partner associations from the voluntary sector.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 18253,
+      "end": 18368,
+      "text": "\n\nThe individuals who agreed to take part in the study were provided with the informed consent form sent via email.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 18369,
+      "end": 18481,
+      "text": "Participants were asked to carefully read it, sign it for acceptance, and return it to the researchers by email.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 18482,
+      "end": 18613,
+      "text": "The two organizations involved in the trial evaluations applied for ethical approval by the respective competent ethics committees.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 18613,
+      "end": 18898,
+      "text": "\n\n\n#### 2.2.2. QUANT and QUAL Data Collection Tools\n\nIn line with the study design, across the trial, life data were collected three times by questionnaires and twice by focus groups, whose tools are described in the following sub-paragraphs together with the analysis methods adopted.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 18899,
+      "end": 19109,
+      "text": "Thus, three questionnaires were drafted, one for every evaluation, i.e., before (T0, the baseline), at mid-term (T1, the 5th week of usage), and after the conclusion of the program (T2, the 10th week of usage).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 19110,
+      "end": 19189,
+      "text": "The questionnaires, besides demographic questions, consisted of three sections.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 19190,
+      "end": 19379,
+      "text": "The first section of the questionnaire focused on physical activity and well-being; the second focused on social life; and the third focused on participants’ experience with the technology.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 19380,
+      "end": 19785,
+      "text": "The first two sections of the second and third wave questionnaires (T1 and T2) were the same as the first wave (T0), except for the section on the technology that did not explore the experience with the ICT as at the baseline but instead delved deeper into users’ experience with the digital coach by means of two tools described in the paragraph headed “Quantitative outcome variables and data analysis”.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 19785,
+      "end": 19787,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S110",
+      "start": 19787,
+      "end": 20001,
+      "text": "The structure of the group sessions with elders in both the study countries foresaw three meetings across the 10-week trial: before the trial, at the middle point, and one week after the end of the experimentation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 20002,
+      "end": 20250,
+      "text": "The first meeting was aimed at training participants in the use of the system, and the other two were aimed at gathering their feedback on their experience with it in daily life as well as their reactions to its functions, usefulness and usability.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 20251,
+      "end": 20326,
+      "text": "Due to the pandemic, the meetings with the human coaches took place online.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 20326,
+      "end": 20476,
+      "text": "\n\nIn the first meeting, the human coaches showed the system functionality by sharing PowerPoint documents, videos, and smartphones running the system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 20477,
+      "end": 20638,
+      "text": "Participants were also invited to try an activity together, e.g., a short demonstration of a mindfulness and body connection exercise as suggested by the system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 20639,
+      "end": 20866,
+      "text": "In the second meeting, the human coaches asked participants how they were getting on with using the app and whether they had any technical problems, and they made room for further explanations to optimize the use of the system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 20867,
+      "end": 21076,
+      "text": "At the third meeting, the human coaches led a focus group aimed at collecting users’ opinions on the system contents, technical aspects, impact on general health and well-being and suggestions for improvement.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 21076,
+      "end": 21555,
+      "text": "\n\nThe outcome variables answering the first research question are the SF-12v2 Health Survey [29] to measure the respondents’ physical health; the International Physical Activity Questionnaire (IPAQ) [30] to register the level of physical activity across the digital coach usage; the WHO-5 scale [31,32] and the General Self-Efficacy Scale (GSE-6) [33] to assess mental well-being; and the Lubben 6-item Social Network Scale (LSNS-6) [34,35] to measure the level of socialization.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 21555,
+      "end": 21557,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S119",
+      "start": 21557,
+      "end": 21623,
+      "text": "The SF-12v2 Health Survey [29] is a 12-item subset of the SF-36v2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 21624,
+      "end": 21753,
+      "text": "It is a brief, reliable measure of overall health status through two sub-scales of physical health (PCS) and mental health (MCS).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 21754,
+      "end": 21858,
+      "text": "Scores range from 0 to 100, with higher scores indicating better physical and mental health functioning.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 21859,
+      "end": 22038,
+      "text": "A score of 50 or less on the PCS-12 is recommended as a cut-off to determine a physical condition, and a score of 42 or less on the MCS-12 may indicate ‘clinical depression’ [36].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 22038,
+      "end": 22459,
+      "text": "\n\nThe IPAQ [30] identifies three levels of physical activity based on frequency and intensity of activities carried out in a week: high (i.e., approximately one hour of activity per day at an at least moderate intensity activity level), medium (i.e., equivalent to half an hour of at least moderate intensity physical activity on most days), and low (i.e., less than half an hour of moderate physical activity in a week).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 22459,
+      "end": 22461,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S125",
+      "start": 22461,
+      "end": 22605,
+      "text": "The WHO-5 [31,32] scale score ranges from 0 to 25, with 0 representing the worst possible and 25 representing the best possible quality of life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 22606,
+      "end": 22642,
+      "text": "The SF-12v2 mean score is set to 50.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 22642,
+      "end": 22793,
+      "text": "\n\nThe GSE-6 [33] measures the level of self-efficacy through six statements on which respondents must indicate the level of agreement and disagreement.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 22794,
+      "end": 22885,
+      "text": "The total score ranges between 5 and 25, with a higher score indicating more self-efficacy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 22885,
+      "end": 22887,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S130",
+      "start": 22887,
+      "end": 22999,
+      "text": "The total score of the Lubben 6-item Social Network Scale [34,35] is calculated by finding the sum of all items.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 23000,
+      "end": 23091,
+      "text": "The score ranges between 0 and 30, with a higher score indicating greater social inclusion.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 23092,
+      "end": 23251,
+      "text": "A cut-off of fewer than 12 points of the LSNS-6 is suggested to indicate social isolation, i.e., fewer than two people to perform social integration functions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 23251,
+      "end": 23405,
+      "text": "\n\nThe outcome variables answering the second research question are the System Usability Scale (SUS) [37] and the User Experience Questionnaire (UEQ) [37].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 23406,
+      "end": 23571,
+      "text": "The SUS is a Likert scale that includes 10 questions, which study participants ranked from 1 to 5 based on how much they agreed with the statement they were reading.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 23572,
+      "end": 23651,
+      "text": "A score of 5 means they agreed completely, and 1 means they strongly disagreed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 23652,
+      "end": 23680,
+      "text": "The average SUS score is 68.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 23681,
+      "end": 23755,
+      "text": "Systems recording a score lower than 68 present severe usability problems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 23756,
+      "end": 23895,
+      "text": "The UEQ scale [38] includes eight items: supportiveness, ease, efficiency, clearness, excitement, interest, inventiveness and leading edge.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 23896,
+      "end": 23973,
+      "text": "The questionnaire scales cover a comprehensive impression of user experience.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 23974,
+      "end": 24116,
+      "text": "Both classical usability aspects (efficiency, perspicuity, dependability) and user experience aspects (originality, stimulation) are measured.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 24117,
+      "end": 24198,
+      "text": "The range of the UEQ scales is between −3 (horribly bad) and +3 (extremely good).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 24199,
+      "end": 24381,
+      "text": "Values between −0.8 and 0.8 represent a neutral evaluation of the corresponding scale, values > 0.8 represent a positive evaluation, and values < 0.8 represent a negative evaluation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 24381,
+      "end": 24685,
+      "text": "\n\nThe third research question was answered through QUAL data collected through the online meetings, during which open-ended questions were asked to stimulate users to think about the weaknesses and strengths of the system and offer suggestions for future digital coaches targeting elders about to retire.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 24685,
+      "end": 24688,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S145",
+      "start": 24688,
+      "end": 24689,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S146",
+      "start": 24689,
+      "end": 24690,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S147",
+      "start": 24690,
+      "end": 24692,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S148",
+      "start": 24693,
+      "end": 24699,
+      "text": "2.2.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S149",
+      "start": 24700,
+      "end": 24982,
+      "text": "QUANT and QUAL Data Analysis\n\nThe QUANT outcome variables were analysed by country (Italy vs. the Netherlands) and by data collection times (T0 vs. T1 and T1 vs. T2) and then compared using the chi-square test for categorical variables and Student’s t-test for continuous variables.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 24983,
+      "end": 25053,
+      "text": "A probability value of <0.05 was considered statistically significant.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 25054,
+      "end": 25114,
+      "text": "Statistical analysis was performed using SPSS for Win V21.0.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 25115,
+      "end": 25366,
+      "text": "For the statistical analysis, only data coming from individuals filling in the questionnaire at the baseline (T0) and at least by the first and/or second follow-up (i.e., T1 and/or T2) and who answered more than ¾ of the questionnaire were considered.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 25367,
+      "end": 25439,
+      "text": "Data refer to 62 individuals, 34 from Italy and 28 from the Netherlands.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 25439,
+      "end": 25558,
+      "text": "\n\nQUANT data are reported as mean (±SD) for continuous variables and as absolute frequencies for categorical variables.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 25558,
+      "end": 25560,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S156",
+      "start": 25560,
+      "end": 25618,
+      "text": "The QUAL data, collected through the online meetings, were",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 25619,
+      "end": 25806,
+      "text": "audio- and video-recorded after obtaining participants’ signatures on the informed consent form circulated before enrolment in the study and their verbal consent during the online session",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S158",
+      "start": 25806,
+      "end": 25807,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S159",
+      "start": 25808,
+      "end": 25929,
+      "text": "Qualitative textual data arising from the transcriptions were analysed using the framework analysis method [39,40,41,42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 25930,
+      "end": 26035,
+      "text": "The text chunks were associated with codes systematized into a tree chart and combined under main themes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 26036,
+      "end": 26146,
+      "text": "The latter were identified once the consistency within different codes under the same theme had been assessed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 26147,
+      "end": 26264,
+      "text": "Repeated patterns/themes throughout the data set were identified, and a code was associated with every chunk of text.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 26265,
+      "end": 26381,
+      "text": "The content areas expressing similar concepts were grouped into mutually exclusive categories associated with codes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 26382,
+      "end": 26513,
+      "text": "Two or more codes were combined, and different codes were sorted into themes and then quotes that were compared on a country basis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 26514,
+      "end": 26712,
+      "text": "For the interpretation, data were rearranged according to the appropriate part of the thematic framework to which it related, and a matrix combining themes and countries was generated [42,43,44,45].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 26712,
+      "end": 26921,
+      "text": "\n\nTherefore, the analysis started deductively from the aims and objectives of the study embedded in the topic guide but also reflected the respondents’ original observations according to an inductive approach.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 26922,
+      "end": 27022,
+      "text": "The parallel and independent analysis by three researchers minimized research bias [46,47,48,49,50].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 27023,
+      "end": 27111,
+      "text": "The QUAL analysis trustworthiness was obtained by scholars’ checks and peer review [51].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 27111,
+      "end": 27116,
+      "text": "\n\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S170",
+      "start": 27116,
+      "end": 27117,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S171",
+      "start": 27117,
+      "end": 27120,
+      "text": "# 3",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S172",
+      "start": 27120,
+      "end": 27121,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S173",
+      "start": 27122,
+      "end": 27331,
+      "text": "Results\n\n### 3.1. Sample Description\n\nThe first data collection wave was carried out with 91 people: 53 in Italy (19 older workers and 34 retirees) and 38 in the Netherlands (15 older workers and 23 retirees).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 27332,
+      "end": 27432,
+      "text": "Throughout the trial, 13 persons in Italy and 10 in the Netherlands dropped out (see Table 1 below).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 27433,
+      "end": 27565,
+      "text": "In Italy and in the Netherlands, the main reasons for dropping out were personal commitments and the lack of interest in the system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 27565,
+      "end": 27855,
+      "text": "\n\nConsidering only individuals filling in the questionnaire at the baseline (T0) and at least by the first and/or second follow-up (i.e., T1 and/or T2) and who answered more than ¾ of the questionnaire, the final sample was made of 62 individuals, 34 from Italy and 28 from the Netherlands.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 27855,
+      "end": 27857,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S178",
+      "start": 27857,
+      "end": 27989,
+      "text": "A total of 64.5% of the whole sample consisted of males (see Table 2 below), but with some differences between the national samples.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 27990,
+      "end": 28087,
+      "text": "In fact, in Italy, 55.9% of participants were females, while in the Netherlands, they were 10.7%.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 28088,
+      "end": 28276,
+      "text": "There was no difference at the country level concerning marital status, i.e., both in Italy and in the Netherlands, married people represented the majority (67.6% and 85.7%, respectively).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 28276,
+      "end": 28698,
+      "text": "\n\nThe Dutch participants were highly educated; 7 participants had completed between 9 and 13 years of education (25%) and 21 (75%) out of 28 participants had completed more than 13. The Italian participants had a more diverse educational level, with the majority having completed between 9 and 13 years of education (62%), almost a quarter more than 13 years of education (24%), and 15% between 6 and 8 years of education.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 28698,
+      "end": 28700,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S183",
+      "start": 28700,
+      "end": 28807,
+      "text": "In the two countries, retirees represented most of the sample: 66.7% in Italy and 60.7% in the Netherlands.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 28807,
+      "end": 28810,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S185",
+      "start": 28810,
+      "end": 28811,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S186",
+      "start": 28811,
+      "end": 28818,
+      "text": "## 3.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S187",
+      "start": 28819,
+      "end": 28888,
+      "text": "The Impact of the AgeWell DC in Improving Healthy Ageing Dimensions\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 28888,
+      "end": 29248,
+      "text": "The percentage of participants perceiving their physical condition (SF-12-PCS) as having worsened, i.e., PCS ≤ 50, increased over the experimentation from 19.6% at T0 to 30.6% at T2, while their perception of their mental well-being (SF-12-MCS) remained stable, i.e., the percentage of respondents rating MCS ≤ 42 was 14.3% at T0 and at T2 (see Table 3 below).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 29249,
+      "end": 29392,
+      "text": "The pre-post intervention difference is statistically significant for both physical and mental well-being (p = 0.002 and <0.001, respectively).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 29392,
+      "end": 29394,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S191",
+      "start": 29394,
+      "end": 29543,
+      "text": "The level of physical activity of participants increased significantly from T0 to T1 and then remained stable up to the end of the trial (p = 0.012).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 29544,
+      "end": 29829,
+      "text": "It is worth noting that the percentage of people practising a low level of physical activity decreased from 8.2% to 6% after the five trial weeks (the period with the support of the human coach), and it increased again once they started using the system autonomously (from 6% to 8.3%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 29830,
+      "end": 29874,
+      "text": "The difference is statistically significant.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 29874,
+      "end": 29876,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S195",
+      "start": 29876,
+      "end": 30018,
+      "text": "The participants’ mental well-being (WHO-5) and self-efficacy (GSE-6) slightly increased from T0 to T1, but they both decreased from T1 to T2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 30019,
+      "end": 30112,
+      "text": "The level of socialization significantly decreased from T0 to T1 and increased from T1 to T2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 30112,
+      "end": 30123,
+      "text": "\n\n\n### 3.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S198",
+      "start": 30124,
+      "end": 30400,
+      "text": "Users’ Experience with the AgeWell Digital Coach\n\nTable 4 shows that out of the six dimensions of the UEQ (attractiveness, perspicuity, efficiency, dependability, stimulation, and novelty), only perspicuity reached a score >0.8, indicating a positive evaluation of the system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 30401,
+      "end": 30699,
+      "text": "All the other dimensions received a bad evaluation by users over the system usage, with small fluctuations from T1 to T2 that only had an increasing trend for “efficiency”, reflecting a slight improvement of the system, while “attractiveness”, “dependability”, and “stimulation” decreased markedly.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 30700,
+      "end": 30781,
+      "text": "The system was not rated as “novel” by users from the start of the study onwards.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 30781,
+      "end": 30783,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S202",
+      "start": 30783,
+      "end": 30951,
+      "text": "The usability score of the system (SUS) is 59, that is, 9 points lower than the average score of the scale (68), indicating that the system presents usability problems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 30951,
+      "end": 31114,
+      "text": "\n\nMore than half of participants found the DC “moderately/very/extremely useful” after five weeks of usage, but, at the 10th usage week, less than half thought so.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S204",
+      "start": 31115,
+      "end": 31401,
+      "text": "Looking at the different system areas of intervention, the percentage of people finding the system useful for “Enriching free time” decreased by 13.1% (from 67.3% to 54.2%), and that of people finding the DC useful for improving mental well-being dropped by 11.4% (from 63.5% to 52.1%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S205",
+      "start": 31402,
+      "end": 31667,
+      "text": "Conversely, participants discovered the usefulness of the AgeWell digital coach for approaching retirement smoothly over time despite initial skepticism; in fact, the percentage of users finding this function useful increased from 50% to 54.2% between T1 and T2.\n\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 31667,
+      "end": 31675,
+      "text": "### 3.4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S207",
+      "start": 31676,
+      "end": 31716,
+      "text": "Strengths and Weaknesses of the System\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 31716,
+      "end": 32029,
+      "text": "The QUAL analysis highlighted six main themes: 1. the digital coach’s contents’ strengths; 2. the digital coach’s contents’ weaknesses; 3. the human coach’s role; 4. the digital coach’s technical strengths; 5. the digital coach’s technical weaknesses; 6. users’ suggestions on contents and 7. on technical issues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 32030,
+      "end": 32339,
+      "text": "Themes and sub-themes are briefly shown in Table 5 and analyzed in depth in the text below, supported by quotations extracted from the study participants’ answers, representing examples of opinions common to both Italian and Dutch participants or, conversely, a disagreement and, thus, national specificities.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 32340,
+      "end": 32650,
+      "text": "Beyond the information on the respondents’ identification number and country, the quotations from Italian respondents are also followed by information on gender and age (e.g., female, 58), which is not available for the Dutch participants because they did not give their consent to the disclosure of such data.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 32650,
+      "end": 33377,
+      "text": "\n\nConcerning the content strengths, trial participants especially recognized the power of the system in five realms:Motivating users to increase their physical activity frequency and regularity: “I have had some benefits, for example from walking. Doing it for an hour a day at a steady pace is good for your health and the app makes me fulfill this commitment” (IT1, M, 65, retiree);Reminding them to perform activities: “I’m mainly using it as a reminder: it reminds me when I have to do something, some things I honestly do when the app reminds me” (IT3, M, 70, retiree);Helping users focus on their own needs (physical, psychological and social): “I have found the app very useful in helping me to focus a little on myself.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 33378,
+      "end": 33879,
+      "text": "In fact, I have a tendency to be focused on the needs of others, so someone reminding me “What do you do for yourself?” seems useful” (IT4, F, 65, retiree);Stimulating the activities proposed under the realms of mental well-being; some of them thought that several activities were really inspiring, e.g., activities about memories, photographs, yoga and relaxation exercises, or writing down their own qualities: “The app gave me inspiration to call my aunt and ask her to fix and rewrite her recipes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 33880,
+      "end": 34002,
+      "text": "There are so many things that can be taken into account, maybe different from what we do every day” (IT7, M, 69, retiree).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 34003,
+      "end": 34883,
+      "text": "This opinion was common, especially among Italian respondents, while Dutch participants mentioned that they liked the proposed activities, but with great variety in the different healthy ageing realms, not only related to emotional well-being but with a wider perspective on the system empowerment capability: “I liked the assignment of being happy with things you have in your home, sending a card to family/friends, the reminder to do some volunteer work, plants” (NL32); “It fits well into my discipline, gives me inspiration and motivation” (NL5);Promoting a good retirement process: “It might be helpful for people in danger of falling into a void after retiring” (NL5) and “The digital coach managed to give me the motivation during the day or week to organize myself with new ideas, because a person who suddenly finds himself without work commitments can feel overwhelmed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 34884,
+      "end": 35106,
+      "text": "The app helps you get organized and above all keeps you physically but also psychologically active, because it helps you organize your day, so for me it is useful by readying me for retirement” (IT10, F, 55, older worker).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S216",
+      "start": 35106,
+      "end": 35522,
+      "text": "\n\nConcerning the content weaknesses, study participants stressed that:Some physical activities proposed by the system were too physically demanding and not fully appropriate for elderly people, and users could not give reasons for not doing the suggested activities, thereby penalizing the overall rate at the end of the week: “On the other hand, the physical activity part that marks the day is not suitable for us.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 35523,
+      "end": 36078,
+      "text": "It is not that we do not move around but, for example, on Sunday we usually go for an excursion because we like to walk, but we have done 2 days of heavy gardening, so yesterday we did not feel like walking” (IT43, F, 59, older worker);The system was quite rigid, not customizable and not flexible: “What bothers me is the daily activity that is automatically inserted and that I cannot remove” (IT4, F, 65; retiree) and “Planning is tricky, also because I work part-time. (I would prefer not to have a) split between working and not working (retirement).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 36079,
+      "end": 36391,
+      "text": "I am not able to fill the day because of work, and my activities like walking dogs and dog training do not fit in (the app)” (NL038);The constant pressure the DC put on users by asking them to report the performance was unpleasant: “I would prefer it to be an inspiration tool, not an administration tool” (NL4).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S219",
+      "start": 36391,
+      "end": 37061,
+      "text": "\n\nThe main technical strength of the system underlined by all participants was the use of videos and video tutorials, as they were considered inspiring and useful for motivating users to put into practice what the videos showed, regardless of the type of activity and the realm it belonged to, e.g., physical activity or psychological well-being, as depicted by the following quotations: “When I was on holiday, I also went to see all the videos that the app offers and they are nice, because they can be stimulating and can make you want to do one thing or the other” (IT12, F, 67, retiree) and “Yoga video clips worked well and fitted [the program of] the gym” (NL09).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S220",
+      "start": 37061,
+      "end": 37063,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S221",
+      "start": 37063,
+      "end": 37205,
+      "text": "Both Italian and Dutch participants stressed the following technical weaknesses:Problems in registering/changing the activities they had done.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S222",
+      "start": 37206,
+      "end": 37585,
+      "text": "Dutch participants also complained about the long time the platform took to load and the pop-up that mentioned “attempts”;Problems with the daily plan, finding it annoying, and preferring a weekly and personalized plan: “I thought it would also be easier and more intuitive to record the activities carried out so that the activity icons in the various sections would be colored.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S223",
+      "start": 37586,
+      "end": 37809,
+      "text": "You have to go and click on “I have done it”, but there was one time when it did not record it and I had to go back to it” (IT03, M, 70, retiree);The lack of intuitiveness and flexibility: “The logic of the app is not good.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S224",
+      "start": 37810,
+      "end": 37859,
+      "text": "It is unpleasant to work with, not user friendly.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S225",
+      "start": 37860,
+      "end": 38008,
+      "text": "(This is an) important downside” (NL027);The unclearness of graphs reporting daily activity rates: “Overview of notifications is missing in the app.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S226",
+      "start": 38009,
+      "end": 38264,
+      "text": "It is tricky that you cannot fill in anything for the day before. Planning something extra on the day itself is not possible” (NL035);The avatar was annoying and boring (especially for Italian users), and it had no added value, especially for Dutch users.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S227",
+      "start": 38265,
+      "end": 38414,
+      "text": "The latter found the way it looked and sounded not fun and very negative because the avatar repeated messages many times, and it was not interactive.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S228",
+      "start": 38415,
+      "end": 38635,
+      "text": "The voice of the avatar was deemed unpleasant and sometimes boring: “Remarks like ‘doing the dishes and cleaning up works well for me’, reminders and specifically derogatory comments like ‘keep it up’ were fake” (NL014).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 38635,
+      "end": 38734,
+      "text": "\n\nSuggestions coming from the experimentation mainly concern system contents and technical aspects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S230",
+      "start": 38735,
+      "end": 40092,
+      "text": "Regarding the contents, the users suggested to: Personalize activities as much as possible, including by adding other activities such as reading, volunteering and nutrition: “The reading activity does not seem so much specified by the app, maybe less in summer, but in winter it would be better to add it and maybe the app should be diversified on a seasonal basis, in my opinion” (IT9, M, 61, retiree), and “To add other activities”, e.g., volunteering (NL10), nutrition (NL04), gym (NL036);Plan periodical meetings with the human coach: “I suggest that every now and then there is a confrontation with the coach, that is, a contact or a video call or a physical meeting (…) I believe that a tool of this kind can be useful, but it must be interspersed with personal relationships, not even with videoconferencing, rather private talk, once with a psychologist, once with a trainer, another time with an expert of any another thing, because it is the relationship that gives us the opportunity to grow, to improve, in my opinion, in terms of both physical and psychological well-being” (IT52,F, 69, retiree);Explaining what every proposed activity is useful for in order to further motivate the user to do it: “I could not lend myself to really doing those categories or activities, when I do not know what it is useful for. What does it bring me?” (NL11).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S231",
+      "start": 40092,
+      "end": 40674,
+      "text": "\n\nConcerning technical issues, users proposed to:Make the app more intuitive: “If there was some more automatic and intuitive function, it would be better, because you always have to go there, see if it works, wait for it to turn and load” (IT03, M, 70, retiree);Launch activities with movies and videos to motivate people to perform the activities: “It would be a good idea to start with a movie clip (that) begins with explaining why I should do this activity” (NL11);Connect the app activity plan to the smartphone agenda: “The app should link to the agenda on your phone” (ID4).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S232",
+      "start": 40674,
+      "end": 41076,
+      "text": "\n\n\n\n## 4. Discussion\n\nThe novelty of the study lies in testing the impact of a digital coach in motivating elders aged 55 and older in transition to retirement, an overlooked group of users, to adopt healthy ageing lifestyles through several activities proposed via four functionalities addressing healthy ageing components, i.e., physical activity, mental well-being, and socialization and retirement.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S233",
+      "start": 41076,
+      "end": 41078,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S234",
+      "start": 41078,
+      "end": 41086,
+      "text": "### 4.1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S235",
+      "start": 41087,
+      "end": 41776,
+      "text": "Towards Tailored and Attractive Digital Coach Systems\n\nQUANT findings showed that the use of the AgeWell digital coach improved participants’ level of physical activity, mental well-being, and self-efficacy during the first 5 weeks of experimentation, when users were supported by the human coach. It is nevertheless worth noting that after the human coach stopped his/her activity, this positive effect continued only for the physical activity, but not for the mental well-being and self-efficacy. On the one hand, these QUANT results suggest that the digital coach systems can stabilize fluctuations in the physical activity performed by older adults before and after retirement [10,11].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S236",
+      "start": 41777,
+      "end": 42113,
+      "text": "On the other hand, the users’ desire to have periodical meetings with the human coach, evidenced by the QUAL results, may suggest that, for this generation of older adults, it is still important to have the mediation of a human coach to also effect their mental well-being, which is exposed to risk during the retirement process [3,13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 42114,
+      "end": 42308,
+      "text": "This suggests that the current version of digital health coaching systems cannot fully replace human-led interventions and may not be as effective as those led by human coaches [14,15,16,17,18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S238",
+      "start": 42308,
+      "end": 42483,
+      "text": "\n\nMoreover, QUANT findings tell us that the level of socialization among participants worsened as the trial proceeded during both the human and the digital coach-driven phase.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S239",
+      "start": 42484,
+      "end": 42843,
+      "text": "A possible explanation of this result may lie in the fact that, although the number of opportunities for social contacts increased thanks to the periodical distance meetings with the human coach and other users, the virtual nature of these contacts was not so gratifying and satisfying as to improve the perception of the quality of participants’ social ties.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S240",
+      "start": 42844,
+      "end": 43117,
+      "text": "In fact, the trial took place between May and October 2021, when many social restrictions were still in force due to the COVID-19 pandemic, and elders participating in the experimentation might have suffered from the medium-term effects of two years of physical distancing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S241",
+      "start": 43118,
+      "end": 43245,
+      "text": "As a result, they might need personal contact with peers to experience meaningful relationships, as in the pre-pandemic period.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S242",
+      "start": 43246,
+      "end": 43560,
+      "text": "In fact, although the QUAL findings show that several participants, especially in Italy, appreciated the function of the digital coach stimulating them to keep in contact with friends and relatives, this was not sufficient to improve participants’ capability of increasing the number or the quality of social ties.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S243",
+      "start": 43561,
+      "end": 43830,
+      "text": "The existing literature agrees on the fact that technology can improve many dimensions of social connection among older adults, e.g., by communicating and sharing not only pictures and media but also emotions and states of mind and by reading news and books [52,53,54].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S244",
+      "start": 43830,
+      "end": 43832,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S245",
+      "start": 43832,
+      "end": 43980,
+      "text": "This highlights the need to design digital coaching systems that are capable of doing this and accordingly improve socialization among older adults.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S246",
+      "start": 43980,
+      "end": 44102,
+      "text": "\n\nFurthermore, both QUANT and QUAL results showed that user experience with the system was not positive in either country.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S247",
+      "start": 44103,
+      "end": 44183,
+      "text": "In fact, users found the system unintuitive, not user-friendly and not flexible.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S248",
+      "start": 44184,
+      "end": 44510,
+      "text": "Dutch users were particularly attentive to the technical aspects, which is probably due to a greater diffusion of digital systems in this country and to greater digital health literacy among its senior citizens compared to their Italian counterparts, which led them to have higher expectations regarding digital coach systems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S249",
+      "start": 44511,
+      "end": 44675,
+      "text": "Moreover, users did not like the appearance and the attitude of the avatar, which was considered rigid and excessively directive, especially by Italian respondents.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S250",
+      "start": 44675,
+      "end": 45043,
+      "text": "\n\nIn addition to what Kettunen, Kari and Frank [22] suggested, i.e., that digital coaching devices must be tailored and easy to learn to be attractive to older adults, the above indicates that a key point for the digital coach to be accepted by this target population is the capability of being flexible, funny, interesting, and attractive without being too directive.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S251",
+      "start": 45044,
+      "end": 45288,
+      "text": "A characteristic common to older adults in retirement, in fact, is the willingness to be masters of their own life and time, which means being in the condition of choosing what to do with full autonomy in real and digital activities alike [55].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S252",
+      "start": 45288,
+      "end": 45544,
+      "text": "\n\nFurthermore, the increased number of users who appreciated the function aimed at making the transition to retirement easier over the experimentation time frame suggests the need for an app that can stimulate healthy ageing during this existential change.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S253",
+      "start": 45545,
+      "end": 45666,
+      "text": "This also implies the need for further studies targeting this population group and their experience with digital coaches.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S254",
+      "start": 45667,
+      "end": 45809,
+      "text": "The latter should be based on customizable avatars, which is one of the most critical issues that emerged in other studies as well [56,57,58].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S255",
+      "start": 45809,
+      "end": 45938,
+      "text": "\n\nIn light of the above, the improvement in system usability could also enhance the impact on individuals’ health and well-being.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S256",
+      "start": 45938,
+      "end": 45941,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S257",
+      "start": 45941,
+      "end": 45977,
+      "text": "### 4.2. Strengths and Limitations\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S258",
+      "start": 45977,
+      "end": 46153,
+      "text": "The strength of the study is the adoption of a mixed-method approach, which allowed the interpretation of apparently contradictory findings highlighted by QUANT and QUAL tools.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S259",
+      "start": 46153,
+      "end": 46506,
+      "text": "\n\nAlthough the QUAL results highlighted the capability of the system to stimulate older adults to behave in a way more oriented to healthy ageing principles, the numerous technical issues might have confounded the users’ perception of the contents and dimmed the full potential of the app in helping elderly people smoothly cross the line of retirement.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S260",
+      "start": 46507,
+      "end": 46699,
+      "text": "This represented a significant limitation of the study, together with the low number of participants, whose recruitment was hindered by the COVID-19 pandemic only in Italy and The Netherlands.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S261",
+      "start": 46700,
+      "end": 46856,
+      "text": "Moreover, it was hard to engage older workers in the trial because they had more time constraints than retirees, who represented the majority of the sample.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S262",
+      "start": 46857,
+      "end": 47042,
+      "text": "In addition, as a limitation of the study design, the lack of a control group, as well as the length of the trial, did not permit us to go in depth into the effectiveness of the system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S263",
+      "start": 47043,
+      "end": 47111,
+      "text": "All these limitations did not allow for a generalization of results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S264",
+      "start": 47111,
+      "end": 47300,
+      "text": "\n\nTherefore, future large sample studies are encouraged to assess the impact and the effectiveness of digital coach systems in promoting healthy ageing within this elderly population group.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S265",
+      "start": 47301,
+      "end": 47552,
+      "text": "Finally, the use of a usable and tailored digital coach may have a positive impact not only on older individuals but also at the company level if we consider older adults near retirement as older workers from a work and human capital perspective [59].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S266",
+      "start": 47553,
+      "end": 47794,
+      "text": "In fact, although there is no difference in productivity between younger and older workers, the latter have more absenteeism than the former [60], representing a huge loss in productivity, as hugely emerged during the COVID-19 outbreak [61].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S267",
+      "start": 47795,
+      "end": 48008,
+      "text": "Although the relationship between age and sickness absence among older workers is not well understood [62], there is a certain concern about it, considering the massive amount of the workforce that is ageing [63].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S268",
+      "start": 48008,
+      "end": 48012,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S269",
+      "start": 48012,
+      "end": 48013,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S270",
+      "start": 48013,
+      "end": 48242,
+      "text": "# 5. Conclusions\n\nThis study showed that a digital coaching program can be a valuable tool to stimulate older adults to adopt healthy lifestyles while they cross the line of retirement, especially by triggering physical activity.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S271",
+      "start": 48243,
+      "end": 48392,
+      "text": "On the contrary, mental well-being and socialization remain the most difficult healthy ageing dimensions to be addressed by digital coach technology.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S272",
+      "start": 48393,
+      "end": 48510,
+      "text": "Thus, there is still a need for the support of a human coach in attaining positive mid-term outcomes in these realms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S273",
+      "start": 48511,
+      "end": 48943,
+      "text": "Within this study, some empirical evidence about the characteristics that a coaching system must possess have been highlighted: flexibility, to address the needs of this specific target; being interesting and attractive, to stimulate proactivity and healthy ageing habits during this existential change; and offering a polite communication mode exchange, since elders in retirement want to maintain control over their life and time.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S274",
+      "start": 48944,
+      "end": 49128,
+      "text": "Indeed, the level of personalization of such coaching systems remains the golden key to aligning the health program to the physical, cognitive and social status of the intended target.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S275",
+      "start": 49129,
+      "end": 49293,
+      "text": "In addition, it can significantly impact the quality of the user-system interaction, usability, and acceptability, as well as enhance adherence to the intervention.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S276",
+      "start": 49294,
+      "end": 49504,
+      "text": "Even if technology-based interventions such as coaching systems are an emerging field in the healthcare domain, it seems that there is still a lack of evaluations to discover the added value of this innovation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S277",
+      "start": 49504,
+      "end": 49507,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=participants | pred=use | obj=Abstract Retirement is a critical step | unit=S4\nB T4 B2 | sub=The use of the digital coach | pred=improve | obj=the participants’ physical activity | unit=S5\nB T4 B3 | sub=An effective coaching system | pred=flexible | obj=attractive | unit=S6\nB T4 B4 | sub=High levels of personalization | pred=remain | obj=the golden key to aligning the | unit=S7\nB T4 B5 | sub=We | pred=witness | obj=the rapid ageing of the world | unit=S10\nB T4 B6 | sub=The extension of life expectancy | pred=mean | obj=a prolonged disability condition in later | unit=S11\nB T4 B7 | sub=The ageing of the population | pred=entail | obj=the transition of many older adults | unit=S12\nB T4 B8 | sub=The literature | pred=agree | obj=that retirement is a critical step | unit=S13\nB T4 B9 | sub=the loss of meaningful relationships | pred=creep | obj=In fact | unit=S14\nB T4 B10 | sub=the transition to retirement | pred=represent | obj=the tipping point for healthy ageing | unit=S15\nB T4 B11 | sub=Healthy ageing | pred=define | obj=as “the process of developing | unit=S16\nB T4 B12 | sub=There | pred=be | obj=lack | unit=S17\nB T4 B13 | sub=retirement | pred=opportunity | obj=On the one hand | unit=S18\nB T4 B14 | sub=the literature | pred=underline | obj=On the other hand | unit=S19\nB T4 B15 | sub=the main driver of physical activity | pred=seem | obj=For example | unit=S20\nB T4 B16 | sub=Retirement | pred=influence | obj=individuals’ mental well-being | unit=S21\nB T4 B17 | sub=weaker and rarer meaningful social relationships | pred=lead | obj=In fact | unit=S22\nB T4 B18 | sub=it | pred=important | obj=to motivate older adults in the | unit=S23\nB T4 B19 | sub=Health coaching interventions led by human | pred=motivate | obj=older adults | unit=S25\nB T4 B20 | sub=Such programs | pred=target | obj=individuals with chronic diseases | unit=S26\nB T4 B21 | sub=Health coaching programs, regardless of whether | pred=address | obj=older adults with chronic diseases | unit=S27\nB T4 B22 | sub=healthy ageing strategies, including, for example | pred=effective | obj=On the contrary | unit=S28\nB T4 B23 | sub=such strategies | pred=manage | obj=by healthcare professionals | unit=S29\nB T4 B24 | sub=digital coaching technologies | pred=offer | obj=an innovative way to overcome this | unit=S30\nB T4 B25 | sub=digital coaching systems | pred=program | obj=that | unit=S31\nB T4 B26 | sub=There | pred=be | obj=scant | unit=S32\nB T4 B27 | sub=the efficacy of personal health coaching | pred=remain | obj=unclear | unit=S33\nB T4 B28 | sub=This study | pred=part | obj=of the AgeWell project aimed at | unit=S34\nB T4 B29 | sub=The study | pred=aim | obj=to evaluate the impact of a | unit=S35\nB T4 B30 | sub=It | pred=represent | obj=a novel contribution to assessing the | unit=S36\nB T4 B31 | sub=The purpose of the study | pred=be | obj=to answer three research questions | unit=S37\nB T4 B32 | sub=article text | pred=material | obj=Methods | unit=S39\nB T4 B33 | sub=article text | pred=system | obj=## 2.1. The System | unit=S41\nB T4 B34 | sub=participants | pred=equip | obj=For the study | unit=S42\nB T4 B35 | sub=The software used for the trial | pred=consist | obj=of an avatar-based frontend (see Figure | unit=S43\nB T4 B36 | sub=Communication between the frontend | pred=establish | obj=over the Internet | unit=S44\nB T4 B37 | sub=The backend server | pred=run | obj=within the facilities of one of | unit=S45\nB T4 B38 | sub=No personal data | pred=store | obj=in the cloud | unit=S46\nB T4 B39 | sub=Figure | pred=home | obj=of the avatar-based | unit=S47\nB T4 B40 | sub=article text | pred=> | obj=/figure> | unit=S49\nB T4 B41 | sub=Authentication | pred=implement | obj=using an OAuth2 broker service (www.auth0.com, | unit=S50\nB T4 B42 | sub=The server components (see Figure 2 | pred=implement | obj=using the Karaf Java OSGi Framework | unit=S51\nB T4 B43 | sub=a SQL database (MariaDB, v10.1.29, MariaDB | pred=use | obj=In contrast | unit=S52\nB T4 B44 | sub=The server components | pred=run | obj=on a Linux Virtual Machine (Ubuntu | unit=S53\nB T4 B45 | sub=Figure | pred=component | obj=of the system.</figcaption | unit=S54\nB T4 B46 | sub=article text | pred=/figure | obj=/figure | unit=S56\nB T4 B47 | sub=Figure | pred=component | obj=AgeWell | unit=S57\nB T4 B48 | sub=The digital coach | pred=co-designe | obj=</figure> | unit=S58\nB T4 B49 | sub=the app | pred=include | obj=Among the physical activities to choose | unit=S59\nB T4 B50 | sub=The avatar | pred=ask | obj=users | unit=S60\nB T4 B51 | sub=it | pred=send | obj=motivational messages to help users reach | unit=S61\nB T4 B52 | sub=The mental well-being function | pred=include | obj=three sub-functions: “Mind | unit=S62\nB T4 B53 | sub=the avatar | pred=propose | obj=In the realm of “Mind | unit=S63\nB T4 B54 | sub=They | pred=deal | obj=with the ability to relax | unit=S64\nB T4 B55 | sub=there | pred=be | obj=In the sub-realms of “Thought | unit=S66\nB T4 B56 | sub=which | pred=invite | obj=users | unit=S67\nB T4 B57 | sub=there | pred=be | obj=in the sub-realm called “Emotions | unit=S69\nB T4 B58 | sub=The system | pred=include | obj=activities for stimulating users’ new social | unit=S71\nB T4 B59 | sub=the “Good retirement” function | pred=include | obj=three sub-functions | unit=S72\nB T4 B60 | sub=the avatar | pred=suggest | obj=In this case | unit=S73\nB T4 B61 | sub=Study | pred=design | obj=order | unit=S74\nB T4 B62 | sub=A concurrent equal status interactive mixed-methods | pred=adopt | obj=QUANT | unit=S75\nB T4 B63 | sub=Two parallel QUANT | pred=integrate | obj=into meta-inferences | unit=S76\nB T4 B64 | sub=QUANT and QUAL results | pred=bring | obj=in the overall interpretation | unit=S77\nB T4 B65 | sub=The QUANT analysis | pred=aim | obj=effects | unit=S78\nB T4 B66 | sub=The QUAL analysis | pred=aim | obj=light | unit=S79\nB T4 B67 | sub=The point of integration of the | pred=reach | obj=QUAL | unit=S80\nB T4 B68 | sub=participants | pred=train | obj=in the first 5 weeks (Phase | unit=S81\nB T4 B69 | sub=study participants | pred=continue | obj=After the first 5 weeks (Phase | unit=S82\nB T4 B70 | sub=They | pred=ask | obj=content-related questions | unit=S83\nB T4 B71 | sub=article text | pred=figure | obj=Figure | unit=S84\nB T4 B72 | sub=the human coaches | pred=administer | obj=During the 5th and 10th weeks | unit=S85\nB T4 B73 | sub=the study protocol | pred=adapt | obj=in accordance with the global health | unit=S86\nB T4 B74 | sub=online questionnaires | pred=adopt | obj=link | unit=S87\nB T4 B75 | sub=several questions | pred=add | obj=in order to bring such variables | unit=S88\nB T4 B76 | sub=The study | pred=start | obj=with the selection and enrolment of | unit=S90\nB T4 B77 | sub=the enrolled individuals | pred=ask | obj=to answer an online questionnaire at | unit=S91\nB T4 B78 | sub=participants | pred=ask | obj=Along with the pilot | unit=S92\nB T4 B79 | sub=the data collected | pred=analyse | obj=QUANT | unit=S93\nB T4 B80 | sub=Inclusion | pred=criterion | obj=Recruitment | unit=S94\nB T4 B81 | sub=a sample of 100 participants | pred=plan | obj=According to the AgeWell project activities | unit=S95\nB T4 B82 | sub=Participants | pred=contact | obj=by phone | unit=S96\nB T4 B83 | sub=the participants’ inclusion criteria | pred=wide | obj=to also include all individuals who | unit=S97\nB T4 B84 | sub=article text | pred=figure | obj=Figure | unit=S98\nB T4 B85 | sub=users | pred=recruit | obj=In Italy | unit=S99\nB T4 B86 | sub=users | pred=contact | obj=In the Netherlands | unit=S100\nB T4 B87 | sub=The individuals who agreed to take | pred=provide | obj=with the informed consent form sent | unit=S101\nB T4 B88 | sub=Participants | pred=ask | obj=to carefully read it | unit=S102\nB T4 B89 | sub=The two organizations involved in the | pred=apply | obj=for ethical approval by the respective | unit=S103\nB T4 B90 | sub=2.2.2. QUANT and QUAL Data Collection | pred=collect | obj=In line with the study design | unit=S104\nB T4 B91 | sub=three questionnaires | pred=draft | obj=one | unit=S105\nB T4 B92 | sub=The questionnaires | pred=consist | obj=besides demographic questions | unit=S106\nB T4 B93 | sub=The first section of the questionnaire | pred=focus | obj=on physical activity | unit=S107\nB T4 B94 | sub=The first two sections of the | pred=same | obj=as the first wave (T0 | unit=S108\nB T4 B95 | sub=The structure of the group sessions | pred=foresee | obj=three meetings across the 10-week trial: | unit=S110\nB T4 B96 | sub=The first meeting | pred=aim | obj=participants | unit=S111\nB T4 B97 | sub=the meetings with the human coaches | pred=take | obj=Due to the pandemic | unit=S112\nB T4 B98 | sub=the human coaches | pred=show | obj=In the first meeting | unit=S113\nB T4 B99 | sub=Participants | pred=invite | obj=to try an activity together, e.g., | unit=S114\nB T4 B100 | sub=the human coaches | pred=ask | obj=In the second meeting | unit=S115\nB T4 B101 | sub=the human coaches | pred=lead | obj=At the third meeting | unit=S116\nB T4 B102 | sub=The outcome variables answering the first | pred=survey | obj=29 | unit=S117\nB T4 B103 | sub=The SF-12v2 Health Survey [29 | pred=subset | obj=of the SF-36v2 | unit=S119\nB T4 B104 | sub=It | pred=measure | obj=of overall health status | unit=S120\nB T4 B105 | sub=Scores | pred=range | obj=from 0 | unit=S121\nB T4 B106 | sub=A score of 50 or less | pred=recommend | obj=as a cut-off | unit=S122\nB T4 B107 | sub=The IPAQ [30 | pred=identify | obj=three levels of physical activity based | unit=S123\nB T4 B108 | sub=The WHO-5 [31,32] scale score | pred=range | obj=from 0 | unit=S125\nB T4 B109 | sub=The SF-12v2 mean score | pred=set | obj=to 50 | unit=S126\nB T4 B110 | sub=article text | pred=measure | obj=the level of self-efficacy | unit=S127\nB T4 B111 | sub=The total score | pred=range | obj=between 5 | unit=S128\nB T4 B112 | sub=The total score of the Lubben | pred=calculate | obj=sum | unit=S130\nB T4 B113 | sub=The score | pred=range | obj=between 0 | unit=S131\nB T4 B114 | sub=A cut-off of fewer than 12 | pred=suggest | obj=to indicate social isolation, i.e., fewer | unit=S132\nB T4 B115 | sub=The outcome variables answering the second | pred=scale | obj=SUS | unit=S133\nB T4 B116 | sub=The SUS | pred=scale | obj=that | unit=S134\nB T4 B117 | sub=A score of 5 | pred=mean | obj=they agreed completely | unit=S135\nB T4 B118 | sub=SUS | pred=score | obj=68 | unit=S136\nB T4 B119 | sub=article text | pred=system | obj=score | unit=S137\nB T4 B120 | sub=The UEQ scale [38 | pred=include | obj=eight items: supportiveness | unit=S138\nB T4 B121 | sub=The questionnaire scales | pred=cover | obj=a comprehensive impression of user experience | unit=S139\nB T4 B122 | sub=Both classical usability aspects (efficiency, perspicuity, | pred=measure | obj=Both classical usability aspects (efficiency, perspicuity, | unit=S140\nB T4 B123 | sub=The range of the UEQ scales | pred=−3 | obj=bad | unit=S141\nB T4 B124 | sub=Values between −0.8 | pred=represent | obj=a neutral evaluation of the corresponding | unit=S142\nB T4 B125 | sub=The third research question | pred=answer | obj=through QUAL data collected through the | unit=S143\nB T4 B126 | sub=QUANT | pred=analyse | obj=by country (Italy | unit=S149\nB T4 B127 | sub=A probability value of <0.05 | pred=consider | obj=statistically significant | unit=S150\nB T4 B128 | sub=Statistical analysis | pred=perform | obj=using SPSS for Win V21.0 | unit=S151\nB T4 B129 | sub=only data coming from individuals filling | pred=consider | obj=For the statistical analysis | unit=S152\nB T4 B130 | sub=Data | pred=refer | obj=to 62 individuals, 34 from Italy | unit=S153\nB T4 B131 | sub=QUANT data | pred=report | obj=as mean (±SD) for continuous variables | unit=S154\nB T4 B132 | sub=The QUAL data, collected through the | pred=be | obj=The QUAL data, collected through the | unit=S156\nB T4 B133 | sub=article text | pred=audio- | obj=video-recorded | unit=S157\nB T4 B134 | sub=Qualitative textual data arising from the | pred=analyse | obj=using the framework analysis method | unit=S159\nB T4 B135 | sub=The text chunks | pred=associate | obj=with codes systematized into a tree | unit=S160\nB T4 B136 | sub=The latter | pred=identify | obj=consistency | unit=S161\nB T4 B137 | sub=Repeated patterns/themes throughout the data set | pred=identify | obj=code | unit=S162\nB T4 B138 | sub=The content areas expressing similar concepts | pred=group | obj=into mutually exclusive categories associated with | unit=S163\nB T4 B139 | sub=Two or more codes | pred=combine | obj=different | unit=S164\nB T4 B140 | sub=data | pred=rearrange | obj=For the interpretation | unit=S165\nB T4 B141 | sub=the analysis | pred=start | obj=from the aims and objectives of | unit=S166\nB T4 B142 | sub=The parallel and independent analysis by | pred=minimize | obj=research bias | unit=S167\nB T4 B143 | sub=The QUAL analysis trustworthiness | pred=obtain | obj=by scholars’ checks | unit=S168\nB T4 B144 | sub=Results ### 3.1. Sample Description | pred=carry | obj=with 91 people | unit=S173\nB T4 B145 | sub=13 persons in Italy | pred=drop | obj=Throughout the trial | unit=S174\nB T4 B146 | sub=the main reasons for dropping out | pred=commitment | obj=In Italy | unit=S175\nB T4 B147 | sub=the final sample | pred=make | obj=of 62 individuals, 34 from Italy | unit=S176\nB T4 B148 | sub=A total of 64.5% of the | pred=consist | obj=of males | unit=S178\nB T4 B149 | sub=55.9% of participants | pred=female | obj=In fact | unit=S179\nB T4 B150 | sub=married people | pred=represent | obj=the majority | unit=S180\nB T4 B151 | sub=The Italian participants | pred=have | obj=The Dutch participants were highly educated; | unit=S181\nB T4 B152 | sub=retirees | pred=represent | obj=In the two countries | unit=S183\nB T4 B153 | sub=article text | pred=impact | obj=of the AgeWell DC | unit=S187\nB T4 B154 | sub=The percentage of participants perceiving their | pred=increase | obj=over the experimentation | unit=S188\nB T4 B155 | sub=The pre-post intervention difference | pred=significant | obj=for both physical and mental well-being | unit=S189\nB T4 B156 | sub=The level of physical activity of | pred=increase | obj=from T0 | unit=S191\nB T4 B157 | sub=It | pred=worth | obj=noting | unit=S192\nB T4 B158 | sub=The difference | pred=significant | obj=The difference is statistically significant. | unit=S193\nB T4 B159 | sub=The participants’ mental well-being (WHO-5 | pred=increase | obj=from T0 | unit=S195\nB T4 B160 | sub=The level of socialization | pred=decrease | obj=from T0 | unit=S196\nB T4 B161 | sub=Users’ Experience with the AgeWell Digital | pred=show | obj=that out of the six dimensions | unit=S198\nB T4 B162 | sub=All the other dimensions | pred=receive | obj=a bad evaluation by users | unit=S199\nB T4 B163 | sub=The system | pred=rat | obj=as “novel | unit=S200\nB T4 B164 | sub=The usability score of the system | pred=59 | obj=9 | unit=S202\nB T4 B165 | sub=More than half of participants | pred=find | obj=the DC | unit=S203\nB T4 B166 | sub=the percentage of people finding the | pred=decrease | obj=by 13.1% | unit=S204\nB T4 B167 | sub=participants | pred=discover | obj=the usefulness of the AgeWell digital | unit=S205\nB T4 B168 | sub=article text | pred=strength | obj=of the System | unit=S207\nB T4 B169 | sub=The QUAL analysis | pred=highlight | obj=six main themes: 1. the digital | unit=S208\nB T4 B170 | sub=Themes | pred=show | obj=in Table 5 | unit=S209\nB T4 B171 | sub=the quotations from Italian respondents | pred=follow | obj=Beyond the information on the respondents’ | unit=S210\nB T4 B172 | sub=trial participants | pred=recognize | obj=Concerning the content strengths | unit=S211\nB T4 B173 | sub=I | pred=have | obj=In fact | unit=S212\nB T4 B174 | sub=There | pred=be | obj=so many things that can be | unit=S213\nB T4 B175 | sub=This opinion | pred=common | obj=especially among Italian respondents | unit=S214\nB T4 B176 | sub=The app | pred=help | obj=you get organized | unit=S215\nB T4 B177 | sub=study participants | pred=stress | obj=Concerning the content weaknesses | unit=S216\nB T4 B178 | sub=It | pred=be | obj=that we do not move around | unit=S217\nB T4 B179 | sub=I | pred=able | obj=to fill the day because of | unit=S218\nB T4 B180 | sub=The main technical strength of the | pred=use | obj=of videos | unit=S219\nB T4 B181 | sub=Both Italian and Dutch participants | pred=stress | obj=the following technical weaknesses | unit=S221\nB T4 B182 | sub=Dutch participants | pred=complain | obj=about the long time the platform | unit=S222\nB T4 B183 | sub=You | pred=have | obj=to go and click on “I | unit=S223\nB T4 B184 | sub=It | pred=unpleasant | obj=to work with | unit=S224\nB T4 B185 | sub=This | pred=downside | obj=(NL027);The | unit=S225\nB T4 B186 | sub=It | pred=tricky | obj=that you cannot fill in anything | unit=S226\nB T4 B187 | sub=The latter | pred=find | obj=the way it looked | unit=S227\nB T4 B188 | sub=The voice of the avatar | pred=deem | obj=unpleasant | unit=S228\nB T4 B189 | sub=Suggestions coming from the experimentation | pred=concern | obj=system contents | unit=S229\nB T4 B190 | sub=the users | pred=suggest | obj=Regarding the contents | unit=S230\nB T4 B191 | sub=users | pred=propose | obj=Concerning technical issues, users proposed to:Make | unit=S231\nB T4 B192 | sub=4. Discussion | pred=lie | obj=impact | unit=S232\nB T4 B193 | sub=level | pred=activity | obj=mental | unit=S235\nB T4 B194 | sub=the users’ desire to have periodical | pred=suggest | obj=On the other hand | unit=S236\nB T4 B195 | sub=This | pred=suggest | obj=that the current version of digital | unit=S237\nB T4 B196 | sub=QUANT findings | pred=tell | obj=us | unit=S238\nB T4 B197 | sub=A possible explanation of this result | pred=lie | obj=in the fact that, although the | unit=S239\nB T4 B198 | sub=the trial | pred=take | obj=In fact | unit=S240\nB T4 B199 | sub=they | pred=need | obj=As a result | unit=S241\nB T4 B200 | sub=this | pred=sufficient | obj=In fact | unit=S242\nB T4 B201 | sub=The existing literature | pred=agree | obj=on the fact that technology can | unit=S243\nB T4 B202 | sub=This | pred=highlight | obj=the need to design digital coaching | unit=S245\nB T4 B203 | sub=both QUANT and QUAL results | pred=show | obj=that user experience with the system | unit=S246\nB T4 B204 | sub=users | pred=find | obj=In fact | unit=S247\nB T4 B205 | sub=Dutch users | pred=attentive | obj=to the technical aspects, which is | unit=S248\nB T4 B206 | sub=users | pred=like | obj=the appearance and the attitude of | unit=S249\nB T4 B207 | sub=the above | pred=indicate | obj=In addition to what Kettunen, Kari | unit=S250\nB T4 B208 | sub=A characteristic common to older adults | pred=willingness | obj=in fact | unit=S251\nB T4 B209 | sub=article text | pred=number | obj=of users who appreciated the function | unit=S252\nB T4 B210 | sub=This | pred=imply | obj=the need for further studies targeting | unit=S253\nB T4 B211 | sub=The latter | pred=base | obj=on customizable avatars, which is one | unit=S254\nB T4 B212 | sub=the improvement in system usability | pred=enhance | obj=In light of the above | unit=S255\nB T4 B213 | sub=article text | pred=strength | obj=Limitations | unit=S257\nB T4 B214 | sub=The strength of the study | pred=adoption | obj=of a mixed-method approach, which allowed | unit=S258\nB T4 B215 | sub=the numerous technical issues | pred=confound | obj=the users’ perception of the contents | unit=S259\nB T4 B216 | sub=This | pred=represent | obj=a significant limitation of the study | unit=S260\nB T4 B217 | sub=it | pred=hard | obj=to engage older workers in the | unit=S261\nB T4 B218 | sub=the lack of a control group | pred=permit | obj=In addition | unit=S262\nB T4 B219 | sub=All these limitations | pred=allow | obj=for a generalization of results | unit=S263\nB T4 B220 | sub=future large sample studies | pred=encourage | obj=to assess the impact and the | unit=S264\nB T4 B221 | sub=the use of a usable and | pred=have | obj=a positive impact | unit=S265\nB T4 B222 | sub=the latter | pred=have | obj=In fact | unit=S266\nB T4 B223 | sub=there | pred=be | obj=certain | unit=S267\nB T4 B224 | sub=# 5. Conclusions | pred=show | obj=that a digital coaching program can | unit=S270\nB T4 B225 | sub=mental well-being | pred=remain | obj=On the contrary | unit=S271\nB T4 B226 | sub=there | pred=be | obj=a need for the support of | unit=S272\nB T4 B227 | sub=some empirical evidence about the characteristics | pred=highlight | obj=Within this study | unit=S273\nB T4 B228 | sub=the level of personalization of such | pred=remain | obj=the golden key to aligning the | unit=S274\nB T4 B229 | sub=it | pred=impact | obj=In addition | unit=S275\nB T4 B230 | sub=it | pred=seem | obj=that there is still a lack | unit=S276",
+  "expected": {
+    "assertion_count": 230,
+    "minimum_concept_count": 380,
+    "minimum_structural_row_count": 982,
+    "minimum_knowledge_map_node_count": 982,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

@@ -26,19 +26,32 @@ spec:
                 name: app-secrets
           env:
             - name: DEFAULT_PROVIDER
-              value: "cloudru"
+              value: "openai"
             - name: DEFAULT_MODEL
-              value: "deepseek-ai/DeepSeek-V4-Flash"
-            - name: CLOUDRU_MODEL
-              value: "deepseek-ai/DeepSeek-V4-Flash"
+              value: "gpt-6-luna"
+            - name: AI_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: article-pipeline-model
+                  key: AI_BASE_URL
+            - name: AI_PROVIDERS
+              valueFrom:
+                configMapKeyRef:
+                  name: article-pipeline-model
+                  key: AI_PROVIDERS
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: OPENAI_API_KEY
             - name: AI_REQUEST_TIMEOUT
-              value: "300"
+              value: "3600"
             - name: AI_CONNECT_TIMEOUT
               value: "15"
             - name: AI_MODELS_CACHE_TTL
               value: "60"
             - name: AI_CONTEXT_LENGTH
-              value: "32000"
+              value: "1050000"
           readinessProbe:
             httpGet:
               path: /health

@@ -43,12 +43,13 @@ from neomodel import db
 
 from .ai_model_client import get_ai_model_client
 from . import settings
+from infrastructure.config import resolve_model_profile
 from .goal_decomposition_prompt_en import build_goal_decomposition_prompt
 
 logger = logging.getLogger(__name__)
 
 # Model settings (как в llm_triplet_extraction_service).
-DEFAULT_MODEL = settings.LLM_EXTRACT_MODEL
+DEFAULT_MODEL = resolve_model_profile("article_extraction")
 DEFAULT_MAX_TOKENS = 12000
 DEFAULT_TIMEOUT = settings.LLM_TIMEOUT
 DEFAULT_TEMPERATURE = 0.2

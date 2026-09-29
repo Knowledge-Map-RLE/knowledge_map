@@ -217,7 +217,9 @@ message AnalyzeTextRequest {
     string text = 1;
     repeated LinguisticLevel levels = 2; // Если пусто - все уровни
     bool enable_voting = 3; // Использовать voting между процессорами
-    int32 min_agreement = 4; // Минимальное количество процессоров для согласия (default: 2)
+    int32 min_agreement = 4; // Minimum processor agreement
+    bool preserve_source = 5; // Analyze every original character, without filtering
+    string doc_id = 6;
 }
 
 message AnalyzeTextResponse {

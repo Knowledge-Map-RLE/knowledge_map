@@ -21,6 +21,12 @@ from domain.exceptions import NotFoundError
 
 logger = logging.getLogger(__name__)
 
+# Верхний предел кандидатов из fulltext-индекса за один вызов queryNodes.
+# Индекс покрывает ~9.8M узлов; без лимита OR-запросы дают миллионы совпадений
+# и превышают 30-секундный таймаут роутера. При AND-семантике top-20000
+# результатов достаточно для страниц любой разумной глубины.
+_FT_BUDGET = 20000
+
 _STOP_WORDS = frozenset({
     "a", "an", "the", "of", "and", "or", "in", "on", "at", "to", "for",
     "is", "are", "was", "were", "be", "been", "being",
@@ -33,10 +39,22 @@ _STOP_WORDS = frozenset({
 })
 
 
-def _strip_stop_words(q: str) -> str:
-    words = q.split()
-    stripped = [w for w in words if w.lower() not in _STOP_WORDS]
-    return " ".join(stripped) if stripped else q
+def _build_ft_query(q: str) -> str:
+    """Строит Lucene-запрос для fulltext-индекса.
+
+    - Убирает стоп-слова и символы пунктуации
+    - Объединяет значимые токены через AND: документ должен содержать все слова запроса.
+    Это резко сужает результат (против OR по умолчанию в Lucene) и делает
+    запрос быстрым даже при миллионах узлов в индексе.
+    """
+    tokens = [
+        t
+        for t in re.findall(r"[A-Za-z0-9]+", q)
+        if t.lower() not in _STOP_WORDS and len(t) >= 2
+    ]
+    if not tokens:
+        return q
+    return " AND ".join(tokens)
 
 
 def _orm_to_domain(orm_doc: OrmDocument) -> Document:
@@ -63,6 +81,8 @@ def _orm_to_domain(orm_doc: OrmDocument) -> Document:
         pubmed_id=orm_doc.pubmed_id,
         pmc_id=orm_doc.pmc_id,
         is_open_access=orm_doc.is_open_access or False,
+        is_gold_standard=orm_doc.is_gold_standard or False,
+        gold_standard_source_pmc_id=orm_doc.gold_standard_source_pmc_id,
         is_processed=orm_doc.is_processed or False,
         processing_status=orm_doc.processing_status or "uploaded",
         error_message=orm_doc.error_message,
@@ -98,6 +118,8 @@ def _domain_to_orm(doc: Document, orm_doc: Optional[OrmDocument] = None) -> OrmD
     orm_doc.pubmed_id = doc.pubmed_id
     orm_doc.pmc_id = doc.pmc_id
     orm_doc.is_open_access = doc.is_open_access
+    orm_doc.is_gold_standard = doc.is_gold_standard
+    orm_doc.gold_standard_source_pmc_id = doc.gold_standard_source_pmc_id
     orm_doc.is_processed = doc.is_processed
     orm_doc.processing_status = doc.processing_status
     orm_doc.error_message = doc.error_message
@@ -112,7 +134,8 @@ def _row_to_domain(row) -> Document:
     0=uid, 1=original_filename, 2=title, 3=processing_status, 4=is_processed,
     5=source, 6=s3_key, 7=s3_bucket, 8=file_size, 9=upload_date,
     10=docling_raw_md_s3_key, 11=user_md_s3_key,
-    12=pubmed_id, 13=pmc_id, 14=is_open_access, 15=error_message, 16=md5_hash
+    12=pubmed_id, 13=pmc_id, 14=is_open_access, 15=error_message, 16=md5_hash,
+    17=is_gold_standard, 18=gold_standard_source_pmc_id
     """
     def _val(v):
         return v if v is not None else None
@@ -135,6 +158,8 @@ def _row_to_domain(row) -> Document:
         is_open_access=bool(_val(row[14])) if _val(row[14]) is not None else False,
         error_message=_val(row[15]),
         md5_hash=_val(row[16]),
+        is_gold_standard=bool(_val(row[17])) if len(row) > 17 and _val(row[17]) is not None else False,
+        gold_standard_source_pmc_id=_val(row[18]) if len(row) > 18 else None,
     )
 
 
@@ -169,7 +194,9 @@ class DocumentRepository:
                d.pmc_id as pmc_id,
                d.is_open_access as is_open_access,
                d.error_message as error_message,
-               d.md5_hash as md5_hash
+               d.md5_hash as md5_hash,
+               d.is_gold_standard as is_gold_standard,
+               d.gold_standard_source_pmc_id as gold_standard_source_pmc_id
     """
 
     def get_by_id(self, uid: str) -> Optional[Document]:
@@ -207,8 +234,8 @@ class DocumentRepository:
         skip: int = 0,
         limit: Optional[int] = None,
         full_text_only: bool = False,
+        gold_standard_only: bool = False,
     ) -> List[Document]:
-        import time
         t0 = time.monotonic()
         try:
             if limit is not None and limit <= 0:
@@ -216,9 +243,10 @@ class DocumentRepository:
 
             eff_limit = limit or 100
 
+            gold_filter = " AND d.is_gold_standard = true" if gold_standard_only else ""
             if full_text_only:
                 cypher = f"""
-                    MATCH (d:Document) WHERE d.has_full_text = true
+                    MATCH (d:Document) WHERE d.has_full_text = true{gold_filter}
                     RETURN {self._LIST_FIELDS}
                     ORDER BY d.uid ASC
                     SKIP $skip
@@ -226,13 +254,13 @@ class DocumentRepository:
                 """
             else:
                 cypher = f"""
-                    MATCH (d:Document) WHERE d.source = 'upload'
+                    MATCH (d:Document) WHERE d.source = 'upload'{gold_filter}
                     RETURN {self._LIST_FIELDS}
                     ORDER BY d.uid ASC
                     SKIP $skip
                     LIMIT $limit
                     UNION ALL
-                    MATCH (d:Document) WHERE d.source IN ['pubmed', 'pmc']
+                    MATCH (d:Document) WHERE d.source IN ['pubmed', 'pmc']{gold_filter}
                     RETURN {self._LIST_FIELDS}
                     ORDER BY d.uid ASC
                     SKIP $skip
@@ -243,7 +271,7 @@ class DocumentRepository:
             results, _ = db.cypher_query(cypher, params)
             elapsed = time.monotonic() - t0
             if elapsed > 2:
-                logger.warning(f"list_all took {elapsed:.1f}s for {len(results)} docs (skip={skip}, limit={limit}, full_text_only={full_text_only})")
+                logger.warning(f"list_all took {elapsed:.1f}s for {len(results)} docs (skip={skip}, limit={limit}, full_text_only={full_text_only}, gold_standard_only={gold_standard_only})")
 
             seen = set()
             docs: List[Document] = []
@@ -285,8 +313,18 @@ class DocumentRepository:
             logger.error(f"count_all failed after {elapsed:.1f}s: {e}")
             return 0
 
-    def count_full_text(self) -> int:
+    def count_full_text(self, gold_standard_only: bool = False) -> int:
         """Количество документов с полным текстом. Кэшируется на 5 минут."""
+        if gold_standard_only:
+            try:
+                results, _ = db.cypher_query(
+                    "MATCH (d:Document) WHERE d.has_full_text = true "
+                    "AND d.is_gold_standard = true RETURN count(d) AS cnt"
+                )
+                return results[0][0] if results else 0
+            except Exception as e:
+                logger.error(f"count_full_text(gold_standard_only=True) failed: {e}")
+                return 0
         now = time.monotonic()
         if self._full_text_count_cache is not None:
             cached_count, cached_at = self._full_text_count_cache
@@ -409,7 +447,6 @@ class DocumentRepository:
         limit: int = 100,
         full_text_only: bool = False,
     ) -> Tuple[List[Document], int]:
-        import time
         t0 = time.monotonic()
         try:
             if not q.strip():
@@ -441,31 +478,23 @@ class DocumentRepository:
                     logger.warning(f"PMCID search took {elapsed:.1f}s for pmcid={query}")
                 return results, total
 
-            ft_query = _strip_stop_words(query)
+            ft_query = _build_ft_query(query)
 
-            if full_text_only:
-                uid_cypher = """
-                    CALL db.index.fulltext.queryNodes('doc_fulltext', $q)
-                    YIELD node as d, score
-                    WHERE score > 0.1 AND d.has_full_text = true
-                    WITH d.uid AS uid, score
-                    ORDER BY score DESC
-                    SKIP $skip
-                    LIMIT $limit
-                    RETURN uid
-                """
-            else:
-                uid_cypher = """
-                    CALL db.index.fulltext.queryNodes('doc_fulltext', $q)
-                    YIELD node as d, score
-                    WHERE score > 0.1
-                    WITH d.uid AS uid, score
-                    ORDER BY score DESC
-                    SKIP $skip
-                    LIMIT $limit
-                    RETURN uid
-                """
-            uid_results, _ = db.cypher_query(uid_cypher, {"q": ft_query, "skip": skip, "limit": limit})
+            ft_filter = "AND d.has_full_text = true" if full_text_only else ""
+            uid_cypher = f"""
+                CALL db.index.fulltext.queryNodes('doc_fulltext', $q, {{limit: $budget}})
+                YIELD node as d, score
+                WHERE score > 0.1 {ft_filter}
+                WITH d.uid AS uid, score
+                ORDER BY score DESC
+                SKIP $skip
+                LIMIT $limit
+                RETURN uid
+            """
+            uid_results, _ = db.cypher_query(
+                uid_cypher,
+                {"q": ft_query, "budget": _FT_BUDGET, "skip": skip, "limit": limit},
+            )
             uids = [row[0] for row in uid_results if row[0]]
             elapsed_ft = time.monotonic() - t0
             if elapsed_ft > 2:
@@ -473,6 +502,18 @@ class DocumentRepository:
 
             if not uids:
                 return [], 0
+
+            count_cypher = f"""
+                CALL db.index.fulltext.queryNodes('doc_fulltext', $q, {{limit: $budget}})
+                YIELD node as d, score
+                WHERE score > 0.1 {ft_filter}
+                RETURN count(DISTINCT d.uid) AS total
+            """
+            cnt, _ = db.cypher_query(
+                count_cypher,
+                {"q": ft_query, "budget": _FT_BUDGET},
+            )
+            total = cnt[0][0] if cnt else len(uid_results)
 
             fetch_cypher = f"""
                 MATCH (d:Document) WHERE d.uid IN $uids
@@ -482,7 +523,6 @@ class DocumentRepository:
 
             uid_order = {uid: i for i, uid in enumerate(uids)}
             sorted_rows = sorted(fetch_results, key=lambda row: uid_order.get(row[0], 999))
-            total = len(uid_results)
 
             elapsed = time.monotonic() - t0
             if elapsed > 3:

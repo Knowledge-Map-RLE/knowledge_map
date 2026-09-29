@@ -14,7 +14,7 @@ Responsibility: neomodel ORM-классы для Neo4j — детали хран
 Allowed imports: neomodel, datetime, стандартная библиотека
 Forbidden imports: fastapi, grpc, aioboto3, domain, application, adapters, web
 """
-from datetime import datetime
+from datetime import date, datetime, time
 
 from neomodel import (
     StructuredNode,
@@ -30,6 +30,40 @@ from neomodel import (
     FloatProperty,
     ArrayProperty,
 )
+
+
+class FlexibleDateTimeProperty(DateTimeProperty):
+    """DateTimeProperty, конвертирующий и float-epoch, и нативный neo4j.time.DateTime.
+
+    Документы, импортированные нативным драйвером (PubMed/PMC), хранят даты
+    как neo4j.time.DateTime, тогда как neomodel ожидает float-epoch.
+    Дефолтное поведение записи не меняется — дефлайт возвращает float (как у
+    базового DateTimeProperty).
+    """
+
+    @staticmethod
+    def _to_python(value):
+        """Конвертирует neo4j.time.DateTime / neo4j.time.Date в datetime."""
+        to_native = getattr(value, "to_native", None)
+        if callable(to_native):
+            value = to_native()
+        if isinstance(value, datetime):
+            return value
+        if isinstance(value, date):
+            return datetime.combine(value, time.min)
+        raise TypeError(f"Unsupported date type: {type(value)}")
+
+    def inflate(self, value, obj=None):
+        if value is None:
+            return None
+        if isinstance(value, (int, float)):
+            return super().inflate(value)
+        return self._to_python(value)
+
+    def deflate(self, value, obj=None):
+        if isinstance(value, datetime):
+            return super().deflate(value)
+        return super().deflate(self._to_python(value))
 
 
 class LinkRel(StructuredRel):
@@ -101,13 +135,13 @@ class Document(StructuredNode):
     s3_bucket = StringProperty(default="knowledge-map-data")
     s3_key = StringProperty(required=True)
     file_size = IntegerProperty()
-    upload_date = DateTimeProperty(default=datetime.utcnow)
+    upload_date = FlexibleDateTimeProperty(default=datetime.utcnow)
 
     title = StringProperty()
     authors = JSONProperty()
     abstract = StringProperty()
     keywords = JSONProperty()
-    publication_date = DateTimeProperty()
+    publication_date = FlexibleDateTimeProperty()
     journal = StringProperty()
     doi = StringProperty()
 
@@ -119,6 +153,10 @@ class Document(StructuredNode):
     pubmed_id = StringProperty()
     pmc_id = StringProperty()
     is_open_access = BooleanProperty(default=False)
+
+    # Изолированный ручной эталон полного article-pipeline.
+    is_gold_standard = BooleanProperty(default=False, index=True)
+    gold_standard_source_pmc_id = StringProperty()
 
     is_processed = BooleanProperty(default=False)
     processing_status = StringProperty(default="uploaded")
@@ -144,7 +182,7 @@ class PDFAnnotation(StructuredNode):
     bbox_width = FloatProperty()
     bbox_height = FloatProperty()
     metadata = JSONProperty()
-    created_date = DateTimeProperty(default=datetime.utcnow)
+    created_date = FlexibleDateTimeProperty(default=datetime.utcnow)
 
     document = RelationshipFrom("Document", "HAS_ANNOTATION")
     created_by_uid = StringProperty()
@@ -154,7 +192,7 @@ class AnnotationRelationRel(StructuredRel):
     """ORM-модель отношения между Markdown-аннотациями."""
     uid = UniqueIdProperty(primary_key=True)
     relation_type = StringProperty(required=True)
-    created_date = DateTimeProperty(default=datetime.utcnow)
+    created_date = FlexibleDateTimeProperty(default=datetime.utcnow)
     metadata = JSONProperty()
 
 
@@ -168,7 +206,7 @@ class MarkdownAnnotation(StructuredNode):
     color = StringProperty(default="#ffeb3b")
     metadata = JSONProperty()
     confidence = FloatProperty()
-    created_date = DateTimeProperty(default=datetime.utcnow)
+    created_date = FlexibleDateTimeProperty(default=datetime.utcnow)
     source = StringProperty(default="user", index=True)
     processor_version = StringProperty()
 
@@ -190,7 +228,7 @@ class LabelStudioProject(StructuredNode):
     description = StringProperty()
     label_config = StringProperty(required=True)
     is_active = BooleanProperty(default=True)
-    created_date = DateTimeProperty(default=datetime.utcnow)
+    created_date = FlexibleDateTimeProperty(default=datetime.utcnow)
 
     created_by_uid = StringProperty()
     documents = RelationshipTo("Document", "USES_PROJECT")
@@ -381,7 +419,7 @@ class Pattern(StructuredNode):
     node_count = IntegerProperty(default=0)        # число узлов в каноническом графе
     edge_count = IntegerProperty(default=0)        # число рёбер в каноническом графе
     size_category = StringProperty()               # unigram, small, medium, large, xlarge
-    created_date = DateTimeProperty(default=datetime.utcnow)
+    created_date = FlexibleDateTimeProperty(default=datetime.utcnow)
 
     # Рёбра паттерна хранятся как JSON (для компактности)
     edges_json = StringProperty()                  # JSON-массив {source_id, target_id, edge_type, relation_subtype}
@@ -410,8 +448,8 @@ class AIChat(StructuredNode):
     user_uid = StringProperty(required=True, index=True)
     title = StringProperty(default="")
     model = StringProperty(default="")
-    created_at = DateTimeProperty(default=datetime.utcnow)
-    updated_at = DateTimeProperty(default=datetime.utcnow)
+    created_at = FlexibleDateTimeProperty(default=datetime.utcnow)
+    updated_at = FlexibleDateTimeProperty(default=datetime.utcnow)
 
     messages = RelationshipTo("AIMessage", "HAS_MESSAGE")
 
@@ -422,7 +460,7 @@ class AIMessage(StructuredNode):
     role = StringProperty(required=True)  # user | assistant | system
     content = StringProperty(required=True)
     order = IntegerProperty(default=0, index=True)
-    created_at = DateTimeProperty(default=datetime.utcnow)
+    created_at = FlexibleDateTimeProperty(default=datetime.utcnow)
 
     chat = RelationshipFrom("AIChat", "HAS_MESSAGE")
     usage = RelationshipTo("AIUsage", "HAS_USAGE")
@@ -455,7 +493,7 @@ class AIUsage(StructuredNode):
     actual_cost = StringProperty(default="0")
     actual_currency = StringProperty(default="RUB")
 
-    created_at = DateTimeProperty(default=datetime.utcnow)
+    created_at = FlexibleDateTimeProperty(default=datetime.utcnow)
 
     message = RelationshipFrom("AIMessage", "HAS_USAGE")
 

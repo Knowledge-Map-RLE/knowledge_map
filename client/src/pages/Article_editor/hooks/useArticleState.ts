@@ -4,6 +4,7 @@ import {
     saveBlocks, getBlocks, updateArticleTitle,
     parseText, parseTextStream, uploadArticleImage,
 } from '../../../services/api/article_editor';
+import { getDocumentAssets } from '../../../services/api/documents';
 import { blocksToStatements, statementsToBlocks, statementsToResolvedText, uuid8Str } from '../Editor/blockConverter';
 import { useRequireAuth } from '../../../shared/hooks/useRequireAuth';
 import { useAuth } from '../../../entities/auth';
@@ -21,6 +22,7 @@ function authorFromUser(user: { uid: string; login: string; nickname: string } |
 interface UseArticleStateResult {
     article: KnowledgeArticle | null;
     text: string;
+    sourceMarkdown: string;
     statements: KnowledgeStatement[];
     blocks: ArticleBlockData[];
     articleUuid: string | null;
@@ -48,6 +50,7 @@ export function useArticleState(): UseArticleStateResult {
     const { user } = useAuth();
     const [article, setArticle] = useState<KnowledgeArticle | null>(null);
     const [text, setTextState] = useState<string>('');
+    const [sourceMarkdown, setSourceMarkdown] = useState<string>('');
     const [blocks, setBlocks] = useState<ArticleBlockData[]>([]);
     const [statements, setStatements] = useState<KnowledgeStatement[]>([]);
     const [isParsing, setIsParsing] = useState(false);
@@ -70,20 +73,27 @@ export function useArticleState(): UseArticleStateResult {
         setParseError(null);
         setNotAnnotatedMessage(null);
         setTextState('');
+        setSourceMarkdown('');
         setBlocks([]);
         setStatements([]);
         setArticleUuid(docId);
         articleUuidRef.current = docId;
 
         let loadedArticle: KnowledgeArticle | null = null;
-        // Аннотированную статью грузим двумя независимыми вызовами параллельно:
-        // метаданные+стейтменты и структурные блоки. Текст не запрашиваем,
-        // если есть блоки — он генерируется из блоков (statementsToResolvedText).
+        let loadedSourceMarkdown = '';
+        // Аннотированную статью грузим параллельно: отдельно получаем исходный
+        // Markdown для предпросмотра и структурные данные для редактора.
         try {
-            const [articleResp, blocksResp] = await Promise.all([
+            const [articleResp, blocksResp, assetsResp] = await Promise.all([
                 getArticle(docId).catch(() => null),
                 getBlocks(docId).catch(() => null),
+                getDocumentAssets(docId).catch(() => null),
             ]);
+
+            loadedSourceMarkdown = assetsResp?.markdown || '';
+            if (loadedSourceMarkdown) {
+                setSourceMarkdown(loadedSourceMarkdown);
+            }
 
             if (articleResp?.success && articleResp?.article) {
                 loadedArticle = articleResp.article;
@@ -142,11 +152,22 @@ export function useArticleState(): UseArticleStateResult {
         } catch { /* empty */ }
 
         if (!loadedText) {
+            loadedText = loadedSourceMarkdown;
+        }
+
+        if (!loadedText && !loadedSourceMarkdown) {
             try {
-                const { getDocumentAssets } = await import('../../../services/api/documents');
                 const assets = await getDocumentAssets(docId);
-                if (assets?.markdown) loadedText = assets.markdown;
+                if (assets?.markdown) {
+                    loadedText = assets.markdown;
+                    loadedSourceMarkdown = assets.markdown;
+                    setSourceMarkdown(assets.markdown);
+                }
             } catch { /* empty */ }
+        }
+
+        if (!loadedSourceMarkdown && loadedText) {
+            setSourceMarkdown(loadedText);
         }
 
         setTextState(loadedText);
@@ -170,6 +191,7 @@ export function useArticleState(): UseArticleStateResult {
         setBlocks([]);
         setStatements([]);
         setTextState('');
+        setSourceMarkdown('');
     }, []);
 
     /** Применяет блоки, полученные от LLM-экстракции: пересобирает стейтменты
@@ -371,6 +393,7 @@ export function useArticleState(): UseArticleStateResult {
                     setSaveStatus('error');
                     return;
                 }
+                setSourceMarkdown(currentText);
                 const currentStatements = statementsRef.current;
                 if (currentStatements.length > 0) {
                     await saveStatements(docId, currentStatements);
@@ -395,7 +418,7 @@ export function useArticleState(): UseArticleStateResult {
     }, [requireAuth]);
 
     return {
-        article, text, statements, blocks, articleUuid,
+        article, text, sourceMarkdown, statements, blocks, articleUuid,
         isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
         loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, updateBlock, deleteBlock, reorderBlocks, applyBlocks,
         triggerParse, save, uploadImage,

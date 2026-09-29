@@ -32,9 +32,9 @@ spec:
             - name: GRPC_MAX_WORKERS
               value: "10"
             - name: DEFAULT_LLM_MODEL
-              value: "qwen/qwen3-4b"
+              value: "openai_gpt6_luna"
             - name: LOCAL_LLM_MODEL
-              value: "qwen/qwen3-4b"
+              value: "openai_gpt6_luna"
             - name: QDRANT_COLLECTION
               value: "statement_embeddings"
             - name: EMBEDDING_MODEL

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10002495",
+  "document_uid": "PMC10002495",
+  "article_title": "Peripheral and Central Iron Measures in Alcohol Use Disorder and Aging: A Quantitative Susceptibility Mapping Pilot Study",
+  "doi": "10.3390/ijms24054461",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10002495/PMC10002495.md"
+  },
+  "article_sha256": "04b72de438b29b0bba1cb77cea9100ae9e345e5feedd1cd3e203a741f77151cc",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

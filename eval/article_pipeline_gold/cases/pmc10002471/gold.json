@@ -1,0 +1,1707 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 337,
+      "text": "# Association of homocysteine-related subcortical brain atrophy with white matter lesion volume and cognition in healthy aging\n\n**Авторы:** Song Hyun, Bharadwaj Pradyumna K., Raichlen David A., Habeck Christian G., Huentelman Matthew J., Hishaw Georg A., Trouard Theodore P., Alexander Gene E.\n\n**Журнал:** Neurobiology of aging (2023)\n\n",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 337,
+      "end": 385,
+      "text": "**DOI:** 10.1016/j.neurobiolaging.2022.10.011\n\n\n",
+      "decision": "non_assertional",
+      "reason": "bibliographic_metadata"
+    },
+    {
+      "id": "S3",
+      "start": 385,
+      "end": 386,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S4",
+      "start": 386,
+      "end": 387,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S5",
+      "start": 388,
+      "end": 565,
+      "text": "Abstract\n\nHomocysteine (Hcy) is a vascular risk factor associated with cognitive impairment and cerebrovascular disease but has also been implicated in Alzheimer’s disease (AD).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 566,
+      "end": 899,
+      "text": "Using multivariate Scaled Subprofile Model (SSM) analysis, we sought to identify a network pattern in structural neuroimaging reflecting the regionally distributed association of plasma Hcy with subcortical gray matter (SGM) volumes and its relation to other health risk factors and cognition in 160 healthy older adults, ages 50–89.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 900,
+      "end": 1100,
+      "text": "We identified an SSM Hcy-SGM pattern that was characterized by bilateral hippocampal and nucleus accumbens volume reductions with relative volume increases in bilateral caudate, pallidum, and putamen.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1101,
+      "end": 1287,
+      "text": "Greater Hcy-SGM pattern expression was associated with greater white matter hyperintensity (WMH) volume, older age, and male sex, but not with other vascular and AD-related risk factors.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1288,
+      "end": 1456,
+      "text": "Mediation analyses revealed that age predicted WMH volume, which predicted Hcy-SGM pattern expression, which, in turn, predicted cognitive processing speed performance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1457,
+      "end": 1662,
+      "text": "These findings suggest that the multivariate SSM Hcy-SGM pattern may be indicative of cognitive aging, reflecting a potential link between vascular health and cognitive dysfunction in healthy older adults.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1662,
+      "end": 2018,
+      "text": "\n\n\n## Introduction\n\nElevated plasma homocysteine (Hcy) levels have been implicated as a vascular risk factor in healthy aging and have been related to increasing risk for cerebrovascular disease (CVD; Hankey and Eikelboom, 2001). Hcy has also been associated with an increased risk for Alzheimer’s disease (AD; Clarke et al., 1998; Hooshmand et al., 2013).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 2019,
+      "end": 2140,
+      "text": "As a sulfhydryl-containing amino acid, Hcy is produced via the metabolism of the dietary essential amino acid methionine.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 2141,
+      "end": 2271,
+      "text": "Disturbances in metabolism related to increasing age may lead to excess Hcy concentrations in plasma (Hankey and Eikelboom, 2001).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 2272,
+      "end": 2672,
+      "text": "Having a high level of plasma Hcy has been associated with greater risk for stroke (Hankey and Eikelboom, 2001) and brain atrophy (Den Heijer et al., 2003; Tan et al., 2018; Williams et al., 2002) in structural neuroimaging studies, especially involving subcortical brain structures preferentially affected by age-related CVD and AD pathology (Nie et al., 2017; Werden et al., 2017; Yi et al., 2016).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2672,
+      "end": 2960,
+      "text": "\n\nHigher Hcy levels have been related to medial temporal lobe atrophy in AD patients (Hooshmand et al., 2013) and to hippocampal atrophy more specifically in non-demented older adults (Den Heijer et al., 2003; Williams et al., 2002), supporting its role as a potential risk factor for AD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2961,
+      "end": 3214,
+      "text": "A recent study of non-demented older adults, however, observed that less gray matter volumes in subcortical structures of the nucleus accumbens, thalamus, and brain stem, but not hippocampus, were associated with higher levels of Hcy (Tan et al., 2018).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 3215,
+      "end": 3360,
+      "text": "Furthermore, the pathway by which elevated Hcy contributes to subcortical brain atrophy and the risk for both CVD and AD is not fully understood.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 3360,
+      "end": 3652,
+      "text": "\n\nHcy is recognized as pro-thrombotic and pro-atherogenic (Hankey and Eikelboom, 2001) and has been implicated in small vessel CVD, as reflected by greater white matter hyperintensity (WMH) lesion load in several studies of middle-to-older-aged adults (Raz et al., 2012; Wright et al., 2005).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 3653,
+      "end": 3895,
+      "text": "Moreover, considerable attention has been directed toward both plasma Hcy levels and associated WMH burden as biomarkers indicating increased risk for CVD, as well as a potential vascular linkage to increased AD risk (Hooshmand et al., 2013).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 3895,
+      "end": 4747,
+      "text": "\n\nConverging evidence suggests that age-related vascular changes associated with WMH burden contribute to AD-like patterns of brain atrophy, showing spatial overlap of the associated atrophy with the brain-based effects of Hcy (Habes et al., 2016). It has been reported that increased WMH burden is associated with smaller volumes in brain regions typically impacted by AD, such as the medial temporal lobe and more specifically the hippocampus (Crane et al., 2015; Van Der Flier et al., 2005), which, in turn, may lead to diminished cognitive function in old age (Van Der Flier et al., 2005). Together, these findings suggest the possibility that WMH burden may be an important link in the association between elevated plasma Hcy and brain atrophy in key subcortical structures that have been implicated in the development of both CVD and AD in aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 4747,
+      "end": 4997,
+      "text": "\n\nPrevious studies have typically applied univariate analysis techniques, focusing on individual brain regions without considering individual differences in Hcy in relation to regional covariance patterns across multiple subcortical brain structures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 4998,
+      "end": 5372,
+      "text": "The Scaled Subprofile Model (SSM; Alexander and Moeller, 1994) provides a multivariate analysis method based on a modified principal component analysis (PCA) to test differences in the covariance across brain regions, detecting regionally distributed patterns of brain structural volumes without the need for correction of multiple comparisons (Alexander and Moeller, 1994).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 5372,
+      "end": 5374,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S24",
+      "start": 5374,
+      "end": 5691,
+      "text": "The SSM has been applied in numerous structural neuroimaging studies of healthy aging (Alexander et al., 2006; Bergfield et al., 2010; Brickman et al., 2007), the association with apolipoprotein E ε4 (APOE) genetic risk for AD (Alexander et al., 2012b), and the relation to blood pressure control (Kern et al., 2017).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 5692,
+      "end": 5853,
+      "text": "It has also been applied in structural brain imaging studies of aging with non-human primate (Alexander et al., 2008) and rodent (Alexander et al., 2020) models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 5854,
+      "end": 6174,
+      "text": "Applying the SSM to subcortical gray matter (SGM) volumes provides the opportunity to identify a regional network covariance pattern of SGM associated with Hcy and to evaluate whether Hcy-related SGM volume pattern differences are mediated by WMH volume and related to cognitive function in the context of healthy aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 6174,
+      "end": 6761,
+      "text": "\n\nIn the present study, we sought (1) to investigate how plasma levels of total Hcy are associated with differences in volumes of subcortical brain structures often implicated in the risk for CVD and AD in a cohort of healthy older adults, 50 to 89 years of age, by applying the SSM to volumes of SGM to create a Hcy-related network pattern of regional covariance; (2) to evaluate its relation to total WMH volume, as well as other vascular health and AD-related risk factors; and (3) to investigate its potential contribution as a mediator of poorer cognitive function in healthy aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 6762,
+      "end": 7153,
+      "text": "We hypothesized that multivariate SSM network covariance analysis would identify a regional network pattern of Hcy-related SGM volumes, including reductions in hippocampal and nucleus accumbens volumes, that shows greater pattern expression related to aging, and would be exacerbated by greater WMH lesion load, leading to diminished cognitive performance in this healthy older adult cohort.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 7153,
+      "end": 7156,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S30",
+      "start": 7156,
+      "end": 7181,
+      "text": "## Material and Methods\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 7181,
+      "end": 7182,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S32",
+      "start": 7182,
+      "end": 7197,
+      "text": "## Participants",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 7197,
+      "end": 7468,
+      "text": "\n\nParticipants were 160 community-dwelling healthy volunteers, 50–89 years of age (mean age = 69.66 ± 9.95 years, 53.8% women), who completed blood tests, brain MRI scans, a graded exercise test, and neuropsychological tests as part of a study of healthy cognitive aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 7469,
+      "end": 7566,
+      "text": "The sample was mostly White (95.0%), with a mean education level of 15.98 ± 2.57 years (Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 7567,
+      "end": 7801,
+      "text": "Participants were screened to exclude significant medical, psychiatric, and neurological disorders through an extensive medical screen combined with a neurological examination by an experienced specialist in geriatric neurology (GAH).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 7802,
+      "end": 7961,
+      "text": "Exclusion criteria also included a Hamilton Depression Rating Scale (HAM-D) score greater than 9 as well as a Mini-Mental State Exam (MMSE) score less than 26.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 7962,
+      "end": 8020,
+      "text": "The mean score of the MMSE in the sample was 29.01 ± 1.25.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 8021,
+      "end": 8074,
+      "text": "The demographic characteristics are shown in Table 1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S39",
+      "start": 8075,
+      "end": 8192,
+      "text": "After the study procedures and possible risks were explained, all participants provided informed and written consent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 8193,
+      "end": 8298,
+      "text": "The study was reviewed and approved by the Institutional Review Board (IRB) at the University of Arizona.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 8298,
+      "end": 8691,
+      "text": "\n\n\n### Laboratory Assessments\n\nBlood samples were collected during the imaging visit after at least 12 hours of fasting, placed on ice immediately, and then prepared for testing in the Clinical Chemistry Laboratory of the Department of Pathology at the University of Arizona Medical Center, Tucson, Arizona according to standard laboratory procedures following the manufacturer’s instructions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S42",
+      "start": 8692,
+      "end": 8901,
+      "text": "Plasma levels of total Hcy were measured by fluorescence polarization immunoassay on the Axsym analyzer or chemiluminescence microparticle immunoassay on the ci8200 analyzer (Abbott Laboratories, Chicago, IL).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S43",
+      "start": 8902,
+      "end": 9040,
+      "text": "Validation between these two analyzers was confirmed by the Clinical Chemistry Laboratory with a Deming regression coefficient of > 0.999.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S44",
+      "start": 9041,
+      "end": 9209,
+      "text": "Serum vitamin B12 levels were measured using enhanced chemiluminescence immunoassay on the Vitros ECi Immunodiagnostic System (Ortho Clinical Diagnostics, Raritan, NJ).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 9209,
+      "end": 9498,
+      "text": "\n\nAPOE alleles were determined in the Neurogenomics Division of the Translational Genomics Research Institute (TGen), Phoenix, Arizona from genomic DNA isolated from blood samples by the polymerase chain reaction/restriction enzyme method, as previously described (Van Etten et al., 2021).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 9499,
+      "end": 9631,
+      "text": "In brief, extracted DNA was assayed by restriction fragment length polymorphism to determine the APOE genotype for each participant.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 9632,
+      "end": 9879,
+      "text": "DNA amplification was performed using AmpliTaq Gold Fast PCR Master Mix (Applied Biosystems: Thermo Fisher Scientific, Waltham, MA) using primer sequences (FWD 5’-ACA-GAA-TTG-GCC-CCG-GCC-TGG-TAC-3’ and REV 5’-TAA-GCT-TGG-CAC-GGC-TGT-CCA-AGG-A-3’).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 9880,
+      "end": 10119,
+      "text": "Each sample was then incubated with 10 units of HhaI restriction enzyme (New England BioLabs, Ipswich, MA) at 37 °C for 16 hours and evaluated with a 4% agarose gel for banding patterns consistent with one of the six common APOE genotypes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 10120,
+      "end": 10207,
+      "text": "In this cohort, there were 48 APOE ε4 carriers (30.0%) and 112 ε4 non-carriers (70.0%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 10207,
+      "end": 10210,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S51",
+      "start": 10210,
+      "end": 10211,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S52",
+      "start": 10211,
+      "end": 10212,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S53",
+      "start": 10212,
+      "end": 10461,
+      "text": "# Cardiorespiratory Fitness Assessment\n\nDuring a treadmill graded exercise test conducted at the Pulmonary Function Laboratory at the University of Arizona Medical Center, Tucson, Arizona, oxygen uptake (VO2) was measured using indirect calorimetry.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 10462,
+      "end": 10584,
+      "text": "Measurements of expiratory gases were determined by standard techniques of open-circuit spirometry using a metabolic cart.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 10585,
+      "end": 10814,
+      "text": "The treadmill session began at a low intensity with a 1 mph speed and a 0% grade, but speed and grade were increased based on the modified Naughton treadmill protocol during exercise (Berry et al., 1996; Strzelczyk et al., 2001).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 10815,
+      "end": 11138,
+      "text": "Maximal oxygen consumption (VO2max) to measure cardiorespiratory fitness was considered achieved when two of the following three criteria were satisfied: (1) a plateau in VO2 with an increase in workload; (2) a respiratory exchange ratio of 1.1 or higher; and (3) a heart rate within ten beats of the age-predicted maximum.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 11139,
+      "end": 11252,
+      "text": "Termination criteria were consistent with the guidelines of the American College of Sports Medicine (ACSM, 2000).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 11252,
+      "end": 11255,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S59",
+      "start": 11255,
+      "end": 11257,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S60",
+      "start": 11257,
+      "end": 11394,
+      "text": "# Magnetic Resonance Imaging\n\nScan acquisition was performed on a 3T GE Signa scanner (HD Signa Excite; General Electric, Milwaukee, WI).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 11395,
+      "end": 11622,
+      "text": "Volumetric T1-weighted MRI scans were acquired with a spoiled gradient echo (SPGR) sequence (TR = 5.3 ms, TE = 2.0 ms, TI = 500 ms, flip Angle = 15°, matrix = 256 × 256, field of view (FOV) = 25.6 cm, slice thickness = 1.0 mm).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 11623,
+      "end": 11824,
+      "text": "We also obtained fluid attenuated inverse recovery (FLAIR) T2-weighted scans (TR = 11,000 ms, TE = 120 ms, TI = 2,250 ms, flip angle = 90°, matrix = 256 × 256, FOV = 25.0 cm, slice thickness = 2.6 mm).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 11824,
+      "end": 11957,
+      "text": "\n\nT1-weighted MRI scans were processed using the automated recon-all pipeline in FreeSurfer v5.3 (http://surfer.nmr.mgh.harvard.edu).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 11958,
+      "end": 12093,
+      "text": "Details of the FreeSurfer processing stages for the automated subcortical segmentation have been described (Fischl et al., 2004, 2002).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 12094,
+      "end": 12374,
+      "text": "Briefly, the processing pipeline involved automated Talairach transformation, intensity normalization, removal of non-brain tissues, subcortical gray/white matter segmentation, tessellation of the gray/white matter boundary, automated topology correction, and surface deformation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 12375,
+      "end": 12485,
+      "text": "Results of the processing steps were visually inspected for segmentation accuracy and re-processed, as needed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 12486,
+      "end": 12663,
+      "text": "The processing stream provided bilateral SGM volumes of seven structures for each hemisphere: thalamus, caudate, putamen, pallidum, hippocampus, amygdala, and nucleus accumbens.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 12664,
+      "end": 12736,
+      "text": "Figure 1 illustrates the SGM volumes averaged over the 160 participants.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 12736,
+      "end": 12916,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Fig. 1.</strong> An illustration of SGM structural volumes averaged over the 160 study participants overlaid on a section of the average T1 image.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 12917,
+      "end": 12967,
+      "text": "(A) Sagittal, (B) Axial, and (C) Coronal sections.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 12968,
+      "end": 13023,
+      "text": "Left hemisphere appears on the right side of the image.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 13024,
+      "end": 13359,
+      "text": "SGM, subcortical gray matter.</figcaption>\n</figure>\n\nWMH volume was automatically segmented using a combination of T1 and FLAIR images with the lesion growth algorithm (LGA) of the lesion segmentation toolbox (LST) (Schmidt et al., 2012) with Statistical Parametric Mapping (SPM12; Wellcome Trust Center for Neuroimaging, London, UK).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 13360,
+      "end": 13514,
+      "text": "The processing steps for the segmentation of WMH in this healthy older adult cohort have been described (Franchetti et al., 2020; Van Etten et al., 2021).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 13514,
+      "end": 13875,
+      "text": "\n\nBriefly, manually segmented WMH maps were generated for a subset of 35 participants using ITK-SNAP (www.itksnap.org) following consensus review by two expert raters (PKB and GEA) and a specialist in geriatric neurology (GAH), and served as the reference images to assess the LGA segmentation accuracy across a range of optimization kappa values (0.05 – 1.00).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 13876,
+      "end": 14054,
+      "text": "Finally, mean spatial overlap with reference WMH maps using dice coefficients was computed at each kappa value to determine an optimal threshold of 0.35 (Van Etten et al., 2021).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S76",
+      "start": 14054,
+      "end": 14300,
+      "text": "\n\nLesion probability maps for all study participants were then generated using LGA at the optimal kappa value of 0.35 and visually inspected for segmentation quality, which was followed by computing total WMH volume (mL) by summing voxel volumes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S77",
+      "start": 14301,
+      "end": 14365,
+      "text": "The WMH volume values were natural log-transformed for analyses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S78",
+      "start": 14366,
+      "end": 14606,
+      "text": "We obtained estimates of total intracranial volume (TIV) in native brain space from each of the T1 images using SPM12 by calculating the sum of the total gray matter, white matter, and cerebrospinal fluid segments (Alexander et al., 2012a).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 14606,
+      "end": 14642,
+      "text": "\n\n\n### Neuropsychological Outcomes\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 14642,
+      "end": 14871,
+      "text": "Neuropsychological tests were administered to assess performance on cognitive domains that are particularly vulnerable to the effects of aging: speed of processing, executive function, and verbal memory (Alexander et al., 2012b).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 14872,
+      "end": 15066,
+      "text": "For this study, we focused on three measures obtained from the Trail Making Test, Parts A and B (TMT) and the 12-trial version of the Buschke Selective Reminding Test using a 12-word list (SRT).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 15067,
+      "end": 15257,
+      "text": "The total time to completion of TMT-A was natural-log transformed and used as a measure of processing speed with higher values representing poorer processing speed performance (Crowe, 1998).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 15258,
+      "end": 15479,
+      "text": "We used the standardized residual of TMT-B, after statistically removing the processing speed performance on TMT-A, as a measure of cognitive flexibility and shifting within the executive functioning domain (Crowe, 1998).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 15480,
+      "end": 15764,
+      "text": "For memory, we used the number of words recalled without interruption on at least three successive trials, scored as consistent long-term retrieval (CLTR) on the SRT, a measure highly sensitive to age-related differences in verbal episodic memory performance (Sliwinski et al., 1997).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 15764,
+      "end": 15767,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S86",
+      "start": 15767,
+      "end": 15768,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S87",
+      "start": 15768,
+      "end": 15769,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S88",
+      "start": 15769,
+      "end": 15953,
+      "text": "# Statistical Analyses\n\nWe performed regional network analysis using a multivariate model of regional covariance (Alexander and Moeller, 1994) in Matlab R2020a (MathWorks, Natick, MA).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 15954,
+      "end": 16150,
+      "text": "We applied the SSM to volumetric measures of 14 regions of interest (ROI) (i.e., bilateral volumes of seven SGM structures) to identify subcortical regional covariance related to plasma total Hcy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 16150,
+      "end": 16152,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S91",
+      "start": 16152,
+      "end": 16339,
+      "text": "As previously described (Alexander and Moeller, 1994), after natural-log transformation, the mean values across the ROIs for each subject and across subjects for each ROI were subtracted.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 16340,
+      "end": 16565,
+      "text": "PCA was subsequently performed to obtain a set of regional covariance patterns and to produce corresponding subject scores, which reflect the extent to which each subject expresses the identified regional covariance patterns.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 16566,
+      "end": 16789,
+      "text": "We used Akaike information criteria (AIC; Burnham and Anderson, 2002) for model selection, which seeks the optimization of a bias-variance trade-off (Habeck et al., 2005) to select the best set of components to predict Hcy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 16790,
+      "end": 16900,
+      "text": "Based on the lowest AIC value in the model, the first set of sequential components was chosen as the best set.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 16900,
+      "end": 17152,
+      "text": "\n\nBootstrap resampling (Alexander et al., 2012a; Efron and Tibshirani, 1994; Habeck et al., 2005) was applied to the SSM analysis with 10,000 iterations to provide reliability estimates at each ROI for the resulting pattern weights associated with Hcy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 17153,
+      "end": 17279,
+      "text": "The bootstrap distributions provided confidence intervals (CI) for the observed linear combination of network pattern weights.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 17280,
+      "end": 17546,
+      "text": "This network analysis was followed by univariate regression for the individual SGM volumes in relation to Hcy, adjusted for TIV, to test how each ROI contributed to the Hcy-related network pattern, with false discovery rate (FDR) correction for multiple comparisons.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 17546,
+      "end": 17766,
+      "text": "\n\nBlock-wise multiple regression analysis was subsequently performed to investigate the effects of WMH burden, demographic characteristics, and vascular and AD-related risk factors on the Hcy-related SGM network pattern.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 17767,
+      "end": 17894,
+      "text": "With the model adjusted for TIV (block 1), total WMH volume was initially entered (block 2), followed by age and sex (block 3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 17895,
+      "end": 18112,
+      "text": "We subsequently tested the SSM pattern prediction by vascular and AD risk factors (block 4), including APOE ε4 status, self-reported hypertension status, a self-reported history of current or past smoking, and VO2max.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S101",
+      "start": 18113,
+      "end": 18260,
+      "text": "Finally, we repeated the multiple regression analysis above, including levels of vitamin B12 (block 5) as an added covariate (Wright et al., 2005).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 18260,
+      "end": 18564,
+      "text": "\n\nWe subsequently performed mediation model analyses to test whether the influence of age on the Hcy-SGM pattern was mediated by WMH burden while accounting for sex differences and with TIV, APOE ε4 status, hypertension status, smoking history, VO2max, and vitamin B12 levels further added as covariates.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 18565,
+      "end": 18776,
+      "text": "Serial multiple mediation models were then used to evaluate how the Hcy-related SGM pattern related to cognitive aging and whether WMH load mediated the pattern’s association with age-related cognitive function.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 18776,
+      "end": 18778,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S105",
+      "start": 18778,
+      "end": 19025,
+      "text": "In these models, we tested age as a predictor and separately included cognitive outcomes in three domains—processing speed, executive function, and verbal memory—as a dependent variable, with WMH volume and the Hcy-SGM pattern tested as mediators.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 19026,
+      "end": 19190,
+      "text": "We focused on three selected cognitive measures expected to be vulnerable to aging (Alexander et al., 2012b) to limit Type I error across multiple mediation models.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 19191,
+      "end": 19491,
+      "text": "We initially included TIV and the time interval between MRI scans and administration of the neuropsychological tests (Mean ± SD = 58.56 ± 47.35 days) as covariates, with additional adjustments for sex and years of education as covariates to control their potential influence on cognitive performance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 19492,
+      "end": 19706,
+      "text": "APOE ε4 status, hypertension status, smoking history, VO2max, and vitamin B12 levels were subsequently added to account for their relation to increased risk of WMH burden, volume reductions, and cognitive function.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 19707,
+      "end": 19920,
+      "text": "Depression ratings on the Geriatric Depression Scale (Yesavage et al., 1982) were included as an additional covariate in a follow-up analysis to control its potential association with processing speed performance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 19920,
+      "end": 20076,
+      "text": "\n\nA bootstrapping procedure with 10,000 iterations was applied using the PROCESS macro (v3.4; Hayes, 2018) to construct percentile CIs for indirect effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 20077,
+      "end": 20180,
+      "text": "We report completely standardized indirect effects as effect size measures (Preacher and Kelley, 2011).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 20181,
+      "end": 20278,
+      "text": "The 95% percentile bootstrap CIs that do not include zero indicate significant mediation effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 20279,
+      "end": 20359,
+      "text": "Statistical analyses were all performed using SPSS 26.0 (IBM Corp., Armonk, NY).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 20359,
+      "end": 20363,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S115",
+      "start": 20363,
+      "end": 20364,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S116",
+      "start": 20364,
+      "end": 20548,
+      "text": "# Results\n\nUsing SSM analysis of the 14 SGM volumes with AIC, we identified the best linear combination of components associated with plasma levels of Hcy in this healthy aging cohort.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 20549,
+      "end": 20786,
+      "text": "This model included the first component and accounted for 9.4% of the variance in the levels of plasma total Hcy, with higher levels of Hcy associated with greater expression of the network pattern (F(1,158) = 16.30, p < .0001; Fig. 2A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 20787,
+      "end": 20985,
+      "text": "The regional pattern was characterized by bilateral volumetric reductions in the hippocampus and nucleus accumbens with relative bilateral volumetric increases in the caudate, putamen, and pallidum.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 20986,
+      "end": 21062,
+      "text": "Figure 2B presents the Hcy-related SSM loadings for the 14 subcortical ROIs.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 21062,
+      "end": 21371,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Fig. 2.</strong> (A) SGM network subject scores and total Hcy levels. The subject scores of the Hcy-related SGM network pattern were derived from the first SSM component. Total Hcy levels were natural log transformed. The gray dotted lines represent 95% confidence intervals.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 21372,
+      "end": 21522,
+      "text": "The scatterplot shows that higher total Hcy levels were associated with greater expression of the SGM network pattern (R2 = .094, p < .0001, n = 160).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 21523,
+      "end": 21598,
+      "text": "(B) Hcy-related loadings for the SSM network pattern of the 14 SGM regions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 21599,
+      "end": 21857,
+      "text": "The gray bars indicate point estimates for the loadings, black lines indicate the 95% confidence intervals from the bootstrap resampling with 10,000 iterations, and asterisks represent statistically significant regions contributing to the covariance pattern.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 21858,
+      "end": 22444,
+      "text": "L = left; R = right; NAcc = nucleus accumbens; Amg = amygdala; Hipp = hippocampus; Pal = pallidum; Put = putamen; Cau = caudate; Thal = thalamus; Hcy, homocysteine; SGM, subcortical gray matter; SSM, Scaled Subprofile Model.</figcaption>\n</figure>\n\nFollow-up univariate regional analyses with adjustment for TIV confirmed that each of the bilateral hippocampus (β = −.295, p-FDR = .003 for left; β = −.259, p-FDR = .008 for right) and bilateral nucleus accumbens (β = −.247, p-FDR = .008 for left; β = −.204, p-FDR = .028 for right) volumes were inversely associated with levels of Hcy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 22445,
+      "end": 22956,
+      "text": "Each of bilateral caudate (β = .162, p-FDR = .170 for left; β = .065, p-FDR = .560 for right), bilateral putamen (β = −.000, p-FDR = .999 for left; β = −.100, p-FDR = .301 for right), and bilateral pallidum (β = .114, p-FDR = .220 for left; β = −.080, p-FDR = .374 for right) volumes, however, did not show significant univariate positive associations with Hcy after adjusting for TIV, suggesting that the regions showing increases in the SSM pattern reflect relative preservation for these subcortical volumes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 22956,
+      "end": 23260,
+      "text": "\n\nWith TIV added to a multiple regression model, we tested the Hcy-SGM network pattern prediction by total WMH volume, age, sex, and vascular health and AD-related risk factors of APOE ε4 status, hypertension status, smoking history, and VO2max to further evaluate their association with the SSM pattern.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 23261,
+      "end": 23426,
+      "text": "As shown in Table 2, after adjusting for TIV, there was a significant association between total WMH volume and the Hcy-SGM network pattern (β = .427, p = 9.0903E-9).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 23427,
+      "end": 23999,
+      "text": "After additionally entering age and sex, each emerged as statistically significant predictors (β = .339, p < .0001 for age; β = .188, p = .041 for sex) and the effect of WMH remained significant (β = .245, p = .002).\n\nSubsequently adding vascular and AD-related risk factors to the model, we found that APOE ε4 status (p = .729), hypertension (p = .441), smoking history (p = .345), and VO2max (p = .437) did not additionally contribute, whereas greater WMH volume, increasing age, and male sex remained associated with greater expression of the Hcy-SGM pattern (Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 24000,
+      "end": 24169,
+      "text": "Specifically, age was a highly significant predictor of the network pattern (β = .297, p = .002), followed by WMH load (β = .231, p = .004) and sex (β = .217, p = .027).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S130",
+      "start": 24169,
+      "end": 24171,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S131",
+      "start": 24171,
+      "end": 24615,
+      "text": "In a follow-up analysis with serum vitamin B12 as an additional covariate, the associations of age, WMH volume, and sex with the Hcy-related SGM pattern remained significant (β = .299, p = .002 for age; β = .224, p = .007 for WMH volume; β = .211, p = .034 for sex, respectively); whereas vitamin B12 levels were not (p = .889), after we controlled for initial covariates in the model, which were all non-significant covariates (all p’s > .05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 24615,
+      "end": 24617,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S133",
+      "start": 24617,
+      "end": 24731,
+      "text": "We then sought to examine whether the association of age with the Hcy-SGM pattern was mediated by WMH lesion load.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 24732,
+      "end": 25211,
+      "text": "The mediation model showed that the influence of age on the Hcy-SGM pattern was mediated by WMH volume after controlling for TIV, sex, APOE ε4 status, hypertension status, smoking history, VO2max, and further vitamin B12 levels (Effect = .119, SE = .048, 95% CI [.030; .219]), with age having a reduced, but still significant direct effect on the Hcy-related SGM pattern (Total effect = .418, SE = .009, 95% CI [.025; .059]; Direct effect = .299, SE = .010, 95% CI [.011; .049]).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 25212,
+      "end": 25485,
+      "text": "As shown in Figure 3A, the individual associations indicated that increasing age predicted greater total WMH volume (β = .505, B = .055, SE = .009, p < .0001), which then predicted greater expression of the Hcy-SGM network pattern (β = .236, B = .218, SE = .080, p = .007).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 25485,
+      "end": 25651,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Fig. 3.</strong> (A) Mediation model of total WMH volume on the association between age and the Hcy-related SGM network SSM pattern.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 25652,
+      "end": 25723,
+      "text": "Boxes and paths indicate hypothesized variables and their associations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 25724,
+      "end": 25783,
+      "text": "Black solid lines indicate statistically significant paths.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 25784,
+      "end": 25943,
+      "text": "Standardized path coefficients with TIV, sex, APOE ε4 status, hypertension status, smoking history, VO2max, and vitamin B12 levels as covariates are presented.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 25944,
+      "end": 26038,
+      "text": "In this model, zero did not lie within the 95% CIs, indicating a significant mediation effect.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 26039,
+      "end": 26168,
+      "text": "(B) Total WMH volume and Hcy-related SGM network SSM pattern sequentially mediating the relationship between age and TMT-A score.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 26169,
+      "end": 26234,
+      "text": "Boxes and paths indicate hypothesized variables and associations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 26235,
+      "end": 26352,
+      "text": "Black solid lines indicate statistically significant paths, whereas gray dotted lines indicate non-significant paths.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 26353,
+      "end": 26598,
+      "text": "Standardized path coefficients with TIV, the time interval between MRI scans and neuropsychological tests, sex, years of education, APOE ε4 status, hypertension status, smoking history, VO2max, and vitamin B12 levels as covariates are presented.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 26599,
+      "end": 26730,
+      "text": "This sequential mediation effect remained significant after additionally adjusting for depression ratings.</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 26730,
+      "end": 26894,
+      "text": "We then extended this mediation analysis to include cognition by testing serial mediation models to examine how the Hcy-related SGM pattern impacts cognitive aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 26895,
+      "end": 27324,
+      "text": "The serial mediation model revealed that the relationship between age and processing speed was serially mediated through WMH lesion load and the Hcy-related SGM pattern after controlling for TIV, the time interval between MRI scans and neuropsychological tests, sex, years of education, APOE ε4 status, hypertension status, smoking history, VO2max, and vitamin B12 levels (Effect = .026, SE = .018, 95% CI [.001; .069]; Fig. 3B).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 27325,
+      "end": 27459,
+      "text": "Additionally, adjusting for depression ratings did not diminish this mediation effect (Effect = .027, SE = .018, 95% CI [.001; .069]).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 27459,
+      "end": 27461,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S150",
+      "start": 27461,
+      "end": 27704,
+      "text": "As presented in Figure 3B, the serial mediation showed the following pattern: increasing age predicted greater total WMH volume, which predicted greater expression of the Hcy-SGM network pattern, leading to poorer processing speed performance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 27705,
+      "end": 27916,
+      "text": "Specifically, we found a significant direct effect (Effect = .298, SE = .003, 95% CI [.003; .015]), as well as total effect (Effect = .368, SE = .003, 95% CI [.006; .017]) of age on processing speed performance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 27917,
+      "end": 28271,
+      "text": "There was also a significant relationship between age and WMH load (β = .480, B = .052, SE = .009, p < .0001) and between WMH load and the Hcy-SGM network pattern (β = .238, B = .220, SE = .082, p = .008), followed by greater expression of the network pattern associated with poorer processing speed performance (β = .232, B = .071, SE = .027, p = .008).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 28271,
+      "end": 28942,
+      "text": "\n\nIn contrast, serial mediation models of age predicting cognitive performance through WMH load and the Hcy-related SGM pattern, using the same covariates, showed no significant indirect effects for the residualized TMT-B value (Effect = −.013, SE = .015, 95% CI [−.050; .010]), with non-significant total and direct effects (Total effect = .155, SE = .010, 95% CI [−.004; .035]; Direct effect = .160, SE = .012, 95% CI [−.007; .039]); and for the SRT CLTR score (Effect = .005, SE = .010, 95% CI [−.014; .027]), with significant total and direct effects (Total effect = −.403, SE = .315, 95% CI [−2.129; −.883]; Direct effect = −.461, SE = .367, 95% CI [−2.447; −.999]).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 28942,
+      "end": 28945,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S155",
+      "start": 28945,
+      "end": 29200,
+      "text": "## Discussion\n\nUsing multivariate network analysis, we identified a Hcy-related SGM network covariance pattern reflecting the association of a peripheral plasma biomarker of vascular health, Hcy, with subcortical volumes of brain atrophy in healthy aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 29201,
+      "end": 29372,
+      "text": "This pattern was characterized by reductions in bilateral nucleus accumbens and hippocampus volumes with relative preservation in bilateral putamen, pallidum, and caudate.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 29373,
+      "end": 29632,
+      "text": "Greater expression of the Hcy-SGM network pattern was associated with increasing age, greater total WMH volume, and male sex, but not with APOE ε4 status, hypertension status, smoking history, VO2max, and serum vitamin B12 levels in this healthy aging cohort.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S158",
+      "start": 29632,
+      "end": 29963,
+      "text": "\n\nWe further found that the influence of age on the Hcy-SGM pattern was mediated by WMH lesion load. Additionally, when this model was extended to include cognition, age was associated with increased WMH load, leading to greater expression of the Hcy-SGM network pattern, which, in turn, led to poorer processing speed performance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S159",
+      "start": 29964,
+      "end": 30249,
+      "text": "That these results of the serial mediation were not influenced by differences in TIV, sex, educational level, APOE ε4 status, hypertension status, smoking history, VO2max, vitamin B12 levels, and ratings of depressed mood in our sample supports the robustness of our observed findings.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S160",
+      "start": 30250,
+      "end": 30521,
+      "text": "Notably, the direct effects of age on the Hcy-related SGM pattern in the simple mediation model and on processing speed performance in the serial mediation model remained significant, indicating that the mediators partially explain the influence of age on these outcomes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 30521,
+      "end": 30523,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S162",
+      "start": 30523,
+      "end": 30727,
+      "text": "Our study sought to investigate the effects of total plasma Hcy levels on the brain and cognitive aging in healthy older adults, identifying a regionally specific network pattern of decreased SGM volumes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 30728,
+      "end": 30836,
+      "text": "This Hcy-related pattern was characterized by reductions in the bilateral hippocampus and nucleus accumbens.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 30837,
+      "end": 31066,
+      "text": "These findings are consistent with prior studies that have shown hippocampal brain atrophy in relation to high levels of plasma Hcy in community-dwelling non-demented older adults (Den Heijer et al., 2003; Williams et al., 2002).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 31067,
+      "end": 31205,
+      "text": "In line with our findings, Tan et al. (2018) also observed an association of higher Hcy levels with a smaller volume of nucleus accumbens.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 31206,
+      "end": 31341,
+      "text": "The authors, however, did not find hippocampal volume reductions related to Hcy levels in non-demented older adults (Tan et al., 2018).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 31342,
+      "end": 31557,
+      "text": "Taking a multivariate network approach, our study indicated that both volumes of the hippocampus and nucleus accumbens may be particularly vulnerable to the brain-based effects of Hcy in the context of healthy aging",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 31557,
+      "end": 31558,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S169",
+      "start": 31558,
+      "end": 31900,
+      "text": "\n\nConsistent with higher Hcy levels generally observed in men compared to women (Hankey and Eikelboom, 2001), we also found greater expression of the Hcy-SGM network pattern in men, suggesting that the impact of high Hcy levels on the brain may differ based on sex, with men exposed to a greater risk of structural brain-based effects of Hcy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 31901,
+      "end": 32147,
+      "text": "Future work with larger samples is needed to examine the question of sex-specific vulnerability to morphological differences in subcortical areas by elevated Hcy levels and the associated development of CVD and AD in the context of healthy aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 32147,
+      "end": 32149,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S172",
+      "start": 32149,
+      "end": 32275,
+      "text": "We also observed relative increases in gray matter volume associated with Hcy in the bilateral pallidum, caudate, and putamen.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 32276,
+      "end": 32604,
+      "text": "Although our follow-up univariate analyses confirmed significant reductions in the bilateral nucleus accumbens and hippocampus volumes, the basal ganglia structural volumes showing relative increases in the pattern were not significant, suggesting that they may be regions of relative preservation with increasing levels of Hcy.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 32605,
+      "end": 32731,
+      "text": "Such regional pattern increases may reflect subcortical brain volumes relatively less affected by Hcy-related adverse effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 32732,
+      "end": 32976,
+      "text": "Future longitudinal studies of SGM morphological changes with Hcy in the context of healthy aging would be important in further clarifying the physiological implications of the structural brain-based effects of Hcy in subcortical brain regions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 32976,
+      "end": 33202,
+      "text": "\n\nImportantly, the subcortical areas where gray matter volumes were preferentially impacted by Hcy correspond with those found in previous studies of AD, as well as CVD (Nie et al., 2017; Werden et al., 2017; Yi et al., 2016).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 33203,
+      "end": 33466,
+      "text": "Prior research has shown that in addition to hippocampal atrophy, nucleus accumbens volume loss may also predict conversion from mild cognitive impairment to AD and was associated with severe cognitive impairment regardless of conversion status (Yi et al., 2016).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 33467,
+      "end": 33774,
+      "text": "This involvement of both the hippocampus and nucleus accumbens was also supported in a study reporting that AD patients had severe atrophy in the bilateral hippocampus and nucleus accumbens compared with healthy controls, which was further associated with global clinical severity scores (Nie et al., 2017).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 33775,
+      "end": 34132,
+      "text": "Our results suggest that greater expression of a regionally specific Hcy-related pattern of SGM mainly characterized by volume reductions in the hippocampus and nucleus accumbens could provide a potential mechanism linking higher levels of plasma Hcy during aging to increased vulnerability to the development of subsequent dementia (Seshadri et al., 2002).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 34133,
+      "end": 34379,
+      "text": "Future work, however, is needed to directly assess the potential role of the SSM Hcy-SGM pattern as an early indicator of dementia risk related to CVD and the possibility of additive or synergistic effects on developing AD-related neuropathology.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 34379,
+      "end": 34641,
+      "text": "\n\nThe inverse relationship of Hcy with hippocampal and nucleus accumbens volumes may be due to neurotoxic effects of Hcy, which might be potentiated by a disruption of the blood-brain barrier as well as toxic effects on brain micro-vessels (Kamath et al., 2006).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 34642,
+      "end": 34830,
+      "text": "Evidence from laboratory investigations in rodents has suggested hippocampal neurons are sensitive to excitotoxic and oxidative injury, and cell death induced by Hcy (Kruman et al., 2000).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 34831,
+      "end": 35103,
+      "text": "It has also been suggested that prominent glutamate input from the ventral hippocampus, amygdala, and prefrontal cortex to the nucleus accumbens contributes to selective vulnerability of the involved structures to Hcy-induced glutamate excitotoxicity (Britt et al., 2012).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 35104,
+      "end": 35348,
+      "text": "While we found decreased SGM volumes of both the hippocampus and nucleus accumbens with Hcy, marked vulnerability of the hippocampus to neurotoxic effects of Hcy has been shown in previous studies (Den Heijer et al., 2006; Kruman et al., 2000).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S185",
+      "start": 35349,
+      "end": 35602,
+      "text": "Additionally, evidence from animal models has suggested that Hcy may differentially affect hippocampal subfields (Ataie et al., 2010), which has also been suggested for CVD and AD in the context of human aging (de Flores et al., 2015; Pin et al., 2021).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S186",
+      "start": 35603,
+      "end": 35831,
+      "text": "Thus, future work on hippocampal regional vulnerability to Hcy neurotoxicity is needed to provide further insights into the structural brain-based effects of Hcy and its implications for the associated development of CVD and AD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 35831,
+      "end": 36388,
+      "text": "\n\nPrior studies have additionally suggested that Hcy may lead to brain atrophy by increasing the development of atherosclerosis and thrombosis through damage to the vessel walls, increased oxidative stress and inflammation, and enhanced endothelial cell injury (Hankey and Eikelboom, 2001; Lazzerini et al., 2007). Support for higher plasma Hcy concentrations contributing to brain lesions through vascular pathology has also been suggested, showing a relationship between high levels of Hcy and increased WMH volume (Raz et al., 2012; Wright et al., 2005).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 36388,
+      "end": 36390,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S189",
+      "start": 36390,
+      "end": 36565,
+      "text": "We found that the SSM Hcy-SGM pattern was associated with increased WMH volume and adjusting for other vascular health factors did not appreciably attenuate this relationship.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 36566,
+      "end": 36698,
+      "text": "These associations between the network pattern and total WMH volume also remained after controlling for serum levels of vitamin B12.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 36699,
+      "end": 36809,
+      "text": "Moreover, age was associated with increased WMH load, which then predicted greater Hcy-SGM pattern expression.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 36810,
+      "end": 36947,
+      "text": "These results provide support for the view that Hcy may influence SGM volume through the accumulation of small vessel vascular pathology.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 36948,
+      "end": 37190,
+      "text": "Our findings suggest that WMH burden related to aging may, in part, drive Hcy effects on subcortical brain structures, in a manner that likely exacerbates morphological differences in subcortical areas through a pathway of common CVD impacts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 37191,
+      "end": 37530,
+      "text": "In this case, older age may lead to greater vulnerability to hippocampal and nucleus accumbens atrophy associated with increased levels of Hcy contributing to brain lesions with vascular pathology, through the accumulation of vascular impacts of WMH burden such as ischemic damage (Gouw et al., 2008; Habes et al., 2016; Raz et al., 2012).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 37530,
+      "end": 37532,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S196",
+      "start": 37532,
+      "end": 37905,
+      "text": "That the association between Hcy-related subcortical volumetric differences and cognitive functioning was observed only for performance on a cognitive test of processing speed is also consistent with a vascular origin of the Hcy-SGM pattern, as previous studies have suggested decrements in processing speed may be preferentially associated with CVD (Righart et al., 2013).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 37906,
+      "end": 38086,
+      "text": "These results also remained significant after we controlled for depressive symptoms, indicating that slower processing speed could not be explained by depressed mood in our cohort.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 38087,
+      "end": 38384,
+      "text": "Together, these findings suggest two pathways through which Hcy impacts processing speed performance: a process leading to morphological differences in SGM driven by Hcy and an additional process related to WMH lesion load, which may exacerbate Hcy-related impacts on subcortical brain structures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 38384,
+      "end": 38607,
+      "text": "\n\nConsistent with our findings, previous studies have linked high plasma concentrations of Hcy to cognitive dysfunction with an inverse association most noticeable for processing speed assessed by TMT-A (Feng et al., 2013).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 38608,
+      "end": 38877,
+      "text": "Vascular white matter lesions have also been shown to affect structural cortical brain alterations, particularly in the frontal lobes (Habes et al., 2016), leading to the disruption of frontal-subcortical circuits by subcortical ischemic lesions (Righart et al., 2013).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 38878,
+      "end": 38987,
+      "text": "Our study was limited to investigating how Hcy levels related to the volumes of subcortical brain structures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 38988,
+      "end": 39264,
+      "text": "To gain a full picture of the influence of Hcy on structural brain aging, further research is needed to investigate how frontal lobe and other cortical brain volumes relate to Hcy-related subcortical volumetric differences and cognitive outcomes observed in the present study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 39264,
+      "end": 39472,
+      "text": "\n\nAdditionally, a recent study using viral vector-mediated gene transfer has demonstrated that in non-human primates, the mesoaccumbal circuit underlies high-effortful motivation (Vancraeyenest et al., 2020).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S204",
+      "start": 39473,
+      "end": 39722,
+      "text": "Building on findings from non-human animal models, it was also shown in a recent human neuroimaging study that encoding of effort-related information engages a sub-region of the ventral striatum including the nucleus accumbens (Suzuki et al., 2021).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S205",
+      "start": 39723,
+      "end": 40019,
+      "text": "Thus, deficits in processing speed related to hippocampal and nucleus accumbens volume reductions driven by higher Hcy levels could be related to a disruption of the mesoaccumbal pathway by vascular white matter lesions in regions involved in motivational processing for effortful task responses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 40019,
+      "end": 40169,
+      "text": "\n\nFurther research with larger and more ethnically diverse cohorts of healthy older adults is needed to evaluate the generalizability of our findings.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 40170,
+      "end": 40290,
+      "text": "It is possible that associations between Hcy and deficits in other cognitive domains might be evident in larger samples.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 40291,
+      "end": 40502,
+      "text": "Although we tested a hypothesized pathway using mediation models with bootstrap resampling that showed significant indirect effects, these findings do not permit clear conclusions regarding causal relationships.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 40503,
+      "end": 40857,
+      "text": "Intervention and longitudinal neuroimaging studies would be important to extend our findings and to help clarify whether reductions in volumes of the hippocampus and nucleus accumbens by Hcy are on the causal pathway, leading to cognitive decline and the early development and progression of CVD, as well as the potential for linkages to the risk for AD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 40857,
+      "end": 41320,
+      "text": "\n\n\n## Conclusions\n\nTogether, our findings indicate that with the use of a multivariate SSM of regional covariance, we were able to identify a Hcy-SGM pattern, mainly characterized by brain volume reductions of hippocampus and nucleus accumbens, that may provide an important early brain-based indicator of cognitive aging, suggesting a potential link between a peripheral fluid biomarker of vascular health, CVD, and cognitive dysfunction in healthy older adults.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 41320,
+      "end": 41323,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=Homocysteine (Hcy | pred=factor | obj=cognitive | unit=S5\nB T4 B2 | sub=we | pred=seek | obj=to identify a network pattern in | unit=S6\nB T4 B3 | sub=We | pred=identify | obj=an SSM Hcy-SGM pattern that was | unit=S7\nB T4 B4 | sub=Greater Hcy-SGM pattern expression | pred=associate | obj=with greater white matter hyperintensity (WMH) | unit=S8\nB T4 B5 | sub=Mediation analyses | pred=reveal | obj=that age predicted WMH volume, which | unit=S9\nB T4 B6 | sub=These findings | pred=suggest | obj=that the multivariate SSM Hcy-SGM pattern | unit=S10\nB T4 B7 | sub=Hcy | pred=associate | obj=with an increased risk for Alzheimer’s | unit=S11\nB T4 B8 | sub=Hcy | pred=produce | obj=As a sulfhydryl-containing amino acid | unit=S12\nB T4 B9 | sub=Disturbances in metabolism related to increasing | pred=lead | obj=to excess Hcy concentrations in plasma | unit=S13\nB T4 B10 | sub=Having a high level of plasma | pred=associate | obj=with greater risk for stroke | unit=S14\nB T4 B11 | sub=Higher Hcy levels | pred=related | obj=to medial temporal lobe atrophy in | unit=S15\nB T4 B12 | sub=A recent study of non-demented older | pred=observe | obj=that less gray matter volumes in | unit=S16\nB T4 B13 | sub=the pathway by which elevated Hcy | pred=understand | obj=Furthermore, the pathway by which elevated | unit=S17\nB T4 B14 | sub=Hcy | pred=recognize | obj=as pro-thrombotic | unit=S18\nB T4 B15 | sub=considerable attention | pred=direct | obj=toward both plasma Hcy levels | unit=S19\nB T4 B16 | sub=these findings | pred=suggest | obj=the possibility that WMH burden may | unit=S20\nB T4 B17 | sub=Previous studies | pred=apply | obj=univariate analysis techniques | unit=S21\nB T4 B18 | sub=The Scaled Subprofile Model (SSM; Alexander | pred=provide | obj=a multivariate analysis method based on | unit=S22\nB T4 B19 | sub=The SSM | pred=apply | obj=in numerous structural neuroimaging studies of | unit=S24\nB T4 B20 | sub=It | pred=apply | obj=in structural brain imaging studies of | unit=S25\nB T4 B21 | sub=Applying the SSM to subcortical gray | pred=provide | obj=the opportunity to identify a regional | unit=S26\nB T4 B22 | sub=we | pred=seek | obj=In the present study | unit=S27\nB T4 B23 | sub=We | pred=hypothesize | obj=that multivariate SSM network covariance analysis | unit=S28\nB T4 B24 | sub=article text | pred=material | obj=Methods | unit=S30\nB T4 B25 | sub=article text | pred=participant | obj=## Participants | unit=S32\nB T4 B26 | sub=Participants | pred=volunteer | obj=50–89 | unit=S33\nB T4 B27 | sub=The sample | pred=white | obj=with a mean education level of | unit=S34\nB T4 B28 | sub=Participants | pred=screen | obj=to exclude significant medical, psychiatric, and | unit=S35\nB T4 B29 | sub=Exclusion criteria | pred=include | obj=a Hamilton Depression Rating Scale (HAM-D) | unit=S36\nB T4 B30 | sub=The mean score of the MMSE | pred=29.01 | obj=1.25 | unit=S37\nB T4 B31 | sub=The demographic characteristics | pred=show | obj=in Table 1 | unit=S38\nB T4 B32 | sub=all participants | pred=provide | obj=informed and written consent | unit=S39\nB T4 B33 | sub=The study | pred=review | obj=Institutional | unit=S40\nB T4 B34 | sub=Laboratory Assessments | pred=collect | obj=during the imaging visit | unit=S41\nB T4 B35 | sub=Plasma levels of total Hcy | pred=measure | obj=by fluorescence polarization immunoassay on the | unit=S42\nB T4 B36 | sub=Validation between these two analyzers | pred=confirm | obj=by the Clinical Chemistry Laboratory | unit=S43\nB T4 B37 | sub=Serum vitamin B12 levels | pred=measure | obj=using enhanced chemiluminescence immunoassay on the | unit=S44\nB T4 B38 | sub=APOE alleles | pred=determine | obj=in the Neurogenomics Division of the | unit=S45\nB T4 B39 | sub=extracted DNA | pred=assay | obj=In brief | unit=S46\nB T4 B40 | sub=DNA amplification | pred=perform | obj=using AmpliTaq Gold Fast PCR Master | unit=S47\nB T4 B41 | sub=Each sample | pred=incubate | obj=with 10 units of HhaI restriction | unit=S48\nB T4 B42 | sub=there | pred=be | obj=In this cohort | unit=S49\nB T4 B43 | sub=Cardiorespiratory Fitness Assessment | pred=measure | obj=During a treadmill graded exercise test | unit=S53\nB T4 B44 | sub=Measurements of expiratory gases | pred=determine | obj=by standard techniques of open-circuit spirometry | unit=S54\nB T4 B45 | sub=The treadmill session | pred=begin | obj=at a low intensity | unit=S55\nB T4 B46 | sub=Maximal oxygen consumption (VO2max) to measure | pred=consider | obj=achieved | unit=S56\nB T4 B47 | sub=Termination criteria | pred=consistent | obj=with the guidelines of the American | unit=S57\nB T4 B48 | sub=Signa | pred=scanner | obj=HD | unit=S60\nB T4 B49 | sub=Volumetric T1-weighted MRI scans | pred=acquire | obj=with a spoiled gradient echo (SPGR) | unit=S61\nB T4 B50 | sub=We | pred=obtain | obj=fluid attenuated inverse recovery (FLAIR) T2-weighted | unit=S62\nB T4 B51 | sub=recon-all | pred=pipeline | obj=in FreeSurfer v5.3 | unit=S63\nB T4 B52 | sub=Details of the FreeSurfer processing stages | pred=describe | obj=Fischl | unit=S64\nB T4 B53 | sub=the processing pipeline | pred=involve | obj=automated Talairach transformation | unit=S65\nB T4 B54 | sub=Results of the processing steps | pred=inspect | obj=for segmentation accuracy | unit=S66\nB T4 B55 | sub=The processing stream | pred=provide | obj=bilateral SGM volumes of seven structures | unit=S67\nB T4 B56 | sub=Figure 1 | pred=illustrate | obj=the SGM volumes averaged over the | unit=S68\nB T4 B57 | sub=Fig. | pred=illustration | obj=of SGM structural volumes averaged over | unit=S69\nB T4 B58 | sub=article text | pred=sagittal | obj=Axial | unit=S70\nB T4 B59 | sub=Left hemisphere | pred=appear | obj=on the right side of the | unit=S71\nB T4 B60 | sub=SGM, subcortical gray matter.</figcaption> </figure> | pred=segment | obj=using a combination of T1 and | unit=S72\nB T4 B61 | sub=The processing steps for the segmentation | pred=describe | obj=Franchetti | unit=S73\nB T4 B62 | sub=manually segmented WMH maps | pred=generate | obj=for a subset of 35 participants | unit=S74\nB T4 B63 | sub=mean spatial overlap with reference WMH | pred=compute | obj=at each kappa value | unit=S75\nB T4 B64 | sub=Lesion probability maps for all study | pred=generate | obj=using LGA at the optimal kappa | unit=S76\nB T4 B65 | sub=The WMH volume values | pred=log-transformed | obj=for analyses | unit=S77\nB T4 B66 | sub=We | pred=obtain | obj=estimates of total intracranial volume (TIV) | unit=S78\nB T4 B67 | sub=article text | pred=outcome | obj=### Neuropsychological Outcomes | unit=S79\nB T4 B68 | sub=Neuropsychological tests | pred=administer | obj=to assess performance on cognitive domains | unit=S80\nB T4 B69 | sub=we | pred=focus | obj=For this study | unit=S81\nB T4 B70 | sub=The total time to completion of | pred=transform | obj=measure | unit=S82\nB T4 B71 | sub=We | pred=use | obj=the standardized residual of TMT-B | unit=S83\nB T4 B72 | sub=we | pred=use | obj=For memory | unit=S84\nB T4 B73 | sub=article text | pred=analysis | obj=We | unit=S88\nB T4 B74 | sub=We | pred=apply | obj=the SSM | unit=S89\nB T4 B75 | sub=the mean values across the ROIs | pred=subtract | obj=after natural-log transformation | unit=S91\nB T4 B76 | sub=PCA | pred=perform | obj=set | unit=S92\nB T4 B77 | sub=We | pred=use | obj=Akaike information criteria (AIC; Burnham and | unit=S93\nB T4 B78 | sub=the first set of sequential components | pred=choose | obj=as the best set | unit=S94\nB T4 B79 | sub=resampling | pred=alexander | obj=2012a | unit=S95\nB T4 B80 | sub=The bootstrap distributions | pred=provide | obj=confidence intervals (CI | unit=S96\nB T4 B81 | sub=This network analysis | pred=follow | obj=by univariate regression for the individual | unit=S97\nB T4 B82 | sub=Block-wise multiple regression analysis | pred=perform | obj=to investigate the effects of WMH | unit=S98\nB T4 B83 | sub=total WMH volume | pred=enter | obj=block | unit=S99\nB T4 B84 | sub=We | pred=test | obj=the SSM pattern prediction by vascular | unit=S100\nB T4 B85 | sub=we | pred=repeat | obj=the multiple regression analysis above | unit=S101\nB T4 B86 | sub=We | pred=perform | obj=mediation model analyses | unit=S102\nB T4 B87 | sub=Serial multiple mediation models | pred=use | obj=to evaluate how the Hcy-related SGM | unit=S103\nB T4 B88 | sub=we | pred=test | obj=In these models | unit=S105\nB T4 B89 | sub=We | pred=focus | obj=on three selected cognitive measures expected | unit=S106\nB T4 B90 | sub=We | pred=include | obj=TIV | unit=S107\nB T4 B91 | sub=APOE ε4 status | pred=add | obj=to account for their relation to | unit=S108\nB T4 B92 | sub=Depression ratings on the Geriatric Depression | pred=include | obj=as an additional covariate | unit=S109\nB T4 B93 | sub=A bootstrapping procedure with 10,000 iterations | pred=apply | obj=using the PROCESS macro (v3.4; Hayes, | unit=S110\nB T4 B94 | sub=We | pred=report | obj=completely standardized indirect effects | unit=S111\nB T4 B95 | sub=The 95% percentile bootstrap CIs that | pred=indicate | obj=significant mediation effects | unit=S112\nB T4 B96 | sub=Statistical analyses | pred=perform | obj=using SPSS 26.0 | unit=S113\nB T4 B97 | sub=article text | pred=result | obj=SSM | unit=S116\nB T4 B98 | sub=This model | pred=include | obj=the first component | unit=S117\nB T4 B99 | sub=The regional pattern | pred=characterize | obj=by bilateral volumetric reductions in the | unit=S118\nB T4 B100 | sub=Figure 2B | pred=present | obj=the Hcy-related SSM loadings for the | unit=S119\nB T4 B101 | sub=subject | pred=score | obj=total | unit=S120\nB T4 B102 | sub=The scatterplot | pred=show | obj=that higher total Hcy levels were | unit=S121\nB T4 B103 | sub=article text | pred=loading | obj=for the SSM network pattern of | unit=S122\nB T4 B104 | sub=The gray bars | pred=indicate | obj=point estimates for the loadings | unit=S123\nB T4 B105 | sub=L = left; R = right; | pred=confirm | obj=that each of the bilateral hippocampus | unit=S124\nB T4 B106 | sub=Each of bilateral caudate (β = | pred=show | obj=significant univariate positive associations | unit=S125\nB T4 B107 | sub=we | pred=test | obj=the Hcy-SGM network pattern prediction by | unit=S126\nB T4 B108 | sub=there | pred=be | obj=between total WMH volume | unit=S127\nB T4 B109 | sub=each | pred=emerge | obj=as statistically significant predictors (β = | unit=S128\nB T4 B110 | sub=age | pred=predictor | obj=of the network pattern | unit=S129\nB T4 B111 | sub=the associations of age, WMH volume, | pred=remain | obj=In a follow-up analysis with serum | unit=S131\nB T4 B112 | sub=We | pred=seek | obj=to examine whether the association of | unit=S133\nB T4 B113 | sub=The mediation model | pred=show | obj=that the influence of age on | unit=S134\nB T4 B114 | sub=the individual associations | pred=indicate | obj=that increasing age predicted greater total | unit=S135\nB T4 B115 | sub=Mediation | pred=model | obj=of total WMH volume | unit=S136\nB T4 B116 | sub=Boxes | pred=indicate | obj=hypothesized variables | unit=S137\nB T4 B117 | sub=Black solid lines | pred=indicate | obj=statistically significant paths | unit=S138\nB T4 B118 | sub=Standardized path coefficients with TIV, sex, | pred=present | obj=Standardized path coefficients with TIV, sex, | unit=S139\nB T4 B119 | sub=zero | pred=lie | obj=In this model | unit=S140\nB T4 B120 | sub=WMH | pred=volume | obj=Hcy-related | unit=S141\nB T4 B121 | sub=Boxes | pred=indicate | obj=hypothesized variables | unit=S142\nB T4 B122 | sub=Black solid lines | pred=indicate | obj=statistically significant paths | unit=S143\nB T4 B123 | sub=Standardized path coefficients with TIV, the | pred=present | obj=Standardized path coefficients with TIV, the | unit=S144\nB T4 B124 | sub=This sequential mediation effect | pred=remain | obj=significant | unit=S145\nB T4 B125 | sub=We | pred=extend | obj=this mediation analysis | unit=S146\nB T4 B126 | sub=The serial mediation model | pred=reveal | obj=that the relationship between age and | unit=S147\nB T4 B127 | sub=adjusting for depression ratings | pred=diminish | obj=this mediation effect | unit=S148\nB T4 B128 | sub=the serial mediation | pred=show | obj=the following pattern | unit=S150\nB T4 B129 | sub=we | pred=find | obj=a significant direct effect (Effect = | unit=S151\nB T4 B130 | sub=There | pred=be | obj=between age | unit=S152\nB T4 B131 | sub=serial mediation models of age predicting | pred=show | obj=In contrast | unit=S153\nB T4 B132 | sub=we | pred=identify | obj=a Hcy-related SGM network covariance pattern | unit=S155\nB T4 B133 | sub=This pattern | pred=characterize | obj=by reductions in bilateral nucleus accumbens | unit=S156\nB T4 B134 | sub=Greater expression of the Hcy-SGM network | pred=associate | obj=with increasing age, greater total WMH | unit=S157\nB T4 B135 | sub=age | pred=associate | obj=with increased WMH load | unit=S158\nB T4 B136 | sub=sample | pred=support | obj=the robustness of our observed findings | unit=S159\nB T4 B137 | sub=the direct effects of age on | pred=remain | obj=significant | unit=S160\nB T4 B138 | sub=Our study | pred=seek | obj=to investigate the effects of total | unit=S162\nB T4 B139 | sub=This Hcy-related pattern | pred=characterize | obj=by reductions in the bilateral hippocampus | unit=S163\nB T4 B140 | sub=These findings | pred=consistent | obj=with prior studies that have shown | unit=S164\nB T4 B141 | sub=In line with our findings, Tan | pred=observe | obj=an association of higher Hcy levels | unit=S165\nB T4 B142 | sub=The authors | pred=find | obj=hippocampal volume reductions related to Hcy | unit=S166\nB T4 B143 | sub=article text | pred=take | obj=a multivariate network approach | unit=S167\nB T4 B144 | sub=we | pred=find | obj=greater expression of the Hcy-SGM network | unit=S169\nB T4 B145 | sub=Future work with larger samples | pred=need | obj=to examine the question of sex-specific | unit=S170\nB T4 B146 | sub=We | pred=observe | obj=relative increases in gray matter volume | unit=S172\nB T4 B147 | sub=the basal ganglia structural volumes showing | pred=significant | obj=suggesting that they may be regions | unit=S173\nB T4 B148 | sub=Such regional pattern increases | pred=reflect | obj=subcortical brain volumes relatively less affected | unit=S174\nB T4 B149 | sub=Future longitudinal studies of SGM morphological | pred=important | obj=physiological | unit=S175\nB T4 B150 | sub=article text | pred=correspond | obj=with those found in previous studies | unit=S176\nB T4 B151 | sub=Prior research | pred=show | obj=that in addition to hippocampal atrophy, | unit=S177\nB T4 B152 | sub=This involvement of both the hippocampus | pred=support | obj=in a study reporting that AD | unit=S178\nB T4 B153 | sub=Our results | pred=suggest | obj=that greater expression of a regionally | unit=S179\nB T4 B154 | sub=Future work | pred=need | obj=to directly assess the potential role | unit=S180\nB T4 B155 | sub=The inverse relationship of Hcy with | pred=effect | obj=of Hcy | unit=S181\nB T4 B156 | sub=Evidence from laboratory investigations in rodents | pred=suggest | obj=hippocampal neurons are sensitive to excitotoxic | unit=S182\nB T4 B157 | sub=It | pred=suggest | obj=that prominent glutamate input from the | unit=S183\nB T4 B158 | sub=marked vulnerability of the hippocampus to | pred=show | obj=in previous studies | unit=S184\nB T4 B159 | sub=evidence from animal models | pred=suggest | obj=that Hcy may differentially affect hippocampal | unit=S185\nB T4 B160 | sub=future work on hippocampal regional vulnerability | pred=need | obj=to provide further insights into the | unit=S186\nB T4 B161 | sub=Support for higher plasma Hcy concentrations | pred=suggest | obj=relationship | unit=S187\nB T4 B162 | sub=We | pred=find | obj=that the SSM Hcy-SGM pattern was | unit=S189\nB T4 B163 | sub=These associations between the network pattern | pred=remain | obj=serum | unit=S190\nB T4 B164 | sub=age | pred=associate | obj=with increased WMH load, which then | unit=S191\nB T4 B165 | sub=These results | pred=provide | obj=support | unit=S192\nB T4 B166 | sub=Our findings | pred=suggest | obj=that WMH burden related to aging | unit=S193\nB T4 B167 | sub=older age | pred=lead | obj=In this case | unit=S194\nB T4 B168 | sub=That the association between Hcy-related subcortical | pred=consistent | obj=with a vascular origin of the | unit=S196\nB T4 B169 | sub=These results | pred=remain | obj=significant | unit=S197\nB T4 B170 | sub=these findings | pred=suggest | obj=two pathways through which Hcy impacts | unit=S198\nB T4 B171 | sub=previous studies | pred=link | obj=high plasma concentrations of Hcy | unit=S199\nB T4 B172 | sub=Vascular white matter lesions | pred=show | obj=to affect structural cortical brain alterations, | unit=S200\nB T4 B173 | sub=Our study | pred=limited | obj=Hcy | unit=S201\nB T4 B174 | sub=further research | pred=need | obj=to investigate how frontal lobe and | unit=S202\nB T4 B175 | sub=a recent study using viral vector-mediated | pred=demonstrate | obj=that in non-human primates, the mesoaccumbal | unit=S203\nB T4 B176 | sub=it | pred=show | obj=in a recent human neuroimaging study | unit=S204\nB T4 B177 | sub=deficits in processing speed related | pred=related | obj=to a disruption of the mesoaccumbal | unit=S205\nB T4 B178 | sub=Further research with larger and more | pred=need | obj=to evaluate the generalizability of our | unit=S206\nB T4 B179 | sub=It | pred=possible | obj=that associations between Hcy and deficits | unit=S207\nB T4 B180 | sub=these findings | pred=permit | obj=clear conclusions regarding causal relationships | unit=S208\nB T4 B181 | sub=Intervention and longitudinal neuroimaging studies | pred=important | obj=our | unit=S209\nB T4 B182 | sub=Conclusions | pred=indicate | obj=that with the use of a | unit=S210",
+  "expected": {
+    "assertion_count": 182,
+    "minimum_concept_count": 309,
+    "minimum_structural_row_count": 868,
+    "minimum_knowledge_map_node_count": 868,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

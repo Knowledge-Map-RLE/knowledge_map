@@ -1,4 +1,5 @@
 import json
+import hashlib
 import logging
 import mimetypes
 import os
@@ -160,8 +161,8 @@ class ArticleEditorService:
             return {"success": False, "uid": doc_id, "error": "S3 upload failed"}
         db.cypher_query(
             "MATCH (d:Document {uid: $uid}) "
-            "SET d.user_md_s3_key = $key, d.edit_date = datetime($now)",
-            {"uid": doc_id, "key": md_key, "now": now},
+            "SET d.user_md_s3_key = $key, d.edit_date = datetime($now), d.current_source_hash = $source_hash",
+            {"uid": doc_id, "key": md_key, "now": now, "source_hash": hashlib.sha256(text.encode("utf-8")).hexdigest()},
         )
         return {"success": True, "uid": doc_id, "text_length": len(text)}
 
@@ -191,6 +192,9 @@ class ArticleEditorService:
     async def save_statements(
         self, doc_id: str, statements: list[dict[str, Any]], user_uid: str | None = None
     ) -> dict[str, Any]:
+        active, _ = db.cypher_query("MATCH (d:Document {uid:$uid}) RETURN d.active_pipeline_version", {"uid":doc_id})
+        if active and active[0][0]:
+            return {"success":False,"error":"immutable_version","message":"Extracted versions are immutable; create and apply a new version."}
         status = await self.get_document_status(doc_id)
         if not self._is_editable_status(status):
             return {"success": False, "error": "not_annotated",
@@ -337,6 +341,9 @@ class ArticleEditorService:
             return {"success": False, "error": "not_annotated",
                     "message": "Редактирование доступно только для аннотированных документов."}
 
+        active, _ = db.cypher_query("MATCH (d:Document {uid:$uid}) RETURN d.active_pipeline_version", {"uid":doc_id})
+        if active and active[0][0]:
+            return {"success":False,"error":"immutable_version","message":"Extracted versions are immutable; create and apply a new version."}
         old_statements = self._load_statements_for_doc(doc_id)
 
         db.cypher_query(
@@ -519,10 +526,27 @@ class ArticleEditorService:
         return {"success": True, "uid": doc_id, "title": title}
 
     async def get_blocks(self, doc_id: str) -> dict[str, Any]:
+        # Applied pipeline versions are immutable and authoritative. Reading
+        # HAS_BLOCK alone can expose stale legacy editor rows instead of the
+        # selected ArticlePipelineRun payload.
+        pipeline_rows, _ = db.cypher_query(
+            "MATCH (d:Document {uid: $uid})-[:HAS_PIPELINE_VERSION]->(v:ArticlePipelineRun) "
+            "WHERE d.active_pipeline_version = v.uid "
+            "RETURN v.payload",
+            {"uid": doc_id},
+        )
+        if pipeline_rows and pipeline_rows[0][0]:
+            try:
+                payload = json.loads(pipeline_rows[0][0])
+            except (json.JSONDecodeError, TypeError):
+                payload = {}
+            blocks = payload.get("blocks")
+            if isinstance(blocks, list):
+                return {"blocks": blocks, "success": True}
         results, _ = db.cypher_query(
             "MATCH (d:Document {uid: $uid})-[:HAS_BLOCK]->(b:ArticleBlock) "
             "OPTIONAL MATCH (u:User {uid: b.created_by_uid}) "
-            "RETURN b.uid, b.block_type, b.data, b.order, u ORDER BY b.order",
+            "RETURN b.uid, b.block_type, b.data, b.order, u, b.schema_version ORDER BY b.order",
             {"uid": doc_id},
         )
         blocks = []
@@ -532,6 +556,7 @@ class ArticleEditorService:
             except (json.JSONDecodeError, TypeError):
                 data = {}
             blocks.append({
+                "schemaVersion": row[5] if len(row) > 5 else None,
                 "instanceId": row[0],
                 "blockType": coerce_block_type(row[1]),
                 "data": data,

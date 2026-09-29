@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import StatementsPanel from './StatementsPanel';
+import PipelineVersions from './PipelineVersions';
+import PipelineStructuralRows, { type StructuralRow } from './PipelineStructuralRows';
 import AuthorBadge from './AuthorBadge';
 import WysiwygEditor from './wysiwyg/WysiwygEditor';
 import { blocksToStatementsRaw } from './blockConverter';
@@ -22,6 +24,9 @@ interface EditorWorkspaceProps {
     onCreateNew?: () => void;
     /** Текущая статья уже является золотым эталоном. */
     isGold?: boolean;
+    /** Статья — эталон полного пайплайна article_pipeline (is_gold_standard=true).
+     *  Блоки v2 выводятся структурными строками только для чтения. */
+    isGoldStandard?: boolean;
     /** Фиксирует текущие строки как эталон; возвращает текст ошибки или null. */
     onFixGold?: () => Promise<string | null>;
 }
@@ -33,7 +38,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     isParsing, parseProgress, parseError,
     onApplyBlocks,
     onSave, saveStatus, articleUuid, articleAuthor, onUploadImage, onCreateNew,
-    isGold = false, onFixGold,
+    isGold = false, isGoldStandard = false, onFixGold,
 }) => {
     const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
     const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
@@ -58,6 +63,12 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         [blocks, articleUuid, statements],
     );
 
+    // Для статей-эталонов полного пайплайна строки v2 уже являются каноническими.
+    // Их нельзя конвертировать обратно через statementsToBlocks: такой путь
+    // сохраняет только прямые триплеты и теряет container/evidence типы.
+    const isV2Blocks = useMemo(() => blocks.some((b) => b.schemaVersion === 2), [blocks]);
+    const editorBlocks = blocks;
+
     const selectedStatement = useMemo(() =>
         selectedStatementIdx !== null && selectedStatementStmt
             ? { index: selectedStatementIdx, stmt: selectedStatementStmt }
@@ -78,14 +89,14 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
      *  внутреннего onBlur поля (list-поля коммитят значение именно там),
      *  а также объединяет быстрые переходы между полями в один запрос. */
     const handleEditorBlurCapture = useCallback(() => {
-        if (!onSave) return;
+        if (isGoldStandard || !onSave) return;
         if (autosaveTimerRef.current !== null) window.clearTimeout(autosaveTimerRef.current);
         autosaveTimerRef.current = window.setTimeout(() => {
             autosaveTimerRef.current = null;
             if (blocks.length === 0) return;
             void onSave();
         }, 600);
-    }, [onSave, blocks.length]);
+    }, [isGoldStandard, onSave, blocks.length]);
 
     const handleFixGold = useCallback(async () => {
         if (!onFixGold || fixStatus === 'busy') return;
@@ -135,6 +146,10 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         setHighlightIndex(index);
     }, []);
 
+    // v2-блоки не золотого эталона — инспекция версий пайплайна.
+    if (isV2Blocks && articleUuid && !isGoldStandard) {
+        return <PipelineVersions docId={articleUuid} />;
+    }
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
             <div style={{
@@ -153,21 +168,34 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                     + Новая статья
                 </button>
                 <div style={{ flex: 1 }} />
-                <button
-                    onClick={onSave}
-                    style={{
-                        padding: '4px 12px', fontSize: 12, fontWeight: 500,
-                        background: saveStatus === 'saving' ? '#d1d5db'
-                            : saveStatus === 'saved' ? '#d1fae5'
-                            : saveStatus === 'error' ? '#fee2e2'
-                            : '#6366f1',
-                        color: saveStatus === 'saving' || saveStatus === 'idle' ? 'white' : '#374151',
-                        border: 'none', borderRadius: 4, cursor: 'pointer',
-                    }}
-                >
-                    {saveLabel}
-                </button>
-                {onFixGold && (
+                {isGoldStandard ? (
+                    <span
+                        title="Статья — эталон полного пайплайна (is_gold_standard=true); блоки неизменяемы"
+                        style={{
+                            padding: '4px 12px', fontSize: 12, fontWeight: 600,
+                            background: '#ecfdf5', color: '#047857',
+                            border: '1px solid #a7f3d0', borderRadius: 4,
+                        }}
+                    >
+                        GOLD pipeline · только чтение
+                    </span>
+                ) : (
+                    <button
+                        onClick={onSave}
+                        style={{
+                            padding: '4px 12px', fontSize: 12, fontWeight: 500,
+                            background: saveStatus === 'saving' ? '#d1d5db'
+                                : saveStatus === 'saved' ? '#d1fae5'
+                                : saveStatus === 'error' ? '#fee2e2'
+                                : '#6366f1',
+                            color: saveStatus === 'saving' || saveStatus === 'idle' ? 'white' : '#374151',
+                            border: 'none', borderRadius: 4, cursor: 'pointer',
+                        }}
+                    >
+                        {saveLabel}
+                    </button>
+                )}
+                {!isGoldStandard && onFixGold && (
                     <>
                         <button
                             onClick={handleFixGold}
@@ -250,13 +278,22 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                             )}
                         </button>
                     </div>
-                    <WysiwygEditor
-                        blocks={blocks}
-                        statements={statements}
-                        articleUuid={articleUuid}
-                        onApply={onApplyBlocks}
-                        onUploadImage={onUploadImage}
-                    />
+                    {isGoldStandard ? (
+                        <PipelineStructuralRows
+                            rows={blocks as StructuralRow[]}
+                            nodes={[]}
+                            busy={false}
+                        />
+                    ) : (
+                        <WysiwygEditor
+                            blocks={editorBlocks}
+                            statements={statements}
+                            articleUuid={articleUuid}
+                            readOnly={false}
+                            onApply={onApplyBlocks}
+                            onUploadImage={onUploadImage}
+                        />
+                    )}
                 </div>
 
             </div>

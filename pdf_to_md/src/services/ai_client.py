@@ -34,7 +34,7 @@ class AIModelClient:
         self,
         raw_text: str,
         docling_markdown: str,
-        model_id: str = "qwen/qwen3-4b",
+        model_id: str = "openai_gpt6_luna",
         max_tokens: int = 4096,
         temperature: float = 0.3,
         timeout: int = 600,

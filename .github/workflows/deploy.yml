@@ -92,7 +92,10 @@ jobs:
             ${{ steps.registry.outputs.prefix }}/${{ matrix.service }}:latest
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}
-          build-contexts: ${{ matrix.needs_shared && 'shared: ./shared' || '' }}
+          build-contexts: |
+            shared: ./shared
+            config: .
+            core: ./knowledge_map_core
 
   deploy:
     runs-on: ubuntu-latest
@@ -129,7 +132,7 @@ jobs:
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
-          CLOUDRU_API_KEY: ${{ secrets.CLOUDRU_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           OPENCITATIONS_ACCESS_TOKEN: ${{ secrets.OPENCITATIONS_ACCESS_TOKEN }}
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}

@@ -65,7 +65,8 @@ deploy/k8s/
 | `INTERNAL_TOKEN` | Токен межсервисных вызовов api → billing |
 | `S3_ACCESS_KEY` / `S3_SECRET_KEY` | Ключи Object Storage cloud.ru |
 | `YOOKASSA_SHOP_ID` / `YOOKASSA_SECRET_KEY` | ЮKassa |
-| `CLOUDRU_API_KEY` | cloud.ru Foundation Models API ключ |
+| `OPENAI_API_KEY` | OpenAI API key для GPT-6 Luna (Responses API, обязателен для production) |
+| `CLOUDRU_API_KEY` | Необязательный ключ альтернативного cloud.ru провайдера |
 | `OPENALEX_API_KEY` | OpenAlex |
 | `OPENCITATIONS_ACCESS_TOKEN` | OpenCitations |
 | `NCBI_API_KEY` | NCBI/PubMed |

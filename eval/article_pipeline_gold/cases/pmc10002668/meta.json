@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10002668",
+  "document_uid": "PMC10002668",
+  "article_title": "Aging Atlas Reveals Cell-Type-Specific Regulation of Pro-longevity Strategies",
+  "doi": "10.1101/2023.02.28.530490",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10002668/PMC10002668.md"
+  },
+  "article_sha256": "b911ae5f20e9c3b8fe8ff10878d3195a41a20ab9568d0c727c92d2f1af765925",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

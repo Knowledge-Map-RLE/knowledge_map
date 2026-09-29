@@ -88,6 +88,8 @@ export interface Document {
     pmc_id?: string;
     doi?: string;
     source?: string;
+    is_gold_standard?: boolean;
+    gold_standard_source_pmc_id?: string;
     files: Record<string, string>;
 }
 

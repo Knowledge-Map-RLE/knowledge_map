@@ -129,6 +129,9 @@ def statements_to_graph(
          "raw": [{"subject_text", "predicate", "object_text"}],
          "node_text": {node_id: читаемый текст}, "count": int}
     """
+    if any(st.get("semantic_data") for st in statements):
+        from .typed_statement_graph import typed_statement_graph
+        return typed_statement_graph(doc_id, statements, predicate_mode, max_nodes)
     rows: List[Dict[str, Any]] = []
     for st in statements or []:
         subj = str(st.get("subject_text") or "").strip()
@@ -136,7 +139,7 @@ def statements_to_graph(
         obj = str(st.get("object_text") or "").strip()
         if not subj or not obj or not pred:
             continue
-        if exclude_noise and pred.lower() in _NOISE_PREDICATES:
+        if exclude_noise and st.get("type") == "META":
             continue
         rows.append(st)
 

@@ -36,17 +36,25 @@ spec:
             - name: ADMIN_UIDS
               value: ""
             - name: LLM_EXTRACT_MODEL
-              value: "deepseek-ai/DeepSeek-V4-Flash"
+              value: "gpt-6-luna"
+            - name: MODEL_PROFILE
+              value: "openai_gpt6_luna"
+            - name: AI_UI_PROFILE
+              value: "openai_gpt6_luna"
+            - name: LLM_EXTRACT_PROFILE
+              value: "openai_gpt6_luna"
             - name: CLOUDRU_BASE_INPUT_PRICE
               value: "0.00001853"
             - name: CLOUDRU_BASE_OUTPUT_PRICE
               value: "0.00003708"
             - name: LLM_MAX_CHUNK_CHARS
               value: "3500"
+            - name: LLM_CONTEXT_LENGTH
+              value: "1050000"
             - name: LLM_MAX_TOKENS
-              value: "80000"
+              value: "128000"
             - name: LLM_TIMEOUT
-              value: "1800"
+              value: "3600"
             - name: LLM_TEMPERATURE
               value: "0.1"
             - name: LLM_MAX_RETRIES

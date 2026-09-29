@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10002395",
+  "document_uid": "PMC10002395",
+  "article_title": "Biofuel Ash Aging in Acidic Environment and Its Influence on Cd Immobilization",
+  "doi": "10.3390/ijerph20054635",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10002395/PMC10002395.md"
+  },
+  "article_sha256": "fd76d8f667d42392fc0cfcbe5ec110cfafacb6454718c958bf5c625f48473a63",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

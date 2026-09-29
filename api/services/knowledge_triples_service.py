@@ -98,8 +98,9 @@ class KnowledgeTriplesService:
              trim(coalesce(s.subject_text, '')) AS subj,
              trim(coalesce(s.predicate, '')) AS pred,
              trim(coalesce(s.object_text, '')) AS obj
-        WHERE subj <> '' AND pred <> '' AND obj <> ''
-          AND NOT toLower(pred) IN $noise_predicates
+        WHERE s.schema_version IS NULL AND subj <> '' AND pred <> ''
+          AND (obj <> '' OR s.arity = 1)
+          AND NOT (s.type = 'META' AND toLower(pred) IN $noise_predicates)
         RETURN s.uid AS uid,
                coalesce(s.subject_type, 'concept') AS subject_type,
                subj AS subject_text,
@@ -127,6 +128,22 @@ class KnowledgeTriplesService:
                 "source_block_id": str(row[7] or "").strip(),
                 "is_goal": bool(row[8]),
             }
+        # Versioned maps are exposed only after explicit activation.
+        import json
+        rows, _ = db.cypher_query(
+            "MATCH (d:Document)-[:HAS_PIPELINE_VERSION]->(v:ArticlePipelineRun) "
+            "WHERE d.active_pipeline_version = v.uid "
+            "MATCH (v)-[:HAS_ENTITY]->(e) RETURN e, d.uid, v.uid")
+        for entity, doc_id, version_id in rows:
+            data = json.loads(entity["payload"])
+            is_assertion = "subject" in data
+            triples[entity["uid"]] = {
+                "uid":entity["uid"], "subject_text":entity.get("display_text",data.get("label","")),
+                "object_text":"", "predicate":data["predicate"]["label"] if is_assertion else "",
+                "subject_type":"concept", "object_type":"none",
+                "type":"EXTRACTED" if is_assertion else "CONCEPT",
+                "source_block_id":entity["uid"], "display_text":entity.get("display_text",data.get("label","")),
+                "schemaVersion":2,"article_id":doc_id,"version_id":version_id,"semantic_data":data}
         return triples
 
     @staticmethod
@@ -487,7 +504,7 @@ class KnowledgeTriplesService:
             }
         """
         try:
-            triples = await self._load_all_triples()
+            triples = {uid:row for uid,row in (await self._load_all_triples()).items() if row.get('schemaVersion') != 2}
             engine = DependencyEngine()
 
             verified_edges = await engine.build_dependency_graph(
@@ -620,6 +637,8 @@ class KnowledgeTriplesService:
         """
         if stmt is None:
             return f"{uid}\n{uid}"
+        if stmt.get('schemaVersion') == 2:
+            return '\n' + stmt['display_text']
 
         if block_names is None:
             block_names = {}

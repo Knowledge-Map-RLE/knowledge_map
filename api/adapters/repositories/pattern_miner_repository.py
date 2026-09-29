@@ -8,6 +8,7 @@ Responsibility: чтение утверждений (KnowledgeStatement) из Ne
 from __future__ import annotations
 
 import logging
+import json
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from neomodel import db
@@ -87,7 +88,7 @@ class PatternMinerRepository:
         where_noise = ""
         if noise_filter:
             params["noise"] = list(_NOISE)
-            where_noise = "AND NOT s.predicate IN $noise "
+            where_noise = "AND coalesce(s.type, 'FACT') <> 'META' "
         if doc_ids:
             params["doc_ids"] = list(doc_ids)
             rows, _ = db.cypher_query(
@@ -98,7 +99,7 @@ class PatternMinerRepository:
                 "RETURN d.uid AS doc_id, s.uid AS uid, s.subject_text AS subject_text, "
                 "s.predicate AS predicate, s.object_text AS object_text, "
                 "s.subject_type AS subject_type, s.object_type AS object_type, "
-                "s.type AS type, s.confidence AS confidence "
+                "s.type AS type, s.confidence AS confidence, s.payload AS semantic_data, s.display_text AS display_text "
                 "ORDER BY doc_id, s.sort_order",
                 params,
             )
@@ -116,7 +117,7 @@ class PatternMinerRepository:
                 "RETURN d.uid AS doc_id, s.uid AS uid, s.subject_text AS subject_text, "
                 "s.predicate AS predicate, s.object_text AS object_text, "
                 "s.subject_type AS subject_type, s.object_type AS object_type, "
-                "s.type AS type, s.confidence AS confidence "
+                "s.type AS type, s.confidence AS confidence, s.payload AS semantic_data, s.display_text AS display_text "
                 "ORDER BY doc_id, s.sort_order",
                 {**params, "doc_limit": max(1, int(doc_limit))},
             )
@@ -132,12 +133,15 @@ class PatternMinerRepository:
                 "subject_type": r[5],
                 "object_type": r[6],
                 "type": r[7],
-                "confidence": r[8],
+                "confidence": r[8], "semantic_data": r[9], "display_text": r[10],
             }
             by_doc.setdefault(doc_id, []).append(stmt)
 
         out = []
         for doc_id, statements in sorted(by_doc.items()):
+            canonical = self._canonical_document(doc_id)
+            if canonical is not None:
+                statements = canonical
             if statements_per_doc_cap and len(statements) > statements_per_doc_cap:
                 step = len(statements) / statements_per_doc_cap
                 statements = [
@@ -148,12 +152,15 @@ class PatternMinerRepository:
 
     def load_document(self, doc_id: str) -> List[Dict[str, Any]]:
         """Возвращает утверждения одного документа."""
+        canonical = self._canonical_document(doc_id)
+        if canonical is not None:
+            return canonical
         rows, _ = db.cypher_query(
             "MATCH (d:Document {uid: $doc_id})-[:HAS_STATEMENT]->(s:KnowledgeStatement) "
-            "WHERE s.predicate IS NOT NULL AND NOT s.predicate IN $noise "
+            "WHERE s.predicate IS NOT NULL AND coalesce(s.type, 'FACT') <> 'META' "
             "RETURN s.uid AS uid, s.subject_text AS subject_text, s.predicate AS predicate, "
             "s.object_text AS object_text, s.subject_type AS subject_type, "
-            "s.object_type AS object_type, s.type AS type, s.confidence AS confidence "
+            "s.object_type AS object_type, s.type AS type, s.confidence AS confidence, s.payload AS semantic_data, s.display_text AS display_text "
             "ORDER BY s.sort_order",
             {"doc_id": doc_id, "noise": list(_NOISE)},
         )
@@ -167,15 +174,26 @@ class PatternMinerRepository:
                 "subject_type": r[4],
                 "object_type": r[5],
                 "type": r[6],
-                "confidence": r[7],
+                "confidence": r[7], "semantic_data": r[8], "display_text": r[9],
             })
         return out
+
+    def _canonical_document(self, doc_id: str):
+        rows, _ = db.cypher_query(
+            "MATCH (d:Document {uid:$doc})-[:HAS_PIPELINE_VERSION]->(v:ArticlePipelineRun) "
+            "WHERE v.uid=d.active_pipeline_version RETURN v.payload", {"doc":doc_id})
+        if not rows:
+            return None
+        result = json.loads(rows[0][0])
+        display = {n["id"]:n["display_text"] for n in result["graph"]["nodes"]}
+        return [{"uid":b["instanceId"], "semantic_data":b["data"],
+                 "display_text":display[b["instanceId"]]} for b in result["blocks"]]
 
     def list_documents(self) -> List[Dict[str, Any]]:
         """Список документов с количеством утверждений (для выбора цели)."""
         rows, _ = db.cypher_query(
             "MATCH (d:Document)-[:HAS_STATEMENT]->(s:KnowledgeStatement) "
-            "WHERE s.predicate IS NOT NULL AND NOT s.predicate IN $noise "
+            "WHERE s.predicate IS NOT NULL AND coalesce(s.type, 'FACT') <> 'META' "
             "RETURN d.uid AS doc_id, count(s) AS cnt "
             "ORDER BY cnt DESC LIMIT 500",
             {"noise": list(_NOISE)},

@@ -5,7 +5,8 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 proc = subprocess.Popen(
-    [sys.executable, "-m", "uvicorn", "web.app:app", "--host", "0.0.0.0", "--port", "8000"],
+    [sys.executable, "-m", "uvicorn", "web.app:app", "--host", "0.0.0.0", "--port", "8000",
+     "--timeout-keep-alive", "120"],
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT,
     text=True,

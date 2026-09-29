@@ -1,8 +1,10 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Header from '../../widgets/Header';
+import MarkdownEditor from '../../widgets/MarkdownEditor';
 import Document_downloader_ui, { type DocumentListHandle } from '../Data_extraction/Document_downloader_ui';
 import EditorWorkspace from './Editor/EditorWorkspace';
 import AgentChat from './Editor/AgentChat';
+import PipelineVersions from './Editor/PipelineVersions';
 import ArticleMap from './Editor/ArticleMap';
 import EvidencePatterns from './Editor/EvidencePatterns';
 import { ChatPanel } from '../Social_network/components/ChatPanel';
@@ -38,8 +40,9 @@ const ArticleEditorUI: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        if (!isAuthenticated) return;
         void reloadGoldIndex();
-    }, [reloadGoldIndex]);
+    }, [isAuthenticated, reloadGoldIndex]);
 
     const openArticleChat = useCallback(() => {
         if (!selectedDocId) return;
@@ -62,7 +65,7 @@ label: selectedDocument?.title || selectedDocId,
     }, [selectedDocId, selectedDocument]);
 
     const {
-        article, text, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
+        article, text, sourceMarkdown, statements, blocks, articleUuid, isParsing, parseProgress, parseError, saveStatus, notAnnotatedMessage,
         loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, applyBlocks, triggerParse, save, uploadImage,
     } = useArticleState();
 
@@ -163,6 +166,12 @@ label: selectedDocument?.title || selectedDocId,
                             Редактор
                         </button>
                         <button
+                            className={`${styles.tabButton} ${activeTab === 'text' ? styles.active : ''}`}
+                            onClick={() => setActiveTab('text')}
+                        >
+                            Текст
+                        </button>
+                        <button
                             className={`${styles.tabButton} ${activeTab === 'graph' ? styles.active : ''}`}
                             onClick={() => setActiveTab('graph')}
                         >
@@ -173,6 +182,14 @@ label: selectedDocument?.title || selectedDocId,
                             onClick={() => setActiveTab('patterns')}
                         >
                             Паттерны
+                        </button>
+                        <button
+                            className={`${styles.tabButton} ${activeTab === 'pipeline' ? styles.active : ''}`}
+                            onClick={() => setActiveTab('pipeline')}
+                            disabled={!selectedDocId}
+                            title={selectedDocId ? 'Версии пайплайна и метрики статьи' : 'Сначала откройте статью'}
+                        >
+                            Пайплайн
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'chat' ? styles.active : ''}`}
@@ -220,11 +237,27 @@ label: selectedDocument?.title || selectedDocId,
                                     onUploadImage={uploadImage}
                                     onCreateNew={handleCreateNew}
                                     isGold={!!selectedDocId && !!goldByDocId[selectedDocId]}
+                                    isGoldStandard={selectedDocument?.is_gold_standard === true}
                                     onFixGold={handleFixGold}
                                 />
-                            )
-                        )}
-                        {activeTab === 'graph' && (
+                             )
+                         )}
+                         {activeTab === 'text' && (
+                             <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                                 {selectedDocId ? (
+                                     <MarkdownEditor
+                                         value={sourceMarkdown}
+                                         onChange={() => {}}
+                                         readOnly={true}
+                                     />
+                                 ) : (
+                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
+                                         Выберите файл или создайте новую статью
+                                     </div>
+                                 )}
+                             </div>
+                         )}
+                         {activeTab === 'graph' && (
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
                                 {selectedDocId ? (
                                     <ArticleMap blocks={blocks} />
@@ -242,6 +275,17 @@ label: selectedDocument?.title || selectedDocId,
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
                                         Выберите файл или создайте новую статью
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {activeTab === 'pipeline' && (
+                            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+                                {selectedDocId && isAuthenticated ? (
+                                    <PipelineVersions docId={selectedDocId} enabled />
+                                ) : (
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
+                                        {!selectedDocId ? 'Выберите файл или создайте новую статью' : 'Войдите в аккаунт, чтобы просмотреть версии пайплайна'}
                                     </div>
                                 )}
                             </div>

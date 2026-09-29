@@ -1,0 +1,2291 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 189,
+      "text": "# Crosstalk between Oxidative Stress and Aging in Neurodegeneration Disorders\n\n**Авторы:** Abdelhamid Rehab F., Nagano Seiichi\n\n**Журнал:** Cells (2023)\n\n**DOI:** 10.3390/cells12050753\n\n\n##",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 190,
+      "end": 200,
+      "text": "Abstract\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S3",
+      "start": 200,
+      "end": 315,
+      "text": "The world population is aging rapidly, and increasing lifespan exacerbates the burden of age-related health issues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 316,
+      "end": 453,
+      "text": "On the other hand, premature aging has begun to be a problem, with increasing numbers of younger people suffering aging-related symptoms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 454,
+      "end": 589,
+      "text": "Advanced aging is caused by a combination of factors: lifestyle, diet, external and internal factors, as well as oxidative stress (OS).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 590,
+      "end": 671,
+      "text": "Although OS is the most researched aging factor, it is also the least understood.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 672,
+      "end": 913,
+      "text": "OS is important not only in relation to aging but also due to its strong impact on neurodegenerative diseases such as amyotrophic lateral sclerosis (ALS), frontotemporal dementia (FTD), Alzheimer’s disease (AD), and Parkinson’s disease (PD).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 914,
+      "end": 1155,
+      "text": "In this review, we will discuss the aging process in relation to OS, the function of OS in neurodegenerative disorders, and prospective therapeutics capable of relieving neurodegenerative symptoms associated with the pro-oxidative condition.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1155,
+      "end": 1552,
+      "text": "\n\n\n## 1. Introduction\n\nHealthy aging is characterized by a gradual breakdown of physiological systems leading to a reduction in cognitive functions and brain health, but the timing and extent of this decline vary among older people. Oxidative stress (OS) is a crucial factor in the aging process that can cause direct damage to the brain’s cellular architecture, causing neurodegenerative disease.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1552,
+      "end": 1554,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S11",
+      "start": 1554,
+      "end": 1671,
+      "text": "Aging is the main lead factor for many diseases, including cancer, metabolic, cardiac and neurodegenerative diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 1672,
+      "end": 1851,
+      "text": "Aging is linked to a loss of homeostasis, involving degradation of structural components, reduced cellular maintenance and a decrease in overall physiological function/metabolism.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S13",
+      "start": 1852,
+      "end": 2012,
+      "text": "There are two major aging theories: the free radical theory, which postulates chronological accumulation of defects in gene expression and environmental damage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 2013,
+      "end": 2248,
+      "text": "According to the free radical theory of aging by Denham Harman, 1956 [1], alterations in normal metabolic and mitochondrial function are induced by production of free radicals, which cause damage, aging, and associated aging illnesses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2248,
+      "end": 2361,
+      "text": "\n\nThe second and more recent theory is the mitochondrial theory of aging by J. Miquel and colleagues in 1980 [2].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2362,
+      "end": 2485,
+      "text": "This theory posits that the loss of balance between free radical production and repair mechanisms is responsible for aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 2485,
+      "end": 2487,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S18",
+      "start": 2487,
+      "end": 2546,
+      "text": "The redox network is also essential in antioxidant defense.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 2547,
+      "end": 2768,
+      "text": "Mitochondria serve a crucial function by turning stored energy into adenosine triphosphate (ATP) through oxidative phosphorylation and phospholipid synthesis, buffering calcium, and coordinating programmed cell death [3].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 2769,
+      "end": 3052,
+      "text": "Free radicals such as reactive oxygen species (ROS), reactive nitrogen species (RNS), and reactive sulfur species (RSS), which are present in all cells, but which are restricted by the antioxidant systems that neutralize them, are primarily produced by oxidative phosphorylation [4].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 3053,
+      "end": 3298,
+      "text": "Free radicals are produced naturally and modulate cellular processes such as inflammation, cell survival, and stress responses, as well as numerous illnesses such as cardiovascular problems, muscular dysfunction, allergies, and malignancies [5].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3298,
+      "end": 3300,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S23",
+      "start": 3300,
+      "end": 3511,
+      "text": "Free radicals are most likely formed due to processes involving molecular oxygen that are catalyzed in the cell by oxidative enzymes and in connective tissues by trace metals such as iron, cobalt, and manganese.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 3511,
+      "end": 3513,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S25",
+      "start": 3513,
+      "end": 3700,
+      "text": "The primary distinction between healthy aging and accelerated aging is the balance between free radical elevation and the body’s ability to guard and fight against RNS and ROS (Figure 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 3700,
+      "end": 3942,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> The primary distinction between healthy aging and accelerated aging is the balance between free radical generation (RNS and ROS) and antioxidation to minimize oxidative stress.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 3942,
+      "end": 3943,
+      "text": "<",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S28",
+      "start": 3943,
+      "end": 4186,
+      "text": "/figure>\n\nIn the event of loss of homeostasis between free radical production and detoxification, ROS production may overpower antioxidant defenses, resulting in a noxious state known as OS and general degradation of normal cellular functions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 4187,
+      "end": 4291,
+      "text": "This has been documented in numerous clinical studies involving mitochondrial malfunction and aging [6].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 4291,
+      "end": 4492,
+      "text": "\n\nThe brain is especially prone to oxidative damage due to its high oxygen consumption, limited antioxidant defenses, and high concentration of polyunsaturated fatty acids that are easily oxidized [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 4492,
+      "end": 4494,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S32",
+      "start": 4494,
+      "end": 4670,
+      "text": "Lipid peroxides (LPO) are highly reactive molecules that include malondialdehyde (MDA), 4-hydroxy-2-nonenal (HNE), acrolein, isoprostanes (IsoPs), and neuroprostanes (NeuroPs).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 4671,
+      "end": 4738,
+      "text": "They can disrupt proteins and DNA structure and functions [8,9,10].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 4739,
+      "end": 4885,
+      "text": "Increased MDA, IsoPs, and HNE have been observed in brain tissues of Tg2576 Alzheimer’s disease (AD) model mice and post-mortem AD brains [11,12].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 4886,
+      "end": 5084,
+      "text": "Oxidative damage to DNA results in formation of oxidized base adducts, including 8-hydroxyguanosine (8-OHG) and 5,6-diamino-5-formamidopyridine in brains of mild cognitive impairment (MCI) patients.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 5085,
+      "end": 5399,
+      "text": "Despite the brain’s great potential for ROS formation, its defense system against OS remains restricted and diminishes with age, owing to low amounts of endogenous antioxidants such as catalase (CAT), glutathione (GSH), glutathione peroxidase (GPx), and vitamin E, compared to other tissues, such as liver [13,14].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S37",
+      "start": 5400,
+      "end": 5565,
+      "text": "The limited regenerative ability of postmitotic neurons renders OS more damaging to the brain, where the damage accumulates over time, compared to other organs [15].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S38",
+      "start": 5565,
+      "end": 5568,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S39",
+      "start": 5568,
+      "end": 5573,
+      "text": "## 2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S40",
+      "start": 5574,
+      "end": 5817,
+      "text": "Other Sources of Free Radicals Contribute to OS\n\nEven though mitochondrial dysfunction is the primary source of free radicals, there are several other sources, such as genetic (endogenous), environmental, and lifestyle causes (exogenous) [16].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S41",
+      "start": 5817,
+      "end": 5819,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S42",
+      "start": 5819,
+      "end": 5820,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S43",
+      "start": 5820,
+      "end": 5822,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S44",
+      "start": 5823,
+      "end": 6084,
+      "text": "2.1. Environmental Factors: Radiation/UV Rays and Pollution\n\nEnvironmental factors, including smoking, UV radiation, heavy metal ions, ozone, allergens, drugs or toxins, pollutants, and pesticides, may all contribute to elevated ROS production in cells [17,18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S45",
+      "start": 6085,
+      "end": 6218,
+      "text": "Ionizing radiation transforms hydroxyl radicals, superoxides, and organic radicals into organic hydroperoxides and hydrogen peroxide.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 6219,
+      "end": 6368,
+      "text": "Subsequently, peroxides react with metal ions, particularly Fe and Cu through redox reactions, with further oxidative activity at the cellular level.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 6369,
+      "end": 6546,
+      "text": "Several studies have demonstrated that exposure of fibroblasts to alpha particles leads to an intracellular increase in oxygen and an acceleration of peroxide formation [19,20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 6547,
+      "end": 6795,
+      "text": "Ultraviolet radiation (UVA) induces oxidative processes by stimulating riboflavin, porphyrins, and NADPH-oxidase, resulting in synthesis of 8-oxo-guanine and a drop in intracellular GSH levels, with a return to normal after exposure cessation [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 6796,
+      "end": 6860,
+      "text": "Heavy metals are crucial to the formation of free radicals [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 6860,
+      "end": 7125,
+      "text": "\n\nNickel, arsenic, iron, copper, cadmium and lead can produce free radicals by Fenton or Haber-Weiss reactions [23,24], as well as through direct reactions between metal ions and cellular constituents with similar effects, such as generation of thiol-type radicals.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 7126,
+      "end": 7204,
+      "text": "In brain tissue, lead causes lipid peroxidation and raises GPx concentrations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 7205,
+      "end": 7415,
+      "text": "By attaching to sulfhydryl groups, arsenic generates peroxides, superoxides, and nitric oxide, and inhibits antioxidant enzymes such as glutathione-S-transferase (GST), GPx, and glutathione reductase (GR) [25].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 7416,
+      "end": 7579,
+      "text": "Free radicals produced by these reactions can cause substitutions of DNA bases, including guanine for cytosine, guanine for thymine, and cytosine for thymine [26].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 7580,
+      "end": 7724,
+      "text": "Even in healthy individuals, ozone exposure can impair lung function by increasing inflammatory infiltration in the respiratory epithelium [27].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 7724,
+      "end": 7727,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S56",
+      "start": 7727,
+      "end": 7728,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S57",
+      "start": 7728,
+      "end": 7735,
+      "text": "## 2.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S58",
+      "start": 7736,
+      "end": 7761,
+      "text": "Lifestyle Related Factors",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 7761,
+      "end": 7884,
+      "text": "\n\nLifestyle factors such as smoking, drinking alcohol, diet, exercise, and frequency of exercise all contribute to OS [28].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 7885,
+      "end": 7996,
+      "text": "Some research has shown that ROS are present at the skeletal muscle level and help to control how muscle works.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 7997,
+      "end": 8118,
+      "text": "Muscle fibers always produce small quantities of reactive oxygen radicals, which are elevated by muscle contraction [29].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 8119,
+      "end": 8335,
+      "text": "These oxygen radicals have many direct and indirect effects on muscle activity (contractility, excitability, metabolism, and calcium homeostasis) and are involved in skeletal muscle fatigue during hard exercise [30].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 8335,
+      "end": 8337,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S64",
+      "start": 8337,
+      "end": 8443,
+      "text": "Long, exhausting exercise and overcoming limits as a phase of overtraining cause a massive response to OS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 8444,
+      "end": 8561,
+      "text": "Endogenous antioxidant status is improved by moderate exercise, low-intensity training, and training for a long time.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 8561,
+      "end": 8563,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S67",
+      "start": 8563,
+      "end": 8669,
+      "text": "ROS are an essential part of how cells talk to each other and how antioxidant genes are turned on and off.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S68",
+      "start": 8670,
+      "end": 8776,
+      "text": "Nuclear factor kappa B and mitogen-activated protein kinase are up-regulated by physical activity [31,32].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S69",
+      "start": 8777,
+      "end": 8907,
+      "text": "These activate gene expression of various enzymes and proteins that maintain oxidative/antioxidant intracellular homeostasis [33].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S70",
+      "start": 8907,
+      "end": 9041,
+      "text": "\n\nPhysical exercise is the main non-drug therapy for treating chronic diseases, especially heart diseases, and lifestyle changes [34].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 9042,
+      "end": 9215,
+      "text": "Relevant studies [35] have shown that autophagy, a process that breaks down and recycles cellular organs and nutrients, is important for cardiovascular benefits of training.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 9215,
+      "end": 9217,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S73",
+      "start": 9217,
+      "end": 9328,
+      "text": "Cigarette smoke has oxidants, free radicals, and organic components such as nitric oxide and nitric superoxide.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 9329,
+      "end": 9454,
+      "text": "These cause neutrophils and macrophages to gather in lung tissues, increasing the production of oxidants in the area [36,37].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 9454,
+      "end": 9457,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S76",
+      "start": 9457,
+      "end": 9458,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S77",
+      "start": 9458,
+      "end": 9465,
+      "text": "## 2.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S78",
+      "start": 9466,
+      "end": 9626,
+      "text": "Genetic Factors\n\nEnzymes that are responsible for fighting damage caused by OS and these enzymes and pathways are prone to free radical damage [38,39,40,41,42].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S79",
+      "start": 9627,
+      "end": 9869,
+      "text": "Oligodendrocytes are susceptible to oxidative damage due to their function in maintenance and creation of myelin and their limited repair mechanisms, suggesting that white matter may be more susceptible to oxidative activity than gray matter.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 9870,
+      "end": 10043,
+      "text": "Antioxidant defense enzymes in the brain, such as superoxide dismutase (SOD), CAT, GPx, and GST are essential for neutralizing toxic byproducts of oxidative phosphorylation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 10044,
+      "end": 10212,
+      "text": "Allelic variants of polymorphisms encoding these antioxidants are associated with anomalies in SOD, CAT, GPx, and GST activity in the central nervous system [38,43,44].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 10212,
+      "end": 10216,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S83",
+      "start": 10216,
+      "end": 10217,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S84",
+      "start": 10217,
+      "end": 10221,
+      "text": "# 3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S85",
+      "start": 10222,
+      "end": 10416,
+      "text": "Mechanistic Evolution of Neurodegenerative Diseases Caused by OS\n\nNeurodegenerative disease is an irreversible condition in which neuronal function declines over time, leading to neuronal death.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 10417,
+      "end": 10533,
+      "text": "The incidence of neurodegenerative disease is increasing every year, especially in countries with aging populations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 10534,
+      "end": 10623,
+      "text": "Common neurodegenerative diseases include Alzheimer’s (AD) and Parkinson’s (PD) diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 10624,
+      "end": 10731,
+      "text": "Mitochondria are the primary source of ROS and are the main cause of neurodegenerative diseases (Figure 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 10731,
+      "end": 10948,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> Illustration showing the impact of oxidative stress on amyotrophic lateral sclerosis, Alzheimer’s disease, Parkinson’s disease, and multiple sclerosis.</figcaption>\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 10948,
+      "end": 11098,
+      "text": "</figure>\n\nMitochondrial synthesis of ATP through oxidative phosphorylation, has the substantial disadvantage of producing unpaired electrons [45,46].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 11099,
+      "end": 11327,
+      "text": "The electron transport chain comprises five multiprotein complexes that mediate interaction of these electrons with oxygen, resulting in ROS hydrogen peroxide (H2O2), superoxide anions (O2−), and hydroxyl radicals (•OH) [14,47].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 11328,
+      "end": 11495,
+      "text": "Electron transfer from NADH to ubiquinone is catalyzed by mitochondrial complex I (reduced nicotinamide adenine dinucleotide [NADH] coenzyme Q reductase) (coenzyme Q).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 11496,
+      "end": 11571,
+      "text": "Complex II also provides electrons to ubiquinone (succinate dehydrogenase).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 11572,
+      "end": 11692,
+      "text": "Electrons from reduced ubiquinone are donated to complex III (cytochrome bc1), and subsequently, to cytochrome c (CytC).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S95",
+      "start": 11693,
+      "end": 11842,
+      "text": "Complex IV (CytC oxidase) is involved in interactions between molecular oxygen and electrons extracted from CytC, resulting in water production [48].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S96",
+      "start": 11843,
+      "end": 11980,
+      "text": "Complexes I, II, and III are most often linked to premature electron leakage to oxygen and are the primary source of ROS generation [49].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S97",
+      "start": 11980,
+      "end": 12172,
+      "text": "\n\nAdditionally, elevated ROS levels trigger formation of additional reactive species, such as RNS, when O2 reacts with other molecules, such as nitric oxide, to generate peroxynitrite (ONOO−).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S98",
+      "start": 12173,
+      "end": 12266,
+      "text": "Furthermore, in addition to ROS and RNS, mitochondria generate RSSs, which are very reactive.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 12267,
+      "end": 12433,
+      "text": "Free oxygen radicals gradually damage proteins, lipids, and nucleic acids, resulting in inefficient or aberrant cellular functions, inflammation, and cell death [50].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S100",
+      "start": 12433,
+      "end": 12435,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S101",
+      "start": 12435,
+      "end": 12645,
+      "text": "Mitochondrial internal components and mitochondrial DNA (mtDNA) in particular, are very vulnerable to OS-induced damage, resulting in impaired mitochondrial bioenergetics, increased ROS generation, and OS [51].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S102",
+      "start": 12646,
+      "end": 12715,
+      "text": "Enzymatic and non-enzymatic mechanisms safeguard antioxidant systems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S103",
+      "start": 12716,
+      "end": 12817,
+      "text": "SOD, CAT, GPx, GR, and thioredoxin (TRX) are the major enzymes involved in catalytic ROS elimination.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S104",
+      "start": 12818,
+      "end": 12932,
+      "text": "Non-enzymatic complexes include vitamins A, C, and E, GSH, and proteins such as albumin and ceruloplasmin [52,53].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 12932,
+      "end": 12935,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S106",
+      "start": 12935,
+      "end": 12940,
+      "text": "## 4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S107",
+      "start": 12941,
+      "end": 13036,
+      "text": "Major Degenerative Disorders Caused by OS\n\n### 4.1. OS in Amyotrophic Lateral Sclerosis (ALS)\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 13036,
+      "end": 13147,
+      "text": "Despite substantial investigation, the genesis of amyotrophic lateral sclerosis (ALS) is still not fully clear.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 13148,
+      "end": 13307,
+      "text": "Ninety percent of ALS cases are sporadic and appear to lack a genetic foundation, whereas 10% of patients have familial ALS, mostly an autosomal dominant [54].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 13308,
+      "end": 13553,
+      "text": "ALS has been linked to various occupational and environmental variables, such as exposure to various chemicals, metals, and pesticides, electromagnetic fields (EMFs), and lifestyle choices, including smoking and excessive exercise [55,56,57,58].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 13553,
+      "end": 13681,
+      "text": "\n\nA recognized but poorly understood pathogenic ALS feature is abnormally high free radical levels and inadequate antioxidation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S112",
+      "start": 13682,
+      "end": 13796,
+      "text": "Undoubtedly, OS is essential for motor neuron death, but we do not know exactly when oxidative damage occurs [59].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S113",
+      "start": 13797,
+      "end": 13914,
+      "text": "OS biomarkers have been identified in brain tissue of ALS patients, cerebrospinal fluid (CSF), blood, and urine [60].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S114",
+      "start": 13915,
+      "end": 14018,
+      "text": "It is challenging to track OS biomarkers over a long period due to the short lifespans of ALS patients.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S115",
+      "start": 14019,
+      "end": 14261,
+      "text": "Further, because of OS’s random start and the present lack of tools to forecast its progression, it is difficult to be certain whether OS is a cause of ALS-associated neurodegeneration or a result of other underlying etiologic variables [57].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S116",
+      "start": 14262,
+      "end": 14504,
+      "text": "Investigations using a murine ALS model have revealed altered mitochondrial structures and nuclear factor erythroid 2-related factor 2 (Nrf2) pathway activation during early ALS stages, indicating OS involvement in the disease’s early stages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 14505,
+      "end": 14607,
+      "text": "OS damage is typically caused by stimulating formation of intracellular antioxidant molecules [61,62].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 14607,
+      "end": 14739,
+      "text": "\n\nHowever, these studies used the murine mutant SOD1 ALS model, and SOD1 mutations only account for 20% of human familial ALS cases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 14740,
+      "end": 14961,
+      "text": "Twenty individuals with sporadic ALS had significantly higher levels of lipid peroxidation and lower levels of the antioxidant enzymes CAT, GR, GSH, and glucose-6-phosphate dehydrogenase (G6PD) in their erythrocytes [63].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 14962,
+      "end": 15073,
+      "text": "Progression of alterations parallel the pathophysiology of ALS, supporting OS participation in ALS development.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 15074,
+      "end": 15252,
+      "text": "Additionally, the aforementioned environmental and endoplasmic reticulum stress factors work together to promote pro-oxidative states that may ultimately harm motor neurons [64].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 15252,
+      "end": 15254,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S123",
+      "start": 15254,
+      "end": 15437,
+      "text": "The intermembrane space (IMS) of mitochondria contains a protein known as Coiled-Coil-Helix-Coiled-Coil-Helix Domain-Containing Protein 10 (CHCHD10), which has no known function [65].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S124",
+      "start": 15438,
+      "end": 15561,
+      "text": "However, it is believed to be involved in maintaining mitochondrial crista morphology and proper oxidative phosphorylation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 15562,
+      "end": 15775,
+      "text": "In particular, in multiprotein complexes I, II, III, and IV, overexpression of mutant CHCHD10 harboring an allele linked to ALS alters mitochondrial structure and impairs electron transport chain function [66,67].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 15776,
+      "end": 15940,
+      "text": "In addition, fibroblasts from an ALS patient with a CHCHD10 mutation displayed mitochondrial ultrastructural damage and mitochondrial network fragmentation [66,67].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 15940,
+      "end": 15943,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S128",
+      "start": 15943,
+      "end": 15944,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S129",
+      "start": 15944,
+      "end": 15951,
+      "text": "## 4.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S130",
+      "start": 15952,
+      "end": 16155,
+      "text": "OS in Alzheimer’s Disease (AD)\n\nThe most common neurodegenerative condition, AD, is characterized by a steady decline in behavior, cognition, and functioning that profoundly affect day-to-day activities.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 16156,
+      "end": 16255,
+      "text": "AD brains have higher protein, DNA, and lipid oxidation rates, as well as redox-active metals [51].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 16255,
+      "end": 16377,
+      "text": "\n\nPathological indicators of AD include extracellular senile plaques (SP) and intracellular neurofibrillary tangles (NFT).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 16378,
+      "end": 16460,
+      "text": "Protein aggregation is sporadic, and its molecular mechanism is poorly understood.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 16461,
+      "end": 16579,
+      "text": "Several investigations have revealed that AD brains display elevated OS, which is crucial to disease development [68].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S135",
+      "start": 16580,
+      "end": 16823,
+      "text": "Amyloid fibril precursors are neurotoxic owing to OS generated by toxic conformer of amyloid oligomers and additional neurotoxic effects such as neuronal membrane rupture, microglia and astrocyte activation, and Ca2+ dyshomeostasis [69,70,71].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S136",
+      "start": 16823,
+      "end": 16825,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S137",
+      "start": 16825,
+      "end": 16919,
+      "text": "Tau protein aggregation is another hallmark of AD although in most cases, it is of late onset.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 16920,
+      "end": 17058,
+      "text": "Several reports have indicated that neurotoxicity caused by beta amyloid alteration is the main trigger of tau alteration to form tangles.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 17059,
+      "end": 17184,
+      "text": "NFTs in the early stages of AD are intracellular deposits; however, these progress to extracellular deposits in later stages.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 17185,
+      "end": 17299,
+      "text": "NFTs are composed of paired helical filaments (PHFs) in which the major component is tau protein [72,73,74,75,76].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 17299,
+      "end": 17412,
+      "text": "\n\nWhen tau proteins are hyperphosphorylated, they self-assemble into NFTs and may be detected in neurons [77,78].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 17413,
+      "end": 17565,
+      "text": "According to recent data, amyloid deposition occurs 15–20 years before dementia manifests itself, and tau pathology appears thereafter [79,80,81,82,83].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 17565,
+      "end": 17835,
+      "text": "\n\nUsing multiphoton imaging, researchers identified a clear link between free radical generation and amyloid plaques in AD mouse models and human AD brain tissues, where fluorogenic free radical markers decreased following administration of a synthetic antioxidant [84].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 17835,
+      "end": 17838,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S145",
+      "start": 17838,
+      "end": 17839,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S146",
+      "start": 17839,
+      "end": 17846,
+      "text": "## 4.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S147",
+      "start": 17847,
+      "end": 18041,
+      "text": "OS in Parkinson’s Disease (PD)\n\nUnlike AD, PD is clinically recognized by four cardinal motor symptoms: bradykinesia, stiffness, resting tremors, and trouble with posture and walking [83,84,85].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S148",
+      "start": 18042,
+      "end": 18211,
+      "text": "In PD brains, the substantia nigra pars compacta and to a lesser extent, the globus pallidus, putamen, and caudate nucleus, exhibit selective dopaminergic neuronal loss.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 18212,
+      "end": 18312,
+      "text": "The nigrostriatal pathway’s degenerating neurons release less of the neurotransmitter dopamine [86].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 18313,
+      "end": 18415,
+      "text": "Lewy bodies are clusters of aberrant proteins seen in neurons of individuals with Parkinson’s disease.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 18416,
+      "end": 18570,
+      "text": "They are components of α-synuclein (α-syn) protein, broadly disseminated in the neurological system, but activities of which are not well understood [87].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S152",
+      "start": 18571,
+      "end": 18694,
+      "text": "α-syn fibrillation creates clumps that take up significant space within cells and ultimately result in neuronal death [88].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 18695,
+      "end": 18779,
+      "text": "As in AD, pathophysiological pathways underlying PD are strongly related to OS [89].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 18780,
+      "end": 18921,
+      "text": "Evidence of OS involvement may be seen in the substantia nigra of PD patients, where oxidized lipids, proteins, and DNA can be found [90,91].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 18922,
+      "end": 19093,
+      "text": "Additionally, the monoamine oxidase (MAO) that breaks down dopamine creates hydrogen peroxide, whereas dopamine on its own produces superoxide anion and reactive quinones.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 19094,
+      "end": 19209,
+      "text": "These reactive substances cause other nearby neurons, as well as dopaminergic neurons, to become cytotoxic [92,93].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 19209,
+      "end": 19212,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S158",
+      "start": 19212,
+      "end": 19213,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S159",
+      "start": 19213,
+      "end": 19214,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S160",
+      "start": 19214,
+      "end": 19220,
+      "text": "# 4.4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S161",
+      "start": 19221,
+      "end": 19431,
+      "text": "OS in Multiple Sclerosis (MS)\n\nMultiple sclerosis (MS) is a multifactorial autoimmune disease of the central nervous system (CNS), characterized by chronic inflammation, demyelination, and axon and neuron loss.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 19432,
+      "end": 19612,
+      "text": "Depending on the location of the demyelinating lesions, MS patients can develop almost any neurological sign or symptom, including motor, sensory, and cognitive impairment [94,95].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 19612,
+      "end": 19745,
+      "text": "\n\nOS is heavily involved in several MS pathological hallmarks such as myelin destruction, axonal degeneration, and inflammation [96].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 19746,
+      "end": 19878,
+      "text": "In MS as in other neurodegenerative diseases OS triggers activation of autophagy and microglia as well as of the neuroimmune system.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 19879,
+      "end": 20044,
+      "text": "Neurons, astrocytes, and oligodendrocytes produce chemicals that bind to microglial receptors in healthy settings, suppressing their activated states [97,98,99,100].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 20045,
+      "end": 20241,
+      "text": "When certain molecules (such as myelin CD47) are expressed less, microglial activation is increased, which may cause myelin debris to be phagocytosed and to provide neurotrophic factors [101,102].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 20242,
+      "end": 20429,
+      "text": "Microglial physiological functions are transformed into harmful inflammatory insults by long-term damage, systemic inflammation, proinflammatory cytokine release, and ROS signaling [103].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 20430,
+      "end": 20657,
+      "text": "Together, our results imply that during the onset and development of experimental autoimmune encephalomyelitis (EAE) and MS lesions, activated microglia and macrophages are directing tissue damage through their oxidative burst.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 20658,
+      "end": 20796,
+      "text": "Simultaneous activation of a sophisticated antioxidant response is insufficient to stop the apoptotic and degenerative processes, however.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 20796,
+      "end": 21027,
+      "text": "\n\nDue to a combination of circumstances, including high levels of iron and polyunsaturated fatty acids, high iron requirements and mitochondrial activity, and restricted cell regeneration, the CNS is particularly susceptible to OS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 21028,
+      "end": 21157,
+      "text": "Oxidative damage also affects the immune response that is developing in the periphery and controls MS illness outside of the CNS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S172",
+      "start": 21158,
+      "end": 21303,
+      "text": "First, by lowering its electrical resistance and thus changing its permeability, elevated ROS levels harm the brain endothelium [94,104,105,106].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S173",
+      "start": 21303,
+      "end": 21307,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S174",
+      "start": 21307,
+      "end": 21308,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S175",
+      "start": 21308,
+      "end": 21312,
+      "text": "# 5.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S176",
+      "start": 21313,
+      "end": 21511,
+      "text": "Significance of Non-Coding RNAs in OS\n\nOS readily damages RNA due to its single-stranded structure and high concentration close to mitochondria, where most intracellular ROS are generated [107,108].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 21512,
+      "end": 21637,
+      "text": "An overabundance of ROS can cause chemical modification or even separation of RNA bases and breakage of RNA strands [91,109].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 21638,
+      "end": 21790,
+      "text": "Oxidatively damaged RNA accumulates in cells, leading to decreased protein synthesis, erroneous protein generation, and ultimately cell death [110,111].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 21790,
+      "end": 21792,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S180",
+      "start": 21792,
+      "end": 21902,
+      "text": "Non-coding RNAs (ncRNAs), which do not encode proteins, make up the majority of RNAs in human cells [112,113].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 21903,
+      "end": 22143,
+      "text": "As a category of ncRNAs, regulatory ncRNAs, including long ncRNAs (lncRNAs) and small ncRNAs, which includes microRNAs (miRNAs), circular RNAs (circRNAs), and PIWI-interacting RNAs (piRNAs), are involved in regulating gene expression [114].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 22144,
+      "end": 22213,
+      "text": "Compared to mRNAs, these regulatory ncRNAs persist relatively longer.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 22214,
+      "end": 22266,
+      "text": "Hence, oxidative damage can cause prolonged effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S184",
+      "start": 22267,
+      "end": 22362,
+      "text": "ncRNAs of several types have been linked to various neurogenerative diseases [115,116,117,118].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S185",
+      "start": 22363,
+      "end": 22560,
+      "text": "However, the direct relationship between ncRNA oxidation and neuronal diseases is still unclear, except in PD, in which the interaction between OS and regulatory ncRNAs has been well studied [119].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S186",
+      "start": 22561,
+      "end": 22663,
+      "text": "In contrast, regulatory small ncRNAs such as miRNAs and lncRNAs help to regulate ROS production [118].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 22664,
+      "end": 22731,
+      "text": "Their interactions are involved in the pathophysiology of PD [120].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 22731,
+      "end": 22851,
+      "text": "\n\nRNA oxidation is not only a hallmark of PD but also a crucial first step in the development of the disorder [112,121].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 22852,
+      "end": 22986,
+      "text": "8-oxo-7, 8-dihydroguanosine (8-oxoG) is one of many oxidative marks on RNA, and it is possibly the most common and well studied [122].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S190",
+      "start": 22987,
+      "end": 23103,
+      "text": "Guanine’s vulnerability to free radicals means that it can form this base adduct, leading to mismatched bases [109].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 23103,
+      "end": 23297,
+      "text": "\n\nNeuronal apoptosis and autophagy are influenced by lncRNAs; thus, α-syn accumulation and degradation that restricts their function would have deleterious effects on cellular homeostasis [123].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 23298,
+      "end": 23449,
+      "text": "For instance, free radical damage to miRNAs can cause them to misidentify their target mRNAs, which can increase expression of specific proteins [124].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 23450,
+      "end": 23556,
+      "text": "A reduction in α-syn expression was mediated by two miRNAs in an experiment performed by Je and Kim [123].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 23557,
+      "end": 23703,
+      "text": "High levels of α-syn and subsequent development of PD resulted from stress-induced oxidative loss of translational inhibition by these two miRNAs.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 23703,
+      "end": 23705,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S196",
+      "start": 23705,
+      "end": 23803,
+      "text": "Furthermore, Chen et al. found that OS triggered modification of circRNA N6-methyladenosine (m6A).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 23804,
+      "end": 23985,
+      "text": "m6A-modified circRNAs can modulate expression of stress response genes (UBC and PPP2CA), which may constitute the mechanistic basis for OS-induced neurodegenerative disorders [125].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 23985,
+      "end": 23987,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S199",
+      "start": 23987,
+      "end": 24088,
+      "text": "The regulatory role of miRNAs in OS is closely linked to α-syn, which is responsible for inducing OS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 24089,
+      "end": 24160,
+      "text": "Both microRNA-141-3p and microRNA-9-5p target the 3′ UTR of SIRT1 mRNA.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 24161,
+      "end": 24332,
+      "text": "Since SIRT1 inhibits formation of α-syn aggregates, knockdown of microRNA-141-3p and microRNA-9-5p may alleviate OS and boost the viability of in vitro PD model [126,127].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 24332,
+      "end": 24424,
+      "text": "\n\nSOD, CAT, and GPx are responsible for detoxifying oxidants and repairing oxidative damage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 24425,
+      "end": 24541,
+      "text": "MicroRNA-137 and microRNA-494-3p aggravate OS by reducing SOD and GPx activity in PD rats treated with these miRNAs.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S204",
+      "start": 24542,
+      "end": 24663,
+      "text": "MicroRNA-335 suppresses expression of FTH1, thereby promoting release of Fe2+ ions and generation of free radicals [128].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S205",
+      "start": 24664,
+      "end": 24761,
+      "text": "Downregulation of microRNA-410 expression in PD is associated with elevated ROS production [129].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 24761,
+      "end": 24809,
+      "text": "\n\nRegulatory lncRNAs and OS are hallmarks of PD.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S207",
+      "start": 24810,
+      "end": 24875,
+      "text": "In PD, mitochondrial dysfunction is linked to ROS overproduction.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S208",
+      "start": 24876,
+      "end": 24980,
+      "text": "α-syn aggregate formation can exacerbate OS by decreasing complex I activity or by activating microglia.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S209",
+      "start": 24981,
+      "end": 25122,
+      "text": "Upregulation of beta-amyloid-cleaving enzyme-antisense (BACE1-AS), a lncRNA, was also associated with increasing levels of α-syn in PD [130].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 25123,
+      "end": 25219,
+      "text": "In addition, the lncRNA microRNA-17-92a-1 cluster host gene (MIR17HG) promotes α-syn expression.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 25220,
+      "end": 25327,
+      "text": "MicroRNA-153-5p cannot inhibit α-syn expression because MIR17HG acts as a sponge for microRNA-153-5p [131].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 25328,
+      "end": 25409,
+      "text": "Inhibition of autophagy by GSK3 promotes α-syn buildup and therefore aggregation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 25410,
+      "end": 25524,
+      "text": "MicroRNA-15b-5p suppressed GSK3 expression, but binding of SNHG1 to microRNA-15b-5p rescued GSK3 expression [132].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 25525,
+      "end": 25658,
+      "text": "Cellular effects of oxidatively damaged RNA and the mechanism by which regulatory ncRNAs affect OS are just beginning to be explored.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 25658,
+      "end": 25666,
+      "text": "\n\n\n## 6.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S216",
+      "start": 25667,
+      "end": 25822,
+      "text": "Methods to Measure OS in Neurodegenerative Diseases\n\nAlthough there are peripheral indicators for OS, it is difficult to detect in the human brain in vivo.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 25823,
+      "end": 25892,
+      "text": "The following measures have been used to quantify brain OS (Table 1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 25892,
+      "end": 25894,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S219",
+      "start": 25894,
+      "end": 25902,
+      "text": "### 6.1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S220",
+      "start": 25903,
+      "end": 26103,
+      "text": "Peripheral Blood OS\n\nSeveral surrogate OS or antioxidant activity indicators, including circulating lipid peroxides, GSH, and vitamins C and E, have been examined in peripheral blood [89,133,134,135].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S221",
+      "start": 26103,
+      "end": 26208,
+      "text": "\n\nAD patients display reduced peripheral vitamin A, C, and E levels [136] and SOD and GPx activity [137].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S222",
+      "start": 26209,
+      "end": 26307,
+      "text": "Lower plasma GSH levels are associated with more severe cognitive impairment in AD patients [138].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S223",
+      "start": 26308,
+      "end": 26383,
+      "text": "PD patients have inconsistently altered erythrocyte SOD activity [139,140].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S224",
+      "start": 26384,
+      "end": 26437,
+      "text": "Increased SOD activity may protect against OS damage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S225",
+      "start": 26437,
+      "end": 26440,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S226",
+      "start": 26440,
+      "end": 26441,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S227",
+      "start": 26441,
+      "end": 26448,
+      "text": "## 6.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S228",
+      "start": 26449,
+      "end": 26545,
+      "text": "Magnetic Resonance Spectroscopy (MRS)\n\nGSH is the single antioxidant assessed by 1H (MRS) [149].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 26546,
+      "end": 26662,
+      "text": "GSH content in the human brain is lower than N-acetyl aspartate, creatine, and choline, making evaluation difficult.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S230",
+      "start": 26663,
+      "end": 26754,
+      "text": "With MRS, it is challenging to discern between GSH and glutamate resonance peaks [141,150].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S231",
+      "start": 26755,
+      "end": 26890,
+      "text": "GSH-CH2 cysteine’s protons resonate at 2.93 and 2.97 ppm, overlapping with those of creatine (3.03 ppm) and aspartate (2.82 ppm) [151].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S232",
+      "start": 26891,
+      "end": 27073,
+      "text": "To detect GSH levels in the brain, spectral editing methods such as MEscher-GArwood-PRESS (MEGA-PRESS) [142] are needed to boost GSH signals so as to gather reliable nuclear signals.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S233",
+      "start": 27074,
+      "end": 27263,
+      "text": "MEGA-PRESS combined with a 180° editing pulse in the original PRESS pulse sequence [142] may distinguish GSH-cysteine signals from other signals, notably creatine signals in the brain [89].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S234",
+      "start": 27264,
+      "end": 27371,
+      "text": "Recent research found that GSH levels are lower in AD patients’ hippocampus and frontal cortices [143,144].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S235",
+      "start": 27371,
+      "end": 27373,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S236",
+      "start": 27373,
+      "end": 27492,
+      "text": "The concentration of vitamin C (ascorbic acid) in the human brain is around 1.0 mM, which may be detected by MRS [152].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 27493,
+      "end": 27670,
+      "text": "However, measuring vitamin C using 1H MRS is problematic owing to the similarities between the resonances of vitamin C (3.73, 4.01, and 4.50 ppm) and glutamate (3.75 ppm) [151].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S238",
+      "start": 27671,
+      "end": 27761,
+      "text": "MEGA-PRESS editing might potentially aid in measuring vitamin C levels in the human brain.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S239",
+      "start": 27762,
+      "end": 27873,
+      "text": "Several earlier research [153] used 1H-MRS with the MEGA-PRESS to evaluate vitamin C levels in the human brain.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S240",
+      "start": 27873,
+      "end": 27876,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S241",
+      "start": 27876,
+      "end": 27877,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S242",
+      "start": 27877,
+      "end": 27884,
+      "text": "## 6.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S243",
+      "start": 27885,
+      "end": 28049,
+      "text": "Electron Paramagnetic Resonance (EPR) Spectroscopy\n\nElectromagnetic radiation absorption often occurs in the microwave region of the electromagnetic spectrum [154].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S244",
+      "start": 28050,
+      "end": 28141,
+      "text": "As a result, it is influenced by paramagnetic species that are present in a magnetic field.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S245",
+      "start": 28142,
+      "end": 28269,
+      "text": "However, owing to short radical half-lives, compared to the EPR time scale, EPR spectroscopy cannot detect them directly [155].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S246",
+      "start": 28270,
+      "end": 28381,
+      "text": "To compensate for this, a stable chemical is frequently used to capture radicals to make them observable [156].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S247",
+      "start": 28381,
+      "end": 28521,
+      "text": "\n\nEPR has been implement in detecting neurodegenerative diseases as in AD [145] and as real time OS marker for post stroke patients [146].\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S248",
+      "start": 28521,
+      "end": 28746,
+      "text": "Despite years of research in EPR spectroscopy, one of the main reasons why it has not been widely employed is presumably poor sensitivity, particularly at the levels of free radicals usually encountered in biological systems.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S249",
+      "start": 28747,
+      "end": 28815,
+      "text": "More research is required before using EPR in human clinical trials.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S250",
+      "start": 28815,
+      "end": 28818,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S251",
+      "start": 28818,
+      "end": 28819,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S252",
+      "start": 28819,
+      "end": 28826,
+      "text": "## 6.4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S253",
+      "start": 28827,
+      "end": 28982,
+      "text": "Positron Emission Tomography (PET)\n\nThe intracellular over-reactive state can be measured using a radiotracer for positron emission tomography (PET) [147].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S254",
+      "start": 28983,
+      "end": 29082,
+      "text": "[62Cu] diacetyl-bis (N4-methylthiosemicarbazone) ([62Cu] ATSM) is a radiotracer widely used in PET.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S255",
+      "start": 29083,
+      "end": 29181,
+      "text": "Evaluation of striatal OS in patients with PD using [62Cu]ATSM PET was previously confirmed [147].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S256",
+      "start": 29182,
+      "end": 29319,
+      "text": "In a recent study, this tracer was utilized to visualize localized OS in PD patients that was mostly caused by mitochondrial malfunction.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S257",
+      "start": 29320,
+      "end": 29517,
+      "text": "In this investigation, deposition of [62Cu] ATSM was detected in the striatum of PD and ALS patients [147,148], indicating a localized over-reductive conditions caused by mitochondrial malfunction.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S258",
+      "start": 29517,
+      "end": 29521,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S259",
+      "start": 29521,
+      "end": 29526,
+      "text": "## 7.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S260",
+      "start": 29527,
+      "end": 29623,
+      "text": "Approaches to Slow Aging by Fighting OS\n\nThe human body has several lines of defense against OS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S261",
+      "start": 29624,
+      "end": 29709,
+      "text": "Multiple antioxidant defense pathways are involved in the brain’s ROS detoxification.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S262",
+      "start": 29710,
+      "end": 29809,
+      "text": "The metalloproteins SOD, CAT, and GPx constitute the first line of antioxidant defense against ROS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S263",
+      "start": 29810,
+      "end": 29945,
+      "text": "Age-related accumulation of highly reactive polyunsaturated fatty acids, iron, and ROS is exacerbated by suboptimal antioxidant levels.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S264",
+      "start": 29945,
+      "end": 30192,
+      "text": "\n\nApart from endogenous antioxidant defense mechanisms in aging brain and given the importance of OS in neurodegenerative diseases, manipulating ROS levels may be a viable therapeutic approach to slow neurodegeneration and reduce related symptoms.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S265",
+      "start": 30192,
+      "end": 30262,
+      "text": "\n\nAvoiding OS-related causes is at the top of preventative approaches.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S266",
+      "start": 30263,
+      "end": 30403,
+      "text": "Diet, exercise, lack of sleep, sedentary behavior and circadian rhythm abnormalities are all crucial components in regulating healthy aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S267",
+      "start": 30404,
+      "end": 30502,
+      "text": "The gut flora is hypersensitive to extrinsic variables linked to an unhealthy lifestyle [157,158].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S268",
+      "start": 30503,
+      "end": 30598,
+      "text": "Preclinical studies showed that a high-fat diet (HFD) in mice changes the gut microbiome [159].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S269",
+      "start": 30599,
+      "end": 30750,
+      "text": "Pro-inflammatory bacteria such as Clostridium, Eubacterium, and Roseburia are positively correlated with hyperglycemic fluctuations in the brain [160].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S270",
+      "start": 30751,
+      "end": 30853,
+      "text": "The need for gut microbiome therapies is growing, and this area of research is continually developing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S271",
+      "start": 30854,
+      "end": 31030,
+      "text": "With impressive results, dietary and probiotic supplementation has been investigated as a possible therapeutic strategy for age-related disorders via changes in gut microbiota.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S272",
+      "start": 31031,
+      "end": 31195,
+      "text": "Recent research has shown that exercise may alter gut microbiota, adding to the potential advantages of this strategy for treating disorders related to aging [161].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S273",
+      "start": 31195,
+      "end": 31197,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S274",
+      "start": 31197,
+      "end": 31395,
+      "text": "Nutraceuticals or natural compounds exist in food have been extensively studied worldwide due to their neuroprotective effects in vivo and in vitro, attributed to the antioxidative properties [162].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S275",
+      "start": 31396,
+      "end": 31725,
+      "text": "Nutraceuticals that show metal chelation ability and anti-inflammatory properties such as curcumin [163,164], green tea polyphenols [164], resveratrol [165] and vitamin E [166,167] are examples of natural antioxidants from foods and other sources that show promise as therapeutic agents for OS-related neurodegenerative diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S276",
+      "start": 31725,
+      "end": 31728,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S277",
+      "start": 31728,
+      "end": 31729,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S278",
+      "start": 31729,
+      "end": 31946,
+      "text": "# 8. Conclusions and Concluding Remarks\n\nAging is not a disease that needs to be treated but a natural process; however, premature or unhealthy aging still needs more study to understand mechanisms and leading causes.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S279",
+      "start": 31947,
+      "end": 32069,
+      "text": "There is a controversial view that OS leads to a short life span and is linked to age-related disease and quality of life.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S280",
+      "start": 32070,
+      "end": 32230,
+      "text": "Numerous studies have shown a significant elevation in OS and free radical concentration as a common cause of aging and accompanying neurodegenerative diseases.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S281",
+      "start": 32231,
+      "end": 32361,
+      "text": "However, in nature, comparative studies indicate long lives of some animals despite high levels of free radicals in their tissues.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S282",
+      "start": 32362,
+      "end": 32428,
+      "text": "This means that there are many unknown mechanisms to cope with OS.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S283",
+      "start": 32429,
+      "end": 32628,
+      "text": "Therefore, a healthy lifestyle to avoid factors that elevate OS, as well as increased intake of natural antioxidants, can protect against OS and prevent neurodegenerative diseases before their onset.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S284",
+      "start": 32628,
+      "end": 32631,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=article text | pred=abstract | obj=Abstract | unit=S2\nB T4 B2 | sub=The world population | pred=age | obj=lifespan | unit=S3\nB T4 B3 | sub=premature aging | pred=begin | obj=On the other hand | unit=S4\nB T4 B4 | sub=Advanced aging | pred=cause | obj=by a combination of factors: lifestyle | unit=S5\nB T4 B5 | sub=it | pred=understand | obj=Although OS is the most researched | unit=S6\nB T4 B6 | sub=OS | pred=important | obj=not only in relation to aging | unit=S7\nB T4 B7 | sub=we | pred=discuss | obj=In this review | unit=S8\nB T4 B8 | sub=1. Introduction Healthy aging is characterized | pred=factor | obj=in the aging process that can | unit=S9\nB T4 B9 | sub=Aging | pred=factor | obj=for many diseases, including cancer, metabolic, | unit=S11\nB T4 B10 | sub=Aging | pred=link | obj=to a loss of homeostasis, involving | unit=S12\nB T4 B11 | sub=There | pred=be | obj=two | unit=S13\nB T4 B12 | sub=alterations in normal metabolic and mitochondrial | pred=induce | obj=According to the free radical theory | unit=S14\nB T4 B13 | sub=The second and more recent theory | pred=theory | obj=of aging | unit=S15\nB T4 B14 | sub=This theory | pred=posit | obj=that the loss of balance between | unit=S16\nB T4 B15 | sub=The redox network | pred=essential | obj=in antioxidant defense | unit=S18\nB T4 B16 | sub=Mitochondria | pred=serve | obj=a crucial function | unit=S19\nB T4 B17 | sub=Free radicals such as reactive oxygen | pred=produce | obj=by oxidative phosphorylation | unit=S20\nB T4 B18 | sub=Free radicals | pred=produce | obj=cellular processes such as inflammation | unit=S21\nB T4 B19 | sub=Free radicals | pred=form | obj=due to processes involving molecular oxygen | unit=S23\nB T4 B20 | sub=The primary distinction between healthy aging | pred=balance | obj=between free radical elevation | unit=S25\nB T4 B21 | sub=The primary distinction between healthy aging | pred=balance | obj=between free radical generation (RNS and | unit=S26\nB T4 B22 | sub=ROS production | pred=overpower | obj=In the event of loss of | unit=S28\nB T4 B23 | sub=This | pred=document | obj=in numerous clinical studies involving mitochondrial | unit=S29\nB T4 B24 | sub=The brain | pred=prone | obj=to oxidative damage | unit=S30\nB T4 B25 | sub=Lipid peroxides (LPO | pred=molecule | obj=that | unit=S32\nB T4 B26 | sub=They | pred=disrupt | obj=proteins | unit=S33\nB T4 B27 | sub=Increased MDA | pred=observe | obj=in brain tissues of Tg2576 Alzheimer’s | unit=S34\nB T4 B28 | sub=Oxidative damage to DNA | pred=result | obj=in formation of oxidized base adducts, | unit=S35\nB T4 B29 | sub=its defense system against OS | pred=remain | obj=Despite the brain’s great potential for | unit=S36\nB T4 B30 | sub=The limited regenerative ability of postmitotic | pred=render | obj=OS more damaging to the brain, | unit=S37\nB T4 B31 | sub=Other Sources of Free Radicals | pred=contribute | obj=to OS | unit=S40\nB T4 B32 | sub=2.1. Environmental Factors: Radiation/UV Rays | pred=contribute | obj=to elevated ROS production in cells | unit=S44\nB T4 B33 | sub=Ionizing radiation | pred=transform | obj=hydroxyl radicals | unit=S45\nB T4 B34 | sub=peroxides | pred=react | obj=with metal ions, particularly Fe | unit=S46\nB T4 B35 | sub=Several studies | pred=demonstrate | obj=that exposure of fibroblasts to alpha | unit=S47\nB T4 B36 | sub=Ultraviolet radiation (UVA | pred=induce | obj=oxidative processes | unit=S48\nB T4 B37 | sub=Heavy metals | pred=crucial | obj=to the formation of free radicals | unit=S49\nB T4 B38 | sub=Nickel | pred=produce | obj=free radicals | unit=S50\nB T4 B39 | sub=lead | pred=cause | obj=In brain tissue | unit=S51\nB T4 B40 | sub=arsenic | pred=generate | obj=peroxides | unit=S52\nB T4 B41 | sub=Free radicals produced by these reactions | pred=cause | obj=substitutions of DNA bases, including guanine | unit=S53\nB T4 B42 | sub=ozone exposure | pred=impair | obj=lung function | unit=S54\nB T4 B43 | sub=Lifestyle | pred=factor | obj=Lifestyle Related Factors | unit=S58\nB T4 B44 | sub=factors | pred=smoking | obj=drinking | unit=S59\nB T4 B45 | sub=Some research | pred=show | obj=that ROS are present at the | unit=S60\nB T4 B46 | sub=Muscle fibers | pred=produce | obj=small quantities of reactive oxygen radicals, | unit=S61\nB T4 B47 | sub=These oxygen radicals | pred=have | obj=many direct and indirect effects | unit=S62\nB T4 B48 | sub=Long, exhausting exercise | pred=cause | obj=a massive response to OS | unit=S64\nB T4 B49 | sub=Endogenous antioxidant status | pred=improve | obj=by moderate exercise | unit=S65\nB T4 B50 | sub=ROS | pred=part | obj=cells | unit=S67\nB T4 B51 | sub=Nuclear factor kappa B | pred=up-regulate | obj=by physical activity | unit=S68\nB T4 B52 | sub=These | pred=activate | obj=gene expression of various enzymes and | unit=S69\nB T4 B53 | sub=Physical exercise | pred=therapy | obj=chronic | unit=S70\nB T4 B54 | sub=Relevant studies [35 | pred=show | obj=that autophagy, a process that breaks | unit=S71\nB T4 B55 | sub=Cigarette smoke | pred=have | obj=oxidants | unit=S73\nB T4 B56 | sub=These | pred=cause | obj=neutrophils and macrophages to gather in | unit=S74\nB T4 B57 | sub=Genetic Factors | pred=prone | obj=to free radical damage | unit=S78\nB T4 B58 | sub=Oligodendrocytes | pred=susceptible | obj=to oxidative damage | unit=S79\nB T4 B59 | sub=Antioxidant defense enzymes in the brain, | pred=essential | obj=toxic | unit=S80\nB T4 B60 | sub=Allelic variants of polymorphisms encoding these | pred=associate | obj=with anomalies in SOD, CAT, GPx, | unit=S81\nB T4 B61 | sub=Mechanistic Evolution of Neurodegenerative Diseases Caused | pred=condition | obj=neuronal | unit=S85\nB T4 B62 | sub=The incidence of neurodegenerative disease | pred=increase | obj=especially in countries with aging populations | unit=S86\nB T4 B63 | sub=Common neurodegenerative diseases | pred=include | obj=Alzheimer’s (AD) and Parkinson’s (PD) diseases | unit=S87\nB T4 B64 | sub=Mitochondria | pred=source | obj=of ROS | unit=S88\nB T4 B65 | sub=stress | pred=sclerosis | obj=Alzheimer | unit=S89\nB T4 B66 | sub=Mitochondrial synthesis of ATP through oxidative | pred=have | obj=the substantial disadvantage of producing unpaired | unit=S90\nB T4 B67 | sub=The electron transport chain | pred=comprise | obj=five multiprotein complexes that mediate interaction | unit=S91\nB T4 B68 | sub=Electron transfer from NADH to ubiquinone | pred=catalyze | obj=by mitochondrial complex I (reduced nicotinamide | unit=S92\nB T4 B69 | sub=Complex II | pred=provide | obj=electrons | unit=S93\nB T4 B70 | sub=Electrons from reduced ubiquinone | pred=donate | obj=to complex III (cytochrome bc1 | unit=S94\nB T4 B71 | sub=Complex IV (CytC oxidase | pred=involve | obj=in interactions between molecular oxygen | unit=S95\nB T4 B72 | sub=Complexes I | pred=link | obj=to premature electron leakage to oxygen | unit=S96\nB T4 B73 | sub=elevated ROS levels | pred=trigger | obj=formation of additional reactive species, such | unit=S97\nB T4 B74 | sub=mitochondria | pred=generate | obj=in addition to ROS | unit=S98\nB T4 B75 | sub=Free oxygen radicals | pred=damage | obj=proteins | unit=S99\nB T4 B76 | sub=Mitochondrial internal components and mitochondrial DNA | pred=vulnerable | obj=to OS-induced damage | unit=S101\nB T4 B77 | sub=Enzymatic and non-enzymatic mechanisms | pred=safeguard | obj=antioxidant systems | unit=S102\nB T4 B78 | sub=SOD | pred=enzyme | obj=catalytic | unit=S103\nB T4 B79 | sub=Non-enzymatic complexes | pred=include | obj=vitamins A | unit=S104\nB T4 B80 | sub=article text | pred=disorder | obj=OS | unit=S107\nB T4 B81 | sub=the genesis of amyotrophic lateral sclerosis | pred=clear | obj=Despite substantial investigation | unit=S108\nB T4 B82 | sub=Ninety percent of ALS cases | pred=sporadic | obj=genetic | unit=S109\nB T4 B83 | sub=ALS | pred=link | obj=to various occupational and environmental variables, | unit=S110\nB T4 B84 | sub=A recognized but poorly understood pathogenic | pred=level | obj=inadequate | unit=S111\nB T4 B85 | sub=OS | pred=essential | obj=for motor neuron death | unit=S112\nB T4 B86 | sub=OS biomarkers | pred=identify | obj=in brain tissue of ALS patients, | unit=S113\nB T4 B87 | sub=It | pred=challenging | obj=to track OS biomarkers over a | unit=S114\nB T4 B88 | sub=it | pred=difficult | obj=because of OS’s random start | unit=S115\nB T4 B89 | sub=Investigations using a murine ALS model | pred=reveal | obj=altered mitochondrial structures | unit=S116\nB T4 B90 | sub=OS damage | pred=cause | obj=formation | unit=S117\nB T4 B91 | sub=these studies | pred=use | obj=the murine mutant SOD1 ALS model | unit=S118\nB T4 B92 | sub=Twenty individuals with sporadic ALS | pred=have | obj=significantly higher levels of lipid peroxidation | unit=S119\nB T4 B93 | sub=Progression of alterations | pred=parallel | obj=the pathophysiology of ALS | unit=S120\nB T4 B94 | sub=the aforementioned environmental | pred=work | obj=to promote pro-oxidative states that may | unit=S121\nB T4 B95 | sub=The intermembrane space (IMS) of mitochondria | pred=contain | obj=a protein known as Coiled-Coil-Helix-Coiled-Coil-Helix Domain-Containing | unit=S123\nB T4 B96 | sub=it | pred=believe | obj=to be involved in maintaining mitochondrial | unit=S124\nB T4 B97 | sub=overexpression of mutant CHCHD10 harboring an | pred=alter | obj=In particular | unit=S125\nB T4 B98 | sub=fibroblasts from an ALS patient with | pred=display | obj=In addition | unit=S126\nB T4 B99 | sub=OS in Alzheimer’s Disease (AD | pred=characterize | obj=by a steady decline in behavior, | unit=S130\nB T4 B100 | sub=AD brains | pred=have | obj=higher protein | unit=S131\nB T4 B101 | sub=Pathological indicators of AD | pred=include | obj=extracellular senile plaques (SP | unit=S132\nB T4 B102 | sub=Protein aggregation | pred=sporadic | obj=its | unit=S133\nB T4 B103 | sub=Several investigations | pred=reveal | obj=that AD brains display elevated OS, | unit=S134\nB T4 B104 | sub=Amyloid fibril precursors | pred=neurotoxic | obj=owing to OS generated by toxic | unit=S135\nB T4 B105 | sub=Tau protein aggregation | pred=hallmark | obj=of AD | unit=S137\nB T4 B106 | sub=Several reports | pred=indicate | obj=that neurotoxicity caused by beta amyloid | unit=S138\nB T4 B107 | sub=NFTs in the early stages of | pred=deposit | obj=extracellular | unit=S139\nB T4 B108 | sub=NFTs | pred=compose | obj=of paired helical filaments (PHFs) in | unit=S140\nB T4 B109 | sub=they | pred=self-assemble | obj=into NFTs | unit=S141\nB T4 B110 | sub=amyloid deposition | pred=occur | obj=According to recent data | unit=S142\nB T4 B111 | sub=researchers | pred=identify | obj=a clear link | unit=S143\nB T4 B112 | sub=OS in Parkinson’s Disease (PD | pred=recognize | obj=Unlike AD | unit=S147\nB T4 B113 | sub=the substantia nigra pars compacta | pred=exhibit | obj=In PD brains | unit=S148\nB T4 B114 | sub=The nigrostriatal pathway’s degenerating neurons | pred=release | obj=less of the neurotransmitter dopamine | unit=S149\nB T4 B115 | sub=Lewy bodies | pred=cluster | obj=of aberrant proteins seen in neurons | unit=S150\nB T4 B116 | sub=They | pred=component | obj=of α-synuclein (α-syn) protein | unit=S151\nB T4 B117 | sub=α-syn fibrillation | pred=create | obj=clumps that take up significant space | unit=S152\nB T4 B118 | sub=pathophysiological pathways underlying PD | pred=related | obj=As in AD | unit=S153\nB T4 B119 | sub=Evidence of OS involvement | pred=see | obj=in the substantia nigra of PD | unit=S154\nB T4 B120 | sub=the monoamine oxidase (MAO) that breaks | pred=create | obj=hydrogen peroxide | unit=S155\nB T4 B121 | sub=These reactive substances | pred=cause | obj=other nearby neurons | unit=S156\nB T4 B122 | sub=OS in Multiple Sclerosis (MS | pred=disease | obj=of the central nervous system (CNS | unit=S161\nB T4 B123 | sub=MS patients | pred=develop | obj=almost any neurological sign or symptom, | unit=S162\nB T4 B124 | sub=OS | pred=involve | obj=in several MS pathological hallmarks such | unit=S163\nB T4 B125 | sub=OS | pred=trigger | obj=In MS as in other neurodegenerative | unit=S164\nB T4 B126 | sub=Neurons | pred=produce | obj=chemicals that bind to microglial receptors | unit=S165\nB T4 B127 | sub=microglial activation | pred=increase | obj=myelin | unit=S166\nB T4 B128 | sub=Microglial physiological functions | pred=transform | obj=into harmful inflammatory insults | unit=S167\nB T4 B129 | sub=our results | pred=imply | obj=that during the onset and development | unit=S168\nB T4 B130 | sub=Simultaneous activation of a sophisticated antioxidant | pred=insufficient | obj=to stop the apoptotic and degenerative | unit=S169\nB T4 B131 | sub=the CNS | pred=susceptible | obj=Due to a combination of circumstances, | unit=S170\nB T4 B132 | sub=Oxidative damage | pred=affect | obj=the immune response that is developing | unit=S171\nB T4 B133 | sub=elevated ROS levels | pred=harm | obj=the brain endothelium | unit=S172\nB T4 B134 | sub=Significance of Non-Coding RNAs in OS | pred=damage | obj=RNA | unit=S176\nB T4 B135 | sub=An overabundance of ROS | pred=cause | obj=chemical modification or even separation of | unit=S177\nB T4 B136 | sub=Oxidatively damaged RNA | pred=accumulate | obj=in cells | unit=S178\nB T4 B137 | sub=Non-coding RNAs (ncRNAs), which do not | pred=make | obj=the majority of RNAs | unit=S180\nB T4 B138 | sub=regulatory ncRNAs, including long ncRNAs (lncRNAs) | pred=involve | obj=As a category of ncRNAs | unit=S181\nB T4 B139 | sub=these regulatory ncRNAs | pred=persist | obj=Compared to mRNAs, these regulatory ncRNAs | unit=S182\nB T4 B140 | sub=oxidative damage | pred=cause | obj=prolonged effects | unit=S183\nB T4 B141 | sub=ncRNAs of several types | pred=link | obj=to various neurogenerative diseases | unit=S184\nB T4 B142 | sub=the direct relationship between ncRNA oxidation | pred=unclear | obj=except in PD, in which the | unit=S185\nB T4 B143 | sub=regulatory small ncRNAs such as miRNAs | pred=help | obj=In contrast | unit=S186\nB T4 B144 | sub=Their interactions | pred=involve | obj=in the pathophysiology of PD | unit=S187\nB T4 B145 | sub=RNA oxidation | pred=hallmark | obj=of PD | unit=S188\nB T4 B146 | sub=8-oxo-7, 8-dihydroguanosine (8-oxoG | pred=one | obj=of many oxidative marks on RNA | unit=S189\nB T4 B147 | sub=Guanine’s vulnerability to free radicals | pred=mean | obj=that it can form this base | unit=S190\nB T4 B148 | sub=Neuronal apoptosis | pred=influence | obj=by lncRNAs | unit=S191\nB T4 B149 | sub=free radical damage to miRNAs | pred=cause | obj=For instance | unit=S192\nB T4 B150 | sub=A reduction in α-syn expression | pred=mediate | obj=by two miRNAs | unit=S193\nB T4 B151 | sub=High levels of α-syn | pred=result | obj=from stress-induced oxidative loss of translational | unit=S194\nB T4 B152 | sub=Chen et al. | pred=find | obj=that OS triggered modification of circRNA | unit=S196\nB T4 B153 | sub=m6A-modified circRNAs | pred=modulate | obj=expression of stress response genes (UBC | unit=S197\nB T4 B154 | sub=The regulatory role of miRNAs in | pred=link | obj=to α-syn, which is responsible for | unit=S199\nB T4 B155 | sub=Both microRNA-141-3p | pred=target | obj=the 3′ UTR of SIRT1 mRNA | unit=S200\nB T4 B156 | sub=knockdown of microRNA-141-3p | pred=alleviate | obj=OS | unit=S201\nB T4 B157 | sub=article text | pred=responsible | obj=oxidants | unit=S202\nB T4 B158 | sub=MicroRNA-137 | pred=aggravate | obj=OS | unit=S203\nB T4 B159 | sub=MicroRNA-335 | pred=suppress | obj=expression of FTH1 | unit=S204\nB T4 B160 | sub=Downregulation of microRNA-410 expression in PD | pred=associate | obj=with elevated ROS production | unit=S205\nB T4 B161 | sub=Regulatory lncRNAs | pred=hallmark | obj=of PD | unit=S206\nB T4 B162 | sub=mitochondrial dysfunction | pred=link | obj=In PD | unit=S207\nB T4 B163 | sub=α-syn aggregate formation | pred=exacerbate | obj=OS | unit=S208\nB T4 B164 | sub=Upregulation of beta-amyloid-cleaving enzyme-antisense (BACE1-AS), a | pred=associate | obj=with increasing levels of α-syn in | unit=S209\nB T4 B165 | sub=the lncRNA microRNA-17-92a-1 cluster host gene | pred=promote | obj=In addition | unit=S210\nB T4 B166 | sub=MicroRNA-153-5p | pred=inhibit | obj=α-syn expression | unit=S211\nB T4 B167 | sub=Inhibition of autophagy by GSK3 | pred=promote | obj=α-syn buildup | unit=S212\nB T4 B168 | sub=MicroRNA-15b-5p | pred=suppress | obj=GSK3 expression | unit=S213\nB T4 B169 | sub=Cellular effects of oxidatively damaged RNA | pred=begin | obj=to be explored | unit=S214\nB T4 B170 | sub=Methods to Measure OS in Neurodegenerative | pred=difficult | obj=to detect in the human brain | unit=S216\nB T4 B171 | sub=The following measures | pred=use | obj=to quantify brain OS | unit=S217\nB T4 B172 | sub=Peripheral Blood OS | pred=examine | obj=in peripheral blood | unit=S220\nB T4 B173 | sub=vitamin | pred=a | obj=C | unit=S221\nB T4 B174 | sub=Lower plasma GSH levels | pred=associate | obj=with more severe cognitive impairment | unit=S222\nB T4 B175 | sub=PD patients | pred=have | obj=inconsistently altered erythrocyte SOD activity | unit=S223\nB T4 B176 | sub=Increased SOD activity | pred=protect | obj=against OS damage | unit=S224\nB T4 B177 | sub=GSH | pred=antioxidant | obj=1H | unit=S228\nB T4 B178 | sub=GSH content in the human brain | pred=low | obj=than N-acetyl aspartate | unit=S229\nB T4 B179 | sub=it | pred=challenging | obj=With MRS | unit=S230\nB T4 B180 | sub=GSH-CH2 cysteine’s protons | pred=resonate | obj=at 2.93 and 2.97 ppm | unit=S231\nB T4 B181 | sub=spectral editing methods such as MEscher-GArwood-PRESS | pred=need | obj=to boost GSH signals so as | unit=S232\nB T4 B182 | sub=MEGA-PRESS combined with a 180° editing | pred=distinguish | obj=GSH-cysteine signals | unit=S233\nB T4 B183 | sub=Recent research | pred=find | obj=that GSH levels are lower in | unit=S234\nB T4 B184 | sub=The concentration of vitamin C (ascorbic | pred=mm | obj=MRS | unit=S236\nB T4 B185 | sub=measuring vitamin C using 1H MRS | pred=problematic | obj=owing to the similarities between the | unit=S237\nB T4 B186 | sub=MEGA-PRESS editing | pred=aid | obj=vitamin | unit=S238\nB T4 B187 | sub=Several earlier research [153 | pred=use | obj=1H-MRS | unit=S239\nB T4 B188 | sub=Electron Paramagnetic Resonance (EPR) Spectroscopy | pred=occur | obj=in the microwave region of the | unit=S243\nB T4 B189 | sub=it | pred=influence | obj=As a result | unit=S244\nB T4 B190 | sub=EPR spectroscopy | pred=detect | obj=owing to short radical half-lives, compared | unit=S245\nB T4 B191 | sub=a stable chemical | pred=use | obj=to capture radicals | unit=S246\nB T4 B192 | sub=EPR | pred=implement | obj=neurodegenerative | unit=S247\nB T4 B193 | sub=one of the main reasons why | pred=sensitivity | obj=Despite years of research in EPR | unit=S248\nB T4 B194 | sub=More research | pred=require | obj=EPR | unit=S249\nB T4 B195 | sub=Positron Emission Tomography (PET | pred=measure | obj=using a radiotracer for positron emission | unit=S253\nB T4 B196 | sub=[62Cu] diacetyl-bis (N4-methylthiosemicarbazone) ([62Cu] ATSM | pred=radiotracer | obj=PET | unit=S254\nB T4 B197 | sub=Evaluation of striatal OS in patients | pred=confirm | obj=147 | unit=S255\nB T4 B198 | sub=this tracer | pred=utilize | obj=In a recent study | unit=S256\nB T4 B199 | sub=deposition of [62Cu] ATSM | pred=detect | obj=In this investigation | unit=S257\nB T4 B200 | sub=Approaches to Slow Aging by Fighting | pred=have | obj=several lines of defense against OS | unit=S260\nB T4 B201 | sub=Multiple antioxidant defense pathways | pred=involve | obj=in the brain’s ROS detoxification | unit=S261\nB T4 B202 | sub=The metalloproteins SOD | pred=constitute | obj=the first line of antioxidant defense | unit=S262\nB T4 B203 | sub=Age-related accumulation of highly reactive polyunsaturated | pred=exacerbated | obj=by suboptimal antioxidant levels | unit=S263\nB T4 B204 | sub=manipulating ROS levels | pred=approach | obj=neurodegeneration | unit=S264\nB T4 B205 | sub=article text | pred=top | obj=of preventative approaches | unit=S265\nB T4 B206 | sub=Diet | pred=component | obj=healthy | unit=S266\nB T4 B207 | sub=The gut flora | pred=hypersensitive | obj=to extrinsic variables linked to an | unit=S267\nB T4 B208 | sub=Preclinical studies | pred=show | obj=that a high-fat diet (HFD) in | unit=S268\nB T4 B209 | sub=Pro-inflammatory bacteria such as Clostridium | pred=correlate | obj=with hyperglycemic fluctuations in the brain | unit=S269\nB T4 B210 | sub=The need for gut microbiome therapies | pred=grow | obj=area | unit=S270\nB T4 B211 | sub=dietary and probiotic supplementation | pred=investigate | obj=With impressive results | unit=S271\nB T4 B212 | sub=Recent research | pred=show | obj=that exercise may alter gut microbiota, | unit=S272\nB T4 B213 | sub=Nutraceuticals | pred=exist | obj=in food | unit=S274\nB T4 B214 | sub=Nutraceuticals that show metal chelation ability | pred=example | obj=of natural antioxidants from foods and | unit=S275\nB T4 B215 | sub=Aging | pred=disease | obj=that | unit=S278\nB T4 B216 | sub=There | pred=be | obj=controversial | unit=S279\nB T4 B217 | sub=Numerous studies | pred=show | obj=a significant elevation in OS | unit=S280\nB T4 B218 | sub=comparative studies | pred=indicate | obj=in nature | unit=S281\nB T4 B219 | sub=This | pred=mean | obj=that there are many unknown mechanisms | unit=S282\nB T4 B220 | sub=a healthy lifestyle to avoid factors | pred=protect | obj=against OS | unit=S283",
+  "expected": {
+    "assertion_count": 220,
+    "minimum_concept_count": 406,
+    "minimum_structural_row_count": 799,
+    "minimum_knowledge_map_node_count": 799,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

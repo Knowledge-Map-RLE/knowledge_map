@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10000969",
+  "document_uid": "PMC10000969",
+  "article_title": "Mitochondria Localized microRNAs: An Unexplored miRNA Niche in Alzheimer’s Disease and Aging",
+  "doi": "10.3390/cells12050742",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10000969/PMC10000969.md"
+  },
+  "article_sha256": "63e8e190142a79c6f76ffd94085dd88e1e48d01829a22c2ba1ff4fca0ada2d5a",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

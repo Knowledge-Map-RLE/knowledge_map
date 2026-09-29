@@ -1,0 +1,1492 @@
+{
+  "schema_version": 1,
+  "article_id": "live-eval-PMC10000584",
+  "source_revision_id": "fd744ea7-a73a-528e-84c9-873631fc6189",
+  "source_sha256": "62e64a49451a0a3f456925756f9908098166696bfca2e0e5be4103873c49a39d",
+  "source_text_length": 38136,
+  "coordinate_space": "pipeline_source_after_reference_stripping",
+  "offset_encoding": "unicode_codepoints",
+  "references_removed": {
+    "start_char": 38139,
+    "heading": "## References",
+    "removed_chars": 10784
+  },
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 477,
+      "text": "# Implications of Hypothalamic Neural Stem Cells on Aging and Obesity-Associated Cardiovascular Diseases\n\n**Авторы:** Plakkot Bhuvana, Di Agostino Ashley, Subramanian Madhan\n\n**Журнал:** Cells (2023)\n\n**DOI:** 10.3390/cells12050769\n\n\n## Abstract\n\nThe hypothalamus, one of the major regulatory centers in the brain, controls various homeostatic processes, and hypothalamic neural stem cells (htNSCs) have been observed to interfere with hypothalamic mechanisms regulating aging."
+    },
+    {
+      "id": "S2",
+      "start": 478,
+      "end": 632,
+      "text": "NSCs play a pivotal role in the repair and regeneration of brain cells during neurodegenerative diseases and rejuvenate the brain tissue microenvironment."
+    },
+    {
+      "id": "S3",
+      "start": 633,
+      "end": 740,
+      "text": "The hypothalamus was recently observed to be involved in neuroinflammation mediated by cellular senescence."
+    },
+    {
+      "id": "S4",
+      "start": 741,
+      "end": 981,
+      "text": "Cellular senescence, or systemic aging, is characterized by a progressive irreversible state of cell cycle arrest that causes physiological dysregulation in the body and it is evident in many neuroinflammatory conditions, including obesity."
+    },
+    {
+      "id": "S5",
+      "start": 982,
+      "end": 1106,
+      "text": "Upregulation of neuroinflammation and oxidative stress due to senescence has the potential to alter the functioning of NSCs."
+    },
+    {
+      "id": "S6",
+      "start": 1107,
+      "end": 1192,
+      "text": "Various studies have substantiated the chances of obesity inducing accelerated aging."
+    },
+    {
+      "id": "S7",
+      "start": 1193,
+      "end": 1402,
+      "text": "Therefore, it is essential to explore the potential effects of htNSC dysregulation in obesity and underlying pathways to develop strategies to address obesity-induced comorbidities associated with brain aging."
+    },
+    {
+      "id": "S8",
+      "start": 1403,
+      "end": 1590,
+      "text": "This review will summarize hypothalamic neurogenesis associated with obesity and prospective NSC-based regenerative therapy for the treatment of obesity-induced cardiovascular conditions."
+    },
+    {
+      "id": "S9",
+      "start": 1590,
+      "end": 1593,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S10",
+      "start": 1593,
+      "end": 1611,
+      "text": "## 1. Introduction"
+    },
+    {
+      "id": "S11",
+      "start": 1611,
+      "end": 1725,
+      "text": "\n\nNeural stem cells (NSCs) in an adult brain are responsible for neurogenesis and regeneration of brain functions."
+    },
+    {
+      "id": "S12",
+      "start": 1726,
+      "end": 1913,
+      "text": "The two primary NSC reservoirs (neurogenic niches) in an adult mammalian brain are the sub-ventricular zone (SVZ) of the lateral ventricles and the hippocampal dentate gyrus (DG) [1,2,3]."
+    },
+    {
+      "id": "S13",
+      "start": 1914,
+      "end": 2014,
+      "text": "In recent times, a third NSC pool, hypothalamic neural stem cells (htNSCs), were discovered [4,5,6]."
+    },
+    {
+      "id": "S14",
+      "start": 2015,
+      "end": 2096,
+      "text": "The htNSC population is sensitive to variations in nutrient intake and signaling."
+    },
+    {
+      "id": "S15",
+      "start": 2097,
+      "end": 2411,
+      "text": "An increase in neurogenesis in the hypothalamus was observed upon acutely feeding a high fat diet (HFD) [7], whereas a reduced neurogenesis in the hypothalamus was noticed as a result of chronic HFD feeding [8], and ‘inflammation’ was suggested as a major factor in causing such pronounced changes in neurogenesis."
+    },
+    {
+      "id": "S16",
+      "start": 2412,
+      "end": 2583,
+      "text": "Upon htNSCs culturing, we observed a significant increase in htNSCs after eight months in HFD-fed C57BL/6J male adult mice compared to the chow-fed controls (unpublished)."
+    },
+    {
+      "id": "S17",
+      "start": 2583,
+      "end": 2585,
+      "text": "\n\n"
+    },
+    {
+      "id": "S18",
+      "start": 2585,
+      "end": 2733,
+      "text": "Cellular senescence is an irreversible growth arrest in proliferating cells, which has been implicated in several neurodegenerative diseases [9,10]."
+    },
+    {
+      "id": "S19",
+      "start": 2734,
+      "end": 2846,
+      "text": "During the process of senescence, the NSCs lose their ability to proliferate and generate neurons [11,12,13,14]."
+    },
+    {
+      "id": "S20",
+      "start": 2847,
+      "end": 3081,
+      "text": "Supplementing mono-unsaturated fatty acids, such as oleic acid, in the diet caused lipid droplets to develop in ependymal cells and contributed to a decrease in neurogenesis in SVZ in the Alzheimer’s disease mouse model, 3xTg-AD [15]."
+    },
+    {
+      "id": "S21",
+      "start": 3082,
+      "end": 3264,
+      "text": "Likewise in obesity, SVZ showed an increase in senescent glial cells carrying excessive fat deposits, and genetically ablating these senescent glial cells restored neurogenesis [16]."
+    },
+    {
+      "id": "S22",
+      "start": 3265,
+      "end": 3349,
+      "text": "Thus, modifying the lipid content in the diet can replenish the old neurogenic pool."
+    },
+    {
+      "id": "S23",
+      "start": 3350,
+      "end": 3559,
+      "text": "In this review, we will summarize hypothalamic neurogenesis associated with obesity and aging and explore the possibilities of NSC-based regenerative therapy to treat obesity-induced cardiovascular conditions."
+    },
+    {
+      "id": "S24",
+      "start": 3559,
+      "end": 3689,
+      "text": "\n\n\n## 2. HtNSCs and Obesity\n\nNSCs are multipotent and they generate neurons, oligodendrocytes, and glia in the nervous system [17]"
+    },
+    {
+      "id": "S25",
+      "start": 3689,
+      "end": 3690,
+      "text": "."
+    },
+    {
+      "id": "S26",
+      "start": 3691,
+      "end": 3826,
+      "text": "Varied levels of neural inflammation are observed in many neurological disorders or neurodegenerative diseases in human beings [18,19]."
+    },
+    {
+      "id": "S27",
+      "start": 3827,
+      "end": 3993,
+      "text": "Their progression involves mediators of inflammation that are synthesized and secreted by various CNS cells, such as astrocytes, microglia, and oligodendrocytes [20]."
+    },
+    {
+      "id": "S28",
+      "start": 3994,
+      "end": 4148,
+      "text": "Both beneficial and detrimental effects are observed in inflammatory conditions, which makes it unclear to specify the exact role of inflammation on NSCs."
+    },
+    {
+      "id": "S29",
+      "start": 4149,
+      "end": 4379,
+      "text": "Certain pathways, after long term activation, cause energy imbalance, abnormal nutrient metabolism, restricted neurogenesis, proliferation, and differentiation of neural stem cells leading to metabolic and cognitive abnormalities."
+    },
+    {
+      "id": "S30",
+      "start": 4380,
+      "end": 4501,
+      "text": "In the hypothalamus, the medio-basal hypothalamus (MBH) and the 3rd ventricle wall are observed to be the NSC niches [8]."
+    },
+    {
+      "id": "S31",
+      "start": 4502,
+      "end": 4575,
+      "text": "Some studies state that mainly adult NSCs are observed in the MBH [7,21]."
+    },
+    {
+      "id": "S32",
+      "start": 4576,
+      "end": 4657,
+      "text": "The MBH is a predominant region for physiological homeostasis of the entire body."
+    },
+    {
+      "id": "S33",
+      "start": 4658,
+      "end": 4780,
+      "text": "Many neural progenitors or specialized ependymal cells that line the 3rd ventricle are observed to be glia-like tanycytes."
+    },
+    {
+      "id": "S34",
+      "start": 4781,
+      "end": 4870,
+      "text": "They send processes to the arcuate nucleus and ventro-medial nucleus of the hypothalamus."
+    },
+    {
+      "id": "S35",
+      "start": 4871,
+      "end": 5037,
+      "text": "Functionally these tanycytes are observed to be glucosensitive, reacting to metabolic stimulation and signal variations caused by feeding and energy balance [4,7,22]."
+    },
+    {
+      "id": "S36",
+      "start": 5038,
+      "end": 5277,
+      "text": "Properties of tanycytes include ATP release, purinergic P2Y1 receptors, ectonucleoside triphosphate diphosphohydrolase 2 (NTPDase2) expression [23], and reacting to the activation of these receptors by the means of intense Ca2+ waves [24]."
+    },
+    {
+      "id": "S37",
+      "start": 5278,
+      "end": 5336,
+      "text": "This is similar to the signaling mechanisms in stem cells."
+    },
+    {
+      "id": "S38",
+      "start": 5337,
+      "end": 5504,
+      "text": "Expression of doublecortin-like [25] proteins, nestin [26,27,28] and vimentin [29,30,31], linked to neural precursor cells are observed in humans and rodent tanycytes."
+    },
+    {
+      "id": "S39",
+      "start": 5505,
+      "end": 5674,
+      "text": "The expression of Sox2 [7,8], a nuclear transcription factor and NSC marker, is found in a few of the tanycytes, especially in the subventricular zone and dentate gyrus."
+    },
+    {
+      "id": "S40",
+      "start": 5675,
+      "end": 5807,
+      "text": "In adult mice, it is mainly expressed in a group of cells in the MBH, particularly within the hypothalamic third-ventricle wall [8]."
+    },
+    {
+      "id": "S41",
+      "start": 5808,
+      "end": 5934,
+      "text": "However, a few studies have shown rare occurrences of proliferating neurogenic progenitors in the human dentate gyrus [32,33]."
+    },
+    {
+      "id": "S42",
+      "start": 5935,
+      "end": 6077,
+      "text": "One of the studies also observed human paralaminar nuclei of the amygdala showing persistence of immature excitatory neurons for decades [34]."
+    },
+    {
+      "id": "S43",
+      "start": 6078,
+      "end": 6316,
+      "text": "Thus, the possibility of observing immature non-proliferative hypothalamic neurons cannot be denied and future studies focusing on confirming their ability to proliferate and differentiate could possibly reveal their normal functionality."
+    },
+    {
+      "id": "S44",
+      "start": 6316,
+      "end": 6565,
+      "text": "\n\nThe MBH regulates body weight, feeding, and glucose balance via melanocortin signals based in the arcuate nucleus (ARC), mainly via orexigenic agouti-related peptide (AGRP) neurons and anorexigenic proopiomelanocortin (POMC) neurons [35,36,37,38]."
+    },
+    {
+      "id": "S45",
+      "start": 6566,
+      "end": 6748,
+      "text": "Leptin and insulin, which vary with different fat mass conditions and feeding patterns, affect these two neurons and the process is crucial for body weight homeostasis [36,39,40,41]."
+    },
+    {
+      "id": "S46",
+      "start": 6749,
+      "end": 6945,
+      "text": "The studies also showed decrease in responsiveness to leptin and insulin by these neurons upon chronic feeding of a high-fat diet (HFD), resulting in type-2 diabetes (T2D) and HFD-induced obesity."
+    },
+    {
+      "id": "S47",
+      "start": 6946,
+      "end": 7043,
+      "text": "A 10% loss in POMC neurons was observed in the hypothalamus upon long term HFD feeding [8,21,42]."
+    },
+    {
+      "id": "S48",
+      "start": 7044,
+      "end": 7143,
+      "text": "Neural precursors giving rise to different neurons were observed to have POMC gene expression [43]."
+    },
+    {
+      "id": "S49",
+      "start": 7144,
+      "end": 7272,
+      "text": "Considering these data and mechanisms, there is evidence of dysregulation of neurogenesis in the hypothalamus of obese subjects."
+    },
+    {
+      "id": "S50",
+      "start": 7273,
+      "end": 7445,
+      "text": "Based on many recent studies, neurogenesis has been observed in adult rodents [7,22,44,45] and htNSCs in adult MBH contribute to the regulation of metabolic physiology [8]."
+    },
+    {
+      "id": "S51",
+      "start": 7446,
+      "end": 7585,
+      "text": "Hence, future studies could be focused on developing htNSCs as a treatment regimen for obesity and its related disorders, such as diabetes."
+    },
+    {
+      "id": "S52",
+      "start": 7585,
+      "end": 7588,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S53",
+      "start": 7588,
+      "end": 7589,
+      "text": "#"
+    },
+    {
+      "id": "S54",
+      "start": 7589,
+      "end": 7593,
+      "text": "# 3."
+    },
+    {
+      "id": "S55",
+      "start": 7594,
+      "end": 7771,
+      "text": "HtNSCs and Inflammation\n\nMicroglia are brain-resident macrophages that contribute to reduced neurogenesis in aging and play a predominant role in the inflammatory response [46]."
+    },
+    {
+      "id": "S56",
+      "start": 7772,
+      "end": 7978,
+      "text": "Through microglia sorting studies, we observed a significant elevation of activated microglia in the hypothalamus of four-month HFD-fed young adult male mice compared to the chow-fed controls (unpublished)."
+    },
+    {
+      "id": "S57",
+      "start": 7979,
+      "end": 8114,
+      "text": "Activated microglia have the potential to release proinflammatory cytokines that can be harmful to NSCs, neurons and other glial cells."
+    },
+    {
+      "id": "S58",
+      "start": 8115,
+      "end": 8287,
+      "text": "Among the complex neural immune reactions in adult NSCs, inflammatory cytokines are observed to majorly affect differentiation, proliferation, migration, and survival [47]."
+    },
+    {
+      "id": "S59",
+      "start": 8288,
+      "end": 8441,
+      "text": "Inhibition of neurogenesis is achieved by pro-inflammatory cytokines whereas an increase in neurogenesis is observed by anti-inflammatory cytokines [48]."
+    },
+    {
+      "id": "S60",
+      "start": 8442,
+      "end": 8678,
+      "text": "The gene expression studies in our lab revealed a significant increase in proinflammatory markers, such as IL1β, MCP1, and TNFα, in the whole hypothalamus of middle-aged, eight-month HFD-fed male mice compared to controls (unpublished)."
+    },
+    {
+      "id": "S61",
+      "start": 8679,
+      "end": 8835,
+      "text": "However, an anti-inflammatory cytokine, such as the transforming growth factor-beta (TGFβ), can enhance endothelial cells of adult NSC during aging [49,50]."
+    },
+    {
+      "id": "S62",
+      "start": 8836,
+      "end": 9059,
+      "text": "In addition to these, a chemokine, CCL11, was observed to be increased in aged mice, both in blood and cerebrospinal fluid (CSF), which further caused a decline in neurogenesis leading to cognitive function impairment [51]."
+    },
+    {
+      "id": "S63",
+      "start": 9060,
+      "end": 9192,
+      "text": "Exercise and restriction of calories can cause variations in systemic factors, and hence, act as adult NSC function modulators [52]."
+    },
+    {
+      "id": "S64",
+      "start": 9192,
+      "end": 9530,
+      "text": "\n\nUpon over-nutrition, the IκB kinase-β/nuclear transcription factor NF-κB (IKKb/NF-κB) pathway, that plays a crucial role in many physiological processes, gets activated; this can cause SOCS3, a suppressor of cytokine signaling-3 gene upregulation in the hypothalamus, to inhibit insulin and leptin signaling, leading to resistance [53]."
+    },
+    {
+      "id": "S65",
+      "start": 9531,
+      "end": 9702,
+      "text": "Studies have confirmed that, in the neurons of the hypothalamus in mice, SOCS3 knockout leads to an improvement in central leptin signaling and reduced obesity [54,55,56]."
+    },
+    {
+      "id": "S66",
+      "start": 9703,
+      "end": 9871,
+      "text": "Similar effects were observed in central IKKb knockout mice and, in the MBH, SOCS3 overexpression decreased the neural IKKb inhibition effect on obesity reduction [53]."
+    },
+    {
+      "id": "S67",
+      "start": 9872,
+      "end": 10045,
+      "text": "Like SOCS3, protein tyrosine phosphatase 1B (PTP1B) causes inhibition of leptin and insulin signaling and was observed to have a role in the IKKb/NF-kB inflammatory pathway."
+    },
+    {
+      "id": "S68",
+      "start": 10046,
+      "end": 10193,
+      "text": "PTP1B expression in the hypothalamus can be increased by TNF-a by activating the IKKb/NF-kB pathway, mainly by being a transcriptional target [57]."
+    },
+    {
+      "id": "S69",
+      "start": 10194,
+      "end": 10321,
+      "text": "Inhibition of PTP1B in neurons resolved leptin resistance, glucose disorders, and obesity induced by over-nutrition [58,59,60]."
+    },
+    {
+      "id": "S70",
+      "start": 10322,
+      "end": 10505,
+      "text": "It is assumed that neural PTP1B may form a link with metabolic disease pathways and neurodegenerative diseases as it had an effect on genetic mouse models of Alzheimer’s disease [61]."
+    },
+    {
+      "id": "S71",
+      "start": 10506,
+      "end": 10737,
+      "text": "In the forebrain, degeneration of GABAergic interneurons was mediated by an overproduction of the cytokine interleukin-6 in diabetes and obesity, which leads to NF-kB activation and release of neurotoxic inflammatory products [62]."
+    },
+    {
+      "id": "S72",
+      "start": 10738,
+      "end": 10939,
+      "text": "Therefore, alleviating chronic diet-induced neuroinflammation by exploring the pathways associated with the metabolic control function of htNSC and identifying their therapeutic potential is essential."
+    },
+    {
+      "id": "S73",
+      "start": 10939,
+      "end": 10942,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S74",
+      "start": 10942,
+      "end": 10943,
+      "text": "#"
+    },
+    {
+      "id": "S75",
+      "start": 10943,
+      "end": 10947,
+      "text": "# 4."
+    },
+    {
+      "id": "S76",
+      "start": 10948,
+      "end": 11291,
+      "text": "Nrf2, an Important Transcription Factor Affecting NSC Populations in Obesity\n\nVarious factors affect NSC populations in obesity, including hormonal factors, transcription factors, inflammatory factors such as cytokines and chemokines, epigenetic changes and chromatin stability, oxidative stress, DNA damage, hyperlipidemia/hyperglycemia, etc."
+    },
+    {
+      "id": "S77",
+      "start": 11292,
+      "end": 11480,
+      "text": "Nuclear factor E2-related factor 2 (Nrf2) is a major transcription factor that regulates basal and induced expression of antioxidant response element genes in response to oxidative stress."
+    },
+    {
+      "id": "S78",
+      "start": 11481,
+      "end": 11643,
+      "text": "Functions of Nrf2 also include stem cell survival, apoptosis, autophagy, mitochondrial biogenesis, and many more, in addition to aging processes [63,64,65,66,67]."
+    },
+    {
+      "id": "S79",
+      "start": 11644,
+      "end": 11807,
+      "text": "Studies in our lab observed an elevated expression of Nrf2 in the hypothalamus of adult obese male mice, along with a significant increase in htNSCs (unpublished)."
+    },
+    {
+      "id": "S80",
+      "start": 11808,
+      "end": 11962,
+      "text": "In a previous study, increased oxidation, or reactive oxygen species in adult mouse NSCs, promoted their ability to generate neurons and proliferate [68]."
+    },
+    {
+      "id": "S81",
+      "start": 11963,
+      "end": 12139,
+      "text": "Self-renewal of stem cells was observed to be regulated by Nrf2, along with differentiation initiation with the support of epigenetic factors and transcription regulators [69]."
+    },
+    {
+      "id": "S82",
+      "start": 12140,
+      "end": 12310,
+      "text": "Nrf2 expression and transcriptional activity steadily increased during the induced oluripotent stem cells (iPSC) differentiation process that peaked in later stages [70]."
+    },
+    {
+      "id": "S83",
+      "start": 12311,
+      "end": 12551,
+      "text": "Restoration of age-related loss of hippocampal function was evidenced by transplanting Nrf2-overexpressing young NSCs [71], indicating the critical role of Nrf2 in mediating NSC/neural progenitor cell (NPC)- dependent neurogenesis in aging."
+    },
+    {
+      "id": "S84",
+      "start": 12552,
+      "end": 12731,
+      "text": "Redox homeostasis by Nrf2 critically mediates the differentiation ability of different stem cell types to survive oxidative stress, which could gradually reduce during aging [69]."
+    },
+    {
+      "id": "S85",
+      "start": 12732,
+      "end": 12987,
+      "text": "Thus, obtaining insight into one of the main transcription factors, Nrf2, that can resist oxidative stress, could provide fundamental knowledge about changes in htNSCs during neuroinflammation and lead to development of an associated therapeutic strategy."
+    },
+    {
+      "id": "S86",
+      "start": 12987,
+      "end": 12995,
+      "text": "\n\n\n## 5."
+    },
+    {
+      "id": "S87",
+      "start": 12996,
+      "end": 13087,
+      "text": "HtNSCs and Aging\n\nA continuous decline in physiological integrity is observed during aging."
+    },
+    {
+      "id": "S88",
+      "start": 13088,
+      "end": 13418,
+      "text": "Characteristic intertwining factors that contribute to the complex aging process include deregulated nutrient sensing, cellular senescence, epigenetic alterations, genomic instability, loss of proteostasis, mitochondrial dysfunction, telomere attrition, change in intercellular communication, and exhaustion of stem cells [72,73]."
+    },
+    {
+      "id": "S89",
+      "start": 13418,
+      "end": 13592,
+      "text": "\n\nIt has been observed in various research that the hypothalamus is particularly important in aging [74,75,76,77] but the underlying cellular mechanism is not known in depth."
+    },
+    {
+      "id": "S90",
+      "start": 13593,
+      "end": 13795,
+      "text": "The IκB kinase-β (IKKβ) pro-inflammatory axis in the hypothalamus and its downstream nuclear transcription factor, NF-κB, (IKKβ/NF-κB signaling) is over-stimulated in over-nutrition or aging [77,78,79]."
+    },
+    {
+      "id": "S91",
+      "start": 13796,
+      "end": 14087,
+      "text": "Systemic aging is directed by the hypothalamic IKKβ/NF-κB pathway via inflammatory crosstalk between neurons and microglia by inhibiting gonadotropin-releasing hormone (GnRH) production, and so counteracting inflammation or GnRH therapy could partly regress degenerative signs of aging [77]."
+    },
+    {
+      "id": "S92",
+      "start": 14088,
+      "end": 14213,
+      "text": "Maternal inflammation has been observed to cause reduced ventricular cell proliferation in developing fetal mouse brain [80]."
+    },
+    {
+      "id": "S93",
+      "start": 14214,
+      "end": 14504,
+      "text": "In young mice, a high number of cells co-expressing Sox2 and the polycomb complex protein, Bmi-1, a nuclear protein [81] that is vital for self-renewal of NSCs and hematopoietic stem cells [82], were observed in the third-ventricle wall, whereas the ones in the MBH were found to be sparse."
+    },
+    {
+      "id": "S94",
+      "start": 14505,
+      "end": 14731,
+      "text": "However, a gradual decrease in these cells was observed as age increased, which was initiated in the ventral region of 3rd ventricle wall within the MBH in 11–16-month-old mice and was totally lost in 22-months-and-older ones."
+    },
+    {
+      "id": "S95",
+      "start": 14732,
+      "end": 14988,
+      "text": "Thus, various studies that aim to evaluate the exact time required to intervene in an inflammatory condition/pathway in the brain will provide more understanding upon which to formulate therapeutic clinical strategies for different neural stem cell niches."
+    },
+    {
+      "id": "S96",
+      "start": 14988,
+      "end": 15123,
+      "text": "\n\nSenescent glial cell accumulation is observed in proximity to the lateral ventricles along with excessive fat deposition within them."
+    },
+    {
+      "id": "S97",
+      "start": 15124,
+      "end": 15298,
+      "text": "Upon removal of senescent cells from HFD or obese mice deficient in leptin receptors, neurogenesis being restored and a decline in anxiety-related behavior was observed [16]."
+    },
+    {
+      "id": "S98",
+      "start": 15299,
+      "end": 15422,
+      "text": "Hence from subsequent studies, they concluded that the topmost contributors to obesity-induced anxiety are senescent cells."
+    },
+    {
+      "id": "S99",
+      "start": 15423,
+      "end": 15526,
+      "text": "Therefore, senolytic drugs have opened a novel therapeutic pathway to treat neuropsychiatric disorders."
+    },
+    {
+      "id": "S100",
+      "start": 15526,
+      "end": 15665,
+      "text": "\n\nAlterations in mitochondrial structure and function may cause deleterious effects in adult NSC, which could drive the aging process [83]."
+    },
+    {
+      "id": "S101",
+      "start": 15666,
+      "end": 15778,
+      "text": "Abnormal toxic by-product accumulation, including of reactive oxygen species (ROS), accompanies this event [84]."
+    },
+    {
+      "id": "S102",
+      "start": 15779,
+      "end": 15923,
+      "text": "SOD2, an antioxidant enzyme that is regulated by FoxO3, a transcription factor associated with longevity [85], protects adult NSCs in mice [86]."
+    },
+    {
+      "id": "S103",
+      "start": 15924,
+      "end": 16078,
+      "text": "An increased level of ROS and a decrease in the potential for self-renewal of adult NSCs was observed in mice that were deficient in FoxO1, 3, and 4 [87]."
+    },
+    {
+      "id": "S104",
+      "start": 16079,
+      "end": 16276,
+      "text": "Other dysfunctions of mitochondria that contribute to the aging of NSCs include mitochondrial protein oxidation, variations in mitochondrial membrane composition, and abnormal mitophagy [83,88,89]."
+    },
+    {
+      "id": "S105",
+      "start": 16276,
+      "end": 16278,
+      "text": "\n\n"
+    },
+    {
+      "id": "S106",
+      "start": 16278,
+      "end": 16397,
+      "text": "During mammalian NSC division, protein segregation is affected by age, mainly by means of diffusion barrier alteration."
+    },
+    {
+      "id": "S107",
+      "start": 16398,
+      "end": 16548,
+      "text": "The stem cells are kept free of damage by the diffusion barrier that facilitates asymmetric segregation of damaged proteins among daughter cells [90]."
+    },
+    {
+      "id": "S108",
+      "start": 16549,
+      "end": 16691,
+      "text": "Like yeast, efficient compartmentalization of cellular damage is achieved in young rodent NSCs and that can protect these proliferative cells."
+    },
+    {
+      "id": "S109",
+      "start": 16692,
+      "end": 16799,
+      "text": "As age advances, this efficiency is reduced, causing aged NSCs to be exposed to excessive cell damage [90]."
+    },
+    {
+      "id": "S110",
+      "start": 16799,
+      "end": 16801,
+      "text": "\n\n"
+    },
+    {
+      "id": "S111",
+      "start": 16801,
+      "end": 16946,
+      "text": "A mitochondrial function regulator, hypoxia-inducible factor-1α (HIF-1α), is essential for the maintenance of adult NSCs in their hypoxic niches."
+    },
+    {
+      "id": "S112",
+      "start": 16947,
+      "end": 17044,
+      "text": "HIF-1α plays a major part in cell adaptation under hypoxia by inducing transcriptional responses."
+    },
+    {
+      "id": "S113",
+      "start": 17045,
+      "end": 17167,
+      "text": "Thus, for proper adult NSC proliferation and subsequent differentiation, oxygen availability is critically important [91]."
+    },
+    {
+      "id": "S114",
+      "start": 17168,
+      "end": 17263,
+      "text": "An abnormal oxygen-sensing pathway may be responsible for the neurogenic decline in aging [92]."
+    },
+    {
+      "id": "S115",
+      "start": 17264,
+      "end": 17452,
+      "text": "Thus, the use of anti-inflammatory agents along with senolytic and associated htNSC therapy have the potential to strategically counteract diet-induced chronic neuroinflammation and aging."
+    },
+    {
+      "id": "S116",
+      "start": 17453,
+      "end": 17555,
+      "text": "This could possibly pave way to new therapeutic regimens in obesity-induced cardiovascular conditions."
+    },
+    {
+      "id": "S117",
+      "start": 17555,
+      "end": 17563,
+      "text": "\n\n\n## 6."
+    },
+    {
+      "id": "S118",
+      "start": 17564,
+      "end": 17742,
+      "text": "Molecular Pathways Associated with NSC Inflammation and Aging\n\nCertain nutrient-sensing mechanisms that can be associated with aging have been considered modifiers of adult NSCs."
+    },
+    {
+      "id": "S119",
+      "start": 17743,
+      "end": 17923,
+      "text": "Adult NSC proliferation and differentiation can be stimulated by insulin-like growth factor 1 (IGF-1) [93], and a reduced IGF-1 level has been associated with cognitive aging [94]."
+    },
+    {
+      "id": "S120",
+      "start": 17924,
+      "end": 18031,
+      "text": "However, lifelong IGF-1 exposure may be the reason for an age-related reduction in adult neurogenesis [95]."
+    },
+    {
+      "id": "S121",
+      "start": 18031,
+      "end": 18177,
+      "text": "\n\nAn important metabolic regulation coordinator is the mammalian target of rapamycin (mTOR), which has two types, viz., mTORC1 and mTORC2 [96,97]."
+    },
+    {
+      "id": "S122",
+      "start": 18178,
+      "end": 18387,
+      "text": "Regulation of body weight and feeding behavior is primarily controlled by mTOR1 using ghrelin and leptin signaling, in addition to control of gluconeogenesis and adipogenesis peripherally in many tissues [97]."
+    },
+    {
+      "id": "S123",
+      "start": 18388,
+      "end": 18515,
+      "text": "Size, morphology, and neuronal cell numbers are controlled by mTORC2, along with energy balance regulation in the hypothalamus."
+    },
+    {
+      "id": "S124",
+      "start": 18516,
+      "end": 18777,
+      "text": "In POMC neurons in aged mice, an elevation in mTOR activity was observed [98], which can indirectly lead to POMC neuronal soma enlargement and a decline in the projection of neurites to the paraventricular nucleus (PVN), which causes age-dependent obesity [99]."
+    },
+    {
+      "id": "S125",
+      "start": 18778,
+      "end": 19061,
+      "text": "It has been observed that, upon intracerebral injection, rapamycin causes mTOR inhibition which further leads to neurite projection and neuronal excitability in POMC, establishing a decline in body weight and food consumption; hence, age acceleration is achieved by the mTOR pathway."
+    },
+    {
+      "id": "S126",
+      "start": 19062,
+      "end": 19193,
+      "text": "Therefore, to delay aging and improve the lifespan, this pathway can be considered a potential target for therapeutic intervention."
+    },
+    {
+      "id": "S127",
+      "start": 19193,
+      "end": 19273,
+      "text": "\n\nAs previously discussed, during aging, a decrease in htNSCs was observed [81]."
+    },
+    {
+      "id": "S128",
+      "start": 19274,
+      "end": 19466,
+      "text": "In addition, mice models with gene silencing mediating Bmi1+ depletion in stem cells showed a significant reduction in cognition, sociality, muscle endurance, coordination, and spatial memory."
+    },
+    {
+      "id": "S129",
+      "start": 19467,
+      "end": 19560,
+      "text": "In other mice models, a decline in lifespan was observed in Sox2+ stem cell-depleted animals."
+    },
+    {
+      "id": "S130",
+      "start": 19561,
+      "end": 19727,
+      "text": "Hence, replenishing new htNSC from a newborn mouse into the MBH of a middle-aged mouse could enhance the lifespan and delay age-associated physiological decline [81]."
+    },
+    {
+      "id": "S131",
+      "start": 19728,
+      "end": 19883,
+      "text": "Exogenous implantation of stem cells into the hypothalamus caused secretion of microRNA-containing exosomes, which delayed physiological deficits in aging."
+    },
+    {
+      "id": "S132",
+      "start": 19884,
+      "end": 20006,
+      "text": "Suppression of NF-kB activation was achieved in neurons due to these microRNAs, and GnRH secretion was also restored [81]."
+    },
+    {
+      "id": "S133",
+      "start": 20007,
+      "end": 20119,
+      "text": "As a result, during aging, htNSC loss might cause systemic physiological changes due to underlying inflammation."
+    },
+    {
+      "id": "S134",
+      "start": 20119,
+      "end": 20262,
+      "text": "\n\nThrough Wingless-related integration site (Wnt)-mediated signaling by astrocytes, adult NSC expansion is induced in a paracrine manner [100]."
+    },
+    {
+      "id": "S135",
+      "start": 20263,
+      "end": 20366,
+      "text": "As age increases, Wnt3 expression reduces in astrocytes, which causes further neurogenic decline [101]."
+    },
+    {
+      "id": "S136",
+      "start": 20367,
+      "end": 20546,
+      "text": "Expression of survivin is decreased in adult NSCs due to an age-associated decline in Wnt-mediated signaling in the astrocytes that leads to a quiescent phase in adult NSCs [102]."
+    },
+    {
+      "id": "S137",
+      "start": 20547,
+      "end": 20675,
+      "text": "Release of the Wnt inhibitor, DKK1, from astrocytes is increased in NSC niches during aging, which decreases neurogenesis [103]."
+    },
+    {
+      "id": "S138",
+      "start": 20676,
+      "end": 20839,
+      "text": "Extracellular matrix composition, mechanical properties, and arrangement have a role in adult NSC function, which varies with injury, disease, and aging [104,105]."
+    },
+    {
+      "id": "S139",
+      "start": 20839,
+      "end": 20935,
+      "text": "\n\nA high fat mass expression and obesity associated gene (FTO) was observed in adult NSCs [106]."
+    },
+    {
+      "id": "S140",
+      "start": 20936,
+      "end": 21174,
+      "text": "A smaller number of BrdU+ and Ki67+ cells was also observed during FTO loss, showing a decline in adult NSC and reduced proliferating capacity, along with a decline in glial and neuronal differentiation, making adult NSC less multipotent."
+    },
+    {
+      "id": "S141",
+      "start": 21175,
+      "end": 21339,
+      "text": "In addition, in adult mice, FTO loss was observed to decrease adult NSC proliferation and caused inhibition of neuronal differentiation in both SGZ and SVZ regions."
+    },
+    {
+      "id": "S142",
+      "start": 21340,
+      "end": 21517,
+      "text": "Thus, adult NSC activity modulation is achieved by FTO through m6A modification regulation of selective transcripts that can indirectly affect the gene expression [107,108,109]."
+    },
+    {
+      "id": "S143",
+      "start": 21517,
+      "end": 21652,
+      "text": "\n\nAlteration of important signaling for neurodevelopment is observed when a change in nutrient or neurotrophic environment is observed."
+    },
+    {
+      "id": "S144",
+      "start": 21653,
+      "end": 21877,
+      "text": "Brain abnormalities and decreased brain weight, along with altered glial and neuronal protein expression is observed in mice that have a paucity of leptin signaling and varied expression of neuronal and glial proteins [110]."
+    },
+    {
+      "id": "S145",
+      "start": 21878,
+      "end": 22040,
+      "text": "Elevated proliferation and decline in neural stem/progenitor cells (NPC) are observed in adult rats with type II diabetes [111] and in rats showing hyperglycemia."
+    },
+    {
+      "id": "S146",
+      "start": 22041,
+      "end": 22131,
+      "text": "NPCs do not respond to growth factors and form neurospheres (NS) that are smaller in size."
+    },
+    {
+      "id": "S147",
+      "start": 22132,
+      "end": 22249,
+      "text": "In addition, a decline in neurogenesis is observed in type I diabetic mice or rats treated with streptozotocin [112]."
+    },
+    {
+      "id": "S148",
+      "start": 22250,
+      "end": 22485,
+      "text": "Along with anorexigenic response signaling, during fetal life, insulin and leptin help in neuronal development and their neurotrophic effects are mediated by the MAPK (ERK/MAPK) pathway that resulted in phosphorylation of ERK1/2 [113]."
+    },
+    {
+      "id": "S149",
+      "start": 22486,
+      "end": 22898,
+      "text": "Significant neuronal differentiation was induced by leptin in differentiation conditions along with elevated early and late neuronal marker expression [114]; whereas the late neuronal marker neuronal nuclei (NeuN) showed no significant increase and a normal elevation in early neuronal markers, such as doublecortin (DCX) and neuron-specific class III β tubulin (Tuj1), were observed upon insulin exposure [114]."
+    },
+    {
+      "id": "S150",
+      "start": 22899,
+      "end": 23146,
+      "text": "According to these studies, it was concluded that maternal diabetes and differential exposure of the fetus to insulin and leptin could result in reduced growth or macrosomia that could have a significant effect on the development of a fetal brain."
+    },
+    {
+      "id": "S151",
+      "start": 23146,
+      "end": 23149,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S152",
+      "start": 23149,
+      "end": 23154,
+      "text": "## 7."
+    },
+    {
+      "id": "S153",
+      "start": 23155,
+      "end": 23611,
+      "text": "The Hypothalamus and the Sympathoexcitatory Effect\n\nIn various studies of the effects of leptin on the hypothalamus, it has been observed that α-melanocyte-stimulating hormone (α-MSH) or melanotan II (agonist of MC3/4R (MTII)), upon intracerebroventricular (ICV) administration, enhanced sympathetic nerve activity (SNA), however agouti-related protein or MC3/4R broad brain inhibition with ICV SHU9119 blocked leptin’s sympathoexcitatory effect [115,116]."
+    },
+    {
+      "id": "S154",
+      "start": 23612,
+      "end": 23827,
+      "text": "This is based on the understanding that α-MSH and glutamate are two major excitatory signals to the PVN, a cardiogenic center in the hypothalamus (see Figure 1), that can mediate leptin’s sympathoexcitatory effects."
+    },
+    {
+      "id": "S155",
+      "start": 23828,
+      "end": 23870,
+      "text": "POMC neurons synthesize and release α-MSH."
+    },
+    {
+      "id": "S156",
+      "start": 23871,
+      "end": 24080,
+      "text": "These neurons are in arcuate nucleus (ArcN), which projects to various sites in the hypothalamus, including the PVN [117,118,119], and regulates autonomic activity; however, the role of PVN MC3/4 is ambiguous."
+    },
+    {
+      "id": "S157",
+      "start": 24081,
+      "end": 24321,
+      "text": "Glutamatergic signals are received by the PVN from various regions that include the dorsal medial hypothalamus, ventral medial hypothalamus, lateral hypothalamus, and ArcN, wherein elevated SNA is observed due to the action of leptin [120]."
+    },
+    {
+      "id": "S158",
+      "start": 24322,
+      "end": 24431,
+      "text": "A small group of POMC neurons in the ArcN also expresses the glutamate vesicular transporter (VGLUT-2) [121]."
+    },
+    {
+      "id": "S159",
+      "start": 24432,
+      "end": 24566,
+      "text": "PVN glutamate receptors blockade decreases the ArcN’s non-specific chemical stimulation-mediated sympathoexcitatory effects [122,123]."
+    },
+    {
+      "id": "S160",
+      "start": 24567,
+      "end": 24716,
+      "text": "Along with this excitatory signaling, inhibitory neurons, such as neuropeptide Y (NPY) neurons of the ArcN, are projected into the PVN [122,123,124]."
+    },
+    {
+      "id": "S161",
+      "start": 24717,
+      "end": 24876,
+      "text": "NPY neurons are inhibited by leptin in the ArcN [125,126] and PVN neuron firing is inhibited by NPY, which gets stimulated by α-MSH or plasma leptin elevation."
+    },
+    {
+      "id": "S162",
+      "start": 24876,
+      "end": 25634,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> A simplified pathway showing excitatory circulatory signaling from SFO and OVLT, which are circumventricular organs lacking blood brain barrier, passing to the adjacent PVN in the hypothalamus and RVLM in the brainstem, causing an efferent sympathetic nerve response from the intermediolateral column of the spinal cord to the heart and blood vessels, resulting in increased heart rate and increased blood pressure associated with vasoconstriction.</figcaption>\n</figure>\n\nBy various studies it has been identified that elevated SNA is observed in obesity, especially in the kidney and hindlimb, for which a leptin increase and hypothalamic melanocortin activity elevation are predominant activities [127]."
+    },
+    {
+      "id": "S163",
+      "start": 25635,
+      "end": 25772,
+      "text": "In mice and rats, expression of NPY in the ArcN/PVN is reduced by diet-induced obesity or, in the ArcN, by NPY mRNA levels [128,129,130]."
+    },
+    {
+      "id": "S164",
+      "start": 25773,
+      "end": 25893,
+      "text": "In the PVN region, obesity-prone rats that were inbred showed a reduction in agouti-related protein/NPY processes [131]."
+    },
+    {
+      "id": "S165",
+      "start": 25894,
+      "end": 25997,
+      "text": "Tonic NPY inhibition decline is essential for leptin-induced sympathetic outflow driven via PVN MC3/4R."
+    },
+    {
+      "id": "S166",
+      "start": 25998,
+      "end": 26164,
+      "text": "It is inferred from this that obesity plays a role in SNA inhibition and it is due to tonic activity of NPY, which further reveals an elevated α-MSH excitation [132]."
+    },
+    {
+      "id": "S167",
+      "start": 26165,
+      "end": 26282,
+      "text": "htNSCs are predominantly found adjacent to the PVN of the hypothalamus (See Figure 2) lining the 3rd ventricle [133]."
+    },
+    {
+      "id": "S168",
+      "start": 26283,
+      "end": 26494,
+      "text": "Based on these studies, there is a need for detailed investigation into the link between the variation in NSC levels associated with different conditions, such as age, diet etc., and sympathoexcitatory activity."
+    },
+    {
+      "id": "S169",
+      "start": 26494,
+      "end": 26765,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> A schematic illustration of the response to feeding chow (left) and high fat diet (HFD) (right) on hypothalamic paraventricular nucleus (PVN) and hypothalamic neural stem cells (htNSCs) lining the 3rd ventricle in mice."
+    },
+    {
+      "id": "S170",
+      "start": 26766,
+      "end": 26995,
+      "text": "HFD could potentially cause an increase in senescent glial cells within the PVN that can release senescence-associated secretory phenotype (SASP) factors causing a proinflammatory response, further leading to htNSC dysregulation."
+    },
+    {
+      "id": "S171",
+      "start": 26996,
+      "end": 27075,
+      "text": "This could, again, cause a reduction in functional glia and neurons in the PVN."
+    },
+    {
+      "id": "S172",
+      "start": 27076,
+      "end": 27208,
+      "text": "The circulatory inflammatory mediators could also potentially cross the blood brain barrier and cause a direct effect on the htNSCs."
+    },
+    {
+      "id": "S173",
+      "start": 27209,
+      "end": 27288,
+      "text": "Chow-fed control showed normal cell populations.</figcaption>\n</figure>\n\n\n## 8."
+    },
+    {
+      "id": "S174",
+      "start": 27289,
+      "end": 27450,
+      "text": "Time-Restricted Feeding and Its Effect on NSCs\n\nReduced energy consumption without any effect on nutritional value is characteristic of dietary restriction (DR)."
+    },
+    {
+      "id": "S175",
+      "start": 27451,
+      "end": 27646,
+      "text": "It can be alternatively described as caloric restriction (CR) and, in a broader way, termed as periodic fasting, short-term starvation, intermittent fasting (IF), and fasting-mimetic diets [134]."
+    },
+    {
+      "id": "S176",
+      "start": 27647,
+      "end": 27754,
+      "text": "In maintaining proper health and physiology, a crucial role is played by the type and amount of diet [135]."
+    },
+    {
+      "id": "S177",
+      "start": 27755,
+      "end": 27908,
+      "text": "Adult stem cells are important for tissue regeneration and homeostasis and these stem cells can differentiate and self-renew into specialized cell types."
+    },
+    {
+      "id": "S178",
+      "start": 27909,
+      "end": 28011,
+      "text": "Dietary changes, environment, and nutrient variation influence the stem cells via function alteration."
+    },
+    {
+      "id": "S179",
+      "start": 28012,
+      "end": 28265,
+      "text": "In various studies, a positive effect was observed in stem cells when calories were restricted, especially an increase in the function of intestine and skeletal muscle stem cells, in addition to an elevated quiescence of hematopoietic stem cells (HSCs)."
+    },
+    {
+      "id": "S180",
+      "start": 28266,
+      "end": 28471,
+      "text": "In addition, time-restricted feeding has been shown to protect neuronal stem cells, intestinal stem cells, and HSCs from injury, especially stroke and neurodegenerative diseases in the brain [136,137,138]."
+    },
+    {
+      "id": "S181",
+      "start": 28472,
+      "end": 28566,
+      "text": "HFD impairs neurogenesis and hematopoiesis, and it can create opportunities for tumorigenesis."
+    },
+    {
+      "id": "S182",
+      "start": 28566,
+      "end": 28750,
+      "text": "\n\nCharacteristic changes in metabolic pathways in the brain are achieved by IF, mainly by ketogenic amino acid and fatty acid breakdown and an elevation in stress resistance [139,140]."
+    },
+    {
+      "id": "S183",
+      "start": 28751,
+      "end": 28846,
+      "text": "A neuroprotective effect can be achieved via IF by activation of many signaling pathways [141]."
+    },
+    {
+      "id": "S184",
+      "start": 28847,
+      "end": 29084,
+      "text": "IF in rodents has shown an increase in long-term potentiation (LTP) at synapses in the hippocampus and an increase in hippocampal neurogenesis [138] in comparison with animals with a sedentary lifestyle that are fed ad libitum (AL) diet."
+    },
+    {
+      "id": "S185",
+      "start": 29085,
+      "end": 29194,
+      "text": "BrdU-labeled cell number in the dentate gyrus was elevated in the mice that were intermittently fasted [138]."
+    },
+    {
+      "id": "S186",
+      "start": 29195,
+      "end": 29359,
+      "text": "They also used Ki67 as a marker to evaluate cell proliferation by identifying an increase in dentate gyrus Ki67-labeled cells in mice that were fed with an IF diet."
+    },
+    {
+      "id": "S187",
+      "start": 29360,
+      "end": 29733,
+      "text": "Mice subjected to IF for three months showed an elevated level of hippocampal nestin and NeuN (protein markers for precursor/neuronal stem cells), and also PSD95 (a scaffolding protein that is a potent regulator of synaptic strength) compared to AL mice [141], which demonstrated an increase in hippocampal neurogenesis and a strengthening of synaptic connections after IF."
+    },
+    {
+      "id": "S188",
+      "start": 29734,
+      "end": 30077,
+      "text": "The researchers also showed that a pathway essential for neural stem cell maintenance in the mammalian brain [142], the Notch 1 signaling pathway, was shown to become activated mainly by upregulation of full-length Notch 1, Notch intracellular domain (NICD1), and transcription factor HES5 (involved in the formation of neurospheres) after IF."
+    },
+    {
+      "id": "S189",
+      "start": 30077,
+      "end": 30079,
+      "text": "\n\n"
+    },
+    {
+      "id": "S190",
+      "start": 30079,
+      "end": 30204,
+      "text": "The stress resistance ability of brain cells is activated by IF by causing various changes in brain metabolic pathways [140]."
+    },
+    {
+      "id": "S191",
+      "start": 30205,
+      "end": 30405,
+      "text": "The changes in metabolic pathways during IF can be injurious to the brain and through activation of the brain-derived neurotrophic factor (BDNF) signaling pathway, a neuroprotective state is achieved."
+    },
+    {
+      "id": "S192",
+      "start": 30406,
+      "end": 30603,
+      "text": "Downstream transcription factor activation that helps in energy balance and neurogenesis is made possible by BDNF, and one such transcription factor is cAMP response element-binding protein (CREB)."
+    },
+    {
+      "id": "S193",
+      "start": 30604,
+      "end": 30772,
+      "text": "To differentiate stem cells into matured neurons, collaboration between the Notch signaling pathway and the CREB and BDNF signaling pathways is essential [143,144,145]."
+    },
+    {
+      "id": "S194",
+      "start": 30773,
+      "end": 30864,
+      "text": "An increase in BDNF and p-CREB expression has been seen in IF compared to AL animals [141]."
+    },
+    {
+      "id": "S195",
+      "start": 30864,
+      "end": 30946,
+      "text": "\n\nWithout leading to malnutrition, CR is a 20–40% reduction in intake of calories."
+    },
+    {
+      "id": "S196",
+      "start": 30947,
+      "end": 31131,
+      "text": "It is known to cause life-span increase, prolonged onset of diseases that are age related, and decrease in the incidence of cancer in different tissues and organisms [146,147,148,149]."
+    },
+    {
+      "id": "S197",
+      "start": 31132,
+      "end": 31319,
+      "text": "The link between CR and longevity is under the influence of the downregulation of major nutrient sensing pathways, including those of insulin or IGF-1, and signaling by mTOR [84,147,150]."
+    },
+    {
+      "id": "S198",
+      "start": 31320,
+      "end": 31409,
+      "text": "Very few studies have been documented on the positive and negative effects of CR on NSCs."
+    },
+    {
+      "id": "S199",
+      "start": 31409,
+      "end": 31690,
+      "text": "\n\nTwo-days-a-week fasting or alternate-days fasting (IF) in animals have been shown to decrease clinical symptoms caused by age-related neuronal diseases such as Alzheimer’s disease, and the animals that were fasted also perform better after stroke, which is an acute injury [151]."
+    },
+    {
+      "id": "S200",
+      "start": 31691,
+      "end": 31828,
+      "text": "After three weeks of a three-month period of IF, an elevated NSC proliferation in the rats and mice dentate gyrus was observed [152,153]."
+    },
+    {
+      "id": "S201",
+      "start": 31829,
+      "end": 31889,
+      "text": "An elevated BDNF was associated with these positive effects."
+    },
+    {
+      "id": "S202",
+      "start": 31890,
+      "end": 32019,
+      "text": "However, various studies showed that neuronal survival ability was altered by fasting rather than induction of NSC proliferation."
+    },
+    {
+      "id": "S203",
+      "start": 32020,
+      "end": 32208,
+      "text": "In the dentate gyrus of mice, an increase in neuron and glia numbers was observed within 72 h of feeding a fasting-mimicking diet (FMD), along with a reduced IGF-1/PKA signaling [152,154]."
+    },
+    {
+      "id": "S204",
+      "start": 32209,
+      "end": 32445,
+      "text": "In addition, an increase in mesenchymal stem and progenitor cell number and proliferation were observed on FMD repeated feeding in aged animals, and in aged mice; rebalanced output from HSCs and progenitors were also observed [154,155]."
+    },
+    {
+      "id": "S205",
+      "start": 32446,
+      "end": 32583,
+      "text": "Therefore, time restricting feeding can be a neuroprotective strategy for replenishing lost NSCs in chronic neuroinflammatory conditions."
+    },
+    {
+      "id": "S206",
+      "start": 32583,
+      "end": 32586,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S207",
+      "start": 32586,
+      "end": 32587,
+      "text": "#"
+    },
+    {
+      "id": "S208",
+      "start": 32587,
+      "end": 32591,
+      "text": "# 9."
+    },
+    {
+      "id": "S209",
+      "start": 32592,
+      "end": 32737,
+      "text": "Exosomes from the HtNSCs\n\nHtNSCs have a distinct endocrine function, to release excessive amounts of microRNAs (miRNAs)-containing exosomes [81]."
+    },
+    {
+      "id": "S210",
+      "start": 32738,
+      "end": 32984,
+      "text": "In addtion, they have certain long non-coding RNAs (lncRNAs) that possess the ability to maintain pluripotency and embryonic stem cell neurogenesis [156], self-renewal of cancer stem cells [157], and reprogramming of pluripotent stem cells [158]."
+    },
+    {
+      "id": "S211",
+      "start": 32985,
+      "end": 33100,
+      "text": "LncRNAs may play a unique role in determining the fate of these stem cells in cellular senescence regulation [159]."
+    },
+    {
+      "id": "S212",
+      "start": 33101,
+      "end": 33198,
+      "text": "An abundant lncRNA, Hnscr in the htNSCs of young mice, drastically reduces as the mice age [159]."
+    },
+    {
+      "id": "S213",
+      "start": 33199,
+      "end": 33437,
+      "text": "Hnscr regulates htNSC senescence and mouse aging by binding to YB-1, a multi-functional protein [160] that controls protein translation [161], and also regulates DNA repair [162], protecting it from protein degradation and ubiquitination."
+    },
+    {
+      "id": "S214",
+      "start": 33438,
+      "end": 33593,
+      "text": "YB-1 acts as a repressor of transcription, inhibiting p16INK4A expression in htNSCs [159,163], and hence could be targeted to modulate senescence in htNSC."
+    },
+    {
+      "id": "S215",
+      "start": 33594,
+      "end": 33819,
+      "text": "According to [159], TF2A treatment, isomeric theaflavin monomer, and a black tea derivative [164], improved YB-1 stability, diminished htNSC senescence, and decreased the level of aging related physiological downturn in mice."
+    },
+    {
+      "id": "S216",
+      "start": 33819,
+      "end": 34017,
+      "text": "\n\nBy various studies it has been observed that htNSC loss causes systemic aging within a short time and the exosomal miRNAs secreted by these cells (See Figure 3) mediate anti-aging properties [81]."
+    },
+    {
+      "id": "S217",
+      "start": 34018,
+      "end": 34110,
+      "text": "Aging can be correlated with modulation of some gene expressions by certain non-coding RNAs."
+    },
+    {
+      "id": "S218",
+      "start": 34111,
+      "end": 34186,
+      "text": "In aged adult NSC, heterochronic micro-RNA let-7b upregulation is observed."
+    },
+    {
+      "id": "S219",
+      "start": 34187,
+      "end": 34465,
+      "text": "Repression of Hmga2, a high mobility group transcriptional regulator, is observed upon let-7b overexpression, which indirectly potentiates p16lnk4a (an inhibitor of cyclin-dependent kinase and activator of Rb) and p19Arf expression, improving the stability of p53 protein [165]."
+    },
+    {
+      "id": "S220",
+      "start": 34466,
+      "end": 34609,
+      "text": "Therefore, it slows down the progression of cell cycle and induces senescence [166], leading to reduced adult NSC functioning and neurogenesis."
+    },
+    {
+      "id": "S221",
+      "start": 34610,
+      "end": 34684,
+      "text": "However, deficiency of p16INK4a in aged mice diminished this effect [167]."
+    },
+    {
+      "id": "S222",
+      "start": 34685,
+      "end": 34837,
+      "text": "Let-7b initiates differentiation and inhibits proliferation of neural stem cells by targeting Tlx and cyclin D1 in adult NSC and embryonic brains [168]."
+    },
+    {
+      "id": "S223",
+      "start": 34838,
+      "end": 35026,
+      "text": "A higher-to --lower/quiescent shift in NSC proliferative state from fetus to adult is contributed to by Imp1, a different let-7b target, even though it is not expressed in adult NSC [169]."
+    },
+    {
+      "id": "S224",
+      "start": 35027,
+      "end": 35090,
+      "text": "As a result, changes in let-7b may initiate aging in adult NSC."
+    },
+    {
+      "id": "S225",
+      "start": 35091,
+      "end": 35222,
+      "text": "The gene regulation mediated by micro RNAs impacts healthy aging as well as aging associated with neurodegenerative diseases [170]."
+    },
+    {
+      "id": "S226",
+      "start": 35223,
+      "end": 35456,
+      "text": "Administering exosomes derived from NSCs (exo-NSCs) could restore BDNF signaling and memory in HFD mice [171], providing suggestive evidence of the potential therapeutic effect of exo-NSCs on HFD-induced NSC dysregulation in obesity."
+    },
+    {
+      "id": "S227",
+      "start": 35457,
+      "end": 35635,
+      "text": "Hence, further studies on differential expression of certain exosomal non-coding RNAs must be performed to form an understandable association with pathological and healthy aging."
+    },
+    {
+      "id": "S228",
+      "start": 35635,
+      "end": 35809,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 3</strong> A simplified protocol for the potential therapeutic effect of exo-NSCs in obesity-induced NSC dysregulation.</figcaption>\n"
+    },
+    {
+      "id": "S229",
+      "start": 35809,
+      "end": 35818,
+      "text": "</figure>"
+    },
+    {
+      "id": "S230",
+      "start": 35818,
+      "end": 35827,
+      "text": "\n\n\n## 10."
+    },
+    {
+      "id": "S231",
+      "start": 35828,
+      "end": 35989,
+      "text": "Challenges Associated with NSCs for Regenerative Medicine and Future Perspectives\n\nImmunological rejection is one of the major difficulties in stem cell therapy."
+    },
+    {
+      "id": "S232",
+      "start": 35990,
+      "end": 36151,
+      "text": "This could be addressed by isolating NSCs from the same subjects that require the therapy to prevent immunological reaction to the newly transplanted stem cells."
+    },
+    {
+      "id": "S233",
+      "start": 36152,
+      "end": 36276,
+      "text": "Administering immunosuppressive drugs could be an additional or alternative option even though it has a lot of side effects."
+    },
+    {
+      "id": "S234",
+      "start": 36277,
+      "end": 36415,
+      "text": "Another challenge is to make certain that the transplanted cells grow enough without causing tumor development and karyotypic instability."
+    },
+    {
+      "id": "S235",
+      "start": 36416,
+      "end": 36686,
+      "text": "According to [172], there is a critical challenge in isolating multipotent NSCs from cell culture for transplantation as the majority of neurospheres in vitro are heterogenic with varying developmental stages and gene expression mainly due to ex vivo culture conditions."
+    },
+    {
+      "id": "S236",
+      "start": 36687,
+      "end": 36923,
+      "text": "Overcoming these challenges and establishing NSC-based therapy for obesity-induced comorbidities, especially cardiovascular conditions, to improve functional outcomes through associated multimodal mechanisms is tremendously foresighted."
+    },
+    {
+      "id": "S237",
+      "start": 36924,
+      "end": 37156,
+      "text": "Based on the difficulty in accessing the brain to collect tissues for processing from live animals, using induced pluripotent stem cell (iPSC) technology is a solution that could produce in vitro NSCs or neurons for transplantation."
+    },
+    {
+      "id": "S238",
+      "start": 37157,
+      "end": 37350,
+      "text": "As iPSCs can be non-invasively obtained from live subjects, and to reduce the risk of immune rejection, reprogramming these cells to NSCs or neurons could provide autologous engraftments [173]."
+    },
+    {
+      "id": "S239",
+      "start": 37350,
+      "end": 37353,
+      "text": "\n\n\n"
+    },
+    {
+      "id": "S240",
+      "start": 37353,
+      "end": 37358,
+      "text": "## 11"
+    },
+    {
+      "id": "S241",
+      "start": 37358,
+      "end": 37359,
+      "text": "."
+    },
+    {
+      "id": "S242",
+      "start": 37360,
+      "end": 37452,
+      "text": "Conclusions\n\nHtNSCs could be a potential therapy in obesity-induced cardiovascular diseases."
+    },
+    {
+      "id": "S243",
+      "start": 37453,
+      "end": 37634,
+      "text": "Exosomes derived from htNSCs could be an alternative to or a conjunction with NSC therapy, being a minimally invasive technique to reverse aging and degenerative changes in the CNS."
+    },
+    {
+      "id": "S244",
+      "start": 37635,
+      "end": 37745,
+      "text": "The relationship between htNSC dysregulation and sympathetic nerve response in obesity has never been studied."
+    },
+    {
+      "id": "S245",
+      "start": 37746,
+      "end": 37955,
+      "text": "As brain microglia activation is a predominant indicator of neuroinflammation in hypertension, restoring a normal population of glia and neurons within the cardiogenic centers of the brain cannot be ruled out."
+    },
+    {
+      "id": "S246",
+      "start": 37956,
+      "end": 38136,
+      "text": "Thus, identifying associated htNSC mechanisms and pathways could bring novel insight to therapeutic strategies in obesity-associated hypertension or sympathetic nerve overactivity."
+    }
+  ]
+}

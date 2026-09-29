@@ -1,0 +1,2419 @@
+{
+  "schema_version": 2,
+  "pipeline": "article_to_linguistic_profile_to_dsl_to_knowledge_map",
+  "dsl_format": "B T4 Bn | sub=... | pred=... | obj=... | unit=S<n>",
+  "annotation_scope": "manual_full_text",
+  "generation": "deterministic_dependency_projection_no_llm",
+  "needs_expert_review": true,
+  "source_units": [
+    {
+      "id": "S1",
+      "start": 0,
+      "end": 559,
+      "text": "# Bos indicus Carcasses Suspended by the Pelvic Bone Require a Shorter Aging Time to Meet Consumer Expectations Regarding Meat Quality\n\n**Авторы:** Baldassini Welder, Coutinho Marcelo, Rovadoscki Gregori, Menezes Bruna, Tagiariolli Murilo, Torrecilhas Juliana, Leonel Júlia, Pereira Guilherme, Curi Rogério, Machado Neto Otávio, Chardulo Luis Artur\n\n**Журнал:** Foods (2023)\n\n**DOI:** 10.3390/foods12050930\n\n\n## Abstract\n\nThis study evaluated the effects of hanging the carcass by the Achilles tendon (AS) versus pelvic suspension (PS) on meat quality traits.",
+      "decision": "non_assertional",
+      "reason": "article_metadata_header"
+    },
+    {
+      "id": "S2",
+      "start": 560,
+      "end": 719,
+      "text": "Bos indicus carcasses of two distinct biological types/sex categories comprised 10 young Brangus heifers and 10 Nellore bulls which were finished in a feedlot.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S3",
+      "start": 720,
+      "end": 873,
+      "text": "Half-carcasses of each biological type/sex category were randomly hung using Achilles suspension (n = 20, AS) or pelvic suspension (n = 20, PS) for 48 h.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S4",
+      "start": 874,
+      "end": 1058,
+      "text": "At boning, longissimus samples were collected for evaluation by untrained consumers for tenderness, liking of flavor, juiciness and overall acceptability, after aging for 5 or 15 days.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S5",
+      "start": 1059,
+      "end": 1188,
+      "text": "Objective samples were also tested for shear force (SF), Minolta meat colour, ultimate pH, cooking loss (CL) and purge loss (PL).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S6",
+      "start": 1189,
+      "end": 1339,
+      "text": "There was a positive effect (p < 0.01) of PS on the sensory tenderness of Nellore bulls and Brangus heifers aged for 5 days compared to the AS method.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S7",
+      "start": 1340,
+      "end": 1434,
+      "text": "At 15 days of aging, difference in sensory tenderness was observed (p < 0.05) in either group.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S8",
+      "start": 1435,
+      "end": 1668,
+      "text": "Additionally, an interaction occurred between the suspension method and the aging of Nellore beef (p < 0.05) on liking of flavor, juiciness and overall acceptance, while the same effects were not observed for Brangus beef (p > 0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S9",
+      "start": 1669,
+      "end": 1868,
+      "text": "Nellore carcasses submitted to PS tended (p = 0.06) to produce more tender meat than those submitted to AS (SF = 44.62 ± 6.96 vs. 50.41 ± 8.04 N), and lower CL (p < 0.05) were found (27.7 vs. 30.9%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S10",
+      "start": 1869,
+      "end": 1962,
+      "text": "Carcass-suspension methods did not influence meat color, pH or PL in either group (p > 0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S11",
+      "start": 1963,
+      "end": 2212,
+      "text": "The PS contributes to improve the quality of Bos indicus bulls loins; in addition, this method allows a reduction in the aging time from 15 to 5 days, and it can be used to supply meat consumer markets which accept a certain level of eating quality.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S12",
+      "start": 2212,
+      "end": 2220,
+      "text": "\n\n\n## 1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S13",
+      "start": 2221,
+      "end": 2374,
+      "text": "Introduction\n\nThe beef cattle herd in Brazil is composed mainly of Zebu animals (Bos indicus), with a predominance (roughly 80%) of the Nellore genotype.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S14",
+      "start": 2375,
+      "end": 2555,
+      "text": "Despite their adaptation to tropical climate, Nellore breed take longer to reach targeted sales weight compared to taurine cattle (Bos taurus), such as Aberdeen Angus and Hereford.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S15",
+      "start": 2556,
+      "end": 2724,
+      "text": "Many farms in the southeast and midwest regions rear Nellore animals on pasture, followed by finishing in the feedlot, a system in which the use of bulls is common [1].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S16",
+      "start": 2725,
+      "end": 2821,
+      "text": "This biological model of production supplies a large part of the domestic and export market [2].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S17",
+      "start": 2822,
+      "end": 3046,
+      "text": "It is well known that the meat quality of Bos indicus bulls is limited, especially in terms of tenderness [3,4], when compared to Bos taurus and crossbred animals, with the need for a longer aging time to improve this trait.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S18",
+      "start": 3047,
+      "end": 3170,
+      "text": "However, considering the costs of a meat-packing plant, very long aging times can render the product excessively expensive.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S19",
+      "start": 3170,
+      "end": 3434,
+      "text": "\n\nThe use of crossbred cattle (Bos taurus × Bos indicus) finished in the feedlot and slaughtered at a young age has been adopted as a strategy to improve productive performance and meat quality [5], especially tenderness, within a shorter post-mortem aging period.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S20",
+      "start": 3435,
+      "end": 3609,
+      "text": "Additionally, crossbred castrated male and female cattle [6] are increasingly used since there are consumers who are willing to pay more for higher-quality meat products [7].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S21",
+      "start": 3610,
+      "end": 3793,
+      "text": "It is known that the gender of cattle affects animal performances and growth, and heifer have superior carcass fatness and meat quality traits compared to bulls, as reported by [8,9].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S22",
+      "start": 3794,
+      "end": 4029,
+      "text": "To supply their own butcher shops, some Brazilian meat-packing companies pay better for carcasses derived from this biological type (low Bos indicus content, heifers or steers carcasses feedlot-finished and slaughtered at a young age).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S23",
+      "start": 4029,
+      "end": 4156,
+      "text": "\n\nIn the meat-packing industry, the commonly used hanging method of bovine carcasses is suspension by the Achilles tendon (AS).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S24",
+      "start": 4157,
+      "end": 4278,
+      "text": "This method results in the shortening of selected hindquarter muscles during rigor mortis, which can affect meat quality.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S25",
+      "start": 4279,
+      "end": 4587,
+      "text": "On the other hand, suspension of the carcass by the pelvic bone, a method known as tenderstretch or PS, is widely used by the Australian and European meat-packing industry in order to improve sensory meat quality, particularly tenderness, as well as reduce the variability of this trait in some muscles [10].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S26",
+      "start": 4588,
+      "end": 4758,
+      "text": "As described by Ferguson [11], the PS method does not affect the semitendinosus, as this muscle is already stretched and therefore shows no improvement in eating quality.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S27",
+      "start": 4759,
+      "end": 4894,
+      "text": "During the post-mortem chilling period of carcasses, the tenderness of almost all hindquarter muscles can be improved by the PS method.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S28",
+      "start": 4895,
+      "end": 5041,
+      "text": "Studies suggest that this method may be more effective for tougher meats [12] and may be an alternative to improve the meat quality of bulls [13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S29",
+      "start": 5042,
+      "end": 5216,
+      "text": "In the Meat Standard Australia (MSA) beef-grading program [14], there is no interaction between Bos indicus and carcass-suspension method on the prediction of eating quality.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S30",
+      "start": 5216,
+      "end": 5379,
+      "text": "\n\nCarcass suspension by the pelvic bone is a technique that is inexpensive to implement, producing gains in meat quality [15,16] and adding value to meat products.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S31",
+      "start": 5380,
+      "end": 5455,
+      "text": "In Brazil, studies evaluating the effects of PS on meat quality are scarce.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S32",
+      "start": 5456,
+      "end": 5662,
+      "text": "Furthermore, there are no studies of the effects of PS on the meat of Bos indicus and crossbred cattle, evaluating sensory and objective traits in different sex classes and under different aging conditions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S33",
+      "start": 5662,
+      "end": 5893,
+      "text": "\n\nWithin this context, meat from carcasses suspended by the pelvic bone may require a shorter aging time to meet consumer expectations regarding quality traits, especially beef of carcasses of males with a high Bos indicus content.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S34",
+      "start": 5894,
+      "end": 6136,
+      "text": "Only a few studies with Nellore bulls and Bos indicus carcasses described the interaction of the carcass-suspension method and meat aging, which allows the investigation of its effects on meat quality traits (sensory and objective variables).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S35",
+      "start": 6137,
+      "end": 6377,
+      "text": "Therefore, the aim of this study was to evaluate whether PS can improve quality traits of aged meat from crossbred heifers and Nellore bulls, two contrasting biological types that supply different meat consumer markets in Brazil and abroad.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S36",
+      "start": 6377,
+      "end": 6380,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S37",
+      "start": 6380,
+      "end": 6381,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S38",
+      "start": 6381,
+      "end": 6385,
+      "text": "# 2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S39",
+      "start": 6386,
+      "end": 6612,
+      "text": "Materials and Methods\n\nThe study protocol was approved by Ethics Committee (CEUA) of the São Paulo State University “Júlio de Mesquita Filho”–UNESP, Campus of Botucatu (protocol number 0094/2020; approved date: 12 August 2020)",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S40",
+      "start": 6612,
+      "end": 6613,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S41",
+      "start": 6613,
+      "end": 6615,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S42",
+      "start": 6615,
+      "end": 6616,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S43",
+      "start": 6616,
+      "end": 6618,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S44",
+      "start": 6619,
+      "end": 6623,
+      "text": "2.1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S45",
+      "start": 6624,
+      "end": 6777,
+      "text": "Animals and Carcasses\n\nBrangus heifers (n = 10) and Nellore bulls (n = 10), finished in commercial feedlots (Boituva, São Paulo, Brazil), were evaluated.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S46",
+      "start": 6778,
+      "end": 6901,
+      "text": "The animals belonged to the same management group and were submitted to the same nutritional conditions and feedlot period.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S47",
+      "start": 6902,
+      "end": 7065,
+      "text": "The two groups received the same diet, containing 15% forage (sugarcane bagasse) and 85% corn-based concentrate (soybean meal, ground corn, urea, mineral mixture).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S48",
+      "start": 7066,
+      "end": 7167,
+      "text": "The animals were allocated in collective pens, equipped with a bunk and an automatic drinking trough.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S49",
+      "start": 7168,
+      "end": 7233,
+      "text": "The diet was offered ad libitum, twice a day at 8 a.m. and 4 p.m.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S50",
+      "start": 7234,
+      "end": 7365,
+      "text": "The experimental groups were slaughtered at different times (Brangus heifers = 100 days on feed; Nellore bulls = 120 days on feed).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S51",
+      "start": 7366,
+      "end": 7562,
+      "text": "The slaughter weight of the animals of each group was established by the commercial protocol of the slaughterhouse (Boituva, São Paulo, Brazil) based on the standardization of their meat products.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S52",
+      "start": 7563,
+      "end": 7710,
+      "text": "At the end of feeding period, the final body weight (FBW) was record for Brangus heifers (FBW = 510 ± 41 kg) and Nellore bulls (FBW = 590 ± 57 kg).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S53",
+      "start": 7711,
+      "end": 7867,
+      "text": "The aim of using two such distinct groups was to evaluate the main biological types destined for the two most important models of Brazilian meat production.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S54",
+      "start": 7868,
+      "end": 8027,
+      "text": "Thus, Nellore animals were classified as products of the commodity model—domestic and export market—and crossbred Brangus animals as the premium quality model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S55",
+      "start": 8027,
+      "end": 8201,
+      "text": "\n\nDuring processing of the two slaughters, the number of permanent incisors teeth were verified and carcasses were cut longitudinally into two parts and weighed individually.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S56",
+      "start": 8202,
+      "end": 8266,
+      "text": "Carcasses were not electrically stimulated in the current study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S57",
+      "start": 8267,
+      "end": 8447,
+      "text": "The half-carcasses were randomly suspended by the traditional method (AS; n = 20: 10 Brangus and 10 Nellore) or by the tenderstretch method (PS; n = 20: 10 Brangus and 10 Nellore).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S58",
+      "start": 8448,
+      "end": 8529,
+      "text": "After identification, the carcasses were kept in the cold room (1 °C) for 48 h.\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S59",
+      "start": 8529,
+      "end": 8829,
+      "text": "Next, the carcasses were evaluated in the chiller, and the following data were collected: carcass weight; ossification score (physiological maturity); hump height (Bos indicus percentage); fatness score; conformation score; marbling score; backfat thickness; ribeye area; and ultimate pH (48 h) [17].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S60",
+      "start": 8830,
+      "end": 9075,
+      "text": "Briefly, ossification was assessed by one trained technician, which scored the degree of ossification of the vertebral spinous processes as well as the shape and colour of the rib bones, with the lowest score being 100 and the highest being 590.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S61",
+      "start": 9076,
+      "end": 9360,
+      "text": "The hump height was recorded in gradients of 5 mm, measuring all of the meat across the hump from the line formed by the dorsal ends of the spinous processes and extended cranially along the dorsal edge of the Ligamentum nuchae, across to the dorsal surface of the Rhomboideus muscle.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S62",
+      "start": 9360,
+      "end": 9543,
+      "text": "\n\nAdditionally, fatness score was assessed, using 1 to 5 degrees for the distribution of fat cover in the hot carcass (1 = absent; 2 = scarce; 3 = medium; 4 = uniform; 5 = excessive).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S63",
+      "start": 9544,
+      "end": 9721,
+      "text": "Subsequently, conformation score was assessed by development of muscle mass in the hindquarters region (1 = concave; 2 = sub-straight; 3 = straight; 4 = sub-convex; 5 = convex).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S64",
+      "start": 9722,
+      "end": 9883,
+      "text": "Finally, marbling score was assessed using MSA standard photograph, divided into tenths for grading, creating a score range from 100 to 1100 in increments of 10.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S65",
+      "start": 9884,
+      "end": 9984,
+      "text": "Backfat thickness (BFT, mm) and ribeye area (REA, cm2) were measured at the 12th/13th rib interface.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S66",
+      "start": 9984,
+      "end": 10239,
+      "text": "\n\nAfter deboning, Longissimus thoracis et lumborum (LTL) samples (~12 cm) were collected from each half-carcass (AS and PS; two samples each) between the 11th and 13th rib (cranial direction) for subsequent sensory and laboratory analyses of meat quality.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S67",
+      "start": 10239,
+      "end": 10242,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S68",
+      "start": 10242,
+      "end": 10243,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S69",
+      "start": 10243,
+      "end": 10244,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S70",
+      "start": 10244,
+      "end": 10497,
+      "text": "# 2.2. Aging\n\nAll meat samples collected during deboning from treatments AS and PS were submitted to wet aging for 5 and 15 days at a temperature of 0 to 2 °C in a biological oxygen demand (BOD) incubator (TE-371, TECNAL, Piracicaba, São Paulo, Brazil).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S71",
+      "start": 10498,
+      "end": 10655,
+      "text": "Before aging, the samples were cut into 2.54 cm-thick steaks, vacuum packed, and duly identified with the treatment (AS or PS) and aging time (5 or 15 days).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S72",
+      "start": 10656,
+      "end": 10710,
+      "text": "The position of the steak for aging periods was fixed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S73",
+      "start": 10711,
+      "end": 10888,
+      "text": "After the aging period, the steaks were packed separately in plastic bags for vacuum sealing with low oxygen permeability and stored frozen at −20 °C until the time of analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S74",
+      "start": 10889,
+      "end": 11058,
+      "text": "Two steaks per treatment and aging time were used in the sensory tests and the other two steaks were used for the objective analysis of meat quality, as described below.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S75",
+      "start": 11058,
+      "end": 11061,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S76",
+      "start": 11061,
+      "end": 11063,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S77",
+      "start": 11063,
+      "end": 11064,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S78",
+      "start": 11065,
+      "end": 11069,
+      "text": "2.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S79",
+      "start": 11070,
+      "end": 11086,
+      "text": "Sensory Analysis",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S80",
+      "start": 11086,
+      "end": 11449,
+      "text": "\n\nFor sensory analysis, untrained consumers assigned scores from 0 to 100 on unstructured hedonic scales to the following meat quality traits using the Sensory Meat software v.1.6 (Brazil Beef Quality Ltd., Piracicaba, São Paulo, Brazil): tenderness, liking of flavor, juiciness, and overall acceptance, which was based on MSA consumer testing, as described [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S81",
+      "start": 11450,
+      "end": 11532,
+      "text": "The length of the lines in the scoring sheets used in this experiment were 100 mm.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S82",
+      "start": 11533,
+      "end": 11686,
+      "text": "For participation, the consumers were determined to be between 18 and 70 years old, to consume meat at least once a week, and to prefer meat medium-rare.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S83",
+      "start": 11687,
+      "end": 11767,
+      "text": "For this study, the genetic groups (biological types) were evaluated separately.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S84",
+      "start": 11767,
+      "end": 11991,
+      "text": "\n\nForty-eight consumers were used in each experiment, with two sessions comprising 24 consumers divided into two groups (G1 and G2) of twelve consumers each. G2 was a repetition of G1 to increase the error variance estimate.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S85",
+      "start": 11992,
+      "end": 12113,
+      "text": "The consumers received seven samples, with the first tasting being used as the reference sample (standardized benchmark).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S86",
+      "start": 12114,
+      "end": 12196,
+      "text": "For this purpose, one of the tested samples was selected randomly in each session.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S87",
+      "start": 12197,
+      "end": 12460,
+      "text": "After they had tasted the reference samples, the consumers analyzed the six subsequent samples from three animals, with each animal being submitted to the two suspension methods, left side of the carcass (PS) and right side (AS), corresponding to the six samples.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S88",
+      "start": 12460,
+      "end": 12622,
+      "text": "\n\nThe LTL samples were thawed for 24 h at 5 °C in a refrigerator (Gelopar, GREP-4PAI, São Paulo, Brazil) and had a temperature less than 10 °C before preparation.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S89",
+      "start": 12623,
+      "end": 12771,
+      "text": "The steaks (2.54 cm thick) were immersed in saline (5% NaCl), and then grilled on a gas grill (Char-Broil Signature 3Q—Infrared, Columbus, GA, USA).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S90",
+      "start": 12772,
+      "end": 12873,
+      "text": "The internal temperature was monitored with thermocouples (ThermoPro, Model TP-16, Hong Kong, China).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S91",
+      "start": 12874,
+      "end": 12972,
+      "text": "The steaks were removed from the grill when their geometric center reached a temperature of 63 °C.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S92",
+      "start": 12973,
+      "end": 13214,
+      "text": "After preparation, the steaks were cut into subsamples (1.27 cm × 1.27 cm × 2.5 cm), packed in sealed pots for the maintenance of humidity, and stored in stoves for temperature control and stabilization, before being served to the consumers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S93",
+      "start": 13215,
+      "end": 13446,
+      "text": "The samples were served in single-use small boxes (Brazil Beef Quality Ltd., Piracicaba, São Paulo, Brazil) with divisions to prevent visual comparison between samples, and to maintain the temperature during assessment (Figure S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S94",
+      "start": 13446,
+      "end": 13449,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S95",
+      "start": 13449,
+      "end": 13450,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S96",
+      "start": 13450,
+      "end": 13451,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S97",
+      "start": 13451,
+      "end": 13457,
+      "text": "# 2.4.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S98",
+      "start": 13458,
+      "end": 13735,
+      "text": "Laboratory Analysis\n\nBeef samples from the two treatments (aged for 5 and 15 days) were used to analyze meat color, pH, shear force (SF), cooking loss (CL) and purge loss (PL) at the Meat Science Laboratory of the São Paulo State University (UNESP Botucatu, São Paulo, Brazil).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S99",
+      "start": 13735,
+      "end": 13737,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S100",
+      "start": 13737,
+      "end": 13738,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S101",
+      "start": 13738,
+      "end": 13739,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S102",
+      "start": 13739,
+      "end": 13741,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S103",
+      "start": 13742,
+      "end": 13748,
+      "text": "2.4.1.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S104",
+      "start": 13749,
+      "end": 13879,
+      "text": "pH and Meat Color\n\nTo allow blooming time, the beef samples were thawed at 4 °C for 24 h and exposed to oxygen for 30 min at 4 °C.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S105",
+      "start": 13880,
+      "end": 14033,
+      "text": "Initially, the meat pH was measured using a digital pH meter equipped with a penetration probe (Model AK86, AKSO Instruments, Rio Grande do Sul, Brazil).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S106",
+      "start": 14034,
+      "end": 14104,
+      "text": "Standard buffers (pH 4.0 and 7.0) were used in calibration procedures.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S107",
+      "start": 14105,
+      "end": 14444,
+      "text": "In the same steak, meat color (L * = lightness, a * = redness, b * = yellowness) was measured using the CIELab system of the CR-400 colorimeter (light source A, observer angle 10°, aperture size 5.0 cm, and display Y: 0.01 at 160.00% reflectance; Konica Minolta Sensing, Inc., Tokyo, Japan), following previously described procedures [19].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S108",
+      "start": 14445,
+      "end": 14638,
+      "text": "Briefly, the colorimeter was calibrated using a standard black and white plate and three-color readings were then performed on the surface of the LTL muscle sample at room temperature (~20 °C).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S109",
+      "start": 14639,
+      "end": 14690,
+      "text": "The mean of these measurements was then calculated.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S110",
+      "start": 14691,
+      "end": 14827,
+      "text": "The chroma colorimetric index was calculated using the formula (a*)2+(b*)2, and hue was calculated using tan(b*a*)−1, as described [20].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S111",
+      "start": 14827,
+      "end": 14830,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S112",
+      "start": 14830,
+      "end": 14831,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S113",
+      "start": 14831,
+      "end": 14834,
+      "text": "###",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S114",
+      "start": 14835,
+      "end": 14840,
+      "text": "2.4.2",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S115",
+      "start": 14840,
+      "end": 14841,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S116",
+      "start": 14842,
+      "end": 15018,
+      "text": "Purge Loss, Shear Force and Cooking Loss\n\nOne steak from each treatment was used to determine PL, as well as SF and CL at 71 °C, considering the two aging times (5 or 15 days).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S117",
+      "start": 15019,
+      "end": 15099,
+      "text": "The recommendations of the American Meat Science Association were followed [21].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S118",
+      "start": 15100,
+      "end": 15265,
+      "text": "The PL of the beef loin sections was determined by measuring the difference between the initial weight prior to freezing and the final weight after freezing/thawing.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S119",
+      "start": 15266,
+      "end": 15331,
+      "text": "Thus, the PL of never frozen control beef loins was not assessed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S120",
+      "start": 15332,
+      "end": 15423,
+      "text": "The CL was divided into evaporation loss (EL) and drip loss (DL), determined as percentage.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S121",
+      "start": 15424,
+      "end": 15512,
+      "text": "The DL was obtained by weighing only the refractory before and after cooking the sample.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S122",
+      "start": 15513,
+      "end": 15581,
+      "text": "The EL was obtained by weighing the sample before and after cooking.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S123",
+      "start": 15581,
+      "end": 15583,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S124",
+      "start": 15583,
+      "end": 15656,
+      "text": "The beef loins were weighed and placed in a grid over a glass refractory.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S125",
+      "start": 15657,
+      "end": 15848,
+      "text": "Next, a thermometer (Model 612 digital thermometer, ATP Instrumentation, Ashby-de-la-Zouch, England) was inserted into the geometric center of the samples to monitor the internal temperature.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S126",
+      "start": 15849,
+      "end": 15940,
+      "text": "Samples were cooked in a preheated oven (Feri90 Venâncio Aires, Rio Grande do Sul, Brazil).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S127",
+      "start": 15941,
+      "end": 16055,
+      "text": "At 40 °C, the beef samples was turned and remained in the oven until an internal temperature of 71 °C was reached.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S128",
+      "start": 16056,
+      "end": 16115,
+      "text": "The samples were then kept at 21 °C for 15 min and weighed.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S129",
+      "start": 16115,
+      "end": 16117,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S130",
+      "start": 16117,
+      "end": 16162,
+      "text": "Grilled steaks were chilled for 24 h at 4 °C.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S131",
+      "start": 16163,
+      "end": 16335,
+      "text": "After this period, cylinders (12.7 mm) were cut from the sample center in the longitudinal direction towards the muscle fiber using a nozzle coupled to an industrial drill.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S132",
+      "start": 16336,
+      "end": 16554,
+      "text": "From the total of grilled steaks, at least six to eight technical replicates (cylinders) from the same half carcass (LTL sample) were sheared perpendicular to the fiber direction, as recommended by Wheeler et al. [22].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S133",
+      "start": 16555,
+      "end": 16811,
+      "text": "A Brookfield CT-3 Texture Analyzer (AMETEK Brookfield, Middleborough, MA, United States), equipped with a stainless steel 3.07 mm-thick Warner–Bratzler blade with a V-shaped (60° angle) cutting edge was used, and the SF results were reported in Newton (N).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S134",
+      "start": 16811,
+      "end": 16815,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S135",
+      "start": 16815,
+      "end": 16823,
+      "text": "### 2.5.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S136",
+      "start": 16824,
+      "end": 16929,
+      "text": "Statistical Analysis\n\nThe data set of meat quality traits’ two biological types were analyzed separately.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S137",
+      "start": 16930,
+      "end": 17092,
+      "text": "The sensory test sessions were organized considering two block factors, consumer and assessment order, in a neighbor-balanced Latin square design (6 × 6) [23,24].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S138",
+      "start": 17093,
+      "end": 17232,
+      "text": "A mixed generalized linear model was applied considering a binomial distribution of the data, using the PROC GLIMMIX procedure (SAS v.9.4).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S139",
+      "start": 17233,
+      "end": 17315,
+      "text": "The length of the lines in the scoring sheets used in this experiment were 100 mm.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S140",
+      "start": 17316,
+      "end": 17417,
+      "text": "Clipping procedures to reduce standard error of the sensory mean was adopted, as recommended by [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S141",
+      "start": 17418,
+      "end": 17568,
+      "text": "In brief, for each session within each sample, the two highest and the two lowest values for each trait evaluated in sensory analysis were eliminated.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S142",
+      "start": 17568,
+      "end": 17823,
+      "text": "\n\nFor the response variables tenderness, liking of flavor, juiciness and overall acceptance, the model included the sequence (sample tasting), suspension method (AS and PS) and aging time (5 and 15 days) as fixed effects and the consumer as random effect.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S143",
+      "start": 17824,
+      "end": 17885,
+      "text": "Tukey’s test was used for the comparison of means (p ≤ 0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S144",
+      "start": 17886,
+      "end": 18235,
+      "text": "Interaction terms for suspension method × aging were tested as follows:Y = μ + C + S + T + A + T × A + e\nwhere Y = trait of interest (sensory meat quality trait); μ = overall mean; C = effect of consumer; S = effect of sequence; T = effect of carcass-suspension method; A = effect of aging; T × A = effect of the interaction; and e = random error.\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S145",
+      "start": 18235,
+      "end": 18362,
+      "text": "For laboratory variables, the model included the suspension method (AS and PS) and aging time (5 and 15 days) as fixed effects.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S146",
+      "start": 18363,
+      "end": 18674,
+      "text": "Interaction terms for suspension method × aging were also tested, according to the model:Y = μ + T + A + T × A + e\nwhere Y = trait of interest (objective meat quality trait); μ = overall mean; T = effect of carcass-suspension method; A = effect of aging; T × A = effect of the interaction; and e = random error.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S147",
+      "start": 18674,
+      "end": 18676,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S148",
+      "start": 18676,
+      "end": 18737,
+      "text": "In addition, the data were evaluated by Pearson correlations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S149",
+      "start": 18738,
+      "end": 19033,
+      "text": "Subsequently, the data were evaluated by principal component analysis (PCA) using the R software (v. 4.1.2) to achieve an overview of their correlations and to visualize and determine the degree of the contribution of suspension method to the variation in quality traits in each biological type.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S150",
+      "start": 19034,
+      "end": 19144,
+      "text": "The FactoMineR [25] and Factoextra [26] packages were used to generate the PCA plots and graphs, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S151",
+      "start": 19144,
+      "end": 19153,
+      "text": "\n\n\n\n## 3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S152",
+      "start": 19154,
+      "end": 19276,
+      "text": "Results\n\n### 3.1. Carcass Traits\n\nTable 1 shows the carcass traits of the genetic/gender groups used in the present study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S153",
+      "start": 19277,
+      "end": 19397,
+      "text": "Both factors (genetic and gender) were used as biological model for application of different carcass-suspension methods.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S154",
+      "start": 19398,
+      "end": 19557,
+      "text": "As expected, these factors affect (p < 0.01) hot carcass weight, fatness, marbling score, age (by dentition) and Bos indicus content (measured by hump height).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S155",
+      "start": 19558,
+      "end": 19688,
+      "text": "The description of such data was aimed at characterizing the biological models, which supply different consumer markets in Brazil.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S156",
+      "start": 19688,
+      "end": 20374,
+      "text": "\n\nFatness score was assessed using 1 to 5 degrees for the distribution of fat cover in the hot carcass (1 = absent; 2 = scarce; 3 = medium; 4 = uniform; 5 = excessive). Conformation score was assessed by development of muscle mass in the hindquarters region (1 = concave; 2 = sub-straight; 3 = straight; 4 = sub-convex; 5 = convex). Marbling score was assessed using MSA standard photograph, divided into tenths for grading, creating a score range from 100 to 1100 in increments of 10. Ossification was assessed by the degree of ossification of the vertebral spinous processes, as well as the shape and colour of the rib bones, with the lowest score being 100 and the highest being 590.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S157",
+      "start": 20374,
+      "end": 20377,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S158",
+      "start": 20377,
+      "end": 20378,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S159",
+      "start": 20378,
+      "end": 20385,
+      "text": "## 3.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S160",
+      "start": 20386,
+      "end": 20607,
+      "text": "Meat Quality Traits\n\nEvaluation of the sensory and physical–chemical characteristics of meat quality revealed no significant interaction (p > 0.05) between two factors: carcass-suspension method and genetic/gender groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S161",
+      "start": 20608,
+      "end": 20686,
+      "text": "Thus, the results are reported separately as the single effect of each factor.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S162",
+      "start": 20687,
+      "end": 20928,
+      "text": "The effects of the carcass-suspension method on the sensory and objective traits of Nellore bulls (Table 2) and Brangus heifers (Table 3) were consistent for some variables but divergent for others, considering the two aging periods studied.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S163",
+      "start": 20929,
+      "end": 21082,
+      "text": "For both biological types, there was a positive effect (p < 0.01) of PS on the sensory tenderness of meat aged for 5 days when compared to the AS method.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S164",
+      "start": 21083,
+      "end": 21196,
+      "text": "Consumers attributed higher tenderness scores to meat of the PS treatment, regardless of gender or genetic group.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S165",
+      "start": 21196,
+      "end": 21459,
+      "text": "\n\nWhen meat was aged for 15 days, there was no difference in sensory tenderness between the AS and PS methods (p > 0.05) in either group, indicating that a longer aging period compensated for the difference in meat quality caused by the carcass-suspension method.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S166",
+      "start": 21460,
+      "end": 21712,
+      "text": "Additionally, there was an effect of the interaction between suspension method and aging of Nellore beef (p < 0.05) on liking of flavor, juiciness and overall acceptance (Table 2), while the same were not observed for Brangus beef (p > 0.05) (Table 3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S167",
+      "start": 21712,
+      "end": 21888,
+      "text": "\n\nIn the Nellore bulls group, carcasses submitted to PS tended (p = 0.06) to produce more tender meat (lower SF average values) than those submitted to the AS method (Table 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S168",
+      "start": 21889,
+      "end": 22122,
+      "text": "Such effects were not observed for Brangus beef (p > 0.05), which indicates that PS method is more effective in improving meat quality traits of Bos indicus carcasses of bulls compared to crossbred (Bos taurus × Bos indicus) heifers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S169",
+      "start": 22123,
+      "end": 22267,
+      "text": "In addition, lower CL (p < 0.05) were found in the Nellore group whose carcasses were submitted to PS treatment compared to AS (27.7 vs. 30.9%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S170",
+      "start": 22268,
+      "end": 22420,
+      "text": "The carcass-suspension method and aging period (5 vs. 15 days) did not influence L *, a *, b *, chroma, hue, meat pH and PL, in either group (p > 0.05).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S171",
+      "start": 22420,
+      "end": 22423,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S172",
+      "start": 22423,
+      "end": 22424,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S173",
+      "start": 22424,
+      "end": 22650,
+      "text": "## 3.3. Correlations\n\nThe phenotypic correlations between the sensory and objective meat quality traits found in this study are considered to be of low magnitude in both Nellore bulls (Figure 1) and Brangus heifers (Figure 2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S174",
+      "start": 22651,
+      "end": 22991,
+      "text": "On the other hand, a strong association between the sensory traits (r ≥ 0.70; p < 0.01) was observed for the two groups (Nellore and Brangus) and carcass-suspension methods (PS and AS), indicating that most consumers who attributed high scores to tenderness also attributed high scores to liking of flavor, juiciness and overall acceptance.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S175",
+      "start": 22991,
+      "end": 23175,
+      "text": "\n\n\n<figure>\n  <figcaption><strong>Figure 1</strong> Pearson correlation (uppercase numbers) and significance (lowercase numbers; p-values) between meat quality traits of Nellore bulls.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S176",
+      "start": 23176,
+      "end": 23327,
+      "text": "Blue or purple colors means strong or medium positive correlations, while orange or yellow/browned colors means strong or medium negative correlations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S177",
+      "start": 23328,
+      "end": 23831,
+      "text": "Variables: SF = shear force; pH = ultimate pH (48 h post-mortem); TE = sensory tenderness; JU = juiciness; OA = overall acceptance; FL = liking of flavor; PL = purge loss; EL = evaporation loss; DL = drip loss; CL = total cooking losses; HUE = real color; CH = chromaticity; b = yellowness; a = redness; and L = lightness.</figcaption>\n</figure>\n\n\n<figure>\n  <figcaption><strong>Figure 2</strong> Pearson correlation (uppercase numbers) and significance (lowercase numbers; p-values) of Brangus heifers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S178",
+      "start": 23832,
+      "end": 23983,
+      "text": "Blue or purple colors means strong or medium positive correlations, while orange or yellow/browned colors means strong or medium negative correlations.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S179",
+      "start": 23984,
+      "end": 24337,
+      "text": "Variables: SF = shear force; pH = ultimate pH (48 h post-mortem); TE = sensory tenderness; JU = juiciness; OA = overall acceptance; FL = liking of flavor; PL = purge loss; EL = evaporation loss; DL = drip loss; CL = total cooking losses; HUE = real color; CH = chromaticity; b * = yellowness; a * = redness; and L * = lightness.</figcaption>\n</figure>\n\n",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S180",
+      "start": 24337,
+      "end": 24495,
+      "text": "Although of low magnitude, the correlation between sensory tenderness and SF was inverse (p < 0.01) for both Nellore (r = −0.12) and Brangus meat (r = −0.26).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S181",
+      "start": 24496,
+      "end": 24648,
+      "text": "Additionally, SF was associated with higher CL in these two groups (r = 0.67 and 0.53, respectively), in agreement with the results of sensory analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S182",
+      "start": 24649,
+      "end": 24919,
+      "text": "The negative correlations between objective meat quality variables in Nellore and Brangus animals should also be highlighted, such as between SF and pH (r = −0.45 and −0.48, respectively; p < 0.01) and between SF and chroma (r = −0.59 and −0.21, respectively; p < 0.01).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S183",
+      "start": 24919,
+      "end": 24921,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S184",
+      "start": 24921,
+      "end": 25006,
+      "text": "The meat quality traits (n = 15) were also submitted to multivariate analysis by PCA.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S185",
+      "start": 25007,
+      "end": 25194,
+      "text": "Considering an eigenvector ≥1 as a criterion [27], the first five principle components were necessary to explain more than 80% of the total variance of the data in both groups (Table S1).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S186",
+      "start": 25195,
+      "end": 25522,
+      "text": "In Nellore bulls (Figure 3), the first two principal components (PC1 and PC2) explained more than 48% of the total variance of the data, with the combination of palatability (sensory) variables with objective tenderness (SF and CL) and meat color (hue) being the most effective in defining PC1 and PC2, respectively (Table S2).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S187",
+      "start": 25523,
+      "end": 25664,
+      "text": "In Brangus heifers, the proportion of variance in the data explained by PC1 and PC2 was higher than 24.7% and 18.3%, respectively (Figure 4).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S188",
+      "start": 25665,
+      "end": 25884,
+      "text": "In this group, the variables related to palatability (sensory tenderness, liking of flavor, juiciness and overall acceptance) and meat color (hue) combined with pH were more effective in defining PC1 and PC2 (Table S3).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S189",
+      "start": 25884,
+      "end": 25887,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S190",
+      "start": 25887,
+      "end": 26051,
+      "text": "<figure>\n  <figcaption><strong>Figure 3</strong> Score plot of meat quality data of Nellore bulls in the multivariate space defined by principal component analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S191",
+      "start": 26052,
+      "end": 26144,
+      "text": "PC1 “tenderness” (explained variance: 25.9%) × PC2 “meat color” (explained variance: 22.4%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S192",
+      "start": 26145,
+      "end": 26340,
+      "text": "Group symbols represent both the carcass-suspension method and meat aging period, respectively: ● (Achilles tendon; 15 days), ▲ (Achilles tendon; 5 days), ■ (Pelvic, 15 days), + (Pelvic, 5 days).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S193",
+      "start": 26341,
+      "end": 26608,
+      "text": "The centroid value of each treatment is represented by a larger shape size.</figcaption>\n</figure>\n\n\n<figure>\n  <figcaption><strong>Figure 4</strong> Score plot of meat quality data of Brangus heifers in the multivariate space defined by principal component analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S194",
+      "start": 26609,
+      "end": 26701,
+      "text": "PC1 “tenderness” (explained variance: 24.7%) × PC2 “meat color” (explained variance: 18.3%).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S195",
+      "start": 26702,
+      "end": 26900,
+      "text": "Group symbols represent both the carcass-suspension method and meat aging period, respectively: ● (Achilles tendon; 15 days), ▲ (Achilles tendon; 5 days), ■ (Pelvic, 15 days) and + (Pelvic, 5 days).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S196",
+      "start": 26901,
+      "end": 27149,
+      "text": "The centroid value of each treatment is represented by a larger shape size.</figcaption>\n</figure>\n\nThe biplots of the meat quality data of Nellore bulls (Figure 3) and Brangus heifers (Figure 4) show correlations of the variables with PC1 and PC2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S197",
+      "start": 27150,
+      "end": 27213,
+      "text": "Meat color (chroma and a *) was positively associated with PC1.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S198",
+      "start": 27214,
+      "end": 27300,
+      "text": "The same variables were negatively (i.e., inversely, ~180°) associated with SF and CL.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S199",
+      "start": 27301,
+      "end": 27428,
+      "text": "Thus, a high chroma value was observed in more tender meat (lower SF) and meat with a higher water-holding capacity (lower CL).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S200",
+      "start": 27429,
+      "end": 27570,
+      "text": "Although not measured directly, CL and PL can be used as indirect measures of water-holding capacity and were negatively associated with PC2.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S201",
+      "start": 27571,
+      "end": 27668,
+      "text": "Thus, samples with high CL were possibly derived from animals with low meat lightness (L) scores.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S202",
+      "start": 27668,
+      "end": 27792,
+      "text": "\n\nThe PCA also revealed a better clustering/separation of the data of Nellore carcasses submitted to PS and aged for 5 days.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S203",
+      "start": 27793,
+      "end": 28023,
+      "text": "These results reinforce the finding that the effects of PS on Bos indicus carcasses were more consistent than those observed for crossbred heifer carcasses, in agreement with the results obtained by sensory and objective analyses.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S204",
+      "start": 28024,
+      "end": 28255,
+      "text": "The data of Bos indicus carcasses submitted to PS and aged for 5 days were displaced towards the lower-right quadrant of the biplot, indicating positive and high values in the sensory analysis and negative and low SF and CL values.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S205",
+      "start": 28256,
+      "end": 28479,
+      "text": "Inverse correlations were also observed in this multivariate space, for example, between SF and meat color (chroma and a *) and between sensory traits (tenderness, liking of flavor, juiciness and overall acceptance) and PL.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S206",
+      "start": 28479,
+      "end": 28484,
+      "text": "\n\n\n\n#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S207",
+      "start": 28484,
+      "end": 28487,
+      "text": "# 4",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S208",
+      "start": 28487,
+      "end": 28488,
+      "text": ".",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S209",
+      "start": 28489,
+      "end": 28726,
+      "text": "Discussion\n\nCarcass suspension by the pelvic bone is a widely used method in Australia and in some European countries which is aimed at improving the quality traits of retail cuts from the high-value parts, especially sensory tenderness.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S210",
+      "start": 28727,
+      "end": 28934,
+      "text": "Within this context, studies on cattle [13,15,28], small ruminants [29,30,31,32] and other species [33,34] have reported better meat tenderness in response to PS when compared to the traditional method (AS).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S211",
+      "start": 28934,
+      "end": 29168,
+      "text": "\n\nOther sensory quality attributes that are important for the consumer and are highly correlated with tenderness can also be influenced by the carcass-suspension method, such as liking of flavor, juiciness and overall acceptance [35].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S212",
+      "start": 29169,
+      "end": 29348,
+      "text": "The results obtained in studies on beef cattle and other species support the present findings, especially regarding sensory meat tenderness of Nellore bulls and crossbred heifers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S213",
+      "start": 29349,
+      "end": 29580,
+      "text": "Our results suggest that the PS method is more effective in improving meat quality traits of Bos indicus carcasses of bulls, which is a biological type with limited meat quality traits compared to crossbred heifers or steers [6,8].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S214",
+      "start": 29581,
+      "end": 29735,
+      "text": "In addition to the gender effects, the degree of tenderization caused by PS method is dictated by the genetic background of the animals, as reviewed [36].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S215",
+      "start": 29735,
+      "end": 29737,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S216",
+      "start": 29737,
+      "end": 29869,
+      "text": "The two biological models were divergent in terms of carcass traits, characterizing the distinction between the experimental groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S217",
+      "start": 29870,
+      "end": 30061,
+      "text": "The mean hot carcass weight of 369.97 kg and dental maturity of 3.67 of Nellore animals demonstrate Brazilian market requirements that prioritize greater meat production per animal unit [37].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S218",
+      "start": 30062,
+      "end": 30202,
+      "text": "On the other hand, the market of beef with higher added value can only be supplied by products with the characteristics of crossbred cattle.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S219",
+      "start": 30203,
+      "end": 30350,
+      "text": "With marbling scores three times higher than those of Nellore bulls and a younger age, these animals produce meat with better sensory quality [38].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S220",
+      "start": 30350,
+      "end": 30352,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S221",
+      "start": 30352,
+      "end": 30353,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S222",
+      "start": 30353,
+      "end": 30355,
+      "text": "##",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S223",
+      "start": 30356,
+      "end": 30575,
+      "text": "4.1. Carcass and Meat Quality Traits\n\nAccording to the MSA system, hanging carcasses by the pelvic bone during chilling or during the first 10 h of cold storage allows the shortening of the aging time of some cuts [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S224",
+      "start": 30576,
+      "end": 30703,
+      "text": "This hypothesis was confirmed in the present study for beef loins (LTL muscle), especially for Nellore carcasses and aged meat.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S225",
+      "start": 30704,
+      "end": 30966,
+      "text": "Under these conditions, in addition to gains in the sensory quality variables of Nellore beef loins, interactions between the suspension method and aging were observed, which also contributed to a better instrumental meat quality in this group (lower SF and CL).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S226",
+      "start": 30966,
+      "end": 31224,
+      "text": "\n\nConsidering that approximately 80% of CL refer to losses by evaporation, carcass-chilling methods that provide greater accumulation of water in the muscle tissue tend to reduce the effects of losses on the final sensory quality of meat during cooking [39].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S227",
+      "start": 31225,
+      "end": 31436,
+      "text": "However, the PS method does not affect the water-holding capacity—WHC (indirectly measured as CL and PL)—of meat in Nellore group, and opposite results can be found in the literature with Bos indicus bulls [13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S228",
+      "start": 31437,
+      "end": 31578,
+      "text": "Similar results were reported by researchers working with young buffalo hung by PS method [40], whereby no changes in WHC of meat were found.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S229",
+      "start": 31579,
+      "end": 31720,
+      "text": "Differences among studies may be due to factors such as genetic (species), gender status, aging period used and chemical composition of meat.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S230",
+      "start": 31720,
+      "end": 31972,
+      "text": "\n\nSimilar results have also been reported by Juárez et al. [41] who showed that ~45% of the variations in the SF of beef were explained by the carcass-suspension method (AS or PS), aging (2-, 6-, 13-, 21- or 27-days post-mortem) and their interactions.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S231",
+      "start": 31973,
+      "end": 32199,
+      "text": "Reductions in SF (~4.9 N) and CL (~2%) observed in samples of the present study have also been reported for beef samples of intact Ankole bulls derived from carcasses hung by the pelvic bone versus the traditional method [13].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S232",
+      "start": 32199,
+      "end": 32201,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S233",
+      "start": 32201,
+      "end": 32555,
+      "text": "The effect of the interaction between the suspension method and meat aging on the liking of flavor, juiciness and overall acceptance of Nellore beef, which was not observed for Brangus beef, is possibly due to the fact that meat from purebred Bos indicus bulls is more sensitive to the suspension technique than meat from crossbred Brangus young heifers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S234",
+      "start": 32556,
+      "end": 32788,
+      "text": "It is known that intense meat tenderization during the post-mortem period occurs earlier in animals with a higher percentage of the Bos taurus genotype [42], thus minimizing the early effects of technologies adopted in the industry.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S235",
+      "start": 32788,
+      "end": 33094,
+      "text": "\n\nFurthermore, Bresolin et al. [43] described possible causal relationships between hot carcass weight, ribeye area and SF in Nellore animals (n = 4414) with a weight and age similar to those of the present study, suggesting a significant relationship between meat tenderization and higher carcass weights.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S236",
+      "start": 33095,
+      "end": 33265,
+      "text": "These results suggest greater effects of carcass chilling techniques on the meat quality of this biological type, considering both genetic/gender factors (Nellore bulls).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S237",
+      "start": 33265,
+      "end": 33268,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S238",
+      "start": 33268,
+      "end": 33269,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S239",
+      "start": 33269,
+      "end": 33276,
+      "text": "## 4.2.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S240",
+      "start": 33277,
+      "end": 33401,
+      "text": "Meat Aging\n\nNian et al. [15] tested PS of Holstein steer versus bull carcasses aged for different periods (3, 7 or 14 days).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S241",
+      "start": 33402,
+      "end": 33538,
+      "text": "These authors reported that PS was more consistent in reducing the SF of bull beef aged for 3 and 7 days when compared to the AS method.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S242",
+      "start": 33539,
+      "end": 33683,
+      "text": "The differences between suspension methods on meat quality disappeared after 14 days of aging, as also observed in the present study at 15 days.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S243",
+      "start": 33684,
+      "end": 33836,
+      "text": "It is therefore possible to infer that a longer aging time had a greater effect on sensory tenderness than the suspension method in both genetic groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S244",
+      "start": 33837,
+      "end": 34058,
+      "text": "In general, studies on carcass suspension do not compare or combine this technique to others adopted in the industry such as wet aging; however, the MSA considers both factors to be determinant of final meat quality [18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S245",
+      "start": 34058,
+      "end": 34295,
+      "text": "\n\nTaken together, these results suggest that the PS method may accelerate meat tenderization during the first days of aging, with a greater magnitude being observed for tougher meat (i.e., purebred Bos indicus animals and non-castrated).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S246",
+      "start": 34296,
+      "end": 34440,
+      "text": "Such results agree with Watson et al. [18], who first reported that the effect of PS becomes quite small in samples subjected to extended aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S247",
+      "start": 34441,
+      "end": 34708,
+      "text": "We also demonstrating that PS could be a fundamental post-mortem tool for the meat-packing industry, which seeks to accelerate the tenderization rate and to reduce the aging time of beef from Nellore bulls, the main biological type produced in feedlots in Brazil [1].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S248",
+      "start": 34709,
+      "end": 34855,
+      "text": "Within this context, PS is a low-cost technology that improves sensory and objective meat quality traits and can therefore add value to beef cuts.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S249",
+      "start": 34855,
+      "end": 35050,
+      "text": "\n\nSimilar to the present study, Moran et al. [28] also reported benefits of PS on the sensory meat tenderness of Holstein bulls versus steers slaughtered at 19 and 24 months of age, respectively.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S250",
+      "start": 35051,
+      "end": 35165,
+      "text": "The influence of PS on post-mortem aging rate was described in an MSA prediction model for beef palatability [14].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S251",
+      "start": 35166,
+      "end": 35364,
+      "text": "The authors explained that, in general, aging tends to even things out: when the meat palatability improves with age, it improves at a faster rate for the suspension method that is behind at 5 days.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S252",
+      "start": 35365,
+      "end": 35498,
+      "text": "Thus, observation of the lack of effects of PS compared to AS on meat quality traits is more common at longer aging times (>14 days).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S253",
+      "start": 35499,
+      "end": 35670,
+      "text": "Few studies are available in the literature that tested the effect of the PS method on bovine carcasses and evaluated longer aging times, especially in Bos indicus cattle.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S254",
+      "start": 35671,
+      "end": 35835,
+      "text": "In the MSA model described by Watson et al. [14], the majority of the aging data were in the range of 7–21 days, with most of them being in the 11–14 days category.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S255",
+      "start": 35835,
+      "end": 35838,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S256",
+      "start": 35838,
+      "end": 35839,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S257",
+      "start": 35839,
+      "end": 35846,
+      "text": "## 4.3.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S258",
+      "start": 35847,
+      "end": 36044,
+      "text": "Meat Quality Correlations\n\nWe found a strong correlation between different sensory scores (tenderness, juiciness, linking of flavor and overall acceptability), which agrees with MSA system [14,18].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S259",
+      "start": 36045,
+      "end": 36200,
+      "text": "Those authors also reported that these sensory variables generally show a very high correlation (r > 0.9), forming a new trait called ‘meat quality score’.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S260",
+      "start": 36201,
+      "end": 36483,
+      "text": "The low phenotypic correlations between sensory and objective meat quality traits (r = −0.07 to −0.26) observed in the present study for Nellore bulls (Figure 1) and Brangus heifers (Figure 2) were expected since the sensory meat quality tests were conducted on untrained consumers.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S261",
+      "start": 36483,
+      "end": 36752,
+      "text": "\n\nAccording to the MSA researchers [18], objective measurements (such as SF) have the advantage of being relatively cheap and rather simplistic, one-dimensional measures of a complex set of interactions that occur when cooked meat is chewed and masticated in the mouth.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S262",
+      "start": 36753,
+      "end": 36954,
+      "text": "Moreover, whilst SF is a useful indicator of sensory tenderness, it does not account for all the improvement in sensory scores when meat is aged, as observed in the present study using two aging times.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S263",
+      "start": 36955,
+      "end": 37067,
+      "text": "This relates to the decreasing importance of the strength of the myofibrillar component of toughness with aging.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S264",
+      "start": 37067,
+      "end": 37229,
+      "text": "\n\nAlthough of low magnitude, the correlations between sensory tenderness and SF were inverse (p < 0.01) for both Nellore (r = −0.12) and Brangus beef (r = −0.26).",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S265",
+      "start": 37230,
+      "end": 37439,
+      "text": "Similar results (r = −0.23 to −0.28) have been reported in a study that evaluated the relationships between instrumental and sensory tenderness of three muscles from Belgian Blue and Norwegian Red cattle [44].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S266",
+      "start": 37440,
+      "end": 37721,
+      "text": "Factors such as the magnitude of the differences in tenderness between the experimental treatments (PS vs. AS), the use of an untrained panel of consumers in the sensory tests [18] and the small number of samples in the objective analysis may have affected the correlation results.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S267",
+      "start": 37722,
+      "end": 37903,
+      "text": "On the other hand, SF was associated with higher CL in the two groups (r = 0.67 and 0.53, Figure 1 and Figure 2, respectively), results that agree with the data of sensory analysis.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S268",
+      "start": 37903,
+      "end": 38169,
+      "text": "\n\nIn a previous study, researchers [45] used PCA to evaluate meat quality traits of Nellore cattle and found similar results, in which beef samples with higher SF and CL values (tough meat) commonly showed a lower backfat thickness and myofibril fragmentation index.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S269",
+      "start": 38170,
+      "end": 38421,
+      "text": "Researchers investigated meat quality traits from male Holstein Friesian cattle using a multivariate approach and classified samples among tenderness clusters (tough, tender and very tender) in response to AS and PS meats aged for different days [28].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S270",
+      "start": 38422,
+      "end": 38600,
+      "text": "Similar to the present study, Moran et al. [28] also found that meat samples seemed to reach a greater degree of tenderness in a shorter aging period when the PS method was used.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S271",
+      "start": 38601,
+      "end": 38834,
+      "text": "Additionally, the PCA results obtained for the meat quality traits of Nellore and Brangus animals agree with those reported by Lopes et al. [20], who applied multivariate techniques to evaluate meat quality traits of crossbred bulls.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S272",
+      "start": 38835,
+      "end": 39064,
+      "text": "The meat color aspect, based on chromaticity of longissimus muscle, reveals greater influence of color variables on meat quality traits and corroborate the findings described in another multivariate study of Nellore heifers [46].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S273",
+      "start": 39064,
+      "end": 39067,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S274",
+      "start": 39067,
+      "end": 39068,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S275",
+      "start": 39068,
+      "end": 39074,
+      "text": "## 4.4",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S276",
+      "start": 39074,
+      "end": 39087,
+      "text": ". Limitations",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S277",
+      "start": 39087,
+      "end": 39089,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S278",
+      "start": 39089,
+      "end": 39262,
+      "text": "Pelvic suspension is a well-accepted means of increasing tenderness by stretching the LTL muscle, which greatly changes the myofibrillar protein overlap and subsequently SF.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S279",
+      "start": 39263,
+      "end": 39458,
+      "text": "At the same time, however, aging beef increases tenderness through increase proteolytic cleavage on intra-sarcomeric proteins that then allow for the disintegration of the myofibrillar structure.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S280",
+      "start": 39459,
+      "end": 39665,
+      "text": "Additional biochemical (sarcomere length of LTL samples) or molecular studies (e.g., proteomic approach) are necessary to fully explain PS effects on muscle structure and, consequently, meat quality traits.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S281",
+      "start": 39665,
+      "end": 39929,
+      "text": "\n\nThe main effects of PS or AS methods are slightly confounded on the biological groups used in the current study (combining genetic and gender factors; Nellore bulls versus Brangus heifers) because of the lack of overlap in carcass weight, marbling score and age.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S282",
+      "start": 39930,
+      "end": 40228,
+      "text": "Consequently, several objective variables did not reach statistical significance, and interaction effects between carcass-suspension method and aging were divergent among groups (on sensory and objectives variables), which may be due to the small number of animals used for the meat quality assays.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S283",
+      "start": 40229,
+      "end": 40334,
+      "text": "Taken together, these results suggest that a greater number of animals should be evaluated in the future.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S284",
+      "start": 40335,
+      "end": 40516,
+      "text": "If a greater number of samples had been used, and a greater number of untrained consumers had participated in the sensory tests, perhaps the results could have been more consistent.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S285",
+      "start": 40516,
+      "end": 40518,
+      "text": "\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S286",
+      "start": 40518,
+      "end": 40602,
+      "text": "Further analyses could be undertaken to integrate the results into an overall model.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S287",
+      "start": 40603,
+      "end": 40733,
+      "text": "It would be possible that increments in sensory eating quality (PS-AS) could be regressed against the sensory scores for AS sides.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S288",
+      "start": 40734,
+      "end": 40894,
+      "text": "This would show that lower eating-quality carcasses showed a greater response to PS, an interaction that has been shown previously by other researchers [47,48].",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S289",
+      "start": 40895,
+      "end": 41038,
+      "text": "Therefore, expressing the sensory data from the two biological groups eliminates (or at least minimizes) the difference between the two groups.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S290",
+      "start": 41038,
+      "end": 41112,
+      "text": "\n\nAn economic evaluation could bring additional data to the present study.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S291",
+      "start": 41113,
+      "end": 41384,
+      "text": "Although tenderstretch was proven to be effective in improving tenderness and other sensory variables, it was not widely adopted in Brazil and other countries due to the perceived inconvenience, extra costs and the lack of financial incentive for improved eating quality.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S292",
+      "start": 41385,
+      "end": 41595,
+      "text": "When PS method is applied, there is a need to have one extra person on the chain to insert the hook through the pelvic bone, as well as one person to rehang the carcass by the AS after rigor mortis is complete.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S293",
+      "start": 41595,
+      "end": 41599,
+      "text": "\n\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S294",
+      "start": 41599,
+      "end": 41600,
+      "text": "#",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S295",
+      "start": 41600,
+      "end": 41604,
+      "text": "# 5.",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    },
+    {
+      "id": "S296",
+      "start": 41605,
+      "end": 41754,
+      "text": "Conclusions\n\nPelvic suspension of carcasses improved the beef loin quality of Nellore bulls and Brangus heifers, two very different biological types.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S297",
+      "start": 41755,
+      "end": 42106,
+      "text": "The PS method allows a reduction in the aging time of Nellore beef from 15 to 5 days without compromising, or even favoring, sensory (tenderness, liking of flavor, juiciness and overall acceptance) and objective traits (SF and CL), demonstrating that animals with a higher genetic Bos taurus content have more tender meat after a shorter aging period.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S298",
+      "start": 42107,
+      "end": 42344,
+      "text": "Pelvic suspension is therefore an efficient technology for significantly reducing the chilling period of Nellore carcasses (or with a high Bos indicus content and bulls), with a positive impact on the costs for the meat-packing industry.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S299",
+      "start": 42345,
+      "end": 42540,
+      "text": "In Brangus heifers, the PS method had a positive effect on sensory meat quality traits such as tenderness, liking of flavor and overall acceptance, but did not influence objective quality traits.",
+      "decision": "extract_sentence_projection",
+      "reason": "deterministic dependency projection; expert review required"
+    },
+    {
+      "id": "S300",
+      "start": 42540,
+      "end": 42543,
+      "text": "\n\n\n",
+      "decision": "non_assertional",
+      "reason": "empty_or_punctuation_fragment"
+    }
+  ],
+  "dsl": "B T4 B1 | sub=Bos indicus carcasses of two distinct | pred=comprise | obj=10 young Brangus heifers and 10 | unit=S2\nB T4 B2 | sub=Half-carcasses of each biological type/sex category | pred=hang | obj=using Achilles suspension (n = 20, | unit=S3\nB T4 B3 | sub=longissimus samples | pred=collect | obj=At boning | unit=S4\nB T4 B4 | sub=Objective samples | pred=test | obj=for shear force (SF | unit=S5\nB T4 B5 | sub=There | pred=be | obj=on the sensory tenderness of Nellore | unit=S6\nB T4 B6 | sub=difference in sensory tenderness | pred=observe | obj=At 15 days of aging | unit=S7\nB T4 B7 | sub=an interaction | pred=occur | obj=between the suspension method and the | unit=S8\nB T4 B8 | sub=Nellore carcasses submitted to PS | pred=tend | obj=to produce more tender meat than | unit=S9\nB T4 B9 | sub=Carcass-suspension methods | pred=influence | obj=meat color | unit=S10\nB T4 B10 | sub=The PS | pred=contribute | obj=to improve the quality of Bos | unit=S11\nB T4 B11 | sub=Introduction | pred=compose | obj=of Zebu animals (Bos indicus | unit=S13\nB T4 B12 | sub=Nellore breed | pred=take | obj=Despite their adaptation to tropical climate | unit=S14\nB T4 B13 | sub=Many farms in the southeast and | pred=rear | obj=Nellore animals | unit=S15\nB T4 B14 | sub=This biological model of production | pred=supply | obj=a large part of the domestic | unit=S16\nB T4 B15 | sub=It | pred=know | obj=that the meat quality of Bos | unit=S17\nB T4 B16 | sub=very long aging times | pred=render | obj=the product excessively expensive | unit=S18\nB T4 B17 | sub=The use of crossbred cattle (Bos | pred=adopt | obj=as a strategy to improve productive | unit=S19\nB T4 B18 | sub=crossbred castrated male and female cattle | pred=use | obj=there | unit=S20\nB T4 B19 | sub=It | pred=know | obj=that the gender of cattle affects | unit=S21\nB T4 B20 | sub=some Brazilian meat-packing companies | pred=pay | obj=better | unit=S22\nB T4 B21 | sub=the commonly used hanging method of | pred=suspension | obj=In the meat-packing industry | unit=S23\nB T4 B22 | sub=This method | pred=result | obj=in the shortening of selected hindquarter | unit=S24\nB T4 B23 | sub=suspension of the carcass by the | pred=use | obj=On the other hand | unit=S25\nB T4 B24 | sub=the PS method | pred=affect | obj=the semitendinosus | unit=S26\nB T4 B25 | sub=the tenderness of almost all hindquarter | pred=improve | obj=During the post-mortem chilling period of | unit=S27\nB T4 B26 | sub=Studies | pred=suggest | obj=that this method may be more | unit=S28\nB T4 B27 | sub=there | pred=be | obj=In the Meat Standard Australia (MSA) | unit=S29\nB T4 B28 | sub=Carcass suspension by the pelvic bone | pred=technique | obj=that | unit=S30\nB T4 B29 | sub=studies evaluating the effects of PS | pred=scarce | obj=In Brazil | unit=S31\nB T4 B30 | sub=there | pred=be | obj=studies | unit=S32\nB T4 B31 | sub=meat from carcasses suspended by the | pred=require | obj=Within this context | unit=S33\nB T4 B32 | sub=Only a few studies with Nellore | pred=describe | obj=the interaction of the carcass-suspension method | unit=S34\nB T4 B33 | sub=the aim of this study | pred=be | obj=to evaluate whether PS can improve | unit=S35\nB T4 B34 | sub=article text | pred=material | obj=Methods | unit=S39\nB T4 B35 | sub=article text | pred=animal | obj=Carcasses | unit=S45\nB T4 B36 | sub=The animals | pred=belong | obj=to the same management group | unit=S46\nB T4 B37 | sub=The two groups | pred=receive | obj=the same diet, containing 15% forage | unit=S47\nB T4 B38 | sub=The animals | pred=allocate | obj=in collective pens, equipped with a | unit=S48\nB T4 B39 | sub=The diet | pred=offer | obj=at 8 a.m. | unit=S49\nB T4 B40 | sub=The experimental groups | pred=slaughter | obj=at different times | unit=S50\nB T4 B41 | sub=The slaughter weight of the animals | pred=establish | obj=by the commercial protocol of the | unit=S51\nB T4 B42 | sub=the final body weight (FBW | pred=record | obj=At the end of feeding period | unit=S52\nB T4 B43 | sub=The aim of using two such | pred=be | obj=to evaluate the main biological types | unit=S53\nB T4 B44 | sub=Nellore animals | pred=classify | obj=as products of the commodity model—domestic | unit=S54\nB T4 B45 | sub=the number of permanent incisors teeth | pred=verify | obj=During processing of the two slaughters | unit=S55\nB T4 B46 | sub=Carcasses | pred=stimulate | obj=in the current study | unit=S56\nB T4 B47 | sub=The half-carcasses | pred=suspend | obj=by the traditional method (AS; n | unit=S57\nB T4 B48 | sub=the carcasses | pred=keep | obj=After identification | unit=S58\nB T4 B49 | sub=the carcasses | pred=evaluate | obj=in the chiller | unit=S59\nB T4 B50 | sub=ossification | pred=assess | obj=by one trained technician, which scored | unit=S60\nB T4 B51 | sub=The hump height | pred=record | obj=in gradients of 5 mm | unit=S61\nB T4 B52 | sub=fatness score | pred=assess | obj=using 1 to 5 degrees | unit=S62\nB T4 B53 | sub=conformation score | pred=assess | obj=by development of muscle mass in | unit=S63\nB T4 B54 | sub=marbling score | pred=assess | obj=using MSA standard photograph, divided into | unit=S64\nB T4 B55 | sub=Backfat thickness (BFT, mm | pred=measure | obj=at the 12th/13th rib interface | unit=S65\nB T4 B56 | sub=Longissimus thoracis et lumborum (LTL) samples | pred=collect | obj=After deboning | unit=S66\nB T4 B57 | sub=article text | pred=age | obj=meat | unit=S70\nB T4 B58 | sub=the samples | pred=cut | obj=Before aging | unit=S71\nB T4 B59 | sub=The position of the steak for | pred=fix | obj=The position of the steak for | unit=S72\nB T4 B60 | sub=the steaks | pred=pack | obj=After the aging period | unit=S73\nB T4 B61 | sub=Two steaks per treatment | pred=use | obj=in the sensory tests | unit=S74\nB T4 B62 | sub=article text | pred=analysis | obj=Sensory Analysis | unit=S79\nB T4 B63 | sub=untrained consumers | pred=assign | obj=For sensory analysis | unit=S80\nB T4 B64 | sub=The length of the lines in | pred=mm | obj=The length of the lines in | unit=S81\nB T4 B65 | sub=the consumers | pred=determine | obj=For participation | unit=S82\nB T4 B66 | sub=the genetic groups (biological types | pred=evaluate | obj=For this study | unit=S83\nB T4 B67 | sub=Forty-eight consumers | pred=use | obj=in each experiment | unit=S84\nB T4 B68 | sub=The consumers | pred=receive | obj=seven samples | unit=S85\nB T4 B69 | sub=one of the tested samples | pred=select | obj=For this purpose | unit=S86\nB T4 B70 | sub=the consumers | pred=analyze | obj=the six subsequent samples from three | unit=S87\nB T4 B71 | sub=The LTL samples | pred=thaw | obj=for 24 h | unit=S88\nB T4 B72 | sub=The steaks (2.54 cm thick | pred=immerse | obj=in saline (5% NaCl | unit=S89\nB T4 B73 | sub=The internal temperature | pred=monitor | obj=with thermocouples (ThermoPro, Model TP-16, Hong | unit=S90\nB T4 B74 | sub=The steaks | pred=remove | obj=from the grill | unit=S91\nB T4 B75 | sub=the steaks | pred=cut | obj=After preparation | unit=S92\nB T4 B76 | sub=The samples | pred=serve | obj=in single-use small boxes (Brazil Beef | unit=S93\nB T4 B77 | sub=Laboratory Analysis | pred=use | obj=to analyze meat color, pH, shear | unit=S98\nB T4 B78 | sub=pH and Meat Color To allow | pred=thaw | obj=at 4 ° | unit=S104\nB T4 B79 | sub=the meat pH | pred=measure | obj=using a digital pH meter equipped | unit=S105\nB T4 B80 | sub=Standard buffers (pH 4.0 | pred=use | obj=in calibration procedures | unit=S106\nB T4 B81 | sub=meat color (L * = lightness, | pred=measure | obj=In the same steak | unit=S107\nB T4 B82 | sub=the colorimeter | pred=calibrate | obj=using a standard black and white | unit=S108\nB T4 B83 | sub=The mean of these measurements | pred=calculate | obj=The mean of these measurements was | unit=S109\nB T4 B84 | sub=The chroma colorimetric index | pred=calculate | obj=using the formula (a*)2+(b*)2 | unit=S110\nB T4 B85 | sub=Purge Loss | pred=use | obj=to determine PL, as well as | unit=S116\nB T4 B86 | sub=The recommendations of the American Meat | pred=follow | obj=21 | unit=S117\nB T4 B87 | sub=The PL of the beef loin | pred=determine | obj=difference | unit=S118\nB T4 B88 | sub=the PL of never frozen control | pred=assess | obj=Thus, the PL of never frozen | unit=S119\nB T4 B89 | sub=The CL | pred=divide | obj=into evaporation loss (EL | unit=S120\nB T4 B90 | sub=The DL | pred=obtain | obj=refractory | unit=S121\nB T4 B91 | sub=The EL | pred=obtain | obj=sample | unit=S122\nB T4 B92 | sub=The beef loins | pred=weigh | obj=grid | unit=S124\nB T4 B93 | sub=a thermometer (Model 612 digital thermometer, | pred=insert | obj=into the geometric center of the | unit=S125\nB T4 B94 | sub=Samples | pred=cook | obj=in a preheated oven (Feri90 Venâncio | unit=S126\nB T4 B95 | sub=the beef samples | pred=turn | obj=At 40 °C | unit=S127\nB T4 B96 | sub=The samples | pred=keep | obj=at 21 ° | unit=S128\nB T4 B97 | sub=Grilled steaks | pred=chill | obj=for 24 h | unit=S130\nB T4 B98 | sub=cylinders (12.7 mm | pred=cut | obj=After this period | unit=S131\nB T4 B99 | sub=at least six to eight technical | pred=shear | obj=From the total of grilled steaks | unit=S132\nB T4 B100 | sub=A Brookfield CT-3 Texture Analyzer (AMETEK | pred=use | obj=SF | unit=S133\nB T4 B101 | sub=Statistical Analysis | pred=analyze | obj=Statistical Analysis The data set of | unit=S136\nB T4 B102 | sub=The sensory test sessions | pred=organize | obj=considering two block factors, consumer | unit=S137\nB T4 B103 | sub=A mixed generalized linear model | pred=apply | obj=considering a binomial distribution of the | unit=S138\nB T4 B104 | sub=The length of the lines in | pred=mm | obj=The length of the lines in | unit=S139\nB T4 B105 | sub=Clipping procedures to reduce standard error | pred=adopt | obj=18 | unit=S140\nB T4 B106 | sub=the two highest and the two | pred=eliminate | obj=In brief | unit=S141\nB T4 B107 | sub=the model | pred=include | obj=For the response variables tenderness | unit=S142\nB T4 B108 | sub=Tukey’s test | pred=use | obj=for the comparison of means (p | unit=S143\nB T4 B109 | sub=Interaction terms for suspension method | pred=test | obj=as follows | unit=S144\nB T4 B110 | sub=the model | pred=include | obj=For laboratory variables | unit=S145\nB T4 B111 | sub=Interaction terms for suspension method | pred=test | obj=according to the model | unit=S146\nB T4 B112 | sub=the data | pred=evaluate | obj=In addition | unit=S148\nB T4 B113 | sub=the data | pred=evaluate | obj=by principal component analysis (PCA | unit=S149\nB T4 B114 | sub=The FactoMineR [25] and Factoextra [26] | pred=use | obj=to generate the PCA plots and | unit=S150\nB T4 B115 | sub=Results ### 3.1. Carcass Traits | pred=show | obj=the carcass traits of the genetic/gender | unit=S152\nB T4 B116 | sub=Both factors (genetic | pred=use | obj=as biological model for application of | unit=S153\nB T4 B117 | sub=these factors | pred=affect | obj=p < 0.01 | unit=S154\nB T4 B118 | sub=The description of such data | pred=aim | obj=biological | unit=S155\nB T4 B119 | sub=Ossification | pred=assess | obj=Fatness score was assessed using 1 | unit=S156\nB T4 B120 | sub=Meat Quality Traits | pred=reveal | obj=no significant interaction (p > 0.05) | unit=S160\nB T4 B121 | sub=the results | pred=report | obj=as the single effect of each | unit=S161\nB T4 B122 | sub=The effects of the carcass-suspension method | pred=consistent | obj=for some variables | unit=S162\nB T4 B123 | sub=there | pred=be | obj=For both biological types | unit=S163\nB T4 B124 | sub=Consumers | pred=attribute | obj=higher tenderness scores | unit=S164\nB T4 B125 | sub=there | pred=be | obj=between the AS and PS methods | unit=S165\nB T4 B126 | sub=there | pred=be | obj=effect | unit=S166\nB T4 B127 | sub=carcasses submitted to PS | pred=tend | obj=In the Nellore bulls group | unit=S167\nB T4 B128 | sub=Such effects | pred=observe | obj=for Brangus beef (p > 0.05 | unit=S168\nB T4 B129 | sub=lower CL (p < 0.05 | pred=find | obj=In addition | unit=S169\nB T4 B130 | sub=The carcass-suspension method and aging period | pred=influence | obj=L * | unit=S170\nB T4 B131 | sub=## 3.3. Correlations | pred=consider | obj=to be of low magnitude in | unit=S173\nB T4 B132 | sub=a strong association between the sensory | pred=observe | obj=On the other hand | unit=S174\nB T4 B133 | sub=Pearson | pred=correlation | obj=between meat quality traits of Nellore | unit=S175\nB T4 B134 | sub=Blue or purple colors | pred=mean | obj=strong or medium positive correlations | unit=S176\nB T4 B135 | sub=article text | pred=variable | obj=of Brangus heifers | unit=S177\nB T4 B136 | sub=Blue or purple colors | pred=mean | obj=strong or medium positive correlations | unit=S178\nB T4 B137 | sub=article text | pred=variable | obj=SF | unit=S179\nB T4 B138 | sub=the correlation between sensory tenderness | pred=inverse | obj=Although of low magnitude | unit=S180\nB T4 B139 | sub=SF | pred=associate | obj=with higher CL | unit=S181\nB T4 B140 | sub=The negative correlations between objective meat | pred=highlight | obj=such as between SF and pH | unit=S182\nB T4 B141 | sub=The meat quality traits (n = | pred=submit | obj=to multivariate analysis by PCA | unit=S184\nB T4 B142 | sub=article text | pred=consider | obj=an eigenvector ≥1 | unit=S185\nB T4 B143 | sub=the first two principal components (PC1 | pred=explain | obj=In Nellore bulls (Figure 3 | unit=S186\nB T4 B144 | sub=the proportion of variance in the | pred=high | obj=In Brangus heifers | unit=S187\nB T4 B145 | sub=the variables related to palatability (sensory | pred=effective | obj=In this group | unit=S188\nB T4 B146 | sub=Score | pred=plot | obj=of meat quality data of Nellore | unit=S190\nB T4 B147 | sub=PC1 | pred=tenderness | obj=variance | unit=S191\nB T4 B148 | sub=Group symbols | pred=represent | obj=both the carcass-suspension method | unit=S192\nB T4 B149 | sub=The centroid value of each treatment | pred=represent | obj=by a larger shape size.</figcaption> | unit=S193\nB T4 B150 | sub=PC1 | pred=tenderness | obj=explained | unit=S194\nB T4 B151 | sub=Group symbols | pred=represent | obj=both the carcass-suspension method | unit=S195\nB T4 B152 | sub=The centroid value of each treatment | pred=represent | obj=by a larger shape size.</figcaption | unit=S196\nB T4 B153 | sub=Meat color (chroma | pred=associate | obj=with PC1 | unit=S197\nB T4 B154 | sub=The same variables | pred=associate | obj=with SF | unit=S198\nB T4 B155 | sub=a high chroma value | pred=observe | obj=in more tender meat (lower SF | unit=S199\nB T4 B156 | sub=CL | pred=use | obj=as indirect measures of water-holding capacity | unit=S200\nB T4 B157 | sub=samples with high CL | pred=derive | obj=from animals with low meat lightness | unit=S201\nB T4 B158 | sub=The PCA | pred=reveal | obj=a better clustering/separation | unit=S202\nB T4 B159 | sub=These results | pred=reinforce | obj=the finding that the effects of | unit=S203\nB T4 B160 | sub=The data of Bos indicus carcasses | pred=displace | obj=towards the lower-right quadrant of the | unit=S204\nB T4 B161 | sub=Inverse correlations | pred=observe | obj=in this multivariate space | unit=S205\nB T4 B162 | sub=Carcass suspension by the pelvic bone | pred=method | obj=in Australia | unit=S209\nB T4 B163 | sub=studies on cattle [13,15,28], small ruminants | pred=report | obj=Within this context | unit=S210\nB T4 B164 | sub=Other sensory quality attributes that are | pred=influence | obj=by the carcass-suspension method | unit=S211\nB T4 B165 | sub=The results obtained in studies on | pred=support | obj=the present findings | unit=S212\nB T4 B166 | sub=Our results | pred=suggest | obj=that the PS method is more | unit=S213\nB T4 B167 | sub=the degree of tenderization caused by | pred=dictate | obj=In addition to the gender effects | unit=S214\nB T4 B168 | sub=The two biological models | pred=divergent | obj=in terms of carcass traits | unit=S216\nB T4 B169 | sub=The mean hot carcass weight of | pred=demonstrate | obj=Brazilian market requirements that prioritize greater | unit=S217\nB T4 B170 | sub=the market of beef with higher | pred=supply | obj=On the other hand | unit=S218\nB T4 B171 | sub=these animals | pred=produce | obj=With marbling scores three times higher | unit=S219\nB T4 B172 | sub=hanging carcasses by the pelvic bone | pred=allow | obj=4.1. Carcass and Meat Quality Traits | unit=S223\nB T4 B173 | sub=This hypothesis | pred=confirm | obj=in the present study | unit=S224\nB T4 B174 | sub=interactions between the suspension method | pred=observe | obj=Under these conditions, in addition to | unit=S225\nB T4 B175 | sub=carcass-chilling methods that provide greater accumulation | pred=tend | obj=to reduce the effects of losses | unit=S226\nB T4 B176 | sub=the PS method | pred=affect | obj=the water-holding capacity—WHC (indirectly measured as | unit=S227\nB T4 B177 | sub=Similar results | pred=report | obj=by researchers working with young buffalo | unit=S228\nB T4 B178 | sub=Differences among studies | pred=factor | obj=such as genetic (species | unit=S229\nB T4 B179 | sub=Similar results | pred=report | obj=by Juárez et al. [41] who | unit=S230\nB T4 B180 | sub=Reductions in SF (~4.9 N) and | pred=report | obj=for beef samples of intact Ankole | unit=S231\nB T4 B181 | sub=The effect of the interaction between | pred=fact | obj=that meat from purebred Bos indicus | unit=S233\nB T4 B182 | sub=It | pred=know | obj=that intense meat tenderization during the | unit=S234\nB T4 B183 | sub=Bresolin et al. [43 | pred=describe | obj=possible causal relationships between hot carcass | unit=S235\nB T4 B184 | sub=These results | pred=suggest | obj=greater effects of carcass chilling techniques | unit=S236\nB T4 B185 | sub=Meat Aging | pred=test | obj=PS of Holstein steer versus bull | unit=S240\nB T4 B186 | sub=These authors | pred=report | obj=that PS was more consistent in | unit=S241\nB T4 B187 | sub=The differences between suspension methods on | pred=disappear | obj=after 14 days of aging | unit=S242\nB T4 B188 | sub=It | pred=possible | obj=to infer that a longer aging | unit=S243\nB T4 B189 | sub=studies on carcass suspension | pred=compare | obj=In general | unit=S244\nB T4 B190 | sub=these results | pred=suggest | obj=that the PS method may accelerate | unit=S245\nB T4 B191 | sub=Such results | pred=agree | obj=with Watson et al. [18], who | unit=S246\nB T4 B192 | sub=We | pred=demonstrate | obj=that PS could be a fundamental | unit=S247\nB T4 B193 | sub=PS | pred=technology | obj=Within this context | unit=S248\nB T4 B194 | sub=Similar to the present study, Moran | pred=report | obj=benefits of PS | unit=S249\nB T4 B195 | sub=The influence of PS on post-mortem | pred=describe | obj=in an MSA prediction model for | unit=S250\nB T4 B196 | sub=The authors | pred=explain | obj=that, in general, aging tends to | unit=S251\nB T4 B197 | sub=observation of the lack of effects | pred=common | obj=at longer aging times (>14 days | unit=S252\nB T4 B198 | sub=Few studies | pred=available | obj=in the literature that tested the | unit=S253\nB T4 B199 | sub=the majority of the aging data | pred=range | obj=In the MSA model described by | unit=S254\nB T4 B200 | sub=Quality | pred=correlation | obj=We found a strong correlation between | unit=S258\nB T4 B201 | sub=Those authors | pred=report | obj=that these sensory variables generally show | unit=S259\nB T4 B202 | sub=The low phenotypic correlations between sensory | pred=expect | obj=sensory | unit=S260\nB T4 B203 | sub=objective measurements (such as SF | pred=have | obj=According to the MSA researchers [18 | unit=S261\nB T4 B204 | sub=it | pred=account | obj=for all the improvement in sensory | unit=S262\nB T4 B205 | sub=This | pred=relate | obj=to the decreasing importance of the | unit=S263\nB T4 B206 | sub=the correlations between sensory tenderness | pred=inverse | obj=Although of low magnitude | unit=S264\nB T4 B207 | sub=Similar results (r = −0.23 to | pred=report | obj=in a study that evaluated the | unit=S265\nB T4 B208 | sub=Factors such as the magnitude of | pred=affect | obj=the correlation results | unit=S266\nB T4 B209 | sub=SF | pred=associate | obj=On the other hand | unit=S267\nB T4 B210 | sub=researchers [45 | pred=use | obj=In a previous study | unit=S268\nB T4 B211 | sub=Researchers | pred=investigate | obj=meat quality traits from male Holstein | unit=S269\nB T4 B212 | sub=Moran et al. [28 | pred=find | obj=that meat samples seemed to reach | unit=S270\nB T4 B213 | sub=the PCA results obtained for the | pred=agree | obj=with those reported by Lopes et | unit=S271\nB T4 B214 | sub=The meat color aspect, based on | pred=reveal | obj=greater influence of color variables on | unit=S272\nB T4 B215 | sub=article text | pred=limitation | obj=. Limitations | unit=S276\nB T4 B216 | sub=Pelvic suspension | pred=means | obj=tenderness | unit=S278\nB T4 B217 | sub=aging beef | pred=increase | obj=At the same time | unit=S279\nB T4 B218 | sub=Additional biochemical (sarcomere length of LTL | pred=necessary | obj=to fully explain PS effects on | unit=S280\nB T4 B219 | sub=The main effects of PS | pred=confound | obj=on the biological groups used in | unit=S281\nB T4 B220 | sub=several objective variables | pred=reach | obj=statistical significance | unit=S282\nB T4 B221 | sub=these results | pred=suggest | obj=that a greater number of animals | unit=S283\nB T4 B222 | sub=the results | pred=consistent | obj=If a greater number of samples | unit=S284\nB T4 B223 | sub=Further analyses | pred=undertake | obj=to integrate the results into an | unit=S286\nB T4 B224 | sub=It | pred=possible | obj=that increments in sensory eating quality | unit=S287\nB T4 B225 | sub=This | pred=show | obj=that lower eating-quality carcasses showed a | unit=S288\nB T4 B226 | sub=expressing the sensory data from the | pred=eliminate | obj=the difference between the two groups | unit=S289\nB T4 B227 | sub=An economic evaluation | pred=bring | obj=additional data | unit=S290\nB T4 B228 | sub=it | pred=adopt | obj=in Brazil | unit=S291\nB T4 B229 | sub=there | pred=be | obj=need | unit=S292\nB T4 B230 | sub=Conclusions | pred=improve | obj=the beef loin quality of Nellore | unit=S296\nB T4 B231 | sub=The PS method | pred=allow | obj=a reduction in the aging time | unit=S297\nB T4 B232 | sub=Pelvic suspension | pred=technology | obj=with a positive impact on the | unit=S298\nB T4 B233 | sub=the PS method | pred=have | obj=In Brangus heifers | unit=S299",
+  "expected": {
+    "assertion_count": 233,
+    "minimum_concept_count": 407,
+    "minimum_structural_row_count": 1095,
+    "minimum_knowledge_map_node_count": 1095,
+    "provenance_required": true,
+    "semantic_fidelity": "requires_expert_review"
+  }
+}

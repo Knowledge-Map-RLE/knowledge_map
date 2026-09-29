@@ -15,6 +15,8 @@ export interface PDFDocument {
     pubmed_id?: string;
     pmc_id?: string;
     doi?: string;
+    is_gold_standard?: boolean;
+    gold_standard_source_pmc_id?: string;
 }
 
 export type DataExtractionTab = 'pdf' | 'markdown' | 'annotator' | 'chat';

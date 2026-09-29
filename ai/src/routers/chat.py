@@ -7,6 +7,7 @@ against this service directly.
 
 from __future__ import annotations
 
+import json
 import logging
 
 from fastapi import APIRouter
@@ -65,8 +66,20 @@ async def chat_completions(body: ChatCompletionRequest):
         return JSONResponse(content=data)
 
     async def _stream():
-        async for frame in client.stream(resolved_model, payload):
-            yield frame
+        try:
+            async for frame in client.stream(resolved_model, payload):
+                yield frame
+        except ProviderError as exc:
+            # Once an SSE response has started, HTTP status can no longer
+            # represent an upstream failure.  Preserve the OpenAI error shape
+            # so an extracting client fails explicitly instead of accepting a
+            # silently truncated DSL document.
+            logger.error("Upstream streaming chat failed: %s", exc)
+            yield (
+                'data: {"error":{"type":"upstream_error","message":'
+                + json.dumps(str(exc), ensure_ascii=False)
+                + "}}\n\n"
+            ).encode("utf-8")
         yield b"data: [DONE]\n\n"
 
     return StreamingResponse(

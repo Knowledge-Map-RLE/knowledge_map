@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10001413",
+  "document_uid": "PMC10001413",
+  "article_title": "The Neuroprotective Activities of the Novel Multi-Target Iron-Chelators in Models of Alzheimer’s Disease, Amyotrophic Lateral Sclerosis and Aging",
+  "doi": "10.3390/cells12050763",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10001413/PMC10001413.md"
+  },
+  "article_sha256": "43fdcde94482108d4d5213c3dbb27a92fcc15a70c36bfadfdb34795e5ae124a0",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

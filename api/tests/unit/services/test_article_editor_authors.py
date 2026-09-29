@@ -158,6 +158,8 @@ def test_get_article_includes_authors(monkeypatch):
 
 def test_get_blocks_includes_author(monkeypatch):
     def fake_cypher(query, params):
+        if "HAS_PIPELINE_VERSION" in query:
+            return ([], None)
         row = ("blk1", 1, "{}", 0, USER_NODE)
         return ([list(row)], None)
 

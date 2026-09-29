@@ -48,10 +48,11 @@ from src.uuid8 import uuid8_str
 from .ai_model_client import get_ai_model_client
 from .article_editor_service import ArticleEditorService
 from .gspan import mine_frequent_subgraphs, match_graph
+from infrastructure.config import resolve_model_profile
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = "qwen/qwen3-4b"
+DEFAULT_MODEL = resolve_model_profile("article_extraction")
 MAX_PROMPT_TEXT_CHARS = 25000
 
 # ── Перечисления (фиксированные значения, требуемые от модели) ────────────

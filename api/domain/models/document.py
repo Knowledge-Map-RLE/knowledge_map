@@ -47,6 +47,10 @@ class Document:
     pmc_id: Optional[str] = None
     is_open_access: bool = False
 
+    # Признак изолированного эталона article-pipeline.
+    is_gold_standard: bool = False
+    gold_standard_source_pmc_id: Optional[str] = None
+
     # Статус обработки
     is_processed: bool = False
     processing_status: str = "uploaded"

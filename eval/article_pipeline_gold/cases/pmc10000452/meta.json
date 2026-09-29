@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "pmc_id": "PMC10000452",
+  "document_uid": "PMC10000452",
+  "article_title": "Cretan Aging Cohort-Phase III: Methodology and Descriptive Characteristics of a Long-Term Longitudinal Study on Predictors of Cognitive Decline in Non-Demented Elderly from Crete, Greece",
+  "doi": "10.3390/healthcare11050703",
+  "source": {
+    "system": "neo4j+s3",
+    "bucket": "knowledge-map-data",
+    "key": "documents/PMC10000452/PMC10000452.md"
+  },
+  "article_sha256": "4d3edb7afa4edfe9cc66bbb28e72480e8b2fe4d9f669d67db89ec19a32b78d95",
+  "annotation_scope": "manual_full_text",
+  "annotator": "Codex (manual, no LLM)",
+  "needs_expert_review": true
+}

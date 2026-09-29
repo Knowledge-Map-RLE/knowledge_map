@@ -9,18 +9,6 @@ spec:
     spec:
       containers:
         - name: ai
-          env:
-            - name: CLOUDRU_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: CLOUDRU_API_KEY
-            - name: DEFAULT_PROVIDER
-              value: "cloudru"
-            - name: DEFAULT_MODEL
-              value: "deepseek-ai/DeepSeek-V4-Flash"
-            - name: CLOUDRU_MODEL
-              value: "deepseek-ai/DeepSeek-V4-Flash"
           resources:
             requests:
               memory: "4Gi"

@@ -11,9 +11,9 @@ FIRST_PERSON_SYSTEM = (
     "   'I include these hallmarks' -> extract 'hallmarks', not 'I')\n"
     "- When a verb like 'propose', 'suggest', 'include' takes an object clause, "
     "extract the inner relation, not the outer clause\n"
-    "  (e.g. 'I propose that aging is a disease' -> [{\"subject\": \"aging\", \"predicate\": \"is\", \"object\": \"a disease\"}])\n"
-    '- Output ONLY a valid JSON array: [{"subject": "...", "predicate": "...", "object": "..."}]\n'
-    '- If no triplets can be extracted, output: []\n'
+    "  (e.g. 'I propose that aging is a disease' -> R | sub=aging | pred=is | obj=a disease)\n"
+    '- Output only DSL rows: R | sub=<noun phrase> | pred=<predicate> | obj=<noun phrase>.\n'
+    '- Emit no row if no triplet can be extracted. Never emit JSON or Markdown fences.\n'
 )
 
 THAT_CLAUSE_SYSTEM = (
@@ -23,10 +23,10 @@ THAT_CLAUSE_SYSTEM = (
     "- DO NOT extract the main clause verb (suggests, proposes, indicates, etc.)\n"
     "- Instead, extract the relation INSIDE the 'that'-clause\n"
     "  (e.g. 'The article suggests that canonical hallmarks are insufficient'\n"
-    "   -> [{\"subject\": \"canonical hallmarks\", \"predicate\": \"are\", \"object\": \"insufficient\"}]\n"
+    "   -> R | sub=canonical hallmarks | pred=are | obj=insufficient\n"
     "   -> do NOT output 'The article -> suggests -> ...')\n"
-    '- Output ONLY a valid JSON array: [{"subject": "...", "predicate": "...", "object": "..."}]\n'
-    '- If no triplets can be extracted, output: []\n'
+    '- Output only DSL rows: R | sub=<noun phrase> | pred=<predicate> | obj=<noun phrase>.\n'
+    '- Emit no row if no triplet can be extracted. Never emit JSON or Markdown fences.\n'
 )
 
 GENERAL_SYSTEM = (
@@ -36,8 +36,8 @@ GENERAL_SYSTEM = (
     '- Subject and object should be noun phrases from the sentence\n'
     "- Predicate should be the main verb (in base form) or 'be' for copular constructions\n"
     "- Include negation: 'not cause' if the verb is negated\n"
-    '- Output ONLY a valid JSON array: [{"subject": "...", "predicate": "...", "object": "..."}]\n'
-    '- If no triplets can be extracted, output: []\n'
+    '- Output only DSL rows: R | sub=<noun phrase> | pred=<predicate> | obj=<noun phrase>.\n'
+    '- Emit no row if no triplet can be extracted. Never emit JSON or Markdown fences.\n'
 )
 
 _TEMPLATE = '<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\nSentence: {sentence}<|im_end|>\n<|im_start|>assistant\n'

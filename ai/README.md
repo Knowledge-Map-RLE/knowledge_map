@@ -4,15 +4,16 @@ OpenAI-compatible chat gateway for the Knowledge Map. The service does **not**
 run models itself — it forwards `/v1/chat/completions` to a configured
 OpenAI-compatible provider and streams the reply back unchanged.
 
-- Production: **cloud.ru Foundation Models** (`deepseek-ai/DeepSeek-V4-Flash`)
-- During development: local GGUF model via llama-cpp-python + LM Studio fallback.
+- Providers and model profiles are stored in the shared `config/models.toml` registry.
+- LM Studio, cloud.ru and the legacy local GGUF provider can coexist; the active
+  profile is selected explicitly and never falls back to the first provider.
 
 ## Architecture
 
 ```
 ai/
 ├── src/
-│   ├── config.py           # Settings + provider loading (AI_PROVIDERS / cloud.ru / LM Studio defaults)
+│   ├── config.py           # Settings + shared model-registry provider loading
 │   ├── providers.py        # Provider registry, model->provider resolution, httpx client
 │   ├── schemas.py          # OpenAI-compatible chat request schema
 │   ├── app.py              # FastAPI app factory (CORS, routers)
@@ -47,7 +48,7 @@ curl http://localhost:50059/v1/models
 ```powershell
 curl -X POST http://localhost:50059/v1/chat/completions `
   -H "Content-Type: application/json" `
-  -d '{"model":"deepseek-ai/DeepSeek-V4-Flash","messages":[{"role":"user","content":"Hello"}],"stream":false}'
+  -d '{"model":"openai_gpt6_luna","messages":[{"role":"user","content":"Привет"}],"stream":false}'
 ```
 
 ## Configuration (`.env`)
@@ -55,21 +56,34 @@ curl -X POST http://localhost:50059/v1/chat/completions `
 | Variable | Description | Default |
 |---|---|---|
 | `AI_HOST` / `AI_PORT` | Bind address of the gateway | `0.0.0.0` / `50059` |
-| `DEFAULT_PROVIDER` | Provider used when no model is given | `cloudru` |
-| `DEFAULT_MODEL` | Default model | `deepseek-ai/DeepSeek-V4-Flash` |
-| `CLOUDRU_API_KEY` | cloud.ru Foundation Models API key | — |
-| `CLOUDRU_MODEL` | Model id (cloud.ru) | `deepseek-ai/DeepSeek-V4-Flash` |
-| `AI_BASE_URL` | LM Studio base URL (provider shorthand) | `http://localhost:1234/v1` |
+| `MODEL_CONFIG_PATH` | Shared TOML registry path | `../config/models.toml` |
+| `MODEL_PROFILE` | Active profile override | registry `active_profile` |
+| `OPENAI_API_KEY` | OpenAI API key for the Responses provider | — |
+| `CLOUDRU_API_KEY` | Optional cloud.ru provider key | — |
+| `AI_BASE_URL` | Legacy LM Studio setting; registry is authoritative | `http://localhost:1234/v1` |
 | `AI_API_KEY` | Key sent to the provider (LM Studio ignores it) | `lm-studio` |
 | `SYSTEM_PROMPT` | Persona prepended when the client sends no system message | — |
-| `AI_PROVIDERS` | Optional JSON list of providers (overrides defaults) | — |
 | `AI_REQUEST_TIMEOUT` / `AI_CONNECT_TIMEOUT` | HTTP timeouts | `1800` / `15` |
 | `AI_MODELS_CACHE_TTL` | `GET /v1/models` probe cache TTL | `60` |
 | `LOG_LEVEL` | Logging level | `INFO` |
 
-## cloud.ru Foundation Models
+## OpenAI GPT-6 Luna
 
-The `cloudru` provider uses the OpenAI-compatible endpoint at `https://foundation-models.api.cloud.ru/v1` with the model `deepseek-ai/DeepSeek-V4-Flash`. Set `CLOUDRU_API_KEY` in your environment to enable it.
+The default profile is `openai_gpt6_luna` and uses the Responses API with
+`reasoning_effort=max`, a 1,050,000-token context window, and up to 128,000
+output tokens. For local development, put `OPENAI_API_KEY` in
+`ai/.env.development`; Docker Compose reads it from the repository-root `.env`.
+The gateway loads this key into its configured provider without logging it.
+
+To run the existing local Qwen3 profile instead, use:
+
+```powershell
+.\scripts\model-profile.ps1 list
+.\scripts\model-profile.ps1 use local_qwen3_8b
+```
+
+The Qwen3 8B profile and its `40960`-token context remain available. Restart the
+AI gateway on port 50059 and API on port 8000 after changing the selected profile.
 
 ## Testing
 

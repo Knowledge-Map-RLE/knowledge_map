@@ -95,12 +95,22 @@ async def delete_document_route(
     return {"success": True, "message": f"Document {doc_id} deleted"}
 
 
+_DB_QUERY_TIMEOUT_S = 30
+
+
 @router.get("/documents/stats")
 async def document_stats_route(
     doc_repo=Depends(get_document_repository),
 ):
     """Быстрые статистики по документам (кэшируется на 5 минут)."""
-    ft_count = await asyncio.to_thread(doc_repo.count_full_text)
+    try:
+        ft_count = await asyncio.wait_for(
+            asyncio.to_thread(doc_repo.count_full_text),
+            timeout=_DB_QUERY_TIMEOUT_S,
+        )
+    except asyncio.TimeoutError:
+        logger.error("document_stats_route: count_full_text timeout (%ds)", _DB_QUERY_TIMEOUT_S)
+        return {"success": False, "detail": "Query timeout, retry later"}
     return {
         "success": True,
         "full_text_count": ft_count,
@@ -109,15 +119,32 @@ async def document_stats_route(
 
 @router.get("/documents")
 async def list_documents_route(
+    request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     full_text_only: bool = Query(True, description="Только документы с полным текстом"),
+    gold_only: bool = Query(False, description="Только gold-эталоны полного article-pipeline"),
     doc_repo=Depends(get_document_repository),
 ):
     """Список документов из Neo4j с пагинацией."""
-    docs, total = await asyncio.to_thread(
-        list_documents, repo=doc_repo, skip=skip, limit=limit, full_text_only=full_text_only
-    )
+    try:
+        docs, total = await asyncio.wait_for(
+            asyncio.to_thread(
+                list_documents, repo=doc_repo, skip=skip, limit=limit,
+                full_text_only=full_text_only, gold_standard_only=gold_only
+            ),
+            timeout=_DB_QUERY_TIMEOUT_S,
+        )
+    except asyncio.TimeoutError:
+        logger.error(
+            "list_documents_route: timeout %ds (skip=%d, limit=%d, full_text_only=%s)",
+            _DB_QUERY_TIMEOUT_S, skip, limit, full_text_only,
+        )
+        return {"success": False, "detail": "Query timeout, retry later"}
+
+    if await request.is_disconnected():
+        return Response(status_code=499)
+
     return {
         "success": True,
         "total_count": total,
@@ -136,6 +163,8 @@ async def list_documents_route(
                 "pubmed_id": d.pubmed_id,
                 "pmc_id": d.pmc_id,
                 "doi": d.doi,
+                "is_gold_standard": d.is_gold_standard,
+                "gold_standard_source_pmc_id": d.gold_standard_source_pmc_id,
                 "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key and d.source == "upload" else {},
             }
             for d in docs
@@ -153,9 +182,18 @@ async def search_documents_route(
 ):
     """Нечёткий поиск документов по названию через Neo4j fulltext index."""
     use_case = SearchDocumentsUseCase(repo=doc_repo)
-    docs, total = await asyncio.to_thread(
-        use_case.execute, q=q, skip=skip, limit=limit, full_text_only=full_text_only
-    )
+    try:
+        docs, total = await asyncio.wait_for(
+            asyncio.to_thread(
+                use_case.execute, q=q, skip=skip, limit=limit, full_text_only=full_text_only
+            ),
+            timeout=_DB_QUERY_TIMEOUT_S,
+        )
+    except asyncio.TimeoutError:
+        logger.error(
+            "search_documents_route: timeout %ds (q=%r)", _DB_QUERY_TIMEOUT_S, q,
+        )
+        return {"success": False, "detail": "Query timeout, retry later"}
     return {
         "success": True,
         "total_count": total,
@@ -175,6 +213,8 @@ async def search_documents_route(
                 "pubmed_id": d.pubmed_id,
                 "pmc_id": d.pmc_id,
                 "doi": d.doi,
+                "is_gold_standard": d.is_gold_standard,
+                "gold_standard_source_pmc_id": d.gold_standard_source_pmc_id,
                 "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key and d.source == "upload" else {},
             }
             for d in docs
