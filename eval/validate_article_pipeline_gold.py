@@ -134,7 +134,7 @@ def _semantic_findings(rows: list[dict], unit_text: dict[str, str]) -> list[str]
         row_terms: set[str] = set()
         snake_case_fields: set[str] = set()
         for dsl_key, spec in DSL_FIELDS[row["blockType"]].items():
-            if spec.kind in {"ref", "refs"}:
+            if spec.kind in {"ref", "refs", "ref_groups"}:
                 continue
             value = row["data"].get(spec.json_field)
             values = value if isinstance(value, list) else [value]

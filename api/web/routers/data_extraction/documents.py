@@ -42,6 +42,7 @@ from web.dependencies import (
     get_annotation_repository,
     get_linguistic_pattern_repository,
     get_current_user,
+    get_document_viewer,
 )
 
 from utils.hash_utils import _compute_md5
@@ -124,6 +125,7 @@ async def list_documents_route(
     limit: int = Query(100, ge=1, le=1000),
     full_text_only: bool = Query(True, description="Только документы с полным текстом"),
     gold_only: bool = Query(False, description="Только gold-эталоны полного article-pipeline"),
+    user: Optional[dict] = Depends(get_document_viewer),
     doc_repo=Depends(get_document_repository),
 ):
     """Список документов из Neo4j с пагинацией."""
@@ -131,7 +133,8 @@ async def list_documents_route(
         docs, total = await asyncio.wait_for(
             asyncio.to_thread(
                 list_documents, repo=doc_repo, skip=skip, limit=limit,
-                full_text_only=full_text_only, gold_standard_only=gold_only
+                full_text_only=full_text_only, gold_standard_only=gold_only,
+                user_uid=user["uid"] if user else None,
             ),
             timeout=_DB_QUERY_TIMEOUT_S,
         )
@@ -165,6 +168,10 @@ async def list_documents_route(
                 "doi": d.doi,
                 "is_gold_standard": d.is_gold_standard,
                 "gold_standard_source_pmc_id": d.gold_standard_source_pmc_id,
+                "current_user_last_edited_at": (
+                    d.current_user_last_edited_at.isoformat()
+                    if d.current_user_last_edited_at else None
+                ),
                 "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key and d.source == "upload" else {},
             }
             for d in docs
@@ -178,6 +185,7 @@ async def search_documents_route(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     full_text_only: bool = Query(True, description="Только документы с полным текстом"),
+    user: Optional[dict] = Depends(get_document_viewer),
     doc_repo=Depends(get_document_repository),
 ):
     """Нечёткий поиск документов по названию через Neo4j fulltext index."""
@@ -185,7 +193,12 @@ async def search_documents_route(
     try:
         docs, total = await asyncio.wait_for(
             asyncio.to_thread(
-                use_case.execute, q=q, skip=skip, limit=limit, full_text_only=full_text_only
+                use_case.execute,
+                q=q,
+                skip=skip,
+                limit=limit,
+                full_text_only=full_text_only,
+                user_uid=user["uid"] if user else None,
             ),
             timeout=_DB_QUERY_TIMEOUT_S,
         )
@@ -215,6 +228,10 @@ async def search_documents_route(
                 "doi": d.doi,
                 "is_gold_standard": d.is_gold_standard,
                 "gold_standard_source_pmc_id": d.gold_standard_source_pmc_id,
+                "current_user_last_edited_at": (
+                    d.current_user_last_edited_at.isoformat()
+                    if d.current_user_last_edited_at else None
+                ),
                 "files": {"pdf": f"/api/v1/s3/image/{d.s3_key}"} if d.s3_key and d.source == "upload" else {},
             }
             for d in docs
@@ -228,7 +245,7 @@ async def update_document_markdown(
     request_body: UpdateMarkdownRequest,
     doc_repo=Depends(get_document_repository),
     storage=Depends(get_s3),
-    _user: dict = Depends(get_current_user),
+    user: dict = Depends(get_current_user),
 ):
     """Обновляет markdown документа с опциональной валидацией."""
     from fastapi import HTTPException
@@ -282,6 +299,7 @@ async def update_document_markdown(
         markdown=request_body.markdown,
         bucket=settings.S3_BUCKET_NAME,
         annotate=mark_annotated,
+        user_uid=user["uid"],
     )
     return UpdateMarkdownResponse(
         success=True,

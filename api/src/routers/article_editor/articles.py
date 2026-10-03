@@ -2,13 +2,14 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
+from adapters.repositories.document_repository import DocumentRepository
 from services.article_editor_service import ArticleEditorService
 from web.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["article_editor"])
-service = ArticleEditorService()
+service = ArticleEditorService(document_repository=DocumentRepository())
 
 
 class CreateArticleRequest(BaseModel):
@@ -51,7 +52,7 @@ async def get_article(doc_id: str):
 
 @router.put("/article_editor/articles/{doc_id}/text")
 async def save_article_text(doc_id: str, req: SaveTextRequest, user: dict = Depends(get_current_user)):
-    result = await service.save_article_text(doc_id, req.text)
+    result = await service.save_article_text(doc_id, req.text, user_uid=user["uid"])
     if not result.get("success"):
         if result.get("error") == "not_annotated":
             raise HTTPException(status_code=403, detail=result.get("message"))
@@ -108,4 +109,4 @@ async def get_blocks(doc_id: str):
 
 @router.put("/article_editor/articles/{doc_id}/title")
 async def update_article_title(doc_id: str, req: UpdateTitleRequest, user: dict = Depends(get_current_user)):
-    return await service.update_article_title(doc_id, req.title)
+    return await service.update_article_title(doc_id, req.title, user_uid=user["uid"])

@@ -11,6 +11,7 @@ from __future__ import annotations
 import logging
 import re
 import time
+from datetime import datetime, timezone
 from typing import Optional, List, Tuple
 
 from neomodel import DoesNotExist, db
@@ -49,8 +50,8 @@ def _build_ft_query(q: str) -> str:
     """
     tokens = [
         t
-        for t in re.findall(r"[A-Za-z0-9]+", q)
-        if t.lower() not in _STOP_WORDS and len(t) >= 2
+        for t in re.findall(r"[^\W_]+", q, flags=re.UNICODE)
+        if t.lower() not in _STOP_WORDS and (len(t) >= 2 or t.isdigit())
     ]
     if not tokens:
         return q
@@ -127,7 +128,9 @@ def _domain_to_orm(doc: Document, orm_doc: Optional[OrmDocument] = None) -> OrmD
     return orm_doc
 
 
-def _row_to_domain(row) -> Document:
+def _row_to_domain(
+    row, activity_index: Optional[int] = None, include_gold_fields: bool = True
+) -> Document:
     """Собирает Document из кортежа результатов Cypher-запроса (порядок как в list_all).
 
     Порядок полей (0-based):
@@ -140,6 +143,12 @@ def _row_to_domain(row) -> Document:
     def _val(v):
         return v if v is not None else None
 
+    activity_at = (
+        _val(row[activity_index])
+        if activity_index is not None and len(row) > activity_index else None
+    )
+    activity_at = _to_datetime(activity_at)
+
     return Document(
         uid=_val(row[0]),
         original_filename=_val(row[1]) or "",
@@ -150,7 +159,7 @@ def _row_to_domain(row) -> Document:
         s3_key=_val(row[6]),
         s3_bucket=_val(row[7]) or "knowledge-map-data",
         file_size=_val(row[8]),
-        upload_date=_val(row[9]),
+        upload_date=_to_datetime(_val(row[9])),
         docling_raw_md_s3_key=_val(row[10]),
         user_md_s3_key=_val(row[11]),
         pubmed_id=_val(row[12]),
@@ -158,9 +167,32 @@ def _row_to_domain(row) -> Document:
         is_open_access=bool(_val(row[14])) if _val(row[14]) is not None else False,
         error_message=_val(row[15]),
         md5_hash=_val(row[16]),
-        is_gold_standard=bool(_val(row[17])) if len(row) > 17 and _val(row[17]) is not None else False,
-        gold_standard_source_pmc_id=_val(row[18]) if len(row) > 18 else None,
+        is_gold_standard=(
+            bool(_val(row[17]))
+            if include_gold_fields and len(row) > 17 and _val(row[17]) is not None else False
+        ),
+        gold_standard_source_pmc_id=(
+            _val(row[18]) if include_gold_fields and len(row) > 18 else None
+        ),
+        current_user_last_edited_at=activity_at,
     )
+
+
+def _to_datetime(value) -> Optional[datetime]:
+    """Нормализует значения Neo4j и epoch-время в доменный datetime."""
+    if value is None:
+        return None
+    to_native = getattr(value, "to_native", None)
+    if callable(to_native):
+        value = to_native()
+    if isinstance(value, datetime):
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    if isinstance(value, (int, float)):
+        try:
+            return datetime.fromtimestamp(value, tz=timezone.utc)
+        except (OverflowError, OSError, ValueError):
+            return None
+    return None
 
 
 class DocumentRepository:
@@ -176,6 +208,31 @@ class DocumentRepository:
 
     def __init__(self) -> None:
         pass
+
+    def record_user_edit(self, user_uid: str, doc_uid: str) -> bool:
+        """Создаёт или обновляет пользовательскую активность документа."""
+        if not user_uid or not doc_uid:
+            logger.warning("Не удалось записать активность документа: отсутствует uid пользователя или документа")
+            return False
+
+        results, _ = db.cypher_query(
+            "MERGE (u:User {uid: $user_uid}) "
+            "ON CREATE SET u.data = '{}' "
+            "WITH u MATCH (d:Document {uid: $doc_uid}) "
+            "MERGE (u)-[activity:RECENTLY_EDITED]->(d) "
+            "SET activity.last_edited_at = datetime() "
+            "RETURN activity.last_edited_at",
+            {"user_uid": user_uid, "doc_uid": doc_uid},
+        )
+        if not results:
+            logger.warning(
+                "Не удалось записать активность: пользователь или документ не найден (user_uid=%s, doc_uid=%s)",
+                user_uid,
+                doc_uid,
+            )
+            return False
+        type(self)._full_text_count_cache = None
+        return True
 
     _LIST_FIELDS = """
                d.uid as uid,
@@ -235,6 +292,7 @@ class DocumentRepository:
         limit: Optional[int] = None,
         full_text_only: bool = False,
         gold_standard_only: bool = False,
+        user_uid: Optional[str] = None,
     ) -> List[Document]:
         t0 = time.monotonic()
         try:
@@ -242,48 +300,98 @@ class DocumentRepository:
                 return []
 
             eff_limit = limit or 100
-
+            source_filter = (
+                "" if full_text_only else " AND d.source IN ['upload', 'pubmed', 'pmc']"
+            )
             gold_filter = " AND d.is_gold_standard = true" if gold_standard_only else ""
-            if full_text_only:
-                cypher = f"""
-                    MATCH (d:Document) WHERE d.has_full_text = true{gold_filter}
-                    RETURN {self._LIST_FIELDS}
-                    ORDER BY d.uid ASC
-                    SKIP $skip
-                    LIMIT $limit
-                """
-            else:
-                cypher = f"""
-                    MATCH (d:Document) WHERE d.source = 'upload'{gold_filter}
-                    RETURN {self._LIST_FIELDS}
-                    ORDER BY d.uid ASC
-                    SKIP $skip
-                    LIMIT $limit
-                    UNION ALL
-                    MATCH (d:Document) WHERE d.source IN ['pubmed', 'pmc']{gold_filter}
-                    RETURN {self._LIST_FIELDS}
-                    ORDER BY d.uid ASC
-                    SKIP $skip
-                    LIMIT $limit
-                """
-            params: dict = {"skip": skip, "limit": eff_limit}
+            personal_docs: List[Document] = []
 
-            results, _ = db.cypher_query(cypher, params)
+            if user_uid:
+                # Начинаем выборку недавних документов с узла пользователя и его
+                # отношений. Так Neo4j не проверяет персональную активность для
+                # каждого документа в многомиллионном каталоге.
+                activity_query = f"""
+                    MATCH (:User {{uid: $user_uid}})-[activity:RECENTLY_EDITED]->(d:Document)
+                    WITH d, max(activity.last_edited_at) AS user_last_edited_at
+                    WHERE user_last_edited_at IS NOT NULL{source_filter}{gold_filter}
+                    RETURN {self._LIST_FIELDS}, user_last_edited_at
+                    ORDER BY user_last_edited_at DESC, is_processed DESC, uid ASC
+                """
+                activity_rows, _ = db.cypher_query(activity_query, {"user_uid": user_uid})
+                personal_docs.extend(
+                    _row_to_domain(row, activity_index=19) for row in activity_rows
+                )
+
+                # Для статей, созданных до появления RECENTLY_EDITED, доступна
+                # дата создания и владелец. Берём только авторские документы без
+                # персонального отношения; created_by_uid индексирован.
+                created_query = f"""
+                    MATCH (d:Document {{created_by_uid: $user_uid}})
+                    OPTIONAL MATCH (:User {{uid: $user_uid}})-[activity:RECENTLY_EDITED]->(d)
+                    WITH d, max(activity.last_edited_at) AS user_last_edited_at
+                    WHERE user_last_edited_at IS NULL{source_filter}{gold_filter}
+                    RETURN {self._LIST_FIELDS}, d.upload_date
+                    ORDER BY d.upload_date DESC, is_processed DESC, uid ASC
+                """
+                created_rows, _ = db.cypher_query(created_query, {"user_uid": user_uid})
+                personal_docs.extend(
+                    _row_to_domain(row, activity_index=19) for row in created_rows
+                )
+
+                # Дедупликация и общий порядок персональных документов.
+                by_uid: dict[str, Document] = {}
+                for doc in personal_docs:
+                    by_uid.setdefault(doc.uid, doc)
+                personal_docs = list(by_uid.values())
+                personal_docs.sort(key=lambda doc: doc.uid or "")
+                personal_docs.sort(key=lambda doc: doc.is_processed, reverse=True)
+                personal_docs.sort(
+                    key=lambda doc: (
+                        doc.current_user_last_edited_at.timestamp()
+                        if doc.current_user_last_edited_at else float("-inf")
+                    ),
+                    reverse=True,
+                )
+
+            personal_uids = [doc.uid for doc in personal_docs]
+            personal_page = personal_docs[skip:skip + eff_limit]
+            regular_skip = max(0, skip - len(personal_docs))
+            regular_limit = eff_limit - len(personal_page)
+            if regular_limit <= 0:
+                docs = personal_page
+            else:
+                personal_exclusion = (
+                    " AND NOT (d.uid IN $personal_uids)" if personal_uids else ""
+                )
+                regular_where = (
+                    "d.has_full_text = true" if full_text_only
+                    else "d.source IN ['upload', 'pubmed', 'pmc']"
+                )
+                if gold_standard_only:
+                    regular_where += " AND d.is_gold_standard = true"
+                regular_query = f"""
+                    MATCH (d:Document)
+                    WHERE {regular_where}{personal_exclusion}
+                    RETURN {self._LIST_FIELDS}, null AS current_user_last_edited_at
+                    ORDER BY is_processed DESC, uid ASC
+                    SKIP $skip
+                    LIMIT $limit
+                """
+                regular_params: dict = {"skip": regular_skip, "limit": regular_limit}
+                if personal_uids:
+                    regular_params["personal_uids"] = personal_uids
+                regular_rows, _ = db.cypher_query(regular_query, regular_params)
+                docs = personal_page + [
+                    _row_to_domain(row, activity_index=19) for row in regular_rows
+                ]
+
             elapsed = time.monotonic() - t0
             if elapsed > 2:
-                logger.warning(f"list_all took {elapsed:.1f}s for {len(results)} docs (skip={skip}, limit={limit}, full_text_only={full_text_only}, gold_standard_only={gold_standard_only})")
-
-            seen = set()
-            docs: List[Document] = []
-            for row in results:
-                uid = row[0]
-                if uid in seen:
-                    continue
-                seen.add(uid)
-                docs.append(_row_to_domain(row))
-                if len(docs) >= eff_limit:
-                    break
-
+                logger.warning(
+                    "list_all took %.1fs for %d docs (skip=%d, limit=%d, "
+                    "full_text_only=%s, gold_standard_only=%s)",
+                    elapsed, len(docs), skip, eff_limit, full_text_only, gold_standard_only,
+                )
             return docs
         except Exception as e:
             elapsed = time.monotonic() - t0
@@ -313,8 +421,36 @@ class DocumentRepository:
             logger.error(f"count_all failed after {elapsed:.1f}s: {e}")
             return 0
 
-    def count_full_text(self, gold_standard_only: bool = False) -> int:
+    def count_full_text(
+        self, gold_standard_only: bool = False, user_uid: Optional[str] = None
+    ) -> int:
         """Количество документов с полным текстом. Кэшируется на 5 минут."""
+        if user_uid is not None:
+            try:
+                gold_filter = "AND d.is_gold_standard = true" if gold_standard_only else ""
+                full_text_count = self.count_full_text(
+                    gold_standard_only=gold_standard_only,
+                )
+                results, _ = db.cypher_query(
+                    "CALL { "
+                    "MATCH (:User {uid: $user_uid})-[:RECENTLY_EDITED]->(d:Document) "
+                    "WHERE coalesce(d.has_full_text, false) = false "
+                    f"{gold_filter} RETURN d "
+                    "UNION "
+                    "MATCH (d:Document {created_by_uid: $user_uid}) "
+                    "WHERE coalesce(d.has_full_text, false) = false "
+                    f"{gold_filter} "
+                    "OPTIONAL MATCH (:User {uid: $user_uid})-[activity:RECENTLY_EDITED]->(d) "
+                    "WITH d, count(activity) AS matched_activity "
+                    "WHERE matched_activity = 0 RETURN d "
+                    "} RETURN count(DISTINCT d) AS cnt",
+                    {"user_uid": user_uid},
+                )
+                personal_without_full_text = results[0][0] if results else 0
+                return full_text_count + personal_without_full_text
+            except Exception as e:
+                logger.error("count_full_text for user failed (user_uid=%s): %s", user_uid, e)
+                return 0
         if gold_standard_only:
             try:
                 results, _ = db.cypher_query(
@@ -422,23 +558,47 @@ class DocumentRepository:
         skip: int,
         limit: int,
         full_text_only: bool = False,
+        user_uid: Optional[str] = None,
     ) -> Tuple[List[Document], int]:
         ft_filter = (
-            "AND d.has_full_text = true"
-            if full_text_only else ""
+            "(d.has_full_text = true OR user_last_edited_at IS NOT NULL "
+            "OR ($user_uid IS NOT NULL AND d.created_by_uid = $user_uid))"
+            if full_text_only else "true"
         )
         cypher = f"""
-            MATCH (d:Document) WHERE d.{field} = $val {ft_filter}
-            RETURN {self._SEARCH_FIELDS}
-            SKIP $skip LIMIT $limit
+            MATCH (d:Document) WHERE d.{field} = $val
+            OPTIONAL MATCH (:User {{uid: $user_uid}})-[activity:RECENTLY_EDITED]->(d)
+            WITH d, max(activity.last_edited_at) AS user_last_edited_at
+            WHERE {ft_filter}
+            WITH d, coalesce(
+                user_last_edited_at,
+                CASE WHEN $user_uid IS NOT NULL AND d.created_by_uid = $user_uid
+                     THEN d.upload_date ELSE null END
+            ) AS current_user_last_edited_at
+            RETURN {self._SEARCH_FIELDS}, current_user_last_edited_at
+            ORDER BY
+                CASE WHEN current_user_last_edited_at IS NULL THEN 1 ELSE 0 END ASC,
+                current_user_last_edited_at DESC,
+                is_processed DESC,
+                uid ASC
+            SKIP $skip
+            LIMIT $limit
         """
-        results, _ = db.cypher_query(cypher, {"val": value, "skip": skip, "limit": limit})
-        if results:
-            count_cypher = f"MATCH (d:Document) WHERE d.{field} = $val {ft_filter} RETURN count(d)"
-            cnt, _ = db.cypher_query(count_cypher, {"val": value})
-            total = cnt[0][0] if cnt else len(results)
-            return [_row_to_domain(row) for row in results], total
-        return [], 0
+        params = {"val": value, "skip": skip, "limit": limit, "user_uid": user_uid}
+        results, _ = db.cypher_query(cypher, params)
+        count_cypher = f"""
+            MATCH (d:Document) WHERE d.{field} = $val
+            OPTIONAL MATCH (:User {{uid: $user_uid}})-[activity:RECENTLY_EDITED]->(d)
+            WITH d, max(activity.last_edited_at) AS user_last_edited_at
+            WHERE {ft_filter}
+            RETURN count(d)
+        """
+        cnt, _ = db.cypher_query(count_cypher, {"val": value, "user_uid": user_uid})
+        total = cnt[0][0] if cnt else 0
+        return [
+            _row_to_domain(row, activity_index=17, include_gold_fields=False)
+            for row in results
+        ], total
 
     def search(
         self,
@@ -446,33 +606,42 @@ class DocumentRepository:
         skip: int = 0,
         limit: int = 100,
         full_text_only: bool = False,
+        user_uid: Optional[str] = None,
     ) -> Tuple[List[Document], int]:
         t0 = time.monotonic()
         try:
             if not q.strip():
                 return (
-                    self.list_all(skip=skip, limit=limit, full_text_only=full_text_only),
-                    self.count_full_text() if full_text_only else self.count_by_sources(),
+                    self.list_all(
+                        skip=skip, limit=limit, full_text_only=full_text_only, user_uid=user_uid,
+                    ),
+                    self.count_full_text(user_uid=user_uid) if full_text_only else self.count_by_sources(),
                 )
 
             query = q.strip()
 
             if self._is_doi(query):
-                results, total = self._search_by_exact_field("doi", query, skip, limit, full_text_only)
+                results, total = self._search_by_exact_field(
+                    "doi", query, skip, limit, full_text_only, user_uid,
+                )
                 elapsed = time.monotonic() - t0
                 if elapsed > 3:
                     logger.warning(f"DOI search took {elapsed:.1f}s for doi={query}")
                 return results, total
 
             if query.isdigit():
-                results, total = self._search_by_exact_field("pubmed_id", query, skip, limit, full_text_only)
+                results, total = self._search_by_exact_field(
+                    "pubmed_id", query, skip, limit, full_text_only, user_uid,
+                )
                 elapsed = time.monotonic() - t0
                 if elapsed > 3:
                     logger.warning(f"PMID search took {elapsed:.1f}s for pmid={query}")
                 return results, total
 
             if query.upper().startswith("PMC") and query[3:].isdigit():
-                results, total = self._search_by_exact_field("pmc_id", query.upper(), skip, limit, full_text_only)
+                results, total = self._search_by_exact_field(
+                    "pmc_id", query.upper(), skip, limit, full_text_only, user_uid,
+                )
                 elapsed = time.monotonic() - t0
                 if elapsed > 3:
                     logger.warning(f"PMCID search took {elapsed:.1f}s for pmcid={query}")
@@ -480,54 +649,63 @@ class DocumentRepository:
 
             ft_query = _build_ft_query(query)
 
-            ft_filter = "AND d.has_full_text = true" if full_text_only else ""
-            uid_cypher = f"""
+            personal_filter = """
+                d.has_full_text = true OR user_last_edited_at IS NOT NULL
+                OR ($user_uid IS NOT NULL AND d.created_by_uid = $user_uid)
+            """ if full_text_only else "true"
+            documents_cypher = f"""
                 CALL db.index.fulltext.queryNodes('doc_fulltext', $q, {{limit: $budget}})
                 YIELD node as d, score
-                WHERE score > 0.1 {ft_filter}
-                WITH d.uid AS uid, score
-                ORDER BY score DESC
+                WHERE score > 0.1
+                OPTIONAL MATCH (:User {{uid: $user_uid}})-[activity:RECENTLY_EDITED]->(d)
+                WITH d, score, max(activity.last_edited_at) AS user_last_edited_at
+                WHERE {personal_filter}
+                WITH d, score, coalesce(
+                    user_last_edited_at,
+                    CASE WHEN $user_uid IS NOT NULL AND d.created_by_uid = $user_uid
+                         THEN d.upload_date ELSE null END
+                ) AS current_user_last_edited_at
+                RETURN {self._SEARCH_FIELDS}, current_user_last_edited_at, score
+                ORDER BY
+                    CASE WHEN current_user_last_edited_at IS NULL THEN 1 ELSE 0 END ASC,
+                    current_user_last_edited_at DESC,
+                    score DESC,
+                    is_processed DESC,
+                    uid ASC
                 SKIP $skip
                 LIMIT $limit
-                RETURN uid
             """
-            uid_results, _ = db.cypher_query(
-                uid_cypher,
-                {"q": ft_query, "budget": _FT_BUDGET, "skip": skip, "limit": limit},
-            )
-            uids = [row[0] for row in uid_results if row[0]]
-            elapsed_ft = time.monotonic() - t0
-            if elapsed_ft > 2:
-                logger.warning(f"fulltext UIDs phase took {elapsed_ft:.1f}s for q={query!r}, uids={len(uids)}")
-
-            if not uids:
-                return [], 0
+            query_params = {
+                "q": ft_query,
+                "budget": _FT_BUDGET,
+                "skip": skip,
+                "limit": limit,
+                "user_uid": user_uid,
+            }
+            results, _ = db.cypher_query(documents_cypher, query_params)
 
             count_cypher = f"""
                 CALL db.index.fulltext.queryNodes('doc_fulltext', $q, {{limit: $budget}})
                 YIELD node as d, score
-                WHERE score > 0.1 {ft_filter}
-                RETURN count(DISTINCT d.uid) AS total
+                WHERE score > 0.1
+                OPTIONAL MATCH (:User {{uid: $user_uid}})-[activity:RECENTLY_EDITED]->(d)
+                WITH d, max(activity.last_edited_at) AS user_last_edited_at
+                WHERE {personal_filter}
+                RETURN count(d) AS total
             """
             cnt, _ = db.cypher_query(
                 count_cypher,
-                {"q": ft_query, "budget": _FT_BUDGET},
+                {"q": ft_query, "budget": _FT_BUDGET, "user_uid": user_uid},
             )
-            total = cnt[0][0] if cnt else len(uid_results)
-
-            fetch_cypher = f"""
-                MATCH (d:Document) WHERE d.uid IN $uids
-                RETURN {self._SEARCH_FIELDS}
-            """
-            fetch_results, _ = db.cypher_query(fetch_cypher, {"uids": uids})
-
-            uid_order = {uid: i for i, uid in enumerate(uids)}
-            sorted_rows = sorted(fetch_results, key=lambda row: uid_order.get(row[0], 999))
+            total = cnt[0][0] if cnt else 0
 
             elapsed = time.monotonic() - t0
             if elapsed > 3:
-                logger.warning(f"fulltext search took {elapsed:.1f}s for q={query!r}, rows={len(sorted_rows)}")
-            return [_row_to_domain(row) for row in sorted_rows], total
+                logger.warning(f"fulltext search took {elapsed:.1f}s for q={query!r}, rows={len(results)}")
+            return [
+                _row_to_domain(row, activity_index=17, include_gold_fields=False)
+                for row in results
+            ], total
         except Exception as e:
             elapsed = time.monotonic() - t0
             logger.error(f"search failed after {elapsed:.1f}s: {e}")

@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { decomposeGoal } from '../../services/api';
 import type { GoalPlanTree } from '../../services/api';
 
@@ -12,6 +13,7 @@ interface GoalDecompositionPanelProps {
  * «Декомпозировать цель (обратное планирование)» и дерево полученного плана.
  */
 const GoalDecompositionPanel: React.FC<GoalDecompositionPanelProps> = ({ onDecomposed }) => {
+  const { t } = useTranslation();
   const [goal, setGoal] = useState('');
   const [tree, setTree] = useState<GoalPlanTree | null>(null);
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ const GoalDecompositionPanel: React.FC<GoalDecompositionPanelProps> = ({ onDecom
   const handleDecompose = useCallback(async () => {
     const text = goal.trim();
     if (!text) {
-      setError('Введите текст цели');
+      setError(t('knowledgeMap.goalDecomposition.enterGoal'));
       return;
     }
     setLoading(true);
@@ -28,27 +30,27 @@ const GoalDecompositionPanel: React.FC<GoalDecompositionPanelProps> = ({ onDecom
     try {
       const data = await decomposeGoal(text);
       if (!data?.success) {
-        setError(data?.message || 'Не удалось декомпозировать цель');
+        setError(data?.message || t('knowledgeMap.goalDecomposition.error'));
         return;
       }
       setTree(data.tree);
       onDecomposed?.(data.tree, data.plan_id);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Ошибка запроса декомпозиции');
+      setError(err instanceof Error ? err.message : t('knowledgeMap.goalDecomposition.requestError'));
     } finally {
       setLoading(false);
     }
-  }, [goal, onDecomposed]);
+  }, [goal, onDecomposed, t]);
 
   return (
     <div style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>
-        Декомпозиция цели
+        {t('knowledgeMap.goalDecomposition.title')}
       </div>
       <textarea
         value={goal}
         onChange={(e) => setGoal(e.target.value)}
-        placeholder="Введите цель на естественном языке..."
+        placeholder={t('knowledgeMap.goalDecomposition.placeholder')}
         rows={3}
         style={{
           width: '100%',
@@ -79,7 +81,7 @@ const GoalDecompositionPanel: React.FC<GoalDecompositionPanelProps> = ({ onDecom
           boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
         }}
       >
-        {loading ? 'Декомпозируем...' : 'Декомпозировать цель (обратное планирование)'}
+        {loading ? t('knowledgeMap.goalDecomposition.loading') : t('knowledgeMap.goalDecomposition.action')}
       </button>
 
       {error && (
@@ -90,7 +92,7 @@ const GoalDecompositionPanel: React.FC<GoalDecompositionPanelProps> = ({ onDecom
 
       {tree && (
         <div style={{ fontSize: 12, color: '#555' }}>
-          План «{tree.goal}» создан
+          {t('knowledgeMap.goalDecomposition.created', { goal: tree.goal })}
         </div>
       )}
 

@@ -30,6 +30,8 @@ export interface ArticleMapNode extends BlockData {
     outcome: NodeOutcome;
     outcomeLabel: string;
     data: Record<string, BlockDataValue>;
+    isGoal?: boolean;
+    height?: number;
 }
 
 export interface ArticleMapLink extends LinkData {

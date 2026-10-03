@@ -1,5 +1,5 @@
 import { httpClient as api } from './api/httpClient'
-import { clearToken, getToken, saveToken } from './token'
+import { clearToken, getToken, invalidateToken, saveToken } from './token'
 import type {
     User,
     AuthResponse,
@@ -75,14 +75,20 @@ class AuthService {
             return null
         }
 
-        try {
-            const response = await api.post('/api/auth/verify', { token })
-            const result = await response.json()
-            return result.valid ? result.user : null
-        } catch {
-            this.clearToken()
+        const response = await api.post('/api/auth/verify', { token })
+        if (response.status === 401) {
+            invalidateToken(token)
             return null
         }
+        if (!response.ok) {
+            throw new Error(`Session verification failed: HTTP ${response.status}`)
+        }
+        const result = await response.json()
+        if (!result.valid || !result.user) {
+            invalidateToken(token)
+            return null
+        }
+        return result.user
     }
 
     async recoveryRequest(data: RecoveryRequest): Promise<AuthResponse> {
@@ -115,4 +121,4 @@ class AuthService {
     }
 }
 
-export const authService = new AuthService() 
+export const authService = new AuthService()

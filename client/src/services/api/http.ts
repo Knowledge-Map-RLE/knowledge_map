@@ -1,6 +1,6 @@
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 
-import { getToken } from '../token';
+import { getToken, invalidateToken } from '../token';
 import { getSessionId } from '../telemetry';
 
 const withBase = (path: string) => {
@@ -35,6 +35,12 @@ export async function fetchJson<T>(path: string, init?: RequestInit): Promise<T>
   };
   const response = await fetch(withBase(path), merged);
   if (!response.ok) {
+    if (response.status === 401) {
+      const authorization = headers.get('Authorization');
+      if (authorization?.startsWith('Bearer ')) {
+        invalidateToken(authorization.slice('Bearer '.length));
+      }
+    }
     const errorBody = await response.text().catch(() => '');
     let detail = `HTTP ${response.status} ${response.statusText}`;
     try {

@@ -21,11 +21,14 @@ def test_prompt_field_catalog_covers_every_registered_type_with_dsl_keys():
             assert f"{dsl_key}=" in line, (
                 f"Missing canonical DSL key {dsl_key}= for T{code} {block_type}"
             )
+    assert "Common to every type:" not in catalog
+    assert "req=" not in catalog and "anyreq=" not in catalog
 
 
 def test_t14_guidance_distinguishes_protocols_from_other_scientific_roles():
     prompt = " ".join(DSL_SYSTEM.split())
-    assert PROMPT_VERSION == "148"
+    assert PROMPT_VERSION == "150"
+    assert "req=" not in prompt and "anyreq=" not in prompt
     assert "T14 `experiment` identifies a concrete, source-described investigation" in prompt
     assert "one row per independently identifiable investigation" in prompt
     assert "observational investigation can qualify without an intervention/control" in prompt
@@ -120,7 +123,7 @@ def test_russian_prompt_reference_tracks_the_runtime_prompt_version_and_rules():
         / "prompts.ru.md"
     ).read_text(encoding="utf-8")
 
-    assert "версия 148" in russian_prompt
+    assert "версия 150" in russian_prompt
     assert "Не заполняйте обязательное `obj=` условием, временем, местом" in russian_prompt
     assert "сначала определите функцию главного предиката" in russian_prompt
     assert "не выдумывайте объект и не оставляйте обязательное поле пустым" in russian_prompt

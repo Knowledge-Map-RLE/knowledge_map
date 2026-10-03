@@ -3,20 +3,27 @@ from __future__ import annotations
 import asyncio
 import json
 from itertools import chain
+from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from web.dependencies import get_current_user
+from web.dependencies import get_current_user, get_document_repository
 from infrastructure.config import resolve_model_profile, settings
 from infrastructure.article_pipeline import LinguisticGateway, SemanticGateway
 from infrastructure.neo4j.article_pipeline_repository import Neo4jArticlePipelineRepository
 from application.article_pipeline import ExtractArticle
+from application.rebuild_article_map import RebuildArticleMap
 from knowledge_contracts.validation import ValidationError
 from knowledge_pipeline.pipeline import checksum
 from services.article_editor_service import ArticleEditorService
+from services.gold_article_localization_service import (
+    GoldArticleLocalizationService,
+    GoldLocalizationError,
+)
 
 router = APIRouter(tags=["article_editor"])
 service = ArticleEditorService()
+gold_localization = GoldArticleLocalizationService(settings.resolved_article_pipeline_gold_dir)
 
 class LlmExtractRequest(BaseModel):
     text: str = ""
@@ -39,6 +46,48 @@ def authorize(repo,doc_id,user):
 
 def event(data):
     return "data: " + json.dumps(data,ensure_ascii=False) + "\n\n"
+
+def _localized_blocks(blocks, localization):
+    try:
+        return gold_localization.localize_blocks(blocks, localization)
+    except GoldLocalizationError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
+
+def _localized_graph(graph, localization):
+    if not graph or localization["locale"] == "en":
+        return graph
+    try:
+        return gold_localization.localize_graph(graph, localization["blocks"])
+    except GoldLocalizationError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
+
+def _load_gold_localization(
+    doc_id, locale, blocks, document_repository=None,
+    *, scope: Literal["article", "structure"] = "structure",
+):
+    try:
+        document = (
+            document_repository.get_by_id(doc_id)
+            if document_repository is not None
+            else None
+        )
+        loader = gold_localization.get if scope == "article" else gold_localization.get_structure
+        localization = loader(
+            doc_id,
+            locale,
+            source_pmc_id=getattr(document, "gold_standard_source_pmc_id", None),
+            pmc_id=getattr(document, "pmc_id", None),
+            doi=getattr(document, "doi", None),
+        )
+    except GoldLocalizationError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
+    if localization is None:
+        return None
+    if scope == "structure":
+        localization["blocks"] = _localized_blocks(blocks, localization)
+        localization.pop("_source_rows_by_tag", None)
+        localization.pop("_saved_blocks_by_fingerprint", None)
+    return localization
 
 @router.post("/article_editor/articles/{doc_id}/llm-extract")
 async def extract(doc_id: str, req: LlmExtractRequest, user=Depends(get_current_user)):
@@ -109,6 +158,57 @@ def versions(doc_id: str,user=Depends(get_current_user),repo=Depends(repository)
     authorize(repo,doc_id,user)
     return {"versions":repo.versions(doc_id,user["uid"])}
 
+@router.get("/article_editor/articles/{doc_id}/pipeline/current-map")
+async def current_map(doc_id: str, locale: str = "en", user=Depends(get_current_user),
+                      repo=Depends(repository),
+                      document_repository=Depends(get_document_repository)):
+    authorize(repo, doc_id, user)
+    stored = await service.get_blocks(doc_id)
+    result = await RebuildArticleMap(repo).load_current(
+        doc_id, user["uid"], stored.get("blocks", [])
+    )
+    if locale != "en":
+        localization = _load_gold_localization(
+            doc_id, locale, stored.get("blocks", []), document_repository
+        )
+        if localization is not None:
+            result["graph"] = _localized_graph(result.get("graph"), localization)
+    return result
+
+@router.get("/article_editor/articles/{doc_id}/localization")
+async def article_localization(doc_id: str, locale: str = "en",
+                               scope: Literal["article", "structure"] = "structure",
+                               user=Depends(get_current_user), repo=Depends(repository),
+                               document_repository=Depends(get_document_repository)):
+    authorize(repo, doc_id, user)
+    blocks = (await service.get_blocks(doc_id)).get("blocks", []) if scope == "structure" else []
+    result = _load_gold_localization(
+        doc_id, locale, blocks, document_repository, scope=scope
+    )
+    if result is None:
+        raise HTTPException(404, detail="Localized GOLD article not found")
+    return result
+
+@router.post("/article_editor/articles/{doc_id}/pipeline/current-map/rebuild")
+async def rebuild_current_map(doc_id: str, locale: str = "en", user=Depends(get_current_user),
+                              repo=Depends(repository),
+                              document_repository=Depends(get_document_repository)):
+    authorize(repo, doc_id, user)
+    stored = await service.get_blocks(doc_id)
+    try:
+        result = await RebuildArticleMap(repo).execute_current(
+            doc_id, user["uid"], stored.get("blocks", [])
+        )
+        if locale != "en":
+            localization = _load_gold_localization(
+                doc_id, locale, stored.get("blocks", []), document_repository
+            )
+            if localization is not None:
+                result["graph"] = _localized_graph(result.get("graph"), localization)
+        return result
+    except ValidationError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
+
 @router.get("/article_editor/articles/{doc_id}/pipeline/versions/{version_id}")
 def version(doc_id: str,version_id: str,user=Depends(get_current_user),repo=Depends(repository)):
     authorize(repo,doc_id,user)
@@ -117,7 +217,8 @@ def version(doc_id: str,version_id: str,user=Depends(get_current_user),repo=Depe
     except ValidationError as exc:
         raise HTTPException(404,detail=str(exc)) from exc
     return {k:result.get(k) for k in ("version_id","run_id","stage","status","processed","total",
-        "error","coverage","validation","quality_metrics","graph","timing","model_steps")} | {"issues":result.get("validation",{}).get("issues",[])}
+        "error","coverage","validation","quality_metrics","graph","timing","model_steps",
+        "map_rebuild")} | {"issues":result.get("validation",{}).get("issues",[])}
 
 @router.get("/article_editor/articles/{doc_id}/pipeline/versions/{version_id}/provenance/{entity_id}")
 def provenance(doc_id: str,version_id: str,entity_id: str,user=Depends(get_current_user),repo=Depends(repository)):
@@ -146,6 +247,15 @@ async def apply_version(doc_id: str,version_id: str,user=Depends(get_current_use
     from services.knowledge_triples_service import invalidate_knowledge_triples_cache
     invalidate_knowledge_triples_cache()
     return {"success":True,"version_id":version_id}
+
+@router.post("/article_editor/articles/{doc_id}/pipeline/versions/{version_id}/rebuild-map")
+async def rebuild_map(doc_id: str, version_id: str, user=Depends(get_current_user),
+                      repo=Depends(repository)):
+    authorize(repo, doc_id, user)
+    try:
+        return await RebuildArticleMap(repo).execute(doc_id, version_id, user["uid"])
+    except ValidationError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
 
 @router.get("/article_editor/articles/{doc_id}/pipeline/versions/{version_id}/stages/{stage}")
 def stage_result(doc_id: str, version_id: str, stage: str, user=Depends(get_current_user), repo=Depends(repository)):

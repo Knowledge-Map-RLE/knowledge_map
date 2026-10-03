@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { authService } from '../../services/auth';
+import { AUTH_SESSION_INVALIDATED_EVENT } from '../../services/token';
 import type { User } from '../user';
 
 /** Событие, которое отправляет любой компонент, запросивший авторизацию
@@ -30,13 +31,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [isAuthLoading, setIsAuthLoading] = useState(true);
 
     useEffect(() => {
+        const invalidateSession = () => setUser(null);
+        window.addEventListener(AUTH_SESSION_INVALIDATED_EVENT, invalidateSession);
+        return () => window.removeEventListener(AUTH_SESSION_INVALIDATED_EVENT, invalidateSession);
+    }, []);
+
+    useEffect(() => {
         let cancelled = false;
+        const verificationToken = authService.getToken();
         (async () => {
             try {
                 const u = await authService.verifyToken();
-                if (!cancelled) setUser(u);
+                if (!cancelled && authService.getToken() === verificationToken) setUser(u);
             } catch {
-                if (!cancelled) setUser(null);
+                if (!cancelled && authService.getToken() === verificationToken) setUser(null);
             } finally {
                 if (!cancelled) setIsAuthLoading(false);
             }
@@ -52,8 +60,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const refresh = useCallback(async () => {
+        const verificationToken = authService.getToken();
         const u = await authService.verifyToken();
-        setUser(u);
+        if (authService.getToken() === verificationToken) setUser(u);
     }, []);
 
     const requestLogin = useCallback(() => {

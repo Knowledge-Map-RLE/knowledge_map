@@ -68,13 +68,20 @@ class DocumentRepositoryProtocol(Protocol):
         limit: Optional[int] = None,
         full_text_only: bool = False,
         gold_standard_only: bool = False,
+        user_uid: Optional[str] = None,
     ) -> List[Document]: ...
+
+    def record_user_edit(self, user_uid: str, doc_uid: str) -> bool:
+        """Записывает успешное пользовательское изменение документа."""
+        ...
 
     def count_all(self) -> int:
         """Общее количество документов — для пагинации."""
         ...
 
-    def count_full_text(self, gold_standard_only: bool = False) -> int:
+    def count_full_text(
+        self, gold_standard_only: bool = False, user_uid: Optional[str] = None
+    ) -> int:
         """Количество документов с полным текстом (не только abstract)."""
         ...
 
@@ -88,6 +95,7 @@ class DocumentRepositoryProtocol(Protocol):
         skip: int = 0,
         limit: int = 100,
         full_text_only: bool = False,
+        user_uid: Optional[str] = None,
     ) -> Tuple[List[Document], int]:
         """Нечёткий поиск по названию. Возвращает (документы, всего_найдено)."""
         ...

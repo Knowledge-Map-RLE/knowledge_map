@@ -33,13 +33,14 @@ def remap_local_tags(rows: list[dict], offset: int) -> list[dict]:
     stay consecutive across the article regardless of which local numbers the
     model chose, and references map through the same deterministic rule.
     """
-    mapping = {local: f"B{offset + position}"
-               for position, local in enumerate(r["data"].get("tag") for r in rows)
-               if local}
+    local_tags = [row["data"].get("tag") for row in rows if row["data"].get("tag")]
+    mapping = {local: f"B{offset + position}" for position, local in enumerate(local_tags)}
     renumbered = []
     for row in rows:
         data = dict(row["data"])
-        data["tag"] = _renumber_tag(data["tag"], mapping)
+        local_tag = data.get("tag")
+        if local_tag:
+            data["tag"] = _renumber_tag(local_tag, mapping)
         for key, kind in _JSON_FIELD_KINDS.items():
             if key not in data:
                 continue
@@ -47,5 +48,8 @@ def remap_local_tags(rows: list[dict], offset: int) -> list[dict]:
                 data[key] = _renumber_tag(data[key], mapping)
             elif kind == "refs" and isinstance(data[key], list):
                 data[key] = [_renumber_tag(item, mapping) for item in data[key]]
-        renumbered.append({**row, "tag": data["tag"], "data": data})
+            elif kind == "ref_groups" and isinstance(data[key], list):
+                data[key] = [[_renumber_tag(item, mapping) for item in group]
+                             for group in data[key]]
+        renumbered.append({**row, "tag": data.get("tag"), "data": data})
     return renumbered

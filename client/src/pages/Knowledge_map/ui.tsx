@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Container, Graphics } from 'pixi.js';
@@ -20,6 +21,7 @@ extend({ Container, Graphics });
 
 // Компонент левой панели: список изолированных триплетов + поиск (с 3 символов).
 const IsolatedTriplesPanel = () => {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [items, setItems] = useState<KnowledgeTriple[]>([]);
   const [total, setTotal] = useState(0);
@@ -77,11 +79,11 @@ const IsolatedTriplesPanel = () => {
   return (
     <div style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
       <div style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>
-        Триплеты без связей{total > 0 ? ` (${total})` : ''}
+        {t('knowledgeMap.isolated.title', { total: total > 0 ? ` (${total})` : '' })}
       </div>
       <input
         type="text"
-        placeholder="Поиск от 3 символов..."
+        placeholder={t('knowledgeMap.isolated.searchPlaceholder')}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         style={{
@@ -107,10 +109,10 @@ const IsolatedTriplesPanel = () => {
         }}
       >
         {isSearching ? (
-          <div style={{ fontSize: 12, color: '#999', padding: '4px 8px' }}>Поиск...</div>
+          <div style={{ fontSize: 12, color: '#999', padding: '4px 8px' }}>{t('knowledgeMap.isolated.searching')}</div>
         ) : items.length === 0 ? (
           <div style={{ fontSize: 12, color: '#aaa', padding: '4px 8px' }}>
-            {query.trim().length >= 3 ? 'Ничего не найдено' : 'Нет триплетов без связей'}
+            {query.trim().length >= 3 ? t('knowledgeMap.isolated.notFound') : t('knowledgeMap.isolated.empty')}
           </div>
         ) : (
           items.map((item) => (
@@ -154,7 +156,7 @@ const IsolatedTriplesPanel = () => {
       </div>
       {query.trim().length >= 3 && !isSearching && items.length > 0 && (
         <div style={{ fontSize: 11, color: '#888', padding: '0 8px' }}>
-          Найдено {items.length} из {total}
+          {t('knowledgeMap.isolated.foundCount', { found: items.length, total })}
         </div>
       )}
     </div>
@@ -169,6 +171,7 @@ const NeighborPanel: React.FC<{
   onPick: (id: string) => void;
   panelRef: React.RefObject<HTMLDivElement | null>;
 }> = ({ side, title, items, onPick, panelRef }) => {
+  const { t } = useTranslation();
   const posStyle = side === 'left' ? { left: 230 } : { right: 228 };
   return (
     <div
@@ -196,7 +199,7 @@ const NeighborPanel: React.FC<{
         {title}{items.length > 0 ? ` (${items.length})` : ''}
       </div>
       {items.length === 0 ? (
-        <div style={{ fontSize: 12, color: '#aaa', padding: '4px 8px' }}>Нет блоков</div>
+        <div style={{ fontSize: 12, color: '#aaa', padding: '4px 8px' }}>{t('knowledgeMap.neighbors.empty')}</div>
       ) : (
         items.map((b) => (
           <div
@@ -261,6 +264,7 @@ const DependencyControls = ({
   onRebuild,
   isRebuilding,
 }: DependencyControlsProps) => {
+  const { t } = useTranslation();
   const counts = useMemo(() => {
     const m = new Map<string, number>();
     for (const l of links) {
@@ -289,7 +293,7 @@ const DependencyControls = ({
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>Типы зависимостей</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>{t('knowledgeMap.dependencies.title')}</span>
         <button
           onClick={onResetTypes}
           style={{
@@ -302,7 +306,7 @@ const DependencyControls = ({
             color: '#555',
           }}
         >
-          Все
+          {t('knowledgeMap.dependencies.all')}
         </button>
       </div>
       {DEPENDENCY_TYPE_META.map((d) => (
@@ -332,7 +336,7 @@ const DependencyControls = ({
               display: 'inline-block',
             }}
           />
-          <span style={{ flex: 1 }}>{d.label}</span>
+          <span style={{ flex: 1 }}>{t(`knowledgeMap.dependencies.types.${d.type}`)}</span>
           <span style={{ color: '#9ca3af', fontSize: 11 }}>{counts.get(d.type) || 0}</span>
         </label>
       ))}
@@ -342,14 +346,14 @@ const DependencyControls = ({
           disabled={isRebuilding}
           style={rebuildBtnStyle(isRebuilding)}
         >
-          {isRebuilding ? 'Пересчёт...' : 'Пересчитать (rules)'}
+          {isRebuilding ? t('knowledgeMap.dependencies.rebuilding') : t('knowledgeMap.dependencies.rebuildRules')}
         </button>
         <button
           onClick={() => onRebuild(true)}
           disabled={isRebuilding}
           style={rebuildBtnStyle(isRebuilding)}
         >
-          Пересчитать (rules + LLM)
+          {t('knowledgeMap.dependencies.rebuildRulesWithLlm')}
         </button>
       </div>
     </div>
@@ -367,6 +371,7 @@ const rebuildBtnStyle = (disabled: boolean): CSSProperties => ({
 });
 
 export const Knowledge_mapUI = () => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<ViewportRef>(null);
   const { setViewportRef } = useViewport();
@@ -395,7 +400,7 @@ export const Knowledge_mapUI = () => {
     try {
       const data = await getKnowledgeTriples(200, controller.signal);
       if (!data?.success) {
-        setLoadError('Не удалось загрузить карту триплетов');
+        setLoadError(t('knowledgeMap.errors.loadMap'));
         return;
       }
       setBlocks(data.blocks || []);
@@ -403,17 +408,17 @@ export const Knowledge_mapUI = () => {
       setIsolatedTotal(data.isolated_total ?? 0);
     } catch (err) {
       if (controller.signal.aborted) {
-        setLoadError('Загрузка карты триплетов заняла слишком много времени. Попробуйте ещё раз.');
+        setLoadError(t('knowledgeMap.errors.timeout'));
       } else if (err instanceof Error && err.name === 'AbortError') {
-        setLoadError('Загрузка карты триплетов была прервана. Попробуйте ещё раз.');
+        setLoadError(t('knowledgeMap.errors.aborted'));
       } else {
-        setLoadError(err instanceof Error ? err.message : 'Ошибка загрузки');
+        setLoadError(err instanceof Error ? err.message : t('knowledgeMap.errors.load'));
       }
     } finally {
       window.clearTimeout(timer);
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const handleRebuild = useCallback(async (useLlm: boolean) => {
     setIsRebuilding(true);
@@ -421,11 +426,11 @@ export const Knowledge_mapUI = () => {
       await rebuildDependencies(useLlm);
       await loadData();
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Ошибка пересчёта зависимостей');
+      setLoadError(err instanceof Error ? err.message : t('knowledgeMap.errors.rebuild'));
     } finally {
       setIsRebuilding(false);
     }
-  }, [loadData]);
+  }, [loadData, t]);
 
   // Только связи выбранных типов зависимостей (пустое множество = все).
   const visibleLinks = useMemo(() => {
@@ -543,7 +548,7 @@ export const Knowledge_mapUI = () => {
         className={styles.knowledge_map}
         style={{ justifyContent: 'center', alignItems: 'center', gap: 12, flexDirection: 'column', color: 'red' }}
       >
-        <div>Ошибка загрузки: {loadError}</div>
+        <div>{t('knowledgeMap.errors.loadWithMessage', { error: loadError })}</div>
         <button
           onClick={loadData}
           style={{
@@ -556,7 +561,7 @@ export const Knowledge_mapUI = () => {
             color: '#374151',
           }}
         >
-          Повторить
+          {t('knowledgeMap.errors.retry')}
         </button>
       </div>
     );
@@ -566,7 +571,7 @@ export const Knowledge_mapUI = () => {
     <main ref={containerRef} className={styles.knowledge_map} tabIndex={-1}>
       {(!pixiReady || isLoading) && (
         <div className={styles.экран_загрузки}>
-          {isLoading ? 'Загрузка карты триплетов...' : 'Инициализация...'}
+          {isLoading ? t('knowledgeMap.status.loading') : t('knowledgeMap.status.initializing')}
         </div>
       )}
       <Application
@@ -636,14 +641,14 @@ export const Knowledge_mapUI = () => {
         <>
           <NeighborPanel
             side="left"
-            title="Входящие блоки"
+            title={t('knowledgeMap.neighbors.incoming')}
             items={incomingBlocks}
             onPick={handleNeighborPick}
             panelRef={incomingPanelRef}
           />
           <NeighborPanel
             side="right"
-            title="Исходящие блоки"
+            title={t('knowledgeMap.neighbors.outgoing')}
             items={outgoingBlocks}
             onPick={handleNeighborPick}
             panelRef={outgoingPanelRef}

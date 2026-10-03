@@ -1,0 +1,466 @@
+{
+  "common": {
+    "language": {
+      "label": "Interface language",
+      "russian": "Русский",
+      "english": "English"
+    },
+    "close": "Close"
+  },
+  "articleEditor": {
+    "blockTypes": {
+      "metadata": "Metadata", "goal": "Research goal", "text": "Free text", "statement": "Direct triple",
+      "hypothesis": "Hypothesis", "prerequisite": "Prerequisites", "expectations": "Expectations",
+      "research_design": "Research design", "material": "Materials", "method": "Methods", "experiment": "Experiment",
+      "inclusion_exclusion_criteria": "Inclusion/exclusion criteria", "biological_mechanism": "Biological mechanism",
+      "impact_goal": "Target of intervention", "intervention": "Intervention", "animal_model": "Animal model",
+      "entity": "Entity", "definition": "Definition", "assumptions": "Assumptions", "sample_size": "Sample size",
+      "data_source": "Data sources", "probability_value": "p-value", "variance": "Variance", "effect_size": "Effect size",
+      "statistical_power": "Statistical power", "confidence_interval": "Confidence interval", "magnitude_value": "Named values",
+      "formula": "Formulas", "causal_graph": "Causal graphs (DAG)", "identifiability_criteria": "Identifiability criteria (Pearl)",
+      "result": "Results", "statistical_processing": "Statistical processing", "claim": "Claim",
+      "limitations": "Study limitations", "side_findings": "Side findings/hypotheses", "side_effects": "Associated effects",
+      "post_claims": "Post-study claims", "open_questions": "Open questions", "novelty": "Novelty", "versions": "Versions",
+      "future_research_suggestions": "Future research suggestions", "reference": "Links to previous studies",
+      "link_with_aging": "Connection to aging", "image": "Image", "code": "Code", "funding": "Funding sources",
+      "interest_conflict": "Conflict of interest", "scientific_knowledge_value": "Knowledge value", "action": "Action",
+      "animal_group": "Animal group", "experiment_step": "Experiment step", "finding": "Finding",
+      "relation": "Causal relation", "temporal_relation": "Temporal sequence"
+    },
+    "tabs": {
+      "editor": "Editor", "text": "Text", "map": "Article map", "patterns": "Patterns",
+      "pipeline": "Pipeline", "pipelineTitle": "Pipeline versions and article metrics",
+      "discussion": "Discussion", "discussionTitle": "Article discussion"
+    },
+    "aiAgent": { "title": "AI agent" },
+    "errors": {
+      "openArticleFirst": "Open an article first",
+      "noRowsToSave": "There are no structural rows to save",
+      "openOrCreateArticle": "Open or create an article first",
+      "notAnnotatedTitle": "⚠ Document is not annotated"
+    },
+    "localization": {
+      "loading": "Loading the Russian GOLD translation…",
+      "unavailable": "A Russian translation for this GOLD article is not available."
+    },
+    "empty": {
+      "selectOrCreate": "Select a file or create a new article",
+      "loginForPipeline": "Log in to view pipeline versions",
+      "loginForDiscussion": "Log in to join the discussion"
+    },
+    "rows": {
+      "mapNode": "map node",
+      "evidence": "evidence",
+      "sourceRange": "source {{source}}",
+      "inspectSource": "Show source fragment and provenance",
+      "source": "source",
+      "ariaLabel": "Structural rows"
+    },
+    "workspace": {
+      "defaultTitle": "New article",
+      "newArticle": "+ New article",
+      "articleAuthor": "Article author",
+      "save": { "action": "Save", "saving": "Saving…", "saved": "Saved", "error": "Error" },
+      "copyMarkdown": "Copy Markdown to clipboard",
+      "showTriplets": "Show triplets",
+      "triplets": "Triplets",
+      "copyAllTriplets": "Copy all triplets to clipboard",
+      "copied": "✓ Copied",
+      "copyAll": "▧ Copy all",
+      "gold": {
+        "saved": "Gold reference saved.",
+        "saving": "Saving reference…",
+        "savedLabel": "Reference saved",
+        "error": "Could not save reference",
+        "update": "Update reference",
+        "saveAs": "Save as reference",
+        "readOnlyTitle": "Full-pipeline reference article (is_gold_standard=true); blocks are read-only",
+        "readOnly": "GOLD pipeline · read-only",
+        "saveTitle": "Save current rows as a gold reference (administrators only)",
+        "badgeTitle": "This article is a gold reference (eval/gold)",
+        "badge": "reference"
+      }
+    },
+    "map": {
+      "deterministic": "Deterministic map · schema {{version}}",
+      "loginRequired": "Log in to load the saved knowledge map.",
+      "loading": "Loading knowledge map…",
+      "loadError": "Could not load the map: {{error}}",
+      "retry": "Retry loading",
+      "noRows": "This document has no saved structural rows yet.",
+      "stale": "Structural rows changed after the map was last built.",
+      "notBuilt": "The map has not been built from these structural rows yet.",
+      "building": "Building map…",
+      "build": "Build map from structural rows without an LLM",
+      "noNodes": "The saved map has no nodes.",
+      "title": "Directed knowledge map",
+      "count": "{{nodes}} nodes · {{edges}} links",
+      "nextStep": "move to the next step →",
+      "goal": "goal",
+      "hoverHint": "Hover over a node to highlight connected steps."
+    }
+  },
+  "header": {
+    "search": {
+      "placeholder": "Enter a query and press Enter to search"
+    },
+    "project": {
+      "name": "KNOWLEDGE MAP",
+      "slogans": ["TO INFINITY AND BEYOND!", "KNOWLEDGE IS LIFE!", "∞ ≠ lim"],
+      "navigation": {
+        "landing": "Home",
+        "introduction": "Introduction",
+        "knowledgeMap": "Knowledge map",
+        "rleDatabases": "Life extension databases",
+        "dataDownload": "Data download",
+        "dataExtraction": "Data extraction",
+        "scienceArticles": "Scientific article map",
+        "patternAnalysis": "Pattern analysis",
+        "patternEditor": "Knowledge uniqueness review",
+        "patternMiner": "Assertion graph patterns",
+        "articleEditor": "Article editor",
+        "socialNetwork": "Social network",
+        "subscription": "Subscription"
+      }
+    },
+    "user": {
+      "loading": "Loading…",
+      "login": "Log in",
+      "register": "Sign up",
+      "notifications": "Notifications",
+      "avatarAlt": "Avatar",
+      "profileFallback": "User",
+      "account": "Account",
+      "logout": "Log out"
+    },
+    "feedback": {
+      "title": "Bug? Suggestion?",
+      "loginRequired": "Log in or sign up to send a message"
+    },
+    "subscription": {
+      "buyTokens": "Get tokens for AI features",
+      "tokenShort": "tokens"
+    }
+  },
+  "introduction": {
+    "overview": "The Knowledge Map is a tool in development for addressing radical life extension.",
+    "animationNote": "(An animation with examples appears in the background)",
+    "projectPath": "A path from project ideas to the goal of radical life extension",
+    "dataSources": "Collecting data — the “Database of Databases” subproject"
+  },
+  "dataExtraction": {
+    "tabs": {
+      "markdown": "Markdown preview", "annotator": "Annotator", "pdf": "Original PDF",
+      "discussion": "Discussion", "discussionTitle": "Document discussion"
+    },
+    "empty": {
+      "selectFirst": "Select a document first",
+      "selectFile": "Select a file",
+      "pdfUnavailable": "PDF is not available for this document",
+      "loginForDiscussion": "Log in to join the discussion"
+    },
+    "status": {
+      "nlp": "NLP analysis…", "saving": "Saving…", "saved": "Saved {{time}}", "saveError": "Save failed"
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "errors": {
+      "list": "Could not load documents", "articleLoad": "Could not load article",
+      "pdfOnly": "Select a PDF file", "upload": "Could not upload the file"
+    },
+    "status": {
+      "uploading": "Uploading", "processing": "Processing", "ready": "Ready to annotate",
+      "annotated": "Annotated", "error": "Error", "unknown": "Unknown"
+    },
+    "progress": { "uploaded": "Uploaded {{progress}}%", "processed": "Processed {{progress}}%" },
+    "gold": {
+      "fullPipelineTitle": "Full-pipeline reference; source: {{source}}",
+      "referenceTitle": "Gold reference: eval/gold/{{slug}}", "reference": "reference",
+      "filterTitle": "Show the 20 full article-pipeline references"
+    },
+    "pubmed": {
+      "loading": "Loading article…", "openToImport": "Click to import and open", "source": "External source (PubMed)"
+    },
+    "upload": { "loading": "Uploading file…", "dropzone": "Drop a PDF or click to select one" },
+    "search": {
+      "placeholder": "Search by title, DOI, PMID, or PMCID…",
+      "fullTextOnly": "Only documents with full text",
+      "notFound": "No results found", "enterQuery": "Enter a query or article ID",
+      "results": "Found {{count}} documents for “{{query}}”.",
+      "fullTextCount": "With full text: {{count}}.",
+      "shown": "Showing {{shown}} of {{total}}.", "enterToSearch": "Enter a query to search."
+    }
+  },
+  "cookieConsent": {
+    "ariaLabel": "Cookie use",
+    "title": "We use cookies",
+    "close": "Close cookie notice",
+    "description": "This site uses cookies to make it more convenient to use. Analytics are anonymized and collected without third-party trackers. By continuing to use the site, you agree to the use of cookies."
+  },
+  "rleDatabases": {
+    "intro": "The Knowledge Map subproject “Life Extension Databases” collects databases relevant to the goal of radical life extension.",
+    "description": "This page will organize databases by levels of living matter, from broad levels such as ecosystems, evolution, and organisms down to cells, genes, molecules, chemistry, and physics. At the top of the page, only databases for the highest level will appear. As you scroll down, the next levels will animate into view while irrelevant ones leave the top. This implements the top-down principle used in the Knowledge Map. The background will change to reflect each level. The animation may move from top to bottom or zoom away from the camera, as in Spore.",
+    "link": "Link"
+  },
+  "patternAnalysis": { "tabs": { "graph": "Graph", "patterns": "Patterns" } },
+  "socialNetwork": {
+    "loading": "Loading…",
+    "tabs": { "profile": "Profile", "chat": "Chat", "friends": "Friends", "communities": "Communities", "trends": "Trends" }
+  },
+  "subscription": {
+    "errors": {
+      "status": "Could not get subscription status",
+      "checkoutUrl": "The service did not return a payment link",
+      "purchase": "Could not complete the purchase"
+    },
+    "hero": {
+      "badge": "Tokens",
+      "title": "Knowledge Map token packages",
+      "description": "Buy tokens and pay only for what you use. The service will not spend more than you choose: AI features pause when your balance runs out."
+    },
+    "comparison": {
+      "title": "Compare plans",
+      "feature": "Feature",
+      "groups": [
+        "Knowledge work and content creation", "Search and analysis", "Rankings and recommendations",
+        "Monitoring and dashboards", "Algorithms, metrics, and knowledge generation",
+        "Patterns (automated scientist)", "Data and API", "AI features (use tokens)"
+      ]
+    },
+    "plans": {
+      "current": "Current balance",
+      "free": {
+        "name": "Free", "priceNote": "forever",
+        "description": "All free Knowledge Map features: search, analysis, ranking, knowledge graph building, and scientific data tools. No AI features.",
+        "ctaLabel": "Start for free"
+      },
+      "tokens_50m": {
+        "name": "50M tokens", "priceNote": "no expiration", "badge": "Popular",
+        "description": "50 million tokens for AI features. Buy as many as you need; tokens never expire. AI features pause when the balance runs out.",
+        "ctaLabel": "Buy 50M"
+      },
+      "tokens_200m": {
+        "name": "200M tokens", "priceNote": "no expiration",
+        "description": "200 million tokens. Ideal for regular use of AI tools without limits.",
+        "ctaLabel": "Buy 200M"
+      }
+    },
+    "callToAction": {
+      "title": "Support life-extension science",
+      "description": "The project is open and free for everyone. Buy a token package to get the complete set of AI tools and support the project's sustainability and growth.",
+      "redirecting": "Redirecting…", "buyTokens": "Buy tokens", "askCommunity": "Ask the community"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": [
+        { "question": "What is included in the free plan?", "answer": "All free Knowledge Map features: creating knowledge and articles, search and analysis, evidence-based ranking, science monitoring, knowledge graph building, PubMed data, and more." },
+        { "question": "How does token billing work?", "answer": "Buy a 50M or 200M token package and use it for AI features. Tokens never expire. AI features pause when the balance reaches zero, and you can buy more at any time." },
+        { "question": "Why is this better than a subscription?", "answer": "You pay only for what you use. AI features pause when tokens run out, so you will not receive an unexpectedly large bill." },
+        { "question": "Can I buy more than one package?", "answer": "Yes. Tokens add to your balance. You can use part of a 50M package and then buy another package or a 200M package." },
+        { "question": "How do I make a purchase?", "answer": "Choose Buy 50M or Buy 200M on a plan card and continue to the payment page. Tokens are added automatically after payment." },
+        { "question": "Can I get a refund?", "answer": "If the tokens do not meet your expectations, contact the community. We can refund the unused balance." }
+      ]
+    },
+    "features": {
+      "free": [
+        "Knowledge Language: a natural structure for knowledge (assertion triples)", "Create and edit knowledge", "Write articles in Knowledge Language", "Manually author articles with the Knowledge Language editor", "Collaboratively edit knowledge, Wikipedia-style", "Social network", "Comments and knowledge discussions", "Links and citations", "Attach source links to every answer", "Knowledge change history", "Export your data as a backup", "Import small datasets", "Import and convert one PDF at a time (Docling)", "Search the knowledge map", "Find evidence for assertions", "Find evidence against assertions", "Find missing knowledge", "Find and remove duplicate knowledge", "Find potential biomarkers", "Find potential therapeutic targets", "Find hidden patterns in the knowledge graph", "Analyze scientific trends", "Analyze citations of assertion triples", "Track research-field dynamics", "Analyze strengths and weaknesses of scientific articles", "Compare articles through assertion triples", "Compare positions and theories", "Reach consensus", "Rank articles by evidence quality", "Rank assertion triples by evidence quality", "Rank research directions by promise", "Rank promising hypotheses and generate new ones", "Rank old experiments and recommend new ones", "Monitor the state of science", "Monitor new articles", "Research dashboards", "Subscribe to changes in evidence strength", "Measure coverage of a problem or goal", "Knowledge quality metrics", "Knowledge uniqueness algorithm", "Knowledge reliability checks", "Test knowledge against reality", "Generate reliable knowledge from pattern analysis", "Generate possible mechanisms of action", "Design experiments from successful patterns", "Calculate the required research sample size", "Create and visualize causal chains", "Ground knowledge in reality (anchors)", "Find a shared graph foundation for multiple goals", "Resolve contradictions globally and between article pairs", "Check article text for errors", "Interface for evaluating algorithms and metrics", "Automated scientist", "Patterns of action dependencies", "Syllogism patterns", "Patterns of thought operations", "Patterns of rationality and common sense", "Patterns for analytics, statistics, A/B tests, and multi-armed bandits", "Scientific-method patterns", "Check logical patterns and structures", "API integrations (with limits)", "Download the full data dump", "Load all PubMed and PubMed Central data", "Store articles in S3 and the Neo4j graph", "Build a DAG of assertion triples", "Reverse operation: turn a graph into text", "Internationalized interface (i18n)"
+      ],
+      "paid": [
+        "Integrate with laboratory systems (LIMS)", "Connect to external databases", "Export data in specialized formats", "Generate weekly reports", "Generate literature reviews by topic", "Webhook notifications about service events", "Higher API limits", "Cloud GPU computing", "Bulk import and recognition of PDFs and Markdown", "Long-running background AI tasks and scheduled AI agents", "Priority AI queue", "In-depth topic analysis, including web sources", "Review a scientific article with an AI agent", "Search the knowledge base with AI (RAG)", "Translate an article into another language", "Ask AI questions about an article, such as requesting a summary", "Suggest a control group", "Suggest statistical analysis", "Explain contradictions", "Suggest research endpoints", "Suggest intermediate steps toward a goal", "Normalize an article's source text", "Edit an article through AI requests", "Find grammar and logic errors", "Convert articles into assertion triples in bulk", "Automatically formalize an article into structural blocks"
+      ]
+    }
+  },
+  "dataDownload": {
+    "title": "Data download",
+    "status": {
+      "idle": "Idle", "starting": "Starting…", "downloading": "Downloading", "paused": "Paused",
+      "stopped": "Stopped", "processing": "Processing", "layouting": "Laying out graph",
+      "completed": "Completed", "error": "Error", "loading": "Loading…",
+      "connected": "🟢 Connected", "disconnected": "🔴 Disconnected"
+    },
+    "sourceTypes": {
+      "s3": "🪣 S3 (Open Data)", "ftp": "📡 FTP", "api+bulk": "🌐 API + Dump", "s3+api": "🪣 S3 + API"
+    },
+    "actions": { "start": "▶ Start", "pause": "⏸ Pause", "resume": "▶ Resume", "reset": "↻ Reset" },
+    "progress": { "download": "Download", "processing": "Processing", "edgesLoaded": "Edges loaded" },
+    "articles": {
+      "badge": "Articles",
+      "description": "Download scientific articles from PubMed and PubMed Central (FTP/S3).",
+      "empty": "PubMed sources were not found. Click a button to initialize them."
+    },
+    "citations": {
+      "title": "Citation graph (DOI)", "badge": "Dependencies",
+      "description": "Citation and link data between documents (DOI). Sources: OpenCitations, OpenAlex, Crossref, and DataCite.",
+      "empty": "Citation sources were not found. Click a button to initialize them.",
+      "fileLimit": "File limit:", "allFiles": "all", "apiTest": "API test ({{count}} DOI):",
+      "edgesFound": "Edges found", "elapsed": "Time", "seconds": "s", "estimatedEdges": "Estimated edges",
+      "estimatedHours": "~{{hours}}h to download", "testing": "⏳ Testing…", "testApi": "🧪 Test API"
+    },
+    "doi": {
+      "title": "Search by DOI", "loading": "⏳…", "find": "🔍 Find", "rawEdges": "Raw edges",
+      "unique": "Unique", "written": "Written", "layout": "Layout", "nodesUpdated": "nodes updated"
+    }
+  },
+  "knowledgeMap": {
+    "isolated": {
+      "title": "Triples without links{{total}}",
+      "searchPlaceholder": "Search (at least 3 characters)…",
+      "searching": "Searching…",
+      "notFound": "No results found",
+      "empty": "No unlinked triples",
+      "foundCount": "Found {{found}} of {{total}}"
+    },
+    "neighbors": { "empty": "No blocks", "incoming": "Incoming blocks", "outgoing": "Outgoing blocks" },
+    "dependencies": {
+      "title": "Dependency types", "all": "All", "rebuilding": "Rebuilding…",
+      "rebuildRules": "Rebuild (rules)", "rebuildRulesWithLlm": "Rebuild (rules + LLM)",
+      "types": {
+        "causal": "Causal", "mechanistic": "Mechanistic", "logical": "Logical",
+        "evidential": "Evidential", "goal_directed": "Goal-directed", "compositional": "Compositional"
+      }
+    },
+    "errors": {
+      "loadMap": "Could not load the triple map",
+      "timeout": "Loading the triple map took too long. Try again.",
+      "aborted": "Loading the triple map was interrupted. Try again.",
+      "load": "Loading failed", "rebuild": "Could not rebuild dependencies",
+      "loadWithMessage": "Could not load the map: {{error}}", "retry": "Retry"
+    },
+    "status": { "loading": "Loading triple map…", "initializing": "Initializing…" },
+    "goalDecomposition": {
+      "enterGoal": "Enter a goal",
+      "error": "Could not decompose the goal",
+      "requestError": "Goal decomposition request failed",
+      "title": "Goal decomposition",
+      "placeholder": "Enter a goal in natural language…",
+      "loading": "Decomposing…",
+      "action": "Decompose goal (backward planning)",
+      "created": "Plan “{{goal}}” created"
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge": "Open Science Initiative",
+      "title": "Defeat aging.",
+      "titleContinuation": "Live as long as you want.",
+      "description": "Knowledge Map is a roadmap for achieving radical human life extension. An automated AI scientist connects science, data, and people.",
+      "join": "Join us",
+      "viewMap": "Explore the map",
+      "partners": "In collaboration with:",
+      "foundation": "Science Against Aging Foundation",
+      "warningTitle": "Warning!",
+      "and": "and",
+      "warning": "The project is at a very early stage of development; functionality and data preservation are not guaranteed. Statements on this page are for demonstration and may not reflect reality. As of March 10, 2026, no therapies for radical life extension exist. For health concerns, consult a qualified physician."
+    },
+    "about": {
+      "title": "What is the Knowledge Map?",
+      "description": "More than a database: a living ecosystem that turns the complexity of scientific information into a structured path toward longevity.",
+      "dag": {
+        "title": "Directed acyclic graph (DAG)",
+        "description": "From fundamental and systems biology and genetics to regenerative therapies and nanomedicine. The paths show how discoveries can move us toward treatments for age-related diseases."
+      },
+      "scientist": {
+        "title": "Automated AI scientist",
+        "description": "Analyzes large datasets, synthesizes findings from thousands of publications, and helps identify patterns and promising directions for research."
+      },
+      "open": {
+        "title": "Open and free",
+        "description": "The project is open and free to everyone, from its ideas to its source code. Science can move faster through collaboration and open access to tools and knowledge."
+      }
+    },
+    "links": {
+      "forum": { "title": "Forum", "description": "A community to connect, discuss, and follow development news" },
+      "miro": { "title": "Map (Miro)", "description": "Demo with 3,000 blocks and 3,000 manually created links" },
+      "github": { "title": "GitHub", "description": "Explore the source code and contribute" },
+      "presentation": { "title": "Presentation", "description": "The project's main ideas" },
+      "video": { "title": "10-hour video", "description": "For the most dedicated: everything about the Knowledge Map" },
+      "donations": { "title": "Donations", "description": "Support the project financially" }
+    },
+    "progress": {
+      "title": "Tracking scientific progress",
+      "description": "Follow each technology from ideas and hypotheses through clinical trials and practical use. The map shows progress toward the main goal and promising areas of longevity research.",
+      "senolytics": "Senolytics",
+      "geneTherapy": "Gene therapy",
+      "nanomedicine": "Nanomedicine",
+      "collaborationTitle": "Solving challenges together",
+      "collaborationDescription": "A social network for scientists and everyone interested in the field. Add knowledge, connect concepts, and build a path toward longevity together. Science moves faster when people think together."
+    },
+    "collaboration": {
+      "editGraph": "📝 Collaboratively edit the knowledge graph",
+      "connectConcepts": "🔗 Connect concepts",
+      "verifyData": "💬 Discuss and verify data",
+      "contributions": "🏆 Track contributions and reputation"
+    },
+    "features": {
+      "sectionTitle": "Implemented features",
+      "graph": { "title": "Interactive graph", "description": "GPU-accelerated Pixi.js visualization. Create, edit, and delete blocks and links. Keyboard shortcuts (Q/W/E), context menu, and hierarchical levels." },
+      "articles": { "title": "Article processing", "description": "Drag-and-drop PDF upload and Markdown conversion. PubMed and PMC integration, KaTeX formulas and tables, with Marker and HURIDOCS engines." },
+      "annotations": { "title": "NLP and annotations", "description": "More than 94 annotation types for parts of speech, syntax, and named entities, plus scientific types such as diseases, therapies, genes, and proteins. Manual and automatic annotation with spaCy." },
+      "patternMining": { "title": "Pattern mining", "description": "Generate patterns from annotations with SSE streaming. Build and visualize action sequences from text." },
+      "literature": { "title": "Scientific literature database", "description": "An ETL pipeline loads millions of PubMed articles into Neo4j, with a citation graph and full texts from PubMed Central Open Access." },
+      "layoutEngine": { "title": "Layout engine (Rust)", "description": "SIMD optimization runs nine times faster than the Python version. Rayon parallelizes topological sorting. gRPC API supports streaming." },
+      "authentication": { "title": "Authentication", "description": "Sign-up, login, two-factor authentication (2FA), password recovery, and CAPTCHA." },
+      "dataExtraction": { "title": "Data extraction", "description": "View the original PDF beside Markdown. Annotation, link, pattern, and sequence tabs bring the pipeline into one interface." }
+    },
+    "future": {
+      "badge": "In development",
+      "title": "Planned features",
+      "aiScientist": { "title": "Generative AI scientist", "description": "Independently synthesize and test hypotheses, create tasks for manual or automated execution, and help identify promising directions." },
+      "knowledgeGraph": { "title": "Expanded knowledge graph", "description": "Move the 3,000-block, 3,000-link Miro demo into the system, add structural templates, and support real-time collaboration." },
+      "ontologies": { "title": "Ontologies and semantics", "description": "Generate semantic ontologies from annotations, provide a GraphQL API for complex queries, and connect entities to UniProt, OMIM, and ChEMBL." },
+      "researchNetwork": { "title": "Social network for scientists", "description": "Researcher profiles, collaborative workspaces, task management, contribution tracking, and expert reviews." },
+      "education": { "title": "Education module", "description": "Spaced repetition and active feedback built into the Knowledge Map, with personalized learning paths." },
+      "integration": { "title": "Global integration", "description": "Synchronize with PubMed, bioRxiv, arXiv, and other research repositories in real time." }
+    },
+    "callToAction": {
+      "title": "Open and free for everyone",
+      "description": "Defeating aging is a shared human challenge. Join as a researcher, developer, or sponsor.",
+      "join": "Join the project",
+      "support": "Support the project",
+      "final": "Join the community →"
+    },
+    "contribute": {
+      "sectionTitle": "How to contribute",
+      "community": { "title": "Join the community", "description": "Join the forum, follow development news, and stay up to date.", "link": "Visit the forum" },
+      "discuss": { "title": "Discuss", "description": "Share ideas, ask questions, and suggest improvements on the forum.", "link": "Start a discussion" },
+      "researcher": { "title": "Researcher or developer", "description": "Join through GitHub and contribute code or scientific knowledge.", "link": "Open the repository" },
+      "sponsor": { "title": "Sponsor", "description": "Support the Knowledge Map financially; payment details are available at the link.", "link": "Donation details" }
+    },
+    "education": {
+      "badge": "Free learning",
+      "title": "Want to contribute to longevity research?",
+      "description": "You do not need prior experience to contribute to the Knowledge Map and radical life extension. Learn here as you go. Spaced repetition and active feedback are built into the system.",
+      "encouragement": "Grow your knowledge in the field you choose!",
+      "topics": {
+        "programming": "🐍 Python and R for scientific analysis",
+        "dataScience": "📊 Data science and analysis",
+        "graphs": "🕸️ Graphs and visualization",
+        "devops": "🚀 DevOps and CI/CD",
+        "biology": "🧬 Fundamental, molecular, and systems biology",
+        "genetics": "🧪 Population genetics, genomics, gerontology, and bioinformatics"
+      },
+      "flashcardLabel": "Spaced repetition",
+      "flashcardQuestion": "What is a telomere?",
+      "flashcardAnswer": "The end section of a chromosome that protects it from degradation. It shortens each time a cell divides.",
+      "again": "Again",
+      "good": "Good",
+      "easy": "Easy"
+    },
+    "sayForever": {
+      "badge": "Say Forever",
+      "title": "Monthly SayForever campaign",
+      "description": "A public opinion survey is held on the first Saturday of each month:",
+      "question1": "How long would you like to live?",
+      "question2": "How important is this to you?",
+      "question3": "What are you willing to do to extend life?",
+      "self": "You can organize this campaign yourself!"
+    },
+    "author": {
+      "initials": "DP",
+      "name": "Dima Prokofiev",
+      "role": "Founder and lead developer",
+      "quote": "“As long as I can remember, I have dreamed that everyone could live for as long as they choose and make the most of that life. The Knowledge Map is an attempt to make that dream real.”"
+    }
+  }
+}

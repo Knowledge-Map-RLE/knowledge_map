@@ -111,6 +111,11 @@ def _serialize_value(value: Any, kind: str) -> str:
     if kind in ("refs", "strs"):
         require(isinstance(value, list), f"Expected list value, got {value!r}")
         return "[" + ",".join(str(item) for item in value) + "]"
+    if kind == "ref_groups":
+        require(isinstance(value, list), f"Expected reference groups, got {value!r}")
+        return "[" + ",".join(
+            "[" + ",".join(str(item) for item in group) + "]" for group in value
+        ) + "]"
     return str(value)
 
 

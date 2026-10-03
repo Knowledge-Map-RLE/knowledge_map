@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getGoldArticleLocalization, type GoldArticleLocalization, type GoldArticleTextLocalization } from '../../services/api/article_editor';
 import Header from '../../widgets/Header';
 import MarkdownEditor from '../../widgets/MarkdownEditor';
 import Document_downloader_ui, { type DocumentListHandle } from '../Data_extraction/Document_downloader_ui';
@@ -19,7 +21,10 @@ import type { ArticleEditorTab } from './model';
 import styles from './Article_editor.module.css';
 
 const ArticleEditorUI: React.FC = () => {
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage === 'ru' ? 'ru' : 'en';
     const [activeTab, setActiveTab] = useState<ArticleEditorTab>('editor');
+    const [pipelineRefresh, setPipelineRefresh] = useState(0);
     const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
     const [selectedDocument, setSelectedDocument] = useState<PDFDocument | null>(null);
     const [chatTarget, setChatTarget] = useState<ChatTarget | null>(null);
@@ -29,6 +34,15 @@ const ArticleEditorUI: React.FC = () => {
     const requireAuth = useRequireAuth();
     const { isAuthenticated, user } = useAuth();
     const [goldByDocId, setGoldByDocId] = useState<Record<string, string>>({});
+    const [goldLocalization, setGoldLocalization] = useState<GoldArticleTextLocalization | null>(null);
+    const [goldLocalizationError, setGoldLocalizationError] = useState<string | null>(null);
+    const [goldLocalizationLoading, setGoldLocalizationLoading] = useState(false);
+    const [goldStructureLocalization, setGoldStructureLocalization] = useState<GoldArticleLocalization | null>(null);
+    const [goldStructureLocalizationError, setGoldStructureLocalizationError] = useState<string | null>(null);
+    const [goldStructureLocalizationLoading, setGoldStructureLocalizationLoading] = useState(false);
+    const refreshPipeline = useCallback(() => {
+        setPipelineRefresh(value => value + 1);
+    }, []);
 
     const reloadGoldIndex = useCallback(async () => {
         try {
@@ -69,6 +83,75 @@ label: selectedDocument?.title || selectedDocId,
         loadArticle, initNewArticle, applyExtractedBlocks, setText, addBlock, applyBlocks, triggerParse, save, uploadImage,
     } = useArticleState();
 
+    useEffect(() => {
+        if (!selectedDocId || selectedDocument?.is_gold_standard !== true || locale === 'en') {
+            setGoldLocalization(null);
+            setGoldLocalizationError(null);
+            setGoldLocalizationLoading(false);
+            setGoldStructureLocalization(null);
+            setGoldStructureLocalizationError(null);
+            setGoldStructureLocalizationLoading(false);
+            return;
+        }
+        let active = true;
+        setGoldLocalization(null);
+        setGoldLocalizationError(null);
+        setGoldLocalizationLoading(true);
+        setGoldStructureLocalization(null);
+        setGoldStructureLocalizationError(null);
+        setGoldStructureLocalizationLoading(true);
+        void getGoldArticleLocalization(selectedDocId, locale, 'article')
+            .then(result => {
+                if (active) setGoldLocalization(result);
+            })
+            .catch(error => {
+                if (active) {
+                    setGoldLocalizationError(error instanceof Error ? error.message : String(error));
+                }
+            })
+            .finally(() => {
+                if (active) setGoldLocalizationLoading(false);
+            });
+        void getGoldArticleLocalization(selectedDocId, locale, 'structure')
+            .then(result => {
+                if (active) setGoldStructureLocalization(result);
+            })
+            .catch(error => {
+                if (active) {
+                    setGoldStructureLocalizationError(error instanceof Error ? error.message : String(error));
+                }
+            })
+            .finally(() => {
+                if (active) setGoldStructureLocalizationLoading(false);
+            });
+        return () => { active = false; };
+    }, [selectedDocId, selectedDocument?.is_gold_standard, locale]);
+
+    const localizedGoldArticle = goldLocalization?.document_uid === selectedDocId && goldLocalization.locale === locale
+        ? goldLocalization : null;
+    const localizedGoldStructure = goldStructureLocalization?.document_uid === selectedDocId && goldStructureLocalization.locale === locale
+        ? goldStructureLocalization : null;
+    const goldTranslationRequired = selectedDocument?.is_gold_standard === true && locale === 'ru';
+    const displayBlocks = goldTranslationRequired ? (localizedGoldStructure?.blocks ?? []) : blocks;
+    const displayText = goldTranslationRequired ? (localizedGoldStructure?.article_markdown ?? '') : text;
+    const displayMarkdown = goldTranslationRequired ? (localizedGoldArticle?.article_markdown ?? '') : sourceMarkdown;
+    const goldTranslationUnavailable = goldTranslationRequired && !localizedGoldArticle && !goldLocalizationLoading;
+    const goldStructureTranslationUnavailable = goldTranslationRequired && !localizedGoldStructure && !goldStructureLocalizationLoading;
+    const renderGoldLocalizationStatus = (unavailable: boolean, error: string | null) => (
+        <div>
+            <div>
+                {unavailable
+                    ? t('articleEditor.localization.unavailable')
+                    : t('articleEditor.localization.loading')}
+            </div>
+            {unavailable && error && (
+                <div style={{ marginTop: 8, fontSize: 13, overflowWrap: 'anywhere' }}>
+                    {error}
+                </div>
+            )}
+        </div>
+    );
+
     const handleSelectDocument = useCallback(async (doc: PDFDocument | null) => {
         setSelectedDocument(doc);
         if (doc && doc.uid) {
@@ -89,16 +172,18 @@ label: selectedDocument?.title || selectedDocId,
     const handleSave = useCallback(async () => {
         if (selectedDocId && !notAnnotatedMessage) {
             await save(selectedDocId);
+            await docListRef.current?.reloadDocuments();
         }
     }, [selectedDocId, save, notAnnotatedMessage]);
 
     /** Фиксирует текущие строки статьи как золотой эталон.
      *  Возвращает текст ошибки или null при успехе. */
     const handleFixGold = useCallback(async (): Promise<string | null> => {
-        if (!selectedDocId) return 'Сначала откройте статью';
-        if (blocks.length === 0) return 'Нет структурных строк для фиксации';
+        if (!selectedDocId) return t('articleEditor.errors.openArticleFirst');
+        if (blocks.length === 0) return t('articleEditor.errors.noRowsToSave');
         try {
             await save(selectedDocId);
+            await docListRef.current?.reloadDocuments();
             const slug = goldByDocId[selectedDocId];
             if (slug) {
                 await updateGoldCase(slug, blocks);
@@ -111,7 +196,7 @@ label: selectedDocument?.title || selectedDocId,
         } catch (err) {
             return err instanceof Error ? err.message : String(err);
         }
-    }, [selectedDocId, blocks, save, goldByDocId, reloadGoldIndex]);
+    }, [selectedDocId, blocks, save, goldByDocId, reloadGoldIndex, t]);
 
     const handleExtracted = useCallback(async (docId: string, extractedBlocks: ArticleBlockData[]) => {
         await applyExtractedBlocks(docId, extractedBlocks);
@@ -120,7 +205,8 @@ label: selectedDocument?.title || selectedDocId,
     const handleCreateNew = useCallback(async () => {
         if (!requireAuth()) return;
         const { createArticle } = await import('../../services/api/article_editor');
-        const result = await createArticle('Новая статья');
+        const newArticleTitle = t('articleEditor.workspace.defaultTitle');
+        const result = await createArticle(newArticleTitle);
         if (result?.uid) {
             initNewArticle(result.uid);
             setSelectedDocId(result.uid);
@@ -133,12 +219,13 @@ label: selectedDocument?.title || selectedDocId,
                 processing_status: 'ready_for_annotation',
                 is_processed: false,
             });
-            addBlock('metadata', { title: result.title || 'Новая статья' });
+            addBlock('metadata', { title: result.title || newArticleTitle });
             await docListRef.current?.reloadDocuments();
             await new Promise(resolve => setTimeout(resolve, 0));
             await save(result.uid);
+            await docListRef.current?.reloadDocuments();
         }
-    }, [initNewArticle, addBlock, save, requireAuth]);
+    }, [initNewArticle, addBlock, save, requireAuth, t]);
 
     return (
         <main className={styles.ae}>
@@ -163,47 +250,51 @@ label: selectedDocument?.title || selectedDocId,
                             className={`${styles.tabButton} ${activeTab === 'editor' ? styles.active : ''}`}
                             onClick={() => setActiveTab('editor')}
                         >
-                            Редактор
+                            {t('articleEditor.tabs.editor')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'text' ? styles.active : ''}`}
                             onClick={() => setActiveTab('text')}
                         >
-                            Текст
+                            {t('articleEditor.tabs.text')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'graph' ? styles.active : ''}`}
                             onClick={() => setActiveTab('graph')}
                         >
-                            Карта статьи
+                            {t('articleEditor.tabs.map')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'patterns' ? styles.active : ''}`}
                             onClick={() => setActiveTab('patterns')}
                         >
-                            Паттерны
+                            {t('articleEditor.tabs.patterns')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'pipeline' ? styles.active : ''}`}
                             onClick={() => setActiveTab('pipeline')}
                             disabled={!selectedDocId}
-                            title={selectedDocId ? 'Версии пайплайна и метрики статьи' : 'Сначала откройте статью'}
+                            title={selectedDocId ? t('articleEditor.tabs.pipelineTitle') : t('articleEditor.errors.openArticleFirst')}
                         >
-                            Пайплайн
+                            {t('articleEditor.tabs.pipeline')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'chat' ? styles.active : ''}`}
                             onClick={openArticleChat}
                             disabled={!selectedDocId}
-                            title={selectedDocId ? 'Обсуждение статьи' : 'Сначала откройте или создайте статью'}
+                            title={selectedDocId ? t('articleEditor.tabs.discussionTitle') : t('articleEditor.errors.openOrCreateArticle')}
                         >
-                            Обсуждение
+                            {t('articleEditor.tabs.discussion')}
                         </button>
                     </div>
 
                     <div className={styles.tabContent}>
                         {activeTab === 'editor' && (
-                            notAnnotatedMessage ? (
+                            goldTranslationRequired && !localizedGoldStructure ? (
+                                <div role={goldStructureTranslationUnavailable ? 'alert' : 'status'} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32, color: '#6b7280', textAlign: 'center' }}>
+                                    {renderGoldLocalizationStatus(goldStructureTranslationUnavailable, goldStructureLocalizationError)}
+                                </div>
+                            ) : notAnnotatedMessage ? (
                                 <div style={{
                                     flex: 1, display: 'flex', flexDirection: 'column',
                                     alignItems: 'center', justifyContent: 'center',
@@ -214,7 +305,7 @@ label: selectedDocument?.title || selectedDocId,
                                         borderRadius: 8, padding: '24px 32px', maxWidth: 480,
                                     }}>
                                         <p style={{ fontSize: 16, fontWeight: 600, color: '#856404', margin: '0 0 8px' }}>
-                                            ⚠ Документ не аннотирован
+                                            {t('articleEditor.errors.notAnnotatedTitle')}
                                         </p>
                                         <p style={{ fontSize: 14, color: '#856404', margin: 0, lineHeight: 1.5 }}>
                                             {notAnnotatedMessage}
@@ -223,9 +314,9 @@ label: selectedDocument?.title || selectedDocId,
                                 </div>
                             ) : (
                                 <EditorWorkspace
-                                    text={text}
+                                    text={displayText}
                                     statements={statements}
-                                    blocks={blocks}
+                                    blocks={displayBlocks}
                                     isParsing={isParsing}
                                     parseProgress={parseProgress}
                                     parseError={parseError}
@@ -245,14 +336,20 @@ label: selectedDocument?.title || selectedDocId,
                          {activeTab === 'text' && (
                              <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                                  {selectedDocId ? (
-                                     <MarkdownEditor
-                                         value={sourceMarkdown}
-                                         onChange={() => {}}
-                                         readOnly={true}
-                                     />
+                                    goldTranslationRequired && !localizedGoldArticle ? (
+                                        <div role={goldTranslationUnavailable ? 'alert' : 'status'} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', padding: 32, color: '#6b7280', textAlign: 'center' }}>
+                                            {renderGoldLocalizationStatus(goldTranslationUnavailable, goldLocalizationError)}
+                                        </div>
+                                    ) : (
+                                        <MarkdownEditor
+                                            value={displayMarkdown}
+                                            onChange={() => {}}
+                                            readOnly={true}
+                                        />
+                                    )
                                  ) : (
-                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
-                                         Выберите файл или создайте новую статью
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
+                                         {t('articleEditor.empty.selectOrCreate')}
                                      </div>
                                  )}
                              </div>
@@ -260,10 +357,10 @@ label: selectedDocument?.title || selectedDocId,
                          {activeTab === 'graph' && (
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
                                 {selectedDocId ? (
-                                    <ArticleMap blocks={blocks} />
+                                    <ArticleMap docId={selectedDocId} enabled={isAuthenticated} />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
-                                        Выберите файл или создайте новую статью
+                                        {t('articleEditor.empty.selectOrCreate')}
                                     </div>
                                 )}
                             </div>
@@ -274,7 +371,7 @@ label: selectedDocument?.title || selectedDocId,
                                     <EvidencePatterns docId={selectedDocId} />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
-                                        Выберите файл или создайте новую статью
+                                        {t('articleEditor.empty.selectOrCreate')}
                                     </div>
                                 )}
                             </div>
@@ -282,10 +379,10 @@ label: selectedDocument?.title || selectedDocId,
                         {activeTab === 'pipeline' && (
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
                                 {selectedDocId && isAuthenticated ? (
-                                    <PipelineVersions docId={selectedDocId} enabled />
+                                    <PipelineVersions docId={selectedDocId} refresh={pipelineRefresh} enabled />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
-                                        {!selectedDocId ? 'Выберите файл или создайте новую статью' : 'Войдите в аккаунт, чтобы просмотреть версии пайплайна'}
+                                        {!selectedDocId ? t('articleEditor.empty.selectOrCreate') : t('articleEditor.empty.loginForPipeline')}
                                     </div>
                                 )}
                             </div>
@@ -298,11 +395,11 @@ label: selectedDocument?.title || selectedDocId,
                                         onOpenTarget={(t) => setChatTarget(t)}
                                         myUid={user.uid}
                                         hideRail
-                                        title={selectedDocument?.title || 'Обсуждение статьи'}
+                                        title={localizedGoldArticle?.title || selectedDocument?.title || t('articleEditor.tabs.discussionTitle')}
                                     />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6b7280', fontSize: 13 }}>
-                                        {!selectedDocId ? 'Выберите файл или создайте новую статью' : 'Войдите в аккаунт, чтобы участвовать в обсуждении'}
+                                        {!selectedDocId ? t('articleEditor.empty.selectOrCreate') : t('articleEditor.empty.loginForDiscussion')}
                                     </div>
                                 )}
                             </div>
@@ -316,7 +413,7 @@ label: selectedDocument?.title || selectedDocId,
                             <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
                             <circle cx="12" cy="12" r="3" />
                         </svg>
-                        {'AI \u0410\u0433\u0435\u043D\u0442'}
+                        {t('articleEditor.aiAgent.title')}
                     </div>
                     <AgentChat
                         articleUuid={articleUuid}
@@ -324,6 +421,7 @@ label: selectedDocument?.title || selectedDocId,
                         statements={statements}
                         text={text}
                         onExtracted={handleExtracted}
+                        onPipelineUpdate={refreshPipeline}
                     />
                 </div>
             </div>

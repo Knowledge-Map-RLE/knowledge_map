@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import GlobalLinguisticGraph from './components/GlobalLinguisticGraph';
 import PatternGraphView from './components/PatternGraphView';
 import styles from './NLP.module.css';
 import type { NlpTab } from './model';
 
 export const NLP: React.FC = () => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<NlpTab>('graph');
 
     return (
@@ -14,13 +16,13 @@ export const NLP: React.FC = () => {
                     className={`${styles.tabButton} ${activeTab === 'graph' ? styles.active : ''}`}
                     onClick={() => setActiveTab('graph')}
                 >
-                    Граф
+                    {t('patternAnalysis.tabs.graph')}
                 </button>
                 <button
                     className={`${styles.tabButton} ${activeTab === 'patterns' ? styles.active : ''}`}
                     onClick={() => setActiveTab('patterns')}
                 >
-                    Паттерны
+                    {t('patternAnalysis.tabs.patterns')}
                 </button>
             </div>
 

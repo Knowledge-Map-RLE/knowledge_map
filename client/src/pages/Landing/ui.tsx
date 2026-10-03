@@ -9,8 +9,10 @@ import {
     CONTRIBUTE_GRID,
     EDUCATION_LIST,
 } from './model';
+import { useTranslation } from 'react-i18next';
 
 const LandingUI: React.FC = () => {
+    const { t } = useTranslation();
     return (
         <div className={styles.page}>
             <Header showSearch={true} className={styles.header} />
@@ -20,38 +22,32 @@ const LandingUI: React.FC = () => {
                     <div className={styles.heroGlowBlue} />
                     <div className={styles.heroGlowPurple} />
                     <div className={styles.heroInner}>
-                        <div className={styles.heroBadge}>Open Science Initiative</div>
+                        <div className={styles.heroBadge}>{t('landing.hero.badge')}</div>
                         <h1 className={styles.heroTitle}>
-                            Победить старение.<br />
-                            <span className={styles.heroGradientText}>Жить, сколько хочешь.</span>
+                            {t('landing.hero.title')}<br />
+                            <span className={styles.heroGradientText}>{t('landing.hero.titleContinuation')}</span>
                         </h1>
-                        <p className={styles.heroSubtitle}>
-                            Карта Знаний — технологическая карта достижения радикального продления жизни человека (РПЖ).
-                            Автоматизированный ИИ-учёный, соединяющий науку, данные и человека.
-                        </p>
+                        <p className={styles.heroSubtitle}>{t('landing.hero.description')}</p>
                         <div className={styles.heroCta}>
                             <a href="https://t.me/KnowledgeMapForum" target="_blank" rel="noopener noreferrer" className={styles.ctaBtnPrimary}>
-                                Присоединиться
+                                {t('landing.hero.join')}
                             </a>
                             <a href="https://miro.com/app/board/uXjVPyIT5F0=/?moveToWidget=3458764562951665022&cot=14" target="_blank" rel="noopener noreferrer" className={styles.ctaBtnSecondary}>
-                                Посмотреть карту
+                                {t('landing.hero.viewMap')}
                             </a>
                         </div>
                         <div className={styles.partners}>
-                            <span className={styles.partnersLabel}>Совместно с:</span>
+                        <span className={styles.partnersLabel}>{t('landing.hero.partners')}</span>
                             <a href="https://openlongevity.org/" target="_blank" rel="noopener noreferrer" className={styles.partnerLink}>Open Longevity</a>
                             <a href="https://t.me/OpenLongevity" target="_blank" rel="noopener noreferrer" className={styles.partnerLink}>(Telegram)</a>
-                            <span className={styles.partnersSep}>и</span>
-                            <a href="https://scienceagainstaging.com" target="_blank" rel="noopener noreferrer" className={styles.partnerLink}>Фондом «Наука за продление жизни»</a>
+                            <span className={styles.partnersSep}>{t('landing.hero.and')}</span>
+                            <a href="https://scienceagainstaging.com" target="_blank" rel="noopener noreferrer" className={styles.partnerLink}>{t('landing.hero.foundation')}</a>
                         </div>
                     </div>
                     <div className={styles.heroWarning}>
                         <div className={styles.heroWarningIcon}>⚠️</div>
                         <p>
-                            <strong>Внимание!</strong> Проект в очень ранней стадии разработки, работоспособность и сохранность данных не гарантированы.
-                            Все заявления на этом лендинге носят демонстрационный характер и не все соответствуют реальности.
-                            Терапий для РПЖ сейчас (на 2026.03.10) не существует.
-                            За любыми вопросами здоровья обращайтесь к врачу — квалифицированному специалисту.
+                            <strong>{t('landing.hero.warningTitle')}</strong> {t('landing.hero.warning')}
                         </p>
                     </div>
                 </section>
@@ -59,12 +55,12 @@ const LandingUI: React.FC = () => {
                 <section className={styles.links}>
                     <div className={styles.sectionInner}>
                         <div className={styles.linksGrid}>
-                            {LINKS_GRID.map(({ href, icon, color, label, desc }) => (
+                            {LINKS_GRID.map(({ href, icon, color, translationPath }) => (
                                 <a key={href} href={href} target="_blank" rel="noopener noreferrer" className={styles.linkCard}>
                                     <div className={styles.linkIcon} style={{ background: color }}>{icon}</div>
                                     <div>
-                                        <div className={styles.linkLabel}>{label}</div>
-                                        <div className={styles.linkDesc}>{desc}</div>
+                            <div className={styles.linkLabel}>{t(`${translationPath}.title`)}</div>
+                            <div className={styles.linkDesc}>{t(`${translationPath}.description`)}</div>
                                     </div>
                                 </a>
                             ))}
@@ -75,27 +71,24 @@ const LandingUI: React.FC = () => {
                 <section className={styles.about} id="about">
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <h2 className={styles.sectionTitle}>Что такое Карта Знаний?</h2>
-                            <p className={styles.sectionSubtitle}>
-                                Не просто база данных — живая экосистема, преобразующая хаос научной информации
-                                в структурированный путь к долголетию.
-                            </p>
+                            <h2 className={styles.sectionTitle}>{t('landing.about.title')}</h2>
+                            <p className={styles.sectionSubtitle}>{t('landing.about.description')}</p>
                         </div>
                         <div className={styles.aboutGrid}>
                             <div className={`${styles.aboutCard} ${styles.aboutCardBlue}`}>
                                 <div className={`${styles.aboutIcon} ${styles.aboutIconBlue}`}>⬡</div>
-                                <h3>Направленный граф (DAG)</h3>
-                                <p>Directed Acyclic Graph — от фундаментальной и системной биологии и генетики до сложнейших регенеративных терапий и наномедицины. Цепочки и пути: наглядное понимание того, как одно открытие приближает создание терапий от возраст-зависимых заболеваний.</p>
+                                <h3>{t('landing.about.dag.title')}</h3>
+                                <p>{t('landing.about.dag.description')}</p>
                             </div>
                             <div className={`${styles.aboutCard} ${styles.aboutCardPurple}`}>
                                 <div className={`${styles.aboutIcon} ${styles.aboutIconPurple}`}>🤖</div>
-                                <h3>Автоматизированный ИИ-учёный</h3>
-                                <p>Анализирует массив данных, недоступный человеку. Быстрый анализ и синтез — обзор тысяч публикаций ежедневно. Предсказание открытий — алгоритмы указывают на наиболее перспективные точки приложения усилий. Находит закономерности и паттерны, скрытые от человеческого глаза.</p>
+                                <h3>{t('landing.about.scientist.title')}</h3>
+                                <p>{t('landing.about.scientist.description')}</p>
                             </div>
                             <div className={`${styles.aboutCard} ${styles.aboutCardPink}`}>
                                 <div className={`${styles.aboutIcon} ${styles.aboutIconPink}`}>🌐</div>
-                                <h3>Открыто и бесплатно</h3>
-                                <p>Проект открыт и бесплатен для всех — от идей до исходного кода. Кардинально ускорить науку можно только совместными усилиями, без барьеров к инструментам и знаниям.</p>
+                                <h3>{t('landing.about.open.title')}</h3>
+                                <p>{t('landing.about.open.description')}</p>
                             </div>
                         </div>
                     </div>
@@ -105,12 +98,12 @@ const LandingUI: React.FC = () => {
                     <div className={styles.sectionInner}>
                         <div className={styles.progressGrid}>
                             <div className={styles.progressCard}>
-                                <h2>Мониторинг прогресса науки</h2>
-                                <p>Отслеживайте текущий статус разработки каждой технологии: от идей и гипотез до клинических испытаний и практического использования. Карта показывает прогресс в главной задаче и наиболее перспективных отраслях долголетия.</p>
+                                <h2>{t('landing.progress.title')}</h2>
+                                <p>{t('landing.progress.description')}</p>
                                 <div className={styles.progressBars}>
-                                    {PROGRESS_BARS.map(({ label, pct }) => (
-                                        <div key={label} className={styles.barRow}>
-                                            <span>{label}</span>
+                                    {PROGRESS_BARS.map(({ translationKey, pct }) => (
+                                        <div key={translationKey} className={styles.barRow}>
+                                            <span>{t(translationKey)}</span>
                                             <div className={styles.barTrack}>
                                                 <div className={styles.barFill} style={{ width: `${pct}%` }} />
                                             </div>
@@ -119,11 +112,11 @@ const LandingUI: React.FC = () => {
                                 </div>
                             </div>
                             <div className={styles.collab}>
-                                <h2>Коллаборативное решение задач</h2>
-                                <p>Социальная сеть для учёных и всех интересующихся. Добавляйте блоки знаний, создавайте связи, работайте совместно над структурированием пути к долголетию. Наука ускоряется, когда люди думают вместе.</p>
+                                <h2>{t('landing.progress.collaborationTitle')}</h2>
+                                <p>{t('landing.progress.collaborationDescription')}</p>
                                 <div className={styles.collabItems}>
-                                    {COLLAB_ITEMS.map(item => (
-                                        <div key={item} className={styles.collabItem}>{item}</div>
+                                    {COLLAB_ITEMS.map(key => (
+                                        <div key={key} className={styles.collabItem}>{t(key)}</div>
                                     ))}
                                 </div>
                             </div>
@@ -134,15 +127,15 @@ const LandingUI: React.FC = () => {
                 <section className={styles.features} id="features">
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <h2 className={styles.sectionTitle}>Реализованная функциональность</h2>
+                            <h2 className={styles.sectionTitle}>{t('landing.features.sectionTitle')}</h2>
                             <div className={styles.titleBar} />
                         </div>
                         <div className={styles.featuresGrid}>
-                            {FEATURES_GRID.map(({ color, icon, title, desc }) => (
-                                <div key={title} className={styles.featureCard}>
+                            {FEATURES_GRID.map(({ color, icon, translationPath }) => (
+                                <div key={translationPath} className={styles.featureCard}>
                                     <div className={styles.featureIcon} style={{ color }}>{icon}</div>
-                                    <h4>{title}</h4>
-                                    <p>{desc}</p>
+                                    <h4>{t(`${translationPath}.title`)}</h4>
+                                    <p>{t(`${translationPath}.description`)}</p>
                                 </div>
                             ))}
                         </div>
@@ -152,14 +145,14 @@ const LandingUI: React.FC = () => {
                 <section className={styles.future}>
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <div className={styles.futureBadge}>В разработке</div>
-                            <h2 className={`${styles.sectionTitle} ${styles.sectionTitleLight}`}>Будущая функциональность</h2>
+                            <div className={styles.futureBadge}>{t('landing.future.badge')}</div>
+                            <h2 className={`${styles.sectionTitle} ${styles.sectionTitleLight}`}>{t('landing.future.title')}</h2>
                         </div>
                         <div className={styles.futureGrid}>
-                            {FUTURE_GRID.map(({ title, desc }) => (
-                                <div key={title} className={styles.futureCard}>
-                                    <h4>{title}</h4>
-                                    <p>{desc}</p>
+                            {FUTURE_GRID.map(({ translationPath }) => (
+                                <div key={translationPath} className={styles.futureCard}>
+                                    <h4>{t(`${translationPath}.title`)}</h4>
+                                    <p>{t(`${translationPath}.description`)}</p>
                                 </div>
                             ))}
                         </div>
@@ -168,11 +161,11 @@ const LandingUI: React.FC = () => {
 
                 <section className={styles.cta} id="contribute">
                     <div className={styles.ctaInner}>
-                        <h2>Проект открыт и<br />бесплатен для всех</h2>
-                        <p>Мы верим, что победа над старением — это общая задача человечества. Присоединяйтесь как исследователь, разработчик или спонсор.</p>
+                        <h2>{t('landing.callToAction.title')}</h2>
+                        <p>{t('landing.callToAction.description')}</p>
                         <div className={styles.ctaButtons}>
-                            <a href="https://t.me/KnowledgeMapForum" target="_blank" rel="noopener noreferrer" className={styles.ctaWhiteBtn}>Стать участником</a>
-                            <a href="https://t.me/KnowledgeMapForum/1079/1080" target="_blank" rel="noopener noreferrer" className={styles.ctaGhostBtn}>Поддержать проект</a>
+                            <a href="https://t.me/KnowledgeMapForum" target="_blank" rel="noopener noreferrer" className={styles.ctaWhiteBtn}>{t('landing.callToAction.join')}</a>
+                            <a href="https://t.me/KnowledgeMapForum/1079/1080" target="_blank" rel="noopener noreferrer" className={styles.ctaGhostBtn}>{t('landing.callToAction.support')}</a>
                         </div>
                     </div>
                 </section>
@@ -180,15 +173,15 @@ const LandingUI: React.FC = () => {
                 <section className={styles.contribute}>
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <h2 className={styles.sectionTitle}>Как внести свой вклад</h2>
+                        <h2 className={styles.sectionTitle}>{t('landing.contribute.sectionTitle')}</h2>
                         </div>
                         <div className={styles.contributeGrid}>
-                            {CONTRIBUTE_GRID.map(({ icon, title, desc, href, linkText }) => (
-                                <div key={title} className={styles.contributeCard}>
+                        {CONTRIBUTE_GRID.map(({ icon, translationPath, href }) => (
+                            <div key={translationPath} className={styles.contributeCard}>
                                     <div className={styles.contributeIcon}>{icon}</div>
-                                    <h4>{title}</h4>
-                                    <p>{desc}</p>
-                                    <a href={href} target="_blank" rel="noopener noreferrer" className={styles.contributeLink}>{linkText} →</a>
+                                <h4>{t(`${translationPath}.title`)}</h4>
+                                <p>{t(`${translationPath}.description`)}</p>
+                                <a href={href} target="_blank" rel="noopener noreferrer" className={styles.contributeLink}>{t(`${translationPath}.link`)} →</a>
                                 </div>
                             ))}
                         </div>
@@ -199,22 +192,22 @@ const LandingUI: React.FC = () => {
                     <div className={styles.sectionInner}>
                         <div className={styles.educationGrid}>
                             <div className={styles.educationContent}>
-                                <div className={styles.educationBadge}>Бесплатное обучение</div>
-                                <h2>Хотите внести вклад в науку о долголетии?</h2>
-                                <p>Для участия в Карте Знаний и РПЖ не нужна предварительная подготовка — учитесь прямо здесь. Система интервального повторения и активной обратной связи встроена прямо в Карту Знаний. <strong>Становись умнее в выбранной области знаний!</strong></p>
+                            <div className={styles.educationBadge}>{t('landing.education.badge')}</div>
+                            <h2>{t('landing.education.title')}</h2>
+                            <p>{t('landing.education.description')} <strong>{t('landing.education.encouragement')}</strong></p>
                                 <ul className={styles.educationList}>
-                                    {EDUCATION_LIST.map(item => <li key={item}>{item}</li>)}
+                                {EDUCATION_LIST.map(key => <li key={key}>{t(key)}</li>)}
                                 </ul>
                             </div>
                             <div className={styles.educationVisual}>
                                 <div className={styles.flashcard}>
-                                    <div className={styles.flashcardLabel}>Интервальное повторение</div>
-                                    <div className={styles.flashcardQ}>Что такое теломера?</div>
-                                    <div className={styles.flashcardA}>Концевой участок хромосомы, защищающий её от деградации. Укорачивается при каждом делении клетки.</div>
+                                <div className={styles.flashcardLabel}>{t('landing.education.flashcardLabel')}</div>
+                                <div className={styles.flashcardQ}>{t('landing.education.flashcardQuestion')}</div>
+                                <div className={styles.flashcardA}>{t('landing.education.flashcardAnswer')}</div>
                                     <div className={styles.flashcardBtns}>
-                                        <span>Снова</span>
-                                        <span>Хорошо</span>
-                                        <span>Легко</span>
+                                    <span>{t('landing.education.again')}</span>
+                                    <span>{t('landing.education.good')}</span>
+                                    <span>{t('landing.education.easy')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -226,15 +219,15 @@ const LandingUI: React.FC = () => {
                     <div className={styles.sectionInner}>
                         <div className={styles.sayforeverInner}>
                             <div className={styles.sayforeverContent}>
-                                <div className={styles.sayforeverBadge}>Say Forever</div>
-                                <h2>Ежемесячная акция SayForever</h2>
-                                <p>В первую субботу каждого месяца — социологический опрос:</p>
+                            <div className={styles.sayforeverBadge}>{t('landing.sayForever.badge')}</div>
+                            <h2>{t('landing.sayForever.title')}</h2>
+                            <p>{t('landing.sayForever.description')}</p>
                                 <ul className={styles.sayforeverList}>
-                                    <li>Сколько лет вы хотели бы жить?</li>
-                                    <li>Насколько это для вас важно?</li>
-                                    <li>Как много вы готовы сделать для продления жизни?</li>
+                                <li>{t('landing.sayForever.question1')}</li>
+                                <li>{t('landing.sayForever.question2')}</li>
+                                <li>{t('landing.sayForever.question3')}</li>
                                 </ul>
-                                <p className={styles.sayforeverSelf}>Такую акцию вы можете провести самостоятельно!</p>
+                            <p className={styles.sayforeverSelf}>{t('landing.sayForever.self')}</p>
                                 <a href="https://sayforever.org/" target="_blank" rel="noopener noreferrer" className={styles.sayforeverLink}>sayforever.org →</a>
                             </div>
                         </div>
@@ -244,12 +237,10 @@ const LandingUI: React.FC = () => {
                 <section className={styles.author}>
                     <div className={styles.sectionInner}>
                         <div className={styles.authorInner}>
-                            <div className={styles.authorAvatar}>ДП</div>
-                            <h3>Дима Прокофьев</h3>
-                            <div className={styles.authorRole}>Основатель и главный разработчик</div>
-                            <blockquote className={styles.authorQuote}>
-                                «Всю жизнь, сколько себя помню, мечтал о том, чтобы каждый смог жить столько, сколько сам захочет, лучшей жизнью. Карта Знаний — это попытка воплотить мечту в реальность.»
-                            </blockquote>
+                            <div className={styles.authorAvatar}>{t('landing.author.initials')}</div>
+                            <h3>{t('landing.author.name')}</h3>
+                            <div className={styles.authorRole}>{t('landing.author.role')}</div>
+                            <blockquote className={styles.authorQuote}>{t('landing.author.quote')}</blockquote>
                             <a href="https://t.me/dima_prokofev" target="_blank" rel="noopener noreferrer" className={styles.authorTg}>Telegram: @dima_prokofev</a>
                         </div>
                     </div>
@@ -257,7 +248,7 @@ const LandingUI: React.FC = () => {
 
                 <section className={styles.finalCta}>
                     <a href="https://t.me/KnowledgeMapForum" target="_blank" rel="noopener noreferrer" className={styles.finalCtaBtn}>
-                        Присоединяйтесь к сообществу →
+                        {t('landing.callToAction.final')}
                     </a>
                 </section>
 

@@ -106,6 +106,10 @@ class Settings(BaseSettings):
     # в production обычно абсолютный путь к примонтированному тому.
     GOLD_DIR: str = ""
 
+    # Неизменяемый корпус локализаций полного article pipeline.
+    # Относительный путь — от корня репозитория; контейнер задаёт абсолютный.
+    ARTICLE_PIPELINE_GOLD_DIR: str = "eval/article_pipeline_gold"
+
     # Администраторы эталонов: uid через запятую.
     # Временная схема до появления ролей в auth-сервисе; проверка —
     # единственная точка web.dependencies.get_current_admin.
@@ -141,6 +145,11 @@ class Settings(BaseSettings):
         if not path.is_absolute():
             path = repo_root / path
         return path.resolve()
+
+    @property
+    def resolved_article_pipeline_gold_dir(self) -> Path:
+        """Каталог корпуса article pipeline с готовыми локализациями."""
+        return self._resolve_repo_path(self.ARTICLE_PIPELINE_GOLD_DIR)
 
     @property
     def openalex_works_dir(self) -> Path:

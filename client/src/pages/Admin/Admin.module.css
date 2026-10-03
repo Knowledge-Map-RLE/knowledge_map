@@ -90,6 +90,24 @@
   min-width: 0;
 }
 
+.languageSwitcher {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 1000;
+}
+
+.languageSwitcher select {
+  min-height: 32px;
+  border: 1px solid #454956;
+  border-radius: 6px;
+  padding: 0 8px;
+  background: #1a1d27;
+  color: #e0e0e0;
+  font: inherit;
+  cursor: pointer;
+}
+
 .adminContent h1 {
   font-size: 1.5rem;
   margin-bottom: 16px;

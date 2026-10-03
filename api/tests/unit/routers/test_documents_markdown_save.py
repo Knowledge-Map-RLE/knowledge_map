@@ -78,7 +78,7 @@ class TestUpdateMarkdownAnnotate:
                 return_value=_fake_grpc_client(VALIDATION_INVALID),
             ):
                 return await update_document_markdown(
-                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock()
+                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock(), user={"uid": "user-1"}
                 )
 
         result = asyncio.run(scenario())
@@ -92,6 +92,7 @@ class TestUpdateMarkdownAnnotate:
         kwargs = mock_update.call_args.kwargs
         assert kwargs["annotate"] is False
         assert kwargs["doc_id"] == "doc_1"
+        assert kwargs["user_uid"] == "user-1"
 
     def test_annotate_marks_annotated_for_valid_markdown(self):
         """annotate=true with valid markdown saves AND marks annotated."""
@@ -113,7 +114,7 @@ class TestUpdateMarkdownAnnotate:
                 return_value=_fake_grpc_client(VALIDATION_VALID),
             ):
                 return await update_document_markdown(
-                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock()
+                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock(), user={"uid": "user-1"}
                 )
 
         result = asyncio.run(scenario())
@@ -140,7 +141,7 @@ class TestUpdateMarkdownAnnotate:
                 return_value=_fake_grpc_client(),
             ):
                 await update_document_markdown(
-                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock()
+                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock(), user={"uid": "user-1"}
                 )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -172,7 +173,7 @@ class TestUpdateMarkdownAnnotate:
                 return_value=failing_client(),
             ):
                 await update_document_markdown(
-                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock()
+                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock(), user={"uid": "user-1"}
                 )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -207,7 +208,7 @@ class TestUpdateMarkdownAnnotate:
                 return_value=failing_client(),
             ):
                 return await update_document_markdown(
-                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock()
+                    "doc_1", request, doc_repo=MagicMock(), storage=MagicMock(), user={"uid": "user-1"}
                 )
 
         result = asyncio.run(scenario())

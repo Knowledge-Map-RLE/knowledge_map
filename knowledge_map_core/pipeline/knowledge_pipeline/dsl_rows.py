@@ -108,7 +108,7 @@ def _split_segments(fields_text: str) -> List[str]:
             continue
         current_field = "".join(current).strip()
         opens_list_value = bool(re.fullmatch(r"[^=|]+\s*=\s*", current_field))
-        if char == "[" and depth == 0 and opens_list_value:
+        if char == "[" and (depth > 0 or opens_list_value):
             depth += 1
             current.append(char)
         elif char == "]":
@@ -185,6 +185,23 @@ def _coerce_refs(raw: str) -> List[str]:
     return list(dict.fromkeys(f"B{t}" for t in tags))
 
 
+def _coerce_ref_groups(raw: str) -> List[List[str]]:
+    """Parse alternative B-tag groups, e.g. ``[[B1,B2],[B3]]``."""
+    value = raw.strip()
+    if value in ("[]", "{}", "-", "none", "n/a", ""):
+        return []
+    group = r"\[\s*B[0-9]{1,6}(?:\s*,\s*B[0-9]{1,6})*\s*\]"
+    require(bool(re.fullmatch(rf"\[\s*(?:{group}(?:\s*,\s*{group})*)?\s*\]", value)),
+            f"Alternative reference groups must use [[B1,B2],[B3]] syntax: {raw!r}")
+    groups = re.findall(r"\[([^\[\]]+)\]", value[1:-1])
+    parsed = []
+    for group_value in groups:
+        tags = _TAG_RE.findall(group_value)
+        require(bool(tags), f"Alternative reference group has no B<tag>: {group_value!r}")
+        parsed.append(list(dict.fromkeys(f"B{tag}" for tag in tags)))
+    return parsed
+
+
 def _coerce(value: str, spec: FieldSpec, block_type: str, tag: str, line: int) -> Any:
     kind = spec.kind
     try:
@@ -200,6 +217,8 @@ def _coerce(value: str, spec: FieldSpec, block_type: str, tag: str, line: int) -
             return _coerce_ref(value)
         if kind == "refs":
             return _coerce_refs(value)
+        if kind == "ref_groups":
+            return _coerce_ref_groups(value)
         return sanitize_value(value)
     except ValidationError:
         raise
@@ -266,6 +285,10 @@ def parse_dsl_rows(dsl_text: str, unit_ids: List[str], *,
             if key == "unit":
                 require(unit is None, f"Duplicate field 'unit' (line {number})")
                 unit = raw_value.upper()
+                continue
+            # Historical DSL may contain model-generated map dependencies.
+            # Read and discard them; new map edges come from deterministic rules.
+            if key in {"req", "anyreq"}:
                 continue
             require(key in by_short or key != "_extra",
                     f"Reserved field {key!r} (line {number})")

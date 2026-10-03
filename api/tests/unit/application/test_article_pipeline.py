@@ -204,12 +204,7 @@ def test_nested_importance_is_typed_action_on_atomic_statement():
     assert blocks[1]["data"]["subjectStatementRef"] == by_tag["B1"]
     assert blocks[1]["data"]["subject"] == "identifying modifiable factors"
     graph = build_knowledge_map(blocks)
-    assert graph["dependency_edges"] == []
-    assert graph["semantic_edges"] == [{
-        "source": by_tag["B1"], "target": by_tag["B2"],
-        "relation": "subject_operation:identify_subjects", "relation_tag": "B2",
-        "block": by_tag["B2"], "resolution": "ref",
-    }]
+    assert graph["edges"] == []
     projected = statements(blocks)
     assert projected[1]["subject_type"] == "statement"
     assert projected[1]["subject_statement_ref"] == by_tag["B1"]
@@ -299,21 +294,13 @@ async def test_pipeline_stage_order_and_artifacts():
     assert result["coverage"]["token_preservation"] == 1
     assert result["validation"] == {"linguistic": "passed", "structural": "passed",
                                     "map": "passed", "semantic_fidelity": 0.285714}
-    assert result["quality_metrics"]["version"] == 5
+    assert result["quality_metrics"]["version"] == 6
     assert result["quality_metrics"]["gates"]["passed"] is True
     assert len(result["blocks"]) == 7
     graph = result["graph"]
-    assert len(graph["nodes"]) == 7
-    relation_block = next(
-        block for block in result["blocks"] if block["blockType"] == "relation"
-    )
-    by_tag = tags(result["blocks"])
-    edge = graph["semantic_edges"][0]
-    assert {edge["source"], edge["target"]} == {
-        by_tag[relation_block["data"]["sourceRef"]],
-        by_tag[relation_block["data"]["targetRef"]],
-    }
-    assert edge["relation"] == "supports" and edge["resolution"] == "ref"
+    assert graph["schema_version"] == 3
+    assert len(graph["nodes"]) < len(result["blocks"])
+    assert graph["edges"] == []
 
 @pytest.mark.asyncio
 async def test_source_corruption_rejected():
@@ -377,7 +364,7 @@ async def test_prefix_index_header_is_normalized_to_code_major():
 @pytest.mark.asyncio
 async def test_prompt_version_is_current():
     from knowledge_pipeline.prompts import PROMPT_VERSION
-    assert PROMPT_VERSION == "147"
+    assert PROMPT_VERSION == "150"
 
 
 def test_prompt_audits_all_predicates_and_source_unit_identity():
@@ -385,7 +372,10 @@ def test_prompt_audits_all_predicates_and_source_unit_identity():
 
     assert "Inventory every source-expressed predication in grammatical order" in DSL_SYSTEM
     assert "Treat every S<n> as an independent evidence boundary" in DSL_SYSTEM
-    assert "it must not supply a separate claim" in DSL_SYSTEM
+    assert (
+        "retain the matrix predicate and its clausal subject as a separate claim"
+        in " ".join(DSL_SYSTEM.split())
+    )
     assert "do not truncate restrictive" in " ".join(DSL_SYSTEM.split())
     assert "attach it to the correct assertion" in " ".join(DSL_SYSTEM.split())
 
@@ -393,12 +383,13 @@ def test_prompt_audits_all_predicates_and_source_unit_identity():
 def test_prompt_preserves_active_argument_direction_and_shared_scope():
     from knowledge_pipeline.prompts import DSL_SYSTEM
 
-    assert "the row must not say the reverse" in DSL_SYSTEM
-    assert "Coordination words such as “and” or “or” are not predicates" in DSL_SYSTEM
-    assert "Carry shared heads/modifiers only where grammar licenses them" in " ".join(DSL_SYSTEM.split())
+    assert "it reverses source roles" in DSL_SYSTEM
+    assert "Resolve coordination by scope, not by punctuation alone" in DSL_SYSTEM
+    assert "Carry shared modifiers only where grammar licenses them" in " ".join(DSL_SYSTEM.split())
     assert "use T4 only as the last resort" in DSL_SYSTEM
-    assert "preserve each feedback-named target exactly once" in " ".join(DSL_SYSTEM.split())
-    assert "in source order" in " ".join(DSL_SYSTEM.split())
+    prompt = " ".join(DSL_SYSTEM.split())
+    assert "preserve each feedback-named target exactly once" in prompt
+    assert "in source order" in prompt
 
 
 def test_prompt_requires_claim_inventory_and_role_faithful_audit():
@@ -2139,7 +2130,7 @@ def test_prompt_catalog_exposes_only_dsl_keys():
     assert "pred=<plain>" in statement_line
     assert "obj=<plain>" in statement_line
     assert "object=" not in statement_line
-    assert len(prompt) < 37_000
+    assert len(prompt) < 43_000
     for block_type in ALL_TYPES:
         code = KEY_TO_LEGACY_INT[block_type]
         line = next(row for row in catalog.splitlines()
@@ -2150,7 +2141,7 @@ def test_prompt_catalog_exposes_only_dsl_keys():
     assert "SOURCE-UNIT EVIDENCE AND COVERAGE" in prompt
     assert "INPUT LEDGER" in prompt and "Follow UNIT_ORDER" in prompt
     assert "Treat every S<n> as an independent evidence boundary" in prompt
-    assert "it must not supply a separate claim" in prompt
+    assert "do not create a separate claim that X causes" in prompt
     assert "suffix is repeated on every row, not once for the batch" in prompt
     assert "spaces alone never separate fields" in prompt
     assert "Each type permits only its catalogued keys" in prompt
@@ -2160,9 +2151,9 @@ def test_prompt_catalog_exposes_only_dsl_keys():
     assert "The word “significant” alone is not a numeric p-value" in prompt
     assert "Inventory every source-expressed predication in grammatical order" in prompt
     assert "A heading never supplies the subject" in prompt
-    assert "the row must not say the reverse" in prompt
+    assert "it reverses source roles" in prompt
     assert "T36 is only for reported findings" in " ".join(prompt.split())
-    assert "Caption: never copy HTML or emit T49; pipeline creates it." in prompt
+    assert "Caption: never copy HTML; the pipeline creates its caption row." in prompt
     assert "BEGIN_FIELD_CATALOG" in prompt
     assert not any(term in prompt for term in (
         "Ki67", "BrdU-labeled", "Nrf2", "SOD2", "GnRH secretion",
@@ -2175,6 +2166,8 @@ def test_prompt_catalog_exposes_only_dsl_keys():
     assert f"T{expectations_code} expectations" in prompt
     assert "Use the exact DSL keys" in prompt
     assert "srcs=" in prompt and "unit=S<n>" in prompt
+    assert "Common to every type:" not in catalog
+    assert "req=" not in catalog and "anyreq=" not in catalog
 
     lines = set(catalog.splitlines())
     for block_type in ALL_TYPES:
@@ -4134,23 +4127,20 @@ async def test_text_only_relation_skips_self_loop():
     ])
     _, _, blocks = build_blocks(dsl)
     graph = build_knowledge_map(blocks)
-    assert graph["semantic_edges"] == []
+    assert graph["edges"] == []
 
 @pytest.mark.asyncio
-async def test_relation_edge_by_text_with_distinct_endpoint_rows():
+async def test_relation_row_is_evidence_not_a_progression_edge():
     dsl = "\n".join([
         "B T1 B1 | doi=10.1 | unit=S1",
         "B T22 B2 | sub=Clusterin | pred=is_a | obj=protein | unit=S1",
         "B T4 B3 | sub=aged mice | pred=show | obj=fibrosis | unit=S2",
-        "B T58 B4 | src=Clusterin | tgt=aged mice | rel=associates | unit=S1",
+        "B T58 B4 | src=Clusterin | tgt=aged mice | rel=requires | unit=S1",
     ])
     _, _, blocks = build_blocks(dsl)
     graph = build_knowledge_map(blocks)
-    by_tag = tags(blocks)
-    assert len(graph["semantic_edges"]) == 1
-    edge = graph["semantic_edges"][0]
-    assert edge["resolution"] == "text"
-    assert edge["source"] == by_tag["B2"] and edge["target"] == by_tag["B3"]
+    assert graph["edges"] == []
+    assert "requirement_groups" not in graph
 
 @pytest.mark.asyncio
 async def test_unresolved_endpoint_produces_no_edge():
@@ -4160,22 +4150,26 @@ async def test_unresolved_endpoint_produces_no_edge():
         "B T58 B4 | src=Clusterin | tgt=nonexistent result | rel=supports | unit=S1",
     ])
     _, _, blocks = build_blocks(dsl)
-    assert build_knowledge_map(blocks)["semantic_edges"] == []
+    assert build_knowledge_map(blocks)["edges"] == []
 
 @pytest.mark.asyncio
-async def test_undeclared_ref_rejected_at_builder_time():
-    source, profile, blocks = build_blocks(DSL.replace("tgtRef=B9", "tgtRef=B99"))
-    with pytest.raises(ValidationError, match="refs undeclared row B99"):
-        build_knowledge_map(blocks)
+async def test_undeclared_ref_rejected_during_structural_validation():
+    with pytest.raises(ValidationError, match="references undeclared structural row B99"):
+        build_blocks(DSL.replace("tgtRef=B9", "tgtRef=B99"))
+
 
 @pytest.mark.asyncio
-async def test_map_nodes_equal_blocks_and_display_text_present():
+async def test_map_nodes_are_semantic_rows_and_other_rows_remain_evidence():
     _, _, blocks = build_blocks()
     graph = build_knowledge_map(blocks)
     validate_map(graph, blocks)
-    assert {n["id"] for n in graph["nodes"]} == {b["instanceId"] for b in blocks}
-    assert all(n["display_text"] for n in graph["nodes"])
-    relation = graph["nodes"][5]
+    node_ids = {node["id"] for node in graph["nodes"]}
+    evidence_ids = {item["id"] for item in graph["evidence"]}
+    row_ids = {block["instanceId"] for block in blocks}
+    assert node_ids.isdisjoint(evidence_ids)
+    assert node_ids | evidence_ids == row_ids
+    assert all(node["display_text"] for node in graph["nodes"])
+    relation = next(item for item in graph["evidence"] if item["block_type"] == "relation")
     assert "Clusterin" in relation["display_text"] and "supports" in relation["display_text"]
 
 @pytest.mark.asyncio
@@ -4185,7 +4179,7 @@ async def test_quality_metrics_gates_and_review_boundaries():
     assert report["gates"]["passed"] is True
     assert report["linguistic"]["token_count"] == len(profile["tokens"])
     assert report["structural_rows"]["provenance_completeness"] == 1.0
-    assert report["knowledge_map"]["orphan_node_count"] == 6
+    assert report["knowledge_map"]["orphan_node_count"] == len(build_knowledge_map(blocks)["nodes"])
     assert 0.0 < report["quality"]["automated_score"] < 100.0
     assert report["manual_review"]["assertion_precision"] == "requires_gold_standard"
 
@@ -4267,7 +4261,7 @@ async def test_pipeline_persists_stage_timing_and_prompt_metadata():
     assert result["timing"]["nlp_seconds"] >= 0
     assert result["timing"]["llm_seconds"] >= 0
     assert result["model_steps"][0]["prompt_id"] == "KM.ARTICLE_ROWS"
-    assert result["model_steps"][0]["prompt_version"] == "147"
+    assert result["model_steps"][0]["prompt_version"] == "150"
 
 @pytest.mark.asyncio
 async def test_text_block_missing_content_is_reconstructed_from_source():

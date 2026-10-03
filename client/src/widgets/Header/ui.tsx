@@ -3,6 +3,7 @@ import Search from '../Search';
 import User from '../User';
 import Feedback from '../Feedback';
 import SubscriptionBadge from './components/SubscriptionBadge';
+import LanguageSwitcher from '../../shared/i18n/LanguageSwitcher';
 import s from './Header.module.css';
 import type { HeaderProps } from './model';
 
@@ -16,6 +17,7 @@ const Header: React.FC<HeaderProps> = ({ showSearch = true, className = '' }) =>
             }
             <SubscriptionBadge />
             <Feedback className={s.feedback} />
+            <LanguageSwitcher className={s.languageSwitcher} />
             <User className={s.user} />
         </header>
     );

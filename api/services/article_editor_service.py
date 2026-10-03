@@ -11,6 +11,7 @@ from src.schemas.block_types import coerce_block_type
 from typing import Any
 
 from neomodel import db
+from application.ports.repositories import DocumentRepositoryProtocol
 from infrastructure.neo4j.orm_models import Document
 from . import settings, get_s3_client
 
@@ -60,6 +61,15 @@ def _author_from_user_node(node: Any) -> dict[str, str] | None:
 
 
 class ArticleEditorService:
+    def __init__(
+        self, document_repository: DocumentRepositoryProtocol | None = None
+    ) -> None:
+        self._document_repository = document_repository
+
+    def _record_user_edit(self, user_uid: str | None, doc_uid: str) -> None:
+        if user_uid and self._document_repository:
+            self._document_repository.record_user_edit(user_uid, doc_uid)
+
     async def create_article(self, user_uid: str, title: str = "New Article") -> dict[str, Any]:
         article_uid = uuid8_str()
         doc = Document(
@@ -72,6 +82,7 @@ class ArticleEditorService:
             is_processed=False,
             created_by_uid=user_uid or None,
         ).save()
+        self._record_user_edit(user_uid, doc.uid)
         return {
             "uid": doc.uid,
             "title": doc.title,
@@ -142,7 +153,9 @@ class ArticleEditorService:
         blocked = {"uploaded", "uploading", "pdf_to_markdown", "processing", "error"}
         return status not in blocked
 
-    async def save_article_text(self, doc_id: str, text: str) -> dict[str, Any]:
+    async def save_article_text(
+        self, doc_id: str, text: str, user_uid: str | None = None
+    ) -> dict[str, Any]:
         status = await self.get_document_status(doc_id)
         if not self._is_editable_status(status):
             return {"success": False, "uid": doc_id, "error": "not_annotated",
@@ -164,6 +177,7 @@ class ArticleEditorService:
             "SET d.user_md_s3_key = $key, d.edit_date = datetime($now), d.current_source_hash = $source_hash",
             {"uid": doc_id, "key": md_key, "now": now, "source_hash": hashlib.sha256(text.encode("utf-8")).hexdigest()},
         )
+        self._record_user_edit(user_uid, doc_id)
         return {"success": True, "uid": doc_id, "text_length": len(text)}
 
     async def get_article_text(self, doc_id: str) -> dict[str, Any]:
@@ -263,6 +277,7 @@ class ArticleEditorService:
                 {"batch": chunk, "doc_id": doc_id},
             )
 
+        self._record_user_edit(user_uid, doc_id)
         return {"success": True, "uid": doc_id, "statements_count": len(content_uuids),
                 "statement_ids": content_uuids}
 
@@ -398,6 +413,7 @@ class ArticleEditorService:
         )
 
         derived = self._derive_and_persist_statements(doc_id, blocks, old_statements, user_uid)
+        self._record_user_edit(user_uid, doc_id)
 
         return {
             "success": True,
@@ -516,13 +532,16 @@ class ArticleEditorService:
 
         return derived
 
-    async def update_article_title(self, doc_id: str, title: str) -> dict[str, Any]:
+    async def update_article_title(
+        self, doc_id: str, title: str, user_uid: str | None = None
+    ) -> dict[str, Any]:
         now = datetime.now(timezone.utc).isoformat()
         db.cypher_query(
             "MATCH (d:Document {uid: $uid}) "
             "SET d.title = $title, d.original_filename = $title, d.edit_date = datetime($now)",
             {"uid": doc_id, "title": title, "now": now},
         )
+        self._record_user_edit(user_uid, doc_id)
         return {"success": True, "uid": doc_id, "title": title}
 
     async def get_blocks(self, doc_id: str) -> dict[str, Any]:

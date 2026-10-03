@@ -272,6 +272,7 @@ async def _ensure_document_indexes():
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.has_full_text)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.has_full_text, d.uid)",
         "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.source, d.uid)",
+        "CREATE INDEX IF NOT EXISTS FOR (d:Document) ON (d.created_by_uid)",
     ]
     try:
         from neomodel import db

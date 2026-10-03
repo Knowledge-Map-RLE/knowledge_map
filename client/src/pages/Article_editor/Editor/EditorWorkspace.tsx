@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import StatementsPanel from './StatementsPanel';
 import PipelineVersions from './PipelineVersions';
 import PipelineStructuralRows, { type StructuralRow } from './PipelineStructuralRows';
@@ -40,6 +41,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
     onSave, saveStatus, articleUuid, articleAuthor, onUploadImage, onCreateNew,
     isGold = false, isGoldStandard = false, onFixGold,
 }) => {
+    const { t } = useTranslation();
     const [selectedStatementIdx, setSelectedStatementIdx] = useState<number | null>(null);
     const [selectedStatementStmt, setSelectedStatementStmt] = useState<KnowledgeStatement | null>(null);
     const [highlightIndex, setHighlightIndex] = useState<number | null>(null);
@@ -76,10 +78,10 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         [selectedStatementIdx, selectedStatementStmt],
     );
 
-    const saveLabel = saveStatus === 'saving' ? '\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435...'
-        : saveStatus === 'saved' ? '\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E'
-        : saveStatus === 'error' ? '\u041E\u0448\u0438\u0431\u043A\u0430'
-        : '\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C';
+    const saveLabel = saveStatus === 'saving' ? t('articleEditor.workspace.save.saving')
+        : saveStatus === 'saved' ? t('articleEditor.workspace.save.saved')
+        : saveStatus === 'error' ? t('articleEditor.workspace.save.error')
+        : t('articleEditor.workspace.save.action');
 
     const handleOpenTriplets = useCallback(() => setShowTriplets(true), []);
     const handleCloseTriplets = useCallback(() => setShowTriplets(false), []);
@@ -104,16 +106,16 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         setFixMessage('');
         const error = await onFixGold();
         setFixStatus(error ? 'error' : 'ok');
-        setFixMessage(error || 'Эталон сохранён в eval/gold — закоммитьте изменения');
+        setFixMessage(error || t('articleEditor.workspace.gold.saved'));
         if (fixTimerRef.current !== null) window.clearTimeout(fixTimerRef.current);
         fixTimerRef.current = window.setTimeout(() => setFixStatus('idle'), 6000);
-    }, [onFixGold, fixStatus]);
+    }, [onFixGold, fixStatus, t]);
 
-    const fixLabel = fixStatus === 'busy' ? '\u0424\u0438\u043A\u0441\u0430\u0446\u0438\u044F...'
-        : fixStatus === 'ok' ? '\u042D\u0442\u0430\u043B\u043E\u043D \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D'
-        : fixStatus === 'error' ? '\u041E\u0448\u0438\u0431\u043A\u0430 \u0444\u0438\u043A\u0441\u0430\u0446\u0438\u0438'
-        : isGold ? '\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u044D\u0442\u0430\u043B\u043E\u043D'
-        : '\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043A\u0430\u043A \u044D\u0442\u0430\u043B\u043E\u043D';
+    const fixLabel = fixStatus === 'busy' ? t('articleEditor.workspace.gold.saving')
+        : fixStatus === 'ok' ? t('articleEditor.workspace.gold.savedLabel')
+        : fixStatus === 'error' ? t('articleEditor.workspace.gold.error')
+        : isGold ? t('articleEditor.workspace.gold.update')
+        : t('articleEditor.workspace.gold.saveAs');
 
     const handleCopyAll = useCallback(async () => {
         if (rawStatements.length === 0) return;
@@ -146,10 +148,12 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         setHighlightIndex(index);
     }, []);
 
-    // v2-блоки не золотого эталона — инспекция версий пайплайна.
-    if (isV2Blocks && articleUuid && !isGoldStandard) {
+    // Для обычных v2-статей вкладка редактора открывает инспекцию версий.
+    // GOLD-статьи показывают сами структурные строки.
+    if (isV2Blocks && articleUuid && !isGold && !isGoldStandard) {
         return <PipelineVersions docId={articleUuid} />;
     }
+    const showPipelineStructuralRows = isGoldStandard || (isGold && isV2Blocks);
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
             <div style={{
@@ -165,19 +169,19 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                         border: 'none', borderRadius: 4, cursor: 'pointer',
                     }}
                 >
-                    + Новая статья
+                    {t('articleEditor.workspace.newArticle')}
                 </button>
                 <div style={{ flex: 1 }} />
                 {isGoldStandard ? (
                     <span
-                        title="Статья — эталон полного пайплайна (is_gold_standard=true); блоки неизменяемы"
+                        title={t('articleEditor.workspace.gold.readOnlyTitle')}
                         style={{
                             padding: '4px 12px', fontSize: 12, fontWeight: 600,
                             background: '#ecfdf5', color: '#047857',
                             border: '1px solid #a7f3d0', borderRadius: 4,
                         }}
                     >
-                        GOLD pipeline · только чтение
+                        {t('articleEditor.workspace.gold.readOnly')}
                     </span>
                 ) : (
                     <button
@@ -200,7 +204,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                         <button
                             onClick={handleFixGold}
                             disabled={fixStatus === 'busy' || blocks.length === 0}
-                            title="Сохранить текущие строки как золотой эталон (только администраторы)"
+                            title={t('articleEditor.workspace.gold.saveTitle')}
                             style={{
                                 padding: '4px 12px', fontSize: 12, fontWeight: 500,
                                 background: fixStatus === 'busy' ? '#d1d5db'
@@ -215,14 +219,14 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                         </button>
                         {isGold && (
                             <span
-                                title="Статья является золотым эталоном (eval/gold)"
+                                title={t('articleEditor.workspace.gold.badgeTitle')}
                                 style={{
                                     padding: '2px 8px', fontSize: 11, fontWeight: 600,
                                     background: '#ecfdf5', color: '#047857',
                                     border: '1px solid #a7f3d0', borderRadius: 10,
                                 }}
                             >
-                                эталон
+                                {t('articleEditor.workspace.gold.badge')}
                             </span>
                         )}
                         {fixMessage && (
@@ -246,7 +250,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                             <line x1="4" y1="18" x2="17" y2="18" />
                         </svg>
                         WYSIWYG
-                        <AuthorBadge author={articleAuthor ?? null} label="Автор статьи" />
+                        <AuthorBadge author={articleAuthor ?? null} label={t('articleEditor.workspace.articleAuthor')} />
                         <span className={styles.editorColumnHint}>
                             {'/\u2014 \u043A\u043E\u043C\u0430\u043D\u0434\u044B, Tab \u2014 \u043F\u043E\u043B\u044F, Ctrl+Z'}
                         </span>
@@ -254,7 +258,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                             className={styles.editorHeaderIconBtn}
                             onClick={handleCopyMarkdown}
                             disabled={!text.trim()}
-                            title="Скопировать Markdown в буфер обмена"
+                            title={t('articleEditor.workspace.copyMarkdown')}
                         >
                             {copiedMarkdown ? (
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -270,19 +274,20 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                         <button
                             className={styles.sbeTripletsBtn}
                             onClick={handleOpenTriplets}
-                            title="Показать триплеты"
+                            title={t('articleEditor.workspace.showTriplets')}
                         >
-                            {'\u0422\u0440\u0438\u043F\u043B\u0435\u0442\u044B'}
+                            {t('articleEditor.workspace.triplets')}
                             {statements.length > 0 && (
                                 <span className={styles.sbeTripletsCount}>{statements.length}</span>
                             )}
                         </button>
                     </div>
-                    {isGoldStandard ? (
+                    {showPipelineStructuralRows ? (
                         <PipelineStructuralRows
                             rows={blocks as StructuralRow[]}
                             nodes={[]}
                             busy={false}
+                            appearance="document"
                         />
                     ) : (
                         <WysiwygEditor
@@ -310,7 +315,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                                 <rect x="9" y="3" width="6" height="4" rx="1" />
                                 <path d="M9 14l2 2 4-4" />
                             </svg>
-                            {'\u0422\u0440\u0438\u043F\u043B\u0435\u0442\u044B'}
+                            {t('articleEditor.workspace.triplets')}
                             <span className={styles.tripletModalCount}>
                                 {statements.length > 0
                                     ? statements.length
@@ -326,14 +331,14 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                                 className={styles.tripletCopyBtn}
                                 onClick={handleCopyAll}
                                 disabled={rawStatements.length === 0}
-                                title="Копировать все триплеты в буфер обмена"
+                                title={t('articleEditor.workspace.copyAllTriplets')}
                             >
-                                {copiedAll ? '\u2713 \u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043E' : '\u2398 \u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0441\u0435'}
+                                {copiedAll ? t('articleEditor.workspace.copied') : t('articleEditor.workspace.copyAll')}
                             </button>
                             <button
                                 className={styles.tripletCloseBtn}
                                 onClick={handleCloseTriplets}
-                                title="Закрыть"
+                                title={t('common.close')}
                             >
                                 &times;
                             </button>

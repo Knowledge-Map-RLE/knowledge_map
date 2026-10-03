@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/index.css'
 import './styles/fonts.css'
+import './shared/i18n'
 import App from './App.tsx'
 import { startTelemetry } from './services/telemetry'
 

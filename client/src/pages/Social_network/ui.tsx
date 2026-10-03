@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../../widgets/Header';
 import { useAuth } from '../../entities/auth';
@@ -12,6 +13,7 @@ import { NetworkGraph } from './components/NetworkGraph';
 import s from './Social_network.module.css';
 
 const SocialNetworkUI: React.FC = () => {
+    const { t } = useTranslation();
     const { isAuthLoading, user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -48,7 +50,7 @@ const SocialNetworkUI: React.FC = () => {
             <div className={s.page}>
                 <Header className={s.header} />
                 <main className={s.main}>
-                    <div className={s.gateCard}>Загрузка…</div>
+                    <div className={s.gateCard}>{t('socialNetwork.loading')}</div>
                 </main>
             </div>
         );
@@ -70,7 +72,7 @@ const SocialNetworkUI: React.FC = () => {
                                     onClick={() => setActiveTab(tab.id)}
                                 >
                                     <span className={s.tabIcon}><tab.icon /></span>
-                                    {tab.label}
+                                    {t(`socialNetwork.tabs.${tab.id}`)}
                                 </button>
                             ))}
                         </nav>

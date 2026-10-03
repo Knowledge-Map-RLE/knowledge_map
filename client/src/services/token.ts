@@ -8,6 +8,8 @@
 const LOCAL_STORAGE_KEY = 'auth_token';
 const SESSION_STORAGE_KEY = 'auth_token_session';
 
+export const AUTH_SESSION_INVALIDATED_EVENT = 'km:auth-session-invalidated';
+
 export function saveToken(token: string, remember: boolean): void {
     clearToken();
     if (remember) {
@@ -24,4 +26,11 @@ export function getToken(): string | null {
 export function clearToken(): void {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     sessionStorage.removeItem(SESSION_STORAGE_KEY);
+}
+
+/** Invalidate only the session used by the rejected request, preserving a newer login. */
+export function invalidateToken(expectedToken: string): void {
+    if (getToken() !== expectedToken) return;
+    clearToken();
+    window.dispatchEvent(new Event(AUTH_SESSION_INVALIDATED_EVENT));
 }

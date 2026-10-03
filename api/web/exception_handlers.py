@@ -31,6 +31,8 @@ from domain.exceptions import (
     KnowledgeMapError,
 )
 
+logger = logging.getLogger(__name__)
+
 
 async def not_found_handler(request: Request, exc: NotFoundError) -> JSONResponse:
     return JSONResponse(status_code=404, content={"detail": str(exc)})
@@ -61,6 +63,8 @@ async def document_exists_handler(
 
 
 async def auth_failed_handler(request: Request, exc: AuthenticationFailed) -> JSONResponse:
+    logger.warning("Authentication rejected method=%s path=%s reason=%s",
+                   request.method, request.url.path, str(exc))
     return JSONResponse(status_code=401, content={"detail": str(exc)})
 
 

@@ -1,4 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../entities/auth';
 import s from './Document_downloader_ui.module.css';
 import {
     uploadPdfForExtraction, listDocuments, searchDocuments as apiSearchDocuments,
@@ -27,6 +29,7 @@ interface PDFDocument {
     source?: string;
     is_gold_standard?: boolean;
     gold_standard_source_pmc_id?: string;
+    current_user_last_edited_at?: string | null;
 }
 
 export interface DocumentListHandle {
@@ -55,6 +58,10 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
     setError,
     goldSlugsByUid
 }, ref) {
+    const { t } = useTranslation();
+    const { user, isAuthLoading } = useAuth();
+    const userUid = user?.uid ?? null;
+    const currentUserUidRef = useRef(userUid);
     const [documents, setDocuments] = useState<PDFDocument[]>([]);
     const [fullTextCount, setFullTextCount] = useState(0);
     const [fullTextOnly, setFullTextOnly] = useState(true);
@@ -94,21 +101,34 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
 
     const abortRef = useRef<AbortController | null>(null);
 
+    React.useLayoutEffect(() => {
+        currentUserUidRef.current = userUid;
+        abortRef.current?.abort();
+        searchAbortRef.current?.abort();
+        pubmedIdAbortRef.current?.abort();
+        setDocuments([]);
+        setSearchResults(null);
+        return () => {
+            abortRef.current?.abort();
+            searchAbortRef.current?.abort();
+            pubmedIdAbortRef.current?.abort();
+        };
+    }, [userUid]);
+
     const loadDocuments = useCallback(async (): Promise<PDFDocument[]> => {
+        if (isAuthLoading || currentUserUidRef.current !== userUid) return [];
         // Отменяем предыдущий висячий запрос
         if (abortRef.current) abortRef.current.abort();
         const controller = new AbortController();
         abortRef.current = controller;
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
 
         try {
-            const timeoutMs = 60000;
-            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
             const data = await listDocuments(0, 100, controller.signal, fullTextOnly, goldOnly);
-            clearTimeout(timeoutId);
+            if (controller.signal.aborted || abortRef.current !== controller || currentUserUidRef.current !== userUid) return [];
 
             if (!data?.success || !Array.isArray(data.documents)) {
-                setError('Ошибка загрузки документов');
+                setError(t('documents.errors.list'));
                 return [];
             }
             const total = data.total_count ?? data.documents.length;
@@ -135,6 +155,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                         source: d.source,
                         is_gold_standard: d.is_gold_standard,
                         gold_standard_source_pmc_id: d.gold_standard_source_pmc_id,
+                        current_user_last_edited_at: d.current_user_last_edited_at,
                     } as PDFDocument;
                 } catch {
                     return {
@@ -151,18 +172,23 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             (window as any).__documents_total = total;
             return mapped;
         } catch (err: any) {
+            if (controller.signal.aborted || abortRef.current !== controller || currentUserUidRef.current !== userUid) return [];
             if (err.name === 'AbortError') {
                 console.warn('Загрузка документов прервана по таймауту');
                 return [];
             }
             setError(`Ошибка загрузки документов: ${err instanceof Error ? err.message : String(err)}`);
             return [];
+        } finally {
+            clearTimeout(timeoutId);
+            if (abortRef.current === controller) abortRef.current = null;
         }
-    }, [setError, fullTextOnly, goldOnly]);
+    }, [setError, fullTextOnly, goldOnly, t, isAuthLoading, userUid]);
 
     useImperativeHandle(ref, () => ({ reloadDocuments: () => loadDocuments().then(() => {}) }));
     useEffect(() => {
-        loadDocuments();
+        void loadDocuments();
+        return () => abortRef.current?.abort();
     }, [loadDocuments]);
 
     useEffect(() => {
@@ -253,7 +279,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 }
                 onDocumentsChange();
             } else {
-                setError(resp.message || 'Ошибка загрузки статьи');
+                setError(resp.message || t('documents.errors.articleLoad'));
             }
         } catch (err) {
             setError(`Ошибка: ${err instanceof Error ? err.message : String(err)}`);
@@ -285,12 +311,15 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
 
     // --- Unified search: документы (fuzzy APOC), PubMed текст, PMID/PMCID ---
     useEffect(() => {
+        let active = true;
         if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
         if (pubmedDebounceRef.current) clearTimeout(pubmedDebounceRef.current);
         if (pubmedIdDebounceRef.current) clearTimeout(pubmedIdDebounceRef.current);
         if (searchAbortRef.current) searchAbortRef.current.abort();
         if (pubmedAbortRef.current) pubmedAbortRef.current.abort();
         if (pubmedIdAbortRef.current) pubmedIdAbortRef.current.abort();
+        setIsPubMedIdSearching(false);
+        if (isAuthLoading) return;
 
         const q = searchQuery.trim();
         if (q.length < 3) {
@@ -314,6 +343,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 setIsPubMedIdSearching(true);
                 try {
                     const localResp = await apiSearchDocuments(q, 0, 100, controller.signal, fullTextOnly);
+                    if (!active || controller.signal.aborted || currentUserUidRef.current !== userUid) return;
                     const localDocs = localResp?.success && Array.isArray(localResp.documents)
                         ? localResp.documents.map((d: any) => ({
                             uid: d.doc_id,
@@ -330,6 +360,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                             source: d.source,
                             is_gold_standard: d.is_gold_standard,
                             gold_standard_source_pmc_id: d.gold_standard_source_pmc_id,
+                            current_user_last_edited_at: d.current_user_last_edited_at,
                         }) as PDFDocument)
                         : [];
                     searchAbortRef.current?.abort();
@@ -338,15 +369,19 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
 
                     if (localDocs.length === 0) {
                         const resp = await getByPubMedId(q, controller.signal);
+                        if (!active || controller.signal.aborted || currentUserUidRef.current !== userUid) return;
                         setPubmedIdResult(resp.results?.[0] || null);
                     }
                 } catch (err: any) {
+                    if (!active || controller.signal.aborted || currentUserUidRef.current !== userUid) return;
                     if (err.name === 'AbortError') return;
                     console.error('PubMed ID search error:', err);
                     setPubmedIdResult(null);
                 } finally {
                     clearTimeout(timeoutId);
-                    setIsPubMedIdSearching(false);
+                    if (active && pubmedIdAbortRef.current === controller && currentUserUidRef.current === userUid) {
+                        setIsPubMedIdSearching(false);
+                    }
                 }
             }, 400);
         } else {
@@ -358,6 +393,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 searchAbortRef.current = controller;
                 try {
                     const data = await apiSearchDocuments(q, 0, 100, controller.signal, fullTextOnly);
+                    if (!active || controller.signal.aborted || currentUserUidRef.current !== userUid) return;
                     if (!data?.success || !Array.isArray(data.documents)) {
                         setSearchResults([]);
                         return;
@@ -377,9 +413,11 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                         source: d.source,
                         is_gold_standard: d.is_gold_standard,
                         gold_standard_source_pmc_id: d.gold_standard_source_pmc_id,
+                        current_user_last_edited_at: d.current_user_last_edited_at,
                     } as PDFDocument));
                     setSearchResults(mapped);
                 } catch (err: any) {
+                    if (!active || controller.signal.aborted || currentUserUidRef.current !== userUid) return;
                     if (err.name === 'AbortError') return;
                     console.warn('Ошибка поиска документов:', err);
                     setSearchResults([]);
@@ -388,6 +426,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
         }
 
         return () => {
+            active = false;
             if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
             if (pubmedDebounceRef.current) clearTimeout(pubmedDebounceRef.current);
             if (pubmedIdDebounceRef.current) clearTimeout(pubmedIdDebounceRef.current);
@@ -395,16 +434,13 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             if (pubmedAbortRef.current) pubmedAbortRef.current.abort();
             if (pubmedIdAbortRef.current) pubmedIdAbortRef.current.abort();
         };
-    }, [searchQuery, fullTextOnly]);
+    }, [searchQuery, fullTextOnly, isAuthLoading, userUid]);
 
     // --- Document list: search results if query >=3, else full list ---
     const filteredDocuments = searchQuery.trim().length >= 3
         ? (searchResults ?? documents)
         : documents.slice(0, 100);
-    const sortedDocuments = [...filteredDocuments].sort((a, b) => {
-        if (a.is_processed === b.is_processed) return 0;
-        return a.is_processed ? -1 : 1;
-    });
+    const sortedDocuments = filteredDocuments;
     const hasMoreDocuments = searchQuery.trim().length < 3 && documents.length > 100;
 
     // --- Дедупликация: уже загруженные статьи не показываем в результатах PubMed ---
@@ -431,7 +467,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
 
     // --- PDF upload ---
     const handleFileUpload = async (file: File) => {
-        if (!file.type.startsWith('application/pdf')) { setError('Пожалуйста, выберите PDF файл'); return; }
+        if (!file.type.startsWith('application/pdf')) { setError(t('documents.errors.pdfOnly')); return; }
         setIsUploading(true);
         setError(null);
         const tempDocId = 'upload_' + Date.now();
@@ -490,11 +526,11 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                     setTimeout(() => pollProgress(newDoc.uid), 2000);
                 }
             } else {
-                setError(result.message || 'Ошибка загрузки файла');
+                setError(result.message || t('documents.errors.upload'));
                 setDocuments(prev => prev.filter(doc => doc.uid !== tempDocId));
             }
         } catch {
-            setError('Ошибка загрузки файла');
+            setError(t('documents.errors.upload'));
             setDocuments(prev => prev.filter(doc => doc.uid !== tempDocId));
         } finally {
             setIsUploading(false);
@@ -517,22 +553,22 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
     };
     const getStatusText = (status: string) => {
         switch (status) {
-            case 'uploading': return 'Загрузка';
-            case 'pdf_to_markdown': return 'Обрабатывается';
-            case 'ready_for_annotation': return 'Готов к аннотированию';
-            case 'processing': return 'Обрабатывается';
-            case 'annotated': return 'Аннотирован';
-            case 'error': return 'Ошибка';
-            default: return 'Неизвестно';
+            case 'uploading': return t('documents.status.uploading');
+            case 'pdf_to_markdown': return t('documents.status.processing');
+            case 'ready_for_annotation': return t('documents.status.ready');
+            case 'processing': return t('documents.status.processing');
+            case 'annotated': return t('documents.status.annotated');
+            case 'error': return t('documents.status.error');
+            default: return t('documents.status.unknown');
         }
     };
     const getProgressText = (status: string, docId: string) => {
         const progress = progressMap[docId];
         const message = progressMessageMap[docId];
-        if (status === 'uploading') return `Загружено ${progress ?? 0}%`;
+        if (status === 'uploading') return t('documents.progress.uploaded', { progress: progress ?? 0 });
         if (status === 'pdf_to_markdown' || status === 'processing') {
             if (message) return `${progress ?? 0}% — ${message}`;
-            return `Обработано ${progress ?? 0}%`;
+            return t('documents.progress.processed', { progress: progress ?? 0 });
         }
         return null;
     };
@@ -564,13 +600,13 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             const goldTag = doc.is_gold_standard
                 ? <span
                     className="text-emerald-700 text-[10px] font-semibold ml-1"
-                    title={`Эталон полного пайплайна; источник: ${doc.gold_standard_source_pmc_id || doc.pmc_id || 'PMC'}`}
+                    title={t('documents.gold.fullPipelineTitle', { source: doc.gold_standard_source_pmc_id || doc.pmc_id || 'PMC' })}
                   >GOLD pipeline</span>
                 : goldSlug
                 ? <span
                     className="text-emerald-700 text-[10px] font-semibold ml-1"
-                    title={`Золотой эталон: eval/gold/${goldSlug}`}
-                  >эталон</span>
+                    title={t('documents.gold.referenceTitle', { slug: goldSlug })}
+                  >{t('documents.gold.reference')}</span>
                 : null;
             return (
                 <div
@@ -603,9 +639,9 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             <div
                 className={s.docItem}
                 onClick={() => handlePubMedClick(r)}
-                title={isIngesting ? 'Загрузка статьи...' : 'Нажмите, чтобы загрузить и открыть'}
+                title={isIngesting ? t('documents.pubmed.loading') : t('documents.pubmed.openToImport')}
             >
-                <span className={`${s.statusIndicator} ${s.uploaded}`} title="Внешний источник (PubMed)"></span>
+                <span className={`${s.statusIndicator} ${s.uploaded}`} title={t('documents.pubmed.source')}></span>
                 <div className={s.docItemContent}>
                     <p className={s.docItemTitle} title={r.title}>{r.title}</p>
                 </div>
@@ -640,8 +676,8 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             {/* Верхний блок: загруженные документы */}
             <div className={s.topBlock}>
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-base font-bold">Документы</h2>
-                    <label className="text-xs text-emerald-700 font-semibold flex items-center gap-1 cursor-pointer" title="Показать 20 эталонов полного article-pipeline">
+                    <h2 className="text-base font-bold">{t('documents.title')}</h2>
+                    <label className="text-xs text-emerald-700 font-semibold flex items-center gap-1 cursor-pointer" title={t('documents.gold.filterTitle')}>
                         <input type="checkbox" checked={goldOnly} onChange={(e) => setGoldOnly(e.target.checked)} />
                         GOLD pipeline
                     </label>
@@ -658,10 +694,10 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                     {isUploading ? (
                         <div className="flex flex-col items-center">
                             <div className={s.loadingSpinner}></div>
-                            <p className="mt-2 text-sm">Загрузка файла...</p>
+                            <p className="mt-2 text-sm">{t('documents.upload.loading')}</p>
                         </div>
                     ) : (
-                        <p className="text-sm">Перетащите PDF или нажмите для выбора</p>
+                        <p className="text-sm">{t('documents.upload.dropzone')}</p>
                     )}
                 </div>
 
@@ -674,7 +710,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 <input
                     type="text"
                     className={`${s.searchInput} mt-2`}
-                    placeholder="Поиск: название, DOI, PMID или PMCID..."
+                    placeholder={t('documents.search.placeholder')}
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                 />
@@ -686,7 +722,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                         onChange={e => setFullTextOnly(e.target.checked)}
                         className="accent-blue-600"
                     />
-                    Только с полными текстами
+                    {t('documents.search.fullTextOnly')}
                 </label>
 
                 <div className={s.docListWrap}>
@@ -698,7 +734,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                     <div className={s.fileList}>
                         {combinedList.length === 0 ? (
                             <p className="text-xs text-gray-300 p-2">
-                                {searchQuery.trim().length >= 3 ? 'Ничего не найдено' : 'Введите запрос или ID статьи'}
+                                {searchQuery.trim().length >= 3 ? t('documents.search.notFound') : t('documents.search.enterQuery')}
                             </p>
                         ) : (
                             combinedList.map(item => (
@@ -714,14 +750,14 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
                 </div>
                 {searchQuery.trim().length >= 3 ? (
                     <p className={s.docListHint}>
-                        Найдено {sortedDocuments.length} документов по запросу «{searchQuery}».
-                        {fullTextCount > 0 && <> С полным текстом: {fullTextCount}.</>}
+                        {t('documents.search.results', { count: sortedDocuments.length, query: searchQuery })}
+                        {fullTextCount > 0 && <> {t('documents.search.fullTextCount', { count: fullTextCount })}</>}
                     </p>
                 ) : (hasMoreDocuments || (window as any).__documents_total > 100) && (
                     <p className={s.docListHint}>
-                        Показано {Math.min(100, documents.length)} из {(window as any).__documents_total || documents.length}.
-                        {fullTextCount > 0 && <> С полным текстом: {fullTextCount}.</>}
-                        Введите запрос для поиска.
+                        {t('documents.search.shown', { shown: Math.min(100, documents.length), total: (window as any).__documents_total || documents.length })}
+                        {fullTextCount > 0 && <> {t('documents.search.fullTextCount', { count: fullTextCount })}</>}
+                        {t('documents.search.enterToSearch')}
                     </p>
                 )}
             </div>

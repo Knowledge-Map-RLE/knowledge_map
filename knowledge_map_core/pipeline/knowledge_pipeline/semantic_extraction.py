@@ -7,7 +7,7 @@ from collections import Counter
 from decimal import Decimal, InvalidOperation
 
 from knowledge_contracts.block_dsl import (DIRECT_ASSERTION_TYPES, DSL_FIELDS,
-                                           subject_operation_issues)
+                                           referenced_tags, subject_operation_issues)
 from knowledge_contracts.block_types import KEY_TO_LEGACY_INT, LEGACY_INT_TO_KEY
 from knowledge_contracts.validation import require, ValidationError
 from .dsl_rows import (escape_dsl_value, missing_required_fields, parse_dsl_rows,
@@ -356,7 +356,7 @@ def _missing_source_numeric_mentions(
         unit_id = str(row["data"]["unit"])
         represented = actual.setdefault(unit_id, set())
         for spec in DSL_FIELDS[row["blockType"]].values():
-            if spec.kind in {"ref", "refs"}:
+            if spec.kind in {"ref", "refs", "ref_groups"}:
                 continue
             value = row["data"].get(spec.json_field)
             if value is None or value == "":
@@ -534,7 +534,8 @@ def _remove_invalid_source_only_references(dsl_text: str) -> str:
         for segment in _split_segments(match.group("fields")):
             key, separator, value = segment.partition("=")
             spec = by_short.get(key.strip().casefold()) if separator else None
-            if (spec is not None and not spec.required and spec.kind in {"ref", "refs"}
+            if (spec is not None and not spec.required
+                    and spec.kind in {"ref", "refs", "ref_groups"}
                     and _SOURCE_ONLY_REFERENCE_VALUE_RE.fullmatch(value.strip())):
                 removed_keys.append(key.strip())
                 continue
@@ -759,6 +760,10 @@ def _render_repaired_row(row: dict, updates: dict[str, object] | None = None,
             value = "true" if value else "false"
         elif spec.kind in {"refs", "strs"}:
             value = "[" + ",".join(str(item) for item in value) + "]"
+        elif spec.kind == "ref_groups":
+            value = "[" + ",".join(
+                "[" + ",".join(str(item) for item in group) + "]" for group in value
+            ) + "]"
         segments.append(f"{dsl_key}={escape_dsl_value(str(value))}")
     segments.append(f"unit={data['unit']}")
     return " | ".join(segments)
@@ -3563,13 +3568,15 @@ def _remove_exact_goal_signposting_duplicates(
     referenced_tags: set[str] = set()
     for row in rows:
         for spec in DSL_FIELDS.get(row.get("blockType", ""), {}).values():
-            if spec.kind not in {"ref", "refs"}:
+            if spec.kind not in {"ref", "refs", "ref_groups"}:
                 continue
             value = row.get("data", {}).get(spec.json_field)
-            values = value if isinstance(value, (list, tuple, set)) else [value]
-            for item in values:
-                if isinstance(item, str) and re.fullmatch(r"B\d+", item):
-                    referenced_tags.add(item)
+            if spec.kind == "ref_groups":
+                values = [item for group in value or [] for item in group]
+            else:
+                values = value if isinstance(value, (list, tuple, set)) else [value]
+            referenced_tags.update(item for item in values
+                                   if isinstance(item, str) and re.fullmatch(r"B\d+", item))
 
     removed_tags = sorted(
         candidates - referenced_tags,
@@ -3594,13 +3601,17 @@ def _renumber_dsl_row_tags(rows: list[dict], warnings: list[dict] | None = None)
             row["tag"] = new_tag
             row.setdefault("data", {})["tag"] = new_tag
         for spec in DSL_FIELDS.get(row.get("blockType", ""), {}).values():
-            if spec.kind not in {"ref", "refs"}:
+            if spec.kind not in {"ref", "refs", "ref_groups"}:
                 continue
             value = row.get("data", {}).get(spec.json_field)
             if spec.kind == "ref" and isinstance(value, str):
                 row["data"][spec.json_field] = tag_map.get(value, value)
             elif spec.kind == "refs" and isinstance(value, (list, tuple)):
                 row["data"][spec.json_field] = [tag_map.get(item, item) for item in value]
+            elif spec.kind == "ref_groups" and isinstance(value, (list, tuple)):
+                row["data"][spec.json_field] = [
+                    [tag_map.get(item, item) for item in group] for group in value
+                ]
 
     for finding in warnings or []:
         old_tag = str(finding.get("tag") or "")
@@ -3979,12 +3990,7 @@ def _without_model_managed_rows(rows: list[dict], dsl_by_tag: dict[str, str]):
 def _reference_targets(row: dict) -> set[str]:
     """Return structural row tags referenced by a normalized DSL row."""
     targets: set[str] = set()
-    for spec in DSL_FIELDS[row["blockType"]].values():
-        value = row["data"].get(spec.json_field)
-        if spec.kind == "ref" and isinstance(value, str):
-            targets.add(value)
-        elif spec.kind == "refs" and isinstance(value, list):
-            targets.update(item for item in value if isinstance(item, str))
+    targets.update(referenced_tags(row["blockType"], row["data"]))
     return targets
 
 
@@ -4064,6 +4070,9 @@ def _merge_audit_rows_preserving_coverage(
                 data[field] = audit_tag_map.get(value, value)
             elif spec.kind == "refs" and isinstance(value, list):
                 data[field] = [audit_tag_map.get(item, item) for item in value]
+            elif spec.kind == "ref_groups" and isinstance(value, list):
+                data[field] = [[audit_tag_map.get(item, item) for item in group]
+                               for group in value]
         merged_audit.append({**row, "tag": data["tag"], "data": data})
 
     # Candidate references resolve to an audited replacement when it kept the
@@ -4077,6 +4086,9 @@ def _merge_audit_rows_preserving_coverage(
                 data[field] = audit_tag_map[value]
             elif spec.kind == "refs" and isinstance(value, list):
                 data[field] = [audit_tag_map.get(item, item) for item in value]
+            elif spec.kind == "ref_groups" and isinstance(value, list):
+                data[field] = [[audit_tag_map.get(item, item) for item in group]
+                               for group in value]
 
     # A candidate ref is only retained when its target is available in the
     # merged output; tags shared with audit rows resolve to the audited row.

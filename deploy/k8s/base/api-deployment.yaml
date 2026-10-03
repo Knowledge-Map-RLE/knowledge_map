@@ -25,6 +25,8 @@ spec:
             - secretRef:
                 name: app-secrets
           env:
+            - name: ARTICLE_PIPELINE_GOLD_DIR
+              value: "/data/article_pipeline_gold"
             - name: LAYOUT_SERVICE_TIMEOUT
               value: "300"
             - name: GRAPH_LAYOUT_TIMEOUT

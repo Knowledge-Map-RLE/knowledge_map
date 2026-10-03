@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { BlockDataValue, BlockFieldDef } from '../../model';
 import { withBase } from '../../../../services/api/http';
 import { useWysiwygApi, type UuidRef } from './WysiwygContext';
@@ -84,17 +84,36 @@ function renderReadOnlyValue(field: BlockFieldDef, value: BlockDataValue, refs: 
 const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value, readOnly = false }) => {
     const api = useWysiwygApi();
     const [editingTagIdx, setEditingTagIdx] = useState<number | null>(null);
+    const [isSelectOptionsOpen, setIsSelectOptionsOpen] = useState(false);
+    const [selectFilter, setSelectFilter] = useState('');
+    const [activeSelectOption, setActiveSelectOption] = useState(-1);
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const selectOptionsId = useId();
 
     const str = typeof value === 'string'
         ? value
         : typeof value === 'number' ? String(value) : '';
 
     const autoRef = useAutoWidth(str);
+    const normalizedSelectFilter = selectFilter.trim().toLocaleLowerCase();
+    const visibleSelectOptions = useMemo(() => {
+        const options = field.options ?? [];
+        return normalizedSelectFilter
+            ? options.filter((option) => option.toLocaleLowerCase().includes(normalizedSelectFilter))
+            : options;
+    }, [field.options, normalizedSelectFilter]);
+    const showSelectOptions = isSelectOptionsOpen && visibleSelectOptions.length > 0;
 
     const onChange = useCallback((v: BlockDataValue) => {
         api.setField(lineId, field.key, v);
     }, [api, lineId, field.key]);
+
+    const chooseSelectOption = useCallback((option: string) => {
+        onChange(option);
+        setSelectFilter('');
+        setActiveSelectOption(-1);
+        setIsSelectOptionsOpen(false);
+    }, [onChange]);
 
     const textChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         onChange(e.target.value);
@@ -114,6 +133,39 @@ const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value, readOnl
     const onFocus = useCallback(() => {
         api.beginFieldEdit(lineId, field.key);
     }, [api, lineId, field.key]);
+
+    const selectKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Escape' && isSelectOptionsOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsSelectOptionsOpen(false);
+            setActiveSelectOption(-1);
+            return;
+        }
+        if (visibleSelectOptions.length > 0 && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsSelectOptionsOpen(true);
+            setActiveSelectOption((current) => {
+                if (e.key === 'ArrowDown') {
+                    return current < 0 ? 0 : Math.min(current + 1, visibleSelectOptions.length - 1);
+                }
+                return current < 0 ? visibleSelectOptions.length - 1 : Math.max(current - 1, 0);
+            });
+            return;
+        }
+        if (e.key === 'Enter' && isSelectOptionsOpen && visibleSelectOptions.length > 0) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (activeSelectOption >= 0 && activeSelectOption < visibleSelectOptions.length) {
+                chooseSelectOption(visibleSelectOptions[activeSelectOption]);
+            } else {
+                setIsSelectOptionsOpen(false);
+            }
+            return;
+        }
+        keyDown(e, false);
+    }, [activeSelectOption, chooseSelectOption, isSelectOptionsOpen, keyDown, visibleSelectOptions]);
 
     useEffect(() => {
         const el = textareaRef.current;
@@ -215,16 +267,52 @@ const InlineField: React.FC<InlineFieldProps> = ({ lineId, field, value, readOnl
             return (
                 <span className={styles.wyWord}>
                     <span className={styles.wySelectWrap}>
-                        <select
+                        <input
                             {...commonProps}
+                            ref={autoRef}
+                            type="text"
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-expanded={showSelectOptions}
+                            aria-controls={showSelectOptions ? selectOptionsId : undefined}
+                            aria-activedescendant={showSelectOptions && activeSelectOption >= 0
+                                ? `${selectOptionsId}-option-${activeSelectOption}`
+                                : undefined}
                             className={`${styles.wySelectProse} ${str ? '' : styles.wySelectEmpty}`}
                             value={str}
-                            onChange={(e) => onChange(e.target.value)}
-                            onKeyDown={(e) => keyDown(e, false)}
-                        >
-                            <option value="">{field.placeholder ?? `— ${field.label} —`}</option>
-                            {field.options?.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-                        </select>
+                            placeholder={field.placeholder ?? `— ${field.label} —`}
+                            onFocus={() => {
+                                onFocus();
+                                setSelectFilter('');
+                                setActiveSelectOption(-1);
+                                setIsSelectOptionsOpen(true);
+                            }}
+                            onBlur={() => setIsSelectOptionsOpen(false)}
+                            onChange={(e) => {
+                                setSelectFilter(e.target.value);
+                                setActiveSelectOption(-1);
+                                onChange(e.target.value);
+                            }}
+                            onKeyDown={selectKeyDown}
+                        />
+                        {showSelectOptions && (
+                            <div className={styles.wySelectOptions} id={selectOptionsId} role="listbox">
+                                {visibleSelectOptions.map((option, index) => (
+                                    <div
+                                        key={option}
+                                        id={`${selectOptionsId}-option-${index}`}
+                                        role="option"
+                                        aria-selected={index === activeSelectOption}
+                                        className={`${styles.wySelectOption} ${index === activeSelectOption ? styles.wySelectOptionActive : ''}`}
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        onMouseEnter={() => setActiveSelectOption(index)}
+                                        onClick={() => chooseSelectOption(option)}
+                                    >
+                                        {option}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </span>
                 </span>
             );

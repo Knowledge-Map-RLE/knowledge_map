@@ -219,6 +219,10 @@ def consolidate_metadata_rows(rows):
                 elif spec.kind == "refs":
                     data[field] = list(dict.fromkeys(aliases.get(value, value)
                                                      for value in data[field]))
+                elif spec.kind == "ref_groups":
+                    data[field] = [list(dict.fromkeys(aliases.get(value, value)
+                                                      for value in group))
+                                   for group in data[field]]
     # Removing candidate rows can leave tag gaps; restore canonical physical
     # order and update every surviving DSL-tag reference at the same time.
     return remap_local_tags(output, 1)

@@ -152,6 +152,7 @@ export const PAID_FEATURES: readonly string[] = [
 export interface PlanRow {
     id: string;
     label: string;
+    translationKey: string;
     free: boolean;
     paid: boolean;
 }
@@ -164,16 +165,18 @@ export interface FeatureGroup {
 const TRUE = true;
 const FALSE = false;
 
-const paidRows: readonly PlanRow[] = PAID_FEATURES.map(feature => ({
-    id: `paid-${feature}`,
+const paidRows: readonly PlanRow[] = PAID_FEATURES.map((feature, index) => ({
+    id: `paid-${index}`,
     label: feature,
+    translationKey: `subscription.features.paid.${index}`,
     free: FALSE,
     paid: TRUE,
 }));
 
-const freeRows: readonly PlanRow[] = FREE_FEATURES.map(feature => ({
-    id: `free-${feature}`,
+const freeRows: readonly PlanRow[] = FREE_FEATURES.map((feature, index) => ({
+    id: `free-${index}`,
     label: feature,
+    translationKey: `subscription.features.free.${index}`,
     free: TRUE,
     paid: TRUE,
 }));

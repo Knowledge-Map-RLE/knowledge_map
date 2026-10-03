@@ -11,8 +11,10 @@ import { useAuth, AUTH_LOGIN_EVENT } from '../../entities/auth';
 import type { User as UserType } from '../../services/auth';
 import type { ModalType, UserProps } from './model';
 import { getUnreadCount, getMe, PROFILE_UPDATED_EVENT, ACCOUNT_MODAL_EVENT, ACCOUNT_SUBSCRIPTION_EVENT, socialImageUrl } from '../../services/api/social';
+import { useTranslation } from 'react-i18next';
 
 const User: React.FC<UserProps> = ({ className = '' }) => {
+    const { t } = useTranslation();
     const [activeModal, setActiveModal] = useState<ModalType>(null);
     const { user: userData, isAuthLoading, setUser, logout, refresh } = useAuth();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -137,7 +139,7 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
     if (isAuthLoading) {
         return (
             <div className={`${s.user} ${className}`}>
-                <div className={s.loading}>Загрузка...</div>
+            <div className={s.loading}>{t('header.user.loading')}</div>
             </div>
         );
     }
@@ -146,10 +148,10 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
         return (
             <div className={`${s.user} ${className}`}>
                 <button onClick={() => setActiveModal('login')} className={s.auth_button}>
-                    Вход
+                    {t('header.user.login')}
                 </button>
                 <button onClick={() => setActiveModal('register')} className={s.auth_button}>
-                    Регистрация
+                    {t('header.user.register')}
                 </button>
 
                 {activeModal === 'login' && (
@@ -187,7 +189,7 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
 
     return (
         <div className={`${s.user} ${className}`}>
-            <button className={s.bell_button} onClick={openNotifications} title="Уведомления">
+            <button className={s.bell_button} onClick={openNotifications} title={t('header.user.notifications')}>
                 <MdNotifications />
                 {unread > 0 && <span className={s.bell_badge}>{unread > 99 ? '99+' : unread}</span>}
             </button>
@@ -196,11 +198,11 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
             <div className={s.user_trigger} onClick={() => setMenuOpen(!menuOpen)}>
                 <div className={s.avatar}>
                     {avatarKey && (
-                        <img src={socialImageUrl(avatarKey)} alt="Аватар" className={s.avatar_img} />
+                        <img src={socialImageUrl(avatarKey)} alt={t('header.user.avatarAlt')} className={s.avatar_img} />
                     )}
                 </div>
                 <div className={s.user_info}>
-                    <div className={s.name}>{userData.nickname || 'Пользователь'}</div>
+                    <div className={s.name}>{userData.nickname || t('header.user.profileFallback')}</div>
                     <div className={s.info}>@{userData.login}</div>
                 </div>
             </div>
@@ -208,14 +210,14 @@ const User: React.FC<UserProps> = ({ className = '' }) => {
             {menuOpen && (
                 <div className={s.dropdown} ref={menuRef}>
                     <button onClick={() => { setMenuOpen(false); setAccountOpen(true); }} className={s.menu_button}>
-                        <MdSettings /> Личный кабинет
+                        <MdSettings /> {t('header.user.account')}
                     </button>
                     <button onClick={openNotifications} className={s.menu_button}>
-                        <MdNotifications /> Уведомления
+                        <MdNotifications /> {t('header.user.notifications')}
                         {unread > 0 && <span className={s.menu_badge}>{unread > 99 ? '99+' : unread}</span>}
                     </button>
                     <button onClick={handleLogout} className={s.logout_button}>
-                        Выйти
+                        {t('header.user.logout')}
                     </button>
                 </div>
             )}

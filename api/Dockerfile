@@ -21,6 +21,7 @@ COPY --from=shared ./knowledge ../shared/knowledge
 COPY --from=shared ./model_registry ../shared/model_registry
 COPY --from=core ./pipeline ../knowledge_map_core/pipeline
 COPY --from=config ./config/models.toml ./config/models.toml
+ENV ARTICLE_PIPELINE_GOLD_DIR=/data/article_pipeline_gold
 
 # 3) Копируем pyproject и lock-файл
 COPY pyproject.toml poetry.lock* ./
@@ -40,6 +41,7 @@ RUN for i in 1 2 3; do \
 
 # 6) Копируем исходный код
 COPY . .
+COPY --from=config ./eval/article_pipeline_gold /data/article_pipeline_gold
 
 # 8) Генерируем proto файлы
 # Создаем utils/generated если не существует

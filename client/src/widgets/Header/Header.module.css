@@ -78,3 +78,21 @@
   flex-shrink: 0;
   padding: 0 10px;
 }
+
+.languageSwitcher {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin: 0 8px;
+}
+
+.languageSwitcher select {
+  min-height: 32px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0 8px;
+  background: #fff;
+  color: #1f2937;
+  font: inherit;
+  cursor: pointer;
+}

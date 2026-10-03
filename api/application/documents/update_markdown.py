@@ -37,6 +37,7 @@ async def update_markdown(
     markdown: str,
     bucket: str,
     annotate: bool = False,
+    user_uid: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Сохраняет markdown как user_md_s3_key.
@@ -72,6 +73,8 @@ async def update_markdown(
         doc.title = new_title
 
     document_repo.save(doc)
+    if user_uid:
+        document_repo.record_user_edit(user_uid, doc_id)
     logger.info(f"[update_markdown] Сохранён markdown для {doc_id}, ключ: {user_key}, annotate={annotate}")
 
     return {

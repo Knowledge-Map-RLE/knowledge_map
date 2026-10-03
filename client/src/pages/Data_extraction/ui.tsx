@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Header from '../../widgets/Header';
 import MarkdownEditor from '../../widgets/MarkdownEditor';
 import { AnnotationWorkspace } from './Annotation';
@@ -19,6 +20,7 @@ declare global {
 }
 
 const DataExtractionUI: React.FC = () => {
+    const { t, i18n } = useTranslation();
     const [activeTab, setActiveTab] = useState<DataExtractionTab>('pdf');
     const [chatTarget, setChatTarget] = useState<ChatTarget | null>(null);
     const [isNlpProcessing, setIsNlpProcessing] = useState(false);
@@ -63,7 +65,7 @@ const DataExtractionUI: React.FC = () => {
     // чтобы статус 'Аннотирован' отобразился в левой колонке
     const handleSaveAndReload = async () => {
         await handleManualSave();
-        documentListRef.current?.reloadDocuments();
+        await documentListRef.current?.reloadDocuments();
     };
 
     return (
@@ -88,40 +90,40 @@ const DataExtractionUI: React.FC = () => {
                             className={`${styles.tabButton} ${activeTab === 'markdown' ? styles.active : ''}`}
                             onClick={() => setActiveTab('markdown')}
                         >
-                            Предпросмотр Markdown
+                            {t('dataExtraction.tabs.markdown')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'annotator' ? styles.active : ''}`}
                             onClick={() => setActiveTab('annotator')}
                         >
-                            Аннотатор
+                            {t('dataExtraction.tabs.annotator')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'pdf' ? styles.active : ''}`}
                             onClick={() => setActiveTab('pdf')}
                         >
-                            Исходный PDF
+                            {t('dataExtraction.tabs.pdf')}
                         </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'chat' ? styles.active : ''}`}
                             onClick={openDocumentChat}
                             disabled={!selectedDocument}
-                            title={selectedDocument ? 'Обсуждение документа' : 'Сначала выберите документ'}
+                            title={selectedDocument ? t('dataExtraction.tabs.discussionTitle') : t('dataExtraction.empty.selectFirst')}
                         >
-                            Обсуждение
+                            {t('dataExtraction.tabs.discussion')}
                         </button>
 
                         {isNlpProcessing && (
                             <div className={`${styles.saveIndicator} ${styles.saving}`} style={{ marginLeft: 'auto' }}>
                                 <div className={styles.loadingSpinner} style={{ width: '12px', height: '12px' }}></div>
-                                <span>NLP анализ...</span>
+                                <span>{t('dataExtraction.status.nlp')}</span>
                             </div>
                         )}
                         {!isNlpProcessing && saveStatus !== 'idle' && (
                             <div className={`${styles.saveIndicator} ${styles[saveStatus]}`} style={{ marginLeft: 'auto' }}>
-                                {saveStatus === 'saving' && <><div className={styles.loadingSpinner} style={{ width: '12px', height: '12px' }}></div><span>Сохранение...</span></>}
-                                {saveStatus === 'saved' && <><span>✓</span><span>Сохранено {lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString() : ''}</span></>}
-                                {saveStatus === 'error' && <><span>✗</span><span>Ошибка сохранения</span></>}
+                                {saveStatus === 'saving' && <><div className={styles.loadingSpinner} style={{ width: '12px', height: '12px' }}></div><span>{t('dataExtraction.status.saving')}</span></>}
+                                {saveStatus === 'saved' && <><span>✓</span><span>{t('dataExtraction.status.saved', { time: lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString(i18n.resolvedLanguage === 'ru' ? 'ru-RU' : 'en-US') : '' })}</span></>}
+                                {saveStatus === 'error' && <><span>✗</span><span>{t('dataExtraction.status.saveError')}</span></>}
                             </div>
                         )}
                     </div>
@@ -140,10 +142,10 @@ const DataExtractionUI: React.FC = () => {
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
-                                        <p className="text-gray-500 font-medium">PDF недоступен для этого документа</p>
+                                        <p className="text-gray-500 font-medium">{t('dataExtraction.empty.pdfUnavailable')}</p>
                                     </div>
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">{t('dataExtraction.empty.selectFile')}</div>
                                 )}
                             </div>
                         )}
@@ -157,7 +159,7 @@ const DataExtractionUI: React.FC = () => {
                                         readOnly={true}
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">{t('dataExtraction.empty.selectFile')}</div>
                                 )}
                             </div>
                         )}
@@ -177,7 +179,7 @@ const DataExtractionUI: React.FC = () => {
                                         onNlpProcessingChange={setIsNlpProcessing}
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Выберите файл</div>
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">{t('dataExtraction.empty.selectFile')}</div>
                                 )}
                             </div>
                         )}
@@ -190,11 +192,11 @@ const DataExtractionUI: React.FC = () => {
                                         onOpenTarget={(t) => setChatTarget(t)}
                                         myUid={user.uid}
                                         hideRail
-                                        title={selectedDocument.title || selectedDocument.original_filename || 'Обсуждение документа'}
+                                        title={selectedDocument.title || selectedDocument.original_filename || t('dataExtraction.tabs.discussionTitle')}
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                                        {!selectedDocument ? 'Выберите файл' : 'Войдите в аккаунт, чтобы участвовать в обсуждении'}
+                                        {!selectedDocument ? t('dataExtraction.empty.selectFile') : t('dataExtraction.empty.loginForDiscussion')}
                                     </div>
                                 )}
                             </div>

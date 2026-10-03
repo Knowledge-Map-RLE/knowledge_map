@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Header from '../../widgets/Header';
 import styles from './Subscription.module.css';
 import {
@@ -16,6 +17,9 @@ import {
 } from '../../services/api/billing';
 
 const SubscriptionUI: React.FC = () => {
+    const { t, i18n } = useTranslation();
+    const localize = (key: string, russianSource: string) =>
+        i18n.resolvedLanguage === 'ru' ? russianSource : t(key);
     const { error: toastError } = useToast();
     const [openFaq, setOpenFaq] = useState<number | null>(0);
     const [subscription, setSubscription] = useState<SubscriptionState | null>(null);
@@ -26,13 +30,13 @@ const SubscriptionUI: React.FC = () => {
             const state = await fetchSubscription();
             setSubscription(state);
         } catch (err) {
-            const message = err instanceof Error ? err.message : 'Не удалось получить статус подписки';
+            const message = err instanceof Error ? err.message : t('subscription.errors.status');
             if (!/401|Authorization|Unauthorized/i.test(message)) {
                 toastError(message);
             }
             setSubscription(null);
         }
-    }, [toastError]);
+    }, [toastError, t]);
 
     useEffect(() => {
         loadSubscription();
@@ -49,16 +53,16 @@ const SubscriptionUI: React.FC = () => {
                 window.location.href = result.confirmation_url;
                 return;
             }
-            throw new Error('Сервис не вернул ссылку на оплату');
+            throw new Error(t('subscription.errors.checkoutUrl'));
         } catch (err) {
-            const message = err instanceof Error ? err.message : 'Не удалось оформить покупку';
+            const message = err instanceof Error ? err.message : t('subscription.errors.purchase');
             if (!/401|Authorization|Unauthorized/i.test(message)) {
                 toastError(message);
             }
         } finally {
             setCheckoutPlan(null);
         }
-    }, [toastError]);
+    }, [toastError, t]);
 
     const currentPlanCode = subscription?.plan_code ?? 'FREE';
 
@@ -72,12 +76,10 @@ const SubscriptionUI: React.FC = () => {
                     <div className={styles.pricingGlowPurple} />
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <div className={styles.heroBadge}>Токены</div>
-                            <h1 className={styles.sectionTitle}>Пакеты токенов Карты Знаний</h1>
+                            <div className={styles.heroBadge}>{localize('subscription.hero.badge', 'Токены')}</div>
+                            <h1 className={styles.sectionTitle}>{localize('subscription.hero.title', 'Пакеты токенов Карты Знаний')}</h1>
                             <p className={styles.sectionSubtitle}>
-                                Покупайте токены — платите только за использование.
-                                Сервис не потратит лишних денег: при исчерпании токенов
-                                ИИ-функции приостанавливаются.
+                                {localize('subscription.hero.description', 'Покупайте токены — платите только за использование. Сервис не потратит лишних денег: при исчерпании токенов ИИ-функции приостанавливаются.')}
                             </p>
                         </div>
 
@@ -99,7 +101,7 @@ const SubscriptionUI: React.FC = () => {
                 <section className={styles.comparison}>
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <h2 className={styles.sectionTitle}>Сравнение планов</h2>
+                            <h2 className={styles.sectionTitle}>{localize('subscription.comparison.title', 'Сравнение планов')}</h2>
                             <div className={styles.titleBar} />
                         </div>
 
@@ -107,18 +109,18 @@ const SubscriptionUI: React.FC = () => {
                             <table className={styles.table}>
                                 <thead>
                                     <tr>
-                                        <th className={styles.thFeature}>Функция</th>
+                                        <th className={styles.thFeature}>{localize('subscription.comparison.feature', 'Функция')}</th>
                                         {PLANS.map(plan => (
                                             <th key={plan.id} className={`${styles.thPlan} ${plan.highlight ? styles.thPlanHighlight : ''}`}>
-                                                <span className={styles.thPlanName}>{plan.name}</span>
+                                                <span className={styles.thPlanName}>{localize(`subscription.plans.${plan.id}.name`, plan.name)}</span>
                                                 <span className={styles.thPlanPrice}>{plan.price}</span>
                                             </th>
                                         ))}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {GROUPS.map(group => (
-                                        <GroupBody key={group.title} title={group.title} groupId={`group-${group.title}`} rows={group.rows} />
+                                    {GROUPS.map((group, index) => (
+                                        <GroupBody key={group.title} title={localize(`subscription.comparison.groups.${index}`, group.title)} groupId={`group-${index}`} rows={group.rows} />
                                     ))}
                                 </tbody>
                             </table>
@@ -129,21 +131,21 @@ const SubscriptionUI: React.FC = () => {
                 <section className={styles.faq} id="faq">
                     <div className={styles.sectionInner}>
                         <div className={styles.sectionHeader}>
-                            <h2 className={styles.sectionTitle}>Частые вопросы</h2>
+                            <h2 className={styles.sectionTitle}>{localize('subscription.faq.title', 'Частые вопросы')}</h2>
                         </div>
                         <div className={styles.faqList}>
                             {FAQ.map((item, index) => (
-                                <div key={item.question} className={`${styles.faqItem} ${openFaq === index ? styles.faqItemOpen : ''}`}>
+                                <div key={index} className={`${styles.faqItem} ${openFaq === index ? styles.faqItemOpen : ''}`}>
                                     <button
                                         type="button"
                                         className={styles.faqQuestion}
                                         onClick={() => setOpenFaq(openFaq === index ? null : index)}
                                     >
-                                        <span>{item.question}</span>
+                                        <span>{localize(`subscription.faq.items.${index}.question`, item.question)}</span>
                                         <span className={styles.faqToggle}>+</span>
                                     </button>
                                     {openFaq === index && (
-                                        <div className={styles.faqAnswer}>{item.answer}</div>
+                                        <div className={styles.faqAnswer}>{localize(`subscription.faq.items.${index}.answer`, item.answer)}</div>
                                     )}
                                 </div>
                             ))}
@@ -153,10 +155,9 @@ const SubscriptionUI: React.FC = () => {
 
                 <section className={styles.cta}>
                     <div className={styles.ctaInner}>
-                        <h2>Поддержите науку о продлении жизни</h2>
+                        <h2>{localize('subscription.callToAction.title', 'Поддержите науку о продлении жизни')}</h2>
                         <p>
-                            Проект открыт и бесплатен для всех. Купите пакет токенов — и вы получите полный набор
-                            ИИ-инструментов, а проект — устойчивость и развитие.
+                            {localize('subscription.callToAction.description', 'Проект открыт и бесплатен для всех. Купите пакет токенов — и вы получите полный набор ИИ-инструментов, а проект — устойчивость и развитие.')}
                         </p>
                         <div className={styles.ctaButtons}>
                             <button
@@ -165,10 +166,10 @@ const SubscriptionUI: React.FC = () => {
                                 onClick={() => handleCheckout(PLANS[1])}
                                 disabled={checkoutPlan !== null}
                             >
-                                {checkoutPlan === PLANS[1].id ? 'Перенаправляем…' : 'Купить токены'}
+                                {checkoutPlan === PLANS[1].id ? localize('subscription.callToAction.redirecting', 'Перенаправляем…') : localize('subscription.callToAction.buyTokens', 'Купить токены')}
                             </button>
                             <a href={FORUM_URL} target="_blank" rel="noopener noreferrer" className={styles.ctaGhostBtn}>
-                                Задать вопрос в сообществе
+                                {localize('subscription.callToAction.askCommunity', 'Задать вопрос в сообществе')}
                             </a>
                         </div>
                     </div>
@@ -185,42 +186,50 @@ const PlanCard: React.FC<{
     busy: boolean;
     disabled: boolean;
     onSelect: () => void;
-}> = ({ plan, current, busy, disabled, onSelect }) => (
+}> = ({ plan, current, busy, disabled, onSelect }) => {
+    const { t, i18n } = useTranslation();
+    const localize = (key: string, russianSource: string) =>
+        i18n.resolvedLanguage === 'ru' ? russianSource : t(key);
+    return (
     <div className={`${styles.planCard} ${plan.highlight ? styles.planCardHighlight : ''}`}>
-        {plan.badge && <div className={styles.planBadge}>{plan.badge}</div>}
-        <h3 className={styles.planName}>{plan.name}</h3>
+        {plan.badge && <div className={styles.planBadge}>{localize(`subscription.plans.${plan.id}.badge`, plan.badge)}</div>}
+        <h3 className={styles.planName}>{localize(`subscription.plans.${plan.id}.name`, plan.name)}</h3>
         <div className={styles.planPrice}>{plan.price}</div>
-        <div className={styles.planPriceNote}>{plan.priceNote}</div>
-        <p className={styles.planDescription}>{plan.description}</p>
+        <div className={styles.planPriceNote}>{localize(`subscription.plans.${plan.id}.priceNote`, plan.priceNote)}</div>
+        <p className={styles.planDescription}>{localize(`subscription.plans.${plan.id}.description`, plan.description)}</p>
         <button
             type="button"
             className={styles.planButton}
             onClick={onSelect}
             disabled={busy || disabled}
         >
-            {busy ? 'Перенаправляем…' : current ? 'Текущий баланс' : plan.ctaLabel}
+            {busy ? localize('subscription.callToAction.redirecting', 'Перенаправляем…') : current ? localize('subscription.plans.current', 'Текущий баланс') : localize(`subscription.plans.${plan.id}.ctaLabel`, plan.ctaLabel)}
         </button>
     </div>
-);
+    );
+};
 
 const GroupBody: React.FC<{
     title: string;
     groupId: string;
-    rows: readonly { label: string; free: boolean; paid: boolean }[];
-}> = ({ title, groupId, rows }) => (
-    <>
+    rows: readonly { id: string; label: string; translationKey: string; free: boolean; paid: boolean }[];
+}> = ({ title, groupId, rows }) => {
+    const { t, i18n } = useTranslation();
+    return (
+      <>
         <tr className={styles.groupRow}>
             <td className={styles.groupTitle} colSpan={3}>{title}</td>
         </tr>
         {rows.map(row => (
             <tr key={groupId + '-' + row.label}>
-                <td className={styles.featureName}>{row.label}</td>
+                <td className={styles.featureName}>{i18n.resolvedLanguage === 'ru' ? row.label : t(row.translationKey)}</td>
                 <td className={styles.featureCell}>{row.free ? <Check /> : <Dash />}</td>
                 <td className={styles.featureCell}>{row.paid ? <Check /> : <Dash />}</td>
             </tr>
         ))}
-    </>
-);
+      </>
+    );
+};
 
 const Check: React.FC = () => (
     <span className={styles.check} aria-hidden="true">✓</span>

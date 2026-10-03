@@ -68,6 +68,39 @@ export interface ArticleGraphResponse {
     edges: unknown[];
 }
 
+export interface GoldArticleTextLocalization {
+    locale: 'ru' | 'en';
+    document_uid: string;
+    title: string;
+    article_markdown: string;
+}
+
+export interface GoldArticleLocalization extends GoldArticleTextLocalization {
+    rows_by_tag: Record<string, { display_text: string; type_name?: string }>;
+    blocks: Array<ArticleBlockData & { display_text: string; localized_type_name?: string }>;
+}
+
+export function getGoldArticleLocalization(
+    docId: string,
+    locale: 'ru' | 'en',
+    scope: 'article',
+): Promise<GoldArticleTextLocalization>;
+export function getGoldArticleLocalization(
+    docId: string,
+    locale: 'ru' | 'en',
+    scope?: 'structure',
+): Promise<GoldArticleLocalization>;
+export async function getGoldArticleLocalization(
+    docId: string,
+    locale: 'ru' | 'en',
+    scope: 'article' | 'structure' = 'structure',
+): Promise<GoldArticleTextLocalization | GoldArticleLocalization> {
+    const params = new URLSearchParams({ locale, scope });
+    return fetchJson(
+        `/api/article_editor/articles/${encodeURIComponent(docId)}/localization?${params.toString()}`,
+    );
+}
+
 export async function createArticle(title: string = 'New Article'): Promise<CreateArticleResponse> {
     return fetchJson('/api/article_editor/articles', {
         method: 'POST',

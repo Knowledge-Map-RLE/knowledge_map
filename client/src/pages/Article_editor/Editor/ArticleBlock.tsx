@@ -1,4 +1,4 @@
-import { Graphics, Text, Container } from 'pixi.js';
+import { CanvasTextMetrics, Graphics, Text, TextStyle, Container } from 'pixi.js';
 import { extend } from '@pixi/react';
 import { PixiText } from '../../../shared/pixi/PixiText';
 import { useCallback, useEffect, useRef, memo } from 'react';
@@ -8,8 +8,25 @@ import type { ArticleMapNode } from './articleMapGraph';
 
 extend({ Container, Graphics, Text });
 
-const BLOCK_WIDTH = 200;
-const BLOCK_HEIGHT = 75;
+export const ARTICLE_BLOCK_WIDTH = 200;
+const MIN_BLOCK_HEIGHT = 75;
+const LABEL_WIDTH = ARTICLE_BLOCK_WIDTH - 24;
+const LABEL_TOP_OFFSET = 24;
+const LABEL_STYLE = new TextStyle({
+    fontFamily: 'Arial',
+    fontSize: 10,
+    fontWeight: '500',
+    wordWrap: true,
+    wordWrapWidth: LABEL_WIDTH,
+    breakWords: true,
+    align: 'center',
+});
+
+export function getArticleBlockHeight(label: string, hasFooter: boolean): number {
+    const textHeight = CanvasTextMetrics.measureText(label || ' ', LABEL_STYLE).height;
+    const footerHeight = hasFooter ? 24 : 18;
+    return Math.max(MIN_BLOCK_HEIGHT, LABEL_TOP_OFFSET + textHeight + footerHeight);
+}
 
 const DPR = typeof window !== 'undefined' ? Math.max(1, window.devicePixelRatio || 1) : 1;
 
@@ -37,7 +54,10 @@ export const ArticleBlock = memo(function ArticleBlock({
     dimmed,
     onHover,
 }: ArticleBlockProps) {
-    const { id, x, y, blockType, label, outcome, outcomeLabel } = blockData;
+    const { id, x, y, blockType, label, outcome, outcomeLabel, isGoal } = blockData;
+    const hasFooter = Boolean(isGoal || (outcome !== 'neutral' && outcomeLabel));
+    const blockHeight = blockData.height ?? getArticleBlockHeight(label, hasFooter);
+    const labelMetrics = CanvasTextMetrics.measureText(label || ' ', LABEL_STYLE);
     const containerRef = useRef<Container>(null);
 
     useEffect(() => {
@@ -53,16 +73,16 @@ export const ArticleBlock = memo(function ArticleBlock({
 
     const drawBg = useCallback((g: Graphics) => {
         g.clear();
-        g.roundRect(-BLOCK_WIDTH / 2, -BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, 8);
+        g.roundRect(-ARTICLE_BLOCK_WIDTH / 2, -blockHeight / 2, ARTICLE_BLOCK_WIDTH, blockHeight, 8);
         if (highlighted) {
-            const color = outcome === 'neutral' ? 0x9ca3af : outcomeColor;
-            g.fill({ color, alpha: outcome === 'neutral' ? 0.1 : 0.16 });
+            const color = isGoal ? 0xea580c : outcome === 'neutral' ? 0x9ca3af : outcomeColor;
+            g.fill({ color, alpha: isGoal ? 0.16 : outcome === 'neutral' ? 0.1 : 0.16 });
             g.stroke({ width: hovered ? 3 : 2, color: hovered ? 0x111827 : color });
         } else {
             g.fill(0xffffff);
-            g.stroke({ width: hovered ? 3 : 2, color: hovered ? 0x111827 : 0x6366f1 });
+            g.stroke({ width: hovered ? 3 : 2, color: hovered ? 0x111827 : isGoal ? 0xea580c : 0x6366f1 });
         }
-    }, [highlighted, hovered, outcome, outcomeColor]);
+    }, [blockHeight, highlighted, hovered, outcome, outcomeColor, isGoal]);
 
     return (
         <container
@@ -78,24 +98,33 @@ export const ArticleBlock = memo(function ArticleBlock({
             <PixiText
                 text={typeDef?.name ?? blockType}
                 x={0}
-                y={-BLOCK_HEIGHT / 2 + 12}
+                y={-blockHeight / 2 + 12}
                 anchor={0.5}
                 resolution={DPR}
                 style={{ fontSize: 9, fill: typeColor, fontWeight: '600' }}
             />
             <PixiText
-                text={label.slice(0, 44)}
+                text={label}
                 x={0}
-                y={-BLOCK_HEIGHT / 2 + 30}
+                y={-blockHeight / 2 + LABEL_TOP_OFFSET + labelMetrics.height / 2}
                 anchor={0.5}
                 resolution={DPR}
-                style={{ fontSize: 10, fill: 0x111827, fontWeight: '500' }}
+                style={{ ...LABEL_STYLE, fill: 0x111827 }}
             />
-            {outcome !== 'neutral' && outcomeLabel ? (
+            {isGoal ? (
+                <PixiText
+                    text="ЦЕЛЬ"
+                    x={0}
+                    y={blockHeight / 2 - 10}
+                    anchor={0.5}
+                    resolution={DPR}
+                    style={{ fontSize: 9, fill: 0xea580c, fontWeight: '700' }}
+                />
+            ) : outcome !== 'neutral' && outcomeLabel ? (
                 <PixiText
                     text={outcomeLabel.slice(0, 40)}
                     x={0}
-                    y={BLOCK_HEIGHT / 2 - 10}
+                    y={blockHeight / 2 - 10}
                     anchor={0.5}
                     resolution={DPR}
                     style={{ fontSize: 9, fill: outcomeColor, fontStyle: 'italic' }}
@@ -103,8 +132,8 @@ export const ArticleBlock = memo(function ArticleBlock({
             ) : null}
             <PixiText
                 text={shortId(id)}
-                x={BLOCK_WIDTH / 2 - 4}
-                y={BLOCK_HEIGHT / 2 - 4}
+                x={ARTICLE_BLOCK_WIDTH / 2 - 4}
+                y={blockHeight / 2 - 4}
                 anchor={{ x: 1, y: 1 }}
                 resolution={DPR}
                 style={{ fontSize: 8, fill: 0x9ca3af }}

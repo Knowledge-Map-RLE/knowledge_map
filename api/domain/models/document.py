@@ -56,6 +56,9 @@ class Document:
     processing_status: str = "uploaded"
     error_message: Optional[str] = None
 
+    # Время последней правки документа текущим пользователем (проекция списка).
+    current_user_last_edited_at: Optional[datetime] = None
+
     def get_active_markdown_key(self) -> Optional[str]:
         """
         Возвращает S3-ключ активной версии Markdown.

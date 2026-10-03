@@ -2473,8 +2473,9 @@
     font-size: 16px;
     color: #374151;
     padding: 1px 15px 1px 0;
-    cursor: pointer;
+    cursor: text;
     max-width: 280px;
+    field-sizing: content;
 }
 
 .wySelectEmpty {
@@ -2494,6 +2495,35 @@
 .wySelectWrap:hover::after,
 .wySelectWrap:focus-within::after {
     opacity: 1;
+}
+
+.wySelectOptions {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 100%;
+    max-width: min(360px, 80vw);
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgb(15 23 42 / 12%);
+}
+
+.wySelectOption {
+    padding: 6px 9px;
+    border-radius: 5px;
+    color: #374151;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.wySelectOption:hover,
+.wySelectOptionActive {
+    background: #f3f4f6;
 }
 
 /* Checkbox как тихий переключатель */
@@ -2970,6 +3000,24 @@
     max-height: 60vh;
     overflow: auto;
     padding: 4px 12px 40px 8px;
+}
+
+/* В редакторе pipeline v2 отображается тем же документным листом, что и WYSIWYG. */
+.pipelineDocumentScroller {
+    overflow-x: hidden;
+}
+
+.pipelineDocumentScroller .pipelineTypeName {
+    opacity: 0;
+    transition: opacity 100ms ease;
+}
+
+.pipelineDocumentScroller .pipelineRow:hover .pipelineTypeName {
+    opacity: 1;
+}
+
+.pipelineDocumentScroller .pipelineContent {
+    font-size: 16px;
 }
 
 .pipelineRow {

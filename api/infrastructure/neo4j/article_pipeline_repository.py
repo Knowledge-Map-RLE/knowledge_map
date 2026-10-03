@@ -131,9 +131,47 @@ class Neo4jArticlePipelineRepository:
                     version = dict(row)
                     payload = json.loads(version.pop("payload") or "{}")
                     version["timing"] = payload.get("timing", {})
+                    version["map_rebuild"] = payload.get("map_rebuild")
                     versions.append(version)
                 return versions
             return session.execute_read(read)
+
+    def save_map_snapshot(self, doc_id, user_uid, graph, blocks_fingerprint):
+        with self.driver.session() as session:
+            session.execute_write(
+                self._save_map_snapshot, doc_id, user_uid, graph, blocks_fingerprint
+            )
+
+    @staticmethod
+    def _save_map_snapshot(tx, doc_id, user_uid, graph, blocks_fingerprint):
+        Neo4jArticlePipelineRepository._access(tx, doc_id, user_uid)
+        tx.run("""MATCH (d:Document {uid:$doc})
+          SET d.deterministic_map_payload=$payload,
+              d.deterministic_map_blocks_fingerprint=$fingerprint,
+              d.deterministic_map_rebuilt_at=$now,
+              d.deterministic_map_rebuilt_by_uid=$user""",
+          doc=doc_id, payload=json.dumps(graph, ensure_ascii=False),
+          fingerprint=blocks_fingerprint, user=user_uid,
+          now=datetime.now(timezone.utc).isoformat()).consume()
+
+    def load_map_snapshot(self, doc_id, user_uid):
+        with self.driver.session() as session:
+            def read(tx):
+                self._access(tx, doc_id, user_uid)
+                row = tx.run("""MATCH (d:Document {uid:$doc})
+                  RETURN d.deterministic_map_payload AS payload,
+                         d.deterministic_map_blocks_fingerprint AS fingerprint,
+                         d.deterministic_map_rebuilt_at AS rebuilt_at""",
+                             doc=doc_id).single()
+                if not row or not row["payload"]:
+                    return None
+                return {
+                    "graph": json.loads(row["payload"]),
+                    "blocks_fingerprint": row["fingerprint"],
+                    "rebuilt_at": row["rebuilt_at"],
+                }
+            return session.execute_read(read)
+
     def apply(self, doc_id, version_id, user_uid, source_hash):
         with self.driver.session() as session:
             session.execute_write(self._apply, doc_id, version_id, user_uid, source_hash)

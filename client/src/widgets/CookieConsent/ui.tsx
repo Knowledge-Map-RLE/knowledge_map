@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ModalPortal } from '../../shared/ui/ModalPortal';
 import s from './CookieConsent.module.css';
 
@@ -32,6 +33,7 @@ function storeConsent(): void {
 }
 
 const CookieConsent: React.FC = () => {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState<boolean>(() => !hasConsent());
 
     if (!visible) {
@@ -45,24 +47,22 @@ const CookieConsent: React.FC = () => {
 
     return (
         <ModalPortal>
-            <div className={s.overlay} role="dialog" aria-modal="true" aria-label="Использование cookie">
+            <div className={s.overlay} role="dialog" aria-modal="true" aria-label={t('cookieConsent.ariaLabel')}>
                 <div className={s.banner}>
                     <div className={s.header}>
-                        <h2 className={s.title}>Мы используем cookie</h2>
+                        <h2 className={s.title}>{t('cookieConsent.title')}</h2>
                         <button
                             type="button"
                             onClick={handleClose}
                             className={s.closeButton}
-                            aria-label="Закрыть уведомление о cookie"
+                            aria-label={t('cookieConsent.close')}
                         >
                             ×
                         </button>
                     </div>
                     <div className={s.body}>
                         <p>
-                            Сайт использует файлы cookie, чтобы сделать работу с ним удобнее.
-                            Аналитика обезличена и собирается без сторонних трекеров. Продолжая
-                            пользоваться сайтом, вы соглашаетесь с использованием cookie.
+                            {t('cookieConsent.description')}
                         </p>
                     </div>
                 </div>

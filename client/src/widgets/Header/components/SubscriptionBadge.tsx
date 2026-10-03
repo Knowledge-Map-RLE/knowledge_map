@@ -5,6 +5,7 @@ import { useAuth } from '../../../entities/auth';
 import { fetchSubscription, type SubscriptionState } from '../../../services/api/billing';
 import { ACCOUNT_SUBSCRIPTION_EVENT } from '../../../services/api/social';
 import s from '../Header.module.css';
+import { useTranslation } from 'react-i18next';
 
 function formatTokens(n: number): string {
     if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M`;
@@ -13,6 +14,7 @@ function formatTokens(n: number): string {
 }
 
 const SubscriptionBadge: React.FC<{ className?: string }> = ({ className = '' }) => {
+    const { t } = useTranslation();
     const { user, isAuthLoading } = useAuth();
     const [sub, setSub] = useState<SubscriptionState | null>(null);
 
@@ -30,13 +32,13 @@ const SubscriptionBadge: React.FC<{ className?: string }> = ({ className = '' })
     };
 
     const isActive = sub?.active && sub.token_balance > 0;
-    const tokenText = isActive ? `${formatTokens(sub.token_balance)} ток.` : null;
+    const tokenText = isActive ? `${formatTokens(sub.token_balance)} ${t('header.subscription.tokenShort')}` : null;
 
     if (!user || !isActive) {
         return (
             <Link to="/subscription" className={`${s.badge} ${s.badgeLink} ${className}`}>
                 <MdToken className={s.badgeIcon} />
-                <span className={s.badgeText}>Купи токены для ИИ функций</span>
+                <span className={s.badgeText}>{t('header.subscription.buyTokens')}</span>
             </Link>
         );
     }

@@ -6,12 +6,13 @@
   - генерации LLM-промпта прямой типизации (какие поля модель может выводить);
   - парсера DSL-ответа (короткие ключи → JSON-поля `data` блока);
   - валидации структурных строк (`kind`, обязательные поля для связи);
-  - выявления закономерностей между строками и их элементами (REF-поля дают рёбра).
+  - связывания строк-свидетельств и детерминированных переходов карты знаний.
 
 Каждая строка DSL содержит обязательное поле ``unit=S<n>`` с указанием source
 unit (предложения) — это единственный канал provenance (квота-поля не нужны).
-Ссылки на другие строки задаются тегами ``B<число>`` (ref) или списками тегов
-``[B5,B6]`` (refs); именно они образуют связи in Knowledge Map.
+Ссылки на другие строки задаются тегами ``B<число>``. Рёбра карты выводятся
+построителем из ролей типов, полей и порядка строк; DSL не содержит общих полей
+зависимости.
 """
 from __future__ import annotations
 
@@ -31,6 +32,7 @@ class FieldSpec(NamedTuple):
       "bool"  — true/false;
       "ref"   — одиночная ссылка-тег ``B5``;
       "refs"  — список ссылок-тегов ``[B5,B6]``;
+      "ref_groups" — группы альтернативных ссылок ``[[B5,B6],[B7]]``;
       "strs"  — список строк ``[a,b]``;
     required: поле обязательно для типа (иначе data считается неполной);
     description: справка для LLM-промпта (англ.).
@@ -354,16 +356,30 @@ DSL_FIELDS: Dict[str, Dict[str, FieldSpec]] = {
     },
 }
 
-# Типы, которым разрешены REF-поля (ссылки на другие строки).
-REF_TYPES: FrozenSet[str] = frozenset({
-    BlockType.STATEMENT,
-    BlockType.RESEARCH_DESIGN,
-    BlockType.BIOLOGICAL_MECHANISM,
-    BlockType.ANIMAL_MODEL,
-    BlockType.ANIMAL_GROUP,
-    BlockType.EXPERIMENT,
-    BlockType.FINDING,
-    BlockType.RELATION,
+# Default map roles. Every structural type is a map node or source evidence.
+# Typed evidence references can attach evidence to a node but do not promote it.
+MAP_NODE_TYPES: FrozenSet[str] = frozenset({
+    BlockType.GOAL, BlockType.IMPACT_GOAL, BlockType.ACTION, BlockType.INTERVENTION,
+    BlockType.EXPERIMENT, BlockType.EXPERIMENT_STEP, BlockType.METHOD,
+    BlockType.RESEARCH_DESIGN, BlockType.PREREQUISITE, BlockType.EXPECTATIONS,
+    BlockType.HYPOTHESIS, BlockType.INCLUSION_EXCLUSION_CRITERIA,
+    BlockType.STATEMENT, BlockType.CLAIM, BlockType.ENTITY, BlockType.DEFINITION,
+    BlockType.BIOLOGICAL_MECHANISM, BlockType.ASSUMPTIONS, BlockType.RESULT,
+    BlockType.FINDING, BlockType.STATISTICAL_PROCESSING, BlockType.LIMITATIONS,
+    BlockType.SIDE_FINDINGS, BlockType.SIDE_EFFECTS, BlockType.POST_CLAIMS,
+    BlockType.OPEN_QUESTIONS, BlockType.NOVELTY,
+    BlockType.FUTURE_RESEARCH_SUGGESTIONS, BlockType.LINK_WITH_AGING,
+    BlockType.SCIENTIFIC_KNOWLEDGE_VALUE, BlockType.IDENTIFIABILITY_CRITERIA,
+})
+MAP_EVIDENCE_TYPES: FrozenSet[str] = frozenset(
+    set(BlockType.ALL_TYPES_SET) - set(MAP_NODE_TYPES)
+)
+
+# Only these typed references assign a non-node row as evidence/property of
+# the referring node. Other references are interpreted by map transition rules.
+EVIDENCE_OWNER_FIELDS: FrozenSet[str] = frozenset({
+    "experimentalPairs", "controlPairs", "groupRefs", "comparisonGroupRefs",
+    "pValueRef", "statisticRefs", "conditionRef", "supportedBy", "sourceRefs",
 })
 
 # Поля, хранящие одиночную ссылку-тег B##.
@@ -378,6 +394,9 @@ REFS_FIELDS: FrozenSet[str] = frozenset({
     "comparisonGroupRefs", "statisticRefs", "sourceRefs", "experiments",
     "hypotheses", "supportedBy",
 })
+
+# Kept empty for source compatibility with older imports.
+REF_GROUPS_FIELDS: FrozenSet[str] = frozenset()
 
 
 def fields_for(block_type: str) -> Dict[str, FieldSpec]:
@@ -432,7 +451,10 @@ def allowed_kinds(block_type: str) -> Dict[str, str]:
     return {spec.json_field: spec.kind for spec in DSL_FIELDS.get(block_type, {}).values()}
 
 
-def render_field_docs(block_type: str) -> str:
+_COMMON_MAP_DSL_KEYS: FrozenSet[str] = frozenset()
+
+
+def render_field_docs(block_type: str, *, include_common: bool = False) -> str:
     """Компактная строка-документация полей для LLM-промпта.
 
     Вывод намеренно содержит только DSL-ключи, которые разрешено писать
@@ -440,9 +462,11 @@ def render_field_docs(block_type: str) -> str:
     """
     parts = []
     for key, spec in DSL_FIELDS.get(block_type, {}).items():
+        if key in _COMMON_MAP_DSL_KEYS and not include_common:
+            continue
         kind = {"str": "plain", "int": "int", "float": "number",
                 "bool": "bool", "ref": "ref", "refs": "refs",
-                "strs": "list"}[spec.kind]
+                "strs": "list", "ref_groups": "ref-groups"}[spec.kind]
         required_mark = "(required)" if spec.required else ""
         description = spec.description
         if spec.choices:
@@ -452,9 +476,14 @@ def render_field_docs(block_type: str) -> str:
     return " ".join(parts)
 
 
+def render_common_map_field_docs() -> str:
+    """Compatibility helper; map transitions are not model-generated fields."""
+    return ""
+
+
 def render_type_doc() -> str:
     """Полная справка «TYPE KEY -> fields» для LLM-промпта прямой типизации."""
-    lines = []
+    lines: List[str] = []
     for block_type in BlockType.ALL_TYPES:
         docs = render_field_docs(block_type)
         lines.append(f"  {block_type}: {docs}")
@@ -462,18 +491,21 @@ def render_type_doc() -> str:
 
 
 def referenced_tags(block_type: str, data: dict) -> List[str]:
-    """Собирает все теги B##, на которые ссылается строка (по REF-полям).
+    """Collect all B-tags referenced by the typed fields of a structural row.
 
-    Используется для выявления закономерностей между строками и построения
-    рёбер Карты Знаний.
+    References validate provenance and are interpreted by typed transition and
+    evidence-ownership rules in the deterministic knowledge-map builder.
     """
     from .dsl_tags import iter_tags
     tags: List[str] = []
     for key, spec in DSL_FIELDS.get(block_type, {}).items():
-        if spec.kind not in ("ref", "refs"):
+        if spec.kind not in ("ref", "refs", "ref_groups"):
             continue
         value = data.get(spec.json_field)
         if value is None:
             continue
-        tags.extend(iter_tags(value))
+        if spec.kind == "ref_groups":
+            tags.extend(tag for group in value for tag in group)
+        else:
+            tags.extend(iter_tags(value))
     return tags

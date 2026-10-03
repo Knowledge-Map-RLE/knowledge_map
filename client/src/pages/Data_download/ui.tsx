@@ -1,20 +1,10 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from 'react-i18next';
 import Header from "../../widgets/Header";
 import { useDataDownload } from "./hooks/useDataDownload";
 import { useCitationDownload } from "./hooks/useCitationDownload";
 import type { DataSourceStatus, DataSourceState, CitationSourceStatus, CitationSourceState, CitationTestResult } from "./model";
 import styles from "./Data_download.module.css";
-
-const stateLabels: Record<DataSourceState, string> = {
-    idle: "Ожидание",
-    starting: "Запуск...",
-    downloading: "Загрузка",
-    paused: "Приостановлено",
-    stopped: "Остановлено",
-    processing: "Обработка",
-    completed: "Завершено",
-    error: "Ошибка",
-};
 
 const stateIcons: Record<DataSourceState, string> = {
     idle: "⏸",
@@ -27,15 +17,6 @@ const stateIcons: Record<DataSourceState, string> = {
     error: "❌",
 };
 
-const citationStateLabels: Record<CitationSourceState, string> = {
-    idle: "Ожидание",
-    downloading: "Загрузка",
-    layouting: "Укладка графа",
-    completed: "Завершено",
-    error: "Ошибка",
-    paused: "Приостановлено",
-};
-
 const citationStateIcons: Record<CitationSourceState, string> = {
     idle: "⏸",
     downloading: "📥",
@@ -43,13 +24,6 @@ const citationStateIcons: Record<CitationSourceState, string> = {
     completed: "✅",
     error: "❌",
     paused: "⏸",
-};
-
-const sourceTypeIcons: Record<string, string> = {
-    "ftp": "📡 FTP",
-    "s3": "🪣 S3 (Open Data)",
-    "api+bulk": "🌐 API + Dump",
-    "s3+api": "🪣 S3 + API",
 };
 
 // ── Shared Components ────────────────────────────────────────────────────
@@ -94,6 +68,7 @@ interface SourceCardProps {
 }
 
 const SourceCard: React.FC<SourceCardProps> = ({ source, onStart, onPause, onReset }) => {
+    const { t } = useTranslation();
     const isRunning =
         source.status === "downloading" || source.status === "starting" || source.status === "processing";
     const isIdle = source.status === "idle";
@@ -103,22 +78,22 @@ const SourceCard: React.FC<SourceCardProps> = ({ source, onStart, onPause, onRes
             <div className={styles.cardHeader}>
                 <h3 className={styles.sourceName}>{source.name}</h3>
                 <span className={styles.sourceType}>
-                    {source.source_type === "s3" ? "🪣 S3 (Open Data)" : "📡 FTP"}
+                    {source.source_type === "s3" ? t('dataDownload.sourceTypes.s3') : t('dataDownload.sourceTypes.ftp')}
                 </span>
                 <span className={styles.stateBadge}>
-                    {stateIcons[source.status]} {stateLabels[source.status]}
+                    {stateIcons[source.status]} {t(`dataDownload.status.${source.status}`)}
                 </span>
             </div>
             <div className={styles.progressArea}>
                 <ProgressBar
-                    label="Загрузка"
+                    label={t('dataDownload.progress.download')}
                     percent={source.progress_percent}
                     done={source.downloaded_files}
                     total={source.total_files}
                     currentFile={source.status === "downloading" ? source.current_file : undefined}
                 />
                 <ProgressBar
-                    label="Обработка"
+                    label={t('dataDownload.progress.processing')}
                     percent={source.processing_percent}
                     done={source.processed_files}
                     total={source.processing_total}
@@ -141,12 +116,12 @@ const SourceCard: React.FC<SourceCardProps> = ({ source, onStart, onPause, onRes
             )}
             <div className={styles.actions}>
                 {(isIdle || source.status === "paused" || source.status === "stopped" || source.status === "completed" || source.status === "error") && (
-                    <button className={styles.startBtn} onClick={onStart}>▶ Старт</button>
+                    <button className={styles.startBtn} onClick={onStart}>{t('dataDownload.actions.start')}</button>
                 )}
                 {isRunning && (
-                    <button className={styles.pauseBtn} onClick={onPause}>⏸ Пауза</button>
+                    <button className={styles.pauseBtn} onClick={onPause}>{t('dataDownload.actions.pause')}</button>
                 )}
-                <button className={styles.resetBtn} onClick={onReset}>↻ Сброс</button>
+                <button className={styles.resetBtn} onClick={onReset}>{t('dataDownload.actions.reset')}</button>
             </div>
         </div>
     );
@@ -165,12 +140,13 @@ interface CitationCardProps {
     testing: boolean;
 }
 
-const citationSourceTypes: Record<string, string> = {
-    "api+bulk": "🌐 API + Dump",
-    "s3+api": "🪣 S3 + API",
+const citationSourceTypes: Record<string, true> = {
+    "api+bulk": true,
+    "s3+api": true,
 };
 
 const CitationSourceCard: React.FC<CitationCardProps> = ({ source, onStart, onResume, onPause, onReset, onTest, testResult, testing }) => {
+    const { t } = useTranslation();
     const [maxFiles, setMaxFiles] = useState("");
     const isRunning = source.status === "downloading" || source.status === "layouting";
     const isPaused = source.status === "paused";
@@ -186,10 +162,10 @@ const CitationSourceCard: React.FC<CitationCardProps> = ({ source, onStart, onRe
             <div className={styles.cardHeader}>
                 <h3 className={styles.sourceName}>{source.name}</h3>
                 <span className={styles.sourceType}>
-                    {citationSourceTypes[source.source_type] || source.source_type}
+                    {citationSourceTypes[source.source_type] ? t(`dataDownload.sourceTypes.${source.source_type}`) : source.source_type}
                 </span>
                 <span className={styles.stateBadge}>
-                    {citationStateIcons[source.status]} {citationStateLabels[source.status]}
+                    {citationStateIcons[source.status]} {t(`dataDownload.status.${source.status}`)}
                 </span>
             </div>
 
@@ -197,7 +173,7 @@ const CitationSourceCard: React.FC<CitationCardProps> = ({ source, onStart, onRe
 
             <div className={styles.progressArea}>
                 <ProgressBar
-                    label="Edges загружено"
+                    label={t('dataDownload.progress.edgesLoaded')}
                     percent={source.progress_percent}
                     done={source.downloaded_edges}
                     total={source.total_edges}
@@ -211,14 +187,14 @@ const CitationSourceCard: React.FC<CitationCardProps> = ({ source, onStart, onRe
 
             <div className={styles.fileLimitRow}>
                 <label className={styles.fileLimitLabel} htmlFor={`limit-${source.key}`}>
-                    Лимит файлов:
+                    {t('dataDownload.citations.fileLimit')}
                 </label>
                 <input
                     id={`limit-${source.key}`}
                     className={styles.fileLimitInput}
                     type="number"
                     min={1}
-                    placeholder="все"
+                    placeholder={t('dataDownload.citations.allFiles')}
                     value={maxFiles}
                     onChange={(e) => setMaxFiles(e.target.value)}
                     disabled={isRunning}
@@ -227,16 +203,16 @@ const CitationSourceCard: React.FC<CitationCardProps> = ({ source, onStart, onRe
 
             {testResult && (
                 <div className={styles.testResult}>
-                    <div className={styles.testTitle}>Тест API ({testResult.sample_size} DOI):</div>
+                    <div className={styles.testTitle}>{t('dataDownload.citations.apiTest', { count: testResult.sample_size })}</div>
                     <div className={styles.testRow}>
-                        <span>Найдено edges: <strong>{testResult.edges_found}</strong></span>
-                        <span>Время: <strong>{testResult.elapsed_seconds}с</strong></span>
+                        <span>{t('dataDownload.citations.edgesFound')}: <strong>{testResult.edges_found}</strong></span>
+                        <span>{t('dataDownload.citations.elapsed')}: <strong>{testResult.elapsed_seconds}{t('dataDownload.citations.seconds')}</strong></span>
                     </div>
                     {testResult.estimated_total_edges && (
                         <div className={styles.testRow}>
-                            <span>Оценка edges: <strong>{testResult.estimated_total_edges.toLocaleString()}</strong></span>
+                            <span>{t('dataDownload.citations.estimatedEdges')}: <strong>{testResult.estimated_total_edges.toLocaleString()}</strong></span>
                             {testResult.estimated_time_seconds && (
-                                <span>~{Math.round(testResult.estimated_time_seconds / 3600)}ч загрузки</span>
+                                <span>{t('dataDownload.citations.estimatedHours', { hours: Math.round(testResult.estimated_time_seconds / 3600) })}</span>
                             )}
                         </div>
                     )}
@@ -251,23 +227,23 @@ const CitationSourceCard: React.FC<CitationCardProps> = ({ source, onStart, onRe
             <div className={styles.actions}>
                 {canStart && (
                     <>
-                        <button className={styles.startBtn} onClick={() => onStart(parseMaxFiles())}>▶ Старт</button>
+                        <button className={styles.startBtn} onClick={() => onStart(parseMaxFiles())}>{t('dataDownload.actions.start')}</button>
                         <button
                             className={styles.testBtn}
                             onClick={onTest}
                             disabled={testing}
                         >
-                            {testing ? "⏳ Тест..." : "🧪 Тест API"}
+                            {testing ? t('dataDownload.citations.testing') : t('dataDownload.citations.testApi')}
                         </button>
                     </>
                 )}
                 {isPaused && (
-                    <button className={styles.startBtn} onClick={onResume}>▶ Продолжить</button>
+                    <button className={styles.startBtn} onClick={onResume}>{t('dataDownload.actions.resume')}</button>
                 )}
                 {isRunning && (
-                    <button className={styles.pauseBtn} onClick={onPause}>⏸ Пауза</button>
+                    <button className={styles.pauseBtn} onClick={onPause}>{t('dataDownload.actions.pause')}</button>
                 )}
-                <button className={styles.resetBtn} onClick={onReset}>↻ Сброс</button>
+                <button className={styles.resetBtn} onClick={onReset}>{t('dataDownload.actions.reset')}</button>
             </div>
         </div>
     );
@@ -280,6 +256,7 @@ interface DoiLookupProps {
 }
 
 const DoiLookup: React.FC<DoiLookupProps> = ({ onLoadDoi }) => {
+    const { t } = useTranslation();
     const [doi, setDoi] = useState("");
     const [result, setResult] = useState<any>(null);
     const [loading, setLoading] = useState(false);
@@ -297,7 +274,7 @@ const DoiLookup: React.FC<DoiLookupProps> = ({ onLoadDoi }) => {
 
     return (
         <div className={styles.doiLookup}>
-            <h3 className={styles.doiLookupTitle}>Поиск по DOI</h3>
+            <h3 className={styles.doiLookupTitle}>{t('dataDownload.doi.title')}</h3>
             <div className={styles.doiInputRow}>
                 <input
                     className={styles.doiInput}
@@ -312,16 +289,16 @@ const DoiLookup: React.FC<DoiLookupProps> = ({ onLoadDoi }) => {
                     onClick={handleLoad}
                     disabled={loading || !doi.trim()}
                 >
-                    {loading ? "⏳..." : "🔍 Найти"}
+                    {loading ? t('dataDownload.doi.loading') : t('dataDownload.doi.find')}
                 </button>
             </div>
             {result && (
                 <div className={styles.doiResult}>
                     <div className={styles.testRow}>
                         <span>DOI: <strong>{result.doi}</strong></span>
-                        <span>Raw edges: <strong>{result.total_edges_raw}</strong></span>
-                        <span>Уникальных: <strong>{result.unique_edges}</strong></span>
-                        <span>Записано: <strong>{result.written_ops}</strong></span>
+                        <span>{t('dataDownload.doi.rawEdges')}: <strong>{result.total_edges_raw}</strong></span>
+                        <span>{t('dataDownload.doi.unique')}: <strong>{result.unique_edges}</strong></span>
+                        <span>{t('dataDownload.doi.written')}: <strong>{result.written_ops}</strong></span>
                     </div>
                     {result.sources && Object.entries(result.sources).map(([k, v]: [string, any]) => (
                         <div key={k} className={styles.testRow}>
@@ -330,7 +307,7 @@ const DoiLookup: React.FC<DoiLookupProps> = ({ onLoadDoi }) => {
                     ))}
                     {result.layout && (
                         <div className={styles.testRow}>
-                            <span>Укладка: <strong>{result.layout.updated}</strong> узлов обновлено</span>
+                            <span>{t('dataDownload.doi.layout')}: <strong>{result.layout.updated}</strong> {t('dataDownload.doi.nodesUpdated')}</span>
                         </div>
                     )}
                 </div>
@@ -342,6 +319,7 @@ const DoiLookup: React.FC<DoiLookupProps> = ({ onLoadDoi }) => {
 // ── Main Page ────────────────────────────────────────────────────────────
 
 const DataDownloadUI: React.FC = () => {
+    const { t } = useTranslation();
     const {
         sources: pubmedSources,
         loading: pubmedLoading,
@@ -384,7 +362,7 @@ const DataDownloadUI: React.FC = () => {
         return (
             <div className={styles.container}>
                 <Header showSearch={true} className={styles.header} />
-                <div className={styles.loading}>Загрузка...</div>
+                <div className={styles.loading}>{t('dataDownload.status.loading')}</div>
             </div>
         );
     }
@@ -393,7 +371,7 @@ const DataDownloadUI: React.FC = () => {
         return (
             <div className={styles.container}>
                 <Header showSearch={true} className={styles.header} />
-                <div className={styles.error}>Ошибка: {errorMsg}</div>
+                <div className={styles.error}>{t('dataDownload.status.error', { error: errorMsg })}</div>
             </div>
         );
     }
@@ -403,19 +381,19 @@ const DataDownloadUI: React.FC = () => {
             <Header showSearch={true} className={styles.header} />
             <main className={styles.main}>
                 <div className={styles.titleRow}>
-                    <h1 className={styles.title}>Загрузка данных</h1>
+                    <h1 className={styles.title}>{t('dataDownload.title')}</h1>
                     <span className={`${styles.connectionStatus} ${isConnected ? styles.connected : styles.disconnected}`}>
-                        {isConnected ? "🟢 Подключено" : "🔴 Отключено"}
+                        {isConnected ? t('dataDownload.status.connected') : t('dataDownload.status.disconnected')}
                     </span>
                 </div>
 
                 {/* ── PubMed Sources ──────────────────────────────────── */}
                 <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>PubMed / PMC</h2>
-                    <span className={styles.sectionBadge}>Статьи</span>
+                    <span className={styles.sectionBadge}>{t('dataDownload.articles.badge')}</span>
                 </div>
                 <p className={styles.description}>
-                    Загрузка научных статей из PubMed и PubMed Central (FTP/S3).
+                    {t('dataDownload.articles.description')}
                 </p>
                 <div className={styles.sourcesList}>
                     {pubmedSources.map((source) => (
@@ -430,19 +408,18 @@ const DataDownloadUI: React.FC = () => {
                 </div>
                 {pubmedSources.length === 0 && (
                     <div className={styles.empty}>
-                        Источники PubMed не найдены. Нажмите кнопку для инициализации.
+                        {t('dataDownload.articles.empty')}
                     </div>
                 )}
 
                 {/* ── Citation Graph Sources ──────────────────────────── */}
                 <div className={styles.sectionDivider} />
                 <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>Цитатный граф (DOI)</h2>
-                    <span className={styles.sectionBadge}>Зависимости</span>
+                    <h2 className={styles.sectionTitle}>{t('dataDownload.citations.title')}</h2>
+                    <span className={styles.sectionBadge}>{t('dataDownload.citations.badge')}</span>
                 </div>
                 <p className={styles.description}>
-                    Данные о цитированиях и ссылках между документами (DOI). Источники:
-                    OpenCitations, OpenAlex, Crossref, DataCite.
+                    {t('dataDownload.citations.description')}
                 </p>
                 <div className={styles.sourcesList}>
                     {citationSources.map((source) => (
@@ -461,7 +438,7 @@ const DataDownloadUI: React.FC = () => {
                 </div>
                 {citationSources.length === 0 && (
                     <div className={styles.empty}>
-                        Источники цитат не найдены. Нажмите кнопку для инициализации.
+                        {t('dataDownload.citations.empty')}
                     </div>
                 )}
 

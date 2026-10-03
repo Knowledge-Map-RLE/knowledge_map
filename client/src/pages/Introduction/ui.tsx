@@ -1,18 +1,20 @@
 import Header from '../../widgets/Header';
+import { useTranslation } from 'react-i18next';
 import styles from './Introduction.module.css';
 
 const IntroductionUI: React.FC = () => {
+    const { t } = useTranslation();
     return (
         <div className={styles.container}>
             <Header showSearch={true} className={styles.header} />
             <main className={styles.main}>
                 <div className={styles.start_text}>
-                    Карта Знаний — инструмент (в разработке) для решения задачи радикального продления жизни
+                    {t('introduction.overview')}
                     <br />
-                    (На заднем фоне анимация с примерами)
+                    {t('introduction.animationNote')}
                 </div>
-                <div>Путь от идей проекта к цели РПЖ</div>
-                <div>Получаем данные — Подпроект "База данных по базам данных"</div>
+                <div>{t('introduction.projectPath')}</div>
+                <div>{t('introduction.dataSources')}</div>
             </main>
         </div>
     );

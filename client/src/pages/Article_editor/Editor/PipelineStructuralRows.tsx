@@ -1,5 +1,6 @@
 import styles from '../Article_editor.module.css';
 import { getBlockTypeDef } from './blockTypes';
+import { useTranslation } from 'react-i18next';
 
 export type StructuralTerm = { kind?: string; id?: string; value?: string; unit?: string };
 
@@ -8,6 +9,8 @@ export type StructuralRow = {
     blockType: 'entity' | 'statement' | string;
     order: number;
     data: Record<string, unknown>;
+    display_text?: string;
+    localized_type_name?: string;
 };
 
 type StructuralNode = { id: string; display_text: string };
@@ -15,8 +18,10 @@ type StructuralNode = { id: string; display_text: string };
 type PipelineStructuralRowsProps = {
     rows: StructuralRow[];
     nodes: StructuralNode[];
+    nodeIds?: ReadonlySet<string>;
     busy: boolean;
     onInspect?: (instanceId: string) => void;
+    appearance?: 'pipeline' | 'document';
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -136,7 +141,15 @@ function TypedProse({ row }: { row: StructuralRow }) {
     );
 }
 
-export default function PipelineStructuralRows({ rows, nodes, busy, onInspect }: PipelineStructuralRowsProps) {
+export default function PipelineStructuralRows({
+    rows,
+    nodes,
+    nodeIds,
+    busy,
+    onInspect,
+    appearance = 'pipeline',
+}: PipelineStructuralRowsProps) {
+    const { t } = useTranslation();
     const nodeLabels = new Map(nodes.map(node => [node.id, node.display_text]));
     rows.forEach(row => {
         if (row.blockType === 'entity') {
@@ -144,43 +157,52 @@ export default function PipelineStructuralRows({ rows, nodes, busy, onInspect }:
             if (id) nodeLabels.set(id, asText(row.data.label) || asText(row.data.text) || id);
         }
     });
-    return (
-        <div className={styles.pipelineRows} aria-label="Структурные строки">
-            {rows.map(row => {
-                const source = sourceSpanText(row);
-                return (
-                    <article
-                        key={row.instanceId}
-                        className={styles.pipelineRow}
-                        data-pipeline-structural-row={row.instanceId}
-                        style={{ ['--pad' as string]: '52px', ['--wy-chip-color' as string]: typeColor(row.blockType) }}
-                    >
-                        <div className={styles.pipelineGutter} aria-hidden="true">
-                            <span className={styles.pipelineTypeName} title={row.blockType}>{typeName(row.blockType)}</span>
-                        </div>
-                        <span className={styles.pipelineBar} aria-hidden="true" />
-                        <div className={styles.pipelineContent}>
-                            {row.blockType === 'entity'
-                                ? <EntityProse row={row} />
-                                : row.blockType === 'statement'
-                                    ? <StatementProse row={row} nodeLabels={nodeLabels} />
-                                    : <TypedProse row={row} />}
-                            <span className={styles.pipelineFoot}>
-                                <span title={row.instanceId}>#{row.order + 1} · {row.instanceId.slice(0, 8)}</span>
-                                {source && <span>источник {source}</span>}
-                                {onInspect && <button
-                                    type="button"
-                                    disabled={busy}
-                                    onClick={() => onInspect(row.instanceId)}
-                                    title="Показать исходный фрагмент и provenance"
-                                >
-                                    источник
-                                </button>}
-                            </span>
-                        </div>
-                    </article>
-                );
-            })}
-        </div>
-    );
+    const rowsContent = rows.map(row => {
+        const source = sourceSpanText(row);
+        return (
+            <article
+                key={row.instanceId}
+                className={styles.pipelineRow}
+                data-pipeline-structural-row={row.instanceId}
+                style={{ ['--pad' as string]: '52px', ['--wy-chip-color' as string]: typeColor(row.blockType) }}
+            >
+                <div className={styles.pipelineGutter} aria-hidden="true">
+                    <span className={styles.pipelineTypeName} title={row.blockType}>{row.localized_type_name || t(`articleEditor.blockTypes.${row.blockType}`, { defaultValue: typeName(row.blockType) })}</span>
+                </div>
+                <span className={styles.pipelineBar} aria-hidden="true" />
+                <div className={styles.pipelineContent}>
+                    {row.display_text
+                        ? <Word strong>{row.display_text}</Word>
+                        : row.blockType === 'entity'
+                        ? <EntityProse row={row} />
+                        : row.blockType === 'statement'
+                            ? <StatementProse row={row} nodeLabels={nodeLabels} />
+                            : <TypedProse row={row} />}
+                    <span className={styles.pipelineFoot}>
+                        <span title={row.instanceId}>#{row.order + 1} · {row.instanceId.slice(0, 8)}</span>
+                        {nodeIds && <span>{t(nodeIds.has(row.instanceId) ? 'articleEditor.rows.mapNode' : 'articleEditor.rows.evidence')}</span>}
+                        {source && <span>{t('articleEditor.rows.sourceRange', { source })}</span>}
+                        {onInspect && <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => onInspect(row.instanceId)}
+                            title={t('articleEditor.rows.inspectSource')}
+                        >
+                            {t('articleEditor.rows.source')}
+                        </button>}
+                    </span>
+                </div>
+            </article>
+        );
+    });
+
+    if (appearance === 'document') {
+        return (
+            <div className={`${styles.wyScroller} ${styles.pipelineDocumentScroller}`} aria-label={t('articleEditor.rows.ariaLabel')}>
+                <div className={styles.wyDoc}>{rowsContent}</div>
+            </div>
+        );
+    }
+
+    return <div className={styles.pipelineRows} aria-label={t('articleEditor.rows.ariaLabel')}>{rowsContent}</div>;
 }

@@ -6,7 +6,7 @@ from knowledge_contracts.block_types import ALL_TYPES, KEY_TO_LEGACY_INT
 from .dsl_rows import escape_dsl_value
 
 PROMPT_ID = "KM.ARTICLE_ROWS"
-PROMPT_VERSION = "148"
+PROMPT_VERSION = "150"
 
 
 def type_doc_with_codes() -> str:
@@ -47,9 +47,11 @@ preserve non-assertional signposting as T3, use a dedicated type for a propositi
 when its role fits, and use T4 only as the last resort for an explicit ordinary
 proposition with no fitting dedicated type. Do not force a T4 triple merely because
 the words can be arranged as subject–predicate–object. T3 is not a fallback for
-difficult-but-resolvable factual claims. ref/refs/srcs
-target structural B-tags, never S<n> IDs or citation numbers; omit unsupported
-optional references. unit=S<n> is mandatory and final; never put S<n> in srcs=.
+difficult-but-resolvable factual claims. ref/refs/srcs target structural B-tags,
+never S<n> IDs or citation numbers; omit unsupported optional references.
+Knowledge-map transitions are built deterministically after structural extraction;
+do not emit graph nodes or graph edges. unit=S<n> is mandatory and final; never
+put S<n> in srcs=.
 Never output T49; the pipeline adds it. Each type permits only its catalogued keys.
 Do not create T3 rows for empty units, isolated punctuation/Markdown delimiters, or
 standalone section-number fragments; these are layout artifacts, not article content.

@@ -15,6 +15,15 @@ import services.article_editor_service as svc
 from services.article_editor_service import ArticleEditorService, _author_from_user_node
 
 
+class FakeDocumentRepository:
+    def __init__(self):
+        self.user_edits = []
+
+    def record_user_edit(self, user_uid, doc_uid):
+        self.user_edits.append((user_uid, doc_uid))
+        return True
+
+
 # ── _author_from_user_node ─────────────────────────────────────────────────────
 
 def test_author_from_user_node_none():
@@ -55,17 +64,24 @@ def test_create_article_sets_created_by_uid(monkeypatch):
 
     monkeypatch.setattr(svc, "Document", FakeDocument)
     monkeypatch.setattr(svc, "uuid8_str", lambda: "doc1")
+    repository = FakeDocumentRepository()
 
-    result = asyncio.run(ArticleEditorService().create_article(user_uid="u1", title="Title"))
+    result = asyncio.run(
+        ArticleEditorService(document_repository=repository).create_article(
+            user_uid="u1", title="Title"
+        )
+    )
 
     assert created["created_by_uid"] == "u1"
     assert result["uid"] == "doc1"
+    assert repository.user_edits == [("u1", "doc1")]
 
 
 # ── save_statements / save_blocks ──────────────────────────────────────────────
 
 def test_save_statements_passes_creator(monkeypatch):
-    service = ArticleEditorService()
+    repository = FakeDocumentRepository()
+    service = ArticleEditorService(document_repository=repository)
     monkeypatch.setattr(service, "get_document_status", AsyncMock(return_value="ready"))
     monkeypatch.setattr(service, "_is_editable_status", lambda _status: True)
 
@@ -87,10 +103,12 @@ def test_save_statements_passes_creator(monkeypatch):
     assert result["success"] is True
     assert created_batches
     assert created_batches[0][0]["creator"] == "u1"
+    assert repository.user_edits == [("u1", "doc1")]
 
 
 def test_save_blocks_passes_creator(monkeypatch):
-    service = ArticleEditorService()
+    repository = FakeDocumentRepository()
+    service = ArticleEditorService(document_repository=repository)
     monkeypatch.setattr(service, "get_document_status", AsyncMock(return_value="ready"))
     monkeypatch.setattr(service, "_is_editable_status", lambda _status: True)
 
@@ -112,6 +130,35 @@ def test_save_blocks_passes_creator(monkeypatch):
     assert result["success"] is True
     assert created_batches
     assert created_batches[0][0]["creator"] == "u1"
+    assert repository.user_edits == [("u1", "doc1")]
+
+
+def test_save_article_text_records_activity_after_success(monkeypatch):
+    class FakeS3Client:
+        async def upload_bytes(self, *_args, **_kwargs):
+            return True
+
+    repository = FakeDocumentRepository()
+    service = ArticleEditorService(document_repository=repository)
+    monkeypatch.setattr(service, "get_document_status", AsyncMock(return_value="ready"))
+    monkeypatch.setattr(svc, "get_s3_client", lambda: FakeS3Client())
+    monkeypatch.setattr(svc.db, "cypher_query", lambda *_args, **_kwargs: ([], None))
+
+    result = asyncio.run(service.save_article_text("doc1", "# Title", user_uid="u1"))
+
+    assert result["success"] is True
+    assert repository.user_edits == [("u1", "doc1")]
+
+
+def test_update_article_title_records_activity(monkeypatch):
+    repository = FakeDocumentRepository()
+    service = ArticleEditorService(document_repository=repository)
+    monkeypatch.setattr(svc.db, "cypher_query", lambda *_args, **_kwargs: ([], None))
+
+    result = asyncio.run(service.update_article_title("doc1", "Biology 5 class", user_uid="u1"))
+
+    assert result["success"] is True
+    assert repository.user_edits == [("u1", "doc1")]
 
 
 # ── get_article / get_blocks / list_articles ───────────────────────────────────

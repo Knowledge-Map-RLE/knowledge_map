@@ -51,8 +51,7 @@ def finalize(repo, doc_id, result, actor, output):
               "blocks": len(blocks),
               "relations": sum(b["blockType"] in ("relation", "temporal_relation") for b in blocks),
               "graph_nodes": len(result["graph"]["nodes"]),
-              "graph_edges": len(result["graph"].get("semantic_edges", []))
-                           + len(result["graph"].get("dependency_edges", [])),
+              "graph_edges": len(result["graph"].get("edges", [])),
               "dedup": result["quality_metrics"]["structural_rows"]["duplicate_fingerprint_candidates"],
               "reference_assertions": sum(line.startswith("S") and ": " in line
                                           for line in reference.splitlines()),

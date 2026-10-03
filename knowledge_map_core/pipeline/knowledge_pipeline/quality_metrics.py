@@ -11,13 +11,13 @@ from collections import Counter, deque
 from typing import Any
 
 from knowledge_contracts.block_types import BlockType
-from knowledge_contracts.block_dsl import REF_FIELDS, REFS_FIELDS
+from knowledge_contracts.block_dsl import REF_FIELDS, REFS_FIELDS, REF_GROUPS_FIELDS
 from knowledge_contracts.validation import (ValidationError, validate_linguistic,
                                             validate_map, validate_structural)
 from .caption_units import caption_unit_ids
 
 
-QUALITY_METRICS_VERSION = 5
+QUALITY_METRICS_VERSION = 6
 
 
 _EVIDENCE_NON_TEXT_KEYS = {"tag", "unit", "source", "provenance", "subjectOperation"}
@@ -62,7 +62,8 @@ def _evidence_check(source, profile, blocks):
         terms: set[str] = set()
         for key, value in data.items():
             if (key in _EVIDENCE_NON_TEXT_KEYS or key in REF_FIELDS
-                    or key in REFS_FIELDS or not isinstance(value, (str, list))):
+                    or key in REFS_FIELDS or key in REF_GROUPS_FIELDS
+                    or not isinstance(value, (str, list))):
                 continue
             values = value if isinstance(value, list) else [value]
             for item in values:
@@ -202,10 +203,10 @@ def evaluate_article_transformation(
 
     relation_rows = [block for block in blocks
                      if block["blockType"] in (BlockType.RELATION, BlockType.TEMPORAL_RELATION)]
-    semantic_edges = graph.get("semantic_edges", [])
+    edges = graph.get("edges", [])
     graph_nodes = graph.get("nodes", [])
     node_ids = {node["id"] for node in graph_nodes}
-    resolvable_edges = [edge for edge in semantic_edges
+    resolvable_edges = [edge for edge in edges
                         if edge["source"] in node_ids and edge["target"] in node_ids]
     degree = Counter(item for edge in resolvable_edges for item in (edge["source"], edge["target"]))
     orphan_nodes = [node["id"] for node in graph_nodes if node["id"] not in degree]
@@ -242,14 +243,14 @@ def evaluate_article_transformation(
         "structural_integrity": 1.0 if all(schema.values()) else 0.0,
         "provenance": _ratio(valid_provenance_blocks, len(blocks)),
         "semantic_coverage": _ratio(len(represented_token_ids), len(tokens)),
-        "relation_resolution": _ratio(len(semantic_edges), len(relation_rows)) if relation_rows else 1.0,
+        "edge_resolution": _ratio(len(resolvable_edges), len(edges)),
         "graph_health": (
-            _ratio(len(resolvable_edges), len(semantic_edges)) +
+            _ratio(len(resolvable_edges), len(edges)) +
             (1.0 - _ratio(len(orphan_nodes), len(graph_nodes)))
         ) / 2,
     }
     weights = {"structural_integrity": 0.20, "provenance": 0.20, "semantic_coverage": 0.20,
-               "relation_resolution": 0.20, "graph_health": 0.20}
+               "edge_resolution": 0.20, "graph_health": 0.20}
     automated_score = round(100 * sum(automated_components[key] * weights[key] for key in weights), 2)
 
     return {
@@ -278,8 +279,8 @@ def evaluate_article_transformation(
         },
         "knowledge_map": {
             "node_count": len(graph_nodes),
-            "semantic_edge_count": len(semantic_edges),
-            "link_resolvability": _ratio(len(resolvable_edges), len(semantic_edges)),
+            "edge_count": len(edges),
+            "link_resolvability": _ratio(len(resolvable_edges), len(edges)),
             "orphan_node_count": len(orphan_nodes),
             "orphan_node_fraction": _ratio(len(orphan_nodes), len(graph_nodes)),
             "weakly_connected_components": _components(graph_nodes, resolvable_edges),

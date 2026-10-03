@@ -12,7 +12,7 @@ Forbidden imports: neomodel (напрямую)
 """
 from typing import Optional
 
-from fastapi import Depends
+from fastapi import Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from adapters.repositories.block_repository import BlockRepository
@@ -127,6 +127,20 @@ def get_current_user(
     if not user:
         raise AuthenticationFailed("Токен недействителен")
     return user
+
+
+def get_document_viewer(
+    request: Request,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
+) -> Optional[dict]:
+    """Public document browsing with a verified identity when supplied.
+
+    Anonymous readers use the common ordering. Any supplied Authorization
+    header must pass the same verification as authenticated operations.
+    """
+    if "authorization" not in request.headers:
+        return None
+    return get_current_user(credentials)
 
 
 def is_admin_user(user: dict) -> bool:
