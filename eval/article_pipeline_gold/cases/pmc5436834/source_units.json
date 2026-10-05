@@ -1,0 +1,260 @@
+{
+  "article_id": "pilot-pmc10000452-pmc5436834-10b9d676a760e5df",
+  "content_end": 20167,
+  "coordinate_space": "article.md",
+  "offset_encoding": "unicode_codepoints",
+  "pipeline_id": "text_reified",
+  "references_excluded_from_extraction": true,
+  "references_removed": false,
+  "schema_version": 1,
+  "source_revision_id": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+  "source_sha256": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+  "source_text_length": 33006,
+  "source_units": [
+    {
+      "end": 60,
+      "id": "U1",
+      "section_id": "H1",
+      "start": 0,
+      "text": "# Tumor necrosis factor α Inhibition for Alzheimer’s Disease"
+    },
+    {
+      "end": 123,
+      "id": "U2",
+      "section_id": "H1",
+      "start": 62,
+      "text": "**Journal:** Journal of Central Nervous System Disease (2017)"
+    },
+    {
+      "end": 158,
+      "id": "U3",
+      "section_id": "H1",
+      "start": 125,
+      "text": "**DOI:** 10.1177/1179573517709278"
+    },
+    {
+      "end": 172,
+      "id": "U4",
+      "section_id": "H2",
+      "start": 161,
+      "text": "## Abstract"
+    },
+    {
+      "end": 655,
+      "id": "U5",
+      "section_id": "H2",
+      "start": 174,
+      "text": "Tumor necrosis factor α (TNF-α) plays a central role in the pathophysiology of Alzheimer’s disease (AD). Food and Drug Administration–approved biologic TNF-α inhibitors are thus a potential treatment for AD, but they do not cross the blood-brain barrier. In this short review, we discuss the involvement of TNF-α in AD, challenges associated with the development of existing biologic TNF-α inhibitors for AD, and potential therapeutic strategies for targeting TNF-α for AD therapy."
+    },
+    {
+      "end": 741,
+      "id": "U6",
+      "section_id": "H2",
+      "start": 657,
+      "text": "Keywords: Alzheimer’s disease, TNF-α, blood-brain barrier, biologic TNF-α inhibitors"
+    },
+    {
+      "end": 759,
+      "id": "U7",
+      "section_id": "H3",
+      "start": 744,
+      "text": "## Introduction"
+    },
+    {
+      "end": 1290,
+      "id": "U8",
+      "section_id": "H3",
+      "start": 761,
+      "text": "Alzheimer’s disease (AD) is the leading cause of dementia worldwide and represents one of the most serious health issues for the elderly. An estimated 5.4 million Americans have AD, and this number is expected to triple in 2050 due to lack of medical breakthroughs to stop, prevent, or slow the disease.1 Over the years, research efforts have focused extensively on delineating the mechanisms and identifying targets involved in AD pathogenesis; however, to date, no disease-modifying therapy has been clinically approved for AD."
+    },
+    {
+      "end": 2978,
+      "id": "U9",
+      "section_id": "H3",
+      "start": 1292,
+      "text": "The 2 major neuropathological hallmarks of AD are extracellular deposition of amyloid beta (Aβ)–containing senile plaques and intracellular tau-containing neurofibrillary tangles (NFTs) in the brain.2 Aβ plaque formation is considered relatively specific to AD pathology; however, NFTs are found associated with other disorders as well.3 Aβ plaque formation involves a cascade of events beginning with the sequential cleavage of the amyloid precursor protein (APP), a large transmembrane protein, by proteolytic enzymes β-secretase and γ-secretase. Cleavage by γ-secretase releases Aβ, peptides which are usually composed of 40 to 42 amino acid residues, into the extracellular space where they aggregate into oligomers, β-sheet–structured fibrils, followed by clumping into Aβ plaques.4 Some studies suggest that Aβ pathology more closely reflects the preclinical (asymptomatic) stage of AD, whereas accumulation of tau tangles more closely reflects the onset of clinical symptoms in AD.5 Among the numerous targets explored to treat AD, anti-Aβ approaches directed toward removal of Aβ and/or decreasing its production (eg, inhibition of γ-secretase, active immunotherapy, and anti-Aβ antibodies) have shown promising results in animal models of AD6–8 and have been at the forefront of AD research. Most of the studies investigating the effects of anti-Aβ approaches have had limited success in mid- to late-stage clinical development and have failed to reach primary clinical end points.9 A recent study investigated the effect of a selective tau aggregation inhibitor in patients with mild-to-moderate AD. This anti-tau approach, however, failed to reach primary outcome measures.10"
+    },
+    {
+      "end": 3950,
+      "id": "U10",
+      "section_id": "H3",
+      "start": 2980,
+      "text": "More recent research has pivoted focus to cytokine-mediated neuroinflammation as a major contributor to the development of AD, and evidence suggests that inflammation promotes pathological processes that lead to AD.11–13 Among the cytokines involved in neuroinflammation, tumor necrosis factor α (TNF-α) is the most studied and plays an essential role in the cytokine cascade during an inflammatory response. Although the levels of TNF-α in the periphery and central nervous system (CNS) of healthy adults are maintained at very low levels, the levels of this cytokine are significantly elevated in blood14 and CNS12 of patients with AD, and many clinical and animal studies have demonstrated a link between excess TNF-α levels in the brain and AD.15 Here, we focus on the involvement of TNF-α in AD, challenges associated with the development of existing biologic TNF-α inhibitors (TNFIs) for AD, and potential therapeutic strategies for targeting TNF-α for AD therapy."
+    },
+    {
+      "end": 3981,
+      "id": "U11",
+      "section_id": "H4",
+      "start": 3953,
+      "text": "## TNF-α and TNF-α Receptors"
+    },
+    {
+      "end": 4613,
+      "id": "U12",
+      "section_id": "H4",
+      "start": 3983,
+      "text": "TNF-α, first recognized for its antitumor activity,16 is one of the main inflammatory cytokines involved in initiating and propagating an inflammatory response. TNF-α is a monomeric (17 kDa) nonglycosylated type 2 transmembrane protein that belongs to a superfamily of ligand/receptor proteins called the TNF/TNF receptor (TNF/TNFR) superfamily proteins. TNF-α is inserted into the membrane as a homotrimer which is then cleaved into a 51-kDa soluble trimer via proteolytic cleavage by the TNF-α–converting enzyme.17 In the central nervous system, TNF-α can be synthesized in the brain by microglia,18 neurons,19 and astrocytes.20"
+    },
+    {
+      "end": 5916,
+      "id": "U13",
+      "section_id": "H4",
+      "start": 4615,
+      "text": "TNF-α binds to 2 receptor subtypes, TNFR1 (p55-R) and TNFR2 (p75-R), each having distinct signaling pathways differentiated by the presence of an intracellular death domain (DD).21 TNFR1, which contains the DD, is ubiquitously expressed in various cell types and is activated through either soluble TNF-α (sTNF-α) or membrane TNF-α (mTNF-α).22 TNFR1, once activated, is involved in divergent effects including cell proliferation, activation, antiviral activity, and primarily in TNF-α–mediated apoptosis and cytotoxicity. TNFR2 has a higher affinity for TNF-α, is activated preferentially by mTNF-α, and is primarily expressed at low levels by cells of the immune system and endothelial cells.22 TNFR2 lacks the DD and can trigger signaling cascades that activate pro-inflammatory and pro-survival pathways through the activation of the cellular inhibitor of apoptosis proteins 1 and 2, nuclear factor κB, and phosphatidylinositol 3-kinase–dependent signaling pathways.23 Some studies also report an indirect role of TNFR2 in TNF-α–mediated cytotoxicity via the enhancement of TNFR1-mediated cytotoxicity, but no induction of cytotoxicity by TNFR2 alone.24 Overall, the general consensus is that TNFR1 exerts pro-apoptotic functions, whereas TNFR2 typically promotes cell survival and proliferation.23"
+    },
+    {
+      "end": 5945,
+      "id": "U14",
+      "section_id": "H5",
+      "start": 5919,
+      "text": "## TNF-α Involvement in AD"
+    },
+    {
+      "end": 6991,
+      "id": "U15",
+      "section_id": "H5",
+      "start": 5947,
+      "text": "The role of TNF-α in the pathophysiology of AD has been examined both in clinical and animal studies. One of the earliest evidence suggesting the involvement of TNF-α in AD pathophysiology was its presence around the Aβ plaque in postmortem human AD brains.25 Following studies in human AD brains showed that TNFR1 signaling is required for Aβ-induced neuronal death, and although TNFR1 protein levels are significantly greater in AD brains compared with nondemented brains, TNFR2 protein levels are lower.26 Furthermore, an increase in the binding affinity of TNF-α to TNFR1, but a decrease in binding affinity to TNFR2, was observed.26 Genetic association studies showed that chromosome 12p region encoding for the TNFR1 gene and the chromosome 1p region encoding for the TNFR2 gene are associated with late-onset AD.27 The role of TNF-α in AD pathology was further suggested by studies in which significant elevation of TNF-α levels in the cerebrospinal fluid (CSF)28 and serum29,30 of patients with AD correlated with disease progression.30"
+    },
+    {
+      "end": 8603,
+      "id": "U16",
+      "section_id": "H5",
+      "start": 6993,
+      "text": "The reported clinical findings regarding the role of TNF-α in AD pathology are consistent with observations made in mouse models of AD. Elevated TNF-α levels were observed in the brain tissues of AD transgenic mice.31 Furthermore, elevated TNF-α levels were associated with intraneuronal Aβ immunoreactivity in the entorhinal cortex, and these elevated TNF-α levels correlated with cognitive deficits in AD mice.32 The role of TNF-α signaling in abnormal APP processing, Aβ plaque accumulation, tau-related pathology, and cell death has also been reported. Deletion of TNFR1 in AD transgenic mice lowered Aβ formation, Aβ plaque burden, β-secretase 1 (BACE1) expression, and cognitive deficits.33 However, ablation of both TNFR1 and TNFR2 exacerbated Aβ and tau pathology due to aggravation of TNFR1-mediated AD pathology resulting from silencing of TNFR2.34 Furthermore, genetic inactivation of TNFR1 signaling in AD transgenic mice prevented intraneuronal accumulation of Aβ,35 whereas genetic deletion of TNFR2 exacerbated AD pathology in a transgenic mouse model of AD.36 In AD transgenic mice, TNF-α increased Aβ production through upregulation of both β-secretase expression37 and γ-secretase activity,38 and chronic neuronal TNF-α expression resulted in extensive neuronal cell death.19 Excess TNF-α levels in the brain can disrupt clearance of Aβ by inhibiting microglial clearance of Aβ,39 cause synaptic dysfunction,40 and accelerate disease progression and cognitive decline.41 Overall, TNF-α–driven processes are involved at multiple stages of AD pathophysiology and disease progression (Figure 1)."
+    },
+    {
+      "end": 8970,
+      "id": "U17",
+      "section_id": "H5",
+      "start": 8606,
+      "text": "<figure>\n  <figcaption><strong>Figure 1</strong> Central role of TNF-α in AD pathophysiology. Elevated TNF-α levels in AD may enhance Aβ production, decrease Aβ clearance, increase neuronal loss and cell death, and are implicated in cognitive decline in AD. Aβ indicates amyloid beta; AD, Alzheimer’s disease; TNF-α, tumor necrosis factor α.</figcaption>\n</figure>"
+    },
+    {
+      "end": 9337,
+      "id": "U18",
+      "section_id": "H5",
+      "start": 8973,
+      "text": "<figure>\n  <figcaption><strong>Figure 1</strong> Central role of TNF-α in AD pathophysiology. Elevated TNF-α levels in AD may enhance Aβ production, decrease Aβ clearance, increase neuronal loss and cell death, and are implicated in cognitive decline in AD. Aβ indicates amyloid beta; AD, Alzheimer’s disease; TNF-α, tumor necrosis factor α.</figcaption>\n</figure>"
+    },
+    {
+      "end": 9364,
+      "id": "U19",
+      "section_id": "H6",
+      "start": 9340,
+      "text": "## Targeting TNF-α in AD"
+    },
+    {
+      "end": 10169,
+      "id": "U20",
+      "section_id": "H6",
+      "start": 9366,
+      "text": "The most potent TNFIs are biologic drugs that are Food and Drug Administration (FDA) approved for the treatment of peripheral inflammatory conditions including Crohn disease, rheumatoid arthritis, and psoriatic arthritis. These biologic TNFIs include TNF-α–specific monoclonal antibodies (MAbs) (infliximab, adalimumab, golimumab, and certolizumab), and recombinant fusion proteins (etanercept).15 TNF-α–specific MAbs bind to either mTNF-α or sTNF-α thus preventing TNF-α signaling mediated by both TNFRs. However, recombinant fusion protein TNFI (etanercept) is comprised of the extracellular domain (ECD) of the TNFR2 fused to the c-terminal of the Fc domain of human IgG1. The fusion protein also binds to both mTNF-α and sTNF-α with high affinity preventing TNF-α signaling mediated by both TNFRs.23"
+    },
+    {
+      "end": 11683,
+      "id": "U21",
+      "section_id": "H6",
+      "start": 10171,
+      "text": "The protective effects of TNF-α inhibition using these biologic TNFIs have been demonstrated both in clinical and experimental AD (Table 1). Inhibition of sTNF-α signaling by intracerebral infusion of a dominant negative TNFI prevented preplaque Aβ-associated pathology in a transgenic mouse model of AD.35 Intracerebroventricular injection of the anti-TNF-α MAb, infliximab, reduced TNF-α levels, Aβ plaques and tau-phosphorylation,42 and cognitive deficits43,44 in mouse models of AD. In a small open-label 6-month study in humans, perispinal etanercept administration (dose range: 25–50 mg per week) resulted in significant improvement in 3 standard measures of cognition: the AD Assessment Scale-Cognitive Subscale, the Severe Impairment Battery, and the Mini-Mental State Examination in patients with AD.45 These observed clinical improvements are hypothesized to be due to rapid penetration of etanercept into the CSF following perispinal administration and mediated by nonsynaptic signal transduction mechanisms of etanercept. However, in a recent study, perispinal injection of etanercept resulted in perispinal drug accumulation, but consistent intracranial delivery of the drug was not observed.46 In a recent case report, intrathecal administration of infliximab resulted in rapid cognitive improvement in a female patient with AD,47 and larger controlled trials are warranted. Collectively, both clinical and preclinical evidence underscore the therapeutic potential of biologic TNFIs for AD therapy."
+    },
+    {
+      "end": 11785,
+      "id": "U22",
+      "section_id": "H6",
+      "start": 11686,
+      "text": "**Table 1** Summary of studies focusing on neutralization of brain TNF-α with biologic TNFIs in AD."
+    },
+    {
+      "end": 12485,
+      "id": "U23",
+      "section_id": "H6",
+      "start": 11787,
+      "text": "One hindrance to the further development of the FDA-approved biologic TNFIs for AD is their limited blood-brain barrier (BBB) penetration,48 and invasive delivery approaches may not be practical or safe for chronic dosing for AD. Recently, modulation of peripheral TNF-α activity by biologic TNFIs has shown promise in transgenic mouse models of AD49; however, in a randomized double-blind phase 2 clinical trial, weekly subcutaneous injections of etanercept did not improve cognition, global function, or behavior in a small group of subjects with mild-to-moderate AD dementia.50 Further studies will be needed to determine whether peripheral modulation of TNF-α offers clinical improvement in AD."
+    },
+    {
+      "end": 14985,
+      "id": "U24",
+      "section_id": "H6",
+      "start": 12487,
+      "text": "Biologic drugs such as etanercept, ECD of the TNFR2, can be reengineered to enable BBB penetration by fusion of the biologic drug to a BBB molecular Trojan horse (MTH).51 A BBB MTH is an endogenous peptide or peptidomimetic monoclonal antibody that undergoes receptor-mediated transport across the BBB via endogenous peptide receptors, such as the transferrin receptor (TfR) or the insulin receptor. This binding triggers receptor-mediated transport of the MAb across the BBB, which ferries the biologic drug into the brain.52 One such BBB-penetrating TNFR, specific for the mouse, has been engineered and tested in mouse models of neurological diseases (Figure 2). The amino terminus of the human TNFR2 ECD is fused to the carboxyl terminal of the heavy chain of the chimeric TfRMAb to engineer a fusion protein designated as cTfRMAb-TNFR.53 This orientation frees the amino terminus of the cTfRMAb that is involved in binding to the BBB TfR and places the TNFR ECD in a dimeric configuration. Because both human and mouse monomeric TNF-α share high amino acid identity, and the human TNFR binds mouse TNF-α with high affinity,54 the cTfRMAb-TNFR fusion protein involves the human TNFR and not the mouse TNFR. The cTfRMAb-TNFR fusion protein binds to both the mouse TfR and TNF-α with high affinity evident from the low binding constants (Kd = 2.6 ± 0.3 nM for mouse TfR and 96 ± 34 pM for TNF-α). The cTfRMAb-TNFR is thus a bifunctional molecule that allows (a) rapid noninvasive transvascular delivery of the TNFR across the BBB using a receptor-mediated transcytosis approach and (b) once in the brain, the TNFR can sequester excess TNF-α. A complete pharmacokinetic analysis of this BBB-penetrating biologic TNFI, the cTfRMAb-TNFR fusion protein, showed that systemic routes (intraperitoneal, subcutaneous, or intravenous) of administration result in brain concentrations of the cTfRMAb-TNFR fusion protein that are 20-fold to 50-fold greater than the concentration of TNF-α in pathologic conditions of the brain.55 The intravenous route of administration is preferred for acute neurological conditions, such as ischemic stroke, whereas the intraperitoneal or subcutaneous routes of administration are more practical for dosing during chronic conditions including AD. The cTfRMAb-TNFR fusion protein was found to be protective in both acute (ischemic stroke) and chronic (Parkinson disease) mouse models of neurological diseases56–58 and is currently being investigated in a mouse model of AD."
+    },
+    {
+      "end": 15791,
+      "id": "U25",
+      "section_id": "H6",
+      "start": 14988,
+      "text": "<figure>\n  <figcaption><strong>Figure 2</strong> Schematic of the molecular Trojan horse (MTH) technology to ferry biologic TNF-α inhibitors (TNFIs) into the brain. The TNFI of interest in the figure is a tumor necrosis factor α receptor (TNFR). A fusion protein of TNFR and a blood-brain barrier (BBB) MTH, such as the chimeric monoclonal antibody against the mouse transferrin receptor (cTfRMAb), can be engineered and this is designated as cTfRMAb-TNFR. Following systemic injection, the cTfRMAb-TNFR fusion protein binds to the BBB transferrin receptor (TfR)1 and is transported across the BBB from blood to brain via the BBB TfR that undergoes receptor-mediated transcytosis.2 Once in the brain, the TNFR domain of the fusion protein can sequester excess TNF-α in the brain.3</figcaption>\n</figure>"
+    },
+    {
+      "end": 16597,
+      "id": "U26",
+      "section_id": "H6",
+      "start": 15794,
+      "text": "<figure>\n  <figcaption><strong>Figure 2</strong> Schematic of the molecular Trojan horse (MTH) technology to ferry biologic TNF-α inhibitors (TNFIs) into the brain. The TNFI of interest in the figure is a tumor necrosis factor α receptor (TNFR). A fusion protein of TNFR and a blood-brain barrier (BBB) MTH, such as the chimeric monoclonal antibody against the mouse transferrin receptor (cTfRMAb), can be engineered and this is designated as cTfRMAb-TNFR. Following systemic injection, the cTfRMAb-TNFR fusion protein binds to the BBB transferrin receptor (TfR)1 and is transported across the BBB from blood to brain via the BBB TfR that undergoes receptor-mediated transcytosis.2 Once in the brain, the TNFR domain of the fusion protein can sequester excess TNF-α in the brain.3</figcaption>\n</figure>"
+    },
+    {
+      "end": 17327,
+      "id": "U27",
+      "section_id": "H6",
+      "start": 16599,
+      "text": "For use in humans, a fusion protein of the ECD of the TNFR2 and a chimeric or humanized antibody against the human insulin receptor (HIRMAb), designated as the HIRMAb-TNFR fusion protein, has been engineered.48 The HIRMAb is the most potent MTH engineered for the human brain and cross-reacts with the insulin receptor of the Old World primates. In rhesus monkeys, the brain uptake of a 0.2 mg/kg dose of the HIRMAb-TNFR fusion protein after intravenous injection was 3 ± 0.1% ID/100 g brain compared with the brain uptake of the TNFR:Fc fusion protein which was 0.23 ± 0.06% ID/100 g brain. Furthermore, chronic administration of a high dose (20 mg/kg) of a HIRMAb-based fusion protein was found to be safe in rhesus monkeys.59"
+    },
+    {
+      "end": 17344,
+      "id": "U28",
+      "section_id": "H7",
+      "start": 17330,
+      "text": "## Conclusions"
+    },
+    {
+      "end": 18468,
+      "id": "U29",
+      "section_id": "H7",
+      "start": 17346,
+      "text": "A plethora of clinical and animal studies strongly suggest an involvement of TNF-α in the pathophysiology of AD. The FDA-approved biologic TNFIs are thus a potential treatment for AD; however, these large molecules have limited BBB penetration. Clinical studies using the perispinal route of administration for biologic TNFIs have shown encouraging results in small open-label trials; however, larger controlled trials are required to confirm these results. Another approach currently under investigation is to target peripheral TNF-α rather than brain TNF-α. However, this approach has not shown any cognitive improvement in a clinical setting so far, and further studies are required to determine the effect of peripheral TNF-α modulation on AD pathology. Novel drug delivery strategies, such as the MTH technology, enable noninvasive delivery of biologic TNFIs to the brain and target both peripheral and brain TNF-α. Considering the multifactorial role of brain TNF-α in AD pathophysiology, such noninvasive drug delivery strategies may be a reasonable approach to deliver biologic TNFIs to the brain for AD treatment."
+    },
+    {
+      "end": 18483,
+      "id": "U30",
+      "section_id": "H8",
+      "start": 18471,
+      "text": "## Footnotes"
+    },
+    {
+      "end": 18654,
+      "id": "U31",
+      "section_id": "H8",
+      "start": 18485,
+      "text": "PEER REVIEW: Five peer reviewers contributed to the peer review report. Reviewers’ reports totaled 858 words, excluding any confidential comments to the academic editor."
+    },
+    {
+      "end": 18877,
+      "id": "U32",
+      "section_id": "H8",
+      "start": 18656,
+      "text": "FUNDING: The author(s) disclosed receipt of the following financial support for the research, authorship, and/or publication of this article: This work is funded by the Alzheimer’s Association grant RG-15-361188 (R.K.S.)."
+    },
+    {
+      "end": 19052,
+      "id": "U33",
+      "section_id": "H8",
+      "start": 18879,
+      "text": "DECLARATION OF CONFLICTING INTERESTS: The author(s) declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article."
+    },
+    {
+      "end": 19403,
+      "id": "U34",
+      "section_id": "H8",
+      "start": 19054,
+      "text": "Author ContributionsRC wrote the first draft of the manuscript. RC, K-LY, and RKS contributed to the writing of the manuscript and agree with manuscript results and conclusions. RKS developed the structure and arguments for the paper and made critical revisions and approved the final version. All authors reviewed and approved the final manuscript."
+    },
+    {
+      "end": 20166,
+      "id": "U35",
+      "section_id": "H8",
+      "start": 19405,
+      "text": "Disclosures and EthicsAs a requirement of publication, author(s) have provided to the publisher signed confirmation of compliance with legal and ethical obligations including but not limited to the following: authorship and contributorship, conflicts of interest, privacy and confidentiality, and (where applicable) protection of human and animal research subjects. The authors have read and confirmed their agreement with the ICMJE authorship and conflict of interest criteria. The authors have also confirmed that this article is unique and not under consideration or published in any other publication, and that they have permission from rights holders to reproduce any copyrighted material. The external blind peer reviewers report no conflicts of interest."
+    }
+  ]
+}

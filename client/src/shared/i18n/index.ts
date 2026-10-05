@@ -2,6 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import english from './locales/en.json';
 import russian from './locales/ru.json';
+import englishMaps from './locales/article-maps.en.json';
+import russianMaps from './locales/article-maps.ru.json';
 
 export const LANGUAGE_STORAGE_KEY = 'knowledge-map.language';
 export const SUPPORTED_LANGUAGES = ['ru', 'en'] as const;
@@ -25,8 +27,8 @@ function initialLanguage(): SupportedLanguage {
 
 void i18n.use(initReactI18next).init({
     resources: {
-        en: { translation: english },
-        ru: { translation: russian },
+        en: { translation: { ...english, articleEditor: { ...english.articleEditor, map: { ...english.articleEditor.map, ...englishMaps } } } },
+        ru: { translation: { ...russian, articleEditor: { ...russian.articleEditor, map: { ...russian.articleEditor.map, ...russianMaps } } } },
     },
     lng: initialLanguage(),
     fallbackLng: false,

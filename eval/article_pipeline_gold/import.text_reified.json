@@ -1,0 +1,126 @@
+{
+  "copied_cases": [
+    {
+      "depth": 16,
+      "edges": 308,
+      "files": {
+        "article.md": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+        "article.xml": "321ecf5d4b4a03085999e05402e3c9165db1f0dc4b9afd6f79e4fab6e2942145",
+        "document_sections.json": "55a441823ae38ea14b441328c196e4b64319a42565196a147c0d78944db2acb1",
+        "knowledge_map.text_reified.json": "67a82185a3bf8e68fb33c9577a5ccb648b1e33d4403e35deaae2773d986c7eee",
+        "meta.json": "d828f4d5c88f682020d9ffe82e45decc293ac6d07992de9b092c3da6a91807cc",
+        "source.meta.json": "60342dad79110281272c9fe0af9448125dc8bf027447f112a7363a439063b1bb",
+        "source_units.json": "5f3022f38e18f7572a3e62e1642964dd49257340a0b07822f751b21de9255c19",
+        "translation.text_reified.ru.json": "63d87d3193ae2582342e4496995aa60da5529f38c3a3ddfb997400c5c60b8b5d"
+      },
+      "nodes": 160,
+      "path": "cases/pmc8775386",
+      "pmc_id": "PMC8775386",
+      "run_id": "f31d0493-8c93-40cb-9179-826760ba0fea",
+      "source_units": 97
+    },
+    {
+      "depth": 18,
+      "edges": 1149,
+      "files": {
+        "article.md": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+        "article.xml": "c51768531433884663fc98cbf37dc2b47077cf2c8f82ecce24738eaf2914405a",
+        "document_sections.json": "bdd4434a13b54fce3dc4aedd7cb3fb83bcf0d4decfb6234e22ee6fba707f8748",
+        "knowledge_map.text_reified.json": "fde1bab36a7689cbd43eb6c9ed4bd8086a04928c2bd041d18ed86919cca93155",
+        "meta.json": "89add9d5891fd7962ab135e0256d711ad42b01e3047723ad72c522f4c8adb87c",
+        "source.meta.json": "c9c38caf9000a3307bed74f1af9b8ffd139e2fe2fe5d54aa6b1714575bb36204",
+        "source_units.json": "43f91fd2972cac086641ef7de178e59b44275b98f11e47771a5b893dd65d6f8d",
+        "translation.text_reified.ru.json": "a64564d6915d250e50907fafe05b86db661cb0cbe9a8ab8a71261cee9a442a13"
+      },
+      "nodes": 236,
+      "path": "cases/pmc7789349",
+      "pmc_id": "PMC7789349",
+      "run_id": "20410988-348a-47ec-906d-f6541376fc3d",
+      "source_units": 100
+    },
+    {
+      "depth": 21,
+      "edges": 284,
+      "files": {
+        "article.md": "8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee",
+        "article.xml": "7b4e1356c9e0f2d563f2af92b70c1bc59598ddb2af7fb29eadb2432575c96916",
+        "document_sections.json": "7bebb38d22a0b3116be8d2f55d5103f44fe9a9c31420259f38fd5e8099d535bf",
+        "knowledge_map.text_reified.json": "7478083841308fb5718b05049d733ca321487ad41eb7eaf365056206c8571796",
+        "meta.json": "9934b79974f904a97f381a84ac189c16ff5a2f8bf3986e174f0aa66d76ae673d",
+        "source.meta.json": "9c6173ccf127353df662cba723a505da1fbef860e2f16417b7f20519d329547a",
+        "source_units.json": "1973ebe9f777f63b65b25c577bc7616bbbacb68dc18e75a91ac268f51a50934f",
+        "translation.text_reified.ru.json": "79cdd45da474f145f8b35e2e0951ee33b5a365b546b27b234f06b8485d828a88"
+      },
+      "nodes": 113,
+      "path": "cases/pmc8918697",
+      "pmc_id": "PMC8918697",
+      "run_id": "144ec078-5e5c-4863-a2d4-6a875ffe2c4f",
+      "source_units": 95
+    },
+    {
+      "depth": 13,
+      "edges": 454,
+      "files": {
+        "article.md": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+        "article.xml": "2191ea74b91e42d514f703a76c2476f25013dbb50dc5e0b13f172634fcc063ef",
+        "document_sections.json": "eba1bf1a8436f437e24ef670208ed03ed70a23667a83247541595cd4bd280dd2",
+        "knowledge_map.text_reified.json": "e01660ba522abf15f3c60bd27b4c0bb8f2503158ed0e099413df34c1d6ef516b",
+        "meta.json": "fe77d9ea3c8ef1dcecfc5506e8dc78aa05af25883e85a0fda8c448ad3e29bb0a",
+        "source.meta.json": "5b92063c77cd5046dfa3ff4f591d84447092661029160d929b2ba5c63b5d2ff3",
+        "source_units.json": "59137c78268c3de121b890dd10b2ee8cea441ec0eeddd185b245a0e1422cc5f2",
+        "translation.text_reified.ru.json": "f46ae740947759fb39f60e11c1760a41e573b11d48beeb2c6914e5844931981a"
+      },
+      "nodes": 119,
+      "path": "cases/pmc6416157",
+      "pmc_id": "PMC6416157",
+      "run_id": "60fbdc4a-ebec-469b-bb79-334cc573cf60",
+      "source_units": 97
+    },
+    {
+      "depth": 10,
+      "edges": 209,
+      "files": {
+        "article.md": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+        "article.xml": "cd35b4dc3172dce08eabbae6d4d5a694172bf546bb7ec52d084cb3f5d0b06c0c",
+        "document_sections.json": "dc6be449bfccea1e7acdc3f3b4a9bb210ad55400cc5fa80b0c55c69020f66592",
+        "knowledge_map.text_reified.json": "76e5e58725b5fe31834bbbeea2eacd9ee237ee78662a7dd21ee19b14def3f4a7",
+        "meta.json": "78d3a3cb00cd133771e6f334296075a1f68867ee13dd2245014d84ce2cfb2c7b",
+        "source.meta.json": "0ac5de2b99cd6faf7754ae70437d5df9f282aad4f707926f8e31b1a2d233d3c9",
+        "source_units.json": "45766cfc61284046bd8d4b7e75d76b063fcdec90d01b8ee4bec51f312d4647f3",
+        "translation.text_reified.ru.json": "b53e7396ff3ba984037409d1da36623dd8085ceec32c46de93b70d4a2bb38067"
+      },
+      "nodes": 194,
+      "path": "cases/pmc5436834",
+      "pmc_id": "PMC5436834",
+      "run_id": "83364e87-8055-4f8a-a9ae-3077c3d8a8f2",
+      "source_units": 35
+    }
+  ],
+  "created_at": "2026-10-05T17:33:07.419385+00:00",
+  "dag": "passed",
+  "destination_root": "eval/article_pipeline_gold/cases",
+  "existing_gold_artifacts": {
+    "files": 112,
+    "legacy_manifest_sha256": "22780adaf0e38805290d338fc704af6d32d00a147da859405e17271ac654be83",
+    "unchanged": true
+  },
+  "expert_validated": false,
+  "llm_calls": 0,
+  "map_and_russian_labels": "byte_identical_to_saved_artifacts",
+  "needs_expert_review": true,
+  "operation": "copy_existing_five_source_artifacts",
+  "pipeline_id": "text_reified",
+  "provenance_coordinates": "unicode_codepoints_verified",
+  "schema_version": 1,
+  "scientific_cost_attempts_after": 68,
+  "scientific_cost_attempts_before": 68,
+  "source_archive": {
+    "after_sha256": "b1dd309a653cf2cf7cf4e1b124d6c4eada61fd11313856b7596b3a825ab505d5",
+    "before_sha256": "b1dd309a653cf2cf7cf4e1b124d6c4eada61fd11313856b7596b3a825ab505d5",
+    "files": 511,
+    "unchanged": true
+  },
+  "source_root": "eval/reference_pilots/pmc10000452",
+  "source_run_id": "3e53a7ff-e01e-4cab-9d70-6a16b9ca3c03",
+  "verification_run_id": "ee9d6caf-acde-4b2e-b913-732fbc9ea736"
+}

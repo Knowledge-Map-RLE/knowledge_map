@@ -1,0 +1,116 @@
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+}
+
+.buildButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    max-width: 100%;
+    padding: 9px 14px;
+    border: 1px solid;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 10%);
+    transition: background-color 150ms, border-color 150ms, box-shadow 150ms;
+}
+
+.buildButton svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.primaryButton {
+    color: #fff;
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.primaryButton:hover:not(:disabled) {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.secondaryButton {
+    color: #334155;
+    background: #fff;
+    border-color: #94a3b8;
+}
+
+.secondaryButton:hover:not(:disabled) {
+    background: #eff6ff;
+    border-color: #64748b;
+}
+
+.buildButton:active:not(:disabled) {
+    box-shadow: inset 0 1px 3px rgb(15 23 42 / 18%);
+}
+
+.buildButton:focus-visible,
+.select:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 3px;
+}
+
+/* Недоступная кнопка сохраняет форму, но визуально отличается от активной. */
+.buildButton:disabled {
+    color: #64748b;
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    color: #4b5563;
+    font-size: 13px;
+}
+
+.select {
+    min-height: 40px;
+    max-width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    color: #1f2937;
+    background: #fff;
+    font: inherit;
+}
+
+.select:disabled {
+    color: #64748b;
+    background: #f1f5f9;
+    cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .buildButton {
+        transition: none;
+    }
+}

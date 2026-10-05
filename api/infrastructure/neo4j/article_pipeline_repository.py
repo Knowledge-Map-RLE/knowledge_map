@@ -9,11 +9,14 @@ straight to its SourceSpan inside the SourceRevision.
 from __future__ import annotations
 import hashlib
 import json
+from uuid import uuid4
 from datetime import datetime, timezone
 from neo4j import GraphDatabase
 from knowledge_contracts.validation import (require, validate_linguistic,
                                             validate_map, validate_structural)
 from knowledge_pipeline.pipeline import checksum
+from infrastructure.neo4j.article_maps_repository import Neo4jArticleMapsRepository
+from domain.article_maps import new_result
 
 
 def _span_uid(source_id: str, start: int, end: int) -> str:
@@ -23,6 +26,7 @@ def _span_uid(source_id: str, start: int, end: int) -> str:
 class Neo4jArticlePipelineRepository:
     def __init__(self, uri, user, password):
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
+        self.maps = Neo4jArticleMapsRepository(driver=self.driver)
     def close(self):
         self.driver.close()
     def ensure_indexes(self):
@@ -137,40 +141,19 @@ class Neo4jArticlePipelineRepository:
             return session.execute_read(read)
 
     def save_map_snapshot(self, doc_id, user_uid, graph, blocks_fingerprint):
-        with self.driver.session() as session:
-            session.execute_write(
-                self._save_map_snapshot, doc_id, user_uid, graph, blocks_fingerprint
-            )
-
-    @staticmethod
-    def _save_map_snapshot(tx, doc_id, user_uid, graph, blocks_fingerprint):
-        Neo4jArticlePipelineRepository._access(tx, doc_id, user_uid)
-        tx.run("""MATCH (d:Document {uid:$doc})
-          SET d.deterministic_map_payload=$payload,
-              d.deterministic_map_blocks_fingerprint=$fingerprint,
-              d.deterministic_map_rebuilt_at=$now,
-              d.deterministic_map_rebuilt_by_uid=$user""",
-          doc=doc_id, payload=json.dumps(graph, ensure_ascii=False),
-          fingerprint=blocks_fingerprint, user=user_uid,
-          now=datetime.now(timezone.utc).isoformat()).consume()
+        token = str(uuid4())
+        self.maps.acquire(doc_id, "structural_rows", user_uid, token)
+        try:
+            result = new_result(doc_id, "structural_rows", graph, blocks_fingerprint,
+                                validation={"contract": "passed", "dag": "passed"})
+            self.maps.save(result, user_uid, token)
+        finally:
+            self.maps.release(doc_id, "structural_rows", user_uid, token)
 
     def load_map_snapshot(self, doc_id, user_uid):
-        with self.driver.session() as session:
-            def read(tx):
-                self._access(tx, doc_id, user_uid)
-                row = tx.run("""MATCH (d:Document {uid:$doc})
-                  RETURN d.deterministic_map_payload AS payload,
-                         d.deterministic_map_blocks_fingerprint AS fingerprint,
-                         d.deterministic_map_rebuilt_at AS rebuilt_at""",
-                             doc=doc_id).single()
-                if not row or not row["payload"]:
-                    return None
-                return {
-                    "graph": json.loads(row["payload"]),
-                    "blocks_fingerprint": row["fingerprint"],
-                    "rebuilt_at": row["rebuilt_at"],
-                }
-            return session.execute_read(read)
+        result = self.maps.get(doc_id, "structural_rows", user_uid)
+        return {"graph": result["graph"], "blocks_fingerprint": result["input_fingerprint"],
+                "rebuilt_at": result["updated_at"]} if result else None
 
     def apply(self, doc_id, version_id, user_uid, source_hash):
         with self.driver.session() as session:

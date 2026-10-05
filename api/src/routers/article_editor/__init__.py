@@ -1,6 +1,7 @@
 import logging
 from fastapi import APIRouter
 from . import articles, parse, graph, split_blocks, images, patterns, llm_extract, gold
+from web.routers import article_maps
 
 logger = logging.getLogger(__name__)
 
@@ -14,5 +15,6 @@ router.include_router(images.router, prefix="")
 router.include_router(patterns.router, prefix="")
 router.include_router(llm_extract.router, prefix="")
 router.include_router(gold.router, prefix="")
+router.include_router(article_maps.router, prefix="")
 
 __all__ = ["router"]

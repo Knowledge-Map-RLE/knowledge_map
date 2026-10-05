@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "sections": [
+    {
+      "end": 264,
+      "id": "H1",
+      "start": 0,
+      "title": "Risk of conversion from mild cognitive impairment to dementia in low‐ and middle‐income countries: A systematic review and meta‐analysis"
+    },
+    {
+      "end": 2403,
+      "id": "H2",
+      "start": 264,
+      "title": "Abstract"
+    },
+    {
+      "end": 6295,
+      "id": "H3",
+      "start": 2403,
+      "title": "INTRODUCTION"
+    },
+    {
+      "end": 6614,
+      "id": "H4",
+      "start": 6295,
+      "title": "METHODS"
+    },
+    {
+      "end": 8829,
+      "id": "H5",
+      "start": 6614,
+      "title": "Search strategy and eligibility criteria"
+    },
+    {
+      "end": 10523,
+      "id": "H6",
+      "start": 8829,
+      "title": "Research in context"
+    },
+    {
+      "end": 11497,
+      "id": "H7",
+      "start": 10523,
+      "title": "Screening process"
+    },
+    {
+      "end": 12227,
+      "id": "H8",
+      "start": 11497,
+      "title": "Data extraction"
+    },
+    {
+      "end": 12698,
+      "id": "H9",
+      "start": 12227,
+      "title": "Risk of bias assessment"
+    },
+    {
+      "end": 13995,
+      "id": "H10",
+      "start": 12698,
+      "title": "Analysis"
+    },
+    {
+      "end": 14011,
+      "id": "H11",
+      "start": 13995,
+      "title": "RESULTS"
+    },
+    {
+      "end": 14651,
+      "id": "H12",
+      "start": 14011,
+      "title": "Study selection"
+    },
+    {
+      "end": 15787,
+      "id": "H13",
+      "start": 14651,
+      "title": "Study characteristics"
+    },
+    {
+      "end": 27316,
+      "id": "H14",
+      "start": 15787,
+      "title": "Diagnostic criteria for MCI"
+    },
+    {
+      "end": 28048,
+      "id": "H15",
+      "start": 27316,
+      "title": "Diagnostic criteria for dementia"
+    },
+    {
+      "end": 28968,
+      "id": "H16",
+      "start": 28048,
+      "title": "Conversion from MCI to dementia"
+    },
+    {
+      "end": 29813,
+      "id": "H17",
+      "start": 28968,
+      "title": "Risk factors for dementia"
+    },
+    {
+      "end": 30070,
+      "id": "H18",
+      "start": 29813,
+      "title": "Risk of bias assessment"
+    },
+    {
+      "end": 31412,
+      "id": "H19",
+      "start": 30070,
+      "title": "Meta‐analysis—risk of conversion to AD"
+    },
+    {
+      "end": 40578,
+      "id": "H20",
+      "start": 31412,
+      "title": "DISCUSSION"
+    },
+    {
+      "end": 43783,
+      "id": "H21",
+      "start": 40578,
+      "title": "CONFLICTS OF INTEREST"
+    },
+    {
+      "end": 44291,
+      "id": "H22",
+      "start": 43783,
+      "title": "AUTHOR CONTRIBUTIONS"
+    },
+    {
+      "end": 44439,
+      "id": "H23",
+      "start": 44291,
+      "title": "Supporting information"
+    },
+    {
+      "end": 45144,
+      "id": "H24",
+      "start": 44439,
+      "title": "ACKNOWLEDGMENTS"
+    },
+    {
+      "end": 45493,
+      "id": "H25",
+      "start": 45144,
+      "title": "DATA AVAILABILITY STATEMENT"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "controls": "Build and select the article map",
+  "buildText": "Text → knowledge map",
+  "buildRows": "Structural rows → knowledge map",
+  "version": "Map version",
+  "noVersions": "No saved maps",
+  "language": "Map language",
+  "noFullText": "Text conversion requires the saved full article text.",
+  "reified": "Map from text: concepts and assertions; connections are semantic inputs.",
+  "knowledge": "Independent knowledge map: definitions, facts, methods and results; depth: {{depth}} layers.",
+  "unsupportedSchema": "Unsupported map schema: {{version}}",
+  "pipeline": {
+    "text_reified": "From text · concepts and assertions",
+    "text_knowledge": "From text · independent knowledge",
+    "structural_rows": "From structural rows"
+  },
+  "stages": {
+    "model": "LLM is converting the article text…",
+    "dependencies": "LLM is reviewing knowledge dependencies against the full source…",
+    "validation": "Validating the map and its sources…",
+    "saving": "Saving the map…",
+    "translation": "Translating map labels into Russian…"
+  },
+  "kinds": {
+    "concept": "Concept", "object": "Object", "class": "Class", "property": "Property",
+    "state": "State", "action": "Action", "process": "Process", "comparison": "Comparison",
+    "rule": "Rule", "assertion": "Assertion", "goal": "Goal", "topic": "Topic",
+    "definition": "Definition", "observation": "Observation", "method": "Method",
+    "operation": "Method application", "result": "Result", "conclusion": "Conclusion"
+  }
+}

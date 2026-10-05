@@ -1,0 +1,32 @@
+{
+  "annotation_scope": "automatic_full_text",
+  "article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+  "article_sha256": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+  "article_title": "Prevalence of mild cognitive impairment in community-dwelling Chinese populations aged over 55 years: a meta-analysis and systematic review.",
+  "conversion_validation": {
+    "body_token_presence": 0.9992821249102656,
+    "reference_count": 138,
+    "scientific_accuracy": "not_assessed"
+  },
+  "conversion_version": "2",
+  "document_type": "journal-article",
+  "document_uid": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+  "doi": "10.1186/s12877-020-01948-3",
+  "download_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7789349/fullTextXML",
+  "license": "cc by",
+  "needs_expert_review": true,
+  "original_sha256": "c51768531433884663fc98cbf37dc2b47077cf2c8f82ecce24738eaf2914405a",
+  "pmcid": "PMC7789349",
+  "publication_date": "2021-01-06",
+  "reference_number": 3,
+  "s3_bucket": "knowledge-map-data",
+  "s3_key": "reference_pilots/pmc10000452/sources/pmc7789349/73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859/article.md",
+  "source": {
+    "bucket": "knowledge-map-data",
+    "key": "reference_pilots/pmc10000452/sources/pmc7789349/73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859/article.md",
+    "system": "neo4j+s3"
+  },
+  "source_id": "PMC7789349",
+  "source_sha256": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+  "title": "Prevalence of mild cognitive impairment in community-dwelling Chinese populations aged over 55 years: a meta-analysis and systematic review."
+}

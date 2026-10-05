@@ -1,0 +1,32 @@
+{
+  "annotation_scope": "automatic_full_text",
+  "article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+  "article_sha256": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+  "article_title": "The incidence of mild cognitive impairment: A systematic review and data synthesis.",
+  "conversion_validation": {
+    "body_token_presence": 1.0,
+    "reference_count": 45,
+    "scientific_accuracy": "not_assessed"
+  },
+  "conversion_version": "2",
+  "document_type": "journal-article",
+  "document_uid": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+  "doi": "10.1016/j.dadm.2019.01.004",
+  "download_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6416157/fullTextXML",
+  "license": "cc by-nc-nd",
+  "needs_expert_review": true,
+  "original_sha256": "2191ea74b91e42d514f703a76c2476f25013dbb50dc5e0b13f172634fcc063ef",
+  "pmcid": "PMC6416157",
+  "publication_date": "2019-03-08",
+  "reference_number": 6,
+  "s3_bucket": "knowledge-map-data",
+  "s3_key": "reference_pilots/pmc10000452/sources/pmc6416157/502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a/article.md",
+  "source": {
+    "bucket": "knowledge-map-data",
+    "key": "reference_pilots/pmc10000452/sources/pmc6416157/502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a/article.md",
+    "system": "neo4j+s3"
+  },
+  "source_id": "PMC6416157",
+  "source_sha256": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+  "title": "The incidence of mild cognitive impairment: A systematic review and data synthesis."
+}

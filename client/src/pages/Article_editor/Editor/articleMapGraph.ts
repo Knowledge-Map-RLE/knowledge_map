@@ -24,6 +24,7 @@ export const OUTCOME_COLORS: Record<NodeOutcome, number> = {
 };
 
 export interface ArticleMapNode extends BlockData {
+    typeLabel?: string;
     blockType: string;
     order: number;
     label: string;

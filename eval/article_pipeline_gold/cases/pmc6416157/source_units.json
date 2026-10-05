@@ -1,0 +1,694 @@
+{
+  "article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+  "content_end": 58310,
+  "coordinate_space": "article.md",
+  "offset_encoding": "unicode_codepoints",
+  "pipeline_id": "text_reified",
+  "references_excluded_from_extraction": true,
+  "references_removed": false,
+  "schema_version": 1,
+  "source_revision_id": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+  "source_sha256": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+  "source_text_length": 69113,
+  "source_units": [
+    {
+      "end": 84,
+      "id": "U1",
+      "section_id": "H1",
+      "start": 0,
+      "text": "# The incidence of mild cognitive impairment: A systematic review and data synthesis"
+    },
+    {
+      "end": 173,
+      "id": "U2",
+      "section_id": "H1",
+      "start": 86,
+      "text": "**Journal:** Alzheimer's & Dementia : Diagnosis, Assessment & Disease Monitoring (2019)"
+    },
+    {
+      "end": 210,
+      "id": "U3",
+      "section_id": "H1",
+      "start": 175,
+      "text": "**DOI:** 10.1016/j.dadm.2019.01.004"
+    },
+    {
+      "end": 224,
+      "id": "U4",
+      "section_id": "H2",
+      "start": 213,
+      "text": "## Abstract"
+    },
+    {
+      "end": 391,
+      "id": "U5",
+      "section_id": "H2",
+      "start": 226,
+      "text": "Incidence estimates of mild cognitive impairment (MCI) range widely. We obtained contemporary age-specific MCI incidence rates and examined sources of heterogeneity."
+    },
+    {
+      "end": 759,
+      "id": "U6",
+      "section_id": "H2",
+      "start": 393,
+      "text": "We conducted a systematic review of population-based studies from the Americas, Europe, and Australia using restrictive inclusion criteria to limit heterogeneity. Incidence was examined using 5-year age categories for MCI and amnestic/nonamnestic subtypes. Data were synthesized using quantitative and qualitative descriptive analyses and quantitative meta-analyses."
+    },
+    {
+      "end": 1143,
+      "id": "U7",
+      "section_id": "H2",
+      "start": 761,
+      "text": "Meta-analysis estimates (95% CI) of MCI incidence per 1000 person-years were 22.5 (5.1–51.4) for ages 75–79y, 40.9 (7.7–97.5) for ages 80–84y, and 60.1 (6.7–159.0) for ages 85+y. Despite restrictive inclusion criteria, considerable heterogeneity (measured by I2) remained. Meta-analysis findings and simple descriptive statistics were consistent and supported by qualitative review."
+    },
+    {
+      "end": 1386,
+      "id": "U8",
+      "section_id": "H2",
+      "start": 1145,
+      "text": "Heterogeneity in MCI incidence estimates persisted across age-specific estimates from population samples, likely reflecting differences in populations and methods. Incidence rate ranges are important to consider with summary point estimates."
+    },
+    {
+      "end": 1511,
+      "id": "U9",
+      "section_id": "H2",
+      "start": 1388,
+      "text": "Keywords: Alzheimer's disease, Diagnosis, Incidence, Meta-analysis, Mild cognitive impairment, Systematic literature review"
+    },
+    {
+      "end": 1527,
+      "id": "U10",
+      "section_id": "H3",
+      "start": 1514,
+      "text": "## Background"
+    },
+    {
+      "end": 1531,
+      "id": "U11",
+      "section_id": "H3",
+      "start": 1529,
+      "text": "1."
+    },
+    {
+      "end": 3116,
+      "id": "U12",
+      "section_id": "H3",
+      "start": 1533,
+      "text": "Individuals with mild cognitive impairment (MCI), a noticeable decline in cognitive abilities that does not interfere with daily functioning, are at increased risk of developing Alzheimer's disease (AD) or other dementia [1], [2]. An estimated 40% to 60% of individuals aged 58 years and older with MCI have underlying AD pathology [3]. Estimates of the incidence of MCI in the general population help inform public health agencies and clinical decision-makers as they prepare for the number of older adults with MCI and at risk for dementia to increase. Although summary estimates of the prevalence of MCI were updated in 2018 [4], systematic literature reviews on the incidence of MCI in the older adult population were last published in 2012, and their results provided limited utility due to the lack of data synthesis and the vast ranges of the individual summary estimates (e.g., rates per 1000 person-years ranging from 21.5 to 71.3 [5] and 49.2 to 78.1 [6]). A wide range of incidence may be expected given both the variation in age composition and the variation in diagnostic criteria for MCI among the studies. Furthermore, other differences in study methods, such as how participants were evaluated at the baseline and the frequency of and intervals between follow-up visits, contribute to differences in incidence estimates [5], [7]. Thus, there remains an opportunity to examine and compare data from these studies in more detail along with data from more recent literature to identify sources of heterogeneity and develop a refined range of estimates for MCI incidence."
+    },
+    {
+      "end": 4569,
+      "id": "U13",
+      "section_id": "H3",
+      "start": 3118,
+      "text": "Our objectives were to obtain precise and updated summary estimates for MCI incidence from the current literature and to understand population and methodological issues that may explain differences across published studies. We conducted an updated systematic literature review of population-based observational studies of MCI in the Americas, Europe, and Australia. We used restrictive inclusion/exclusion criteria to reduce variability and heterogeneity. Included studies were required to (1) use samples representative of the general population; (2) report age-specific incidence estimates of MCI in 5-year categories, given the association between age and MCI risk; (3) use accepted definitions of MCI; and (4) be geographically restricted to the Americas, Europe, or Australia. Where data were available, we stratified results by MCI subtypes: amnestic MCI (aMCI) and nonamnestic MCI (naMCI) [8], [9], [10]. In addition, we hypothesized that the use of standard 5-year age categories, standardized MCI classification, and other qualitative categorization would reduce heterogeneity and result in a narrower range of estimates for MCI incidence. We adopted three approaches to synthesize the data: a descriptive quantitative analysis, a quantitative meta-analysis, and a qualitative analysis. In the face of real-world heterogeneity, we approached data analysis from multiple perspectives to buttress quantitative analyses with qualitative support."
+    },
+    {
+      "end": 4582,
+      "id": "U14",
+      "section_id": "H4",
+      "start": 4572,
+      "text": "## Methods"
+    },
+    {
+      "end": 4586,
+      "id": "U15",
+      "section_id": "H4",
+      "start": 4584,
+      "text": "2."
+    },
+    {
+      "end": 4620,
+      "id": "U16",
+      "section_id": "H5",
+      "start": 4588,
+      "text": "### Systematic literature review"
+    },
+    {
+      "end": 4626,
+      "id": "U17",
+      "section_id": "H5",
+      "start": 4622,
+      "text": "2.1."
+    },
+    {
+      "end": 5080,
+      "id": "U18",
+      "section_id": "H5",
+      "start": 4628,
+      "text": "This systematic literature review conformed to Meta-analysis of Observational Studies in Epidemiology guidelines [11]. We aimed to identify studies reporting MCI incidence in the general population and, thus, focused on identifying publications that describe MCI in population-based samples. Restrictive study inclusion criteria were applied, and data extraction from each study was performed to enable detailed comparison of study methods and quality."
+    },
+    {
+      "end": 6357,
+      "id": "U19",
+      "section_id": "H5",
+      "start": 5082,
+      "text": "The literature search was designed to complement a review published in 2012 that included literature from January 1984 through August 2008 [5]. The current literature search aimed to have a sharper focus on MCI as it is currently ascertained; therefore, the search criteria were more focused than in the prior review [5], and the dates were adjusted to capture recent literature. Two independent researchers searched Medline (via PubMed) for English-language articles published between January 2007 and September 2016. Search criteria required a keyword for MCI (e.g., “incipient dementia,” “mild cognitive impairment,” “cognitive impairment,” or “early stage dementia”), a term related to incidence (e.g., “incident” or “incidence”), and a term related to the study design (e.g., “population-based,” “registry,” or “cohort”); we also excluded terms to minimize irrelevant articles (e.g., “case reports” or “editorials”). The full search strategy is available in Supplementary Table A.1. The literature included in Ward et al. 2012 was also reviewed to evaluate whether any of those prior studies fit the current criteria. Additional articles noted to be potentially relevant by subject matter experts were also considered as a supplement to the electronic literature search."
+    },
+    {
+      "end": 6986,
+      "id": "U20",
+      "section_id": "H5",
+      "start": 6359,
+      "text": "Studies included for further review were required to be in English-language peer-reviewed journals and to contain human data on incidence of MCI in a population-based sample. Reviewers first screened the retrieved publications by title and abstract for article relevance. Those that passed the initial screen were reviewed in full text to determine eligibility. Inclusion and exclusion criteria for studies to be selected for data extraction are listed in Supplementary Table A.2. When two or more articles described the same study population over similar periods, only the article with the longest follow-up time was retained."
+    },
+    {
+      "end": 7008,
+      "id": "U21",
+      "section_id": "H6",
+      "start": 6989,
+      "text": "### Data extraction"
+    },
+    {
+      "end": 7014,
+      "id": "U22",
+      "section_id": "H6",
+      "start": 7010,
+      "text": "2.2."
+    },
+    {
+      "end": 7986,
+      "id": "U23",
+      "section_id": "H6",
+      "start": 7016,
+      "text": "Data from the systematic literature review were extracted into a table that was designed to facilitate qualitative comparison and critique of key study parameters. Data were extracted for systematic literature reviews of MCI, aMCI, and naMCI. Data collected from each study included (when available) incidence rates per 1000 person-years, number of cases, person-years of follow-up, study characteristics (e.g., study design, geographic location, study period, frequency, and duration of follow-up), sampling methods (e.g., community vs. clinic, response rate, selection method), statistical methods, study population (e.g., sex, ethnicity, age), MCI definition and operationalization (e.g., diagnostic criteria, cognitive measures employed, use of education-adjusted norms, blinding of investigators to prior diagnoses, tests, cutoffs), and diagnostic staging measures used (e.g., Mini-Mental State Examination, Montreal Cognitive Assessment, Clinical Dementia Rating)."
+    },
+    {
+      "end": 8020,
+      "id": "U24",
+      "section_id": "H7",
+      "start": 7989,
+      "text": "### Data synthesis and analysis"
+    },
+    {
+      "end": 8026,
+      "id": "U25",
+      "section_id": "H7",
+      "start": 8022,
+      "text": "2.3."
+    },
+    {
+      "end": 9043,
+      "id": "U26",
+      "section_id": "H7",
+      "start": 8028,
+      "text": "Based on published literature reviews of MCI incidence, a high degree of variability in results was expected [5], [12]. To understand, and possibly reduce, heterogeneity of summary estimates, we explicitly narrowed the criteria for study selection and addressed key methodological differences between studies in this more restrictively selected group. The criteria for this narrower sample, referred to as the “analysis criteria” were (1) the use of standard MCI criteria, which require the presence of subjective memory or cognitive concerns as well as objective evidence of cognitive decline [8], [9], [10], [13] and (2) reporting of age-specific incidence estimates in similar 5-year (±1 year) age categories of 65–69, 70–74, 75–79, 80–84, and 85+ years [5]. Analyses were conducted separately for MCI, aMCI, and naMCI. Studies reporting other cognitive impairment conditions, such as cognitive impairment, no dementia (CIND), age-associated cognitive decline, or age-associated memory impairment, were excluded."
+    },
+    {
+      "end": 9887,
+      "id": "U27",
+      "section_id": "H7",
+      "start": 9045,
+      "text": "Using this set of studies, we conducted detailed qualitative analyses and two types of quantitative analysis. One quantitative approach summarized descriptive statistics (median, interquartile range [IQR], minimum, maximum) for each age and outcome category. Where studies reported multiple estimates from the same study population (e.g., applying different MCI definitions or different operationalization of a single definition), we used the estimate linked to the definition most consistent with the standard clinical diagnostic criteria for MCI (e.g., the revised Petersen [4] or International Working Group [10] clinical diagnostic criteria for MCI). When studies presented both crude estimates and estimates adjusted for population attrition, the adjusted estimate was selected as a better representation of the expected incidence rates."
+    },
+    {
+      "end": 10596,
+      "id": "U28",
+      "section_id": "H7",
+      "start": 9889,
+      "text": "Meta-analyses were conducted as the second quantitative approach using the “Metaprop” command in Stata in each 5-year age category that contained data from ≥3 studies [14]. Assessment of between-study heterogeneity included calculation of the Cochrane Q statistic and I2. The I2 statistic is calculated using the Cochrane statistic and degrees of freedom and represents the percentage of the variability due to heterogeneity across studies study. Thus, I2 provides quantification of the degree of inconsistency in the studies' results. An I2 of 75% or greater was considered indicative of considerable statistical heterogeneity [15]. Pooled estimates and 95% CIs were calculated using random-effects models."
+    },
+    {
+      "end": 10610,
+      "id": "U29",
+      "section_id": "H8",
+      "start": 10600,
+      "text": "## Results"
+    },
+    {
+      "end": 10614,
+      "id": "U30",
+      "section_id": "H8",
+      "start": 10612,
+      "text": "3."
+    },
+    {
+      "end": 10635,
+      "id": "U31",
+      "section_id": "H9",
+      "start": 10616,
+      "text": "### Study selection"
+    },
+    {
+      "end": 10641,
+      "id": "U32",
+      "section_id": "H9",
+      "start": 10637,
+      "text": "3.1."
+    },
+    {
+      "end": 11322,
+      "id": "U33",
+      "section_id": "H9",
+      "start": 10643,
+      "text": "The systematic literature search identified 617 unique articles with one duplicate study excluded. Three additional articles were included from the Ward et al. 2012 review [5], as they met the criteria of providing age-stratified incidence rates in a population-based sample. A total of 23 articles met criteria in Supplementary Table A.2 for data extraction [6], [12], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25], [26], [27], [28], [29], [30], [31], [32], [33], [34], [35], [36]. Of these 23, only 7 studies met the analysis criteria for a multiprong analysis of MCI, aMCI, and naMCI [6], [12], [32], [33], [34], [35], [36]. This process is illustrated in Fig. 1."
+    },
+    {
+      "end": 12817,
+      "id": "U34",
+      "section_id": "H9",
+      "start": 11325,
+      "text": "<figure>\n  <figcaption><strong>Fig. 1</strong> Process of identification and exclusion of studies for multiprong qualitative and quantitative approach. Abbreviations: aMCI, amnestic mild cognitive impairment; CIND, cognitive impairment, no dementia; MCI, mild cognitive impairment; naMCI, nonamnestic cognitive impairment; SCC, subjective cognitive complaint. *Reasons for full-text exclusions: (Phase 2.2)—disease definition not clearly described; (Phase 2.3)—study is not related to or is not focused on MCI, aMCI, or naMCI incidence, is focused solely on a type of MCI due to a specific disease (e.g., Parkinson’s disease, Lewy body disease), or does not report MCI, aMCI, or naMCI incidence; (Phase 2.4)—sampling method not clearly described; (Phase 2.6)—convenience sample or disease-based sample; (Phase 2.7)—if two studies use the same data set or patient population for the same parameter for the same time period, select the study with the longer follow-up period; (Phase 2.8)—review paper (include the cited studies instead); (Phase 2.12)—clinical trials; (Phase 2.14)—region outside of inclusion area (Americas, Europe, and Australia). †Reasons for multiprong analyses exclusions: age bands—estimates fell outside of our specified age bands; CIND—estimates are for cognitive impairment, no dementia instead of MCI; sex stratified—estimates are only provided stratified by sex; SCC—modified MCI criteria to exclude subjective cognitive concern as a criterion.</figcaption>\n</figure>"
+    },
+    {
+      "end": 14312,
+      "id": "U35",
+      "section_id": "H9",
+      "start": 12820,
+      "text": "<figure>\n  <figcaption><strong>Fig. 1</strong> Process of identification and exclusion of studies for multiprong qualitative and quantitative approach. Abbreviations: aMCI, amnestic mild cognitive impairment; CIND, cognitive impairment, no dementia; MCI, mild cognitive impairment; naMCI, nonamnestic cognitive impairment; SCC, subjective cognitive complaint. *Reasons for full-text exclusions: (Phase 2.2)—disease definition not clearly described; (Phase 2.3)—study is not related to or is not focused on MCI, aMCI, or naMCI incidence, is focused solely on a type of MCI due to a specific disease (e.g., Parkinson’s disease, Lewy body disease), or does not report MCI, aMCI, or naMCI incidence; (Phase 2.4)—sampling method not clearly described; (Phase 2.6)—convenience sample or disease-based sample; (Phase 2.7)—if two studies use the same data set or patient population for the same parameter for the same time period, select the study with the longer follow-up period; (Phase 2.8)—review paper (include the cited studies instead); (Phase 2.12)—clinical trials; (Phase 2.14)—region outside of inclusion area (Americas, Europe, and Australia). †Reasons for multiprong analyses exclusions: age bands—estimates fell outside of our specified age bands; CIND—estimates are for cognitive impairment, no dementia instead of MCI; sex stratified—estimates are only provided stratified by sex; SCC—modified MCI criteria to exclude subjective cognitive concern as a criterion.</figcaption>\n</figure>"
+    },
+    {
+      "end": 15370,
+      "id": "U36",
+      "section_id": "H9",
+      "start": 14314,
+      "text": "Of the 23 extracted studies that reported MCI or MCI-type incidence data, most (n = 18, 78%) required subjective memory or cognitive concerns as a component of the MCI definition, consistent with current research and clinical definitions [1]. Five studies were excluded for issues related to the definition of MCI: two for not requiring subjective memory or cognitive concerns [27], [29] and three that focused on CIND [23], [25], [26] (CIND does not require presence of a cognitive concern for diagnosis). An additional study provided only sex-specific estimates of incidence by age [22] and was excluded. A total of ten studies were excluded [16], [17], [18], [19], [20], [21], [24], [28], [30], [31] for not presenting estimates in the predefined 5-year age bands we had specified for analysis. Of these ten studies, six provided only overall estimates, one provided only estimates in individuals younger than 65 years, and three provided estimates by 10-year age bands. After these exclusions, seven studies of MCI incidence remained for data analysis."
+    },
+    {
+      "end": 15915,
+      "id": "U37",
+      "section_id": "H9",
+      "start": 15372,
+      "text": "Of the final seven studies, two [32], [35] provided incidence of MCI without subtype data, two [6], [12] provided incidence of MCI and both subtypes (aMCI and naMCI), two [34], [36] reported only on the subtypes, and one [33] reported only on aMCI. These studies consisted of cohorts from the United States (three studies), Germany (two studies), France (one study), and Sweden (one study) (Table 1). Study size varied from 732 participants to 2364 participants. Total follow-up time varied from an average of 3.4 years to as long as 16 years."
+    },
+    {
+      "end": 16047,
+      "id": "U38",
+      "section_id": "H9",
+      "start": 15918,
+      "text": "**Table 1** Summary of MCI incidence rates (IR) per 1000 person-years in published studies included in the quantitative analyses∗"
+    },
+    {
+      "end": 23552,
+      "id": "U39",
+      "section_id": "H9",
+      "start": 16050,
+      "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"1\" colspan=\"1\"></th>\n      <th rowspan=\"1\" colspan=\"1\"></th>\n      <th rowspan=\"1\" colspan=\"1\">65–69 years</th>\n      <th rowspan=\"1\" colspan=\"1\">70–74 years</th>\n      <th rowspan=\"1\" colspan=\"1\">75–79 years</th>\n      <th rowspan=\"1\" colspan=\"1\">80–84 years</th>\n      <th rowspan=\"1\" colspan=\"1\">85+ years†</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=\"7\" colspan=\"1\">MCI</td>\n      <td rowspan=\"1\" colspan=\"1\">Number of studies</td>\n      <td rowspan=\"1\" colspan=\"1\">0</td>\n      <td rowspan=\"1\" colspan=\"1\">2 [6], [35]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [32], [35]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [32], [35]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [32], [35]</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Minimum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">12.4 (11.6, 13.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">5.3 (1.7, 12.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">9.5 (8.9, 10.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">8.8 (1.8, 25.6)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Maximum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">35.9 (20.4, 51.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">50.3 (38.3, 66.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">86.3 (63.6, 109.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">157.6 (117.7, 211.1)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Median IR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">24.2</td>\n      <td rowspan=\"1\" colspan=\"1\">26.3</td>\n      <td rowspan=\"1\" colspan=\"1\">49.8</td>\n      <td rowspan=\"1\" colspan=\"1\">73.7</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">IQR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">7.1–46.3</td>\n      <td rowspan=\"1\" colspan=\"1\">13.4–85.2</td>\n      <td rowspan=\"1\" colspan=\"1\">11.5–140.1</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Meta-analysis estimate (95% CI)§</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">22.5 (5.1, 51.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">40.9 (7.7, 97.5)</td>\n      <td rowspan=\"1\" colspan=\"1\">60.1 (6.7, 159.0)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">I2 measure of heterogeneity, %¶</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">96.4</td>\n      <td rowspan=\"1\" colspan=\"1\">97.7</td>\n      <td rowspan=\"1\" colspan=\"1\">98.3</td>\n    </tr>\n    <tr>\n      <td rowspan=\"7\" colspan=\"1\">aMCI</td>\n      <td rowspan=\"1\" colspan=\"1\">Number of studies</td>\n      <td rowspan=\"1\" colspan=\"1\">1 [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">5 [6], [12], [33], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [33], [34]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [33], [34]</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Minimum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">11 (5, 17)</td>\n      <td rowspan=\"1\" colspan=\"1\">21.0 (16.0, 27.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">5.4 (2.3, 12.8)</td>\n      <td rowspan=\"1\" colspan=\"1\">11.2 (6.6, 18.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">20.2 (13.1, 31.1)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Maximum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">26.0 (13.7, 49.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">26.3 (14.1, 38.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">51.7 (34.6, 68.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">74.2 (45.8, 102.5)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Median IR‡</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">24.1</td>\n      <td rowspan=\"1\" colspan=\"1\">19.8</td>\n      <td rowspan=\"1\" colspan=\"1\">37.3</td>\n      <td rowspan=\"1\" colspan=\"1\">59.1</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">IQR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">22.6–25.1</td>\n      <td rowspan=\"1\" colspan=\"1\">15.5–22.0</td>\n      <td rowspan=\"1\" colspan=\"1\">28.2–43.4</td>\n      <td rowspan=\"1\" colspan=\"1\">46.3–65.9</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Meta-analysis estimate (95% CI)§</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">22.4 (18.2, 27.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">18.7 (13.4, 24.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">32.7 (16.8, 53.7)</td>\n      <td rowspan=\"1\" colspan=\"1\">50.5 (26.6, 81.3)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">I2 measure of heterogeneity, %¶</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">0</td>\n      <td rowspan=\"1\" colspan=\"1\">58.7</td>\n      <td rowspan=\"1\" colspan=\"1\">89.5</td>\n      <td rowspan=\"1\" colspan=\"1\">88.0</td>\n    </tr>\n    <tr>\n      <td rowspan=\"7\" colspan=\"1\">naMCI</td>\n      <td rowspan=\"1\" colspan=\"1\">Number of studies</td>\n      <td rowspan=\"1\" colspan=\"1\">1 [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [12], [34]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [12], [34]</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Minimum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">17 (10, 24)</td>\n      <td rowspan=\"1\" colspan=\"1\">7.7 (0.7, 14.8)</td>\n      <td rowspan=\"1\" colspan=\"1\">9.5 (2.3, 16.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">21.1 (10.2, 32.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">32.0 (12.9, 51.2)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Maximum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">46.1 (29.1, 73.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">37.8 (20.9, 68.5)</td>\n      <td rowspan=\"1\" colspan=\"1\">50.9 (34.1, 75.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">94.6 (64.9, 137.9)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Median IR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">17</td>\n      <td rowspan=\"1\" colspan=\"1\">26.0</td>\n      <td rowspan=\"1\" colspan=\"1\">34.4</td>\n      <td rowspan=\"1\" colspan=\"1\">28.6</td>\n      <td rowspan=\"1\" colspan=\"1\">49.7</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">IQR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">16.9–36.1</td>\n      <td rowspan=\"1\" colspan=\"1\">27.9–35.6</td>\n      <td rowspan=\"1\" colspan=\"1\">24.9–39.8</td>\n      <td rowspan=\"1\" colspan=\"1\">40.9–72.2</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Meta-analysis estimate (95% CI)§</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">23.3 (7.9, 46.3)</td>\n      <td rowspan=\"1\" colspan=\"1\">27.6 (15.1, 43.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">31.1 (18.1, 47.3)</td>\n      <td rowspan=\"1\" colspan=\"1\">54.3 (26.9, 90.4)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">I2 measure of heterogeneity, %¶</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">93.2</td>\n      <td rowspan=\"1\" colspan=\"1\">89.8</td>\n      <td rowspan=\"1\" colspan=\"1\">79.7</td>\n      <td rowspan=\"1\" colspan=\"1\">87.8</td>\n    </tr>\n  </tbody>\n</table>"
+    },
+    {
+      "end": 23709,
+      "id": "U40",
+      "section_id": "H9",
+      "start": 23554,
+      "text": "Abbreviations: aMCI, amnestic mild cognitive impairment; IQR, interquartile range; MCI, mild cognitive impairment; naMCI, nonamnestic cognitive impairment."
+    },
+    {
+      "end": 23943,
+      "id": "U41",
+      "section_id": "H9",
+      "start": 23711,
+      "text": "∗Studies included met eligibility criteria for qualitative review (see Supplementary Table A.2) and also (A) required subjective cognitive or memory concerns in the MCI definition and (B) reported estimates in 5-year age categories."
+    },
+    {
+      "end": 24037,
+      "id": "U42",
+      "section_id": "H9",
+      "start": 23945,
+      "text": "†The 85+ years age group includes age categories of 85–89 years, 85–94 years, and ≥85 years."
+    },
+    {
+      "end": 24140,
+      "id": "U43",
+      "section_id": "H9",
+      "start": 24039,
+      "text": "‡When only two estimates are available the median is equal to the mean and the IQR is not calculated."
+    },
+    {
+      "end": 24529,
+      "id": "U44",
+      "section_id": "H9",
+      "start": 24142,
+      "text": "§Meta-analyses estimates were only calculated when ≥3 studies were available in each age strata. Meta-analyses estimates show a weighted average value of the highly variable estimates from the included studies for each age range. Given the high heterogeneity observed across studies, these estimates do not necessarily represent valid estimates of the incidence for any given population."
+    },
+    {
+      "end": 24804,
+      "id": "U45",
+      "section_id": "H9",
+      "start": 24531,
+      "text": "¶I2 is the percentage of the variability due to heterogeneity rather than sampling error: 0% to 40%: might not be important, 30% to 60%: may represent moderate heterogeneity; 50% to 90%: may represent substantial heterogeneity, 75% to 100%: considerable heterogeneity [15]."
+    },
+    {
+      "end": 24832,
+      "id": "U46",
+      "section_id": "H10",
+      "start": 24807,
+      "text": "### Quantitative findings"
+    },
+    {
+      "end": 24838,
+      "id": "U47",
+      "section_id": "H10",
+      "start": 24834,
+      "text": "3.2."
+    },
+    {
+      "end": 26185,
+      "id": "U48",
+      "section_id": "H10",
+      "start": 24840,
+      "text": "Incidence estimates within each 5-year age category varied substantially from study to study, as indicated by the range (minimum, maximum) and IQRs in Table 1. When we examined patterns in the incidence rate estimates, we observed that study-specific estimates generally increased with age, as expected. The meta-analysis summary estimates for the random-effects models in each 5-year age category are provided in Table 1. Meta-analysis estimates (95% CI) of MCI incidence per 1000 person-years were 22.5 (5.1–51.4) for 75–79 years, 40.9 (7.7–97.5) for 80–84 years, and 60.1 (6.7–159.0) for 85+ years. Substantial heterogeneity was observed within almost all age strata, with the I2 ranging from 58.7% to 98.3%, although one stratum had an I2 of 0%. This statistical heterogeneity was also apparent in forest plots of the data (Supplementary Figs. A1–A3). The one exception was the aMCI incidence in the 70–74 year age category, where I2 = 0, and the summary median IR estimate was 24.1 per 1000 person-years. The findings from the descriptive analysis were consistent with the findings from the meta-analysis based on evaluation of point estimates and ranges for each analysis. Median and IQR from descriptive findings resided within the 95% CIs of the meta-analysis findings for each age band in each MCI category (MCI total, aMCI, and naMCI)."
+    },
+    {
+      "end": 26212,
+      "id": "U49",
+      "section_id": "H11",
+      "start": 26188,
+      "text": "### Qualitative findings"
+    },
+    {
+      "end": 26218,
+      "id": "U50",
+      "section_id": "H11",
+      "start": 26214,
+      "text": "3.3."
+    },
+    {
+      "end": 26948,
+      "id": "U51",
+      "section_id": "H11",
+      "start": 26220,
+      "text": "To explore sources of heterogeneity, our detailed qualitative review of study parameters included 82 study variables, which we distilled into the 13 variables (Supplementary Table A.3) most likely to contribute to heterogeneity (Table 2). Some common design elements were observed among these 7 studies. For example, all assessed participants at the baseline using the Diagnostic and Statistical Manual of Mental Disorders (DSM III or DSM IV) criteria to exclude prevalent dementia cases. Also, all these studies used the original or the revised Petersen diagnostic criteria as the MCI definition [4], [13]. In addition, all but 1 study [34] used age- and/or education-adjusted norms in operationalizing the diagnostic criteria."
+    },
+    {
+      "end": 27143,
+      "id": "U52",
+      "section_id": "H11",
+      "start": 26951,
+      "text": "**Table 2** Qualitative table of MCI, aMCI, and naMCI incidence studies included in quantitative analysis: critical criteria for evaluation (in order of first year of study observation period)"
+    },
+    {
+      "end": 44684,
+      "id": "U53",
+      "section_id": "H11",
+      "start": 27146,
+      "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"1\" colspan=\"3\">Study information</th>\n      <th rowspan=\"1\" colspan=\"5\">Estimated incidence rate by age, per 1000 person-years (95% CI)</th>\n      <th rowspan=\"1\" colspan=\"4\">Diagnostic information</th>\n      <th rowspan=\"1\" colspan=\"6\">Demographics of cohort</th>\n      <th rowspan=\"1\" colspan=\"3\">Follow-up</th>\n    </tr>\n    <tr>\n      <th rowspan=\"1\" colspan=\"1\">Author and published year</th>\n      <th rowspan=\"1\" colspan=\"1\">Country</th>\n      <th rowspan=\"1\" colspan=\"1\">Years∗ of study</th>\n      <th rowspan=\"1\" colspan=\"1\">65–69 years</th>\n      <th rowspan=\"1\" colspan=\"1\">70–74 years</th>\n      <th rowspan=\"1\" colspan=\"1\">75–79 years</th>\n      <th rowspan=\"1\" colspan=\"1\">80–84 years</th>\n      <th rowspan=\"1\" colspan=\"1\">85 + years</th>\n      <th rowspan=\"1\" colspan=\"1\">Criteria</th>\n      <th rowspan=\"1\" colspan=\"1\">SD¶</th>\n      <th rowspan=\"1\" colspan=\"1\">Dementia exclusion</th>\n      <th rowspan=\"1\" colspan=\"1\">Norms</th>\n      <th rowspan=\"1\" colspan=\"1\">Female, %</th>\n      <th rowspan=\"1\" colspan=\"1\">N</th>\n      <th rowspan=\"1\" colspan=\"1\">Age range, years</th>\n      <th rowspan=\"1\" colspan=\"1\">Response rate</th>\n      <th rowspan=\"1\" colspan=\"1\">Education</th>\n      <th rowspan=\"1\" colspan=\"1\">Place</th>\n      <th rowspan=\"1\" colspan=\"1\">Freq.</th>\n      <th rowspan=\"1\" colspan=\"1\">Lost, %</th>\n      <th rowspan=\"1\" colspan=\"1\">Max</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">MCI</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Larrieu 2002 [35]</td>\n      <td rowspan=\"1\" colspan=\"1\">France</td>\n      <td rowspan=\"1\" colspan=\"1\">1993–1998</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">12.4 (11.6, 13.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">7.7 (7.3, 8.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">9.5 (8.9, 10.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">12.4 (11.4, 13.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Original</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III-R</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">52</td>\n      <td rowspan=\"1\" colspan=\"1\">1265</td>\n      <td rowspan=\"1\" colspan=\"1\">65-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">69%</td>\n      <td rowspan=\"1\" colspan=\"1\">77% primary school or greater</td>\n      <td rowspan=\"1\" colspan=\"1\">Mixed urban-rural</td>\n      <td rowspan=\"1\" colspan=\"1\">60 months</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">5</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Busse 2003‡[32]</td>\n      <td rowspan=\"1\" colspan=\"1\">Germany</td>\n      <td rowspan=\"1\" colspan=\"1\">1997–2001</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">5.3 (1.7, 12.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">14.7 (5.9, 30.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">8.8 (1.8, 25.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">900</td>\n      <td rowspan=\"1\" colspan=\"1\">75-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">75%</td>\n      <td rowspan=\"1\" colspan=\"1\">Mostly moderate to low</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">18, 36 months</td>\n      <td rowspan=\"1\" colspan=\"1\">24</td>\n      <td rowspan=\"1\" colspan=\"1\">3</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Luck 2010 [12]</td>\n      <td rowspan=\"1\" colspan=\"1\">Germany</td>\n      <td rowspan=\"1\" colspan=\"1\">1997–2005</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">50.3 (38.3, 66.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">84.8 (62.2, 115.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">157.6 (117.7, 211.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III-R &amp; DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">74</td>\n      <td rowspan=\"1\" colspan=\"1\">732</td>\n      <td rowspan=\"1\" colspan=\"1\">75-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">75%</td>\n      <td rowspan=\"1\" colspan=\"1\">67% low</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">≈ every 1.4 years</td>\n      <td rowspan=\"1\" colspan=\"1\">35</td>\n      <td rowspan=\"1\" colspan=\"1\">8</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Roberts 2012 [6]</td>\n      <td rowspan=\"1\" colspan=\"1\">USA</td>\n      <td rowspan=\"1\" colspan=\"1\">2004–NR</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">35.9 (20.4, 51.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">44.9 (28.8, 61.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">86.3 (63.6, 109)</td>\n      <td rowspan=\"1\" colspan=\"1\">135 (95.6, 174.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">Age</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">1640</td>\n      <td rowspan=\"1\" colspan=\"1\">70-89</td>\n      <td rowspan=\"1\" colspan=\"1\">62%</td>\n      <td rowspan=\"1\" colspan=\"1\">49% &gt; 12 years</td>\n      <td rowspan=\"1\" colspan=\"1\">Mixed urban-rural</td>\n      <td rowspan=\"1\" colspan=\"1\">Every 15 months</td>\n      <td rowspan=\"1\" colspan=\"1\">9</td>\n      <td rowspan=\"1\" colspan=\"1\">3.4#</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">aMCI</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Caracciolo 2008 [33]§</td>\n      <td rowspan=\"1\" colspan=\"1\">Sweden</td>\n      <td rowspan=\"1\" colspan=\"1\">1987–1996</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">5.4 (2.3, 12.8)</td>\n      <td rowspan=\"1\" colspan=\"1\">11.2 (6.6, 18.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">20.2 (13.1, 31.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1.5</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III-R or MMSE &lt; 20</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">75</td>\n      <td rowspan=\"1\" colspan=\"1\">1070</td>\n      <td rowspan=\"1\" colspan=\"1\">75-90+</td>\n      <td rowspan=\"1\" colspan=\"1\">72%</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">3 times</td>\n      <td rowspan=\"1\" colspan=\"1\">74</td>\n      <td rowspan=\"1\" colspan=\"1\">9</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Manly 2008 [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">USA</td>\n      <td rowspan=\"1\" colspan=\"1\">1992–NR; 1999–NR</td>\n      <td rowspan=\"1\" colspan=\"1\">11 (5, 17)</td>\n      <td rowspan=\"1\" colspan=\"1\">21 (16, 27)</td>\n      <td rowspan=\"1\" colspan=\"1\">22 (16, 29)</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1.5</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III-R</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">69</td>\n      <td rowspan=\"1\" colspan=\"1\">2364</td>\n      <td rowspan=\"1\" colspan=\"1\">65-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">34%</td>\n      <td rowspan=\"1\" colspan=\"1\">Mean 10 years</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">Avg of 2.3 times</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">5</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Katz 2012 [34]</td>\n      <td rowspan=\"1\" colspan=\"1\">USA</td>\n      <td rowspan=\"1\" colspan=\"1\">1993–2009</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">26 (13.7, 49.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">19.8 (3.2, 125.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">40.6 (24.2, 68.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">55 (18.4, 164.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">FCSRT† ≤ 24 or SD &gt; 1.5</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">61</td>\n      <td rowspan=\"1\" colspan=\"1\">1168</td>\n      <td rowspan=\"1\" colspan=\"1\">70-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">Mean 13.5 years</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">Annually</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">16</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Luck 2010 [12]</td>\n      <td rowspan=\"1\" colspan=\"1\">Germany</td>\n      <td rowspan=\"1\" colspan=\"1\">1997–2005</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">15.5 (9.5, 25.3)</td>\n      <td rowspan=\"1\" colspan=\"1\">33.9 (20.8, 55.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">63.1 (39.7, 100.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III-R &amp; DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">74</td>\n      <td rowspan=\"1\" colspan=\"1\">732</td>\n      <td rowspan=\"1\" colspan=\"1\">75-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">75%</td>\n      <td rowspan=\"1\" colspan=\"1\">67% low</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">≈ every 1.4 years</td>\n      <td rowspan=\"1\" colspan=\"1\">35</td>\n      <td rowspan=\"1\" colspan=\"1\">8</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Roberts 2012 [6]</td>\n      <td rowspan=\"1\" colspan=\"1\">USA</td>\n      <td rowspan=\"1\" colspan=\"1\">2004–NR</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">24.1 (11.6, 36.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">26.3 (14.1, 38.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">51.7 (34.6, 68.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">74.2 (45.8, 102.5)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">Age</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">1640</td>\n      <td rowspan=\"1\" colspan=\"1\">70-89</td>\n      <td rowspan=\"1\" colspan=\"1\">62%</td>\n      <td rowspan=\"1\" colspan=\"1\">49% &gt; 12 years</td>\n      <td rowspan=\"1\" colspan=\"1\">Mixed urban-rural</td>\n      <td rowspan=\"1\" colspan=\"1\">Every 15 months</td>\n      <td rowspan=\"1\" colspan=\"1\">9</td>\n      <td rowspan=\"1\" colspan=\"1\">3.4#</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">naMCI</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Manly 2008 [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">USA</td>\n      <td rowspan=\"1\" colspan=\"1\">1992–NR; 1999–NR</td>\n      <td rowspan=\"1\" colspan=\"1\">17 (10, 24)</td>\n      <td rowspan=\"1\" colspan=\"1\">26 (20, 32)</td>\n      <td rowspan=\"1\" colspan=\"1\">34 (26, 42)</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1.5</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III-R</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">68.6</td>\n      <td rowspan=\"1\" colspan=\"1\">2364</td>\n      <td rowspan=\"1\" colspan=\"1\">65-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">34%</td>\n      <td rowspan=\"1\" colspan=\"1\">Mean 10 years</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">Avg of 2.3 times</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">5</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Katz 2012 [34]</td>\n      <td rowspan=\"1\" colspan=\"1\">USA</td>\n      <td rowspan=\"1\" colspan=\"1\">1993–2009</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">46.1 (29.1, 73.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">37.8 (20.9, 68.5)</td>\n      <td rowspan=\"1\" colspan=\"1\">28.6 (14.5, 56.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">49.7 (26.7, 92.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">FCSRT∗ ≤ 24 or SD &gt; 1.5</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">60.7</td>\n      <td rowspan=\"1\" colspan=\"1\">1168</td>\n      <td rowspan=\"1\" colspan=\"1\">70-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">Mean 13.5 years</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">Annually</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">16</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Luck 2010 [12]</td>\n      <td rowspan=\"1\" colspan=\"1\">Germany</td>\n      <td rowspan=\"1\" colspan=\"1\">1997–2005</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">34.8 (25.1, 48.3)</td>\n      <td rowspan=\"1\" colspan=\"1\">50.9 (34.1, 75.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">94.6 (64.9, 137.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III-R &amp; DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">Age, edu</td>\n      <td rowspan=\"1\" colspan=\"1\">73.9</td>\n      <td rowspan=\"1\" colspan=\"1\">732</td>\n      <td rowspan=\"1\" colspan=\"1\">75-NR</td>\n      <td rowspan=\"1\" colspan=\"1\">74.76%</td>\n      <td rowspan=\"1\" colspan=\"1\">67% low</td>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">≈ every 1.4 years</td>\n      <td rowspan=\"1\" colspan=\"1\">35</td>\n      <td rowspan=\"1\" colspan=\"1\">8</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Roberts 2012 [6]</td>\n      <td rowspan=\"1\" colspan=\"1\">USA</td>\n      <td rowspan=\"1\" colspan=\"1\">2004–NR</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">7.7 (0.7, 14.8)</td>\n      <td rowspan=\"1\" colspan=\"1\">9.5 (2.3, 16.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">21.1 (10.2, 32.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">32 (12.9, 51.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen Revised</td>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">Age</td>\n      <td rowspan=\"1\" colspan=\"1\">NR</td>\n      <td rowspan=\"1\" colspan=\"1\">1640</td>\n      <td rowspan=\"1\" colspan=\"1\">70- 89</td>\n      <td rowspan=\"1\" colspan=\"1\">61.8%</td>\n      <td rowspan=\"1\" colspan=\"1\">49% &gt; 12 years</td>\n      <td rowspan=\"1\" colspan=\"1\">Mixed urban-rural</td>\n      <td rowspan=\"1\" colspan=\"1\">Every 15 months</td>\n      <td rowspan=\"1\" colspan=\"1\">9</td>\n      <td rowspan=\"1\" colspan=\"1\">3.4#</td>\n    </tr>\n  </tbody>\n</table>"
+    },
+    {
+      "end": 45101,
+      "id": "U54",
+      "section_id": "H11",
+      "start": 44686,
+      "text": "Abbreviations: aMCI, amnestic mild cognitive impairment; avg, average; DSM-IV, Diagnostic and Statistical Manual of Mental Disorders, 4th Edition; DSM-III-R, Diagnostic and Statistical Manual of Mental Disorders, 3rd Edition, Revision; edu, education; freq, frequency; max, maximum; MCI, mild cognitive impairment, MMSE, Mini-Mental State Examination; naMCI, nonamnestic mild cognitive impairment; NR, not reported."
+    },
+    {
+      "end": 45172,
+      "id": "U55",
+      "section_id": "H11",
+      "start": 45103,
+      "text": "∗Years of study represent the calendar years the cohort was observed."
+    },
+    {
+      "end": 45214,
+      "id": "U56",
+      "section_id": "H11",
+      "start": 45174,
+      "text": "†Free and Cued Selective Reminding test."
+    },
+    {
+      "end": 45469,
+      "id": "U57",
+      "section_id": "H11",
+      "start": 45216,
+      "text": "‡Busse et al. 2003: excluded duplicate estimates that did not require cognitive complaint in MCI criteria (excluded estimates: 75–79 years, IR = 7.6 [95% CI 3.1–15.7]; 80–84 years, IR = 21.4 [95% CI 10.3–39.4]; 85 + years, IR = 11.9 [95% CI 3.3– 30.6])."
+    },
+    {
+      "end": 45722,
+      "id": "U58",
+      "section_id": "H11",
+      "start": 45471,
+      "text": "§Estimates adjusted for population attrition: excluded crude estimates unadjusted for population attrition (excluded estimates 75–79 years, IR = 5.3 [95% CI 2.2–12.8]; 80–84 years, IR = 9.6 [95% CI 5.8–15.9]; 85 + years, IR = 16.3 [95% CI 11.3–23.4])."
+    },
+    {
+      "end": 45785,
+      "id": "U59",
+      "section_id": "H11",
+      "start": 45724,
+      "text": "¶Standard deviation used in criteria to designate impairment."
+    },
+    {
+      "end": 45864,
+      "id": "U60",
+      "section_id": "H11",
+      "start": 45787,
+      "text": "#Mean follow-up reported when information on max follow-up not found in text."
+    },
+    {
+      "end": 46229,
+      "id": "U61",
+      "section_id": "H11",
+      "start": 45866,
+      "text": "MCI incidence estimates appeared to be higher from studies with more recent data collection [6], [12]. This potential trend of more recent calendar year of data collection corresponding to higher MCI incidence estimates was observed in aMCI data [6], [12], [34] but not naMCI data. However, small numbers limited further exploration of this potential association."
+    },
+    {
+      "end": 46426,
+      "id": "U62",
+      "section_id": "H11",
+      "start": 46231,
+      "text": "No consistent differences were observed when examined by other characteristics (e.g., study country, education, response rate, or follow-up time) across studies related to reported MCI incidence."
+    },
+    {
+      "end": 46443,
+      "id": "U63",
+      "section_id": "H12",
+      "start": 46430,
+      "text": "## Discussion"
+    },
+    {
+      "end": 46447,
+      "id": "U64",
+      "section_id": "H12",
+      "start": 46445,
+      "text": "4."
+    },
+    {
+      "end": 46482,
+      "id": "U65",
+      "section_id": "H13",
+      "start": 46449,
+      "text": "### Methodological considerations"
+    },
+    {
+      "end": 46488,
+      "id": "U66",
+      "section_id": "H13",
+      "start": 46484,
+      "text": "4.1."
+    },
+    {
+      "end": 47054,
+      "id": "U67",
+      "section_id": "H13",
+      "start": 46490,
+      "text": "The data synthesis in this review incorporated both qualitative analysis and quantitative meta-analysis to explore the complexity and challenges of the data. Rather than summarizing MCI incidence estimates across highly diverse studies as performed in previous literature reviews [5], [6], we conducted a qualitative systematic review to select community-based epidemiological studies more comparable in design. We further generated summary estimates along with ranges of estimates, specific to each age category, anchored in descriptive and meta-analytic results."
+    },
+    {
+      "end": 48296,
+      "id": "U68",
+      "section_id": "H13",
+      "start": 47056,
+      "text": "Because a large degree of heterogeneity among studies was anticipated, we designed exclusion and inclusion criteria to limit known sources of heterogeneity that could also affect the accuracy of estimates. For example, advancing age is a strong risk factor for MCI and dementia; therefore, estimates of MCI incidence in one study could exceed those in another merely because its study population is older [4], [5]. We required the MCI diagnosis to meet current clinical standards, which specify the presence of subjective cognitive concern from the patient, family, or provider [37]. Applying uniform diagnostic criteria across geographically diverse studies helped reduce variability in estimates of MCI prevalence in the Cohort Studies of Memory in an International Consortium, suggesting that apparent geographical variation in estimates is partly due to application and operationalization of diagnostic criteria rather than country differences alone [38]. Accordingly, we focused on methodological aspects of studies rather than geographical aspects. Because no significant sex differences in MCI incidence were found in a recent meta-analysis [39], we used estimates that included both men and women rather than those separated by sex."
+    },
+    {
+      "end": 48331,
+      "id": "U69",
+      "section_id": "H14",
+      "start": 48299,
+      "text": "### Examination of heterogeneity"
+    },
+    {
+      "end": 48337,
+      "id": "U70",
+      "section_id": "H14",
+      "start": 48333,
+      "text": "4.2."
+    },
+    {
+      "end": 49010,
+      "id": "U71",
+      "section_id": "H14",
+      "start": 48339,
+      "text": "The Cohort Studies of Memory in an International Consortium found that “applying uniform criteria to harmonized data greatly reduced the variation in MCI prevalence internationally [38].” Despite applying strict criteria for study inclusion in our work, heterogeneity remained across the MCI incidence studies. Meta-regression analyses are typically used to identify variables that may be the source of heterogeneity. However, with small number of studies in each age category, we were underpowered to conduct meta-regression. For this reason, we instead focused on a qualitative analysis of key variables (as shown in Table 2) that may have contributed to heterogeneity."
+    },
+    {
+      "end": 49936,
+      "id": "U72",
+      "section_id": "H14",
+      "start": 49012,
+      "text": "Several potential factors contributing to data heterogeneity were hypothesized; however, owing to the small number of studies, this could not be confirmed quantitatively. Heterogeneity of summary estimates could result from different diagnostic criteria for MCI or from distinctions in the operationalization of the same diagnostic criteria. Differences in response rate and varying follow-up times among studies may also contribute to heterogeneity in terms of type of patients included and the number of MCI cases identified, respectively. In addition, because all studies used a population-adjusted norm (typically adjusted for age and education) to determine cognitive impairment, differences between cohorts in how many individuals were classified as “cognitively normal” may also impact findings. Furthermore, how studies excluded individuals with the baseline dementia or prevalent MCI may affect incidence estimates."
+    },
+    {
+      "end": 50863,
+      "id": "U73",
+      "section_id": "H14",
+      "start": 49938,
+      "text": "Ultimately, one of the largest contributors to the variability observed in rates of MCI is likely to be the mutable nature of the disease course itself. MCI can result from a variety of underlying conditions, ranging from AD to depression, and the stability of MCI varies accordingly [8], [40], [41], [42]. Even if studies used consistent methods to evaluate MCI, individuals who meet MCI criteria at one assessment may not always meet them at subsequent assessments. Indeed, underlying variability due to challenges in the changing nature of MCI expression and detection should be acknowledged when considering statistical heterogeneity. Given the nature of the studies, both quantitative and qualitative approaches used to summarize the data have strengths and limitations. Accordingly, rather than extracting a single-point estimate, the age-specific range of estimates and range of summary estimates should be considered."
+    },
+    {
+      "end": 50924,
+      "id": "U74",
+      "section_id": "H15",
+      "start": 50866,
+      "text": "### Considerations for broader application of the findings"
+    },
+    {
+      "end": 50930,
+      "id": "U75",
+      "section_id": "H15",
+      "start": 50926,
+      "text": "4.3."
+    },
+    {
+      "end": 52410,
+      "id": "U76",
+      "section_id": "H15",
+      "start": 50932,
+      "text": "Public health or health services planning efforts often rely on epidemiological incidence data such as those summarized in this study. Results from this detailed systematic review may inform public health decision-making in the face of seemingly disparate literature findings. Important considerations when applying the current findings include the fact that MCI cases observed in epidemiological population-based studies may not come to the attention of the health care system or otherwise be detected clinically. Population-based epidemiological studies classify MCI cases based on standard criteria and do not consider a participant's motivation for help-seeking or access to care [17]. Known barriers to help-seeking include hesitation to admit a potential impairment and inadequate understanding of cognitive impairment compared with normal aging [43], [44], [45]. In addition, MCI can be due to multiple etiologies. For example, a specific disease etiology such as AD may be the cause of only a fraction of new MCI cases. Considering these factors in combination, a patient funnel may emerge, as shown in Fig. 2. This funnel depicts how the epidemiological incidence data summarized in this report provide the first of many inputs to inform health services planning for a particular etiology of MCI, such as AD. Although as depicted, the illustration shows incident population data, the concept of the patient funnel applies to prevalent population considerations as well."
+    },
+    {
+      "end": 52807,
+      "id": "U77",
+      "section_id": "H15",
+      "start": 52413,
+      "text": "<figure>\n  <figcaption><strong>Fig. 2</strong> Example of a patient funnel for decision-makers, estimating the incidence of MCI in the patient population with Alzheimer&#x27;s disease pathology. Abbreviations: AD, Alzheimer&#x27;s disease; MCI, mild cognitive impairment. *Refers to application of case identification correction factor to account for the patient journey.</figcaption>\n</figure>"
+    },
+    {
+      "end": 53204,
+      "id": "U78",
+      "section_id": "H15",
+      "start": 52810,
+      "text": "<figure>\n  <figcaption><strong>Fig. 2</strong> Example of a patient funnel for decision-makers, estimating the incidence of MCI in the patient population with Alzheimer&#x27;s disease pathology. Abbreviations: AD, Alzheimer&#x27;s disease; MCI, mild cognitive impairment. *Refers to application of case identification correction factor to account for the patient journey.</figcaption>\n</figure>"
+    },
+    {
+      "end": 53250,
+      "id": "U79",
+      "section_id": "H16",
+      "start": 53207,
+      "text": "### Limitations and strengths of this study"
+    },
+    {
+      "end": 53256,
+      "id": "U80",
+      "section_id": "H16",
+      "start": 53252,
+      "text": "4.4."
+    },
+    {
+      "end": 54516,
+      "id": "U81",
+      "section_id": "H16",
+      "start": 53258,
+      "text": "A limitation of this work is that with the restrictive inclusion criteria, the number of studies that remained for quantitative analyses was small. Because of the limited number of studies, multivariable-adjusted meta-regression, which would provide a statistical examination of sources of heterogeneity, was not feasible. Also, some otherwise well-conducted epidemiological studies were not included in the final analyses due to the analysis criteria of 5-year age strata. For example, Ganguli et al. was reviewed in our initial qualitative analyses but was excluded in subsequent analyses because of its use of broader age strata [21]. Although we eliminated one study that provided only sex-stratified estimates, we did not expect our results to be dramatically different if using sex-stratified estimates based on the lack of sex-based difference in estimates observed in this review during visual examination of the studies (data not shown). Despite our inclusion/exclusion criteria, we still observed a high degree of heterogeneity, indicating that a single-point summary estimate may not reflect the MCI incidence rate in a given population. At a minimum, we suggest that age-specific ranges be used for future clinical and public health applications."
+    },
+    {
+      "end": 55438,
+      "id": "U82",
+      "section_id": "H16",
+      "start": 54518,
+      "text": "Strengths of our study include the extraction of a broad range of qualitative factors from high-quality studies to guide the examination of heterogeneity. We limited studies to those using criteria consistent with current clinical guidelines for the diagnosis of MCI to better reflect a real-world diagnostic process. In addition, we provided narrow age categories for age-specific estimates, which allow application of these findings by age category in other populations. The use of a multiprong approach for exploring incidence differences across studies was another strength of our study. Descriptive analyses, meta-analyses, and qualitative analyses each have benefits and drawbacks. When widespread heterogeneity is expected, a single approach may not offer an adequate view of incidence within a given population. By combining several approaches, we could capitalize on the strengths of each in examining our data."
+    },
+    {
+      "end": 55456,
+      "id": "U83",
+      "section_id": "H17",
+      "start": 55442,
+      "text": "## Conclusions"
+    },
+    {
+      "end": 55460,
+      "id": "U84",
+      "section_id": "H17",
+      "start": 55458,
+      "text": "5."
+    },
+    {
+      "end": 56279,
+      "id": "U85",
+      "section_id": "H17",
+      "start": 55462,
+      "text": "In summary, by using a multiprong approach to synthesize data from a set of high-quality studies harmonized in some fundamental methods, we derived age-specific summary estimates and ranges for MCI incidence. This systematic literature review confirmed the challenges in estimating MCI incidence, particularly challenges posed by heterogeneity. Data from this study suggest that clinicians and decision-makers should consider incidence rates in the setting of the quantitative ranges observed, rather than a single summary point estimate that may be contextually misleading due to heterogeneous estimates. Finally, one must consider that estimates for MCI from general population studies include all cases, regardless of their likelihood of being detected in the health care system or the underlying disease etiology."
+    },
+    {
+      "end": 56300,
+      "id": "U86",
+      "section_id": "H17",
+      "start": 56281,
+      "text": "Research in Context"
+    },
+    {
+      "end": 56825,
+      "id": "U87",
+      "section_id": "H17",
+      "start": 56302,
+      "text": "- 1.Systematic review: As the population ages, estimates of mild cognitive impairment (MCI) incidence can help inform public health agencies and clinical decision-makers as they prepare for an influx of individuals with MCI and at increased risk of dementia. Although systematic reviews of MCI incidence have been conducted, a comprehensive meta-analysis using data synthesis has not been completed. Data in this study were synthesized using quantitative and qualitative descriptive analyses and quantitative meta-analyses."
+    },
+    {
+      "end": 57128,
+      "id": "U88",
+      "section_id": "H17",
+      "start": 56827,
+      "text": "- 2.Interpretation: This systematic literature review and data synthesis provides multi-national contemporary estimates of the incidence of MCI and highlights real-world challenges that contribute to heterogeneity such as operationalization of diagnostic criteria and study methodological differences."
+    },
+    {
+      "end": 57345,
+      "id": "U89",
+      "section_id": "H17",
+      "start": 57130,
+      "text": "- 3.Future directions: Data from this study highlights the need for key decision-makers to consider the context of quantitative point estimates and their associated ranges when interpreting observed incidence rates."
+    },
+    {
+      "end": 57367,
+      "id": "U90",
+      "section_id": "H18",
+      "start": 57349,
+      "text": "## Acknowledgments"
+    },
+    {
+      "end": 57815,
+      "id": "U91",
+      "section_id": "H18",
+      "start": 57369,
+      "text": "The authors would like to acknowledge the following collaborators for their contributions to the design and execution of this study: Deborah Blacker, MD, ScD; Jennifer Weuve, MPH ScD; and W. Dana Flanders MD, DSc. In addition, we would like to thank the following collaborators for their guidance and contributions to the interpretation of the findings in this study: Deborah Blacker, MD, ScD; Jennifer Weuve, MPH ScD; and Dana Flanders, MD, DSc."
+    },
+    {
+      "end": 58052,
+      "id": "U92",
+      "section_id": "H18",
+      "start": 57817,
+      "text": "Design and completion of this study, interpretation of study data, and drafting of this manuscript was funded by Biogen. Medical writing support, under direction of the authors, was provided by Nucleus Global, and was funded by Biogen."
+    },
+    {
+      "end": 58067,
+      "id": "U93",
+      "section_id": "H19",
+      "start": 58055,
+      "text": "## Footnotes"
+    },
+    {
+      "end": 58157,
+      "id": "U94",
+      "section_id": "H19",
+      "start": 58069,
+      "text": "Declarations of interest: N.M., F.M., and M.P. are employees and shareholders of Biogen."
+    },
+    {
+      "end": 58260,
+      "id": "U95",
+      "section_id": "H19",
+      "start": 58159,
+      "text": "Supplementary data to this article can be found online at https://doi.org/10.1016/j.dadm.2019.01.004."
+    },
+    {
+      "end": 58285,
+      "id": "U96",
+      "section_id": "H20",
+      "start": 58264,
+      "text": "## Supplementary data"
+    },
+    {
+      "end": 58309,
+      "id": "U97",
+      "section_id": "H20",
+      "start": 58287,
+      "text": "Supplementary Material"
+    }
+  ]
+}

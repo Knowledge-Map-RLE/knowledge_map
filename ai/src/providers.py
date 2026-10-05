@@ -16,12 +16,14 @@ import json
 import logging
 import threading
 import time
+from contextlib import aclosing
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import httpx
 
 from src.config import Provider, load_providers, model_registry, settings
+from src.response_tasks import BackgroundResponseTask, ResponseTaskError
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +34,10 @@ RETRY_MAX_DELAY = 30.0
 
 class ProviderError(Exception):
     """Raised when a provider is unknown or an upstream call fails."""
+
+    def __init__(self, message: str, *, details: dict | None = None):
+        super().__init__(message)
+        self.details = details or {}
 
 
 @dataclass
@@ -305,18 +311,46 @@ class OpenAIResponsesProviderClient:
         )
         if max_output_tokens:
             payload["max_output_tokens"] = int(max_output_tokens)
+        response_format = req.get("response_format")
+        if response_format is not None:
+            # Переносим контракт ответа клиента в формат Responses без подмены.
+            if not isinstance(response_format, dict):
+                raise ProviderError("Invalid response_format")
+            format_type = response_format.get("type")
+            if format_type == "json_schema":
+                definition = response_format.get("json_schema")
+                if (not isinstance(definition, dict)
+                        or not isinstance(definition.get("name"), str)
+                        or not isinstance(definition.get("schema"), dict)
+                        or type(definition.get("strict", False)) is not bool):
+                    raise ProviderError("Invalid JSON schema response_format")
+                payload["text"] = {"format": {"type": "json_schema", **definition}}
+            elif format_type in {"json_object", "text"}:
+                payload["text"] = {"format": {"type": format_type}}
+            else:
+                raise ProviderError("Unsupported response_format")
         return payload
 
     @staticmethod
     def _usage_to_chat(usage: dict | None) -> dict:
-        usage = usage or {}
+        if not isinstance(usage, dict) or not usage:
+            return {}
         prompt_tokens = int(usage.get("input_tokens") or 0)
         completion_tokens = int(usage.get("output_tokens") or 0)
-        return {
+        result = {
             "prompt_tokens": prompt_tokens,
             "completion_tokens": completion_tokens,
             "total_tokens": int(usage.get("total_tokens") or prompt_tokens + completion_tokens),
         }
+        # Счётчики рассуждений и кэша нужны для честного учёта незавершённых вызовов.
+        for upstream, internal, field_name in (
+            ("output_tokens_details", "completion_tokens_details", "reasoning_tokens"),
+            ("input_tokens_details", "prompt_tokens_details", "cached_tokens"),
+        ):
+            value = (usage.get(upstream) or {}).get(field_name)
+            if type(value) is int and value >= 0:
+                result[internal] = {field_name: value}
+        return result
 
     @staticmethod
     def _output_text(response: dict) -> str:
@@ -346,9 +380,10 @@ class OpenAIResponsesProviderClient:
                     return message.strip()
         return fallback
 
-    async def _post_json(self, payload: dict) -> dict:
+    async def _post_json(self, payload: dict, *, retry: bool = True) -> dict:
         last_error = "no response received"
-        for attempt in range(RETRY_ATTEMPTS):
+        attempts = RETRY_ATTEMPTS if retry else 1
+        for attempt in range(attempts):
             try:
                 response = await self._client.post(
                     f"{self.base_url}/responses", json=payload, headers=self._headers
@@ -377,18 +412,18 @@ class OpenAIResponsesProviderClient:
                         await response.aclose()
                     return result
 
-            if attempt + 1 == RETRY_ATTEMPTS:
+            if attempt + 1 == attempts:
                 break
             delay = min(RETRY_BASE_DELAY * (2 ** attempt), RETRY_MAX_DELAY)
             logger.warning(
                 "Provider '%s' Responses request failed before output "
                 "(attempt %d/%d): %s — retrying in %.1fs",
-                self.provider.name, attempt + 1, RETRY_ATTEMPTS, last_error, delay,
+                self.provider.name, attempt + 1, attempts, last_error, delay,
             )
             await asyncio.sleep(delay)
         raise ProviderError(
             f"Provider '{self.provider.name}' Responses request failed after "
-            f"{RETRY_ATTEMPTS} attempts: {last_error}"
+            f"{attempts} attempts: {last_error}"
         )
 
     async def generate(self, model: str, req: dict) -> dict:
@@ -413,7 +448,59 @@ class OpenAIResponsesProviderClient:
             "usage": self._usage_to_chat(response.get("usage")),
         }
 
+    async def _stream_structured_response(self, model: str, req: dict):
+        # Единственная фоновая генерация; GET читает состояние именно её id.
+        task = BackgroundResponseTask(self._client, self.base_url, self._headers, settings.request_timeout)
+        def common(response):
+            frame = {"model": response.get("model") or model, "object": "chat.completion.chunk",
+                     "created": int(time.time()), "upstream_transport": "responses_background",
+                     "upstream_request_sha256": task.request_sha256}
+            if task.response_id:
+                frame["id"] = task.response_id
+            if response.get("status") in {"queued", "in_progress", "completed", "incomplete", "failed", "cancelled"}:
+                frame["upstream_status"] = response["status"]
+            return frame
+        try:
+            async with aclosing(task.run(self._payload(model, req, stream=False))) as responses:
+                async for response in responses:
+                    if response.get("status") in {"queued", "in_progress"}:
+                        yield _sse_event(common(response) | {"choices": []})
+        except ResponseTaskError as error:
+            # Счётчики отмены, если они доступны, не теряются из-за ошибки GET или таймаута.
+            usage = self._usage_to_chat(task.last_response.get("usage"))
+            yield _sse_event(common(task.last_response) | {"choices": [], "usage": usage})
+            details = {"event_type": "response.failed", "transport_reason": str(error)}
+            if task.response_id:
+                details["response_id"] = task.response_id
+            raise ProviderError(str(error), details=details) from error
+        usage = self._usage_to_chat(response.get("usage"))
+        frame = common(response)
+        if response.get("status") != "completed":
+            details = {"response_id": task.response_id, "event_type": "response.failed"}
+            if response.get("status") == "incomplete":
+                reason = (response.get("incomplete_details") or {}).get("reason")
+                details.update(event_type="response.incomplete", incomplete_reason=(reason if reason in {
+                    "max_output_tokens", "max_tokens", "content_filter", "steered"} else "unknown"))
+            if usage:
+                yield _sse_event(frame | {"choices": [], "usage": usage})
+            raise ProviderError("OpenAI structured response did not complete", details=details)
+        text = self._output_text(response)
+        if not text.strip():
+            raise ProviderError("OpenAI structured response is empty", details={"response_id": task.response_id})
+        yield _sse_event(frame | {"choices": [{"index": 0, "delta": {"content": text},
+                                                "finish_reason": None}]})
+        yield _sse_event(frame | {"choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}],
+                                  "usage": usage})
+
     async def stream(self, model: str, req: dict):
+        response_format = req.get("response_format") or {}
+        if (response_format.get("type") == "json_schema"
+                and (response_format.get("json_schema") or {}).get("strict") is True):
+            # Это основной транспорт строгого JSON, а не повторный запрос после SSE-отказа.
+            async with aclosing(self._stream_structured_response(model, req)) as frames:
+                async for frame in frames:
+                    yield frame
+            return
         payload = self._payload(model, req, stream=True)
         headers = self._headers
         last_error = "stream ended before response.completed"
@@ -497,9 +584,27 @@ class OpenAIResponsesProviderClient:
                                 })
                                 return
                             elif event_type in {"error", "response.failed", "response.incomplete"}:
+                                failed_response = event.get("response") or {}
+                                details = {"event_type": event_type}
+                                if isinstance(failed_response.get("id"), str):
+                                    details["response_id"] = failed_response["id"]
+                                reason = (failed_response.get("incomplete_details") or {}).get("reason")
+                                if event_type == "response.incomplete":
+                                    details["incomplete_reason"] = (reason if reason in {
+                                        "max_output_tokens", "max_tokens", "content_filter", "steered"
+                                    } else "unknown")
+                                failure_usage = self._usage_to_chat(failed_response.get("usage"))
+                                if failure_usage:
+                                    # Это счётчики отказа, а не завершающий успешный кадр.
+                                    yield _sse_event({"id": failed_response.get("id") or response_id,
+                                        "model": failed_response.get("model") or response_model,
+                                        "object": "chat.completion.chunk", "choices": [],
+                                        "usage": failure_usage})
                                 raise ProviderError(
                                     f"OpenAI Responses stream failed: "
                                     f"{self._error_message(event, event_type or 'unknown error')}"
+                                    + (f" ({details['incomplete_reason']})" if "incomplete_reason" in details else ""),
+                                    details=details,
                                 )
                         if not completed and not retryable:
                             raise ProviderError(

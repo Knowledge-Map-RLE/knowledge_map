@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "sections": [
+    {
+      "end": 213,
+      "id": "H1",
+      "start": 0,
+      "title": "The incidence of mild cognitive impairment: A systematic review and data synthesis"
+    },
+    {
+      "end": 1514,
+      "id": "H2",
+      "start": 213,
+      "title": "Abstract"
+    },
+    {
+      "end": 4572,
+      "id": "H3",
+      "start": 1514,
+      "title": "Background"
+    },
+    {
+      "end": 4588,
+      "id": "H4",
+      "start": 4572,
+      "title": "Methods"
+    },
+    {
+      "end": 6989,
+      "id": "H5",
+      "start": 4588,
+      "title": "Systematic literature review"
+    },
+    {
+      "end": 7989,
+      "id": "H6",
+      "start": 6989,
+      "title": "Data extraction"
+    },
+    {
+      "end": 10600,
+      "id": "H7",
+      "start": 7989,
+      "title": "Data synthesis and analysis"
+    },
+    {
+      "end": 10616,
+      "id": "H8",
+      "start": 10600,
+      "title": "Results"
+    },
+    {
+      "end": 24807,
+      "id": "H9",
+      "start": 10616,
+      "title": "Study selection"
+    },
+    {
+      "end": 26188,
+      "id": "H10",
+      "start": 24807,
+      "title": "Quantitative findings"
+    },
+    {
+      "end": 46430,
+      "id": "H11",
+      "start": 26188,
+      "title": "Qualitative findings"
+    },
+    {
+      "end": 46449,
+      "id": "H12",
+      "start": 46430,
+      "title": "Discussion"
+    },
+    {
+      "end": 48299,
+      "id": "H13",
+      "start": 46449,
+      "title": "Methodological considerations"
+    },
+    {
+      "end": 50866,
+      "id": "H14",
+      "start": 48299,
+      "title": "Examination of heterogeneity"
+    },
+    {
+      "end": 53207,
+      "id": "H15",
+      "start": 50866,
+      "title": "Considerations for broader application of the findings"
+    },
+    {
+      "end": 55442,
+      "id": "H16",
+      "start": 53207,
+      "title": "Limitations and strengths of this study"
+    },
+    {
+      "end": 57349,
+      "id": "H17",
+      "start": 55442,
+      "title": "Conclusions"
+    },
+    {
+      "end": 58055,
+      "id": "H18",
+      "start": 57349,
+      "title": "Acknowledgments"
+    },
+    {
+      "end": 58264,
+      "id": "H19",
+      "start": 58055,
+      "title": "Footnotes"
+    },
+    {
+      "end": 58310,
+      "id": "H20",
+      "start": 58264,
+      "title": "Supplementary data"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "annotation_scope": "automatic_full_text",
+  "article_id": "pilot-pmc10000452-pmc5436834-10b9d676a760e5df",
+  "article_sha256": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+  "article_title": "Tumor necrosis factor α Inhibition for Alzheimer's Disease.",
+  "conversion_validation": {
+    "body_token_presence": 0.9987381703470032,
+    "reference_count": 59,
+    "scientific_accuracy": "not_assessed"
+  },
+  "conversion_version": "2",
+  "document_type": "journal-article",
+  "document_uid": "pilot-pmc10000452-pmc5436834-10b9d676a760e5df",
+  "doi": "10.1177/1179573517709278",
+  "download_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5436834/fullTextXML",
+  "license": "cc by-nc",
+  "needs_expert_review": true,
+  "original_sha256": "cd35b4dc3172dce08eabbae6d4d5a694172bf546bb7ec52d084cb3f5d0b06c0c",
+  "pmcid": "PMC5436834",
+  "publication_date": "2017-05-15",
+  "reference_number": 17,
+  "s3_bucket": "knowledge-map-data",
+  "s3_key": "reference_pilots/pmc10000452/sources/pmc5436834/10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a/article.md",
+  "source": {
+    "bucket": "knowledge-map-data",
+    "key": "reference_pilots/pmc10000452/sources/pmc5436834/10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a/article.md",
+    "system": "neo4j+s3"
+  },
+  "source_id": "PMC5436834",
+  "source_sha256": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+  "title": "Tumor necrosis factor α Inhibition for Alzheimer's Disease."
+}

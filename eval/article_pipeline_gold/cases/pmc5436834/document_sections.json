@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "sections": [
+    {
+      "end": 161,
+      "id": "H1",
+      "start": 0,
+      "title": "Tumor necrosis factor α Inhibition for Alzheimer’s Disease"
+    },
+    {
+      "end": 744,
+      "id": "H2",
+      "start": 161,
+      "title": "Abstract"
+    },
+    {
+      "end": 3953,
+      "id": "H3",
+      "start": 744,
+      "title": "Introduction"
+    },
+    {
+      "end": 5919,
+      "id": "H4",
+      "start": 3953,
+      "title": "TNF-α and TNF-α Receptors"
+    },
+    {
+      "end": 9340,
+      "id": "H5",
+      "start": 5919,
+      "title": "TNF-α Involvement in AD"
+    },
+    {
+      "end": 17330,
+      "id": "H6",
+      "start": 9340,
+      "title": "Targeting TNF-α in AD"
+    },
+    {
+      "end": 18471,
+      "id": "H7",
+      "start": 17330,
+      "title": "Conclusions"
+    },
+    {
+      "end": 20167,
+      "id": "H8",
+      "start": 18471,
+      "title": "Footnotes"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "annotation_scope": "automatic_full_text",
+  "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+  "article_language": "en",
+  "article_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+  "article_title": "Poor Diet, Long Sleep, and Lack of Physical Activity Are Associated with Inflammation among Non-Demented Community-Dwelling Elderly.",
+  "conversion_validation": {
+    "body_token_presence": 1.0,
+    "reference_count": 87,
+    "scientific_accuracy": "not_assessed"
+  },
+  "conversion_version": "2",
+  "document_type": "journal-article",
+  "document_uid": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+  "doi": "10.3390/healthcare10010143",
+  "download_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8775386/fullTextXML",
+  "expert_validated": false,
+  "gold_status": "unreviewed_candidate",
+  "import_origin": {
+    "experiment_run_id": "3e53a7ff-e01e-4cab-9d70-6a16b9ca3c03",
+    "map_artifact": "maps/pilot-pmc10000452-pmc8775386-953d8a7973426b47/722677e376cf669592190d46f9b4a9393c5fcecf77a761daa7fa64165ac2f08e.json",
+    "map_artifact_sha256": "67a82185a3bf8e68fb33c9577a5ccb648b1e33d4403e35deaae2773d986c7eee",
+    "source_revision": "sources/pmc8775386/revisions/953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a"
+  },
+  "knowledge_map_run_id": "f31d0493-8c93-40cb-9179-826760ba0fea",
+  "license": "cc by",
+  "needs_expert_review": true,
+  "original_sha256": "321ecf5d4b4a03085999e05402e3c9165db1f0dc4b9afd6f79e4fab6e2942145",
+  "pipeline_id": "text_reified",
+  "pmc_id": "PMC8775386",
+  "pmcid": "PMC8775386",
+  "publication_date": "2022-01-12",
+  "reference_number": 41,
+  "russian_translation": {
+    "article_text_available": false,
+    "file": "translation.text_reified.ru.json",
+    "kind": "knowledge_map_display_labels"
+  },
+  "s3_bucket": "knowledge-map-data",
+  "s3_key": "reference_pilots/pmc10000452/sources/pmc8775386/953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a/article.md",
+  "schema_version": 1,
+  "source": {
+    "bucket": "knowledge-map-data",
+    "key": "reference_pilots/pmc10000452/sources/pmc8775386/953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a/article.md",
+    "system": "neo4j+s3"
+  },
+  "source_id": "PMC8775386",
+  "source_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+  "title": "Poor Diet, Long Sleep, and Lack of Physical Activity Are Associated with Inflammation among Non-Demented Community-Dwelling Elderly."
+}

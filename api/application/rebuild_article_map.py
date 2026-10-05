@@ -16,13 +16,17 @@ from application.ports.article_pipeline import ArticlePipelineRepository
 from knowledge_pipeline.knowledge_map_builder import build_knowledge_map
 from knowledge_pipeline.pipeline import uid
 from knowledge_pipeline.quality_metrics import evaluate_article_transformation
+from application.ports.article_maps import ArticleMapsRepository
+from domain.article_maps import new_result
+from application.article_map_lock import acquire_map_lock
 
 
 class RebuildArticleMap:
     """Create an immutable pipeline version with a deterministically rebuilt map."""
 
-    def __init__(self, repository: ArticlePipelineRepository):
+    def __init__(self, repository: ArticlePipelineRepository, maps: ArticleMapsRepository):
         self.repository = repository
+        self.maps = maps
 
     @staticmethod
     def _current_blocks(blocks: list[dict]) -> list[dict]:
@@ -59,46 +63,44 @@ class RebuildArticleMap:
     async def load_current(self, doc_id: str, user_uid: str, blocks: list[dict]) -> dict:
         rows = self._current_blocks(blocks)
         fingerprint = self._fingerprint(rows)
-        snapshot = await asyncio.to_thread(
-            self.repository.load_map_snapshot, doc_id, user_uid
-        )
-        current = bool(snapshot and snapshot["blocks_fingerprint"] == fingerprint)
+        snapshot = await asyncio.to_thread(self.maps.get, doc_id, "structural_rows", user_uid)
+        current = bool(snapshot and snapshot["input_fingerprint"] == fingerprint)
         return {
             "graph": snapshot["graph"] if current else None,
             "blocks": rows,
-            "rebuilt_at": snapshot["rebuilt_at"] if current else None,
+            "rebuilt_at": snapshot["updated_at"] if current else None,
             "stale": bool(snapshot and not current),
         }
 
     async def execute_current(self, doc_id: str, user_uid: str, blocks: list[dict]) -> dict:
         require(isinstance(blocks, list) and bool(blocks),
                 "There are no saved structural rows to build a map from")
-        rows = self._current_blocks(blocks)
-        fingerprint = self._fingerprint(rows)
-        graph = build_knowledge_map(rows)
-        existing = await asyncio.to_thread(
-            self.repository.load_map_snapshot, doc_id, user_uid
-        )
-        if existing and existing["blocks_fingerprint"] == fingerprint and existing["graph"] == graph:
-            return {
-                "graph": graph,
-                "blocks": rows,
-                "rebuilt_at": existing["rebuilt_at"],
-                "created": False,
-                "graph_schema_version": graph["schema_version"],
-            }
-        await asyncio.to_thread(
-            self.repository.save_map_snapshot, doc_id, user_uid, graph, fingerprint
-        )
-        return {
-            "graph": graph,
-            "blocks": rows,
-            "rebuilt_at": None,
-            "created": True,
-            "graph_schema_version": graph["schema_version"],
-        }
+        token = uid()
+        await acquire_map_lock(self.maps, doc_id, "structural_rows", user_uid, token)
+        try:
+            rows = self._current_blocks(blocks)
+            graph = build_knowledge_map(rows)
+            result = await self._save_map(doc_id, user_uid, rows, graph, token)
+            return {**result, "blocks": rows, "rebuilt_at": result["updated_at"], "created": True}
+        finally:
+            await asyncio.shield(asyncio.to_thread(self.maps.release, doc_id, "structural_rows", user_uid, token))
+
+    async def _save_map(self, doc_id, user_uid, rows, graph, token, **metadata):
+        """Все точки пересборки публикуют один и тот же независимый результат."""
+        result = new_result(doc_id, "structural_rows", graph, self._fingerprint(rows),
+                            validation={"contract": "passed", "dag": "passed"}, **metadata)
+        await asyncio.to_thread(self.maps.save, result, user_uid, token)
+        return result
 
     async def execute(self, doc_id: str, source_version_id: str, user_uid: str) -> dict:
+        token = uid()
+        await acquire_map_lock(self.maps, doc_id, "structural_rows", user_uid, token)
+        try:
+            return await self._execute_version(doc_id, source_version_id, user_uid, token)
+        finally:
+            await asyncio.shield(asyncio.to_thread(self.maps.release, doc_id, "structural_rows", user_uid, token))
+
+    async def _execute_version(self, doc_id, source_version_id, user_uid, token):
         source_result = await asyncio.to_thread(
             self.repository.load, doc_id, source_version_id, user_uid
         )
@@ -118,6 +120,8 @@ class RebuildArticleMap:
         started_at = time.perf_counter()
         graph = build_knowledge_map(blocks)
         if graph == source_result.get("graph"):
+            await self._save_map(doc_id, user_uid, self._current_blocks(blocks), graph, token,
+                                 source_version_id=source_version_id)
             return {
                 "version_id": source_version_id,
                 "source_version_id": source_version_id,
@@ -141,6 +145,8 @@ class RebuildArticleMap:
         }
 
         await asyncio.to_thread(self.repository.save, rebuilt, user_uid)
+        await self._save_map(doc_id, user_uid, self._current_blocks(blocks), graph, token,
+                             source_version_id=rebuilt["version_id"])
         return {
             "version_id": rebuilt["version_id"],
             "source_version_id": source_version_id,

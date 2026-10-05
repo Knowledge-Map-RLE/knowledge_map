@@ -1,0 +1,32 @@
+{
+  "annotation_scope": "automatic_full_text",
+  "article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+  "article_sha256": "8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee",
+  "article_title": "Risk of conversion from mild cognitive impairment to dementia in low- and middle-income countries: A systematic review and meta-analysis.",
+  "conversion_validation": {
+    "body_token_presence": 0.9989847715736041,
+    "reference_count": 88,
+    "scientific_accuracy": "not_assessed"
+  },
+  "conversion_version": "2",
+  "document_type": "journal-article",
+  "document_uid": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+  "doi": "10.1002/trc2.12267",
+  "download_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8918697/fullTextXML",
+  "license": "cc by",
+  "needs_expert_review": true,
+  "original_sha256": "7b4e1356c9e0f2d563f2af92b70c1bc59598ddb2af7fb29eadb2432575c96916",
+  "pmcid": "PMC8918697",
+  "publication_date": "2022-03-13",
+  "reference_number": 5,
+  "s3_bucket": "knowledge-map-data",
+  "s3_key": "reference_pilots/pmc10000452/sources/pmc8918697/8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee/article.md",
+  "source": {
+    "bucket": "knowledge-map-data",
+    "key": "reference_pilots/pmc10000452/sources/pmc8918697/8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee/article.md",
+    "system": "neo4j+s3"
+  },
+  "source_id": "PMC8918697",
+  "source_sha256": "8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee",
+  "title": "Risk of conversion from mild cognitive impairment to dementia in low- and middle-income countries: A systematic review and meta-analysis."
+}

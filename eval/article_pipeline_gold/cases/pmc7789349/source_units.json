@@ -1,0 +1,715 @@
+{
+  "article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+  "content_end": 76601,
+  "coordinate_space": "article.md",
+  "offset_encoding": "unicode_codepoints",
+  "pipeline_id": "text_reified",
+  "references_excluded_from_extraction": true,
+  "references_removed": false,
+  "schema_version": 1,
+  "source_revision_id": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+  "source_sha256": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+  "source_text_length": 106600,
+  "source_units": [
+    {
+      "end": 141,
+      "id": "U1",
+      "section_id": "H1",
+      "start": 0,
+      "text": "# Prevalence of mild cognitive impairment in community-dwelling Chinese populations aged over 55 years: a meta-analysis and systematic review"
+    },
+    {
+      "end": 177,
+      "id": "U2",
+      "section_id": "H1",
+      "start": 143,
+      "text": "**Journal:** BMC Geriatrics (2021)"
+    },
+    {
+      "end": 214,
+      "id": "U3",
+      "section_id": "H1",
+      "start": 179,
+      "text": "**DOI:** 10.1186/s12877-020-01948-3"
+    },
+    {
+      "end": 228,
+      "id": "U4",
+      "section_id": "H2",
+      "start": 217,
+      "text": "## Abstract"
+    },
+    {
+      "end": 549,
+      "id": "U5",
+      "section_id": "H2",
+      "start": 230,
+      "text": "Mild cognitive impairment (MCI) is an intermediate phase between normal cognitive ageing and overt dementia, with amnesic MCI (aMCI) being the dominant subtype. This study aims to synthesise the prevalence results of MCI and aMCI in community-dwelling populations in China through a meta-analysis and systematic review."
+    },
+    {
+      "end": 1208,
+      "id": "U6",
+      "section_id": "H2",
+      "start": 551,
+      "text": "The study followed the Preferred Reporting Items for Systematic reviews and Meta-Analyses (PRISMA) protocol. English and Chinese studies published before 1 March 2020 were searched from ten electronic bibliographic databases. Two reviewers screened for relevance of the studies against the pre-defined inclusion and exclusion criteria and assessed the quality of the included studies using the Risk of Bias Tool independently. A random-effect model was adopted to estimate the prevalence of MCI and aMCI, followed by sub-group analyses and meta-regression. Sensitivity and publication bias tests were performed to verify the robustness of the meta-analyses."
+    },
+    {
+      "end": 1897,
+      "id": "U7",
+      "section_id": "H2",
+      "start": 1210,
+      "text": "A total of 41 studies with 112,632 participants were included in the meta-analyses. The Chinese community-dwelling populations over 55 years old had a pooled prevalence of 12.2% [95% confidence interval (CI): 10.6, 14.2%] for MCI and 10.9% [95% CI, 7.7, 15.4%] for aMCI, respectively. The prevalence of MCI increased with age. The American Psychiatric Association’s Diagnostic tool (DSM-IV) generated the highest MCI prevalence (13.5%), followed by the Petersen criteria (12.9%), and the National Institute on Aging Alzheimer’s Association (NIA-AA) criteria (10.3%). Women, rural residents, and those who lived alone and had low levels of education had higher MCI prevalence than others."
+    },
+    {
+      "end": 2230,
+      "id": "U8",
+      "section_id": "H2",
+      "start": 1899,
+      "text": "Higher MCI prevalence was identified in community-dwelling older adult populations in China compared with some other countries, possibly due to more broadened criteria being adopted for confirming the diagnosis. The study shows that aMCI accounts for 66.5% of MCI, which is consistent with findings of studies undertaken elsewhere."
+    },
+    {
+      "end": 2256,
+      "id": "U9",
+      "section_id": "H2",
+      "start": 2232,
+      "text": "PROSPERO CRD42019134686."
+    },
+    {
+      "end": 2349,
+      "id": "U10",
+      "section_id": "H2",
+      "start": 2258,
+      "text": "The online version contains supplementary material available at 10.1186/s12877-020-01948-3."
+    },
+    {
+      "end": 2432,
+      "id": "U11",
+      "section_id": "H2",
+      "start": 2351,
+      "text": "Keywords: Mild cognitive impairment, Prevalence, Systematic review, Meta-analysis"
+    },
+    {
+      "end": 2448,
+      "id": "U12",
+      "section_id": "H3",
+      "start": 2435,
+      "text": "## Background"
+    },
+    {
+      "end": 3157,
+      "id": "U13",
+      "section_id": "H3",
+      "start": 2450,
+      "text": "The World Alzheimer Report 2016 [1] estimated that dementia is the third most serious health problem following cancer and cardio-cerebrovascular diseases, and costs the global economy around 315 billon US dollars annually. Like many other diseases, most of the burden of dementia is experienced by low- and middle-income countries [2]. China, as the most populated middle-income country, has attracted the greatest burden of dementia. About one quarter of people with a dementia diagnosis live in China [3]. The dementia-associated disability and care burden in China is projected to be as high as US$250 billion in 2020, which accounts for nearly one fifth of the global costs associated with dementia [4]."
+    },
+    {
+      "end": 3841,
+      "id": "U14",
+      "section_id": "H3",
+      "start": 3159,
+      "text": "Early intervention measures are considered to be the most cost-effective for managing dementia due to a lack of an effective treatment regimen [5]. Mild cognitive impairment (MCI) has been conceptualised as an intermediate phase between normal cognitive ageing and overt dementia [6]. MCI is a neurological disorder in older adults characterised by slight but noticeable deficits in memory and/or other thinking skills with minimal impacts on daily living functioning [7]. Some researchers argue that MCI represents an early stage of dementia [8], with a tendency of progressing into clinically diagnosed dementia at an annual rate around 30% [9] and a lifetime rate of 60–90% [10]."
+    },
+    {
+      "end": 4289,
+      "id": "U15",
+      "section_id": "H3",
+      "start": 3843,
+      "text": "MCI can be subcategorised into amnesic MCI (aMCI) and non-amnesic (naMCI). Memory loss is the predominant symptom of aMCI compared with naMCI which involves impairment in thinking skills other than memory [11]. Individuals with aMCI tend to progress into Alzheimer’s disease (AD); however, naMCI seems to represent a prodromal phase of frontotemporal dementia and dementia with Lewy bodies. Both aMCI and naMCI can lead to vascular dementia [12]."
+    },
+    {
+      "end": 4995,
+      "id": "U16",
+      "section_id": "H3",
+      "start": 4291,
+      "text": "Internationally, extensive studies have been undertaken to determine the prevalence of MCI, generating great variations in results. A systematic review published in 2012 reported a prevalence of MCI ranging from 0.5 to 42% in different countries and populations [13]. Recent studies in the US [14], Spain [15], Brazil [16], Saudi Arabia [17], and Japan [18] reported a range of MCI prevalence between 6.5 and 38.6%. Significant variations in reported prevalence of MCI also exist within China. The Dementia Research Group reported a MCI prevalence of 0.8% in China [19], compared with 20.8% reported by the Chinese National Centre for Prevention and Control of Chronic and Non-communicable Diseases [20]."
+    },
+    {
+      "end": 6638,
+      "id": "U17",
+      "section_id": "H3",
+      "start": 4997,
+      "text": "This study aims to determine the prevalence of MCI (including its subtypes) in community-dwelling older adults in China through a meta-analysis and systematic review. The study addresses several limitations of the existing systematic reviews [21, 22]. First, there is a need to carefully assess the representativeness of study samples. Inclusion of studies involving participants with certain special characteristics can seriously overestimate or underestimate the prevalence of MCI. For example, a study reported extremely high prevalence of MCI (74.23%) in retired cadres, most in a very senior age [23]. By contrast, another study involving a high proportion of participants younger than 60 years reported only 2.4% of MCI [24]. Second, diagnostic criteria need to be considered in synthesising results. Applying different diagnostic tools and criteria is likely to lead to different results [25]. Many studies have failed to report specified criteria for confirmation of MCI [26]. Third, discrepancies in findings across study settings are common and they should not be mixed in synthesising analyses. MCI prevalence is usually higher in institutional settings than in communities [27]. To overcome the above-mentioned shortfalls, this study performed a series of subgroup analyses. To the best of our knowledge, no meta-analysis on aMCI prevalence in China has been reported. Findings of this study, especially those of the subgroup analyses, can provide a solid foundation for estimating MCI prevalence in community residents with different characteristics. This data is critical for planning preventive services in community settings."
+    },
+    {
+      "end": 6651,
+      "id": "U18",
+      "section_id": "H4",
+      "start": 6641,
+      "text": "## Methods"
+    },
+    {
+      "end": 7053,
+      "id": "U19",
+      "section_id": "H4",
+      "start": 6653,
+      "text": "We followed the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) protocol (supplementary file 1), which delineates a four-phase flow diagram and a 27-item checklist (www.prisma-statement.org). The protocol of this systematic review was registered on PROSPERO and is available in full on the website https://www.crd.york.ac.uk/PROSPERO/display_record.php? ID=CRD42019134686."
+    },
+    {
+      "end": 7074,
+      "id": "U20",
+      "section_id": "H5",
+      "start": 7055,
+      "text": "### Search strategy"
+    },
+    {
+      "end": 7808,
+      "id": "U21",
+      "section_id": "H5",
+      "start": 7076,
+      "text": "The well-established databases in English (Google Scholar, PubMed, Web of Science, Embase, CINAHL, PsycINFO) and Chinese languages (CQVIP, Wangfang, CNKI, Sinomed) were searched. All of the databases were searched from their inception to the 1st of March 2020, using a combination of the following searching terms: (“mild cognitive impairment” or “cognitive dysfunction” or “early dementia”) and (epidemiology, prevalence, rate, occurrence) (details provided in supplementary file 2). Hand searches were also performed to identify related papers through reference lists of the identified studies. A research librarian was consulted in developing the search strategy. The search results were exported to Endnote X9 (Thomson Reuters)."
+    },
+    {
+      "end": 7830,
+      "id": "U22",
+      "section_id": "H6",
+      "start": 7811,
+      "text": "### Data extraction"
+    },
+    {
+      "end": 9731,
+      "id": "U23",
+      "section_id": "H6",
+      "start": 7832,
+      "text": "A total of 2136 studies were identified after deletion of duplications. Two reviewers (MZ and JM) screened the titles and abstracts of the articles and identified those that met the inclusion and exclusion criteria. The included articles had to fall into the category of original studies, including both population-based cross-sectional and longitudinal studies in community-based samples, with prevalence of MCI and/or aMCI as a primary study objective. The study samples were representative of community-dwelling older adults as indicated by the sampling strategy and did not include those admitted to long-term care facilities. MCI cases were identified using a MCI screening strategy followed by diagnostic confirmation. Since the pathobiological process in the human brain happens decades before the onset of dementia [28] and MCI screening may reasonably start at the age of 55 years, studies involving participants aged over 55 years were deemed eligible. There is a lack of consensus about when MCI screening should be started. Empirical evidence shows that the prevalence of MCI increases with age [23, 24]. This study included participants ≥55 years simply because there were no eligible MCI studies involving participants under 55 years old. In China, women and those engaging in labor-intensive jobs usually retire at the age of 55 years and are eligible for some preventive care packages delivered by community health services. These may include community MCI screening. Studies with a sample restricted to those with special characteristics such as disease condition (e.g. Parkinson disease, depression, stroke), occupation, internal migration, insurance, and literacy were excluded. Full texts of the eligible articles (n = 172) were then further assessed against the inclusion and exclusion criteria, and another 127 articles were excluded for failing to meet the inclusion criteria."
+    },
+    {
+      "end": 10813,
+      "id": "U24",
+      "section_id": "H6",
+      "start": 9733,
+      "text": "Two reviewers (MZ and JM) assessed the quality of the 45 studies that met the inclusion criteria by extracting key elements from the full texts into the Risk of Bias Tool [29]. The Risk of Bias Tool examines four aspects of external validity (target population representation, sample representation, random sampling, non-response bias), five aspects of internal validity (data collection proxy, acceptable case definition, instrument validity and reliability, data collection mode, appropriate parameter), and the overall risk of bias of the studies. This tool was designed for assessing bias in epidemiological surveys. The grading of the assessed aspects adopted the Cochrane Grades of Recommendation, Assessment, Development, and Evaluation (GRADE) scheme [30]. Each assessed aspect was given a rating of “low”, “medium” or “high” risk of bias. Discrepancies between the two reviewers, if occurred, were resolved through discussions moderated by a third researcher. This resulted in a final sample of 41 studies without a high risk of bias for the final meta-analysis (Fig. 1)."
+    },
+    {
+      "end": 10997,
+      "id": "U25",
+      "section_id": "H6",
+      "start": 10816,
+      "text": "<figure>\n  <figcaption><strong>Fig. 1</strong> the flowchart on the stages of including the studies in the systematic reviewed and meta-analysis (PRISMA 2009)</figcaption>\n</figure>"
+    },
+    {
+      "end": 11181,
+      "id": "U26",
+      "section_id": "H6",
+      "start": 11000,
+      "text": "<figure>\n  <figcaption><strong>Fig. 1</strong> the flowchart on the stages of including the studies in the systematic reviewed and meta-analysis (PRISMA 2009)</figcaption>\n</figure>"
+    },
+    {
+      "end": 11602,
+      "id": "U27",
+      "section_id": "H6",
+      "start": 11183,
+      "text": "Apart from the prevalence of MCI (including aMCI and naMCI), data in relation to study setting (urban/rural), demographic characteristics (age, sex, educational attainments, living status) of participants, study period, screening tools, and diagnostic confirmation methods for each of the included studies were extracted. Empirical evidence shows that the prevalence of MCI/aMCI is likely to vary by these factors [31]."
+    },
+    {
+      "end": 11629,
+      "id": "U28",
+      "section_id": "H7",
+      "start": 11605,
+      "text": "### Statistical analysis"
+    },
+    {
+      "end": 11772,
+      "id": "U29",
+      "section_id": "H7",
+      "start": 11631,
+      "text": "MCI prevalence was the primary outcome of this meta-analysis. We synthesised the results for MCI in general as well as for aMCI specifically."
+    },
+    {
+      "end": 11963,
+      "id": "U30",
+      "section_id": "H7",
+      "start": 11774,
+      "text": "Publication bias of the included studies was assessed through visual symmetry of the funnel plots and Egger’s tests [32]. A p value lower than 0.05 indicates an absence of publication bias."
+    },
+    {
+      "end": 12881,
+      "id": "U31",
+      "section_id": "H7",
+      "start": 11965,
+      "text": "We performed heterogeneity analyses to determine the model used for meta-analyses. The I2 value was calculated and tested with Cochran Q tests. According to Cochrane Reviews [33], an I2 value of 0% indicates no observed heterogeneity, while a value greater than 25, 50 and 75% indicates low, moderate, and high levels of heterogeneity, respectively. We chose a random effect model for meta-analyses and adopted sensitivity tests, meta-regression test and subgroup analyses strategies to handle high heterogeneity as suggested by Lipsey and Wilson [34]. The robustness of the meta-analyses was examined in sensitivity tests through sequentially removing each included study. The studies that deviated significantly from the others were excluded in the pooled results. Meta-regression was used to investigate available contributing factors on the heterogeneity. Subgroup meta-analyses were conducted whenever possible."
+    },
+    {
+      "end": 13115,
+      "id": "U32",
+      "section_id": "H7",
+      "start": 12883,
+      "text": "All statistical analyses were performed using Stata version 12.0 (Stata Corp, College Station, TX, USA). A two-sided p < 0.05 was considered statistically significant. We also reported 95% confidence intervals (CIs) for the results."
+    },
+    {
+      "end": 13129,
+      "id": "U33",
+      "section_id": "H8",
+      "start": 13119,
+      "text": "## Results"
+    },
+    {
+      "end": 13170,
+      "id": "U34",
+      "section_id": "H9",
+      "start": 13131,
+      "text": "### Characteristics of included studies"
+    },
+    {
+      "end": 16070,
+      "id": "U35",
+      "section_id": "H9",
+      "start": 13172,
+      "text": "The 41 eligible studies [19, 20, 24, 35–72] involved 112,632 study participants, with MCI prevalence ranging from 1.21 to 33.03%. The studies were conducted between 1998 and 2020. More than half (58%) of the studies restricted participants from the age of over 60 years and 75% of the included studies had a sample size over 1000 participants. Most studies were cross-sectional, except for 7 longitudinal studies [39, 43, 46, 59, 61, 63, 66]. Sex composition varied across the studies, with women comprising 25.74 to 66.89% of study participants. About 30 neuropsychological test tools were used in the included studies of this systematic review. Of those tools, some test comprehensive cognitive function, such as CAMCOG (Cambridge Cognitive Examination) [73], CCAS (Chinese Cognitive Ability Scale) [74], CSI-D (Community Screening Instrument for Dementia) [75], MMSE (Mini-Mental State Examination) [76], MoCA (the Montreal Cognitive Assessment) [77], NPI-Q (Neuropsychiatric Inventory Questionnaire) [78], OCST-E (Quick Cognitive Screening Scale) [79], SCID (Structured Clinical Interview for DSM-IV) [80], WAIS (Wechsler Adult Intelligence Scale) [81], WHO-BCAI (World Health Organization-Battery of Cognitive Assessment Instrument) [82] and WHODAS-12 (12-item WHO Disability Assessment Schedule) [83], while others were adopted to test five cognitive domains: memory assessed by ALT (Associative Learning Test) [84], IMCT (Information-Memory-Concentration test) [85] and WMS-R (Wechsler Memory Scale-Revised) [86]; attention assessed by SDMT (Symbol Digit Modalities Test) [87] and STMT (Semantic Trail Making Test) [88]; vision tested by CDT (Clock drawing Test) [89] and ROCFR (Rey-Osterrieth Complex Figure Recall tests) [90]; language tested by AVLT (Auditory Verbal Learning Test) [91] and VFT (Verbal Fluency Test) [92]; and executive ability tested by ADL (Activity Daily Living) [93] and FAQ (Functional Activities Questionnaire) [94]. CDR (Clinical Dementia Rating Scale) [95], CESD (The Center for Epidemiologic Studies Depression Scale) [96], DS (Digit Span) [97], HAMD (Hamilton Depression Rating Scale) [98], GDS (Global Deterioration Scale) [99], GMS (Geriatric Mental State) [100], SAS (Self-Rating Anxiety Scale) [101], and HIS (Hachinski Ischemic Index) [102] were used to exclude dementia and other mental disorder. MMSE [76] and the MoCA [77] scales were the predominant tools for MCI screening, supplemented by ADL [93] to test daily living function and other neurological tests such as CDR [95] to exclude dementia. The majority of the studies (N = 25) adopted Petersen’s criteria for confirmation of diagnosis of MCI and aMCI, followed by the Diagnostic and the Statistical Manual of Mental Disorder 4th edition (DSM-IV) [80] developed by the American Psychiatric Association and the National Institute on Aging Alzheimer’s Association (NIA-AA) [103] criteria (Table 1)."
+    },
+    {
+      "end": 16147,
+      "id": "U36",
+      "section_id": "H9",
+      "start": 16073,
+      "text": "**Table 1** Characteristics of studies (n = 41) included for meta-analysis"
+    },
+    {
+      "end": 36529,
+      "id": "U37",
+      "section_id": "H9",
+      "start": 16150,
+      "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"1\" colspan=\"1\">FirstAuthor</th>\n      <th rowspan=\"1\" colspan=\"1\">Study period</th>\n      <th rowspan=\"1\" colspan=\"1\">Sample size</th>\n      <th rowspan=\"1\" colspan=\"1\">Age (years)</th>\n      <th rowspan=\"1\" colspan=\"1\">Sex(% women)</th>\n      <th rowspan=\"1\" colspan=\"1\">Study location</th>\n      <th rowspan=\"1\" colspan=\"1\">Diagnostic criteria</th>\n      <th rowspan=\"1\" colspan=\"1\">Neurological tests</th>\n      <th rowspan=\"1\" colspan=\"1\">MCI prevalence(95%CI)</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Chen ND</td>\n      <td rowspan=\"1\" colspan=\"1\">2012</td>\n      <td rowspan=\"1\" colspan=\"1\">465</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">30.75%</td>\n      <td rowspan=\"1\" colspan=\"1\">Jiangsu</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDT [89], SAS [101]</td>\n      <td rowspan=\"1\" colspan=\"1\">10.75%(8.25–13.9%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Ding D</td>\n      <td rowspan=\"1\" colspan=\"1\">2011</td>\n      <td rowspan=\"1\" colspan=\"1\">2985</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">54.22%</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], SAS [101], CDR [95], HAMD [98], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">20.10%(18.73–21.61%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Guo GY</td>\n      <td rowspan=\"1\" colspan=\"1\">2013</td>\n      <td rowspan=\"1\" colspan=\"1\">940</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">56.81%</td>\n      <td rowspan=\"1\" colspan=\"1\">Hebei</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">14.47%(12.36–16.86%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Guo X</td>\n      <td rowspan=\"1\" colspan=\"1\">2011</td>\n      <td rowspan=\"1\" colspan=\"1\">1367</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">50.40%</td>\n      <td rowspan=\"1\" colspan=\"1\">Hunan</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">CDR [95], GDS [99],HIS [102], IMCT [85], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">10.17%(8.68–11.88%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Hai S</td>\n      <td rowspan=\"1\" colspan=\"1\">2007</td>\n      <td rowspan=\"1\" colspan=\"1\">202</td>\n      <td rowspan=\"1\" colspan=\"1\">≥80</td>\n      <td rowspan=\"1\" colspan=\"1\">25.74%</td>\n      <td rowspan=\"1\" colspan=\"1\">Sichuan</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CAMCOG [73],GDS [99], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">30.2%(24.28–36.85%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">He L</td>\n      <td rowspan=\"1\" colspan=\"1\">2014</td>\n      <td rowspan=\"1\" colspan=\"1\">842</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">48.81%</td>\n      <td rowspan=\"1\" colspan=\"1\">Jiangxi</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], HIS [102], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">13.42%(11.28–15.89%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Hu R</td>\n      <td rowspan=\"1\" colspan=\"1\">2009</td>\n      <td rowspan=\"1\" colspan=\"1\">5887</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">56.38%</td>\n      <td rowspan=\"1\" colspan=\"1\">Mongolia</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], HIS [102], HAMD [98], MMSE [76], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">20.60%(19.59–21.66%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Huang R</td>\n      <td rowspan=\"1\" colspan=\"1\">2002</td>\n      <td rowspan=\"1\" colspan=\"1\">4697</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">58.85%</td>\n      <td rowspan=\"1\" colspan=\"1\">Guangzhou</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], CESD [96], HAMD [98], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">5.47%(4.86–6.16%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Jia J</td>\n      <td rowspan=\"1\" colspan=\"1\">2009</td>\n      <td rowspan=\"1\" colspan=\"1\">10,276</td>\n      <td rowspan=\"1\" colspan=\"1\">≥65</td>\n      <td rowspan=\"1\" colspan=\"1\">N/A</td>\n      <td rowspan=\"1\" colspan=\"1\">National</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">AVLT, CDR [95], CDT [89], CESD [96], FAQ [94], HIS, MoCA [77], MMSE [76], STMT [88], VFT [92], AVLT [91]</td>\n      <td rowspan=\"1\" colspan=\"1\">20.8%(20.02–21.59%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Jiang LJ</td>\n      <td rowspan=\"1\" colspan=\"1\">2016</td>\n      <td rowspan=\"1\" colspan=\"1\">895</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">51.06%</td>\n      <td rowspan=\"1\" colspan=\"1\">Jilin</td>\n      <td rowspan=\"1\" colspan=\"1\">NIA-AA</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], HIS [102], MMSE [76], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">5.36%(4.07–7.04%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Lao ML</td>\n      <td rowspan=\"1\" colspan=\"1\">2010</td>\n      <td rowspan=\"1\" colspan=\"1\">7665</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">54.22%</td>\n      <td rowspan=\"1\" colspan=\"1\">Hainan</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], GDS [99], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">4.25%(3.82–4.73%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Li CP</td>\n      <td rowspan=\"1\" colspan=\"1\">2014</td>\n      <td rowspan=\"1\" colspan=\"1\">1971</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">62.61%</td>\n      <td rowspan=\"1\" colspan=\"1\">Shandong</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], HIS [102], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">33.03%(30.99–35.14%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Li W</td>\n      <td rowspan=\"1\" colspan=\"1\">2019</td>\n      <td rowspan=\"1\" colspan=\"1\">3246</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">N/A</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ALT [84], AVLT [91], DS [97], MMSE [76], MoCA [77], NPI-Q [78], VFT [92], WAIS [81]</td>\n      <td rowspan=\"1\" colspan=\"1\">17.07%*(15.79–18.42%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Li X</td>\n      <td rowspan=\"1\" colspan=\"1\">2013</td>\n      <td rowspan=\"1\" colspan=\"1\">1020</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">63.33%</td>\n      <td rowspan=\"1\" colspan=\"1\">Beijing</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">AVLT [91], CDT [89], MMSE [76], ROCFR [90], SDMT [87], STMT [88]</td>\n      <td rowspan=\"1\" colspan=\"1\">15.69%(13.58–18.05%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Liao B</td>\n      <td rowspan=\"1\" colspan=\"1\">2012</td>\n      <td rowspan=\"1\" colspan=\"1\">399</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">53.63%</td>\n      <td rowspan=\"1\" colspan=\"1\">Jiangxi</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], HIS [102], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">10.28%(7.67–13.64%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Liu H</td>\n      <td rowspan=\"1\" colspan=\"1\">2018</td>\n      <td rowspan=\"1\" colspan=\"1\">1796</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">53.95%</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], GDS [99], HIS [102], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">17.65%(15.96–19.48%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Ma F</td>\n      <td rowspan=\"1\" colspan=\"1\">2016</td>\n      <td rowspan=\"1\" colspan=\"1\">5067</td>\n      <td rowspan=\"1\" colspan=\"1\">≥65</td>\n      <td rowspan=\"1\" colspan=\"1\">57.80%</td>\n      <td rowspan=\"1\" colspan=\"1\">Tianjin</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], MMSE [76], WAIS [81]</td>\n      <td rowspan=\"1\" colspan=\"1\">11.33%(10.48–12.23%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Meng WQ</td>\n      <td rowspan=\"1\" colspan=\"1\">2009</td>\n      <td rowspan=\"1\" colspan=\"1\">5452</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">53.62%</td>\n      <td rowspan=\"1\" colspan=\"1\">Inner Mongolia</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">22.50%(21.16–23.37%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Pan ZD</td>\n      <td rowspan=\"1\" colspan=\"1\">2012</td>\n      <td rowspan=\"1\" colspan=\"1\">300</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">57.14%</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], HIS [102], MMSE [76], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">22.33%(17.99–27.38%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Qin HY</td>\n      <td rowspan=\"1\" colspan=\"1\">2012</td>\n      <td rowspan=\"1\" colspan=\"1\">4086</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">65.00%</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">14.98%(13.92–16.11%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Qiu CJ</td>\n      <td rowspan=\"1\" colspan=\"1\">2001</td>\n      <td rowspan=\"1\" colspan=\"1\">3910</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">50.82%</td>\n      <td rowspan=\"1\" colspan=\"1\">Chengdu</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">CDR [95], CESD [96], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">2.35%(1.92–2.88%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Rao DP</td>\n      <td rowspan=\"1\" colspan=\"1\">2009</td>\n      <td rowspan=\"1\" colspan=\"1\">2111</td>\n      <td rowspan=\"1\" colspan=\"1\">≥65</td>\n      <td rowspan=\"1\" colspan=\"1\">59.50%</td>\n      <td rowspan=\"1\" colspan=\"1\">Guangzhou</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], MMSE [76], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">14.16%(12.74–15.72%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Ren CF</td>\n      <td rowspan=\"1\" colspan=\"1\">2011</td>\n      <td rowspan=\"1\" colspan=\"1\">946</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">49.26%</td>\n      <td rowspan=\"1\" colspan=\"1\">Jiangxi</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], HIS [102], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">10.47%(8.67–12.58%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Song XZ</td>\n      <td rowspan=\"1\" colspan=\"1\">2011</td>\n      <td rowspan=\"1\" colspan=\"1\">2279</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">51.21%</td>\n      <td rowspan=\"1\" colspan=\"1\">Guangzhou</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], HIS [102], HAMD [98], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">7.33%(6.33–8.47%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Sosa AL</td>\n      <td rowspan=\"1\" colspan=\"1\">2007</td>\n      <td rowspan=\"1\" colspan=\"1\">2014</td>\n      <td rowspan=\"1\" colspan=\"1\">≥65</td>\n      <td rowspan=\"1\" colspan=\"1\">63.33%</td>\n      <td rowspan=\"1\" colspan=\"1\">National</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">CSI-D [75], GMS [100], NPI-Q [78], WHODAS-12[83]</td>\n      <td rowspan=\"1\" colspan=\"1\">7.99%*(6.89–9.26%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Su C</td>\n      <td rowspan=\"1\" colspan=\"1\">2011</td>\n      <td rowspan=\"1\" colspan=\"1\">341</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">52.49%</td>\n      <td rowspan=\"1\" colspan=\"1\">Guangzhou</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS [99], WHO-BCAI [82], MMSE [76], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">12.32%(9.24–16.23%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Sun Y</td>\n      <td rowspan=\"1\" colspan=\"1\">2013</td>\n      <td rowspan=\"1\" colspan=\"1\">10,432</td>\n      <td rowspan=\"1\" colspan=\"1\">≥65</td>\n      <td rowspan=\"1\" colspan=\"1\">52.32%</td>\n      <td rowspan=\"1\" colspan=\"1\">Taiwan</td>\n      <td rowspan=\"1\" colspan=\"1\">NIA-AA</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">19.64%(18.89–20.41%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Tang MN</td>\n      <td rowspan=\"1\" colspan=\"1\">1998</td>\n      <td rowspan=\"1\" colspan=\"1\">5385</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">N/A</td>\n      <td rowspan=\"1\" colspan=\"1\">Chengdu</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-III</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], CESD [96], HIS [102], HAMD [98], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">1.21%(0.95–1.54%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Tang Z</td>\n      <td rowspan=\"1\" colspan=\"1\">2004</td>\n      <td rowspan=\"1\" colspan=\"1\">1865</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">51.90%</td>\n      <td rowspan=\"1\" colspan=\"1\">Beijing</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL, CDR [95], CESD [96], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">11.64%(10.26–13.17%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Wang T</td>\n      <td rowspan=\"1\" colspan=\"1\">2012</td>\n      <td rowspan=\"1\" colspan=\"1\">1005</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">N/A</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], AVLT [91], CDR [95], DS [97], GDS [99], HIS [102], MMSE [76], MoCA [77], WMS-R [86]</td>\n      <td rowspan=\"1\" colspan=\"1\">22.29%*(19.82–24.96%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Wang TT</td>\n      <td rowspan=\"1\" colspan=\"1\">2017</td>\n      <td rowspan=\"1\" colspan=\"1\">1781</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">60.47%</td>\n      <td rowspan=\"1\" colspan=\"1\">Chongqing</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], GDS, MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">11.73%(10.32–13.31%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Wang YP</td>\n      <td rowspan=\"1\" colspan=\"1\">2009</td>\n      <td rowspan=\"1\" colspan=\"1\">6152</td>\n      <td rowspan=\"1\" colspan=\"1\">≥65</td>\n      <td rowspan=\"1\" colspan=\"1\">N/A</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanxi</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">CDR [95], MMSE [76], WHO-BCAI [82]</td>\n      <td rowspan=\"1\" colspan=\"1\">9.75%(9.04–10.52%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Wang ZZ</td>\n      <td rowspan=\"1\" colspan=\"1\">2013</td>\n      <td rowspan=\"1\" colspan=\"1\">689</td>\n      <td rowspan=\"1\" colspan=\"1\">≥55</td>\n      <td rowspan=\"1\" colspan=\"1\">62.70%</td>\n      <td rowspan=\"1\" colspan=\"1\">Ningxia</td>\n      <td rowspan=\"1\" colspan=\"1\">Chinese Dementia guideline</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], GDS [99], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">18.29%(15.58–21.35%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Wu Y</td>\n      <td rowspan=\"1\" colspan=\"1\">2014</td>\n      <td rowspan=\"1\" colspan=\"1\">1846</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">53.36%</td>\n      <td rowspan=\"1\" colspan=\"1\">Jiangsu</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">CCAS [74], CDR [95], HAMD [98],MMSE [76], QCST-E [79]</td>\n      <td rowspan=\"1\" colspan=\"1\">17.17%(15.52–18.96%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Xiao SF</td>\n      <td rowspan=\"1\" colspan=\"1\">2016</td>\n      <td rowspan=\"1\" colspan=\"1\">1068</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">N/A</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">AVLT [91], MMSE [76], MoCA [77], WMS-R [86],WHO-BCAI [82]</td>\n      <td rowspan=\"1\" colspan=\"1\">25.00%(22.50–27.68%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Xu SJ</td>\n      <td rowspan=\"1\" colspan=\"1\">2011</td>\n      <td rowspan=\"1\" colspan=\"1\">2426</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">60.68%</td>\n      <td rowspan=\"1\" colspan=\"1\">Hebei</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], GDS [99], MMSE [76],MoCA [77], SAS [101]</td>\n      <td rowspan=\"1\" colspan=\"1\">21.68%(20.09–23.37%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Yin LY</td>\n      <td rowspan=\"1\" colspan=\"1\">2009</td>\n      <td rowspan=\"1\" colspan=\"1\">1011</td>\n      <td rowspan=\"1\" colspan=\"1\">≥65</td>\n      <td rowspan=\"1\" colspan=\"1\">59.45%</td>\n      <td rowspan=\"1\" colspan=\"1\">Hebei</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">CDR [95], CESD [96], FAQ, GDS [99], MMSE [76], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">6.63%(5.25–8.33%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Yuan J</td>\n      <td rowspan=\"1\" colspan=\"1\">2010</td>\n      <td rowspan=\"1\" colspan=\"1\">3311</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">66.89%</td>\n      <td rowspan=\"1\" colspan=\"1\">Shanghai</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">HIS [102], SCID-I/P [80]</td>\n      <td rowspan=\"1\" colspan=\"1\">19.06%(17.76–20.43%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Zhang XQ</td>\n      <td rowspan=\"1\" colspan=\"1\">2012</td>\n      <td rowspan=\"1\" colspan=\"1\">1764</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">55.95%</td>\n      <td rowspan=\"1\" colspan=\"1\">Changsha</td>\n      <td rowspan=\"1\" colspan=\"1\">Petersen</td>\n      <td rowspan=\"1\" colspan=\"1\">ADL [93], CDR [95], GDS, MMSE [76], MoCA [77]</td>\n      <td rowspan=\"1\" colspan=\"1\">16.27%(14.62–18.07%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Zhou DS</td>\n      <td rowspan=\"1\" colspan=\"1\">2010</td>\n      <td rowspan=\"1\" colspan=\"1\">1227</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">56.32%</td>\n      <td rowspan=\"1\" colspan=\"1\">Zhejiang</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">CDR [95], CESD [96], GDS [99], HIS [102],IMCT [85], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">8.72%(7.27–10.43%)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Zhu XQ</td>\n      <td rowspan=\"1\" colspan=\"1\">2008</td>\n      <td rowspan=\"1\" colspan=\"1\">1511</td>\n      <td rowspan=\"1\" colspan=\"1\">≥60</td>\n      <td rowspan=\"1\" colspan=\"1\">54.60%</td>\n      <td rowspan=\"1\" colspan=\"1\">Xinjiang</td>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">CDR [95], GD S [99], HIS [102], HAMD [98], MMSE [76]</td>\n      <td rowspan=\"1\" colspan=\"1\">9.79%(8.40–11.40%)</td>\n    </tr>\n  </tbody>\n</table>"
+    },
+    {
+      "end": 36554,
+      "id": "U38",
+      "section_id": "H9",
+      "start": 36531,
+      "text": "Note: * aMCI prevalence"
+    },
+    {
+      "end": 36577,
+      "id": "U39",
+      "section_id": "H10",
+      "start": 36557,
+      "text": "### Publication bias"
+    },
+    {
+      "end": 36781,
+      "id": "U40",
+      "section_id": "H10",
+      "start": 36579,
+      "text": "Most of the included studies were rated as having a moderate risk of bias, except for the four studies [104–107], which have a high risk of bias and were excluded from the final meta-analysis (Table 2)."
+    },
+    {
+      "end": 36837,
+      "id": "U41",
+      "section_id": "H10",
+      "start": 36784,
+      "text": "**Table 2** Risk of bias of included studies (n = 45)"
+    },
+    {
+      "end": 49129,
+      "id": "U42",
+      "section_id": "H10",
+      "start": 36840,
+      "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"1\" colspan=\"1\">No.</th>\n      <th rowspan=\"1\" colspan=\"1\">Study</th>\n      <th rowspan=\"1\" colspan=\"1\">External validity</th>\n      <th rowspan=\"1\" colspan=\"1\">Internal validity</th>\n      <th rowspan=\"1\" colspan=\"1\">Overall</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">1</td>\n      <td rowspan=\"1\" colspan=\"1\">Chen ND, 2012</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">2</td>\n      <td rowspan=\"1\" colspan=\"1\">Ding D, 2015</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">3</td>\n      <td rowspan=\"1\" colspan=\"1\">Guo GY, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">4</td>\n      <td rowspan=\"1\" colspan=\"1\">Guo XY, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">5</td>\n      <td rowspan=\"1\" colspan=\"1\">Hai S, 2011</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">6</td>\n      <td rowspan=\"1\" colspan=\"1\">He L, 2015</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">7</td>\n      <td rowspan=\"1\" colspan=\"1\">Hu R, 2012</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">8</td>\n      <td rowspan=\"1\" colspan=\"1\">Huang R, 2008</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">9</td>\n      <td rowspan=\"1\" colspan=\"1\">JIA J, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">10</td>\n      <td rowspan=\"1\" colspan=\"1\">Jiang LJ, 2017</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">11</td>\n      <td rowspan=\"1\" colspan=\"1\">Lao ML, 2011</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">12</td>\n      <td rowspan=\"1\" colspan=\"1\">Li CP, 2014</td>\n      <td rowspan=\"1\" colspan=\"1\">low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">13</td>\n      <td rowspan=\"1\" colspan=\"1\">Li X, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">14</td>\n      <td rowspan=\"1\" colspan=\"1\">Li W, 2020</td>\n      <td rowspan=\"1\" colspan=\"1\">low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">15</td>\n      <td rowspan=\"1\" colspan=\"1\">Liao B, 2012</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">16</td>\n      <td rowspan=\"1\" colspan=\"1\">Liu H, 2018</td>\n      <td rowspan=\"1\" colspan=\"1\">low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">17</td>\n      <td rowspan=\"1\" colspan=\"1\">Ma F, 2016</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">18</td>\n      <td rowspan=\"1\" colspan=\"1\">Meng WQ, 2010</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">19</td>\n      <td rowspan=\"1\" colspan=\"1\">Pan HY, 2012</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">20</td>\n      <td rowspan=\"1\" colspan=\"1\">Pan ZD, 2012</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">21</td>\n      <td rowspan=\"1\" colspan=\"1\">Peng Z, 2019</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">22</td>\n      <td rowspan=\"1\" colspan=\"1\">Qin HY, 2014</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">23</td>\n      <td rowspan=\"1\" colspan=\"1\">Qiu CJ, 2003</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">24</td>\n      <td rowspan=\"1\" colspan=\"1\">Rao D, 2018</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">25</td>\n      <td rowspan=\"1\" colspan=\"1\">Ren CF, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">26</td>\n      <td rowspan=\"1\" colspan=\"1\">Song XZ, 2012</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">27</td>\n      <td rowspan=\"1\" colspan=\"1\">Sosa AL, 2012</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">28</td>\n      <td rowspan=\"1\" colspan=\"1\">Su C, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">29</td>\n      <td rowspan=\"1\" colspan=\"1\">Sun Y, 2014</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">30</td>\n      <td rowspan=\"1\" colspan=\"1\">Tang Z, 2007</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">31</td>\n      <td rowspan=\"1\" colspan=\"1\">Tang MN, 2000</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">32</td>\n      <td rowspan=\"1\" colspan=\"1\">Wang T, 2017</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">33</td>\n      <td rowspan=\"1\" colspan=\"1\">Wang TT, 2017</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">34</td>\n      <td rowspan=\"1\" colspan=\"1\">Wang YP, 2011</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">35</td>\n      <td rowspan=\"1\" colspan=\"1\">Wang ZZ, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">36</td>\n      <td rowspan=\"1\" colspan=\"1\">Wu L, 2016</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">37</td>\n      <td rowspan=\"1\" colspan=\"1\">Wu Y, 2017</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">38</td>\n      <td rowspan=\"1\" colspan=\"1\">Xiao SF, 2016</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">39</td>\n      <td rowspan=\"1\" colspan=\"1\">Xu SJ, 2014</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">40</td>\n      <td rowspan=\"1\" colspan=\"1\">Yin LY, 2010</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">41</td>\n      <td rowspan=\"1\" colspan=\"1\">Yuan J, 2013</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">42</td>\n      <td rowspan=\"1\" colspan=\"1\">Zhang XQ, 2014</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">43</td>\n      <td rowspan=\"1\" colspan=\"1\">Zhong SY, 2018</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">High Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">44</td>\n      <td rowspan=\"1\" colspan=\"1\">Zhou DS, 2011</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">45</td>\n      <td rowspan=\"1\" colspan=\"1\">Zhu XQ, 2009</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Low Risk</td>\n      <td rowspan=\"1\" colspan=\"1\">Moderate Risk</td>\n    </tr>\n  </tbody>\n</table>"
+    },
+    {
+      "end": 49167,
+      "id": "U43",
+      "section_id": "H11",
+      "start": 49132,
+      "text": "### Robust tests for pooled results"
+    },
+    {
+      "end": 49824,
+      "id": "U44",
+      "section_id": "H11",
+      "start": 49169,
+      "text": "High levels of heterogeneity were found (I2 > 75%) across the 41 included studies. Of the 38 studies reporting MCI prevalence, three [39, 45, 59] showed significant deviation from the others both in sensitivity tests and visual funnel asymmetry. The Egger’s and Begg’s tests also revealed significant publication bias in the studies (β = 0.002, p < 0.01). Cohort effects could explain 20.75% of heterogeneity from meta-regression test. Further subgroup analyses on MCI prevalence were warranted as no significant associations (p>0.05) between the prevalence of MCI and other two potential bias factors were found in the meta-regression analyses (Table 3)."
+    },
+    {
+      "end": 49870,
+      "id": "U45",
+      "section_id": "H11",
+      "start": 49827,
+      "text": "**Table 3** Meta-regression analyses result"
+    },
+    {
+      "end": 51648,
+      "id": "U46",
+      "section_id": "H11",
+      "start": 49873,
+      "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"1\" colspan=\"1\">lnhr</th>\n      <th rowspan=\"1\" colspan=\"1\">Coef.</th>\n      <th rowspan=\"1\" colspan=\"1\">Std. Err.</th>\n      <th rowspan=\"1\" colspan=\"1\">t</th>\n      <th rowspan=\"1\" colspan=\"1\">P &gt; |t|</th>\n      <th rowspan=\"1\" colspan=\"2\">[95% Conf. Interval]</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Age</td>\n      <td rowspan=\"1\" colspan=\"1\">.2187126</td>\n      <td rowspan=\"1\" colspan=\"1\">.1562825</td>\n      <td rowspan=\"1\" colspan=\"1\">1.40</td>\n      <td rowspan=\"1\" colspan=\"1\">0.171</td>\n      <td rowspan=\"1\" colspan=\"1\">−.0988917</td>\n      <td rowspan=\"1\" colspan=\"1\">.5363169</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Study period</td>\n      <td rowspan=\"1\" colspan=\"1\">.3282157</td>\n      <td rowspan=\"1\" colspan=\"1\">.1214176</td>\n      <td rowspan=\"1\" colspan=\"1\">2.70</td>\n      <td rowspan=\"1\" colspan=\"1\">0.011</td>\n      <td rowspan=\"1\" colspan=\"1\">.0814654</td>\n      <td rowspan=\"1\" colspan=\"1\">.574966</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Diagnostic criteria</td>\n      <td rowspan=\"1\" colspan=\"1\">−.1795994</td>\n      <td rowspan=\"1\" colspan=\"1\">.1203679</td>\n      <td rowspan=\"1\" colspan=\"1\">−1.49</td>\n      <td rowspan=\"1\" colspan=\"1\">0.145</td>\n      <td rowspan=\"1\" colspan=\"1\">−.4242164</td>\n      <td rowspan=\"1\" colspan=\"1\">.0650176</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Constant</td>\n      <td rowspan=\"1\" colspan=\"1\">−3.146882</td>\n      <td rowspan=\"1\" colspan=\"1\">.5048756</td>\n      <td rowspan=\"1\" colspan=\"1\">−6.23</td>\n      <td rowspan=\"1\" colspan=\"1\">0.000</td>\n      <td rowspan=\"1\" colspan=\"1\">−4.172913</td>\n      <td rowspan=\"1\" colspan=\"1\">−2.120851</td>\n    </tr>\n  </tbody>\n</table>"
+    },
+    {
+      "end": 51901,
+      "id": "U47",
+      "section_id": "H11",
+      "start": 51650,
+      "text": "Of the 8 studies [19, 20, 36, 46, 47, 50, 54, 61] reporting aMCI prevalence, no study showed significant deviation from the others in sensitivity tests. The Egger’s and Begg’s tests revealed no significant publication bias either (β = 1.0, p = 0.902)."
+    },
+    {
+      "end": 51961,
+      "id": "U48",
+      "section_id": "H12",
+      "start": 51904,
+      "text": "### Prevalence of MCI and aMCI – results of meta-analyses"
+    },
+    {
+      "end": 52134,
+      "id": "U49",
+      "section_id": "H12",
+      "start": 51963,
+      "text": "The meta-analysis of the 38 studies (n = 106,367) with a random-effect estimate resulted in a MCI prevalence of 12.2% [95% confidence interval (CI): 10.6, 14.2%] (Fig. 2)."
+    },
+    {
+      "end": 52224,
+      "id": "U50",
+      "section_id": "H12",
+      "start": 52137,
+      "text": "<figure>\n  <figcaption><strong>Fig. 2</strong> Prevalence of MCI</figcaption>\n</figure>"
+    },
+    {
+      "end": 52314,
+      "id": "U51",
+      "section_id": "H12",
+      "start": 52227,
+      "text": "<figure>\n  <figcaption><strong>Fig. 2</strong> Prevalence of MCI</figcaption>\n</figure>"
+    },
+    {
+      "end": 52440,
+      "id": "U52",
+      "section_id": "H12",
+      "start": 52316,
+      "text": "The meta-analysis of the 8 studies (n = 27,613) generated a result of 10.9% prevalence of aMCI [95%CI: 7.7, 15.4%] (Fig. 3)."
+    },
+    {
+      "end": 52531,
+      "id": "U53",
+      "section_id": "H12",
+      "start": 52443,
+      "text": "<figure>\n  <figcaption><strong>Fig. 3</strong> Prevalence of aMCI</figcaption>\n</figure>"
+    },
+    {
+      "end": 52622,
+      "id": "U54",
+      "section_id": "H12",
+      "start": 52534,
+      "text": "<figure>\n  <figcaption><strong>Fig. 3</strong> Prevalence of aMCI</figcaption>\n</figure>"
+    },
+    {
+      "end": 52657,
+      "id": "U55",
+      "section_id": "H13",
+      "start": 52625,
+      "text": "### Results of subgroup analyses"
+    },
+    {
+      "end": 53333,
+      "id": "U56",
+      "section_id": "H13",
+      "start": 52659,
+      "text": "Heterogeneity of the subgroup analyses reduced significantly. The prevalence of MCI increased with age: 7.6% for 55–59 years; 9.5% for 60–69 years; 14.6% for 70–79 years; and 23.6% for 80 years and older. Women had a higher prevalence of MCI than men. Those who resided in rural areas, lived alone, and had lower educational attainments had higher MCI prevalence than others. The DSM-IV diagnostic criteria generated the highest MCI prevalence (13.5%), compared with 12.9% using the Petersen criteria and 10.3% using the NIA-AA diagnosis. The four studies [24, 42, 59, 60] conducted before 2005 reported significantly lower prevalence of MCI than those after 2005 (Table 4)."
+    },
+    {
+      "end": 53395,
+      "id": "U57",
+      "section_id": "H13",
+      "start": 53336,
+      "text": "**Table 4** Subgroup meta-analyses on the prevalence of MCI"
+    },
+    {
+      "end": 61176,
+      "id": "U58",
+      "section_id": "H13",
+      "start": 53398,
+      "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"2\" colspan=\"1\">Subgroup</th>\n      <th rowspan=\"2\" colspan=\"1\">Included studies</th>\n      <th rowspan=\"2\" colspan=\"1\">Study participants (sample size)</th>\n      <th rowspan=\"1\" colspan=\"2\">Random-effect Model</th>\n      <th rowspan=\"1\" colspan=\"2\">Heterogeneity</th>\n    </tr>\n    <tr>\n      <th rowspan=\"1\" colspan=\"1\">MCI Prevalence(95% CI)</th>\n      <th rowspan=\"1\" colspan=\"1\">p</th>\n      <th rowspan=\"1\" colspan=\"1\">I2</th>\n      <th rowspan=\"1\" colspan=\"1\">Ph</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=\"1\" colspan=\"7\">Age (Years)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">55–59</td>\n      <td rowspan=\"1\" colspan=\"1\">3</td>\n      <td rowspan=\"1\" colspan=\"1\">5951</td>\n      <td rowspan=\"1\" colspan=\"1\">0.076(0.025–0.226)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">99.2%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.922</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">60–69</td>\n      <td rowspan=\"1\" colspan=\"1\">24</td>\n      <td rowspan=\"1\" colspan=\"1\">23,095</td>\n      <td rowspan=\"1\" colspan=\"1\">0.095(0.074–0.121)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">97.8%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.356</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">70–79</td>\n      <td rowspan=\"1\" colspan=\"1\">25</td>\n      <td rowspan=\"1\" colspan=\"1\">22,902</td>\n      <td rowspan=\"1\" colspan=\"1\">0.146 (0.124–0.171)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">96.6%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.153</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">≥ 80</td>\n      <td rowspan=\"1\" colspan=\"1\">25</td>\n      <td rowspan=\"1\" colspan=\"1\">9397</td>\n      <td rowspan=\"1\" colspan=\"1\">0.236 (0.204–0.274)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">93.5%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.122</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"7\">Sex</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Men</td>\n      <td rowspan=\"1\" colspan=\"1\">34</td>\n      <td rowspan=\"1\" colspan=\"1\">45,609</td>\n      <td rowspan=\"1\" colspan=\"1\">0.115 (0.097–0.136)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">97.4%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.233</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Women</td>\n      <td rowspan=\"1\" colspan=\"1\">34</td>\n      <td rowspan=\"1\" colspan=\"1\">36,027</td>\n      <td rowspan=\"1\" colspan=\"1\">0.138 (0.117–0.163)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.3%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.224</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"7\">Residency</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Urban</td>\n      <td rowspan=\"1\" colspan=\"1\">32</td>\n      <td rowspan=\"1\" colspan=\"1\">71,801</td>\n      <td rowspan=\"1\" colspan=\"1\">0.114 (0.098–0.132)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.4%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.174</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Rural</td>\n      <td rowspan=\"1\" colspan=\"1\">12</td>\n      <td rowspan=\"1\" colspan=\"1\">25,137</td>\n      <td rowspan=\"1\" colspan=\"1\">0.136 (0.106–0.176)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.8%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.193</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"7\">Living status</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">With family</td>\n      <td rowspan=\"1\" colspan=\"1\">10</td>\n      <td rowspan=\"1\" colspan=\"1\">13,941</td>\n      <td rowspan=\"1\" colspan=\"1\">0.141 (0.110–0.182)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">97.6%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.157</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">alone</td>\n      <td rowspan=\"1\" colspan=\"1\">10</td>\n      <td rowspan=\"1\" colspan=\"1\">3518</td>\n      <td rowspan=\"1\" colspan=\"1\">0.182 (0.136–0.244)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">95.0%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.206</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"7\">Education attainment</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">&lt; Primary school</td>\n      <td rowspan=\"1\" colspan=\"1\">18</td>\n      <td rowspan=\"1\" colspan=\"1\">10,974</td>\n      <td rowspan=\"1\" colspan=\"1\">0.172 (0.122–0.243)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.3%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.540</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Primary school</td>\n      <td rowspan=\"1\" colspan=\"1\">18</td>\n      <td rowspan=\"1\" colspan=\"1\">14,502</td>\n      <td rowspan=\"1\" colspan=\"1\">0.120 (0.083–0.174)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.5%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.623</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Middle school</td>\n      <td rowspan=\"1\" colspan=\"1\">21</td>\n      <td rowspan=\"1\" colspan=\"1\">11,367</td>\n      <td rowspan=\"1\" colspan=\"1\">0.091 (0.072–0.115)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">94.3%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.418</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">≥ High school</td>\n      <td rowspan=\"1\" colspan=\"1\">21</td>\n      <td rowspan=\"1\" colspan=\"1\">9568</td>\n      <td rowspan=\"1\" colspan=\"1\">0.063 (0.046–0.085)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">94.2%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.515</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"7\">Diagnostic criteria</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Peterson</td>\n      <td rowspan=\"1\" colspan=\"1\">25</td>\n      <td rowspan=\"1\" colspan=\"1\">67,267</td>\n      <td rowspan=\"1\" colspan=\"1\">0.129 (0.107–0.154)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.9%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.209</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">DSM-IV</td>\n      <td rowspan=\"1\" colspan=\"1\">9</td>\n      <td rowspan=\"1\" colspan=\"1\">21,699</td>\n      <td rowspan=\"1\" colspan=\"1\">0.135 (0.097–0.188)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">99.0%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.257</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">NIA-AA</td>\n      <td rowspan=\"1\" colspan=\"1\">2</td>\n      <td rowspan=\"1\" colspan=\"1\">11,327</td>\n      <td rowspan=\"1\" colspan=\"1\">0.103 (0.029–0.369)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.8%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.833</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"7\">Study period</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 2005</td>\n      <td rowspan=\"1\" colspan=\"1\">4</td>\n      <td rowspan=\"1\" colspan=\"1\">15,857</td>\n      <td rowspan=\"1\" colspan=\"1\">0.037 (0.016–0.087)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">99.2%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.769</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">≥ 2005</td>\n      <td rowspan=\"1\" colspan=\"1\">30</td>\n      <td rowspan=\"1\" colspan=\"1\">90,510</td>\n      <td rowspan=\"1\" colspan=\"1\">0.141 (0.124–0.160)</td>\n      <td rowspan=\"1\" colspan=\"1\">&lt; 0.001</td>\n      <td rowspan=\"1\" colspan=\"1\">98.6%</td>\n      <td rowspan=\"1\" colspan=\"1\">0.142</td>\n    </tr>\n  </tbody>\n</table>"
+    },
+    {
+      "end": 61193,
+      "id": "U59",
+      "section_id": "H14",
+      "start": 61180,
+      "text": "## Discussion"
+    },
+    {
+      "end": 61225,
+      "id": "U60",
+      "section_id": "H15",
+      "start": 61195,
+      "text": "### Prevalence of MCI and aMCI"
+    },
+    {
+      "end": 62825,
+      "id": "U61",
+      "section_id": "H15",
+      "start": 61227,
+      "text": "Overall, 12.2% of Chinese community-dwelling older adults have MCI. This result is consistent with findings of previous systematic reviews [21, 22] although they adopted much more broadened standards in terms of diagnostic confirmation and inclusion/exclusion criteria for included studies. If we exclude participants younger than 60 years in this systematic review, the result would be comparable to the MCI prevalence levels (12.7 to 14.7%) revealed in those systematic reviews. Similar levels of MCI prevalence were also reported in the 65 years and older populations in Greece [108] and Georgia [109]. Such a level is high compared to the studies conducted in other populations where more strict diagnostic criteria were adopted (e.g. neuropsychological scores at least 1.5 standard deviations below the adjusted norm). For example, a prevalence proportion of 5.3% for MCI was found in Finland in community residents aged between 60 and 76 years [110]. An Italian study found a prevalence proportion of 4.9% for MCI in community-dwelling residents older than 65 years [111]. It is likely that a higher percentage of older adults may have lived in aged care institutions in these developed nations. However, this does not offer a full explanation of the low prevalence of MCI. Lower levels of MCI prevalence were also found in some developing nations, such as 6.45% in Mexico [112] and 6.10% in Brazil [16] from community residents over 60 years despite the fact that most studies in these countries used the Petersen criteria, the same as the included studies in this current systematic review."
+    },
+    {
+      "end": 63949,
+      "id": "U62",
+      "section_id": "H15",
+      "start": 62827,
+      "text": "This study included participants aged between 55 and 59 years in the meta-analyses. To our knowledge, this is the first attempt to estimate MCI prevalence in people younger than 60 years. Indeed, there is a dramatic increase in MCI prevalence in the community residents older than 60 years as revealed in this study. However, 7.6% of those at the age between 55 and 59 years were still diagnosed with MCI. This indicates a potential benefit of starting MCI screening in this group of population. Many preventive care packages have been designed for people older than 55 years in community health services, which present an opportunity for introducing MCI screening services. But before such a policy is developed, robust studies into the cost benefits of such services are needed. Currently, there are few studies of MCI in people younger than 60 years. Only eight studies [24, 41, 44, 47, 51, 53, 59, 64] were identified in this systematic review. Nevertheless, the pathobiological process in the human brain happens decades before the onset of dementia [28] and MCI screening may reasonably start at the age of 55 years."
+    },
+    {
+      "end": 64551,
+      "id": "U63",
+      "section_id": "H15",
+      "start": 63951,
+      "text": "It is evident that aMCI is the predominant form of MCI in Chinese populations. This study estimated that 10.9% community-dwelling Chinese populations older than 55 years have aMCI, higher than those reported in most international studies [113, 114]. This study found that aMCI account for 66.5% of all MCI cases. Internationally, aMCI as a percentage of MCI ranges between 30 and 77%. The lowest prevalence of aMCI (2.4%) was reported in Mexico [112], while the highest (around 11%) was reported by the Mayo Clinic Study of Aging from Olmsted County, USA, residents between 70 and 89 years old [115]."
+    },
+    {
+      "end": 64612,
+      "id": "U64",
+      "section_id": "H16",
+      "start": 64554,
+      "text": "### Factors associated with the prevalence of MCI and aMCI"
+    },
+    {
+      "end": 66476,
+      "id": "U65",
+      "section_id": "H16",
+      "start": 64614,
+      "text": "High levels of heterogeneity are evident in the studies included in our meta-analyses. Many factors may have contributed to the variations of findings within individual studies. MCI prevalence varies by diagnostic tools, study settings and study periods. The lack of consensus in the definition of MCI has imposed serious challenges on previous reviews [25]. Different diagnostic confirmation tools can result in different MCI prevalence results [116]. The Petersen method [11] is based on four criteria: subjective memory complaint, objective memory disorder, normal functional activities, and absence of dementia. In contrast, the NIA-AA [103] allows inclusion of MRI imaging and cerebrospinal fluid tests as evidence, boosting the chance of MCI detection. However, our study shows that MCI prevalence is lower in the studies using NIA-AA compared to those applying the Petersen criteria. Such a contradiction may be associated with the fact that MRI imaging instruments and biomarker tests are optional and are likely to be ignored by many studies due to resource restrictions. Adding to the complexity is the use of screening as a first step to identify MCI patients. Variations in screening instruments and cut-off thresholds can lead to different results too [117]. MMSE [76] is the most commonly used cognitive screening tool worldwide, providing a comprehensive assessment on cognitive function in seven domains. However, the MMSE lacks sensitivity to detect MCI. While MoCA [77] meets the criteria with both high sensitivity and relatively high specificity in MCI detection (Sn = 81–97%; Sp = 60–86%) [118], it has been recommended as a preferred screening tool in MCI detection in primary care setting. It is believed that the variation of results across the study period can also be partly attributed to variations in screening diagnostic tools [119]."
+    },
+    {
+      "end": 67150,
+      "id": "U66",
+      "section_id": "H16",
+      "start": 66478,
+      "text": "Differentiating between aMCI and naMCI may help address some of the above issues by offering greater clarity in selecting diagnostic and screening tools. But unfortunately, only a small percentage of studies chose to do so, perhaps because additional cognitive domains such as language, vision, and listening need to be assessed. It is important to note that the DSM-IV diagnostic confirmation method, used in 9 included studies in this systematic review, detects amnesic cognitive disorders and could underestimate the overall prevalence of MCI [120]. But it does not seem to be the case. This is likely to be a result of confounding effects of different screening tools."
+    },
+    {
+      "end": 67364,
+      "id": "U67",
+      "section_id": "H16",
+      "start": 67152,
+      "text": "Our sub-group meta-analyses revealed that MCI prevalence increases with age. Women, rural residents, and those who live alone and have low levels of education are likely to have higher MCI prevalence than others."
+    },
+    {
+      "end": 67765,
+      "id": "U68",
+      "section_id": "H16",
+      "start": 67366,
+      "text": "Aging has been reported as the most common risk factor for MCI [121]. Our study provides further evidence to support this argument. The prevalence of MCI in those aged between 70 and 79 years (14.6%) nearly doubles that of those aged between 55 and 59 years. The mechanism underling this age connection may be associated with increased oxidative stress and amyloidal accumulation in the brain [122]."
+    },
+    {
+      "end": 68452,
+      "id": "U69",
+      "section_id": "H16",
+      "start": 67767,
+      "text": "In this study, we found that women are more likely to have MCI than men. This finding is consistent with results of previous systematic reviews on Chinese populations [21, 22]. This study showed, for the first time, that the same sex difference also exists in aMCI for Chinese populations, similar to that in other populations [123, 124]. Some researchers argued that hormone changes may explain the sex difference in MCI because there is evidence that hormone-replacement therapy can protect against dementia [125]. But the evidence is weak and indirect. There are studies reporting insignificant sex difference in MCI [126], or even higher prevalence of MCI in older adult men [115]."
+    },
+    {
+      "end": 70154,
+      "id": "U70",
+      "section_id": "H16",
+      "start": 68454,
+      "text": "Socioeconomic disparities in MCI prevalence deserve increasing academic and policy attention. This systematic review confirmed that low levels of education can exacerbate the occurrence of cognitive impairment, including dementia as concluded in some other studies [127–129]. This is unlikely a result of screening or diagnostic bias as all neuropsychological tests have been corrected for education. Some researchers believe that education can enhance the brain’s ability to make efficient use of cognitive networks [130, 131]. Furthermore, those who live alone are more likely to have MCI. This may be associated with a lack of communication, anxiety, and depression [132]. The urban-rural difference in MCI prevalence may have some unique implications for China. Although it appears to be an international phenomenon with rural residents having higher MCI prevalence than their urban counterparts [133], possibly due to increased health risks and chronic conditions (such as diabetes and hypertension) [134–136], China’s dual welfare systems present some particular challenges for addressing the problem. Rural residents in mainland China usually have lower income, live in poorer housing conditions, receive less education, and enjoy lower levels of social and health entitlements compared with the urban ones. During the dramatic transition period with unprecedented economic development, a large proportion of young rural residents moved to urban centres for better education and job opportunities, leaving their older family members alone at home. A combination of these risk factors can expose rural older residents in a serious vulnerable position to cognitive impairment and dementia [137]."
+    },
+    {
+      "end": 71633,
+      "id": "U71",
+      "section_id": "H16",
+      "start": 70156,
+      "text": "High levels of heterogeneity were observed for the pooled analysis of MCI and aMCI, as well as for the sub-group analysis of MCI. Although we adopted the recommended methods for handling the heterogeneity, it is noteworthy when applying the findings of this study. Indeed, previous studies reported an increase of MCI prevalence in China from 5% in 2000 to about 20% in 2014 [22]. This may be a result of several underlined reasons. We found in this study that cohort effect can explain about 21% of heterogeneity of the included studies in this systematic review. However, China has experienced dramatic socioeconomic transformation over the period. These include, but not limited to, prolonged life expectancy and arrival of an ageing society, increase in morbidity of chronic conditions such as diabetes and hypertension, and rapid advancement of medical technologies and medical care services. All of these can compound the prevalence of MCI. The true cohort effect can only be revealed through future studies using a method that can separate the effects of age, cohort, study period, and other confounding factors [138]. At this stage, the interpretation and application of the pooled results of this systematic review should be cautious. It is not unreasonable to anticipate a further increase in MCI prevalence as China continues its aging process. Local communities should consider the characteristics of their community residents in estimating local prevalence of MCI."
+    },
+    {
+      "end": 71665,
+      "id": "U72",
+      "section_id": "H17",
+      "start": 71636,
+      "text": "### Strengths and limitations"
+    },
+    {
+      "end": 72373,
+      "id": "U73",
+      "section_id": "H17",
+      "start": 71667,
+      "text": "This study has several strengths. Firstly, this systematic review restricted studies to those of community-dwelling non-institutionalised residents. Very few, if any, Chinese people have received institutionalised care due to social, cultural and economic reasons. This enables better generalisability of findings to community populations. Secondly, this study included extensive literature searching for studies published in both English and Chinese languages. Thirdly, this study adopted more stringent inclusion and exclusion criteria to ensure high quality results. The analyses were based on confirmed, not suspected cases of MCI. Moreover, this systematic review involved a separate analysis on aMCI."
+    },
+    {
+      "end": 73137,
+      "id": "U74",
+      "section_id": "H17",
+      "start": 72375,
+      "text": "Despite the strengths, there are several limitations in this study. Lack of enough available data may account for the reasons why we had identified no more than one significant predictor in the meta-regression analysis. There is a shortage of studies into the subtypes of MCI, which prevented us from performing further subgroup analyses on aMCI prevalence. Only two studies [19, 20] included in the meta-analysis drew results from a nation-wide sample. The rest had participants from different regions. Significant socioeconomic disparities exist across regions in China. We found no study involving minority ethnicity groups. China has 56 ethnic groups. Further studies into these populations are needed. A national study using a unified protocol is preferred."
+    },
+    {
+      "end": 73154,
+      "id": "U75",
+      "section_id": "H18",
+      "start": 73141,
+      "text": "## Conclusion"
+    },
+    {
+      "end": 73622,
+      "id": "U76",
+      "section_id": "H18",
+      "start": 73156,
+      "text": "This study shows that 12.2% of Chinese populations over 55 years have MCI and 10.9% have aMCI. MCI prevalence increases with age. Women, rural residents, and those who live alone and have low levels of education have higher MCI prevalence than others. The results also vary with diagnostic criteria and study periods. Increasing attention should be paid to regional disparities in future studies as socioeconomic disparities across regions continue to grow in China."
+    },
+    {
+      "end": 73653,
+      "id": "U77",
+      "section_id": "H19",
+      "start": 73625,
+      "text": "## Supplementary Information"
+    },
+    {
+      "end": 73673,
+      "id": "U78",
+      "section_id": "H19",
+      "start": 73655,
+      "text": "Additional file 1."
+    },
+    {
+      "end": 73693,
+      "id": "U79",
+      "section_id": "H19",
+      "start": 73675,
+      "text": "Additional file 2."
+    },
+    {
+      "end": 73716,
+      "id": "U80",
+      "section_id": "H20",
+      "start": 73697,
+      "text": "## Acknowledgements"
+    },
+    {
+      "end": 73837,
+      "id": "U81",
+      "section_id": "H20",
+      "start": 73718,
+      "text": "The authors thank the faculty members of Statistics Consultant Xia Li, La Trobe University of Mathematics & Statistics."
+    },
+    {
+      "end": 73856,
+      "id": "U82",
+      "section_id": "H21",
+      "start": 73840,
+      "text": "## Abbreviations"
+    },
+    {
+      "end": 75181,
+      "id": "U83",
+      "section_id": "H21",
+      "start": 73858,
+      "text": "ADLActivity of Daily LivingALTAssociative Learning TestAMCIAmnesic Mild Cognitive ImpairmentAVLTAuditory Verbal Learning TestCAMCOGCambridge Cognitive ExaminationCCASChinese Cognitive Ability ScaleCDRClinical Dementia Rating ScaleCDTClock Drawing TestCESDThe Center for Epidemiologic Studies Depression ScaleCSI-DCommunity Screening Instrument for DementiaDSDigit SpanDSM-IVthe American Psychiatric Association’s Diagnostic and Statistical Manual of Mental Disorder 4th editionFAQFunctional Activities QuestionnaireGDSGlobal Deterioration ScaleGMSGeriatric Mental StateHAMDHamilton Depression Rating ScaleHISHachinski Ischemic IndexIMCTInformation-Memory-Concentration testMCIMild Cognitive ImpairmentMMSEMini-Mental State Examination (MMSE)MoCAMontreal Cognitive AssessmentNIA-AANational Institute on Aging Alzheimer’s Association (NIA-AA)NPI-QNeuropsychiatric Inventory QuestionnaireQCST-EQuick Cognitive Screening ScaleROCFRRey-Osterrieth Complex Figure Recall TestsSASSelf-Rating Anxiety ScaleSCIDStructured Clinical Interview for DSM-IVSDMTSymbol Digit Modalities TestSTMTSemantic Trail Making TestVFTVerbal Fluency TestWAISWechsler Adult Intelligence ScaleWHO-BCAIWorld Health Organization-Battery of Cognitive Assessment InstrumentWHODAS-1212-item WHO Disability Assessment ScheduleWMS-RWechsler Memory Scale-Revised"
+    },
+    {
+      "end": 75209,
+      "id": "U84",
+      "section_id": "H22",
+      "start": 75184,
+      "text": "## Authors’ contributions"
+    },
+    {
+      "end": 75579,
+      "id": "U85",
+      "section_id": "H22",
+      "start": 75211,
+      "text": "YL, CL1 and DY conceived and designed the study. YL collected and analysed the data, prepared figures/tables, contributed drafts of the manuscript. CL1, DY and SF critically reviewed the contents and modified the draft. JM and MZ participated in collecting and analysing the data. CL2 provided data analysis support. All authors read and approved the final manuscript."
+    },
+    {
+      "end": 75592,
+      "id": "U86",
+      "section_id": "H23",
+      "start": 75582,
+      "text": "## Funding"
+    },
+    {
+      "end": 75984,
+      "id": "U87",
+      "section_id": "H23",
+      "start": 75594,
+      "text": "The project was supported by the fund from Shanghai Municipal Health Commission, Shanghai, China (201940495). This work was also supported by the Australian Government Research Training Program Fees Offset (RTP Fees Offset) and the La Trobe University Full Fee Research Scholarship (LTUFFRS). The funding bodies do not have any involvement in the design, execution and writing of the study."
+    },
+    {
+      "end": 76024,
+      "id": "U88",
+      "section_id": "H24",
+      "start": 75987,
+      "text": "## Availability of data and materials"
+    },
+    {
+      "end": 76132,
+      "id": "U89",
+      "section_id": "H24",
+      "start": 76026,
+      "text": "All data generated and analysed during this study are included in this manuscript and the supporting file."
+    },
+    {
+      "end": 76180,
+      "id": "U90",
+      "section_id": "H25",
+      "start": 76135,
+      "text": "## Ethics approval and consent to participate"
+    },
+    {
+      "end": 76197,
+      "id": "U91",
+      "section_id": "H25",
+      "start": 76182,
+      "text": "Not applicable."
+    },
+    {
+      "end": 76226,
+      "id": "U92",
+      "section_id": "H26",
+      "start": 76200,
+      "text": "## Consent for publication"
+    },
+    {
+      "end": 76243,
+      "id": "U93",
+      "section_id": "H26",
+      "start": 76228,
+      "text": "Not applicable."
+    },
+    {
+      "end": 76268,
+      "id": "U94",
+      "section_id": "H27",
+      "start": 76246,
+      "text": "## Competing interests"
+    },
+    {
+      "end": 76340,
+      "id": "U95",
+      "section_id": "H27",
+      "start": 76270,
+      "text": "The authors declare there are no conflicts of interest for this study."
+    },
+    {
+      "end": 76355,
+      "id": "U96",
+      "section_id": "H28",
+      "start": 76343,
+      "text": "## Footnotes"
+    },
+    {
+      "end": 76491,
+      "id": "U97",
+      "section_id": "H28",
+      "start": 76357,
+      "text": "Publisher’s NoteSpringer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations."
+    },
+    {
+      "end": 76521,
+      "id": "U98",
+      "section_id": "H29",
+      "start": 76495,
+      "text": "## Contributor Information"
+    },
+    {
+      "end": 76564,
+      "id": "U99",
+      "section_id": "H29",
+      "start": 76523,
+      "text": "Chaojie Liu, Email: c.liu@latrobe.edu.au."
+    },
+    {
+      "end": 76600,
+      "id": "U100",
+      "section_id": "H29",
+      "start": 76566,
+      "text": "Dehua Yu, Email: ydh1404@sina.com."
+    }
+  ]
+}

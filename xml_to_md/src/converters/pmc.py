@@ -3,6 +3,7 @@
 Извлечено из api/services/pubmed_service.py.
 """
 import logging
+from html import escape
 import re
 from typing import Dict, List, Optional
 from xml.etree import ElementTree as ET
@@ -132,8 +133,8 @@ def render_fig(fig: ET.Element, lines: List[str], image_urls: ImageUrls) -> None
     fig_id = fig.get("id", "")
     label_el = fig.find("label")
     label = "".join(label_el.itertext()).strip() if label_el is not None else ""
-    caption_el = fig.find(".//caption/p")
-    cap = "".join(caption_el.itertext()).strip() if caption_el is not None else ""
+    caption_el = fig.find("caption")
+    cap = " ".join(element_to_text(part).strip() for part in caption_el) if caption_el is not None else ""
 
     img_url = resolve_fig_image(fig, image_urls)
     alt = label or fig_id or "Figure"
@@ -142,7 +143,7 @@ def render_fig(fig: ET.Element, lines: List[str], image_urls: ImageUrls) -> None
     if img_url:
         html_parts.append(f'  <img src="{img_url}" alt="{alt}">')
     if label or cap:
-        caption_text = f"<strong>{label}</strong> {cap}".strip() if label else cap
+        caption_text = f"<strong>{escape(label)}</strong> {escape(cap)}".strip() if label else escape(cap)
         html_parts.append(f'  <figcaption>{caption_text}</figcaption>')
     html_parts.append('</figure>')
     lines.append("\n" + "\n".join(html_parts) + "\n")
@@ -153,27 +154,23 @@ def render_table(table_el: ET.Element, lines: List[str]) -> None:
     rows: List[str] = []
     rows.append("<table>")
 
-    for thead in table_el.findall("thead"):
-        rows.append("  <thead>")
-        for tr in thead.findall("tr"):
+    # JATS допускает прямые строки и tfoot; rowspan/colspan несут смысл таблицы.
+    for group in table_el:
+        if group.tag not in {"thead", "tbody", "tfoot", "tr"}:
+            continue
+        if group.tag != "tr":
+            rows.append(f"  <{group.tag}>")
+        for tr in ([group] if group.tag == "tr" else group.findall("tr")):
             rows.append("    <tr>")
             for c in tr:
                 if c.tag in ("th", "td"):
                     cell = element_to_text(c).strip().replace("\n", " ")
-                    rows.append(f"      <th>{cell}</th>")
+                    spans = "".join(f' {name}="{escape(c.get(name), quote=True)}"'
+                                    for name in ("rowspan", "colspan") if c.get(name))
+                    rows.append(f"      <{c.tag}{spans}>{escape(cell)}</{c.tag}>")
             rows.append("    </tr>")
-        rows.append("  </thead>")
-
-    for tbody in table_el.findall("tbody"):
-        rows.append("  <tbody>")
-        for tr in tbody.findall("tr"):
-            rows.append("    <tr>")
-            for c in tr:
-                if c.tag in ("th", "td"):
-                    cell = element_to_text(c).strip().replace("\n", " ")
-                    rows.append(f"      <td>{cell}</td>")
-            rows.append("    </tr>")
-        rows.append("  </tbody>")
+        if group.tag != "tr":
+            rows.append(f"  </{group.tag}>")
 
     rows.append("</table>")
     lines.append("\n" + "\n".join(rows) + "\n")
@@ -182,9 +179,9 @@ def render_table(table_el: ET.Element, lines: List[str]) -> None:
 def render_table_wrap(tw: ET.Element, lines: List[str]) -> None:
     """Рендерит <table-wrap>: подпись + HTML-таблица."""
     label_el = tw.find("label")
-    caption_el = tw.find(".//caption/p")
+    caption_el = tw.find("caption")
     label = element_to_text(label_el).strip() if label_el is not None else ""
-    cap = element_to_text(caption_el).strip() if caption_el is not None else ""
+    cap = " ".join(element_to_text(part).strip() for part in caption_el) if caption_el is not None else ""
     full_cap = f"**{label}**" if label else ""
     if cap:
         full_cap = f"{full_cap} {cap}".strip()
@@ -193,6 +190,12 @@ def render_table_wrap(tw: ET.Element, lines: List[str]) -> None:
     table_el = tw.find(".//table")
     if table_el is not None:
         render_table(table_el, lines)
+    foot = tw.find("table-wrap-foot")
+    if foot is not None:
+        for part in foot:
+            text = element_to_text(part).strip()
+            if text:
+                lines.append(f"{text}\n")
 
 
 def render_section(
@@ -223,7 +226,7 @@ def render_section(
 
     for child in sec:
         tag = child.tag
-        if tag == "title":
+        if tag in {"title", "ref-list"}:
             continue
         elif tag == "p":
             inner_tables = child.findall("table-wrap")
@@ -258,6 +261,14 @@ def render_section(
                 item_text = element_to_text(item).strip()
                 if item_text:
                     lines.append(f"- {item_text}\n")
+        elif tag in {"boxed-text", "fn-group", "ack", "notes", "app", "app-group", "statement"}:
+            render_section(child, lines, level, image_urls=image_urls,
+                           figs_by_id=figs_by_id, rendered_figs=rendered_figs)
+        else:
+            # Остальные текстовые элементы тела (включая формулы и сноски) не теряются.
+            text = element_to_text(child).strip()
+            if text:
+                lines.append(f"{text}\n")
 
     lines.append("")
 
@@ -306,13 +317,13 @@ def _pmc_xml_to_markdown(
         if surname:
             authors.append(f"{surname} {given}".strip())
     if authors:
-        lines.append(f"**Авторы:** {', '.join(authors)}\n")
+        lines.append(f"**Authors:** {', '.join(authors)}\n")
 
     # Журнал и дата
     journal = root.findtext(".//journal-title", "")
     year = root.findtext(".//pub-date/year", "")
     if journal:
-        lines.append(f"**Журнал:** {journal}" + (f" ({year})" if year else "") + "\n")
+        lines.append(f"**Journal:** {journal}" + (f" ({year})" if year else "") + "\n")
 
     # DOI
     for article_id in root.findall(".//article-id"):
@@ -354,8 +365,9 @@ def _pmc_xml_to_markdown(
     rendered_figs: set = set()
 
     # Основные секции
-    for sec in root.findall(".//body/sec"):
-        render_section(sec, lines, level=2, image_urls=image_urls,
+    body = root.find("body")
+    if body is not None:
+        render_section(body, lines, level=1, image_urls=image_urls,
                        figs_by_id=figs_by_id, rendered_figs=rendered_figs)
 
     # Фигуры, не встретившиеся в тексте — добавляем в конец
@@ -365,11 +377,17 @@ def _pmc_xml_to_markdown(
         for fig in remaining:
             render_fig(fig, lines, image_urls)
 
-    # Список литературы (первые 50)
+    # Приложения, благодарности и раскрытия сохраняются до раздела библиографии.
+    back = root.find("back")
+    if back is not None:
+        render_section(back, lines, level=1, image_urls=image_urls,
+                       figs_by_id=figs_by_id, rendered_figs=rendered_figs)
+
+    # Полный список литературы: обрезка нарушает полноту исходной ревизии.
     refs = root.findall(".//ref-list/ref")
     if refs:
         lines.append("## References\n")
-        for i, ref in enumerate(refs[:50], 1):
+        for i, ref in enumerate(refs, 1):
             mixed_citation = ref.find(".//mixed-citation")
             element_citation = ref.find(".//element-citation")
             if mixed_citation is not None:

@@ -22,6 +22,7 @@ COPY --from=shared ./model_registry ../shared/model_registry
 COPY --from=core ./pipeline ../knowledge_map_core/pipeline
 COPY --from=config ./config/models.toml ./config/models.toml
 ENV ARTICLE_PIPELINE_GOLD_DIR=/data/article_pipeline_gold
+ENV REFERENCE_PILOT_DIR=/data/reference_pilots/pmc10000452
 
 # 3) Копируем pyproject и lock-файл
 COPY pyproject.toml poetry.lock* ./

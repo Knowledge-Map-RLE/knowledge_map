@@ -57,6 +57,8 @@ tests/
 
 # Documentation
 *.md
+!application/text_to_map.en.md
+!application/text_to_map_dependencies.en.md
 docs/
 
 # Git

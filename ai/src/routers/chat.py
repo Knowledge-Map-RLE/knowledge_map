@@ -9,13 +9,15 @@ from __future__ import annotations
 
 import json
 import logging
+from contextlib import aclosing
 
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse
 
 from src.config import settings
 from src.providers import ProviderError, catalog
 from src.schemas import ChatCompletionRequest
+from src.streaming import ClosingStreamingResponse
 
 logger = logging.getLogger(__name__)
 
@@ -67,22 +69,24 @@ async def chat_completions(body: ChatCompletionRequest):
 
     async def _stream():
         try:
-            async for frame in client.stream(resolved_model, payload):
-                yield frame
+            # Отключение клиента закрывает вложенный генератор
+            # и отменяет принадлежащее этому запросу фоновое задание.
+            async with aclosing(client.stream(resolved_model, payload)) as frames:
+                async for frame in frames:
+                    yield frame
         except ProviderError as exc:
             # Once an SSE response has started, HTTP status can no longer
             # represent an upstream failure.  Preserve the OpenAI error shape
             # so an extracting client fails explicitly instead of accepting a
             # silently truncated DSL document.
             logger.error("Upstream streaming chat failed: %s", exc)
-            yield (
-                'data: {"error":{"type":"upstream_error","message":'
-                + json.dumps(str(exc), ensure_ascii=False)
-                + "}}\n\n"
-            ).encode("utf-8")
+            error = {"error": {"type": "upstream_error", "message": str(exc)}}
+            if exc.details:
+                error["upstream"] = exc.details
+            yield ("data: " + json.dumps(error, ensure_ascii=False) + "\n\n").encode("utf-8")
         yield b"data: [DONE]\n\n"
 
-    return StreamingResponse(
+    return ClosingStreamingResponse(
         _stream(),
         media_type="text/event-stream",
         headers={

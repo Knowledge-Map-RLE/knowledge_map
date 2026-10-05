@@ -13,6 +13,8 @@ from infrastructure.article_pipeline import LinguisticGateway, SemanticGateway
 from infrastructure.neo4j.article_pipeline_repository import Neo4jArticlePipelineRepository
 from application.article_pipeline import ExtractArticle
 from application.rebuild_article_map import RebuildArticleMap
+from domain.article_maps import ArticleMapError
+from web.routers.article_maps import http_error
 from knowledge_contracts.validation import ValidationError
 from knowledge_pipeline.pipeline import checksum
 from services.article_editor_service import ArticleEditorService
@@ -164,7 +166,7 @@ async def current_map(doc_id: str, locale: str = "en", user=Depends(get_current_
                       document_repository=Depends(get_document_repository)):
     authorize(repo, doc_id, user)
     stored = await service.get_blocks(doc_id)
-    result = await RebuildArticleMap(repo).load_current(
+    result = await RebuildArticleMap(repo, repo.maps).load_current(
         doc_id, user["uid"], stored.get("blocks", [])
     )
     if locale != "en":
@@ -196,7 +198,7 @@ async def rebuild_current_map(doc_id: str, locale: str = "en", user=Depends(get_
     authorize(repo, doc_id, user)
     stored = await service.get_blocks(doc_id)
     try:
-        result = await RebuildArticleMap(repo).execute_current(
+        result = await RebuildArticleMap(repo, repo.maps).execute_current(
             doc_id, user["uid"], stored.get("blocks", [])
         )
         if locale != "en":
@@ -206,6 +208,8 @@ async def rebuild_current_map(doc_id: str, locale: str = "en", user=Depends(get_
             if localization is not None:
                 result["graph"] = _localized_graph(result.get("graph"), localization)
         return result
+    except ArticleMapError as exc:
+        raise http_error(exc) from exc
     except ValidationError as exc:
         raise HTTPException(409, detail=str(exc)) from exc
 
@@ -253,7 +257,9 @@ async def rebuild_map(doc_id: str, version_id: str, user=Depends(get_current_use
                       repo=Depends(repository)):
     authorize(repo, doc_id, user)
     try:
-        return await RebuildArticleMap(repo).execute(doc_id, version_id, user["uid"])
+        return await RebuildArticleMap(repo, repo.maps).execute(doc_id, version_id, user["uid"])
+    except ArticleMapError as exc:
+        raise http_error(exc) from exc
     except ValidationError as exc:
         raise HTTPException(409, detail=str(exc)) from exc
 

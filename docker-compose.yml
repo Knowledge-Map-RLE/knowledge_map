@@ -108,6 +108,7 @@ services:
       - AI_MODEL_SERVICE_PORT=50059
       - MODEL_CONFIG_PATH=/app/config/models.toml
       - ARTICLE_PIPELINE_GOLD_DIR=/data/article_pipeline_gold
+      - REFERENCE_PILOT_DIR=/data/reference_pilots/pmc10000452
       - MODEL_PROFILE=${MODEL_PROFILE:-}
       - AI_UI_PROFILE=${AI_UI_PROFILE:-}
       - LLM_EXTRACT_PROFILE=${LLM_EXTRACT_PROFILE:-}
@@ -141,6 +142,7 @@ services:
       - auth_proto:/shared/proto
       - ./api:/app
       - ./eval/article_pipeline_gold:/data/article_pipeline_gold:ro
+      - ./eval/reference_pilots:/data/reference_pilots
       - /app/__pycache__
     deploy:
       resources:

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, memo } from 'react';
 import { getBlockTypeDef } from './blockTypes';
 import { OUTCOME_COLORS } from './articleMapGraph';
 import type { ArticleMapNode } from './articleMapGraph';
+import { useTranslation } from 'react-i18next';
 
 extend({ Container, Graphics, Text });
 
@@ -54,6 +55,7 @@ export const ArticleBlock = memo(function ArticleBlock({
     dimmed,
     onHover,
 }: ArticleBlockProps) {
+    const { t } = useTranslation();
     const { id, x, y, blockType, label, outcome, outcomeLabel, isGoal } = blockData;
     const hasFooter = Boolean(isGoal || (outcome !== 'neutral' && outcomeLabel));
     const blockHeight = blockData.height ?? getArticleBlockHeight(label, hasFooter);
@@ -96,7 +98,7 @@ export const ArticleBlock = memo(function ArticleBlock({
         >
             <pixiGraphics draw={drawBg} />
             <PixiText
-                text={typeDef?.name ?? blockType}
+                text={blockData.typeLabel ?? typeDef?.name ?? blockType}
                 x={0}
                 y={-blockHeight / 2 + 12}
                 anchor={0.5}
@@ -113,7 +115,7 @@ export const ArticleBlock = memo(function ArticleBlock({
             />
             {isGoal ? (
                 <PixiText
-                    text="ЦЕЛЬ"
+                    text={t('articleEditor.map.goal')}
                     x={0}
                     y={blockHeight / 2 - 10}
                     anchor={0.5}
